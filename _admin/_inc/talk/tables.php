@@ -15,6 +15,15 @@ if(!(isset($define_access_to_control_panel))){
 /*- Tables ---------------------------------------------------------------------------- */
 $t_talk_liquidbase				= $mysqlPrefixSav . "talk_liquidbase";
 
+$t_talk_channels_index		= $mysqlPrefixSav . "talk_channels_index";
+$t_talk_channels_messages	= $mysqlPrefixSav . "talk_channels_messages";
+$t_talk_channels_users_online	= $mysqlPrefixSav . "talk_channels_users_online";
+$t_talk_users_starred_channels	= $mysqlPrefixSav . "talk_users_starred_channels";
+
+$t_talk_dm_conversations = $mysqlPrefixSav . "talk_dm_conversations";
+$t_talk_dm_messages	 = $mysqlPrefixSav . "talk_dm_messages";
+
+$t_talk_total_unread = $mysqlPrefixSav . "talk_total_unread";
 
 if($action == ""){
 	echo"

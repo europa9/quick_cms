@@ -411,6 +411,7 @@ if(file_exists($mysql_config_file)){
 	$t_edb_case_index_human_tasks_responsible_counters = $mysqlPrefixSav . "edb_case_index_human_tasks_responsible_counters";
 	$t_edb_case_index_automated_tasks		= $mysqlPrefixSav . "edb_case_index_automated_tasks";
 	$t_edb_case_index_notes				= $mysqlPrefixSav . "edb_case_index_notes";
+	$t_edb_case_index_reviews			= $mysqlPrefixSav . "edb_case_index_reviews";
 	$t_edb_case_index_open_case_menu_counters	= $mysqlPrefixSav . "edb_case_index_open_case_menu_counters";
 	$t_edb_case_index_glossaries			= $mysqlPrefixSav . "edb_case_index_glossaries";
 	$t_edb_case_index_photos			= $mysqlPrefixSav . "edb_case_index_photos";
@@ -636,6 +637,12 @@ else{
 	if($root == ".."){
 		// index.php
 		$language_case = "B";
+		$language_file = $language_file . "/$url_minus_two/ts_$url_minus_one";
+		$pageCSSFile = "_css/$url_minus_one.css";
+	}
+	elseif($root == "../.."){
+		// index.php
+		$language_case = "D";
 		$language_file = $language_file . "/$url_minus_two/ts_$url_minus_one";
 		$pageCSSFile = "_css/$url_minus_one.css";
 	}

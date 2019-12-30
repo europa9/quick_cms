@@ -15,7 +15,6 @@ if(!(isset($define_access_to_control_panel))){
 }
 
 /*- Tables ---------------------------------------------------------------------------- */
-$t_talk_total_unread = $mysqlPrefixSav . "talk_total_unread";
 echo"
 
 <!-- talk_total_unread -->

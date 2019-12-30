@@ -258,7 +258,7 @@ if($process != "1"){
 	<!-- Footer -->
 	<footer>
 		<p>
-		<a href=\"https://github.com/europa9/sindre_cms\">&copy; 2019-2020 $cmsNameSav $cmsVersionSav</a>
+		<a href=\"$cmsWebsiteSav\">$cmsCopyrightSav $cmsNameSav $cmsVersionSav</a>
 		</p>
 	</footer>
 	<!-- //Footer -->

@@ -368,7 +368,7 @@ $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
 list($get_my_user_id, $get_my_user_email, $get_my_user_name, $get_my_user_language, $get_my_user_last_online, $get_my_user_rank, $get_my_user_login_tries) = $row;
 if($get_my_user_id == ""){
-	$url = "login/index.php?ft=info&fm=please_login_to_the_control_panel";
+	$url = "login/index.php?ft=info&fm=please_login_to_the_control_panel&my_user_id=$my_user_id&my_security=$my_security";
 	header("Location: $url");
 	exit;
 }
@@ -491,7 +491,7 @@ echo"<!DOCTYPE html>
 			<div class=\"header_right_admin\">
 			<!-- Admin -->
 				";
-				if(file_exists("../_uploads/users/images/$get_my_user_id/$get_my_photo_destination")){
+				if(file_exists("../_uploads/users/images/$get_my_user_id/$get_my_photo_destination") && $get_my_photo_destination != ""){
 					if(!(file_exists("../_uploads/users/images/$get_my_user_id/$get_my_photo_thumb_40"))){
 						// Create thumb
 						resize_crop_image(40, 40, "../_uploads/users/images/$get_my_user_id/$get_my_photo_destination", "../_uploads/users/images/$get_my_user_id/$get_my_photo_thumb_40");

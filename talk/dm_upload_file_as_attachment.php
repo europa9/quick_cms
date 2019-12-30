@@ -39,7 +39,6 @@ $tabindex = 0;
 $l_mysql = quote_smart($link, $l);
 
 
-
 /*- Variables ------------------------------------------------------------------------- */
 if(isset($_GET['t_user_id'])){
 	$t_user_id = $_GET['t_user_id'];
@@ -101,6 +100,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 		
 		// Check for file (to be attatched to message)
+		if(!(is_dir("$root/_uploads/"))){
+			mkdir("$root/_uploads/", 0777);
+		}
 		if(!(is_dir("$root/_uploads/talk/"))){
 			mkdir("$root/_uploads/talk/", 0777);
 		}

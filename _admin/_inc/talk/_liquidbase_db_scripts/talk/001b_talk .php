@@ -16,6 +16,12 @@ if(!(isset($define_access_to_control_panel))){
 
 /*- Tables ---------------------------------------------------------------------------- */
 
+$result = mysqli_query($link, "DROP TABLE IF EXISTS $t_talk_channels_index") or die(mysqli_error($link)); 
+$result = mysqli_query($link, "DROP TABLE IF EXISTS $t_talk_channels_messages") or die(mysqli_error($link)); 
+$result = mysqli_query($link, "DROP TABLE IF EXISTS $t_talk_channels_users_online") or die(mysqli_error($link)); 
+$result = mysqli_query($link, "DROP TABLE IF EXISTS $t_talk_users_starred_channels") or die(mysqli_error($link)); 
+
+
 echo"
 
 
@@ -45,7 +51,10 @@ else{
 	   channel_created_saying VARCHAR(200),
 	   channel_last_message_time VARCHAR(200),
 	   channel_last_message_saying VARCHAR(200),
-	   channel_users_online INT
+	   channel_users_online INT,
+	   channel_encryption_key VARCHAR(200),
+	   channel_encryption_key_year INT,
+	   channel_encryption_key_month INT
 	   )")
 	   or die(mysqli_error());
 

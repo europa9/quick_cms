@@ -67,10 +67,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	}
 	else{
 		// Find channel
-		$query = "SELECT channel_id, channel_name, channel_password, channel_last_message_time FROM $t_talk_channels_index WHERE channel_id=$get_current_channel_id";
+		$query = "SELECT channel_id, channel_name, channel_password, channel_last_message_time, channel_encryption_key, channel_encryption_key_year, channel_encryption_key_month FROM $t_talk_channels_index WHERE channel_id=$get_current_channel_id";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
-		list($get_current_channel_id, $get_current_channel_name, $get_current_channel_password, $get_current_channel_last_message_time) = $row;
+		list($get_current_channel_id, $get_current_channel_name, $get_current_channel_password, $get_current_channel_last_message_time, $get_current_channel_encryption_key, $get_current_channel_encryption_key_year, $get_current_channel_encryption_key_month) = $row;
 
 		if($get_current_channel_id == ""){
 			echo"<h1>Channel not found</h1>";
@@ -84,9 +84,40 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			else{
 				$inp_text = "";
 			}
-			$inp_text_mysql = quote_smart($link, $inp_text);
 
 			if($inp_text != ""){
+				// Encrypter
+				$year = date("Y");
+				$month = date("m");
+				if($year != "$get_current_channel_encryption_key_year"){
+					// make a new encryption string for this year month
+					$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+					$randstring = '';
+					for ($i = 0; $i < 10; $i++) {
+						$randstring = $randstring . $characters[rand(0, strlen($characters))];
+					}
+					$inp_encryption_key_mysql = quote_smart($link, $randstring);
+					$result_update = mysqli_query($link, "UPDATE $t_talk_channels_index SET 
+						channel_encryption_key=$inp_encryption_key_mysql,
+						channel_encryption_key_year=$year, 
+						channel_encryption_key_month=$month WHERE channel_id=$get_current_channel_id") or die(mysqli_error($link));
+
+					// Delete old messages (new year - new encrytion string)
+					$result_delete = mysqli_query($link, "DELETE FROM $t_talk_channels_messages WHERE message_channel_id=$get_current_channel_id") or die(mysqli_error($link));
+					
+
+					// Transfer
+					$get_current_channel_encryption_key = "$randstring";
+				}
+
+				// Encrypt text
+				$ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
+				$iv = openssl_random_pseudo_bytes($ivlen);
+				$ciphertext_raw = openssl_encrypt($inp_text, $cipher, $get_current_channel_encryption_key, $options=OPENSSL_RAW_DATA, $iv);
+				$hmac = hash_hmac('sha256', $ciphertext_raw, $get_current_channel_encryption_key, $as_binary=true);
+				$ciphertext = base64_encode( $iv.$hmac.$ciphertext_raw );
+
+				$inp_text_mysql = quote_smart($link, $ciphertext);
 
 				// Dates
 				$datetime = date("Y-m-d H:i:s");
@@ -168,6 +199,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$result = mysqli_query($link, $query);
 				$row = mysqli_fetch_row($result);
 				list($get_message_id, $get_message_channel_id, $get_message_text, $get_message_datetime, $get_message_date_saying, $get_message_time_saying, $get_message_time, $get_message_year, $get_message_from_user_id, $get_message_from_user_name, $get_message_from_user_alias, $get_message_from_user_image_path, $get_message_from_user_image_file, $get_message_from_user_image_thumb_40, $get_message_from_user_image_thumb_50, $get_message_from_ip, $get_message_from_hostname, $get_message_from_user_agente) = $row;
+
+				// Decrypt message
+				$c = base64_decode($get_message_text);
+				$ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
+				$iv = substr($c, 0, $ivlen);
+				$hmac = substr($c, $ivlen, $sha2len=32);
+				$ciphertext_raw = substr($c, $ivlen+$sha2len);
+				$original_plaintext = openssl_decrypt($ciphertext_raw, $cipher, $get_current_channel_encryption_key, $options=OPENSSL_RAW_DATA, $iv);
+				$calcmac = hash_hmac('sha256', $ciphertext_raw, $get_current_channel_encryption_key, $as_binary=true);
+				if (hash_equals($hmac, $calcmac)) {
+					 $get_message_text = "$original_plaintext";
+				}
+
 				echo"
 				<table>
 				 <tr>

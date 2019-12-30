@@ -48,6 +48,9 @@ $ip_date = date("Y-m-d");
 $inp_my_ip_block = $inp_ip . "|" . $ip_date . "|" . "1";
 
 // IP Check
+if(!is_dir("$root/_cache")){
+	mkdir("$root/_cache");
+}
 if(!(file_exists("$root/_cache/create_free_account_ipblock.dat"))){
 	$fh = fopen("$root/_cache/create_free_account_ipblock.dat", "w+") or die("can not open file");
 	fwrite($fh, $inp_my_ip_block);

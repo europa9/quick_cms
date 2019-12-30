@@ -73,10 +73,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	}
 	else{
 		// Find conversation (we need conversation key)
-		$query = "SELECT conversation_id, conversation_key, conversation_f_user_id, conversation_f_user_name, conversation_f_user_alias, conversation_f_image_path, conversation_f_image_file, conversation_f_image_thumb40, conversation_f_image_thumb50, conversation_f_has_blocked, conversation_f_unread_messages, conversation_t_user_id, conversation_t_user_name, conversation_t_user_alias, conversation_t_image_path, conversation_t_image_file, conversation_t_image_thumb40, conversation_t_image_thumb50, conversation_t_has_blocked, conversation_t_unread_messages FROM $t_talk_dm_conversations WHERE conversation_f_user_id=$get_my_user_id AND conversation_t_user_id=$get_to_user_id";
+		$query = "SELECT conversation_id, conversation_key, conversation_f_user_id, conversation_f_user_name, conversation_f_user_alias, conversation_f_image_path, conversation_f_image_file, conversation_f_image_thumb40, conversation_f_image_thumb50, conversation_f_has_blocked, conversation_f_unread_messages, conversation_t_user_id, conversation_t_user_name, conversation_t_user_alias, conversation_t_image_path, conversation_t_image_file, conversation_t_image_thumb40, conversation_t_image_thumb50, conversation_t_has_blocked, conversation_t_unread_messages, conversation_encryption_key, conversation_encryption_key_year, conversation_encryption_key_month FROM $t_talk_dm_conversations WHERE conversation_f_user_id=$get_my_user_id AND conversation_t_user_id=$get_to_user_id";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
-		list($get_current_conversation_id, $get_current_conversation_key, $get_current_conversation_f_user_id, $get_current_conversation_f_user_name, $get_current_conversation_f_user_alias, $get_current_conversation_f_image_path, $get_current_conversation_f_image_file, $get_current_conversation_f_image_thumb40, $get_current_conversation_f_image_thumb50, $get_current_conversation_f_has_blocked, $get_current_conversation_f_unread_messages, $get_current_conversation_t_user_id, $get_current_conversation_t_user_name, $get_current_conversation_t_user_alias, $get_current_conversation_t_image_path, $get_current_conversation_t_image_file, $get_current_conversation_t_image_thumb40, $get_current_conversation_t_image_thumb50, $get_current_conversation_t_has_blocked, $get_current_conversation_t_unread_messages) = $row;
+		list($get_current_conversation_id, $get_current_conversation_key, $get_current_conversation_f_user_id, $get_current_conversation_f_user_name, $get_current_conversation_f_user_alias, $get_current_conversation_f_image_path, $get_current_conversation_f_image_file, $get_current_conversation_f_image_thumb40, $get_current_conversation_f_image_thumb50, $get_current_conversation_f_has_blocked, $get_current_conversation_f_unread_messages, $get_current_conversation_t_user_id, $get_current_conversation_t_user_name, $get_current_conversation_t_user_alias, $get_current_conversation_t_image_path, $get_current_conversation_t_image_file, $get_current_conversation_t_image_thumb40, $get_current_conversation_t_image_thumb50, $get_current_conversation_t_has_blocked, $get_current_conversation_t_unread_messages, $get_current_conversation_encryption_key, $get_current_conversation_encryption_key_year, $get_current_conversation_encryption_key_month) = $row;
 
 		if($get_current_conversation_id == ""){
 			echo"Create conversation";
@@ -91,7 +91,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		else{
 			$inp_text = "";
 		}
-		$inp_text_mysql = quote_smart($link, $inp_text);
 
 
 		if(isset($_POST['inp_file'])){
@@ -104,6 +103,40 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$inp_file_mysql = quote_smart($link, $inp_file);
 
 		if($inp_text != ""){
+
+			// Encrypter
+			$year = date("Y");
+			$month = date("m");
+			if($year != "$get_current_conversation_encryption_key_year"){
+				// make a new encryption string for this year month
+				$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+				$randstring = '';
+				for ($i = 0; $i < 10; $i++) {
+					$randstring = $randstring . $characters[rand(0, strlen($characters))];
+				}
+				$inp_encryption_key_mysql = quote_smart($link, $randstring);
+				$conversation_key_mysql = quote_smart($link, $get_current_conversation_key);
+				$result_update = mysqli_query($link, "UPDATE $t_talk_dm_conversations SET 
+					conversation_encryption_key=$inp_encryption_key_mysql,
+					conversation_encryption_key_year=$year, 
+					conversation_encryption_key_month=$month WHERE conversation_key=$conversation_key_mysql") or die(mysqli_error($link));
+
+				// Delete old messages (new year - new encrytion string)
+				$result_delete = mysqli_query($link, "DELETE FROM $t_talk_dm_messages WHERE message_conversation_key=$conversation_key_mysql") or die(mysqli_error($link));
+					
+				// Transfer
+				$get_current_conversation_encryption_key = "$randstring";
+			}
+
+			// Encrypt text
+			$ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
+			$iv = openssl_random_pseudo_bytes($ivlen);
+			$ciphertext_raw = openssl_encrypt($inp_text, $cipher, $get_current_conversation_encryption_key, $options=OPENSSL_RAW_DATA, $iv);
+			$hmac = hash_hmac('sha256', $ciphertext_raw, $get_current_conversation_encryption_key, $as_binary=true);
+			$ciphertext = base64_encode( $iv.$hmac.$ciphertext_raw );
+
+			$inp_text_mysql = quote_smart($link, $ciphertext);
+
 
 			// Dates
 			$datetime = date("Y-m-d H:i:s");
@@ -189,6 +222,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
 			list($get_message_id, $get_message_conversation_key, $get_message_type, $get_message_text, $get_message_datetime, $get_message_date_saying, $get_message_time_saying, $get_message_time, $get_message_year, $get_message_seen, $get_message_from_user_id, $get_message_attachment_type, $get_message_attachment_path, $get_message_attachment_file, $get_message_from_ip, $get_message_from_hostname, $get_message_from_user_agent) = $row;
+	
+			// Decrypt message
+			$c = base64_decode($get_message_text);
+			$ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
+			$iv = substr($c, 0, $ivlen);
+			$hmac = substr($c, $ivlen, $sha2len=32);
+			$ciphertext_raw = substr($c, $ivlen+$sha2len);
+			$original_plaintext = openssl_decrypt($ciphertext_raw, $cipher, $get_current_conversation_encryption_key, $options=OPENSSL_RAW_DATA, $iv);
+			$calcmac = hash_hmac('sha256', $ciphertext_raw, $get_current_conversation_encryption_key, $as_binary=true);
+			if (hash_equals($hmac, $calcmac)) {
+				 $get_message_text = "$original_plaintext";
+			}
+
 			echo"
 							<table>
 							 <tr>

@@ -75,10 +75,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	}
 	else{
 		// Find channel
-		$query = "SELECT channel_id, channel_name, channel_password, channel_last_message_time FROM $t_talk_channels_index WHERE channel_id=$get_current_channel_id";
+		$query = "SELECT channel_id, channel_name, channel_password, channel_last_message_time, channel_encryption_key, channel_encryption_key_year, channel_encryption_key_month FROM $t_talk_channels_index WHERE channel_id=$get_current_channel_id";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
-		list($get_current_channel_id, $get_current_channel_name, $get_current_channel_password, $get_current_channel_last_message_time) = $row;
+		list($get_current_channel_id, $get_current_channel_name, $get_current_channel_password, $get_current_channel_last_message_time, $get_current_channel_encryption_key, $get_current_channel_encryption_key_year, $get_current_channel_encryption_key_month) = $row;
 
 		if($get_current_channel_id == ""){
 			echo"<h1>Channel not found</h1>";
@@ -116,7 +116,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								$variable_last_message_id = "1";
 								$date_saying = date("j M Y");
 								$time = time();
-								$query = "SELECT message_id, message_channel_id, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_from_user_id, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent FROM $t_talk_channels_messages WHERE message_channel_id=$get_current_channel_id";
+								$query = "SELECT message_id, message_channel_id, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_from_user_id, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent FROM $t_talk_channels_messages WHERE message_channel_id=$get_current_channel_id ORDER BY message_id DESC";
 								$result = mysqli_query($link, $query);
 								while($row = mysqli_fetch_row($result)) {
 									list($get_message_id, $get_message_channel_id, $get_message_type, $get_message_text, $get_message_datetime, $get_message_date_saying, $get_message_time_saying, $get_message_time, $get_message_year, $get_message_from_user_id, $get_message_from_user_name, $get_message_from_user_alias, $get_message_from_user_image_path, $get_message_from_user_image_file, $get_message_from_user_image_thumb_40, $get_message_from_user_image_thumb_50, $get_message_from_ip, $get_message_from_hostname, $get_message_from_user_agent) = $row;
@@ -144,6 +144,18 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 										";
 									}
 									else{
+										// Decrypt message
+										$c = base64_decode($get_message_text);
+										$ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
+										$iv = substr($c, 0, $ivlen);
+										$hmac = substr($c, $ivlen, $sha2len=32);
+										$ciphertext_raw = substr($c, $ivlen+$sha2len);
+										$original_plaintext = openssl_decrypt($ciphertext_raw, $cipher, $get_current_channel_encryption_key, $options=OPENSSL_RAW_DATA, $iv);
+										$calcmac = hash_hmac('sha256', $ciphertext_raw, $get_current_channel_encryption_key, $as_binary=true);
+										if (hash_equals($hmac, $calcmac)){
+										    $get_message_text = "$original_plaintext";
+										}
+
 										echo"
 										<table>
 										 <tr>

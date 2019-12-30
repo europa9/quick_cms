@@ -73,10 +73,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	}
 	else{
 		// Find channel
-		$query = "SELECT channel_id, channel_name, channel_password, channel_last_message_time FROM $t_talk_channels_index WHERE channel_id=$get_current_channel_id";
+		$query = "SELECT channel_id, channel_name, channel_password, channel_last_message_time, channel_encryption_key, channel_encryption_key_year, channel_encryption_key_month FROM $t_talk_channels_index WHERE channel_id=$get_current_channel_id";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
-		list($get_current_channel_id, $get_current_channel_name, $get_current_channel_password, $get_current_channel_last_message_time) = $row;
+		list($get_current_channel_id, $get_current_channel_name, $get_current_channel_password, $get_current_channel_last_message_time, $get_current_channel_encryption_key, $get_current_channel_encryption_key_year, $get_current_channel_encryption_key_month) = $row;
 
 		if($get_current_channel_id == ""){
 			echo"<h1>Channel not found - 404 server error</h1>";
@@ -107,6 +107,20 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 										";
 				}
 				else{
+					
+					// Decrypt message
+					$c = base64_decode($get_message_text);
+					$ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
+					$iv = substr($c, 0, $ivlen);
+					$hmac = substr($c, $ivlen, $sha2len=32);
+					$ciphertext_raw = substr($c, $ivlen+$sha2len);
+					$original_plaintext = openssl_decrypt($ciphertext_raw, $cipher, $get_current_channel_encryption_key, $options=OPENSSL_RAW_DATA, $iv);
+					$calcmac = hash_hmac('sha256', $ciphertext_raw, $get_current_channel_encryption_key, $as_binary=true);
+					if (hash_equals($hmac, $calcmac))//PHP 5.6+ timing attack safe comparison
+					{
+					    $get_message_text = "$original_plaintext";
+					}
+
 
 					echo"
 					<table>
