@@ -652,12 +652,7 @@ elseif($mode == "flag"){
 		}
 } // mode == flag
 elseif($mode == "open_language"){
-	echo"
-	<h1>$l_site_translation - $language</h1>
-
-
-
-	";
+	
 	// Check if language exists
 	if(is_dir("_translations/site/$language") && $language != ""){
 	}
@@ -665,6 +660,170 @@ elseif($mode == "open_language"){
 		echo"<p>$l_language_not_found.</p>";
 		exit;
 	}
+
+	// Make sure all files exists in database
+	$debug = "0";
+	if($debug == "1"){
+		echo"
+			<h2>Check that all strings that are in flat files exists in database</h2>
+
+			
+			<table class=\"hor-zebra\">
+			 <thead>
+			  <tr>
+			   <th scope=\"col\">
+				<span>URL</span>
+			   </th>
+			   <th scope=\"col\">
+				<span>ID</span>
+			   </th>
+			  </tr>
+			 </thead>
+			 <tbody>
+
+		";
+	}
+	// List all folders
+	$language_mysql = quote_smart($link, $language);
+	$query = "SELECT site_translation_directory_id, site_translation_directory_name, site_translation_directory_level FROM $t_site_translations_directories ORDER BY site_translation_directory_name ASC";
+	$result = mysqli_query($link, $query);
+	while($row = mysqli_fetch_row($result)) {
+		list($get_site_translation_directory_id, $get_site_translation_directory_name, $get_site_translation_directory_level) = $row;
+					
+		if($debug == "1"){
+			if(isset($style) && $style == "odd"){
+				$style = "";
+			}
+			else{
+				$style = "odd";
+			}
+
+			echo"
+			  <tr>
+			   <td class=\"$style\">
+				<span>$get_site_translation_directory_name</span>
+			   </td>
+			   <td class=\"$style\">
+				<span>$get_site_translation_directory_id</span>
+			   </td>
+			  </tr>
+			";
+		} // debug
+				
+		// List all files
+		$query_files = "SELECT site_translation_file_id, site_translation_file_name, site_translation_dir_id FROM $t_site_translations_files WHERE site_translation_dir_id=$get_site_translation_directory_id ORDER BY site_translation_file_name ASC";
+		$result_files = mysqli_query($link, $query_files);
+		while($row_files = mysqli_fetch_row($result_files)) {
+			list($get_site_translation_file_id, $get_site_translation_file_name, $get_site_translation_dir_id) = $row_files;
+	
+			if($debug == "1"){
+				if(isset($style) && $style == "odd"){
+					$style = "";
+				}
+				else{
+					$style = "odd";
+				}
+
+				echo"
+				  <tr>
+				   <td class=\"$style\">
+					<span>&nbsp; &nbsp; $get_site_translation_file_name</span>
+				   </td>
+				   <td class=\"$style\">
+					<span>$get_site_translation_file_id</span>
+				   </td>
+				  </tr>
+				";
+			} // debug
+
+			// Check strings in file
+			if(!(file_exists("_translations/site/$language/$get_site_translation_directory_name/$get_site_translation_file_name"))){
+					
+				echo"<div class=\"info\"><p>Copy <a href=\"_translations/site/en/$get_site_translation_directory_name/$get_site_translation_file_name\">$get_site_translation_file_name</a></p></div>
+				<meta http-equiv=refresh content=\"15; URL=index.php?open=settings&amp;page=site_translation&amp;language=$language&amp;mode=open_language&amp;editor_language=$editor_language\">";
+
+				if(!(is_dir("_translations/site/$language/$get_site_translation_directory_name"))){
+					echo"<div class=\"info\"><p>mkdir _translations/site/$language/$get_site_translation_directory_name</p></div>";
+				}
+				copy("_translations/site/en/$get_site_translation_directory_name/$get_site_translation_file_name", "_translations/site/$language/$get_site_translation_directory_name/$get_site_translation_file_name");
+
+				$read_local_file = file_get_contents("_translations/site/$language/$get_site_translation_directory_name/$get_site_translation_file_name"); 
+				preg_match_all('/\$[A-Za-z0-9-_]+/', $read_local_file, $variable_names);
+				preg_match_all('/"([^"]+)"/', $read_local_file, $translations);
+								
+				// Loop	
+				$size = sizeof($variable_names[0]);
+				for($x=0;$x<$size;$x++){
+					// Variable name
+					$variable_name = $variable_names[0][$x];
+					$variable_name_mysql = quote_smart($link, $variable_name);
+
+					// Content
+					if(isset($translations[0][$x])){
+						$translation = $translations[0][$x];
+					}
+					else{
+						$translation = "";
+					}
+					$translation = str_replace('"', "", $translation);
+					$translation_mysql = quote_smart($link, $translation);
+
+					// Status
+					$query_strings = "SELECT site_translation_string_id FROM $t_site_translations_strings WHERE site_translation_string_dir_id=$get_site_translation_directory_id AND site_translation_string_file_id=$get_site_translation_file_id AND site_translation_string_language=$language_mysql AND site_translation_string_variable=$variable_name_mysql";
+					$result_strings = mysqli_query($link, $query_strings);
+					$row_strings = mysqli_fetch_row($result_strings);
+					list($get_site_translation_string_id) = $row_strings;
+					if($get_site_translation_string_id == ""){
+						mysqli_query($link, "INSERT INTO $t_site_translations_strings
+						(site_translation_string_id, site_translation_string_dir_id, site_translation_string_file_id, site_translation_string_language, site_translation_string_variable, site_translation_string_value) 
+						VALUES 
+						(NULL, $get_site_translation_directory_id, $get_site_translation_file_id, $language_mysql, $variable_name_mysql, $translation_mysql)")
+						or die(mysqli_error($link));
+						echo"<div class=\"info\"><p>Created $variable_name</p></div>
+						<meta http-equiv=refresh content=\"1; URL=index.php?open=settings&amp;page=site_translation&amp;language=$language&amp;mode=open_language&amp;editor_language=$editor_language\">";
+					}
+
+					if(isset($style) && $style == "odd"){
+						$style = "";
+					}
+					else{
+						$style = "odd";
+					}
+					// Variable
+
+					if($debug == "1"){
+						echo"
+						  <tr>
+						   <td class=\"$style\">
+							<span>&nbsp; &nbsp; &nbsp; &nbsp; $variable_name = $translation</span>
+						   </td>
+						   <td class=\"$style\">
+							<span>$get_site_translation_string_id</span>
+						   </td>
+						  </tr>
+						";
+					}
+				
+				} // loop trough files
+			} // loop trough folder
+		}
+	}
+	if($debug == "1"){
+		echo"
+		 </tbody>
+		</table>
+		</div>
+		";
+	}
+	
+
+
+	echo"
+	<h1>$l_site_translation - $language</h1>
+
+
+
+	";
 
 	echo"
 	<!-- You are here -->
@@ -724,155 +883,7 @@ elseif($mode == "open_language"){
 		</div>
 	<!-- //Content Left -->
 	
-
-	<!-- Content Right -->
-		<div class=\"content_right_big\">
-			<h2>Check that all strings that are in flat files exists in database</h2>
-
-			
-			<table class=\"hor-zebra\">
-			 <thead>
-			  <tr>
-			   <th scope=\"col\">
-				<span>URL</span>
-			   </th>
-			   <th scope=\"col\">
-				<span>ID</span>
-			   </th>
-			  </tr>
-			 </thead>
-			 <tbody>
-
-		";
-			// List all folders
-			$language_mysql = quote_smart($link, $language);
-			$query = "SELECT site_translation_directory_id, site_translation_directory_name, site_translation_directory_level FROM $t_site_translations_directories ORDER BY site_translation_directory_name ASC";
-			$result = mysqli_query($link, $query);
-			while($row = mysqli_fetch_row($result)) {
-				list($get_site_translation_directory_id, $get_site_translation_directory_name, $get_site_translation_directory_level) = $row;
-					
-				if(isset($style) && $style == "odd"){
-					$style = "";
-				}
-				else{
-					$style = "odd";
-				}
-
-				echo"
-				  <tr>
-				   <td class=\"$style\">
-					<span>$get_site_translation_directory_name</span>
-				   </td>
-				   <td class=\"$style\">
-					<span>$get_site_translation_directory_id</span>
-				   </td>
-				  </tr>
-				";
-				
-				// List all files
-				$query_files = "SELECT site_translation_file_id, site_translation_file_name, site_translation_dir_id FROM $t_site_translations_files WHERE site_translation_dir_id=$get_site_translation_directory_id ORDER BY site_translation_file_name ASC";
-				$result_files = mysqli_query($link, $query_files);
-				while($row_files = mysqli_fetch_row($result_files)) {
-					list($get_site_translation_file_id, $get_site_translation_file_name, $get_site_translation_dir_id) = $row_files;
-
-					if(isset($style) && $style == "odd"){
-						$style = "";
-					}
-					else{
-						$style = "odd";
-					}
-
-
-					echo"
-					  <tr>
-					   <td class=\"$style\">
-						<span>&nbsp; &nbsp; $get_site_translation_file_name</span>
-					   </td>
-					   <td class=\"$style\">
-						<span>$get_site_translation_file_id</span>
-					   </td>
-					  </tr>
-					";
-
-	
-					// Check strings in file
-					if(!(file_exists("_translations/site/$language/$get_site_translation_directory_name/$get_site_translation_file_name"))){
-
-						echo"<div class=\"info\"><p>Copy <a href=\"_translations/site/en/$get_site_translation_directory_name/$get_site_translation_file_name\">$get_site_translation_file_name</a></p></div>
-						<meta http-equiv=refresh content=\"15; URL=index.php?open=settings&amp;page=site_translation&amp;language=$language&amp;mode=open_language&amp;editor_language=$editor_language\">";
-
-						if(!(is_dir("_translations/site/$language/$get_site_translation_directory_name"))){
-
-							echo"<div class=\"info\"><p>mkdir _translations/site/$language/$get_site_translation_directory_name</p></div>";
-
-						}
-						copy("_translations/site/en/$get_site_translation_directory_name/$get_site_translation_file_name", "_translations/site/$language/$get_site_translation_directory_name/$get_site_translation_file_name");
-					}
-					$read_local_file = file_get_contents("_translations/site/$language/$get_site_translation_directory_name/$get_site_translation_file_name"); 
-					preg_match_all('/\$[A-Za-z0-9-_]+/', $read_local_file, $variable_names);
-					preg_match_all('/"([^"]+)"/', $read_local_file, $translations);
-								
-					// Loop	
-					$size = sizeof($variable_names[0]);
-					for($x=0;$x<$size;$x++){
-						// Variable name
-						$variable_name = $variable_names[0][$x];
-						$variable_name_mysql = quote_smart($link, $variable_name);
-
-						// Content
-						if(isset($translations[0][$x])){
-							$translation = $translations[0][$x];
-						}
-						else{
-							$translation = "";
-						}
-						$translation = str_replace('"', "", $translation);
-						$translation_mysql = quote_smart($link, $translation);
-
-
-						// Status
-						$query_strings = "SELECT site_translation_string_id FROM $t_site_translations_strings WHERE site_translation_string_dir_id=$get_site_translation_directory_id AND site_translation_string_file_id=$get_site_translation_file_id AND site_translation_string_language=$language_mysql AND site_translation_string_variable=$variable_name_mysql";
-						$result_strings = mysqli_query($link, $query_strings);
-						$row_strings = mysqli_fetch_row($result_strings);
-						list($get_site_translation_string_id) = $row_strings;
-						if($get_site_translation_string_id == ""){
-							mysqli_query($link, "INSERT INTO $t_site_translations_strings
-							(site_translation_string_id, site_translation_string_dir_id, site_translation_string_file_id, site_translation_string_language, site_translation_string_variable, site_translation_string_value) 
-							VALUES 
-							(NULL, $get_site_translation_directory_id, $get_site_translation_file_id, $language_mysql, $variable_name_mysql, $translation_mysql)")
-							or die(mysqli_error($link));
-							echo"<div class=\"info\"><p>Created $variable_name</p></div>
-							<meta http-equiv=refresh content=\"1; URL=index.php?open=settings&amp;page=site_translation&amp;language=$language&amp;mode=open_language&amp;editor_language=$editor_language\">";
-
-						}
-
-						if(isset($style) && $style == "odd"){
-							$style = "";
-						}
-						else{
-							$style = "odd";
-						}
-
-						// Variable
-						echo"
-						  <tr>
-						   <td class=\"$style\">
-							<span>&nbsp; &nbsp; &nbsp; &nbsp; $variable_name = $translation</span>
-						   </td>
-						   <td class=\"$style\">
-							<span>$get_site_translation_string_id</span>
-						   </td>
-						  </tr>
-						";
-					}
-				} // loop trough files
-			} // loop trough folder
-		echo"
-		 </tbody>
-		</table>
-		</div>
-	<!-- //Content Right -->
-
+	<div class=\"clear\"></div>
 
 	";
 } // mode == open_language
@@ -1436,7 +1447,243 @@ elseif($mode == "add_language"){
 		";
 } // mode == add_language
 elseif($mode == ""){
-	echo"
+	// Truncate temp tables
+	$res = mysqli_query($link, "TRUNCATE $t_site_translations_directories");
+	$res = mysqli_query($link, "TRUNCATE $t_site_translations_files");
+	$res = mysqli_query($link, "TRUNCATE $t_site_translations_strings");
+
+
+	// Check that all english files and folders are represented in MySQL
+	$debug = 0;
+	if($debug == "1"){
+		echo"
+		<!-- Check that all english files and folders are represented in MySQL -->
+		<h2>English folders and files</h2>
+		<p>
+		<a href=\"index.php?open=$open&amp;page=$page&amp;mode=truncate_tables\">Truncate cache tables</a>
+		</p>
+		<table class=\"hor-zebra\">
+		 <thead>
+		  <tr>
+		   <th scope=\"col\">
+			<span>URL</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>ID</span>
+		   </th>
+		  </tr>
+		 </thead>
+		 <tbody>
+		";
+	}
+
+
+		$dir = "_translations/site/en/";
+		if ($handle = opendir($dir)) {
+			while (false !== ($file = readdir($handle))) {
+				if ($file === '.') continue;
+				if ($file === '..') continue;
+		
+
+				if(isset($style) && $style == "odd"){
+					$style = "";
+				}
+				else{
+					$style = "odd";
+				}
+
+				// Folder
+				$english_folder_name = "$file";
+				$english_folder_name_mysql = quote_smart($link, $english_folder_name);
+
+				// Make sure that the folder name is not a image
+				if(is_dir("_translations/site/en/$file")){
+
+					// Status
+					$query = "SELECT site_translation_directory_id, site_translation_directory_name, site_translation_directory_level FROM $t_site_translations_directories WHERE site_translation_directory_name=$english_folder_name_mysql";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_site_translation_directory_id, $get_site_translation_directory_name, $get_site_translation_directory_level) = $row;
+					if($get_site_translation_directory_id == ""){
+						mysqli_query($link, "INSERT INTO $t_site_translations_directories
+						(site_translation_directory_id, site_translation_directory_name, site_translation_directory_level) 
+						VALUES 
+						(NULL, $english_folder_name_mysql, '1')")
+						or die(mysqli_error($link));
+
+						if($debug == "1"){
+							echo"<div class=\"info\"><p>Created $english_folder_name</p></div><meta http-equiv=refresh content=\"0; URL=index.php?open=settings&amp;page=site_translation&amp;editor_language=$editor_language\">";
+						}
+
+						$query = "SELECT site_translation_directory_id, site_translation_directory_name, site_translation_directory_level FROM $t_site_translations_directories WHERE site_translation_directory_name=$english_folder_name_mysql";
+						$result = mysqli_query($link, $query);
+						$row = mysqli_fetch_row($result);
+						list($get_site_translation_directory_id, $get_site_translation_directory_name, $get_site_translation_directory_level) = $row;
+
+					}
+
+					if($debug == "1"){
+						// This folder
+						echo"
+						  <tr>
+						   <td class=\"$style\">
+							<span><b>$english_folder_name</b></span>
+						   </td>
+						   <td class=\"$style\">
+							<span>$get_site_translation_directory_id</span>
+						   </td>
+						  </tr>
+						";
+					}
+
+
+					if($get_site_translation_directory_id != "" && $file != "en.png"){
+						$dir_sub = "_translations/site/en/$file/";
+						$dir_len_sub = strlen($dir_sub);
+						if ($handle_sub = opendir($dir_sub)) {
+							while (false !== ($file_sub = readdir($handle_sub))) {
+								if ($file_sub === '.') continue;
+								if ($file_sub === '..') continue;
+
+
+								if(isset($style) && $style == "odd"){
+									$style = "";
+								}
+								else{
+									$style = "odd";
+								}
+
+								// File
+								$english_file_name = "$file_sub";
+								$english_file_name_mysql = quote_smart($link, $english_file_name);
+
+								// Status
+								$query = "SELECT site_translation_file_id, site_translation_file_name, site_translation_dir_id FROM $t_site_translations_files WHERE site_translation_file_name=$english_file_name_mysql AND site_translation_dir_id=$get_site_translation_directory_id";
+								$result = mysqli_query($link, $query);
+								$row = mysqli_fetch_row($result);
+								list($get_site_translation_file_id, $get_site_translation_file_name, $get_site_translation_dir_id) = $row;
+								if($get_site_translation_file_id == ""){
+									mysqli_query($link, "INSERT INTO $t_site_translations_files
+									(site_translation_file_id, site_translation_file_name, site_translation_dir_id) 
+									VALUES 
+									(NULL, $english_file_name_mysql, $get_site_translation_directory_id)")
+									or die(mysqli_error($link));
+
+									if($debug == "1"){
+										echo"<div class=\"info\"><p>Created $english_file_name</p></div><meta http-equiv=refresh content=\"1; URL=index.php?open=settings&amp;page=site_translation&amp;editor_language=$editor_language\">";
+									}
+
+									$query = "SELECT site_translation_file_id, site_translation_file_name, site_translation_dir_id FROM $t_site_translations_files WHERE site_translation_file_name=$english_file_name_mysql AND site_translation_dir_id=$get_site_translation_directory_id";
+									$result = mysqli_query($link, $query);
+									$row = mysqli_fetch_row($result);
+									list($get_site_translation_file_id, $get_site_translation_file_name, $get_site_translation_dir_id) = $row;
+								}
+		
+
+								if($debug == "1"){
+									// This file
+									echo"
+									  <tr>
+									   <td class=\"$style\">
+										<span>&nbsp; &nbsp; $english_file_name</span>
+									   </td>
+									   <td class=\"$style\">
+										<span>$get_site_translation_file_id</span>
+									   </td>
+									  </tr>
+									";
+								}
+	
+								if($get_site_translation_file_id != ""){
+									// Check strings in file
+
+									$read_english_file = file_get_contents("_translations/site/en/$english_folder_name/$english_file_name"); 
+									preg_match_all('/\$[A-Za-z0-9-_]+/', $read_english_file, $variable_names);
+									preg_match_all('/"([^"]+)"/', $read_english_file, $translations);
+								
+
+									// Current file - Get data between brackets
+
+
+									// Loop	
+									$size = sizeof($variable_names[0]);
+									for($x=0;$x<$size;$x++){
+										
+										// Variable name
+										$variable_name = $variable_names[0][$x];
+										$variable_name_mysql = quote_smart($link, $variable_name);
+
+										// Content
+										if(isset($translations[0][$x])){
+											$translation = $translations[0][$x];
+										}
+										else{
+											$translation = "";
+										}
+										$translation = str_replace('"', "", $translation);
+										$translation_mysql = quote_smart($link, $translation);
+	
+
+										// Status
+										$query = "SELECT site_translation_string_id FROM $t_site_translations_strings WHERE site_translation_string_dir_id=$get_site_translation_directory_id AND site_translation_string_file_id=$get_site_translation_file_id AND site_translation_string_variable=$variable_name_mysql";
+										$result = mysqli_query($link, $query);
+										$row = mysqli_fetch_row($result);
+										list($get_site_translation_string_id) = $row;
+										if($get_site_translation_string_id == ""){
+											mysqli_query($link, "INSERT INTO $t_site_translations_strings
+											(site_translation_string_id, site_translation_string_dir_id, site_translation_string_file_id, site_translation_string_language, site_translation_string_variable, site_translation_string_value) 
+											VALUES 
+											(NULL, $get_site_translation_directory_id, $get_site_translation_file_id, 'en', $variable_name_mysql, $translation_mysql)")
+											or die(mysqli_error($link));
+
+
+											if($debug == "1"){
+												echo"<div class=\"info\"><p>Created $variable_name</p></div><meta http-equiv=refresh content=\"1; URL=?open=settings&amp;page=site_translation&amp;editor_language=$editor_language\">";
+											}
+
+											$query = "SELECT site_translation_string_id FROM $t_site_translations_strings WHERE site_translation_string_dir_id=$get_site_translation_directory_id AND site_translation_string_file_id=$get_site_translation_file_id AND site_translation_string_variable=$variable_name_mysql";
+											$result = mysqli_query($link, $query);
+											$row = mysqli_fetch_row($result);
+											list($get_site_translation_string_id) = $row;
+										}
+
+										if($debug == "1"){
+											// Variable
+											echo"
+											  <tr>
+											   <td class=\"$style\">
+												<span>&nbsp; &nbsp; &nbsp; &nbsp; $variable_name = $translation</span>
+											   </td>
+											   <td class=\"$style\">
+												<span>$get_site_translation_string_id</span>
+											   </td>
+											  </tr>
+											";
+										}
+										// Make sure that the translated file to local language exists
+									}
+	
+								} // Site id
+							} // loop trough files
+						} // loop trough folder
+					} // $get_site_translation_directory_id != ""
+
+				} // make sure it is a folder (if(is_dir("_translations/site/en/$file")){
+			} // loop trough files
+	} // loop trough folder
+
+	if($debug == "1"){
+			echo"
+			 </tbody>
+			</table>
+
+
+		<!-- //Check that all english files and folders are represented in MySQL -->
+
+		";
+	}
+
+	echo" 
 	<h1>$l_site_translation</h1>
 
 
@@ -1574,214 +1821,6 @@ elseif($mode == ""){
 				 </tbody>
 				</table>
 	<!-- //About -->
-
-
-	<!-- Check that all english files and folders are represented in MySQL -->
-		<h2>English folders and files</h2>
-		<p>
-		<a href=\"index.php?open=$open&amp;page=$page&amp;mode=truncate_tables\">Truncate cache tables</a>
-		</p>
-		<table class=\"hor-zebra\">
-		 <thead>
-		  <tr>
-		   <th scope=\"col\">
-			<span>URL</span>
-		   </th>
-		   <th scope=\"col\">
-			<span>ID</span>
-		   </th>
-		  </tr>
-		 </thead>
-		 <tbody>
-		";
-
-
-
-		$dir = "_translations/site/en/";
-		if ($handle = opendir($dir)) {
-			while (false !== ($file = readdir($handle))) {
-				if ($file === '.') continue;
-				if ($file === '..') continue;
-		
-
-				if(isset($style) && $style == "odd"){
-					$style = "";
-				}
-				else{
-					$style = "odd";
-				}
-
-				// Folder
-				$english_folder_name = "$file";
-				$english_folder_name_mysql = quote_smart($link, $english_folder_name);
-
-				// Make sure that the folder name is not a image
-				if(is_dir("_translations/site/en/$file")){
-
-					// Status
-					$query = "SELECT site_translation_directory_id, site_translation_directory_name, site_translation_directory_level FROM $t_site_translations_directories WHERE site_translation_directory_name=$english_folder_name_mysql";
-					$result = mysqli_query($link, $query);
-					$row = mysqli_fetch_row($result);
-					list($get_site_translation_directory_id, $get_site_translation_directory_name, $get_site_translation_directory_level) = $row;
-					if($get_site_translation_directory_id == ""){
-						mysqli_query($link, "INSERT INTO $t_site_translations_directories
-						(site_translation_directory_id, site_translation_directory_name, site_translation_directory_level) 
-						VALUES 
-						(NULL, $english_folder_name_mysql, '1')")
-						or die(mysqli_error($link));
-						echo"<div class=\"info\"><p>Created $english_folder_name</p></div><meta http-equiv=refresh content=\"0; URL=index.php?open=settings&amp;page=site_translation&amp;editor_language=$editor_language\">";
-
-						$query = "SELECT site_translation_directory_id, site_translation_directory_name, site_translation_directory_level FROM $t_site_translations_directories WHERE site_translation_directory_name=$english_folder_name_mysql";
-						$result = mysqli_query($link, $query);
-						$row = mysqli_fetch_row($result);
-						list($get_site_translation_directory_id, $get_site_translation_directory_name, $get_site_translation_directory_level) = $row;
-
-					}
-
-					// This folder
-					echo"
-					  <tr>
-					   <td class=\"$style\">
-						<span><b>$english_folder_name</b></span>
-					   </td>
-					   <td class=\"$style\">
-						<span>$get_site_translation_directory_id</span>
-					   </td>
-					  </tr>
-					";
-
-					if($get_site_translation_directory_id != "" && $file != "en.png"){
-						$dir_sub = "_translations/site/en/$file/";
-						$dir_len_sub = strlen($dir_sub);
-						if ($handle_sub = opendir($dir_sub)) {
-							while (false !== ($file_sub = readdir($handle_sub))) {
-								if ($file_sub === '.') continue;
-								if ($file_sub === '..') continue;
-
-
-								if(isset($style) && $style == "odd"){
-									$style = "";
-								}
-								else{
-									$style = "odd";
-								}
-
-								// File
-								$english_file_name = "$file_sub";
-								$english_file_name_mysql = quote_smart($link, $english_file_name);
-
-								// Status
-								$query = "SELECT site_translation_file_id, site_translation_file_name, site_translation_dir_id FROM $t_site_translations_files WHERE site_translation_file_name=$english_file_name_mysql AND site_translation_dir_id=$get_site_translation_directory_id";
-								$result = mysqli_query($link, $query);
-								$row = mysqli_fetch_row($result);
-								list($get_site_translation_file_id, $get_site_translation_file_name, $get_site_translation_dir_id) = $row;
-								if($get_site_translation_file_id == ""){
-									mysqli_query($link, "INSERT INTO $t_site_translations_files
-									(site_translation_file_id, site_translation_file_name, site_translation_dir_id) 
-									VALUES 
-									(NULL, $english_file_name_mysql, $get_site_translation_directory_id)")
-									or die(mysqli_error($link));
-									echo"<div class=\"info\"><p>Created $english_file_name</p></div><meta http-equiv=refresh content=\"1; URL=index.php?open=settings&amp;page=site_translation&amp;editor_language=$editor_language\">";
-
-									$query = "SELECT site_translation_file_id, site_translation_file_name, site_translation_dir_id FROM $t_site_translations_files WHERE site_translation_file_name=$english_file_name_mysql AND site_translation_dir_id=$get_site_translation_directory_id";
-									$result = mysqli_query($link, $query);
-									$row = mysqli_fetch_row($result);
-									list($get_site_translation_file_id, $get_site_translation_file_name, $get_site_translation_dir_id) = $row;
-								}
-		
-
-								// This file
-								echo"
-								  <tr>
-								   <td class=\"$style\">
-									<span>&nbsp; &nbsp; $english_file_name</span>
-								   </td>
-								   <td class=\"$style\">
-									<span>$get_site_translation_file_id</span>
-								   </td>
-								  </tr>
-								";
-
-	
-								if($get_site_translation_file_id != ""){
-									// Check strings in file
-
-									$read_english_file = file_get_contents("_translations/site/en/$english_folder_name/$english_file_name"); 
-									preg_match_all('/\$[A-Za-z0-9-_]+/', $read_english_file, $variable_names);
-									preg_match_all('/"([^"]+)"/', $read_english_file, $translations);
-								
-
-									// Current file - Get data between brackets
-
-
-									// Loop	
-									$size = sizeof($variable_names[0]);
-									for($x=0;$x<$size;$x++){
-										
-										// Variable name
-										$variable_name = $variable_names[0][$x];
-										$variable_name_mysql = quote_smart($link, $variable_name);
-
-										// Content
-										if(isset($translations[0][$x])){
-											$translation = $translations[0][$x];
-										}
-										else{
-											$translation = "";
-										}
-										$translation = str_replace('"', "", $translation);
-										$translation_mysql = quote_smart($link, $translation);
-	
-
-										// Status
-										$query = "SELECT site_translation_string_id FROM $t_site_translations_strings WHERE site_translation_string_dir_id=$get_site_translation_directory_id AND site_translation_string_file_id=$get_site_translation_file_id AND site_translation_string_variable=$variable_name_mysql";
-										$result = mysqli_query($link, $query);
-										$row = mysqli_fetch_row($result);
-										list($get_site_translation_string_id) = $row;
-										if($get_site_translation_string_id == ""){
-											mysqli_query($link, "INSERT INTO $t_site_translations_strings
-											(site_translation_string_id, site_translation_string_dir_id, site_translation_string_file_id, site_translation_string_language, site_translation_string_variable, site_translation_string_value) 
-											VALUES 
-											(NULL, $get_site_translation_directory_id, $get_site_translation_file_id, 'en', $variable_name_mysql, $translation_mysql)")
-											or die(mysqli_error($link));
-											echo"<div class=\"info\"><p>Created $variable_name</p></div><meta http-equiv=refresh content=\"1; URL=?open=settings&amp;page=site_translation&amp;editor_language=$editor_language\">";
-
-											$query = "SELECT site_translation_string_id FROM $t_site_translations_strings WHERE site_translation_string_dir_id=$get_site_translation_directory_id AND site_translation_string_file_id=$get_site_translation_file_id AND site_translation_string_variable=$variable_name_mysql";
-											$result = mysqli_query($link, $query);
-											$row = mysqli_fetch_row($result);
-											list($get_site_translation_string_id) = $row;
-										}
-
-										// Variable
-										echo"
-										  <tr>
-										   <td class=\"$style\">
-											<span>&nbsp; &nbsp; &nbsp; &nbsp; $variable_name = $translation</span>
-										   </td>
-										   <td class=\"$style\">
-											<span>$get_site_translation_string_id</span>
-										   </td>
-										  </tr>
-										";
-
-										// Make sure that the translated file to local language exists
-									}
-	
-								} // Site id
-							} // loop trough files
-						} // loop trough folder
-					} // $get_site_translation_directory_id != ""
-
-				} // make sure it is a folder (if(is_dir("_translations/site/en/$file")){
-			} // loop trough files
-		} // loop trough folder
-		echo"
-		 </tbody>
-		</table>
-
-
-	<!-- //Check that all english files and folders are represented in MySQL -->
-
 	";
 } // mode == !!
 			

@@ -176,6 +176,8 @@ echo"
 	  	 download_id INT NOT NULL AUTO_INCREMENT,
 	 	  PRIMARY KEY(download_id), 
 	  	   download_title VARCHAR(200),
+	  	   download_title_short VARCHAR(200),
+	  	   download_title_length INT,
 	  	   download_language VARCHAR(200),
 	  	   download_introduction VARCHAR(200),
 	  	   download_description TEXT,

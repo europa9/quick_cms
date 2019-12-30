@@ -52,6 +52,17 @@ if($action == ""){
 		if(empty($inp_title)){
 			echo"No title";die;
 		}
+		$inp_title_length = strlen($inp_title);
+		$inp_title_length_mysql = quote_smart($link, $inp_title_length);
+
+		if($inp_title_length  > 27){
+			$inp_title_short = substr($inp_title, 0, 27);
+			$inp_title_short = $inp_title_short . "...";
+		}
+		else{
+			$inp_title_short = "";
+		}
+		$inp_title_short_mysql = quote_smart($link, $inp_title_short);
 
 		$inp_language = $_POST['inp_language'];
 		$inp_language = output_html($inp_language);
@@ -67,9 +78,9 @@ if($action == ""){
 		$date_print = date('j M Y');
 
 		mysqli_query($link, "INSERT INTO $t_downloads_index
-		(download_id, download_title, download_language, download_main_category_id, download_sub_category_id, download_created_datetime, download_updated_datetime, download_updated_print) 
+		(download_id, download_title, download_title_short, download_title_length, download_language, download_main_category_id, download_sub_category_id, download_created_datetime, download_updated_datetime, download_updated_print) 
 		VALUES 
-		(NULL, $inp_title_mysql, $inp_language_mysql, $inp_main_category_id_mysql, '0', '$datetime', '$datetime', '$date_print')")
+		(NULL, $inp_title_mysql, $inp_title_short_mysql, $inp_title_length_mysql, $inp_language_mysql, $inp_main_category_id_mysql, '0', '$datetime', '$datetime', '$date_print')")
 		or die(mysqli_error($link));
 
 		// Fetch ID

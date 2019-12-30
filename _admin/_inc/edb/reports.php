@@ -633,10 +633,7 @@ elseif($action == "new"){
 		</p>
 
 		<p>Type:<br />
-		<select name=\"inp_type\">
-			<option value=\"acquire_report\">acquire_report</option>
-			<option value=\"analysis_report\">analysis_report</option>
-		</select> 
+		<input type=\"text\" name=\"inp_type\" value=\"acquire_report\" size=\"25\" />
 		</p>
 
 		<p><input type=\"submit\" value=\"Create\" class=\"btn_default\" />

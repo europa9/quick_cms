@@ -19,7 +19,7 @@ if($page == "menu"){
 	<h1>Courses</h1>
 	<div class=\"vertical\">
 		<ul>
-			<li><a href=\"index.php?open=$open&amp;editor_language=$editor_language\">Categories</a></li>
+			<li><a href=\"index.php?open=$open&amp;editor_language=$editor_language\">Courses</a></li>
 
 	";
 }
@@ -27,6 +27,7 @@ if($page == "menu"){
 
 
 echo"
+			<li><a href=\"index.php?open=$open&amp;page=categories_main&amp;editor_language=$editor_language\">Categories</a></li>
 			<li><a href=\"index.php?open=$open&amp;page=tables&amp;editor_language=$editor_language\""; if($page == "tables"){ echo" class=\"selected\""; } echo">Tables</a></li>
 		
 ";

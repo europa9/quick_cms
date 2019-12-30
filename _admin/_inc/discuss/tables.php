@@ -89,6 +89,8 @@ echo"
 	  	   topic_user_image VARCHAR(50),
 	  	   topic_language VARCHAR(50),
 	  	   topic_title VARCHAR(250),
+	  	   topic_title_short VARCHAR(250),
+	  	   topic_title_length INT,
 	  	   topic_text TEXT,
 	  	   topic_created DATETIME,
 	  	   topic_created_time VARCHAR(250),

@@ -363,10 +363,6 @@ elseif($action == "open_district"){
 						$style = "";
 					}
 
-					if($jour_id == "$get_jour_id"){
-						$style = "important";
-					}
-
 					echo"
 					 <tr>
 					  <td class=\"$style\">
@@ -671,7 +667,7 @@ jour_user_image_thumb_50=$inp_user_image_thumb_50_mysql
  WHERE jour_id=$get_current_jour_id") or die(mysqli_error($link));
 
 
-			$url = "index.php?open=edb&page=$page&action=open_district&district_id=$get_current_jour_district_id&jour_id=$get_current_jour_id&order_by=$order_by&order_method=$order_method&editor_language=$editor_language&l=$l&ft=success&fm=saved#jour_id$get_current_jour_id";
+			$url = "index.php?open=edb&page=$page&action=open_district&district_id=$get_current_jour_district_id&order_by=$order_by&order_method=$order_method&editor_language=$editor_language&l=$l&ft=success&fm=saved#jour_id$get_current_jour_id";
 			header("Location: $url");
 			exit;
 		}
@@ -718,83 +714,17 @@ jour_user_image_thumb_50=$inp_user_image_thumb_50_mysql
 		<!-- //Focus -->
 
 		<!-- Edit form -->
-			<table>
-			 <tr>
-			  <td style=\"padding-right: 40px;vertical-align: top;\">
-				<!-- Edit -->
-					<form method=\"post\" action=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;jour_id=$get_current_jour_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+			<form method=\"post\" action=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;jour_id=$get_current_jour_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
-					<p>User name:<br />
-					<input type=\"text\" name=\"inp_user_name\" id=\"inp_user_name\" value=\"$get_current_jour_user_name\" size=\"25\" />
-					</p>
+			<p>User name:<br />
+			<input type=\"text\" name=\"inp_user_name\" value=\"$get_current_jour_user_name\" size=\"25\" />
+			</p>
 
 
-					<p>
-					<input type=\"submit\" value=\"Save changes\" class=\"btn_default\" />
-					</p>
-					</form>
-				<!-- //Edit -->
-			  </td>
-			  <td style=\"padding-right: 40px;vertical-align: top;\">
-				<!-- Avaible users -->
-					<h2>Avaible users</h2>
-					<table class=\"hor-zebra\">
-					 <thead>
-					  <tr>
-					   <th scope=\"col\">
-						<span>Username</span>
-					   </th>
-					   <th scope=\"col\">
-						<span>Name</span>
-					   </th>
-					  </tr>
-					 </thead>
-					 <tbody>";
-					// District Members
-					$query = "SELECT district_member_id, district_member_district_id, district_member_district_title, district_member_user_id, district_member_rank, district_member_user_name, district_member_user_alias, district_member_user_first_name, district_member_user_middle_name, district_member_user_last_name, district_member_user_email, district_member_user_image_path, district_member_user_image_file, district_member_user_image_thumb_40, district_member_user_image_thumb_50, district_member_user_image_thumb_60, district_member_user_image_thumb_200, district_member_user_position, district_member_user_department, district_member_user_location, district_member_user_about, district_member_show_on_board, district_member_can_be_jour, district_member_added_datetime, district_member_added_date_saying, district_member_added_by_user_id, district_member_added_by_user_name, district_member_added_by_user_alias, district_member_added_by_user_image FROM $t_edb_districts_members WHERE district_member_district_id=$get_current_jour_district_id AND district_member_can_be_jour=1 ORDER BY district_member_user_name ASC";
-					$result = mysqli_query($link, $query);
-					while($row = mysqli_fetch_row($result)) {
-						list($get_district_member_id, $get_district_member_district_id, $get_district_member_district_title, $get_district_member_user_id, $get_district_member_rank, $get_district_member_user_name, $get_district_member_user_alias, $get_district_member_user_first_name, $get_district_member_user_middle_name, $get_district_member_user_last_name, $get_district_member_user_email, $get_district_member_user_image_path, $get_district_member_user_image_file, $get_district_member_user_image_thumb_40, $get_district_member_user_image_thumb_50, $get_district_member_user_image_thumb_60, $get_district_member_user_image_thumb_200, $get_district_member_user_position, $get_district_member_user_department, $get_district_member_user_location, $get_district_member_user_about, $get_district_member_show_on_board, $get_district_member_can_be_jour, $get_district_member_added_datetime, $get_district_member_added_date_saying, $get_district_member_added_by_user_id, $get_district_member_added_by_user_name, $get_district_member_added_by_user_alias, $get_district_member_added_by_user_image) = $row;
-
-
-						if(isset($odd) && $odd == false){
-							$odd = true;
-						}
-						else{
-							$odd = false;
-						}
-
-						echo"
-						<tr>
-						  <td"; if($odd == true){ echo" class=\"odd\""; } echo">
-							<span><a href=\"#\" class=\"tags_select\" data-divid=\"$get_district_member_user_name\">$get_district_member_user_name</a></span>
-						  </td>
-						  <td"; if($odd == true){ echo" class=\"odd\""; } echo">
-							<span><a href=\"#\" class=\"tags_select\" data-divid=\"$get_district_member_user_name\">$get_district_member_user_first_name $get_district_member_user_middle_name $get_district_member_user_last_name</a></span>
-						  </td>
-						</tr>
-						";
-					}
-					echo"
-					 </tbody>
-					</table>
-				<!-- //Avaible users  -->
-				<!-- Javascript on click add text to text input -->
-					<script type=\"text/javascript\">
-					\$(function() {
-						\$('.tags_select').click(function() {
-							var value = \$(this).data('divid');
-            						var input = \$('#inp_user_name');
-            						input.val(value);
-
-            						return false;
-       						});
-    					});
-					</script>
-				<!-- //Javascript on click add text to text input -->
-			  </td>
-			 </tr>
-			</table>
+			<p>
+			<input type=\"submit\" value=\"Save changes\" class=\"btn_default\" />
+			</p>
+			</form>
 		<!-- //Edit form -->
 
 		";

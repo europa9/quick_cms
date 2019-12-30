@@ -393,7 +393,7 @@ elseif($action == "new"){
 		</p>
 
 		<p>Description:<br />
-		<textarea name=\"inp_description\" rows=\"10\" cols=\"80\"></textarea>
+		<input type=\"text\" name=\"inp_description\" value=\"\" size=\"25\" />
 		</p>
 
 		<p>Report text:<br />
@@ -507,7 +507,7 @@ elseif($action == "edit_task_available"){
 
 			<form method=\"post\" action=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;task_available_id=$get_current_task_available_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
-			<p>Tasks available name:<br />
+			<p>Machine name:<br />
 			<input type=\"text\" name=\"inp_name\" value=\"$get_current_task_available_name\" size=\"25\" />
 			</p>
 
@@ -525,9 +525,7 @@ elseif($action == "edit_task_available"){
 			</p>
 
 			<p>Description:<br />
-			<textarea name=\"inp_description\" rows=\"10\" cols=\"80\">";
-			$get_current_task_available_description = str_replace("<br />", "\n", $get_current_task_available_description);
-			echo"$get_current_task_available_description</textarea>
+			<input type=\"text\" name=\"inp_description\" value=\"$get_current_task_available_description\" size=\"25\" />
 			</p>
 
 			<p>Report text:<br />
@@ -739,7 +737,11 @@ elseif($action == "edit_script_and_exe"){
 			$inp_script_name = $inp_script_name . "_" . $inp_script_version . ".$extension";
 
 			if($inp_script_file_name){
-				if ($extension == "exe" OR $extension == "sh" OR $extension == "py" OR $extension == "zip") {
+				if (($extension != "exe")) {
+					$ft_script_file = "warning";
+					$fm_script_file = "unknown_file_format";
+				}
+				else{
 					$tmp_name = $_FILES['inp_script_file']['tmp_name'];
 					$size = filesize($_FILES['inp_script_file']['tmp_name']);
 
@@ -764,10 +766,6 @@ elseif($action == "edit_script_and_exe"){
 
 						
 					}
-				}
-				else{
-					$ft_script_file = "warning";
-					$fm_script_file = "unknown_file_format";
 				}
 			}
 
@@ -846,7 +844,7 @@ elseif($action == "edit_script_and_exe"){
 			<a href=\"../$get_current_task_available_script_path/$get_current_task_available_script_file\">$get_current_task_available_script_file</a>
 			</p>
 
-			<p><b>Upload new script file (exe, sh, py, zip):</b><br />
+			<p><b>Upload new script file:</b><br />
 			<span class=\"smal\">Leave blank to use old script file</span><br />
 			<input type=\"file\" name=\"inp_script_file\" />
 			</p>

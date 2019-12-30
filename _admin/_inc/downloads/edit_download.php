@@ -136,6 +136,18 @@ else{
 				echo"No title";die;
 			}
 
+			$inp_title_length = strlen($inp_title);
+			$inp_title_length_mysql = quote_smart($link, $inp_title_length);
+
+			if($inp_title_length  > 27){
+				$inp_title_short = substr($inp_title, 0, 27);
+				$inp_title_short = $inp_title_short . "...";
+			}
+			else{
+				$inp_title_short = "";
+			}
+			$inp_title_short_mysql = quote_smart($link, $inp_title_short);
+
 			$inp_introduction = $_POST['inp_introduction'];
 			$inp_introduction = output_html($inp_introduction);
 			$inp_introduction_mysql = quote_smart($link, $inp_introduction);
@@ -197,7 +209,11 @@ else{
 			$date_print = date('j M Y');
 
 			// Update
-			$result = mysqli_query($link, "UPDATE $t_downloads_index SET download_title=$inp_title_mysql, download_language=$inp_language_mysql, download_introduction=$inp_introduction_mysql, 
+			$result = mysqli_query($link, "UPDATE $t_downloads_index SET 
+							download_title=$inp_title_mysql,
+							download_title_short=$inp_title_short_mysql,
+							download_title_length=$inp_title_length_mysql, 
+							download_language=$inp_language_mysql, download_introduction=$inp_introduction_mysql, 
 				download_read_more_url=$inp_read_more_url_mysql, download_main_category_id=$inp_main_category_id_mysql, download_sub_category_id=$inp_sub_category_id_mysql,
 				download_tag_a=$inp_tag_a_mysql, download_tag_b=$inp_tag_b_mysql, download_tag_c=$inp_tag_c_mysql, download_updated_datetime='$datetime', download_updated_print='$date_print',
 				download_have_to_be_logged_in_to_download=$inp_have_to_be_logged_in_to_download_mysql

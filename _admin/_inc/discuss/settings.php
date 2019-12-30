@@ -28,6 +28,8 @@ if(!(file_exists("_data/discuss.php"))){
 \$discussShowTagsBelowNavSav = \"1\";
 \$discussShowWatchedAndIgnoredTagsBelowNavSav = \"1\";
 \$discussCSSToUseOnATagsBelowNavSav = \"forum_a_tag\";
+\$discussNavigationIconPaddingLeftPx = \"4px\";
+\$discussNavigationTextPaddingLeftPx = \"26px\";
 \$discussCSSToUseOnLiTagsBelowNavSav = \"forum_li_tag\";
 \$discussEmailSendingOnOffSav = \"1\";
 ?>";
@@ -56,6 +58,12 @@ if($process == "1"){
 	$inp_css_to_use_on_a_tags_below_nav = $_POST['inp_css_to_use_on_a_tags_below_nav'];
 	$inp_css_to_use_on_a_tags_below_nav = output_html($inp_css_to_use_on_a_tags_below_nav);
 
+	$inp_css_navigation_icon_padding_left_px = $_POST['inp_css_navigation_icon_padding_left_px'];
+	$inp_css_navigation_icon_padding_left_px = output_html($inp_css_navigation_icon_padding_left_px);
+
+	$inp_css_navigation_text_padding_left_px = $_POST['inp_css_navigation_text_padding_left_px'];
+	$inp_css_navigation_text_padding_left_px = output_html($inp_css_navigation_text_padding_left_px);
+
 	$inp_css_to_use_on_li_tags_below_nav = $_POST['inp_css_to_use_on_li_tags_below_nav'];
 	$inp_css_to_use_on_li_tags_below_nav = output_html($inp_css_to_use_on_li_tags_below_nav);
 
@@ -68,6 +76,8 @@ if($process == "1"){
 \$discussShowTagsBelowNavSav = \"$inp_show_tags_below_navigation\";
 \$discussShowWatchedAndIgnoredTagsBelowNavSav = \"$inp_show_watched_and_ignored_tags_below_navigation\";
 \$discussCSSToUseOnATagsBelowNavSav = \"$inp_css_to_use_on_a_tags_below_nav\";
+\$discussNavigationIconPaddingLeftPx = \"$inp_css_navigation_icon_padding_left_px\";
+\$discussNavigationTextPaddingLeftPx = \"$inp_css_navigation_text_padding_left_px\";
 \$discussCSSToUseOnLiTagsBelowNavSav = \"$inp_css_to_use_on_li_tags_below_nav\";
 \$discussEmailSendingOnOffSav = \"$inp_email_sending_on_off\";
 ?>";
@@ -145,6 +155,14 @@ No
  <option value=\"forum_a_tag\" "; if($discussCSSToUseOnATagsBelowNavSav == "forum_a_tag"){ echo" selected=\"selected\""; } echo" />forum_a_tag</option>
  <option value=\"forum_a_tag_no_background\" "; if($discussCSSToUseOnATagsBelowNavSav == "forum_a_tag_no_background"){ echo" selected=\"selected\""; } echo" />forum_a_tag_no_background</option>
 </select>
+</p>
+
+<p><b>Navigation icon paddign left (default 4px):</b><br />
+<input type=\"text\" name=\"inp_css_navigation_icon_padding_left_px\" value=\"$discussNavigationIconPaddingLeftPx\" size=\"25\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+</p>
+
+<p><b>Navigation text paddign left (default 26px):</b><br />
+<input type=\"text\" name=\"inp_css_navigation_text_padding_left_px\" value=\"$discussNavigationTextPaddingLeftPx\" size=\"25\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 </p>
 
 <p><b>CSS to use on li tags below navigation:</b><br />

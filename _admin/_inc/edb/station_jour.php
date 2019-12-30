@@ -362,10 +362,6 @@ elseif($action == "open_station"){
 							$style = "";
 						}
 
-						if($jour_id == "$get_jour_id"){
-							$style = "important";
-						}
-
 						echo"
 						 <tr>
 						  <td class=\"$style\">
@@ -657,7 +653,7 @@ jour_user_image_thumb_50=$inp_user_image_thumb_50_mysql
  WHERE jour_id=$get_current_jour_id") or die(mysqli_error($link));
 
 
-			$url = "index.php?open=edb&page=$page&action=open_station&station_id=$get_current_jour_station_id&order_by=$order_by&order_method=$order_method&editor_language=$editor_language&l=$l&ft=success&fm=saved&jour_id=$get_current_jour_id#jour_id$get_current_jour_id";
+			$url = "index.php?open=edb&page=$page&action=open_station&station_id=$get_current_jour_station_id&order_by=$order_by&order_method=$order_method&editor_language=$editor_language&l=$l&ft=success&fm=saved#jour_id$get_current_jour_id";
 			header("Location: $url");
 			exit;
 		}
@@ -704,83 +700,17 @@ jour_user_image_thumb_50=$inp_user_image_thumb_50_mysql
 		<!-- //Focus -->
 
 		<!-- Edit form -->
-			<table>
-			 <tr>
-			  <td style=\"padding-right: 40px;vertical-align: top;\">
-				<!-- Edit -->
-					<h2>Edit Jour Form</h2>
-					<form method=\"post\" action=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;jour_id=$get_current_jour_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+			<form method=\"post\" action=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;jour_id=$get_current_jour_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
-					<p>User name:<br />
-					<input type=\"text\" name=\"inp_user_name\" id=\"inp_user_name\" value=\"$get_current_jour_user_name\" size=\"25\" />
-					</p>
+			<p>User name:<br />
+			<input type=\"text\" name=\"inp_user_name\" value=\"$get_current_jour_user_name\" size=\"25\" />
+			</p>
 
 
-					<p>
-					<input type=\"submit\" value=\"Save changes\" class=\"btn_default\" />
-					</p>
-					</form>
-				<!-- //Edit -->
-			  </td>
-			  <td style=\"padding-right: 40px;vertical-align: top;\">
-				<!-- Avaible users -->
-					<h2>Avaible users</h2>
-					<table class=\"hor-zebra\">
-					 <thead>
-					  <tr>
-					   <th scope=\"col\">
-						<span>Username</span>
-					   </th>
-					   <th scope=\"col\">
-						<span>Name</span>
-					   </th>
-					  </tr>
-					 </thead>
-					 <tbody>";
-					// Station Members
-					$query = "SELECT station_member_id, station_member_user_id, station_member_rank, station_member_user_name, station_member_user_alias, station_member_first_name, station_member_middle_name, station_member_last_name FROM $t_edb_stations_members WHERE station_member_station_id=$get_current_jour_station_id AND station_member_can_be_jour=1 ORDER BY station_member_user_name ASC";
-					$result = mysqli_query($link, $query);
-					while($row = mysqli_fetch_row($result)) {
-						list($get_station_member_id, $get_station_member_user_id, $get_station_member_rank, $get_station_member_user_name, $get_station_member_user_alias, $get_station_member_first_name, $get_station_member_middle_name, $get_station_member_last_name) = $row;
-
-						if(isset($odd) && $odd == false){
-							$odd = true;
-						}
-						else{
-							$odd = false;
-						}
-
-						echo"
-						<tr>
-						  <td"; if($odd == true){ echo" class=\"odd\""; } echo">
-							<span><a href=\"#\" class=\"tags_select\" data-divid=\"$get_station_member_user_name\">$get_station_member_user_name</a></span>
-						  </td>
-						  <td"; if($odd == true){ echo" class=\"odd\""; } echo">
-							<span><a href=\"#\" class=\"tags_select\" data-divid=\"$get_station_member_user_name\">$get_station_member_first_name $get_station_member_middle_name $get_station_member_last_name</a></span>
-						  </td>
-						</tr>
-						";
-					}
-					echo"
-					 </tbody>
-					</table>
-				<!-- //Avaible users  -->
-				<!-- Javascript on click add text to text input -->
-					<script type=\"text/javascript\">
-					\$(function() {
-						\$('.tags_select').click(function() {
-							var value = \$(this).data('divid');
-            						var input = \$('#inp_user_name');
-            						input.val(value);
-
-            						return false;
-       						});
-    					});
-					</script>
-				<!-- //Javascript on click add text to text input -->
-			  </td>
-			 </tr>
-			</table>
+			<p>
+			<input type=\"submit\" value=\"Save changes\" class=\"btn_default\" />
+			</p>
+			</form>
 		<!-- //Edit form -->
 
 		";

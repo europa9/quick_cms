@@ -166,11 +166,11 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 		echo"
 		<table class=\"hor-zebra\">
 		";
-		$query = "SELECT code_id, code_number, code_title, code_title_clean, code_title_abbr, code_is_active, code_valid_from_date, code_valid_from_time, code_valid_to_date, code_valid_to_time, code_gives_priority_id, code_gives_priority_title, code_last_used_datetime, code_last_used_time, code_times_used FROM $t_edb_case_codes";
+		$query = "SELECT code_id, code_number, code_title, code_title_clean, code_gives_priority_id, code_gives_priority_title, code_last_used_times_used FROM $t_edb_case_codes";
 		$query = $query  . " WHERE code_number LIKE $q_mysql OR code_title LIKE $q_mysql";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
-			list($get_code_id, $get_code_number, $get_code_title, $get_code_title_clean, $get_code_title_abbr, $get_code_is_active, $get_code_valid_from_date, $get_code_valid_from_time, $get_code_valid_to_date, $get_code_valid_to_time, $get_code_gives_priority_id, $get_code_gives_priority_title, $get_code_last_used_datetime, $get_code_last_used_time, $get_code_times_used) = $row;
+			list($get_code_id, $get_code_number, $get_code_title, $get_code_title_clean, $get_code_gives_priority_id, $get_code_gives_priority_title, $get_code_last_used_times_used) = $row;
 			
 			// Style
 			if(isset($style) && $style == ""){
@@ -182,7 +182,7 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 
 			echo"
 			 <tr>
-			  <td class=\"$style\">
+			  <td class=\"$style\" style=\"width: 40%;\">
 				<a id=\"#code$get_code_id\"></a>
 				<span>
 				<a href=\"index.php?open=$open&amp;page=$page&amp;action=open_code&amp;code_id=$get_code_id&amp;l=$l&amp;editor_language=$editor_language\">$get_code_number</a>
@@ -192,18 +192,6 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 				<span>
 				<a href=\"index.php?open=$open&amp;page=$page&amp;action=open_code&amp;code_id=$get_code_id&amp;l=$l&amp;editor_language=$editor_language\">$get_code_title</a>
 				</span>
-			  </td>
-			  <td class=\"$style\">
-				<span>$get_code_is_active</span>
-			  </td>
-			  <td class=\"$style\">
-				<span>$get_code_valid_from_date</span>
-			  </td>
-			  <td class=\"$style\">
-				<span>$get_code_valid_to_date</span>
-			  </td>
-			  <td class=\"$style\">
-				<span>$get_code_gives_priority_title</span>
 			  </td>
 			 </tr>";
 

@@ -248,36 +248,17 @@ elseif($action == "new"){
 		$inp_description = output_html($inp_description);
 		$inp_description_mysql = quote_smart($link, $inp_description);
 
-
-		$datetime = date("Y-m-d H:i:s");
-
-		mysqli_query($link, "INSERT INTO $t_edb_glossaries
-		(glossary_id, glossary_title, glossary_description, glossary_words, glossary_last_used_datetime) 
-		VALUES 
-		(NULL, $inp_title_mysql, $inp_description_mysql, $inp_words_mysql, '$datetime')
-		") or die(mysqli_error($link));
-
-		// Get ID
-		$query = "SELECT glossary_id FROM $t_edb_glossaries WHERE glossary_last_used_datetime='$datetime'";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_current_glossary_id) = $row;
-	
-		// Words
 		$inp_words = $_POST['inp_words'];
-		/*
 		$inp_words = output_html($inp_words);
 		$inp_words = str_replace("<br />", "\n", $inp_words);
 		$inp_words_mysql = quote_smart($link, $inp_words);
-		*/
-		$sql = "UPDATE $t_edb_glossaries SET glossary_words=? WHERE glossary_id=$get_current_glossary_id";
-		$stmt = $link->prepare($sql);
-		$stmt->bind_param("s", $inp_words);
-		$stmt->execute();
-		if ($stmt->errno) {
-			echo "FAILURE!!! " . $stmt->error; die;
-		}
 
+
+		mysqli_query($link, "INSERT INTO $t_edb_glossaries
+		(glossary_id, glossary_title, glossary_description, glossary_words) 
+		VALUES 
+		(NULL, $inp_title_mysql, $inp_description_mysql, $inp_words_mysql)
+		") or die(mysqli_error($link));
 
 		$url = "index.php?open=edb&page=$page&action=new&order_by=$order_by&order_method=$order_method&editor_language=$editor_language&l=$l&ft=success&fm=created_$inp_title";
 		header("Location: $url");
@@ -351,7 +332,7 @@ elseif($action == "open"){
 	$query = "SELECT glossary_id, glossary_title, glossary_description, glossary_words, glossary_last_used_datetime FROM $t_edb_glossaries WHERE glossary_id=$glossary_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_glossary_id, $get_current_glossary_title, $get_current_glossary_description, $get_current_glossary_words, $get_current_glossary_last_used_datetime) = $row;
+	list($get_current_glossary_id, $get_current_glossary_title, $get_current_glossary_description, $get_current_glossary_words, $get_current_glossary_last_used_datetime ) = $row;
 	
 	if($get_current_glossary_id == ""){
 		echo"
@@ -372,26 +353,18 @@ elseif($action == "open"){
 			$inp_description = output_html($inp_description);
 			$inp_description_mysql = quote_smart($link, $inp_description);
 
+			$inp_words = $_POST['inp_words'];
+			$inp_words = output_html($inp_words);
+			$inp_words = str_replace("<br />", "\n", $inp_words);
+			$inp_words_mysql = quote_smart($link, $inp_words);
+
 
 			$result = mysqli_query($link, "UPDATE $t_edb_glossaries SET 
 						glossary_title=$inp_title_mysql,
-					 	glossary_description=$inp_description_mysql
+					 	glossary_description=$inp_description_mysql,
+						glossary_words=$inp_words_mysql 
 					 WHERE glossary_id=$get_current_glossary_id") or die(mysqli_error($link));
 
-			// Words
-
-			$inp_words = $_POST['inp_words'];
-			/*
-			$inp_words = output_html($inp_words);
-			$inp_words = str_replace("<br />", "\n", $inp_words);
-			$inp_words_mysql = quote_smart($link, $inp_words);*/
-			$sql = "UPDATE $t_edb_glossaries SET glossary_words=? WHERE glossary_id=$get_current_glossary_id";
-			$stmt = $link->prepare($sql);
-			$stmt->bind_param("s", $inp_words);
-			$stmt->execute();
-			if ($stmt->errno) {
-				echo "FAILURE!!! " . $stmt->error; die;
-			}
 
 
 			$url = "index.php?open=edb&page=$page&action=$action&glossary_id=$get_current_glossary_id&order_by=$order_by&order_method=$order_method&editor_language=$editor_language&l=$l&ft=success&fm=changes_saved";

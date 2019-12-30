@@ -24,9 +24,6 @@ $t_edb_physical_locations_directories	= $mysqlPrefixSav . "edb_physical_location
 
 $t_edb_software_index	= $mysqlPrefixSav . "edb_software_index";
 
-/*- Functions -------------------------------------------------------------------------- */
-include("_functions/get_extension.php");
-
 /*- Variables -------------------------------------------------------------------------- */
 if(isset($_GET['status_id'])) {
 	$status_id = $_GET['status_id'];
@@ -105,10 +102,7 @@ if($action == ""){
 			<span><b>Weight</b></span>
 		   </th>
 		   <th scope=\"col\">
-			<span><b>On person view: show without person</b></span>
-		   </th>
-		   <th scope=\"col\">
-			<span><b>On person view: show before person?</b></span>
+			<span><b>On person view show without person</b></span>
 		   </th>
 		   <th scope=\"col\">
 			<span><b>When case is given status, then close the case</b></span>
@@ -125,11 +119,11 @@ if($action == ""){
 
 		";
 		$human_counter = 1;
-		$query = "SELECT status_id, status_title, status_title_clean, status_bg_color, status_border_color, status_text_color, status_link_color, status_weight, status_number_of_cases_now, status_number_of_cases_max, status_show_on_front_page, status_on_given_status_do_close_case, status_on_person_view_show_without_person, status_on_person_view_show_before_person, status_show_on_stats_page, status_gives_amount_of_points_to_user FROM $t_edb_case_statuses";
+		$query = "SELECT status_id, status_title, status_title_clean, status_bg_color, status_border_color, status_text_color, status_link_color, status_weight, status_number_of_cases_now, status_number_of_cases_max, status_show_on_front_page, status_on_given_status_do_close_case, status_on_person_view_show_without_person, status_show_on_stats_page, status_gives_amount_of_points_to_user FROM $t_edb_case_statuses";
 		$query = $query  . " ORDER BY status_weight ASC";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
-			list($get_status_id, $get_status_title, $get_status_title_clean, $get_status_bg_color, $get_status_border_color, $get_status_text_color, $get_status_link_color, $get_status_weight, $get_status_number_of_cases_now, $get_status_number_of_cases_max, $get_status_show_on_front_page, $get_status_on_given_status_do_close_case, $get_status_on_person_view_show_without_person, $get_status_on_person_view_show_before_person, $get_status_show_on_stats_page, $get_status_gives_amount_of_points_to_user) = $row;
+			list($get_status_id, $get_status_title, $get_status_title_clean, $get_status_bg_color, $get_status_border_color, $get_status_text_color, $get_status_link_color, $get_status_weight, $get_status_number_of_cases_now, $get_status_number_of_cases_max, $get_status_show_on_front_page, $get_status_on_given_status_do_close_case, $get_status_on_person_view_show_without_person, $get_status_show_on_stats_page, $get_status_gives_amount_of_points_to_user) = $row;
 			
 			// Style
 			if(isset($style) && $style == ""){
@@ -165,18 +159,6 @@ if($action == ""){
 				}
 				else{
 					echo"No";
-				}
-				echo"
-				</span>
-			  </td>
-			  <td class=\"$style\">
-				<span>
-				";
-				if($get_status_on_person_view_show_before_person == "1"){
-					echo"Yes (Show before persons)";
-				}
-				else{
-					echo"No (Show after persons)";
 				}
 				echo"
 				</span>
@@ -235,10 +217,10 @@ if($action == ""){
 elseif($action == "edit"){
 	// Find
 	$status_id_mysql = quote_smart($link, $status_id);
-	$query = "SELECT status_id, status_parent_id, status_title, status_title_clean, status_bg_color, status_border_color, status_text_color, status_link_color, status_weight, status_number_of_cases_now, status_number_of_cases_max, status_show_on_front_page, status_on_given_status_do_close_case, status_on_person_view_show_without_person, status_on_person_view_show_before_person, status_show_on_stats_page, status_show_as_image, status_image_path, status_image_file, status_gives_amount_of_points_to_user FROM $t_edb_case_statuses WHERE status_id=$status_id_mysql";
+	$query = "SELECT status_id, status_title, status_title_clean, status_bg_color, status_border_color, status_text_color, status_link_color, status_weight, status_number_of_cases_now, status_number_of_cases_max, status_show_on_front_page, status_on_given_status_do_close_case, status_on_person_view_show_without_person, status_show_on_stats_page, status_gives_amount_of_points_to_user FROM $t_edb_case_statuses WHERE status_id=$status_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_status_id, $get_current_status_parent_id, $get_current_status_title, $get_current_status_title_clean, $get_current_status_bg_color, $get_current_status_border_color, $get_current_status_text_color, $get_current_status_link_color, $get_current_status_weight, $get_current_status_number_of_cases_now, $get_current_status_number_of_cases_max, $get_current_status_show_on_front_page, $get_current_status_on_given_status_do_close_case, $get_current_status_on_person_view_show_without_person, $get_current_status_on_person_view_show_before_person, $get_current_status_show_on_stats_page, $get_current_status_show_as_image, $get_current_status_image_path, $get_current_status_image_file, $get_current_status_gives_amount_of_points_to_user) = $row;
+	list($get_current_status_id, $get_current_status_title, $get_current_status_title_clean, $get_current_status_bg_color, $get_current_status_border_color, $get_current_status_text_color, $get_current_status_link_color, $get_current_status_weight, $get_current_status_number_of_cases_now, $get_current_status_number_of_cases_max, $get_current_status_show_on_front_page, $get_current_status_on_given_status_do_close_case, $get_current_status_on_person_view_show_without_person, $get_current_status_show_on_stats_page, $get_current_status_gives_amount_of_points_to_user) = $row;
 	
 	if($get_current_status_id == ""){
 		echo"
@@ -295,13 +277,6 @@ elseif($action == "edit"){
 			$inp_on_person_view_show_without_person = output_html($inp_on_person_view_show_without_person);
 			$inp_on_person_view_show_without_person_mysql = quote_smart($link, $inp_on_person_view_show_without_person);
 
-			$inp_on_person_view_show_before_person = $_POST['inp_on_person_view_show_before_person'];
-			$inp_on_person_view_show_before_person = output_html($inp_on_person_view_show_before_person);
-			$inp_on_person_view_show_before_person_mysql = quote_smart($link, $inp_on_person_view_show_before_person);
-
-
-
-
 			$inp_show_on_stats_page = $_POST['inp_show_on_stats_page'];
 			$inp_show_on_stats_page = output_html($inp_show_on_stats_page);
 			$inp_show_on_stats_page_mysql = quote_smart($link, $inp_show_on_stats_page);
@@ -309,10 +284,6 @@ elseif($action == "edit"){
 			$inp_gives_amount_of_points_to_user = $_POST['inp_gives_amount_of_points_to_user'];
 			$inp_gives_amount_of_points_to_user = output_html($inp_gives_amount_of_points_to_user);
 			$inp_gives_amount_of_points_to_user_mysql = quote_smart($link, $inp_gives_amount_of_points_to_user);
-
-			$inp_show_as_image = $_POST['inp_show_as_image'];
-			$inp_show_as_image = output_html($inp_show_as_image);
-			$inp_show_as_image_mysql = quote_smart($link, $inp_show_as_image);
 
 			$result = mysqli_query($link, "UPDATE $t_edb_case_statuses SET 
 					status_title=$inp_title_mysql, 
@@ -326,120 +297,12 @@ elseif($action == "edit"){
 					status_show_on_front_page=$inp_show_on_front_page_mysql,
 					status_on_given_status_do_close_case=$inp_on_given_status_do_close_case_mysql,
 					status_on_person_view_show_without_person=$inp_on_person_view_show_without_person_mysql, 
-					status_on_person_view_show_before_person=$inp_on_person_view_show_before_person_mysql, 
 					status_show_on_stats_page=$inp_show_on_stats_page_mysql, 
-					status_show_as_image=$inp_show_as_image_mysql, 
 					status_gives_amount_of_points_to_user=$inp_gives_amount_of_points_to_user_mysql 
 					 WHERE status_id=$get_current_status_id") or die(mysqli_error($link));
 
 
-			// Image upload
-			
-					// Create dir
-					if(!is_dir("../_uploads")){
-						mkdir("../_uploads");
-					}
-					if(!is_dir("../_uploads/edb")){
-						mkdir("../_uploads/edb");
-					}
-					if(!is_dir("../_uploads/edb/statuses")){
-						mkdir("../_uploads/edb/statuses");
-					}
-
-
-					$tmp_name = $_FILES["inp_image"]["tmp_name"];
-					$filename = stripslashes($_FILES['inp_image']['name']);
-					$extension = get_extension($filename);
-					$extension = strtolower($extension);
-					$inp_extension = output_html($extension);
-					$inp_extension_mysql = quote_smart($link, $inp_extension);
-
-					$datetime = date("ymdhis");
-					$inp_file_name = $datetime . "." . $extension;
-					$inp_file_name_mysql = quote_smart($link, $inp_file_name);
-
-					$inp_file_path = "_uploads/edb/statuses";
-					$inp_file_path_mysql = quote_smart($link, $inp_file_path);
-
-
-					// Transfer
-					$ft_image = "";
-					$fm_image = "";
-				
-					if($filename){
-						if ($extension == "jpg" OR $extension == "jpeg" OR $extension == "png" OR $extension == "gif") {
-							$inp_type = "image";
-							$inp_type_mysql = quote_smart($link, $inp_type);
-
-							$size=filesize($_FILES['inp_image']['tmp_name']);
-
-							if($extension=="jpg" || $extension=="jpeg" ){
-								ini_set ('gd.jpeg_ignore_warning', 1);
-								error_reporting(0);
-								$uploadedfile = $_FILES['inp_image']['tmp_name'];
-								$src = imagecreatefromjpeg($uploadedfile);
-							}
-							elseif($extension=="png"){
-								$uploadedfile = $_FILES['inp_image']['tmp_name'];
-								$src = @imagecreatefrompng($uploadedfile);
-							}
-							else{
-								$src = @imagecreatefromgif($uploadedfile);
-							}
-							list($width,$height) = @getimagesize($uploadedfile);
-							if($width == "" OR $height == ""){
-								$ft_image = "warning";
-								$fm_image = "photo_could_not_be_uploaded_please_check_file_size";
-							}
-							else{
-								
-								$result = mysqli_query($link, "UPDATE $t_edb_case_statuses SET
-									status_image_path=$inp_file_path_mysql,
-									status_image_file=$inp_file_name_mysql
-									 WHERE status_id=$get_current_status_id");
-
-
-								if(move_uploaded_file($tmp_name, "../$inp_file_path/$inp_file_name")){
-								
-									// Header
-									$ft_image = "success";
-									$fm_image = "image_uploaded";
-
-								} // move_uploaded_file
-								else{
-									$ft_image = "warning";
-									$fm_image = "move_uploaded_file_failed";
-								} // move_uploaded_file failed
-							}  // if($width == "" OR $height == ""){
-						}
-					} // image
-					else{
-						switch ($_FILES['inp_image']['error']) {
-							case UPLOAD_ERR_OK:
-								$fm_image = "photo_unknown_error";
-								$ft_image = "warning";
-								break;
-							case UPLOAD_ERR_NO_FILE:
-       								$fm_image = "no_file_selected";
-								$ft_image = "warning";
-								break;
-							case UPLOAD_ERR_INI_SIZE:
-           							$fm_image = "photo_exceeds_filesize";
-								$ft_image = "warning";
-								break;
-							case UPLOAD_ERR_FORM_SIZE:
-           							$fm_image = "photo_exceeds_filesize_form";
-								$ft_image = "warning";
-								break;
-							default:
-           							$fm_image = "unknown_upload_error";
-								$ft_image = "warning";
-								break;
-						}
-
-
-					} // else
-			$url = "index.php?open=edb&page=$page&action=$action&status_id=$get_current_status_id&order_by=$order_by&order_method=$order_method&editor_language=$editor_language&l=$l&ft=success&fm=changes_saved&ft_image=$ft_image&fm_image=$fm_image";
+			$url = "index.php?open=edb&page=$page&action=$action&status_id=$get_current_status_id&order_by=$order_by&order_method=$order_method&editor_language=$editor_language&l=$l&ft=success&fm=changes_saved";
 			header("Location: $url");
 			exit;
 		}
@@ -469,25 +332,6 @@ elseif($action == "edit"){
 				}
 				echo"<div class=\"$ft\"><span>$fm</span></div>";
 			}
-
-
-			if(isset($_GET['ft_image']) && isset($_GET['fm_image'])) {
-				$ft_image = $_GET['ft_image'];
-				$ft_image = strip_tags(stripslashes($ft_image));
-				$ft_image = output_html($ft_image);
-
-				$fm_image = $_GET['fm_image'];
-				$fm_image = strip_tags(stripslashes($fm_image));
-				$fm_image = output_html($fm_image);
-				$fm_image = str_replace("_", " ", $fm_image);
-				$fm_image = ucfirst($fm_image);
-				if($ft_image != "" && $fm_image != ""){
-					echo"<div class=\"$ft_image\"><span>$fm_image</span></div>";
-				}
-			}
-
-
-
 			echo"	
 		<!-- //Feedback -->
 
@@ -546,17 +390,10 @@ elseif($action == "edit"){
 			</select>
 			</p>
 
-			<p>On person view: Show without person:<br />
+			<p>On person view show without person:<br />
 			<select name=\"inp_on_person_view_show_without_person\">
 				<option value=\"1\""; if($get_current_status_on_person_view_show_without_person == "1"){ echo" selected=\"selected\""; } echo">Yes</option>
 				<option value=\"0\""; if($get_current_status_on_person_view_show_without_person == "0"){ echo" selected=\"selected\""; } echo">No</option>
-			</select>
-			</p>
-
-			<p>On person view: Show before person:<br />
-			<select name=\"inp_on_person_view_show_before_person\">
-				<option value=\"1\""; if($get_current_status_on_person_view_show_before_person == "1"){ echo" selected=\"selected\""; } echo">Yes (show before person)</option>
-				<option value=\"0\""; if($get_current_status_on_person_view_show_before_person == "0"){ echo" selected=\"selected\""; } echo">No (show after person)</option>
 			</select>
 			</p>
 
@@ -571,29 +408,7 @@ elseif($action == "edit"){
 			<p>Gives amount of points to user:<br />
 			<input type=\"text\" name=\"inp_gives_amount_of_points_to_user\" value=\"$get_current_status_gives_amount_of_points_to_user\" size=\"10\" />
 			</p>
-			
-			<hr />
 
-			<p>Show status as image:<br />
-			<select name=\"inp_show_as_image\">
-				<option value=\"1\""; if($get_current_status_show_as_image == "1"){ echo" selected=\"selected\""; } echo">Yes</option>
-				<option value=\"0\""; if($get_current_status_show_as_image == "0"){ echo" selected=\"selected\""; } echo">No</option>
-			</select>
-			</p>
-
-			<p>
-			Existing image:<br />
-			";
-			if(file_exists("../$get_current_status_image_path/$get_current_status_image_file") && $get_current_status_image_file != ""){
-				echo"<img src=\"../$get_current_status_image_path/$get_current_status_image_file\" alt=\"$get_current_status_image_file\" />\n";
-			}
-			echo"
-			</p>
-
-			<p>
-			New photo (leave blank to use existing):<br />
-			<input name=\"inp_image\" type=\"file\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
-			</p>
 
 
 			<p><input type=\"submit\" value=\"Save changes\" class=\"btn_default\" />
@@ -719,15 +534,11 @@ elseif($action == "new"){
 		$inp_on_person_view_show_without_person = output_html($inp_on_person_view_show_without_person);
 		$inp_on_person_view_show_without_person_mysql = quote_smart($link, $inp_on_person_view_show_without_person);
 
-		$inp_on_person_view_show_before_person = $_POST['inp_on_person_view_show_before_person'];
-		$inp_on_person_view_show_before_person = output_html($inp_on_person_view_show_before_person);
-		$inp_on_person_view_show_before_person_mysql = quote_smart($link, $inp_on_person_view_show_before_person);
-
 
 		mysqli_query($link, "INSERT INTO $t_edb_case_statuses
-		(status_id, status_title, status_title_clean, status_bg_color, status_border_color, status_text_color, status_link_color, status_weight, status_number_of_cases_now, status_number_of_cases_max, status_show_on_front_page, status_on_given_status_do_close_case, status_on_person_view_show_without_person, status_on_person_view_show_before_person) 
+		(status_id, status_title, status_title_clean, status_bg_color, status_border_color, status_text_color, status_link_color, status_weight, status_number_of_cases_now, status_number_of_cases_max, status_show_on_front_page, status_on_given_status_do_close_case, status_on_person_view_show_without_person) 
 		VALUES 
-		(NULL, $inp_title_mysql, $inp_title_clean_mysql, $inp_bg_color_mysql, $inp_border_color_mysql, $inp_text_color_mysql, $inp_link_color_mysql, $inp_weight_mysql, 0, $inp_number_of_cases_max_mysql, $inp_show_on_front_page_mysql, $inp_on_given_status_do_close_case_mysql, $inp_on_person_view_show_without_person_mysql, $inp_on_person_view_show_before_person_mysql)")
+		(NULL, $inp_title_mysql, $inp_title_clean_mysql, $inp_bg_color_mysql, $inp_border_color_mysql, $inp_text_color_mysql, $inp_link_color_mysql, $inp_weight_mysql, 0, $inp_number_of_cases_max_mysql, $inp_show_on_front_page_mysql, $inp_on_given_status_do_close_case_mysql, $inp_on_person_view_show_without_person_mysql)")
 		or die(mysqli_error($link));
 
 		$url = "index.php?open=edb&page=$page&action=$action&editor_language=$editor_language&l=$l&ft=success&fm=saved";
@@ -816,17 +627,10 @@ elseif($action == "new"){
 		</select>
 		</p>
 
-		<p>On person view: show without person:<br />
+		<p>On person view show without person:<br />
 		<select name=\"inp_on_person_view_show_without_person\">
 			<option value=\"1\">Yes</option>
 			<option value=\"0\">No</option>
-		</select>
-		</p>
-
-		<p>On person view: Show before person:<br />
-		<select name=\"inp_on_person_view_show_before_person\">
-			<option value=\"1\">Yes (show before person)</option>
-			<option value=\"0\">No (show after person)</option>
 		</select>
 		</p>
 

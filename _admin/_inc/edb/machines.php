@@ -30,7 +30,6 @@ $t_edb_software_index	= $mysqlPrefixSav . "edb_software_index";
 
 
 $t_edb_machines_index				= $mysqlPrefixSav . "edb_machines_index";
-$t_edb_machines_index_types			= $mysqlPrefixSav . "edb_machines_index_types";
 $t_edb_machines_types				= $mysqlPrefixSav . "edb_machines_types";
 $t_edb_machines_all_tasks_available		= $mysqlPrefixSav . "edb_machines_all_tasks_available";
 $t_edb_machines_all_tasks_available_to_item  	= $mysqlPrefixSav . "edb_machines_all_tasks_available_to_item";
@@ -313,8 +312,8 @@ if($action == ""){
 
 					";
 
-					$query = "SELECT machine_id, machine_name, machine_os, machine_ip, machine_mac, machine_key, machine_description, machine_station_id, machine_station_title, machine_last_seen_datetime, machine_last_seen_time, machine_last_seen_ddmmyyhi, machine_last_seen_ddmmyyyyhi, machine_is_working_with_automated_task_id, machine_started_working_datetime, machine_started_working_time, machine_started_working_ddmmyyhi, machine_started_working_ddmmyyyyhi FROM $t_edb_machines_index";
-					if($order_by == "machine_id" OR $order_by == "machine_name" OR $order_by == "machine_os" OR $order_by == "machine_ip" OR $order_by == "machine_mac" OR $order_by == "machine_key" OR $order_by == "machine_description" OR $order_by == "machine_station_id" OR $order_by == "machine_station_title" OR $order_by == "machine_last_seen_datetime" OR $order_by == "machine_last_seen_time" OR $order_by == "machine_last_seen_dmyhi" OR $order_by == "machine_is_working_with_automated_task_id" OR $order_by == "machine_started_working_datetime" OR $order_by == "machine_started_working_time" OR $order_by == "machine_started_working_dmyhi"){
+					$query = "SELECT machine_id, machine_name, machine_type_id, machine_type_title, machine_os, machine_ip, machine_mac, machine_key, machine_description, machine_station_id, machine_station_title, machine_last_seen_datetime, machine_last_seen_time, machine_last_seen_ddmmyyhi, machine_last_seen_ddmmyyyyhi, machine_is_working_with_automated_task_id, machine_started_working_datetime, machine_started_working_time, machine_started_working_ddmmyyhi, machine_started_working_ddmmyyyyhi FROM $t_edb_machines_index";
+					if($order_by == "machine_id" OR $order_by == "machine_name" OR $order_by == "machine_type_title" OR $order_by == "machine_os" OR $order_by == "machine_ip" OR $order_by == "machine_mac" OR $order_by == "machine_key" OR $order_by == "machine_description" OR $order_by == "machine_station_id" OR $order_by == "machine_station_title" OR $order_by == "machine_last_seen_datetime" OR $order_by == "machine_last_seen_time" OR $order_by == "machine_last_seen_dmyhi" OR $order_by == "machine_is_working_with_automated_task_id" OR $order_by == "machine_started_working_datetime" OR $order_by == "machine_started_working_time" OR $order_by == "machine_started_working_dmyhi"){
 						if($order_method  == "asc" OR $order_method == "desc"){
 							$query = $query  . " ORDER BY $order_by $order_method";
 						}
@@ -325,7 +324,7 @@ if($action == ""){
 					$query = $query  . " LIMIT 0,200";
 					$result = mysqli_query($link, $query);
 					while($row = mysqli_fetch_row($result)) {
-						list($get_machine_id, $get_machine_name, $get_machine_os, $get_machine_ip, $get_machine_mac, $get_machine_key, $get_machine_description, $get_machine_station_id, $get_machine_station_title, $get_machine_last_seen_datetime, $get_machine_last_seen_time, $get_machine_last_seen_ddmmyyhi, $get_machine_last_seen_ddmmyyyyhi, $get_machine_is_working_with_automated_task_id, $get_machine_started_working_datetime, $get_machine_started_working_time, $get_machine_started_working_ddmmyyhi, $get_machine_started_working_ddmmyyyyhi) = $row;
+						list($get_machine_id, $get_machine_name, $get_machine_type_id, $get_machine_type_title, $get_machine_os, $get_machine_ip, $get_machine_mac, $get_machine_key, $get_machine_description, $get_machine_station_id, $get_machine_station_title, $get_machine_last_seen_datetime, $get_machine_last_seen_time, $get_machine_last_seen_ddmmyyhi, $get_machine_last_seen_ddmmyyyyhi, $get_machine_is_working_with_automated_task_id, $get_machine_started_working_datetime, $get_machine_started_working_time, $get_machine_started_working_ddmmyyhi, $get_machine_started_working_ddmmyyyyhi) = $row;
 			
 						// Style
 						if(isset($style) && $style == ""){
@@ -344,26 +343,14 @@ if($action == ""){
 							</span>
 						  </td>
 						  <td class=\"$style\">
-							<span>$get_machine_name<br /></span>
-							<span style=\"font-size:80%;\">$get_machine_description</span>
-							
+							<span>
+							$get_machine_name<br />
+							$get_machine_description
+							</span>
 						  </td>
 						  <td class=\"$style\">
 							<span>
-							";
-							$types_saying = "";
-							$query_it = "SELECT machine_index_type_id, machine_index_type_type_id, machine_index_type_type_title FROM $t_edb_machines_index_types WHERE machine_index_type_machine_id=$get_machine_id";
-							$result_it = mysqli_query($link, $query_it);
-							while($row_it = mysqli_fetch_row($result_it)) {
-								list($get_machine_index_type_id, $get_machine_index_type_type_id, $get_machine_index_type_type_title) = $row_it;
-								if($types_saying == ""){
-									$types_saying = "$get_machine_index_type_type_title";
-								}
-								else{
-									$types_saying = "$types_saying, " . "$get_machine_index_type_type_title";
-								}
-							}
-							echo"$types_saying
+							$get_machine_type_title
 							</span>
 						  </td>
 						  <td class=\"$style\">
@@ -673,21 +660,20 @@ elseif($action == "open_station"){
 
 					";
 
-					$query = "SELECT machine_id, machine_name, machine_os, machine_ip, machine_mac, machine_key, machine_description, machine_station_id, machine_station_title, machine_last_seen_datetime, machine_last_seen_time, machine_last_seen_ddmmyyhi, machine_last_seen_ddmmyyyyhi, machine_is_working_with_automated_task_id, machine_started_working_datetime, machine_started_working_time, machine_started_working_ddmmyyhi, machine_started_working_ddmmyyyyhi FROM $t_edb_machines_index WHERE machine_station_id=$get_current_station_id";
-					if($order_by == "machine_id" OR $order_by == "machine_name" OR $order_by == "machine_os" OR $order_by == "machine_ip" OR $order_by == "machine_mac" OR $order_by == "machine_key" OR $order_by == "machine_description" OR $order_by == "machine_station_id" OR $order_by == "machine_station_title" OR $order_by == "machine_last_seen_datetime" OR $order_by == "machine_last_seen_time" OR $order_by == "machine_last_seen_dmyhi" OR $order_by == "machine_is_working_with_automated_task_id" OR $order_by == "machine_started_working_datetime" OR $order_by == "machine_started_working_time" OR $order_by == "machine_started_working_dmyhi"){
+					$query = "SELECT machine_id, machine_name, machine_type_id, machine_type_title, machine_os, machine_ip, machine_mac, machine_key, machine_description, machine_station_id, machine_station_title, machine_last_seen_datetime, machine_last_seen_time, machine_last_seen_ddmmyyhi, machine_last_seen_ddmmyyyyhi, machine_is_working_with_automated_task_id, machine_started_working_datetime, machine_started_working_time, machine_started_working_ddmmyyhi, machine_started_working_ddmmyyyyhi FROM $t_edb_machines_index WHERE machine_station_id=$get_current_station_id";
+					if($order_by == "machine_id" OR $order_by == "machine_name" OR $order_by == "machine_type_title" OR $order_by == "machine_os" OR $order_by == "machine_ip" OR $order_by == "machine_mac" OR $order_by == "machine_key" OR $order_by == "machine_description" OR $order_by == "machine_station_id" OR $order_by == "machine_station_title" OR $order_by == "machine_last_seen_datetime" OR $order_by == "machine_last_seen_time" OR $order_by == "machine_last_seen_dmyhi" OR $order_by == "machine_is_working_with_automated_task_id" OR $order_by == "machine_started_working_datetime" OR $order_by == "machine_started_working_time" OR $order_by == "machine_started_working_dmyhi"){
 						if($order_method  == "asc" OR $order_method == "desc"){
 							$query = $query  . " ORDER BY $order_by $order_method";
 						}
-
 					}
 					else{
-						$query = $query  . " ORDER BY machine_name ASC";
+						$query = $query  . " ORDER BY jour_id ASC";
 					}
 					$query = $query  . " LIMIT 0,200";
 
 					$result = mysqli_query($link, $query);
 					while($row = mysqli_fetch_row($result)) {
-						list($get_machine_id, $get_machine_name, $get_machine_os, $get_machine_ip, $get_machine_mac, $get_machine_key, $get_machine_description, $get_machine_station_id, $get_machine_station_title, $get_machine_last_seen_datetime, $get_machine_last_seen_time, $get_machine_last_seen_ddmmyyhi, $get_machine_last_seen_ddmmyyyyhi, $get_machine_is_working_with_automated_task_id, $get_machine_started_working_datetime, $get_machine_started_working_time, $get_machine_started_working_ddmmyyhi, $get_machine_started_working_ddmmyyyyhi) = $row;
+						list($get_machine_id, $get_machine_name, $get_machine_type_id, $get_machine_type_title, $get_machine_os, $get_machine_ip, $get_machine_mac, $get_machine_key, $get_machine_description, $get_machine_station_id, $get_machine_station_title, $get_machine_last_seen_datetime, $get_machine_last_seen_time, $get_machine_last_seen_ddmmyyhi, $get_machine_last_seen_ddmmyyyyhi, $get_machine_is_working_with_automated_task_id, $get_machine_started_working_datetime, $get_machine_started_working_time, $get_machine_started_working_ddmmyyhi, $get_machine_started_working_ddmmyyyyhi) = $row;
 			
 						// Style
 						if(isset($style) && $style == ""){
@@ -706,25 +692,14 @@ elseif($action == "open_station"){
 							</span>
 						  </td>
 						  <td class=\"$style\">
-							<span>$get_machine_name<br /></span>
-							<span style=\"font-size:80%;\">$get_machine_description</span>
+							<span>
+							$get_machine_name<br />
+							$get_machine_description
+							</span>
 						  </td>
 						  <td class=\"$style\">
 							<span>
-							";
-							$types_saying = "";
-							$query_it = "SELECT machine_index_type_id, machine_index_type_type_id, machine_index_type_type_title FROM $t_edb_machines_index_types WHERE machine_index_type_machine_id=$get_machine_id";
-							$result_it = mysqli_query($link, $query_it);
-							while($row_it = mysqli_fetch_row($result_it)) {
-								list($get_machine_index_type_id, $get_machine_index_type_type_id, $get_machine_index_type_type_title) = $row_it;
-								if($types_saying == ""){
-									$types_saying = "$get_machine_index_type_type_title";
-								}
-								else{
-									$types_saying = "$types_saying, " . "$get_machine_index_type_type_title";
-								}
-							}
-							echo"$types_saying
+							$get_machine_type_title
 							</span>
 						  </td>
 						  <td class=\"$style\">
@@ -758,8 +733,6 @@ elseif($action == "open_station"){
 						  </td>
 						  <td class=\"$style\">
 							<span>
-							<a href=\"../edb/api/01_look_for_new_task.php?machine_key=$get_machine_key\">API</a>
-							|
 							<a href=\"index.php?open=edb&amp;page=$page&amp;action=edit_machine&amp;machine_id=$get_machine_id&amp;editor_language=$editor_language&amp;l=$l\">Edit</a>
 							|
 							<a href=\"index.php?open=edb&amp;page=$page&amp;action=delete_machine&amp;machine_id=$get_machine_id&amp;editor_language=$editor_language&amp;l=$l\">Delete</a>
@@ -811,6 +784,17 @@ elseif($action == "new"){
 			$inp_name = output_html($inp_name);
 			$inp_name_mysql = quote_smart($link, $inp_name);
 
+			$inp_type_id = $_POST['inp_type_id'];
+			$inp_type_id = output_html($inp_type_id);
+			$inp_type_id_mysql = quote_smart($link, $inp_type_id);
+
+			// Machine type title
+			$query = "SELECT machine_type_id, machine_type_title FROM $t_edb_machines_types WHERE machine_type_id=$inp_type_id_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_current_machine_type_id, $get_current_machine_type_title) = $row;
+	
+			$inp_type_title_mysql = quote_smart($link, $get_current_machine_type_title);
 
 			$inp_os = $_POST['inp_os'];
 			$inp_os = output_html($inp_os);
@@ -847,36 +831,12 @@ elseif($action == "new"){
 
 			
 			mysqli_query($link, "INSERT INTO $t_edb_machines_index
-			(machine_id, machine_name,  machine_os, machine_ip, machine_mac, machine_key, machine_description, machine_station_id, machine_station_title) 
+			(machine_id, machine_name, machine_type_id, machine_type_title, machine_os, machine_ip, machine_mac, machine_key, machine_description, machine_station_id, machine_station_title) 
 			VALUES 
-			(NULL, $inp_name_mysql, $inp_os_mysql, $inp_ip_mysql, $inp_mac_mysql, $inp_key_mysql, $inp_description_mysql, $inp_station_id_mysql, $inp_station_title_mysql)
+			(NULL, $inp_name_mysql, $inp_type_id_mysql, $inp_type_title_mysql, $inp_os_mysql, $inp_ip_mysql, $inp_mac_mysql, $inp_key_mysql, $inp_description_mysql, $inp_station_id_mysql, $inp_station_title_mysql)
 			") or die(mysqli_error($link));
 
-			// Get ID
-			$query = "SELECT machine_id FROM $t_edb_machines_index WHERE machine_name=$inp_name_mysql";
-			$result = mysqli_query($link, $query);
-			$row = mysqli_fetch_row($result);
-			list($get_current_machine_id) = $row;
-			
-			// Types
-			$query = "SELECT  machine_type_id, machine_type_title FROM $t_edb_machines_types ORDER BY machine_type_title ASC";
-			$result = mysqli_query($link, $query);
-			while($row = mysqli_fetch_row($result)) {
-				list($get_machine_type_id, $get_machine_type_title) = $row;
-				if(isset($_POST["inp_machine_type_$get_machine_type_id"])){
-					// Insert type
-					$inp_type_title_mysql = quote_smart($link, $get_machine_type_title);
-					mysqli_query($link, "INSERT INTO $t_edb_machines_index_types
-					(machine_index_type_id, machine_index_type_machine_id, machine_index_type_machine_title, machine_index_type_type_id, machine_index_type_type_title) 
-					VALUES 
-					(NULL, $get_current_machine_id, $inp_name_mysql, $get_machine_type_id, $inp_type_title_mysql)
-					") or die(mysqli_error($link));
 
-				}
-			}
-
-
-			
 			$url = "index.php?open=edb&page=$page&action=open_station&station_id=$get_current_station_id&order_by=$order_by&order_method=$order_method&editor_language=$editor_language&l=$l&ft=success&fm=changes_saved";
 			header("Location: $url");
 			exit;
@@ -932,15 +892,17 @@ elseif($action == "new"){
 			<input type=\"text\" name=\"inp_name\" value=\"\" size=\"25\" />
 			</p>
 
-			<p>Machine type:<br />\n";
+			<p>Machine type:<br />
+			<select name=\"inp_type_id\">\n";
 			$query = "SELECT  machine_type_id, machine_type_title FROM $t_edb_machines_types ORDER BY machine_type_title ASC";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
 				list($get_machine_type_id, $get_machine_type_title) = $row;
 				echo"					";
-				echo"<input type=\"checkbox\" name=\"inp_machine_type_$get_machine_type_id\" /> $get_machine_type_title &nbsp;\n";
+				echo"<option value=\"$get_machine_type_id\">$get_machine_type_title</option>\n";
 			}
 			echo"
+			</select>
 			</p>
 
 			<p>Machine OS:<br />
@@ -995,10 +957,10 @@ elseif($action == "new"){
 elseif($action == "edit_machine"){
 	// Find machine
 	$machine_id_mysql = quote_smart($link, $machine_id);
-	$query = "SELECT machine_id, machine_name,  machine_os, machine_ip, machine_mac, machine_key, machine_description, machine_station_id, machine_station_title, machine_last_seen_datetime, machine_last_seen_time, machine_last_seen_ddmmyyhi, machine_last_seen_ddmmyyyyhi, machine_is_working_with_automated_task_id, machine_started_working_datetime, machine_started_working_time, machine_started_working_ddmmyyhi, machine_started_working_ddmmyyyyhi FROM $t_edb_machines_index WHERE machine_id=$machine_id_mysql";
+	$query = "SELECT machine_id, machine_name, machine_type_id, machine_type_title, machine_os, machine_ip, machine_mac, machine_key, machine_description, machine_station_id, machine_station_title, machine_last_seen_datetime, machine_last_seen_time, machine_last_seen_ddmmyyhi, machine_last_seen_ddmmyyyyhi, machine_is_working_with_automated_task_id, machine_started_working_datetime, machine_started_working_time, machine_started_working_ddmmyyhi, machine_started_working_ddmmyyyyhi FROM $t_edb_machines_index WHERE machine_id=$machine_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_machine_id, $get_current_machine_name, $get_current_machine_os, $get_current_machine_ip, $get_current_machine_mac, $get_current_machine_key, $get_current_machine_description, $get_current_machine_station_id, $get_current_machine_station_title, $get_current_machine_last_seen_datetime, $get_current_machine_last_seen_time, $get_current_machine_last_seen_ddmmyyhi, $get_current_machine_last_seen_ddmmyyyyhi, $get_current_machine_is_working_with_automated_task_id, $get_current_machine_started_working_datetime, $get_current_machine_started_working_time, $get_current_machine_started_working_ddmmyyhi, $get_current_machine_started_working_ddmmyyyyhi) = $row;
+	list($get_current_machine_id, $get_current_machine_name, $get_current_machine_type_id, $get_current_machine_type_title, $get_current_machine_os, $get_current_machine_ip, $get_current_machine_mac, $get_current_machine_key, $get_current_machine_description, $get_current_machine_station_id, $get_current_machine_station_title, $get_current_machine_last_seen_datetime, $get_current_machine_last_seen_time, $get_current_machine_last_seen_ddmmyyhi, $get_current_machine_last_seen_ddmmyyyyhi, $get_current_machine_is_working_with_automated_task_id, $get_current_machine_started_working_datetime, $get_current_machine_started_working_time, $get_current_machine_started_working_ddmmyyhi, $get_current_machine_started_working_ddmmyyyyhi) = $row;
 	
 	if($get_current_machine_id == ""){
 		echo"
@@ -1010,6 +972,18 @@ elseif($action == "edit_machine"){
 			$inp_name = $_POST['inp_name'];
 			$inp_name = output_html($inp_name);
 			$inp_name_mysql = quote_smart($link, $inp_name);
+
+			$inp_type_id = $_POST['inp_type_id'];
+			$inp_type_id = output_html($inp_type_id);
+			$inp_type_id_mysql = quote_smart($link, $inp_type_id);
+
+			// Machine type title
+			$query = "SELECT machine_type_id, machine_type_title FROM $t_edb_machines_types WHERE machine_type_id=$inp_type_id_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_current_machine_type_id, $get_current_machine_type_title) = $row;
+	
+			$inp_type_title_mysql = quote_smart($link, $get_current_machine_type_title);
 
 			$inp_os = $_POST['inp_os'];
 			$inp_os = output_html($inp_os);
@@ -1045,7 +1019,9 @@ elseif($action == "edit_machine"){
 
 			
 			$result = mysqli_query($link, "UPDATE $t_edb_machines_index SET
-							machine_name=$inp_name_mysql, 
+							machine_name=$inp_name_mysql,  
+							machine_type_id=$inp_type_id_mysql,  
+							machine_type_title=$inp_type_title_mysql,  
 							machine_os=$inp_os_mysql,  
 							machine_ip=$inp_ip_mysql, 
 							machine_mac=$inp_mac_mysql,  
@@ -1069,24 +1045,6 @@ elseif($action == "edit_machine"){
 							 WHERE machine_id=$get_current_machine_id") or die(mysqli_error($link));
 			}
 
-			// Type
-			$result = mysqli_query($link, "DELETE FROM $t_edb_machines_index_types WHERE machine_index_type_machine_id=$get_current_machine_id") or die(mysqli_error($link));
-			
-			$query = "SELECT  machine_type_id, machine_type_title FROM $t_edb_machines_types ORDER BY machine_type_title ASC";
-			$result = mysqli_query($link, $query);
-			while($row = mysqli_fetch_row($result)) {
-				list($get_machine_type_id, $get_machine_type_title) = $row;
-				if(isset($_POST["inp_machine_type_$get_machine_type_id"])){
-					// Insert type
-					$inp_type_title_mysql = quote_smart($link, $get_machine_type_title);
-					mysqli_query($link, "INSERT INTO $t_edb_machines_index_types
-					(machine_index_type_id, machine_index_type_machine_id, machine_index_type_machine_title, machine_index_type_type_id, machine_index_type_type_title) 
-					VALUES 
-					(NULL, $get_current_machine_id, $inp_name_mysql, $get_machine_type_id, $inp_type_title_mysql)
-					") or die(mysqli_error($link));
-
-				}
-			}
 
 			$url = "index.php?open=edb&page=machines&action=edit_machine&machine_id=$get_current_machine_id&order_by=$order_by&order_method=$order_method&editor_language=$editor_language&l=$l&ft=success&fm=changes_saved";
 			header("Location: $url");
@@ -1145,23 +1103,22 @@ elseif($action == "edit_machine"){
 				<p>Machine name:<br />
 				<input type=\"text\" name=\"inp_name\" value=\"$get_current_machine_name\" size=\"25\" />
 				</p>
-
-				<p>Machine type:<br />\n";
+	
+				<p>Machine type:<br />
+				<select name=\"inp_type_id\">\n";
 				$query = "SELECT  machine_type_id, machine_type_title FROM $t_edb_machines_types ORDER BY machine_type_title ASC";
 				$result = mysqli_query($link, $query);
 				while($row = mysqli_fetch_row($result)) {
 					list($get_machine_type_id, $get_machine_type_title) = $row;
-
-					// Am I this type?
-					$query_it = "SELECT machine_index_type_id FROM $t_edb_machines_index_types WHERE machine_index_type_machine_id=$get_current_machine_id AND machine_index_type_type_id=$get_machine_type_id";
-					$result_it = mysqli_query($link, $query_it);
-					$row_it = mysqli_fetch_row($result_it);
-					list($get_machine_index_type_id) = $row_it;
-	
 					echo"					";
-					echo"<input type=\"checkbox\" name=\"inp_machine_type_$get_machine_type_id\""; if($get_machine_index_type_id != ""){ echo" checked=\"checked\""; } echo" /> $get_machine_type_title &nbsp;\n";
+					echo"<option value=\"$get_machine_type_id\""; if($get_machine_type_id == "$get_current_machine_type_id"){ echo" selected=\"selected\""; } echo">$get_machine_type_title</option>\n";
 				}
 				echo"
+				</select>
+				</p>
+
+				<p>Machine type:<br />
+				<input type=\"text\" name=\"inp_type\" value=\"$get_current_machine_type\" size=\"25\" />
 				</p>
 
 				<p>Machine OS:<br />
@@ -1230,10 +1187,10 @@ elseif($action == "edit_machine"){
 elseif($action == "delete_machine"){
 	// Find machine
 	$machine_id_mysql = quote_smart($link, $machine_id);
-	$query = "SELECT machine_id, machine_name, machine_os, machine_ip, machine_mac, machine_key, machine_description, machine_station_id, machine_station_title, machine_last_seen_datetime, machine_last_seen_time, machine_last_seen_ddmmyyhi, machine_last_seen_ddmmyyyyhi, machine_is_working_with_automated_task_id, machine_started_working_datetime, machine_started_working_time, machine_started_working_ddmmyyhi, machine_started_working_ddmmyyyyhi FROM $t_edb_machines_index WHERE machine_id=$machine_id_mysql";
+	$query = "SELECT machine_id, machine_name, machine_type_id, machine_type_title, machine_os, machine_ip, machine_mac, machine_key, machine_description, machine_station_id, machine_station_title, machine_last_seen_datetime, machine_last_seen_time, machine_last_seen_ddmmyyhi, machine_last_seen_ddmmyyyyhi, machine_is_working_with_automated_task_id, machine_started_working_datetime, machine_started_working_time, machine_started_working_ddmmyyhi, machine_started_working_ddmmyyyyhi FROM $t_edb_machines_index WHERE machine_id=$machine_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_machine_id, $get_current_machine_name, $get_current_machine_os, $get_current_machine_ip, $get_current_machine_mac, $get_current_machine_key, $get_current_machine_description, $get_current_machine_station_id, $get_current_machine_station_title, $get_current_machine_last_seen_datetime, $get_current_machine_last_seen_time, $get_current_machine_last_seen_ddmmyyhi, $get_current_machine_last_seen_ddmmyyyyhi, $get_current_machine_is_working_with_automated_task_id, $get_current_machine_started_working_datetime, $get_current_machine_started_working_time, $get_current_machine_started_working_ddmmyyhi, $get_current_machine_started_working_ddmmyyyyhi) = $row;
+	list($get_current_machine_id, $get_current_machine_name, $get_current_machine_type_id, $get_current_machine_type_title, $get_current_machine_os, $get_current_machine_ip, $get_current_machine_mac, $get_current_machine_key, $get_current_machine_description, $get_current_machine_station_id, $get_current_machine_station_title, $get_current_machine_last_seen_datetime, $get_current_machine_last_seen_time, $get_current_machine_last_seen_ddmmyyhi, $get_current_machine_last_seen_ddmmyyyyhi, $get_current_machine_is_working_with_automated_task_id, $get_current_machine_started_working_datetime, $get_current_machine_started_working_time, $get_current_machine_started_working_ddmmyyhi, $get_current_machine_started_working_ddmmyyyyhi) = $row;
 	
 	if($get_current_machine_id == ""){
 		echo"

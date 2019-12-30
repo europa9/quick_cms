@@ -48,10 +48,6 @@ echo"
 			<li><a href=\"index.php?open=edb&amp;page=human_tasks_in_case&amp;editor_language=$editor_language\""; if($page == "human_tasks_in_case"){ echo" class=\"selected\""; } echo">Human tasks in case</a></li>
 			<li><a href=\"index.php?open=edb&amp;page=evidence_storage_shelves&amp;editor_language=$editor_language\""; if($page == "evidence_storage_shelves"){ echo" class=\"selected\""; } echo">Evidence storage shelves</a></li>
 
-			<li><a href=\"index.php?open=edb&amp;page=review_standards&amp;editor_language=$editor_language\""; if($page == "review_standards"){ echo" class=\"selected\""; } echo">Review standards</a></li>
-			<li><a href=\"index.php?open=edb&amp;page=ping_on&amp;editor_language=$editor_language\""; if($page == "ping_on"){ echo" class=\"selected\""; } echo">Ping on</a></li>
-			<li><a href=\"index.php?open=edb&amp;page=backup_disks&amp;editor_language=$editor_language\""; if($page == "backup_disks"){ echo" class=\"selected\""; } echo">Backup disks</a></li>
-
 			<li><a href=\"index.php?open=edb&amp;page=tables&amp;editor_language=$editor_language\""; if($page == "tables"){ echo" class=\"selected\""; } echo">Tables</a></li>
 		
 ";

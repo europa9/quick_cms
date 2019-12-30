@@ -146,9 +146,6 @@ if($action == ""){
 			 </thead>
 			 <tbody>
 			";
-			
-			$backup_machine_type_found = 0;
-
 			$query = "SELECT machine_type_id, machine_type_title FROM $t_edb_machines_types";
 			if($order_by == "machine_type_id" OR $order_by == "machine_type_title"){
 				if($order_method  == "asc" OR $order_method == "desc"){
@@ -192,20 +189,10 @@ if($action == ""){
 					</span>
 				  </td>
 				 </tr>";
-
-				if($get_machine_type_title == "Backup"){
-					$backup_machine_type_found = 1;
-				}
 			} // while
 			echo"
 			 </tbody>
-			</table>";
-
-
-		if($backup_machine_type_found == "0"){
-			echo"<div class=\"info\"><p>You dont have a machine type with title &quot;Backup&quot;. You should make one.</p></div>";
-		}
-		echo"
+			</table>
 	<!-- //Machine types -->
 	";
 } // action == ""

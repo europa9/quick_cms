@@ -65,7 +65,7 @@ if($action == ""){
 					$admin_navigation_icon_white_medium = "ic_" . $file . "t_white_24dp.png";
 
 					echo"
-					<li><a href=\"index.php?open=$file&amp;page=menu&amp;editor_language=$editor_language&amp;l=$l\"><img src=\"_design/gfx/icons/material/$admin_navigation_icon_black_small\" alt=\"$admin_navigation_icon_black_small\" /> $admin_navigation_title</a></li>";
+					<li><a href=\"index.php?open=$open&amp;page=default&amp;action=add_to_favorite_and_visit&amp;item=$file&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\"><img src=\"_design/gfx/icons/material/$admin_navigation_icon_black_small\" alt=\"$admin_navigation_icon_black_small\" /> $admin_navigation_title</a></li>";
 				}
 				closedir($handle);
 			}
@@ -438,6 +438,11 @@ elseif($action == "delete"){
 	} // navigation found
 } // delete
 elseif($action == "add_item"){
+	// Me
+	$my_user_id = $_SESSION['admin_user_id'];
+	$my_user_id = output_html($my_user_id);
+	$my_user_id_mysql = quote_smart($link, $my_user_id);
+
 
 	if($process == "1"){
 		$inp_url = $_GET['item'];
@@ -470,9 +475,6 @@ elseif($action == "add_item"){
 		$inp_icon_color_medium = "ic_" . $inp_icon . "_orange_24dp.png";
 		$inp_icon_color_medium_mysql = quote_smart($link, $inp_icon_color_medium);
 
-		$my_user_id = $_SESSION['admin_user_id'];
-		$my_user_id = output_html($my_user_id);
-		$my_user_id_mysql = quote_smart($link, $my_user_id);
 
 		mysqli_query($link, "INSERT INTO $t_admin_navigation 
 		(navigation_id, navigation_url, navigation_title, navigation_icon, navigation_icon_black_18, navigation_icon_black_24, navigation_icon_white_18, navigation_icon_white_24, 
@@ -483,8 +485,23 @@ elseif($action == "add_item"){
 		$my_user_id_mysql, '1', '999')")
 		or die(mysqli_error($link));
 
-			
-		$url = "index.php?open=$open&page=$page&action=my_navigation&ft=success&fm=item_added";
+
+		// Sort all alphabetically
+		/*
+		$x=0;
+		$query = "SELECT navigation_id, navigation_url, navigation_title, navigation_icon_white_18, navigation_icon_black_18, navigation_weight FROM $t_admin_navigation WHERE navigation_user_id=$my_user_id_mysql ORDER BY navigation_title ASC";
+		$result = mysqli_query($link, $query);
+		while($row = mysqli_fetch_row($result)) {
+			list($get_navigation_id, $get_navigation_url, $get_navigation_title, $get_navigation_icon_white_18, $get_navigation_icon_black_18, $get_navigation_weight) = $row;
+			if($get_navigation_weight != "$x"){
+				mysqli_query($link, "UPDATE $t_admin_navigation SET navigation_weight=$x WHERE navigation_id=$get_navigation_id") or die(mysqli_error($link));
+
+			}
+			$x++;
+		}
+		*/
+
+		$url = "index.php?open=$open&page=$page&action=add_item&ft=success&fm=item_added";
 		header("Location: $url");
 		exit;
 			
@@ -530,8 +547,10 @@ elseif($action == "add_item"){
 			<ul>
 			";
 			// Custom pages
+			$dir_files = array();
 			$filenames = "";
 			$dir = "_inc/";
+			$x=0;
 			if ($handle = opendir($dir)) {
 				while (false !== ($file = readdir($handle))) {
 					if ($file === '.') continue;
@@ -540,9 +559,15 @@ elseif($action == "add_item"){
 					if ($file === "login") continue;
 					if ($file === "ucp") continue;
 					if ($file === "setup") continue;
-					// $content_saying = 
 
 
+					$dir_files[] = $file;
+				}
+				closedir($handle);
+			}
+
+			sort($dir_files);
+			foreach($dir_files as $file){
 					$admin_navigation_title = ucfirst($file);
 					$admin_navigation_icon = "$file";
 					$admin_navigation_icon_black_small = "ic_" . $file . "_black_18dp.png";
@@ -550,10 +575,18 @@ elseif($action == "add_item"){
 					$admin_navigation_icon_white_small = "ic_" . $file . "_white_18dp.png";
 					$admin_navigation_icon_white_medium = "ic_" . $file . "_white_24dp.png";
 
-					echo"
-					<li><a href=\"index.php?open=$open&amp;page=$page&amp;action=my_navigation&amp;action=$action&amp;item=$file&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\"><img src=\"_design/gfx/icons/material/$admin_navigation_icon_black_small\" alt=\"$admin_navigation_icon_black_small\" /> $admin_navigation_title</a></li>";
-				}
-				closedir($handle);
+
+					// Check if I have it
+					$navigation_url_mysql = quote_smart($link, $file);
+					$query = "SELECT navigation_id FROM $t_admin_navigation WHERE navigation_url=$navigation_url_mysql AND navigation_user_id=$my_user_id_mysql";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_current_navigation_id) = $row;
+
+					if($get_current_navigation_id == ""){
+						echo"
+						<li><a href=\"index.php?open=$open&amp;page=$page&amp;action=my_navigation&amp;action=$action&amp;item=$file&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\"><img src=\"_design/gfx/icons/material/$admin_navigation_icon_black_small\" alt=\"$admin_navigation_icon_black_small\" /> $admin_navigation_title</a></li>";
+					}
 			}
 			echo"
 
@@ -592,4 +625,85 @@ elseif($action == "my_navigation_auto_setup"){
 		exit;
 	}
 } // my_navigation_auto_setup
+elseif($action == "add_to_favorite_and_visit"){
+	// Me
+	$my_user_id = $_SESSION['admin_user_id'];
+	$my_user_id = output_html($my_user_id);
+	$my_user_id_mysql = quote_smart($link, $my_user_id);
+
+
+	$inp_url = $_GET['item'];
+	$inp_url = output_html($inp_url);
+	$inp_url_mysql = quote_smart($link, $inp_url);
+
+	$inp_title = ucfirst($inp_url);
+	$inp_title = output_html($inp_title);
+	$inp_title_mysql = quote_smart($link, $inp_title);
+
+	$inp_icon = "$inp_url";
+	$inp_icon = output_html($inp_icon);
+	$inp_icon_mysql = quote_smart($link, $inp_icon);
+
+	$inp_icon_black_small = "ic_" . $inp_icon . "_black_18dp.png";
+	$inp_icon_black_small_mysql = quote_smart($link, $inp_icon_black_small);
+
+	$inp_icon_black_medium = "ic" . $inp_icon . "_black_24dp.png";
+	$inp_icon_black_medium_mysql = quote_smart($link, $inp_icon_black_medium);
+
+	$inp_icon_white_small = "ic_" . $inp_icon . "_white_18dp.png";
+	$inp_icon_white_small_mysql = quote_smart($link, $inp_icon_white_small);
+
+	$inp_icon_white_medium = "ic_" . $inp_icon . "_white_24dp.png";
+	$inp_icon_white_medium_mysql = quote_smart($link, $inp_icon_white_medium);
+
+	$inp_icon_color_small = "ic_" . $inp_icon . "_orange_18dp.png";
+	$inp_icon_color_small_mysql = quote_smart($link, $inp_icon_color_small);
+
+	$inp_icon_color_medium = "ic_" . $inp_icon . "_orange_24dp.png";
+	$inp_icon_color_medium_mysql = quote_smart($link, $inp_icon_color_medium);
+
+	// Check if I have this already
+	$query = "SELECT navigation_id FROM $t_admin_navigation WHERE navigation_url=$inp_url_mysql AND navigation_user_id=$my_user_id_mysql";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_current_navigation_id) = $row;
+	if($get_current_navigation_id == ""){
+
+		mysqli_query($link, "INSERT INTO $t_admin_navigation 
+		(navigation_id, navigation_url, navigation_title, navigation_icon, navigation_icon_black_18, navigation_icon_black_24, navigation_icon_white_18, navigation_icon_white_24, 
+		navigation_icon_color_18, navigation_icon_color_24, navigation_user_id, navigation_show, navigation_weight) 
+		VALUES 
+		(NULL, $inp_url_mysql, $inp_title_mysql, $inp_icon_mysql, $inp_icon_black_small_mysql, $inp_icon_black_medium_mysql, 
+		$inp_icon_white_small_mysql, $inp_icon_white_medium_mysql, $inp_icon_color_small_mysql, $inp_icon_color_medium_mysql, 
+		$my_user_id_mysql, '1', '999')")
+		or die(mysqli_error($link));
+
+
+		// Sort all alphabetically
+		/*
+		$x=0;
+		$query = "SELECT navigation_id, navigation_url, navigation_title, navigation_icon_white_18, navigation_icon_black_18, navigation_weight FROM $t_admin_navigation WHERE navigation_user_id=$my_user_id_mysql ORDER BY navigation_title ASC";
+		$result = mysqli_query($link, $query);
+		while($row = mysqli_fetch_row($result)) {
+			list($get_navigation_id, $get_navigation_url, $get_navigation_title, $get_navigation_icon_white_18, $get_navigation_icon_black_18, $get_navigation_weight) = $row;
+			if($get_navigation_weight != "$x"){
+				mysqli_query($link, "UPDATE $t_admin_navigation SET navigation_weight=$x WHERE navigation_id=$get_navigation_id") or die(mysqli_error($link));
+
+			}
+			$x++;
+		}
+		*/
+		
+		$url = "index.php?open=$inp_url&editor_language=$editor_language&l=$l&ft=info&fm=added_to_quick_access_for_next_time";
+		header("Location: $url");
+		exit;
+	}
+	else{
+		$url = "index.php?open=$inp_url&editor_language=$editor_language&l=$l";
+		header("Location: $url");
+		exit;
+	}
+
+
+} // action == add_to_favorite_and_visit
 ?>
