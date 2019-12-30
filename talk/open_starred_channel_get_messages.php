@@ -139,13 +139,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 							if(file_exists("$root/$get_message_from_user_image_path/$get_message_from_user_image_thumb_40") && $get_message_from_user_image_thumb_40 != ""){
 								echo"
-								<a href=\"$root/users/view_profile.php?user_id=$get_message_from_user_id&amp;l=$l\"><img src=\"$root/$get_message_from_user_image_path/$get_message_from_user_image_thumb_40\" alt=\"$get_message_from_user_image_thumb_40\" class=\"talk_messages_from_user_image\" /></a>
+								<a href=\"dm.php?t_user_id=$get_message_from_user_id&amp;l=$l\"><img src=\"$root/$get_message_from_user_image_path/$get_message_from_user_image_thumb_40\" alt=\"$get_message_from_user_image_thumb_40\" class=\"talk_messages_from_user_image\" /></a>
 								";
 							}
 						}
 						else{
 							echo"
-							<a href=\"$root/users/view_profile.php?user_id=$get_message_from_user_id&amp;l=$l\"><img src=\"_gfx/avatar_blank_40.png\" alt=\"avatar_blank_40.png\" class=\"talk_messages_from_user_image\" /></a>
+							<a href=\"dm.php?t_user_id=$get_message_from_user_id&amp;l=$l\"><img src=\"_gfx/avatar_blank_40.png\" alt=\"avatar_blank_40.png\" class=\"talk_messages_from_user_image\" /></a>
 							";
 						}
 						echo"
@@ -155,7 +155,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					  <td style=\"vertical-align:top;\">
 						<!-- Name and text -->	
 						<p>
-						<a href=\"$root/users/view_profile.php?user_id=$get_message_from_user_id&amp;l=$l\" class=\"talk_messages_from_user_alias\">$get_message_from_user_alias</a>
+						<a href=\"dm.php?t_user_id=$get_message_from_user_id&amp;l=$l\" class=\"talk_messages_from_user_alias\">$get_message_from_user_alias</a>
 						<span class=\"talk_messages_date_and_time\">";
 						if($date_saying != "$get_message_date_saying"){
 							echo"$get_message_date_saying ";

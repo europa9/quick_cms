@@ -93,14 +93,14 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		}
 
 
-		if(isset($_POST['inp_file'])){
-			$inp_file = $_POST['inp_file'];
-			$inp_file = output_html($inp_file);
+		if(isset($_POST['inp_attachment_file'])){
+			$inp_attachment_file = $_POST['inp_attachment_file'];
+			$inp_attachment_file = output_html($inp_attachment_file);
 		}
 		else{
-			$inp_file = "";
+			$inp_attachment_file = "";
 		}
-		$inp_file_mysql = quote_smart($link, $inp_file);
+		$inp_attachment_file_mysql = quote_smart($link, $inp_attachment_file);
 
 		if($inp_text != ""){
 
@@ -172,8 +172,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			or die(mysqli_error($link));
 
 			// Attachment?
-			if($inp_file != "" && file_exists("$root/_uploads/talk/images/$get_current_conversation_id/$inp_file")){
-				$extension = get_extension($inp_file);
+			if($inp_attachment_file != "" && file_exists("$root/_uploads/talk/images/$get_current_conversation_id/$inp_attachment_file")){
+				$extension = get_extension($inp_attachment_file);
 
 				$inp_attachment_type = "$extension";
 				$inp_attachment_type = output_html($inp_attachment_type);
@@ -182,11 +182,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$inp_attachment_path = "_uploads/talk/images/$get_current_conversation_id";
 				$inp_attachment_path_mysql = quote_smart($link, $inp_attachment_path);
 
-				$inp_attachment_file = "$inp_file";
-				$inp_attachment_file = output_html($inp_attachment_file);
-				$inp_attachment_file_mysql = quote_smart($link, $inp_attachment_file);
+				
 
-				$inp_attachment_thumb = str_replace(".$extension", "", $inp_file);
+				$inp_attachment_thumb = str_replace(".$extension", "", $inp_attachment_file);
 				$inp_attachment_thumb = $inp_attachment_thumb . "_thumb." . $extension;
 				$inp_attachment_thumb = output_html($inp_attachment_thumb);
 				$inp_attachment_thumb_mysql = quote_smart($link, $inp_attachment_thumb);

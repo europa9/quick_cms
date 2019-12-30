@@ -443,8 +443,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					<form method=\"POST\" action=\"dm_upload_file_as_attachment.php?t_user_id=$t_user_id&amp;l=$l&amp;process=1\" id=\"dm_upload_file_as_attachment_form_data\" enctype=\"multipart/form-data\">
 						
 					<p>
-					<input type=\"hidden\" name=\"inp_attachment_file\" id=\"inp_attachment_file\" value=\"$inp_file\" size=\"25\" />
 					<input type=\"text\" name=\"inp_text\" id=\"inp_text\" value=\"\" size=\"25\" style=\"width: 82%;\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />
+					<input type=\"hidden\" name=\"inp_attachment_file\" id=\"inp_attachment_file\" value=\"$inp_file\" size=\"25\" />
 					
 					";
 					if($inp_thumb != ""){
@@ -456,7 +456,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							<span  id=\"dm_upload_file_as_attachment_form\" style=\"visibility:hidden;\">";
 						}
 						else{
-							echo"<a href=\"$root/_uploads/talk/images/$get_current_conversation_id/$inp_thumb\" style=\"color:red;\">Thumb not found</a>\n";
+							// echo"<a href=\"$root/_uploads/talk/images/$get_current_conversation_id/$inp_thumb\" style=\"color:red;\">Thumb not found</a>\n";
 						}
 					}
 					else{
@@ -507,7 +507,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
        								var inp_text = $(\"#inp_text\").val();
        								var inp_attachment_file = $(\"#inp_attachment_file\").val();
  								// forming the queryString
-								var data = 'l=$l&t_user_id=$get_current_conversation_t_user_id&inp_file='+ inp_attachment_file + '&inp_text='+ inp_text;
+								var data = 'l=$l&t_user_id=$get_current_conversation_t_user_id&inp_attachment_file='+ inp_attachment_file + '&inp_text='+ inp_text;
          
         							// if searchString is not empty
         							if(inp_text) {
@@ -522,6 +522,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
                									success: function(html){
                     									\$(\"#messages\").append(html);
                     									\$(\"#inp_text\").val('');
+                    									\$(\"#inp_attachment_file\").val('');
 											\$('#messages').scrollTop(\$('#messages')[0].scrollHeight);
 
 											// Reset upload image somehow
