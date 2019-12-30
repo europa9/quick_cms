@@ -1,0 +1,65 @@
+@import url("navigation.css");
+
+/*- Where am I -------------------------------------------------------------- */
+div.knowledge_where_am_i{
+	float: left;
+}
+div.knowledge_where_am_i > p{
+	font-size: 90%;
+	display:block;
+	color: #656565;
+	text-decoration:none;
+	margin: 0px 0px 0px 0px;
+	padding: 20px 0px 0px 0px;
+}
+div.knowledge_where_am_i > p > a{
+	padding: 0px 0px 0px 0px;
+}
+div.knowledge_where_am_i > p > span{
+	padding: 0px 4px 0px 4px;
+}
+
+/*- Knowledge menu --------------------------------------------------------- */
+div.knowledge_head_menu{
+	float: right;
+}
+div.knowledge_head_menu > ul{
+	list-style:none;
+	margin: 0px 0px 0px 0px;
+	padding: 0;
+}
+div.knowledge_head_menu > ul > li{
+	float:left;
+	padding: 0px 0px 0px 0px;
+	margin: 20px 0px 0px 0px;
+}
+div.knowledge_head_menu > ul > li > a{
+	font-size: 90%;
+	display:block;
+	color: #344563;
+	text-decoration:none;
+	padding: 0px 0px 0px 8px;
+}
+div.knowledge_head_menu > ul > li > a > img{
+	float: left;
+	padding-right: 4px;
+}
+
+
+/*- Tags ------------------------------------------------------------------- */
+div.knowledge_tags{
+	text-align: right;
+}
+
+/*- Comments ---------------------------------------------------------------- */
+span.knowledge_comment_by{
+	font-size: 90%;
+}
+a.knowledge_comment_author{
+	font-size: 90%;
+}
+a.knowledge_comment_date{
+	font-size: 90%;
+	color: #858585;
+}
+

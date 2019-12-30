@@ -1,0 +1,13 @@
+<?php
+$l_age_restriction = "Aldersbegrensning";
+$l_category = "Kategori";
+$l_cusine = "Kokkekunst";
+$l_example_alcohol = "F.eks. alkohol";
+$l_language = "Spr&aring;k";
+$l_no = "Nei";
+$l_none = "Ingen";
+$l_occasion = "Anledning";
+$l_season = "&Aring;rstid";
+$l_servings = "Porsjoner";
+$l_yes = "Ja";
+?>

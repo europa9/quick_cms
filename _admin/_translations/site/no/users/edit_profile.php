@@ -1,0 +1,33 @@
+<?php
+$l_alias = "Alias";
+$l_please_select = "Vennligst velg";
+$l_gender = "Kj&oslash;nn";
+$l_male = "Mann";
+$l_female = "Kvinne";
+$l_save = "Lagre";
+$l_edit_profile = "Rediger profil";
+$l_work = "Arbeid";
+$l_university = "Universitet";
+$l_high_school = "Videreg&aring;ende";
+$l_languages = "Spr&aring;k";
+$l_website = "Webside";
+$l_interested_in = "Intressert i";
+$l_men = "Menn";
+$l_women = "Kvinner";
+$l_relationship = "Forhold";
+$l_relationship_status = "Forhold status";
+$l_single = "Singel";
+$l_in_a_relationship = "I et forhold";
+$l_engaged = "Forlovet";
+$l_married = "Gift";
+$l_in_a_open_relationship = "I et &aring;pent forhold";
+$l_its_complicated = "Det er komplisert";
+$l_seperated = "Separert";
+$l_divorced = "Skilt";
+$l_widow_widower = "Enke/enkemann";
+$l_about_me = "Om meg";
+$l_about = "Om";
+$l_name = "Navn";
+$l_intrested_in = "Intressert i";
+$l_male_and_female = "Menn og kvinner";
+?>

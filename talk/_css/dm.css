@@ -1,0 +1,44 @@
+
+
+/*- Talk messages -------------------------------------------- */
+#messages{
+    	height: 550px;
+    	max-height: 550px;
+	width: 100%;
+    	overflow-y: scroll;
+    	background: ivory;
+}
+img.talk_messages_from_user_image{
+	border-radius: 10%;
+}
+a.talk_messages_from_user_alias{
+	color: #000;
+	font-weight: bold;
+}
+span.talk_messages_date_and_time{
+	color: #a0a0a2;
+}
+#variable_last_message_id{
+	display: none;
+}
+
+/* New message */
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+.inputfile + label {
+	background: url("../_gfx/icon_add_image.png") no-repeat center center;
+	display: inline-block;
+	cursor: pointer; /* "hand" cursor */
+	width: 16px;
+	margin-right: 6px;
+}
+
+.inputfile + label:hover {
+	background-color: #ccc;
+}

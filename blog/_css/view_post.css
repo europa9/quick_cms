@@ -1,0 +1,30 @@
+/* Image */
+p.view_post_image{
+	line-height: 1.2;	
+	color: #2b2b2b;
+	font-size: 90%;
+}
+
+/* Meta */
+div.view_post_metadata_left{
+	float: left;
+}
+div.view_post_metadata_right{
+	float: right;
+	text-align: right;
+
+}
+
+img.by_author_img{
+	border-radius: 50%;
+	width: 35px;
+	height: 35px;
+}
+
+
+@media screen and (max-width: 52.375em) {
+	div.view_post_metadata_right{
+		float: left;
+		text-align: left;
+	}
+}

@@ -1,0 +1,9 @@
+@import url("index.css");
+@import url("open_main_category.css");
+
+
+img.food_score_img {
+	position: relative;
+	top: 30px;
+	left: 50px;
+}

@@ -1,0 +1,64 @@
+/*- First row text boxes  ----------------------------------------------- */
+div.first_row_flex_row{
+	display: flex;
+	margin-top: -42px;
+	background: #f6f6f7;
+}
+div.flex_col_white_bg{
+	flex: 1;
+	background: #fff;
+	border-radius: 5px;
+	border: #eaeef2 1px solid;
+	box-shadow: 0 2px 3px rgba(0,0,0,0.03);
+	padding: 10px 10px 10px 10px;
+	margin: 0px 20px 20px 20px;
+}
+
+@media screen and (max-width: 52.375em) {
+	div.first_row_flex_row{
+		display: inline-block;
+	}
+	div.flex_col_white_bg{
+		flex: 0;
+	}
+}
+
+
+/* Headline */
+div.flex_col_white_bg_headline_left{
+	float: left;
+}
+div.flex_col_white_bg_headline_left > h2{
+	padding: 8px 0px 8px 0px;
+	margin: 0px 0px 0px 0px;
+}
+div.flex_col_white_bg_headline_right{
+	float: right;
+}
+
+
+
+p.flex_col_white_bg_text_left_content{
+	padding: 5px 0px 0px 0px;
+	margin: 0px 0px 0px 0px;
+	float: left;
+}
+
+div.flex_col_white_bg_text_right{
+	float: right;
+	padding-right: 8px;
+}
+p.flex_col_white_bg_text_right_headline {
+	color: #4d5259;
+	padding: 8px 0px 4px 0px;
+	margin: 0;
+}
+p.flex_col_white_bg_text_right_content{
+	color: #4d5259;
+	font: normal 16px Arial,"Helvetica Neue",Helvetica,sans-serif;
+	letter-spacing: 1px;
+	padding: 0px 0px 0px 0px;
+	margin: 0;
+}
+
+/*- Second row text boxes ----------------------------------------------- */

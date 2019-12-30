@@ -1,0 +1,32 @@
+<?php
+$l_add = "Lagre";
+$l_after_training_lowercase = "etter trening";
+$l_before_training_lowercase = "f&oslash;r trening";
+$l_breakfast_lowercase = "frokost";
+$l_cal_lowercase = "kcal";
+$l_carb_lowercase = "karb";
+$l_dinner_lowercase = "middag";
+$l_fat_lowercase = "fett";
+$l_food = "Mat";
+$l_food_categories = "Kategorier";
+$l_food_search = "S&oslash;k etter mat";
+$l_fridays_lowercase = "fredager";
+$l_lunch_lowercase = "lunsj";
+$l_mondays_lowercase = "mandager";
+$l_new_entry = "Ny oppf&oslash;ring";
+$l_new_food = "Ny mat";
+$l_on_lowercase = "p&aring;";
+$l_on_this_page_you_will_see_food_you_have_added_before = "P&aring; denne siden vil du se mat du har lagt til f&oslash;r.";
+$l_proteins_lowercase = "proteiner";
+$l_recent = "Nylig";
+$l_recipes = "Oppskrifter";
+$l_saturdays_lowercase = "l&oslash;rdager";
+$l_snacks_lowercase = "snacks";
+$l_sundays_lowercase = "s&oslash;ndager";
+$l_supper = "kveldsmat";
+$l_the_more_you_use_the_food_diary_the_smarter_it_gets = "Jo mer du bruker kaloridagboka, jo smartere blir den.";
+$l_the_page_is_smart_so_it_will_remember_what_you_usually_have_for_your = "Denne siden er smart, s&aring; den vil huske hva du spiser til";
+$l_thursdays_lowercase = "torsdager";
+$l_tuesdays_lowercase = "tirsdager";
+$l_wednesdays_lowercase = "onsdager";
+?>

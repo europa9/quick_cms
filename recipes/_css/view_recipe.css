@@ -1,0 +1,174 @@
+/*- Headline recipe ---------------------------------------------------- */
+h1.recipe_headline{
+	font-size: 30px;
+	float: left;
+}
+
+
+/*- Recipe Header left and right --------------------------------------- */
+	/*- Left ------------------------------------------------------- */
+	div.view_recipe_header_left, div.view_recipe_body_left{
+		float: left;
+		width: 500px;
+		padding-right: 25px;
+	}
+	div.view_recipe_header_left > h1{
+		padding-bottom: 0;
+		margin-bottom: 0;
+	}
+
+
+	/*- Right ----------------------------------------------------- */
+	div.view_recipe_header_right, div.view_recipe_body_right{
+		float: right;
+		width: 310px;
+	}
+
+	div.recipe_rating{
+		float: right;
+	}
+
+	div.view_recipe_info_box{
+		clear: right;
+		margin-top: 18px;
+		overflow:auto; 
+		background: #f5f5f2;
+		border-top: #d6dadf 1px solid;
+		border-bottom: #d6dadf 1px solid;
+		padding: 6px 6px 6px 6px;
+	}
+	img.recipe_author_image {
+		float: right;
+	}
+	div.recipe_author_text {
+		float: left;
+	}
+	div.recipe_author_text > p{
+		padding: 0;
+		margin: 0;
+	}
+
+
+
+	@media screen and (max-width: 52.375em) {
+		div.view_recipe_header_left{
+			float: none;
+		}
+		div.view_recipe_header_right{
+			float: none;
+		}
+	}
+
+
+/*- Ingredients ----------------------------------------------------- */
+div.ingredients{
+	
+}
+td.ingredients_headcell, td.ingredients_headcell_desktop{
+	
+}
+
+td.ingredients_body_bodycell, td.ingredients_body_desktop_bodycell{
+	vertical-align: top;
+	border-bottom: #f2f2f2 1px solid;
+	padding: 6px;
+}
+td.ingredients_body_subcell, td.ingredients_body_desktop_subcell{
+	vertical-align: top;
+	border-bottom: #f2f2f2 1px solid;
+	padding: 6px;
+}
+
+input.ingredients_amount{
+	border: #fff 1px solid;
+	border-bottom: #bbbbbb 1px dashed;
+   	text-align: center;
+	width: 28px;
+	min-width: 28px;
+}
+
+div.mobile_only{
+	display: none;
+}
+
+@media screen and (max-width: 52.375em) {
+	td.ingredients_headcell_desktop{
+		display: none;
+	}
+	td.ingredients_body_desktop_bodycell, td.ingredients_body_desktop_subcell {
+		display: none;
+	}
+	div.desktop_only{
+		display: none;
+	}
+	div.mobile_only{
+		display: inline;
+	}
+}
+
+
+
+/*- Intro ------------------------------------------------------------- */
+div.recipe_intro_wrapper{
+	clear: both;
+	margin: 20px 0px 0px 0px;
+	padding: 20px 0px 20px 0px;
+
+}
+div.recipe_intro{
+	border-top: #ccc 1px solid;
+	border-bottom: #ccc 1px solid;
+	margin: 0px 0px 0px 0px;
+
+}
+div.recipe_intro > p{
+	margin: 20px 0px 0px 0px;
+	padding: 0px 0px 20px 0px;
+	font: 20px italic serif;
+}
+
+
+/*- Directions --------------------------------------------------------- */
+div.directions{
+	clear: both;
+}
+div.directions > h2 {
+	margin: 20px 0px 0px 0px;
+	padding: 0;
+}
+
+
+/*- Comments ---------------------------------------------------------- */
+span.recipes_comment_by{
+	font-size: 80%;
+}
+a.recipes_comment_author{
+	font-size: 80%;
+}
+a.recipes_comment_date{
+	font-size: 80%;
+	color: #858585;
+}
+
+
+
+
+
+/*- View recipe show age restrictions waring ---------------------------------------------- */
+div.view_recipe_select_country_row{
+	display: flex;
+}
+
+div.view_recipe_select_country_col{
+	flex: 1;
+	padding: 1px 0px 1px 0px;
+}
+
+@media screen and (max-width: 52.375em) {
+	div.view_recipe_select_country_row{
+		display: inline-block;
+	}
+	div.view_recipe_select_country_col{
+		flex: 0;
+	}
+}

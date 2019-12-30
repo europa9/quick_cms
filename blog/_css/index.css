@@ -1,0 +1,24 @@
+
+
+div.view_posts_author{
+	float: left;
+}
+div.view_posts_date{
+	display: inline-block;
+	padding-left: 10px;
+}
+div.view_posts_comments{
+	float: right;
+}
+
+
+@media screen and (max-width: 52.375em) {
+
+	div.view_posts_date{
+		display: none;
+	}
+	div.view_posts_comments{
+		clear: both;
+		float: none;
+	}
+}

@@ -1,0 +1,67 @@
+			if($energy_diff_med > 0){
+				echo"<span style=\"color: red;\">$energy_diff_med</span>";
+			}
+			elseif($energy_diff_med < 0){
+				echo"<span style=\"color: green;\">$energy_diff_med</span>";
+			}
+			else{
+				echo"<span>$energy_diff_med</span>";
+				$product_score_description = $product_score_description . " $l_have_an_ok_amount_of_calories_lowercase, ";
+			}
+
+			if($fat_diff_med > 0){
+				echo"<span style=\"color: red;\">$fat_diff_med</span>";
+			}
+			elseif($fat_diff_med < 0){
+				echo"<span style=\"color: green;\">$fat_diff_med</span>";
+			}
+			else{
+				echo"<span>$fat_diff_med</span>";
+				$product_score_description = $product_score_description . " $l_ok_amount_of_fat_lowercase, ";
+			}
+			if($food_fat_of_which_saturated_fatty_acids_diff_med > 0){
+				echo"<span style=\"color: red;\"><br />$food_fat_of_which_saturated_fatty_acids_diff_med</span>";
+			}
+			elseif($food_fat_of_which_saturated_fatty_acids_diff_med < 0){
+				echo"<span style=\"color: green;\"><br />$food_fat_of_which_saturated_fatty_acids_diff_med</span>";
+			}
+			else{
+				echo"<span><br />$food_fat_of_which_saturated_fatty_acids_diff_med</span>";
+				$product_score_description = $product_score_description . " $l_ok_amount_of_fat_lowercase, ";
+			}
+			if($carbohydrate_diff_med > 0){
+				echo"<span style=\"color: red;\">$carbohydrate_diff_med</span>";
+			}
+			elseif($carbohydrate_diff_med < 0){
+				echo"<span style=\"color: green;\">$carbohydrate_diff_med</span>";
+			}
+			else{
+				echo"<span>$carbohydrate_diff_med</span>";
+			}
+			if($food_carbohydrates_of_which_sugars_diff_med > 0){
+				echo"<span style=\"color: red;\"><br />$food_carbohydrates_of_which_sugars_diff_med</span>";
+			}
+			elseif($food_carbohydrates_of_which_sugars_diff_med < 0){
+				echo"<span style=\"color: green;\"><br />$food_carbohydrates_of_which_sugars_diff_med</span>";
+			}
+			else{
+				echo"<span><br />$food_carbohydrates_of_which_sugars_diff_med</span>";
+			}
+			if($proteins_diff_med < 0){
+				echo"<span style=\"color: green;\">$proteins_diff_med</span>";
+			}
+			elseif($proteins_diff_med > 0){
+				echo"<span style=\"color: red;\">$proteins_diff_med</span>";
+			}
+			else{
+				echo"<span>$proteins_diff_med*</span>";
+			}
+			if($salt_diff_med > 0){
+				echo"<span style=\"color: red;\">$salt_diff_med</span>";
+			}
+			elseif($salt_diff_med < 0){
+				echo"<span style=\"color: green;\">$salt_diff_med</span>";
+			}
+			else{
+				echo"<span>$salt_diff_med</span>";
+			}

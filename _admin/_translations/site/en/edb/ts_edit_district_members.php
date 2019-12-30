@@ -1,0 +1,32 @@
+<?php
+$l_members_lowercase = "members";
+$l_members = "Members";
+$l_username = "Username";
+$l_rank = "Rank";
+$l_actions = "Actions";
+$l_edit = "Edit";
+$l_delete = "Delete";
+$l_alias = "Alias";
+$l_admin = "Admin";
+$l_moderator = "Moderator";
+$l_editor = "Editor";
+$l_member = "Member";
+$l_save = "Save";
+$l_view_only = "View only";
+$l_changes_saved = "Changes saved";
+$l_view_request = "View request";
+$l_request = "Request";
+$l_decline_request = "Decline request";
+$l_accept_request = "Accept request";
+$l_name = "Name";
+$l_email = "Email";
+$l_position = "Position";
+$l_department = "Department";
+$l_location = "Location";
+$l_about = "About";
+$l_requested_date = "Requested date";
+$l_are_you_sure_you_want_to_delete_the_member_from_the_district = "Are you sure you want to delete the member from the district";
+$l_confirm = "Confirm";
+$l_editor_limited = "Editor limited";
+$l_can_only_edit_detective_notes_and_detective_tasks = "Can only edit detective notes and detective tasks";
+?>
