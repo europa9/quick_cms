@@ -220,10 +220,7 @@ echo"
 					include("$root/_admin/_translations/site/$l/office_calendar/ts_header.php");
 					include("$root/_admin/_translations/site/$l/talk/ts_header.php");
 					echo"
-					<li><a href=\"$root/edb/index.php?l=$l\">$l_edb</a></li>
-					<li><a href=\"$root/knowledge/index.php?l=$l\">$l_spaces</a></li>
-					<li><a href=\"$root/discuss/index.php?l=$l\">Forum</a></li>
-					<li><a href=\"$root/office_calendar/index.php?l=$l\">$l_office_calendar</a></li>";
+					<li><a href=\"$root/discuss/index.php?l=$l\">Forum</a></li>";
 
 					// Total unread messages
 					$t_talk_total_unread = $mysqlPrefixSav . "talk_total_unread";

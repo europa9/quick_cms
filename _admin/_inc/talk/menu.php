@@ -28,6 +28,7 @@ if($page == "menu"){
 
 
 echo"
+			<li><a href=\"index.php?open=talk&amp;page=emojies_index&amp;editor_language=$editor_language\""; if($page == "emojies_index"){ echo" class=\"selected\""; } echo">Emojies index</a></li>
 			<li><a href=\"index.php?open=talk&amp;page=tables&amp;editor_language=$editor_language\""; if($page == "tables"){ echo" class=\"selected\""; } echo">Tables</a></li>
 		
 ";
