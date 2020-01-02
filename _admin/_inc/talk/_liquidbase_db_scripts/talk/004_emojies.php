@@ -109,6 +109,10 @@ else{
 	   emoji_main_category_id INT,
 	   emoji_sub_category_id INT,
 	   emoji_title VARCHAR(200),
+	   emoji_replace_a VARCHAR(200),
+	   emoji_replace_b VARCHAR(200),
+	   emoji_replace_c VARCHAR(200),
+	   emoji_is_active INT,
 	   emoji_code VARCHAR(200),
 	   emoji_char VARCHAR(200),
 	   emoji_source_path VARCHAR(200),
@@ -227,9 +231,9 @@ else{
 		if($get_emoji_id == ""){
 			// Insert
 			mysqli_query($link, "INSERT INTO $t_talk_emojies_index 
-			(emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_code, emoji_char, emoji_skin_tone, emoji_created_by_user_id, emoji_created_datetime) 
+			(emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_is_active, emoji_code, emoji_char, emoji_skin_tone, emoji_created_by_user_id, emoji_created_datetime) 
 			VALUES 
-			(NULL, $get_main_category_id, $get_sub_category_id, $inp_emoji_title_mysql, $inp_emoji_code_mysql, $inp_emoji_char_mysql, $inp_skin_tone_mysql, 1, '$datetime')")
+			(NULL, $get_main_category_id, $get_sub_category_id, $inp_emoji_title_mysql, 1, $inp_emoji_code_mysql, $inp_emoji_char_mysql, $inp_skin_tone_mysql, 1, '$datetime')")
 			or die(mysqli_error($link));
 
 			$sub_category_counter++;
