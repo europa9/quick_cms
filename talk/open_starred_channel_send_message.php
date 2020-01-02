@@ -24,6 +24,7 @@ else{ $root = "../../.."; }
 
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
+include("$root/_admin/_data/talk.php");
 
 
 /*- Tables ---------------------------------------------------------------------------- */
@@ -33,6 +34,14 @@ $t_talk_channels_users_online	= $mysqlPrefixSav . "talk_channels_users_online";
 $t_talk_private			= $mysqlPrefixSav . "talk_private";
 $t_talk_users_starred_channels	= $mysqlPrefixSav . "talk_users_starred_channels";
 $t_talk_users_starred_users	= $mysqlPrefixSav . "talk_users_starred_users";
+
+/*- Functions ------------------------------------------------------------------------- */
+if($talkEncryptionMethodSav == "openssl_encrypt(AES-128-CBC)"){
+	include("_encrypt_decrypt/openssl_encrypt_aes-128-cbc.php");
+}
+elseif($talkEncryptionMethodSav == "caesar_cipher(random)"){
+	include("_encrypt_decrypt/caesar_cipher.php");
+}
 
 /*- Variables ------------------------------------------------------------------------- */
 $tabindex = 0;
@@ -91,12 +100,32 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$month = date("m");
 				if($year != "$get_current_channel_encryption_key_year"){
 					// make a new encryption string for this year month
-					$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-					$randstring = '';
-					for ($i = 0; $i < 10; $i++) {
-						$randstring = $randstring . $characters[rand(0, strlen($characters))];
+					if($talkEncryptionMethodSav == "none"){
+						$inp_encryption_key_mysql = quote_smart($link, "");
+
+						// Transfer
+						$get_current_channel_encryption_key = "";
+
 					}
-					$inp_encryption_key_mysql = quote_smart($link, $randstring);
+					elseif($talkEncryptionMethodSav == "openssl_encrypt(AES-128-CBC)"){
+						$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+						$randstring = '';
+						for ($i = 0; $i < 10; $i++) {
+							$randstring = $randstring . $characters[rand(0, strlen($characters))];
+						}
+						$inp_encryption_key_mysql = quote_smart($link, $randstring);
+
+						// Transfer
+						$get_current_channel_encryption_key = "$randstring";
+					}
+					elseif($talkEncryptionMethodSav == "caesar_cipher(random)"){
+						$random = rand(0,10);
+						$inp_encryption_key_mysql = quote_smart($link, $random);
+
+						// Transfer
+						$get_current_channel_encryption_key = "$random";
+					}
+
 					$result_update = mysqli_query($link, "UPDATE $t_talk_channels_index SET 
 						channel_encryption_key=$inp_encryption_key_mysql,
 						channel_encryption_key_year=$year, 
@@ -105,19 +134,21 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					// Delete old messages (new year - new encrytion string)
 					$result_delete = mysqli_query($link, "DELETE FROM $t_talk_channels_messages WHERE message_channel_id=$get_current_channel_id") or die(mysqli_error($link));
 					
-
-					// Transfer
-					$get_current_channel_encryption_key = "$randstring";
 				}
 
 				// Encrypt text
-				$ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
-				$iv = openssl_random_pseudo_bytes($ivlen);
-				$ciphertext_raw = openssl_encrypt($inp_text, $cipher, $get_current_channel_encryption_key, $options=OPENSSL_RAW_DATA, $iv);
-				$hmac = hash_hmac('sha256', $ciphertext_raw, $get_current_channel_encryption_key, $as_binary=true);
-				$ciphertext = base64_encode( $iv.$hmac.$ciphertext_raw );
-
-				$inp_text_mysql = quote_smart($link, $ciphertext);
+				if($talkEncryptionMethodSav == "none"){
+					$inp_text_mysql = quote_smart($link, $inp_text);
+				}
+				elseif($talkEncryptionMethodSav == "openssl_encrypt(AES-128-CBC)"){
+					$inp_text_encrypted = openssl_encrypt_aes_128_cbc_encrypt($inp_text, $get_current_channel_encryption_key);
+					$inp_text_mysql = quote_smart($link, $inp_text_encrypted);
+				}
+				elseif($talkEncryptionMethodSav == "caesar_cipher(random)"){
+					$cipher = new KKiernan\CaesarCipher(); 
+					$inp_text_encrypted = $cipher->encrypt($inp_text, $get_current_channel_encryption_key);
+					$inp_text_mysql = quote_smart($link, $inp_text_encrypted);
+				}
 
 				// Dates
 				$datetime = date("Y-m-d H:i:s");

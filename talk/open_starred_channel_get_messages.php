@@ -24,6 +24,7 @@ else{ $root = "../../.."; }
 
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
+include("$root/_admin/_data/talk.php");
 
 
 /*- Tables ---------------------------------------------------------------------------- */
@@ -33,6 +34,14 @@ $t_talk_channels_users_online	= $mysqlPrefixSav . "talk_channels_users_online";
 $t_talk_private			= $mysqlPrefixSav . "talk_private";
 $t_talk_users_starred_channels	= $mysqlPrefixSav . "talk_users_starred_channels";
 $t_talk_users_starred_users	= $mysqlPrefixSav . "talk_users_starred_users";
+
+/*- Functions ------------------------------------------------------------------------- */
+if($talkEncryptionMethodSav == "openssl_encrypt(AES-128-CBC)"){
+	include("_encrypt_decrypt/openssl_encrypt_aes-128-cbc.php");
+}
+elseif($talkEncryptionMethodSav == "caesar_cipher(random)"){
+	include("_encrypt_decrypt/caesar_cipher.php");
+}
 
 /*- Variables ------------------------------------------------------------------------- */
 $tabindex = 0;
@@ -107,19 +116,18 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 										";
 				}
 				else{
-					
 					// Decrypt message
-					$c = base64_decode($get_message_text);
-					$ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
-					$iv = substr($c, 0, $ivlen);
-					$hmac = substr($c, $ivlen, $sha2len=32);
-					$ciphertext_raw = substr($c, $ivlen+$sha2len);
-					$original_plaintext = openssl_decrypt($ciphertext_raw, $cipher, $get_current_channel_encryption_key, $options=OPENSSL_RAW_DATA, $iv);
-					$calcmac = hash_hmac('sha256', $ciphertext_raw, $get_current_channel_encryption_key, $as_binary=true);
-					if (hash_equals($hmac, $calcmac))//PHP 5.6+ timing attack safe comparison
-					{
-					    $get_message_text = "$original_plaintext";
+					if($talkEncryptionMethodSav == "none"){
+											
 					}
+					elseif($talkEncryptionMethodSav == "openssl_encrypt(AES-128-CBC)"){
+						$get_message_text = openssl_decrypt_aes_128_cbc_decrypt($get_message_text, $get_current_channel_encryption_key);
+					}
+					elseif($talkEncryptionMethodSav == "caesar_cipher(random)"){
+						$cipher = new KKiernan\CaesarCipher();
+						$get_message_text = $cipher->encrypt($get_message_text, -$get_current_channel_encryption_key);
+					}
+					
 
 
 					echo"
