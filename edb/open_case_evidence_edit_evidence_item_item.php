@@ -361,6 +361,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						} // if($storage_location_abbr != ""){
 					} // Storage
 
+					// Name
+					$inp_name = $_POST['inp_name'];
+					$inp_name = output_html($inp_name);
+					$inp_name_mysql = quote_smart($link, $inp_name);
+					
 					// Parent
 					$inp_parent_item_id = $_POST['inp_parent_item_id'];
 					$inp_parent_item_id = output_html($inp_parent_item_id);
@@ -457,6 +462,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 									item_serial_number=$inp_serial_number_mysql,
 									item_os_title=$inp_os_title_mysql,
 									item_os_version=$inp_os_version_mysql,
+									item_name=$inp_name_mysql,
 									item_timezone=$inp_item_timezone_mysql,
 									item_time_now=$inp_time_now_mysql,
 									item_correct_time_now=$inp_correct_time_now_mysql,

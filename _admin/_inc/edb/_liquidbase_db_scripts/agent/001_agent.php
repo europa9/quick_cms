@@ -17,35 +17,6 @@ if(!(isset($define_access_to_control_panel))){
 echo"
 
 
-<!-- edb_agent_log -->
-";
-
-$query = "SELECT * FROM $t_edb_agent_log LIMIT 1";
-$result = mysqli_query($link, $query);
-if($result !== FALSE){
-	// Count rows
-	$row_cnt = mysqli_num_rows($result);
-	echo"
-	<p>$t_edb_agent_log: $row_cnt</p>
-	";
-}
-else{
-
-
-	mysqli_query($link, "CREATE TABLE $t_edb_agent_log(
-	  agent_log_id INT NOT NULL AUTO_INCREMENT,
-	  PRIMARY KEY(agent_log_id), 
-	   agent_log_datetime DATETIME,
-	   agent_log_date_ddmmyyhi VARCHAR(200),
-	   agent_log_date_ddmmyyyyhi VARCHAR(200),
-	   agent_log_date_saying VARCHAR(200),
-	   agent_log_text TEXT
-	   )")
-	   or die(mysqli_error());
-
-}
-echo"
-<!-- //edb_agent_log -->
 
 <!-- edb_agent_user_active_inactive -->
 ";

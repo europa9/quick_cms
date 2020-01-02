@@ -2,8 +2,8 @@
 /**
 *
 * File: _admin/_inc/edb/stations_directories.php
-* Version 11:55 30.12.2017
-* Copyright (c) 2008-2017 Sindre Andre Ditlefsen
+* Version 10:25 15.10.2019
+* Copyright (c) 2019 Sindre Andre Ditlefsen
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -223,7 +223,7 @@ if($action == ""){
 				 <tbody id=\"autosearch_search_results_hide\">
 
 					";
-					$query = "SELECT directory_id, directory_station_id, directory_station_title, directory_type, directory_address FROM $t_edb_stations_directories";
+					$query = "SELECT directory_id, directory_station_id, directory_station_title, directory_type, directory_address_linux, directory_address_windows, directory_address_prefered_for_agent FROM $t_edb_stations_directories";
 					if($order_by == "directory_id" OR $order_by == "directory_station_title" OR $order_by == "directory_type" OR $order_by == "directory_address"){
 						if($order_method  == "asc" OR $order_method == "desc"){
 							$query = $query  . " ORDER BY $order_by $order_method";
@@ -234,7 +234,7 @@ if($action == ""){
 					}
 					$result = mysqli_query($link, $query);
 					while($row = mysqli_fetch_row($result)) {
-						list($get_directory_id, $get_directory_station_id, $get_directory_station_title, $get_directory_type, $get_directory_address) = $row;
+						list($get_directory_id, $get_directory_station_id, $get_directory_station_title, $get_directory_type, $get_directory_address_linux, $get_directory_address_windows, $get_directory_address_prefered_for_agent) = $row;
 			
 						// Style
 						if(isset($style) && $style == ""){
@@ -264,7 +264,7 @@ if($action == ""){
 						  </td>
 						  <td class=\"$style\">
 							<span>
-							$get_directory_address
+							$get_directory_address_linux<br />$get_directory_address_windows
 							</span>
 						  </td>
 						 </tr>";
@@ -461,7 +461,7 @@ elseif($action == "open_station"){
 
 					";
 
-					$query = "SELECT directory_id, directory_station_id, directory_station_title, directory_type, directory_address FROM $t_edb_stations_directories WHERE directory_station_id=$get_current_station_id";
+					$query = "SELECT directory_id, directory_station_id, directory_station_title, directory_type, directory_address_linux, directory_address_windows, directory_address_prefered_for_agent FROM $t_edb_stations_directories WHERE directory_station_id=$get_current_station_id";
 					if($order_by == "directory_id" OR $order_by == "directory_station_title" OR $order_by == "directory_type" OR $order_by == "directory_address"){
 						if($order_method  == "asc" OR $order_method == "desc"){
 							$query = $query  . " ORDER BY $order_by $order_method";
@@ -473,7 +473,7 @@ elseif($action == "open_station"){
 
 					$result = mysqli_query($link, $query);
 					while($row = mysqli_fetch_row($result)) {
-						list($get_directory_id, $get_directory_station_id, $get_directory_station_title, $get_directory_type, $get_directory_address) = $row;
+						list($get_directory_id, $get_directory_station_id, $get_directory_station_title, $get_directory_type, $get_directory_address_linux, $get_directory_address_windows, $get_directory_address_prefered_for_agent) = $row;
 			
 						// Style
 						if(isset($style) && $style == ""){
@@ -503,7 +503,8 @@ elseif($action == "open_station"){
 						  </td>
 						  <td class=\"$style\">
 							<span>
-							$get_directory_address
+							$get_directory_address_linux<br />
+							$get_directory_address_windows
 							</span>
 						  </td>
 						 </tr>";
@@ -524,10 +525,10 @@ elseif($action == "open_directory"){
 	// Find directory
 
 	$directory_id_mysql = quote_smart($link, $directory_id);
-	$query = "SELECT directory_id, directory_station_id, directory_station_title, directory_type, directory_address, directory_last_checked_for_new_files_counter, directory_last_checked_for_new_files_time, directory_last_checked_for_new_files_hour, directory_last_checked_for_new_files_minute, directory_now_size_last_calculated_day, directory_now_size_last_calculated_hour, directory_now_size_last_calculated_minute, directory_now_size_mb, directory_now_size_gb, directory_available_size_mb, directory_available_size_gb, directory_available_size_percentage FROM $t_edb_stations_directories WHERE directory_id=$directory_id_mysql";
+	$query = "SELECT directory_id, directory_station_id, directory_station_title, directory_type, directory_address_linux, directory_address_windows, directory_address_prefered_for_agent, directory_last_checked_for_new_files_counter, directory_last_checked_for_new_files_time, directory_last_checked_for_new_files_hour, directory_last_checked_for_new_files_minute, directory_now_size_last_calculated_day, directory_now_size_last_calculated_hour, directory_now_size_last_calculated_minute, directory_now_size_mb, directory_now_size_gb, directory_available_size_mb, directory_available_size_gb, directory_available_size_percentage FROM $t_edb_stations_directories WHERE directory_id=$directory_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_directory_id, $get_current_directory_station_id, $get_current_directory_station_title, $get_current_directory_type, $get_current_directory_address, $get_current_directory_last_checked_for_new_files_counter, $get_current_directory_last_checked_for_new_files_time, $get_current_directory_last_checked_for_new_files_hour, $get_current_directory_last_checked_for_new_files_minute, $get_current_directory_now_size_last_calculated_day, $get_current_directory_now_size_last_calculated_hour, $get_current_directory_now_size_last_calculated_minute, $get_current_directory_now_size_mb, $get_current_directory_now_size_gb, $get_current_directory_available_size_mb, $get_current_directory_available_size_gb, $get_current_directory_available_size_percentage) = $row;
+	list($get_current_directory_id, $get_current_directory_station_id, $get_current_directory_station_title, $get_current_directory_type, $get_current_directory_address_linux, $get_current_directory_address_windows, $get_current_directory_address_prefered_for_agent, $get_current_directory_last_checked_for_new_files_counter, $get_current_directory_last_checked_for_new_files_time, $get_current_directory_last_checked_for_new_files_hour, $get_current_directory_last_checked_for_new_files_minute, $get_current_directory_now_size_last_calculated_day, $get_current_directory_now_size_last_calculated_hour, $get_current_directory_now_size_last_calculated_minute, $get_current_directory_now_size_mb, $get_current_directory_now_size_gb, $get_current_directory_available_size_mb, $get_current_directory_available_size_gb, $get_current_directory_available_size_percentage) = $row;
 	
 
 
@@ -555,11 +556,21 @@ elseif($action == "open_directory"){
 			$inp_type = output_html($inp_type);
 			$inp_type_mysql = quote_smart($link, $inp_type);
 
-			$inp_address = $_POST['inp_address'];
-			$inp_address = output_html($inp_address);
-			$inp_address = str_replace("&#92;", "\\", $inp_address);
-			$inp_address = str_replace("&#92", "\\", $inp_address);
-			$inp_address_mysql = quote_smart($link, $inp_address);
+			$inp_address_linux = $_POST['inp_address_linux'];
+			$inp_address_linux = output_html($inp_address_linux);
+			$inp_address_linux = str_replace("&#92;", "\\", $inp_address_linux);
+			$inp_address_linux = str_replace("&#92", "\\", $inp_address_linux);
+			$inp_address_linux_mysql = quote_smart($link, $inp_address_linux);
+
+			$inp_address_windows = $_POST['inp_address_windows'];
+			$inp_address_windows = output_html($inp_address_windows);
+			$inp_address_windows = str_replace("&#92;", "\\", $inp_address_windows);
+			$inp_address_windows = str_replace("&#92", "\\", $inp_address_windows);
+			$inp_address_windows_mysql = quote_smart($link, $inp_address_windows);
+
+			$inp_address_prefered_for_agent = $_POST['inp_address_prefered_for_agent'];
+			$inp_address_prefered_for_agent = output_html($inp_address_prefered_for_agent);
+			$inp_address_prefered_for_agent_mysql = quote_smart($link, $inp_address_prefered_for_agent);
 
 			$inp_available_size_mb = $_POST['inp_available_size_mb'];
 			$inp_available_size_mb = output_html($inp_available_size_mb);
@@ -577,7 +588,9 @@ elseif($action == "open_directory"){
 							directory_district_title=$inp_district_title_mysql, 
 
 							directory_type=$inp_type_mysql, 
-							directory_address=$inp_address_mysql, 
+							directory_address_linux=$inp_address_linux_mysql, 
+							directory_address_windows=$inp_address_windows_mysql, 
+							directory_address_prefered_for_agent=$inp_address_prefered_for_agent_mysql, 
 							directory_available_size_mb=$inp_available_size_mb_mysql, 
 							directory_available_size_gb=$inp_available_size_gb_mysql
 							 WHERE directory_id=$get_current_directory_id") or die(mysqli_error($link));
@@ -704,8 +717,20 @@ elseif($action == "open_directory"){
 				</select>
 				</p>
 
-				<p>Directory address:<br />
-				<input type=\"text\" name=\"inp_address\" value=\"$get_current_directory_address\" size=\"25\" />
+				<p>Directory address Linux (//home/user/mirror_files):<br />
+				<input type=\"text\" name=\"inp_address_linux\" value=\"$get_current_directory_address_linux\" size=\"25\" style=\"width: 98%;\" />
+				</p>
+
+				<p>Directory address Windows (X:\mirror_files):<br />
+				<input type=\"text\" name=\"inp_address_windows\" value=\"$get_current_directory_address_windows\" size=\"25\" style=\"width: 98%;\" />
+				</p>
+
+				<p>Directory address prefered for agent:<br />
+				<span class=\"smal\">If the server is a Linux or Windows server</span><br />
+				<select name=\"inp_address_prefered_for_agent\">
+					<option value=\"linux\""; if($get_current_directory_address_prefered_for_agent == "linux"){ echo" selected=\"selected\""; } echo">Linux</option>
+					<option value=\"windows\""; if($get_current_directory_address_prefered_for_agent == "windows"){ echo" selected=\"selected\""; } echo">Windows</option>
+				</select>
 				</p>
 
 				<p>Available size in mb:<br />
@@ -730,10 +755,10 @@ elseif($action == "delete_directory"){
 	// Find directory
 
 	$directory_id_mysql = quote_smart($link, $directory_id);
-	$query = "SELECT directory_id, directory_station_id, directory_station_title, directory_type, directory_address, directory_last_checked_for_new_files_counter, directory_last_checked_for_new_files_time, directory_last_checked_for_new_files_hour, directory_last_checked_for_new_files_minute, directory_now_size_last_calculated_day, directory_now_size_last_calculated_hour, directory_now_size_last_calculated_minute, directory_now_size_mb, directory_now_size_gb, directory_available_size_mb, directory_available_size_gb, directory_available_size_percentage FROM $t_edb_stations_directories WHERE directory_id=$directory_id_mysql";
+	$query = "SELECT directory_id, directory_station_id, directory_station_title, directory_type, directory_last_checked_for_new_files_counter, directory_last_checked_for_new_files_time, directory_last_checked_for_new_files_hour, directory_last_checked_for_new_files_minute, directory_now_size_last_calculated_day, directory_now_size_last_calculated_hour, directory_now_size_last_calculated_minute, directory_now_size_mb, directory_now_size_gb, directory_available_size_mb, directory_available_size_gb, directory_available_size_percentage FROM $t_edb_stations_directories WHERE directory_id=$directory_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_directory_id, $get_current_directory_station_id, $get_current_directory_station_title, $get_current_directory_type, $get_current_directory_address, $get_current_directory_last_checked_for_new_files_counter, $get_current_directory_last_checked_for_new_files_time, $get_current_directory_last_checked_for_new_files_hour, $get_current_directory_last_checked_for_new_files_minute, $get_current_directory_now_size_last_calculated_day, $get_current_directory_now_size_last_calculated_hour, $get_current_directory_now_size_last_calculated_minute, $get_current_directory_now_size_mb, $get_current_directory_now_size_gb, $get_current_directory_available_size_mb, $get_current_directory_available_size_gb, $get_current_directory_available_size_percentage) = $row;
+	list($get_current_directory_id, $get_current_directory_station_id, $get_current_directory_station_title, $get_current_directory_type, $get_current_directory_last_checked_for_new_files_counter, $get_current_directory_last_checked_for_new_files_time, $get_current_directory_last_checked_for_new_files_hour, $get_current_directory_last_checked_for_new_files_minute, $get_current_directory_now_size_last_calculated_day, $get_current_directory_now_size_last_calculated_hour, $get_current_directory_now_size_last_calculated_minute, $get_current_directory_now_size_mb, $get_current_directory_now_size_gb, $get_current_directory_available_size_mb, $get_current_directory_available_size_gb, $get_current_directory_available_size_percentage) = $row;
 	
 
 
@@ -875,11 +900,21 @@ elseif($action == "new_directory"){
 		$inp_type = output_html($inp_type);
 		$inp_type_mysql = quote_smart($link, $inp_type);
 
-		$inp_address = $_POST['inp_address'];
-		$inp_address = output_html($inp_address);
-		$inp_address = str_replace("&#92;", "\\", $inp_address);
-		$inp_address = str_replace("&#92", "\\", $inp_address);
-		$inp_address_mysql = quote_smart($link, $inp_address);
+		$inp_address_linux = $_POST['inp_address_linux'];
+		$inp_address_linux = output_html($inp_address_linux);
+		$inp_address_linux = str_replace("&#92;", "\\", $inp_address_linux);
+		$inp_address_linux = str_replace("&#92", "\\", $inp_address_linux);
+		$inp_address_linux_mysql = quote_smart($link, $inp_address_linux);
+
+		$inp_address_windows = $_POST['inp_address_windows'];
+		$inp_address_windows = output_html($inp_address_windows);
+		$inp_address_windows = str_replace("&#92;", "\\", $inp_address_windows);
+		$inp_address_windows = str_replace("&#92", "\\", $inp_address_windows);
+		$inp_address_windows_mysql = quote_smart($link, $inp_address_windows);
+
+		$inp_address_prefered_for_agent = $_POST['inp_address_prefered_for_agent'];
+		$inp_address_prefered_for_agent = output_html($inp_address_prefered_for_agent);
+		$inp_address_prefered_for_agent_mysql = quote_smart($link, $inp_address_prefered_for_agent);
 
 		$inp_available_size_mb = $_POST['inp_available_size_mb'];
 		$inp_available_size_mb = output_html($inp_available_size_mb);
@@ -892,9 +927,9 @@ elseif($action == "new_directory"){
 			
 
 		mysqli_query($link, "INSERT INTO $t_$t_edb_stations_directories 
-		(directory_id, directory_station_id, directory_station_title, directory_district_id, directory_district_title, directory_type, directory_address, directory_available_size_mb, directory_available_size_gb) 
+		(directory_id, directory_station_id, directory_station_title, directory_district_id, directory_district_title, directory_type, directory_address_linux, directory_address_windows, directory_address_prefered_for_agent, directory_available_size_mb, directory_available_size_gb) 
 		VALUES 
-		(NULL, $inp_station_id_mysql, $inp_station_title_mysql, $get_current_station_district_id, $inp_district_title_mysql, $inp_type_mysql, $inp_address_mysql, $inp_available_size_mb_mysql, $inp_available_size_gb_mysql)
+		(NULL, $inp_station_id_mysql, $inp_station_title_mysql, $get_current_station_district_id, $inp_district_title_mysql, $inp_type_mysql, $inp_address_linux_mysql, $inp_address_windows_mysql, $inp_address_prefered_for_agent_mysql, $inp_available_size_mb_mysql, $inp_available_size_gb_mysql)
 		") or die(mysqli_error($link));
 
 		
@@ -969,8 +1004,21 @@ elseif($action == "new_directory"){
 		</select>
 		</p>
 
-		<p>Directory address:<br />
-		<input type=\"text\" name=\"inp_address\" value=\"\" size=\"25\" />
+
+		<p>Directory address Linux (//home/user/mirror_files):<br />
+		<input type=\"text\" name=\"inp_address_linux\" value=\"\" size=\"25\" style=\"width: 98%;\" />
+		</p>
+
+		<p>Directory address Windows (X:\mirror_files):<br />
+		<input type=\"text\" name=\"inp_address_windows\" value=\"\" size=\"25\" style=\"width: 98%;\" />
+		</p>
+
+		<p>Directory address prefered for agent:<br />
+		<span class=\"smal\">If the server is a Linux or Windows server</span><br />
+		<select name=\"inp_address_prefered_for_agent\">
+			<option value=\"linux\">Linux</option>
+			<option value=\"windows\">Windows</option>
+		</select>
 		</p>
 
 		<p>Available size in mb:<br />

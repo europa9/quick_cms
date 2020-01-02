@@ -420,6 +420,14 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 																$row_m = mysqli_fetch_row($result_m);
 																list($get_current_mirror_file_id) = $row_m;
 													
+																// Update EXT (we sometimes get ext 0001, and MySQL stores it as "1" only"
+																$sql = "UPDATE $t_edb_case_index_evidence_items_mirror_files SET mirror_file_ext=? WHERE mirror_file_id='$get_current_mirror_file_id'";
+																$stmt = $link->prepare($sql);
+																$stmt->bind_param("s", $inp_mirror_file_ext);
+																$stmt->execute();
+																if ($stmt->errno) {
+																	echo "FAILURE!!! " . $stmt->error; die;
+																}
 
 																// Ping on
 																$get_current_case_id = "$get_case_id";

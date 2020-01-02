@@ -36,8 +36,6 @@ else{
 	  machine_id INT NOT NULL AUTO_INCREMENT,
 	  PRIMARY KEY(machine_id), 
 	   machine_name VARCHAR(200), 
-	   machine_type_id INT, 
-	   machine_type_title VARCHAR(200), 
 	   machine_os VARCHAR(200), 
 	   machine_ip VARCHAR(200),
 	   machine_mac VARCHAR(200),
@@ -59,17 +57,45 @@ else{
 
 
 	mysqli_query($link, "INSERT INTO $t_edb_machines_index
-	(machine_id, machine_name, machine_type_id, machine_type_title, machine_os, machine_ip, machine_mac, machine_key, machine_description, machine_station_id, machine_station_title) 
+	(machine_id, machine_name,  machine_os, machine_ip, machine_mac, machine_key, machine_description, machine_station_id, machine_station_title) 
 	VALUES 
-	(NULL, 'DPAStavAutoXway1', '1', 'X-Ways', 'Windows 10', '10.1.0.50', '50:60:70:80', 'stavanger_xway_1', 'X-way machine 1 Creates cases and processes them', 1, 'Stavanger'),
-	(NULL, 'DPAStavAutoIEF1', '2', 'IEF', 'Windows 10', '10.1.0.51', '50:60:70:81', 'stavanger_ief_1', 'IEF 1 Creates cases and processes them', 1, 'Stavanger'),
-	(NULL, 'DPAHaugAutoXway1', '1', 'X-Ways', 'Windows 10', '10.2.0.50', '50:60:70:90', 'haugesund_xway_1', 'X-way machine 1 Creates cases and processes them', 2, 'Haugesund'),
-	(NULL, 'DPAHaugAutoIEF1', '2', 'IEF', 'Windows 10', '10.2.0.51', '50:60:70:91', 'stavanger_ief_1', 'IEF 1 Creates cases and processes them', 2, 'Haugesund')
+	(NULL, 'DPA Stavanger Auto 1', 'Windows 10', '10.1.0.50', '50:60:70:80', 'stavanger_xway_1', 'X-way machine 1 Creates cases and processes them', 1, 'Stavanger'), 
+	(NULL, 'DPA Haugesund Auto 1', 'Windows 10', '10.2.0.50', '50:60:70:90', 'haugesund_xway_1', 'X-way machine 1 Creates cases and processes them', 2, 'Haugesund')
 	") or die(mysqli_error($link));
 
 }
 echo"
 <!-- //edb_machines_index -->
+
+<!-- edb_machines_index_types -->
+";
+
+$query = "SELECT * FROM $t_edb_machines_index_types LIMIT 1";
+$result = mysqli_query($link, $query);
+if($result !== FALSE){
+	// Count rows
+	$row_cnt = mysqli_num_rows($result);
+	echo"
+	<p>$t_edb_machines_index_types: $row_cnt</p>
+	";
+}
+else{
+
+
+	mysqli_query($link, "CREATE TABLE $t_edb_machines_index_types(
+	  machine_index_type_id INT NOT NULL AUTO_INCREMENT,
+	  PRIMARY KEY(machine_index_type_id), 
+	   machine_index_type_machine_id INT, 
+	   machine_index_type_machine_title VARCHAR(200),
+	   machine_index_type_type_id INT, 
+	   machine_index_type_type_title VARCHAR(200)
+	   )")
+	   or die(mysqli_error());
+
+}
+echo"
+<!-- //edb_machines_index_types -->
+
 <!-- edb_machines_types -->
 ";
 

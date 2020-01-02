@@ -250,7 +250,9 @@ else{
 	   directory_district_id INT, 
 	   directory_district_title VARCHAR(200), 
 	   directory_type VARCHAR(200),
-	   directory_address VARCHAR(200),
+	   directory_address_linux VARCHAR(200),
+	   directory_address_windows VARCHAR(200),
+	   directory_address_prefered_for_agent VARCHAR(200),
 	   directory_last_checked_for_new_files_counter INT,
 	   directory_last_checked_for_new_files_time VARCHAR(200),
 	   directory_last_checked_for_new_files_hour INT,
@@ -266,30 +268,58 @@ else{
 	   )")
 	   or die(mysqli_error());
 
-	// $inp_mirror_files_a = "\\\\10.0.0.1\Mirror_Files";
-	$inp_mirror_files_a = "C:\Mirror_Files_Stavanger";
-	$inp_mirror_files_a_mysql = quote_smart($link, $inp_mirror_files_a);
+	// Stavanger
+	$inp_mirror_files_linux = "\\\\10.0.0.23\Beslagsdb_test_Stavanger_speilfiler";
+	$inp_mirror_files_linux_mysql = quote_smart($link, $inp_mirror_files_linux);
 
-	// $inp_case_files_a = "\\\\10.0.0.1\Case_Files";
-	$inp_case_files_a = "C:\Case_Files_Stavanger";
-	$inp_case_files_a_mysql = quote_smart($link, $inp_case_files_a);
-
-	// $inp_mirror_files_b = "\\\\10.0.0.1\Mirror_Files";
-	$inp_mirror_files_b = "C:\Mirror_Files_Haugesund";
-	$inp_mirror_files_b_mysql = quote_smart($link, $inp_mirror_files_b);
-
-	// $inp_case_files_b = "\\\\10.0.0.1\Case_Files";
-	$inp_case_files_b = "C:\Case_Files_Haugesund";
-	$inp_case_files_b_mysql = quote_smart($link, $inp_case_files_b);
+	$inp_mirror_files_windows = "X:\Beslagsdb_test_Stavanger_speilfiler";
+	$inp_mirror_files_windows_mysql = quote_smart($link, $inp_mirror_files_windows);
 
 	mysqli_query($link, "INSERT INTO $t_edb_stations_directories
-	(directory_id, directory_station_id, directory_station_title, directory_district_id, directory_district_title, directory_type, directory_address) 
+	(directory_id, directory_station_id, directory_station_title, directory_district_id, directory_district_title, directory_type, directory_address_linux, directory_address_windows, directory_address_prefered_for_agent) 
 	VALUES 
-	(NULL, 1, 'Stavanger', 6, 'S&oslash;r-Vest', 'mirror_files', $inp_mirror_files_a_mysql),
-	(NULL, 1, 'Stavanger', 6, 'S&oslash;r-Vest', 'case_files', $inp_case_files_a_mysql),
-	(NULL, 2, 'Haugesund', 6, 'S&oslash;r-Vest', 'mirror_files', $inp_mirror_files_b_mysql),
-	(NULL, 2, 'Haugesund', 6, 'S&oslash;r-Vest', 'case_files', $inp_case_files_b_mysql)
+	(NULL, 1, 'Stavanger', 7, 'S&oslash;r-Vest', 'mirror_files', $inp_mirror_files_linux_mysql, $inp_mirror_files_windows_mysql, 'linux')
 	") or die(mysqli_error($link));
+
+
+	$inp_mirror_files_linux = "\\\\10.0.0.23\Beslagsdb_test_Stavanger_sak";
+	$inp_mirror_files_linux_mysql = quote_smart($link, $inp_mirror_files_linux);
+
+	$inp_mirror_files_windows = "X:\Beslagsdb_test_Stavanger_sak";
+	$inp_mirror_files_windows_mysql = quote_smart($link, $inp_mirror_files_windows);
+
+	mysqli_query($link, "INSERT INTO $t_edb_stations_directories
+	(directory_id, directory_station_id, directory_station_title, directory_district_id, directory_district_title, directory_type, directory_address_linux, directory_address_windows, directory_address_prefered_for_agent) 
+	VALUES 
+	(NULL, 1, 'Stavanger', 7, 'S&oslash;r-Vest', 'case_files', $inp_mirror_files_linux_mysql, $inp_mirror_files_windows_mysql, 'linux')
+	") or die(mysqli_error($link));
+
+	// Haugesund
+	$inp_mirror_files_linux = "\\\\10.0.0.23\Beslagsdb_test_Haugesund_speilfiler";
+	$inp_mirror_files_linux_mysql = quote_smart($link, $inp_mirror_files_linux);
+
+	$inp_mirror_files_windows = "X:\Beslagsdb_test_Haugesund_speilfiler";
+	$inp_mirror_files_windows_mysql = quote_smart($link, $inp_mirror_files_windows);
+
+	mysqli_query($link, "INSERT INTO $t_edb_stations_directories
+	(directory_id, directory_station_id, directory_station_title, directory_district_id, directory_district_title, directory_type, directory_address_linux, directory_address_windows, directory_address_prefered_for_agent) 
+	VALUES 
+	(NULL, 2, 'Haugesund', 7, 'S&oslash;r-Vest', 'mirror_files', $inp_mirror_files_linux_mysql, $inp_mirror_files_windows_mysql, 'linux')
+	") or die(mysqli_error($link));
+
+
+	$inp_mirror_files_linux = "\\\\10.0.0.23\Beslagsdb_test_Haugesund_sak";
+	$inp_mirror_files_linux_mysql = quote_smart($link, $inp_mirror_files_linux);
+
+	$inp_mirror_files_windows = "X:\Beslagsdb_test_Haugesund_sak";
+	$inp_mirror_files_windows_mysql = quote_smart($link, $inp_mirror_files_windows);
+
+	mysqli_query($link, "INSERT INTO $t_edb_stations_directories
+	(directory_id, directory_station_id, directory_station_title, directory_district_id, directory_district_title, directory_type, directory_address_linux, directory_address_windows, directory_address_prefered_for_agent) 
+	VALUES 
+	(NULL, 2, 'Haugesund', 7, 'S&oslash;r-Vest', 'case_files', $inp_mirror_files_linux_mysql, $inp_mirror_files_windows_mysql, 'linux')
+	") or die(mysqli_error($link));
+
 
 }
 echo"

@@ -200,7 +200,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$row = mysqli_fetch_row($result);
 				list($get_message_id, $get_message_channel_id, $get_message_text, $get_message_datetime, $get_message_date_saying, $get_message_time_saying, $get_message_time, $get_message_year, $get_message_from_user_id, $get_message_from_user_name, $get_message_from_user_alias, $get_message_from_user_image_path, $get_message_from_user_image_file, $get_message_from_user_image_thumb_40, $get_message_from_user_image_thumb_50, $get_message_from_ip, $get_message_from_hostname, $get_message_from_user_agente) = $row;
 
-				// Decrypt message
+				// Decrypt message	
+				/*
 				$c = base64_decode($get_message_text);
 				$ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
 				$iv = substr($c, 0, $ivlen);
@@ -211,6 +212,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				if (hash_equals($hmac, $calcmac)) {
 					 $get_message_text = "$original_plaintext";
 				}
+				*/
+				$get_message_text = "$inp_text";
 
 				echo"
 				<table>

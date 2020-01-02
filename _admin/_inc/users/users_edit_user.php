@@ -48,6 +48,8 @@ $query = "SELECT user_id, user_email, user_name, user_alias, user_password, user
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
 list($get_user_id, $get_user_email, $get_user_name, $get_user_alias, $get_user_password, $get_user_salt, $get_user_security, $get_user_language, $get_user_gender, $get_user_measurement, $get_user_dob, $get_user_date_format, $get_user_registered, $get_user_last_online, $get_user_rank, $get_user_points, $get_user_likes, $get_user_dislikes, $get_user_status, $get_user_login_tries, $get_user_last_ip, $get_user_synchronized, $get_user_verified_by_moderator) = $row;
+
+// Get Profile
 $query = "SELECT profile_id, profile_user_id, profile_first_name, profile_middle_name, profile_last_name, profile_address_line_a, profile_address_line_b, profile_zip, profile_city, profile_country, profile_phone, profile_work, profile_university, profile_high_school, profile_languages, profile_website, profile_interested_in, profile_relationship, profile_about, profile_newsletter FROM $t_users_profile WHERE profile_user_id=$user_id_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
@@ -57,6 +59,11 @@ if($get_user_id == ""){
 	echo"<h1>Error</h1><p>Error with user id.</p>"; 
 	die;
 }
+
+if($get_profile_id == ""){
+	echo"<h1>Error</h1><p>Profile not found.</p>";
+}
+
 // Can I edit?
 $my_user_id = $_SESSION['admin_user_id'];
 $my_user_id = output_html($my_user_id);
@@ -91,7 +98,7 @@ if($get_my_user_rank != "moderator" && $get_my_user_rank != "admin"){
 			list($check_user_id, $check_user_email, $check_user_name) = $row;
 			if($check_user_id == ""){
 				// Update email
-				$result = mysqli_query($link, "UPDATE $t_users SET user_email=$inp_user_email_mysql WHERE user_id=$user_id_mysql");
+				$result = mysqli_query($link, "UPDATE $t_users SET user_email=$inp_user_email_mysql WHERE user_id=$user_id_mysql") or die(mysqli_error($link));
 				$fm = "email_address_updated";
 				$ft = "success";
 			}
@@ -114,7 +121,7 @@ if($get_my_user_rank != "moderator" && $get_my_user_rank != "admin"){
 			list($check_user_id, $check_user_email, $check_user_name) = $row;
 			if($check_user_id == ""){
 				// Update email
-				$result = mysqli_query($link, "UPDATE $t_users SET user_name=$inp_user_name_mysql WHERE user_id=$user_id_mysql");
+				$result = mysqli_query($link, "UPDATE $t_users SET user_name=$inp_user_name_mysql WHERE user_id=$user_id_mysql") or die(mysqli_error($link));
 				$fm = "user_name_updated";
 				$ft = "success";
 			}
@@ -126,6 +133,35 @@ if($get_my_user_rank != "moderator" && $get_my_user_rank != "admin"){
 			}
 		
 		}
+
+
+		$inp_user_alias = $_POST['inp_user_alias'];
+		$inp_user_alias = output_html($inp_user_alias);
+		// $inp_user_alias = ucfirst($inp_user_alias);
+		$inp_user_alias_mysql = quote_smart($link, $inp_user_alias);
+		if($inp_user_alias != "$get_user_alias"){
+			// Check if new email is taken
+			
+			$query = "SELECT user_id, user_email, user_alias FROM $t_users WHERE user_alias=$inp_user_alias_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($check_user_id, $check_user_email, $check_user_alias) = $row;
+			if($check_user_id == ""){
+				// Update email
+				$result = mysqli_query($link, "UPDATE $t_users SET user_alias=$inp_user_alias_mysql WHERE user_id=$user_id_mysql") or die(mysqli_error($link));
+				$fm = "user_alias_updated";
+				$ft = "success";
+			}
+			else{
+				if($check_user_id != "$user_id"){
+					$fm = "user_alias_already_in_use";
+					$ft = "warning";
+				}
+			}
+		
+		}
+
+
 		$inp_user_language = $_POST['inp_user_language'];
 		$inp_user_language = output_html($inp_user_language);
 		$inp_user_language_mysql = quote_smart($link, $inp_user_language);
@@ -142,30 +178,57 @@ if($get_my_user_rank != "moderator" && $get_my_user_rank != "admin"){
 		$inp_user_dob = output_html($inp_user_dob);
 		$inp_user_dob_mysql = quote_smart($link, $inp_user_dob);
 		if($inp_user_dob != "--"){
-			$result = mysqli_query($link, "UPDATE $t_users SET user_dob=$inp_user_dob_mysql WHERE user_id=$user_id_mysql");
+			$result = mysqli_query($link, "UPDATE $t_users SET user_dob=$inp_user_dob_mysql WHERE user_id=$user_id_mysql") or die(mysqli_error($link));
 		}
 		$inp_user_measurement = $_POST['inp_user_measurement'];
 		$inp_user_measurement = output_html($inp_user_measurement);
 		$inp_user_measurement_mysql = quote_smart($link, $inp_user_measurement);
+
 		$inp_user_rank = $_POST['inp_user_rank'];
 		$inp_user_rank = output_html($inp_user_rank);
 		$inp_user_rank_mysql = quote_smart($link, $inp_user_rank);
+
 		$inp_user_points = $_POST['inp_user_points'];
 		$inp_user_points = output_html($inp_user_points);
+		if($inp_user_points == ""){
+			$inp_user_points = "0";
+		}
 		$inp_user_points_mysql = quote_smart($link, $inp_user_points);
+
+
 		$inp_user_likes = $_POST['inp_user_likes'];
 		$inp_user_likes = output_html($inp_user_likes);
+		if($inp_user_likes == ""){
+			$inp_user_likes = "0";
+		}
 		$inp_user_likes_mysql = quote_smart($link, $inp_user_likes);
+
 		$inp_user_dislikes = $_POST['inp_user_dislikes'];
 		$inp_user_dislikes = output_html($inp_user_dislikes);
+		if($inp_user_dislikes == ""){
+			$inp_user_dislikes = "0";
+		}
 		$inp_user_dislikes_mysql = quote_smart($link, $inp_user_dislikes);
+
+
 		$inp_user_status = $_POST['inp_user_status'];
 		$inp_user_status = output_html($inp_user_status);
 		$inp_user_status_mysql = quote_smart($link, $inp_user_status);
 		$inp_user_verified_by_moderator = $_POST['inp_user_verified_by_moderator'];
 		$inp_user_verified_by_moderator = output_html($inp_user_verified_by_moderator);
 		$inp_user_verified_by_moderator_mysql = quote_smart($link, $inp_user_verified_by_moderator);
-		$result = mysqli_query($link, "UPDATE $t_users SET user_language=$inp_user_language_mysql, user_gender=$inp_user_gender_mysql, user_measurement=$inp_user_measurement_mysql, user_rank=$inp_user_rank_mysql, user_points=$inp_user_points_mysql, user_likes=$inp_user_likes_mysql, user_dislikes=$inp_user_dislikes_mysql, user_status=$inp_user_status_mysql, user_verified_by_moderator=$inp_user_verified_by_moderator_mysql WHERE user_id=$user_id_mysql");
+
+		$result = mysqli_query($link, "UPDATE $t_users SET 
+					user_language=$inp_user_language_mysql, 
+					user_gender=$inp_user_gender_mysql, 
+					user_measurement=$inp_user_measurement_mysql, 
+					user_rank=$inp_user_rank_mysql, 
+					user_points=$inp_user_points_mysql, 
+					user_likes=$inp_user_likes_mysql, 
+					user_dislikes=$inp_user_dislikes_mysql, 
+					user_status=$inp_user_status_mysql, 
+					user_verified_by_moderator=$inp_user_verified_by_moderator_mysql 
+					WHERE user_id=$user_id_mysql") or die(mysqli_error($link));
 		
 		if($ft == "" OR $ft == "success"){
 			if($fm == ""){
@@ -223,10 +286,17 @@ if($get_my_user_rank != "moderator" && $get_my_user_rank != "admin"){
 	$l_email_address:<br />
 	<input type=\"text\" name=\"inp_user_email\" size=\"78\" value=\"$get_user_email\" /><br />
 	</p>
+
 	<p>
 	$l_user_name:<br />
 	<input type=\"text\" name=\"inp_user_name\" size=\"78\" value=\"$get_user_name\" /><br />
 	</p>
+
+	<p>
+	Alias:<br />
+	<input type=\"text\" name=\"inp_user_alias\" size=\"78\" value=\"$get_user_alias\" /><br />
+	</p>
+
 	<p>
 	$l_language:<br />
 	<select name=\"inp_user_language\">";

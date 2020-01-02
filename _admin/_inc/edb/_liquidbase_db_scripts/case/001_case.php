@@ -32,12 +32,12 @@ else{
 	  case_id INT NOT NULL AUTO_INCREMENT,
 	  PRIMARY KEY(case_id), 
 	   case_number INT,
-	   case_title VARCHAR(200), 
-	   case_title_clean VARCHAR(200), 
+	   case_title VARCHAR(500), 
+	   case_title_clean VARCHAR(500), 
 	   case_suspect_in_custody INT, 
 	   case_code_id INT, 
 	   case_code_number INT, 
-	   case_code_title VARCHAR(200), 
+	   case_code_title VARCHAR(500), 
 	   case_status_id INT, 
 	   case_status_title VARCHAR(200), 
 	   case_priority_id INT, 
@@ -52,6 +52,9 @@ else{
 	   case_confirmed_by_human INT,
 	   case_human_rejected INT,
 	   case_last_event_text VARCHAR(200), 
+	   case_path_windows VARCHAR(300), 
+	   case_path_linux VARCHAR(300), 
+	   case_path_folder_name VARCHAR(300), 
 	   case_assigned_to_datetime DATETIME, 
 	   case_assigned_to_date DATE, 
 	   case_assigned_to_time VARCHAR(200), 
@@ -245,129 +248,7 @@ echo"
 
 
 <!-- edb_case_index_evidence_items -->
-";
-
-$query = "SELECT * FROM $t_edb_case_index_evidence_items LIMIT 1";
-$result = mysqli_query($link, $query);
-if($result !== FALSE){
-	// Count rows
-	$row_cnt = mysqli_num_rows($result);
-	echo"
-	<p>$t_edb_case_index_evidence_items: $row_cnt</p>
-	";
-}
-else{
-	mysqli_query($link, "CREATE TABLE $t_edb_case_index_evidence_items(
-	  item_id INT NOT NULL AUTO_INCREMENT,
-	  PRIMARY KEY(item_id), 
-	   item_case_id INT,
-	   item_record_id INT,
-	   item_record_seized_year VARCHAR(4), 
-	   item_record_seized_journal INT,
-	   item_record_seized_district_number INT,
-	   item_numeric_serial_number INT,
-	   item_title VARCHAR(200), 
-	   item_type_id INT, 
-	   item_type_title VARCHAR(200), 
-	   item_confirmed_by_human INT,
-	   item_human_rejected INT,
-
-	   item_request_text TEXT, 
-	   item_requester_user_id INT, 
-	   item_requester_user_name VARCHAR(200), 
-	   item_requester_user_alias VARCHAR(200), 
-	   item_requester_user_email VARCHAR(200), 
-	   item_requester_user_image_path VARCHAR(200),
-	   item_requester_user_image_file VARCHAR(200),
-	   item_requester_user_image_thumb_40 VARCHAR(200),
-	   item_requester_user_image_thumb_50 VARCHAR(200), 
-	   item_requester_user_first_name VARCHAR(200), 
-	   item_requester_user_middle_name VARCHAR(200), 
-	   item_requester_user_last_name VARCHAR(200),
-	   item_requester_user_job_title VARCHAR(200), 
-	   item_requester_user_department VARCHAR(200),
-
-	   item_in_datetime DATETIME,
-	   item_in_date DATE,
-	   item_in_time VARCHAR(200), 
-	   item_in_date_saying VARCHAR(100), 
-	   item_in_date_ddmmyy VARCHAR(100), 
-	   item_in_date_ddmmyyyy VARCHAR(100), 
-	   item_storage_shelf_id INT, 
-	   item_storage_shelf_title VARCHAR(200), 
-	   item_storage_location_id INT, 
-	   item_storage_location_abbr VARCHAR(200), 
-
-	   item_comment TEXT, 
-	   item_condition TEXT, 
-	   item_serial_number VARCHAR(200), 
-	   item_imei_a VARCHAR(200), 
-	   item_imei_b VARCHAR(200), 
-	   item_imei_c VARCHAR(200), 
-	   item_imei_d VARCHAR(200), 
-	   item_os_title VARCHAR(200), 
-	   item_os_version VARCHAR(200), 
-	   item_login_user VARCHAR(200), 
-	   item_login_password VARCHAR(200), 
-	   item_startup_password VARCHAR(200), 
-	   item_pin VARCHAR(200), 
-	   item_unlock_pattern VARCHAR(200), 
-	   item_decrypt_password VARCHAR(200), 
-	   item_bios_password VARCHAR(200), 
-	   item_timezone VARCHAR(200), 
-	   item_date_now_date DATE, 
-	   item_date_now_saying VARCHAR(100), 
-	   item_date_now_ddmmyy VARCHAR(100), 
-	   item_date_now_ddmmyyyy VARCHAR(100), 
-	   item_time_now VARCHAR(200), 
-	   item_correct_date_now_date DATE,
-	   item_correct_date_now_saying VARCHAR(100), 
-	   item_correct_date_now_ddmmyy VARCHAR(100), 
-	   item_correct_date_now_ddmmyyyy VARCHAR(100), 
-	   item_correct_time_now VARCHAR(200), 
-	   item_adjust_clock_automatically VARCHAR(200), 
-
-
-	   item_acquired_software_id_a INT,
-	   item_acquired_software_title_a VARCHAR(200),
-	   item_acquired_software_notes_a VARCHAR(200),
-	   item_acquired_software_id_b INT,
-	   item_acquired_software_title_b VARCHAR(200),
-	   item_acquired_software_notes_b VARCHAR(200),
-	   item_acquired_software_id_c INT,
-	   item_acquired_software_title_c VARCHAR(200),
-	   item_acquired_software_notes_c VARCHAR(200),
-	   item_acquired_date DATE,
-	   item_acquired_time VARCHAR(200), 
-	   item_acquired_date_saying VARCHAR(200), 
-	   item_acquired_date_ddmmyy VARCHAR(200), 
-	   item_acquired_date_ddmmyyyy VARCHAR(200), 
-
-	   item_acquired_user_id INT, 
-	   item_acquired_user_name VARCHAR(200), 
-	   item_acquired_user_alias VARCHAR(200), 
-	   item_acquired_user_email VARCHAR(200), 
-	   item_acquired_user_image_path VARCHAR(200), 
-	   item_acquired_user_image_file VARCHAR(200), 
-	   item_acquired_user_image_thumb_40 VARCHAR(200), 
-	   item_acquired_user_image_thumb_50 VARCHAR(200), 
-	   item_acquired_user_first_name VARCHAR(200), 
-	   item_acquired_user_middle_name VARCHAR(200), 
-	   item_acquired_user_last_name VARCHAR(200), 
-	   
-
-	   item_out_date DATE,
-	   item_out_time VARCHAR(200), 
-	   item_out_date_saying VARCHAR(100), 
-	   item_out_date_ddmmyy VARCHAR(100), 
-	   item_out_date_ddmmyyyy VARCHAR(100),
-	   item_out_notes VARCHAR(200)
-		)")
-	   or die(mysqli_error());	
-
-
-}
-echo"
+	<!-- Moved to 011_case_index_evidence_items.php -->
 <!-- //edb_case_index_evidence_items -->
 
 
@@ -487,9 +368,19 @@ else{
 	   hard_disk_record_id INT,
 	   hard_disk_item_id INT,
 	   hard_disk_manufacturer VARCHAR(200), 
+	   hard_disk_model VARCHAR(200), 
 	   hard_disk_type VARCHAR(200), 
 	   hard_disk_size VARCHAR(200), 
 	   hard_disk_serial VARCHAR(200), 
+	   hard_disk_connection VARCHAR(200), 
+	   hard_disk_acquired_tools VARCHAR(200), 
+	   hard_disk_acquired_tools_version VARCHAR(200), 
+	   hard_disk_fastblock VARCHAR(200), 
+	   hard_disk_verified INT, 
+	   hard_disk_compression INT,
+	   hard_disk_number_of_sectors VARCHAR(200), 
+	   hard_disk_sector_size VARCHAR(200), 
+	   hard_disk_disk_date DATE,
 	   hard_disk_comments TEXT)")
 	   or die(mysqli_error());
 }
@@ -497,59 +388,38 @@ echo"
 <!-- //edb_case_index_evidence_items_hard_disks -->
 
 
-<!-- edb_case_index_evidence_items_mirror_files -->
+<!-- edb_case_index_evidence_items_volumes -->
 ";
 
-$query = "SELECT * FROM $t_edb_case_index_evidence_items_mirror_files LIMIT 1";
+$query = "SELECT * FROM $t_edb_case_index_evidence_items_volumes LIMIT 1";
 $result = mysqli_query($link, $query);
 if($result !== FALSE){
 	// Count rows
 	$row_cnt = mysqli_num_rows($result);
 	echo"
-	<p>$t_edb_case_index_evidence_items_mirror_files: $row_cnt</p>
+	<p>$t_edb_case_index_evidence_items_volumes: $row_cnt</p>
 	";
 }
 else{
-	mysqli_query($link, "CREATE TABLE $t_edb_case_index_evidence_items_mirror_files(
-	  mirror_file_id INT NOT NULL AUTO_INCREMENT,
-	  PRIMARY KEY(mirror_file_id), 
-	   mirror_file_case_id INT,
-	   mirror_file_record_id INT,
-	   mirror_file_item_id INT,
-	   mirror_file_path VARCHAR(200), 
-	   mirror_file_file VARCHAR(200), 
-	   mirror_file_ext VARCHAR(200), 
-	   mirror_file_type VARCHAR(200), 
-	   mirror_file_confirmed_by_human INT,
-	   mirror_file_human_rejected INT,
-
-	   mirror_file_created_datetime DATETIME,
-	   mirror_file_created_date DATE,
-	   mirror_file_created_time VARCHAR(200), 
-	   mirror_file_created_date_saying VARCHAR(200), 
-	   mirror_file_created_date_ddmmyy VARCHAR(200), 
-	   mirror_file_created_date_ddmmyyyy VARCHAR(200), 
-
-	   mirror_file_modified_datetime DATETIME,
-	   mirror_file_modified_date DATE,
-	   mirror_file_modified_time VARCHAR(200), 
-	   mirror_file_modified_date_saying VARCHAR(200), 
-	   mirror_file_modified_date_ddmmyy VARCHAR(200), 
-	   mirror_file_modified_date_ddmmyyyy VARCHAR(200), 
-	   
-	   mirror_file_size_bytes VARCHAR(200), 
-	   mirror_file_size_mb DOUBLE, 
-	   mirror_file_size_human VARCHAR(200), 
-	   mirror_file_backup_disk VARCHAR(200), 
-	   mirror_file_exists INT,
-	   mirror_file_exists_agent_tries_counter INT,
-	   mirror_file_ready_for_automated_machine INT,
-	   mirror_file_ready_agent_tries_counter INT,
-	   mirror_file_comments VARCHAR(200))")
+	mysqli_query($link, "CREATE TABLE $t_edb_case_index_evidence_items_volumes(
+	  volume_id INT NOT NULL AUTO_INCREMENT,
+	  PRIMARY KEY(volume_id), 
+	   volume_case_id INT,
+	   volume_record_id INT,
+	   volume_item_id INT,
+	   volume_hard_disk_id INT,
+	   volume_visible VARCHAR(200), 
+	   volume_name VARCHAR(200), 
+	   volume_file_system VARCHAR(200), 
+	   volume_capacity VARCHAR(200), 
+	   volume_setup VARCHAR(200), 
+	   volume_type VARCHAR(200), 
+	   volume_disk_number INT)")
 	   or die(mysqli_error());
 }
 echo"
-<!-- //edb_case_index_evidence_items_mirror_files -->
+<!-- //edb_case_index_evidence_items_volumes -->
+
 
 
 <!-- edb_case_index_statuses -->
@@ -578,7 +448,7 @@ else{
 	   case_index_status_date_saying VARCHAR(200), 
 	   case_index_status_date_ddmmyy VARCHAR(200), 
 	   case_index_status_date_ddmmyyyy VARCHAR(200), 
-	   case_index_status_text VARCHAR(200), 
+	   case_index_status_text TEXT, 
 	  
 	   case_index_status_user_id INT, 
 	   case_index_status_user_name VARCHAR(200), 
@@ -598,74 +468,6 @@ else{
 echo"
 <!-- //edb_case_index_statuses -->
 
-<!-- edb_case_index_automated_tasks -->
-";
-
-$query = "SELECT * FROM $t_edb_case_index_automated_tasks LIMIT 1";
-$result = mysqli_query($link, $query);
-if($result !== FALSE){
-	// Count rows
-	$row_cnt = mysqli_num_rows($result);
-	echo"
-	<p>$t_edb_case_index_automated_tasks: $row_cnt</p>
-	";
-}
-else{
-	mysqli_query($link, "CREATE TABLE $t_edb_case_index_automated_tasks(
-	  automated_task_id INT NOT NULL AUTO_INCREMENT,
-	  PRIMARY KEY(automated_task_id), 
-	   automated_task_case_id INT,
-	   automated_task_evidence_record_id INT,
-	   automated_task_evidence_item_id INT,
-	   automated_task_evidence_full_title VARCHAR(200), 
-	   automated_task_task_available_id INT, 
-	   automated_task_task_available_name VARCHAR(200), 
-	   automated_task_task_machine_type_id INT, 
-	   automated_task_task_machine_type_title VARCHAR(200), 
-
-	   automated_task_station_id INT, 
-	   automated_task_station_title VARCHAR(200), 
-
-	   automated_task_mirror_file_id INT, 
-	   automated_task_mirror_file_path VARCHAR(200), 
-	   automated_task_mirror_file_file VARCHAR(200), 
-
-	   automated_task_glossaries_ids VARCHAR(100), 
-	   automated_task_priority INT, 
-	   automated_task_dependent_on_automated_task_id INT, 
-	   automated_task_dependent_on_automated_task_title VARCHAR(200), 
-
-	   automated_task_added_by_user_id INT,
-	   automated_task_added_by_user_email VARCHAR(200), 
-	   automated_task_added_datetime DATETIME, 
-	   automated_task_added_date DATE, 
-	   automated_task_added_time VARCHAR(200), 
-	   automated_task_added_date_saying VARCHAR(200), 
-	   automated_task_added_date_ddmmyy VARCHAR(200),  
-	   automated_task_added_date_ddmmyyyy VARCHAR(200),  
-
-	   automated_task_started_datetime DATETIME, 
-	   automated_task_started_date DATE, 
-	   automated_task_started_time VARCHAR(200), 
-	   automated_task_started_date_saying VARCHAR(200), 
-	   automated_task_started_date_ddmmyyhi VARCHAR(200), 
-	   automated_task_started_date_ddmmyyyyhi VARCHAR(200), 
-	   automated_task_machine_id INT, 
-	   automated_task_machine_name VARCHAR(200),
-	  
-	   automated_task_is_finished INT, 
-	   automated_task_finished_datetime DATETIME, 
-	   automated_task_finished_date DATE, 
-	   automated_task_finished_time VARCHAR(200), 
-	   automated_task_finished_date_saying VARCHAR(200), 
-	   automated_task_finished_date_ddmmyyhi VARCHAR(200), 
-	   automated_task_finished_date_ddmmyyyyhi VARCHAR(200), 
-	   automated_task_time_taken_time VARCHAR(100), 
-	   automated_task_time_taken_human VARCHAR(100))")
-	   or die(mysqli_error());
-}
-echo"
-<!-- //edb_case_index_automated_tasks -->
 
 
 <!-- edb_case_index_notes -->
@@ -793,11 +595,19 @@ else{
 	   code_number VARCHAR(100),
 	   code_title VARCHAR(200), 
 	   code_title_clean VARCHAR(200), 
+	   code_title_abbr VARCHAR(200), 
+	   code_is_active INT,
+	   code_valid_from_date DATE,
+	   code_valid_from_time VARCHAR(200), 
+	   code_valid_to_date DATE,
+	   code_valid_to_time VARCHAR(200), 
 	   code_gives_priority_id INT,
 	   code_gives_priority_title VARCHAR(200), 
 	   code_last_used_datetime DATETIME, 
 	   code_last_used_time VARCHAR(200), 
-	   code_times_used INT)")
+	   code_times_used INT,
+	   code_line_color_graph VARCHAR(50),
+	   code_fill_color_graph VARCHAR(50))")
 	   or die(mysqli_error());	
 	
 	mysqli_query($link, "INSERT INTO $t_edb_case_codes
@@ -815,61 +625,6 @@ else{
 }
 echo"
 <!-- //edb_case_codes -->
-
-
-<!-- edb_case_statuses-->
-";
-
-$query = "SELECT * FROM $t_edb_case_statuses LIMIT 1";
-$result = mysqli_query($link, $query);
-if($result !== FALSE){
-	// Count rows
-	$row_cnt = mysqli_num_rows($result);
-	echo"
-	<p>$t_edb_case_statuses: $row_cnt</p>
-	";
-}
-else{
-
-
-	mysqli_query($link, "CREATE TABLE $t_edb_case_statuses(
-	  status_id INT NOT NULL AUTO_INCREMENT,
-	  PRIMARY KEY(status_id), 
-	   status_parent_id INT,
-	   status_title VARCHAR(200), 
-	   status_title_clean VARCHAR(200), 
-	   status_bg_color VARCHAR(200), 
-	   status_border_color VARCHAR(200), 
-	   status_text_color VARCHAR(200), 
-	   status_link_color VARCHAR(200), 
-	   status_weight INT, 
-	   status_number_of_cases_now INT,
-	   status_number_of_cases_max INT,
-	   status_show_on_front_page INT,
-	   status_on_given_status_do_close_case INT,
-	   status_on_person_view_show_without_person INT,
-	   status_show_on_stats_page INT,
-	   status_gives_amount_of_points_to_user INT)")
-	   or die(mysqli_error());	
-	
-	mysqli_query($link, "INSERT INTO $t_edb_case_statuses
-	(status_id, status_title, status_title_clean, status_weight, status_number_of_cases_now, status_number_of_cases_max, status_show_on_front_page, status_on_given_status_do_close_case, status_on_person_view_show_without_person, status_show_on_stats_page, status_gives_amount_of_points_to_user) 
-	VALUES 
-	(NULL, 'Ikke tildelt', 'ikke_tildelt', 1, 0, 10, 1, 0, 1, 1, 1),
-	(NULL, 'Tildelt', 'Tildelt', 2, 0, 10, 1, 0, 0, 1, 1),
-	(NULL, 'Sikres', 'sikres', 3, 0, 10, 1, 0, 0, 1, 1),
-	(NULL, 'Sikring utsatt', 'sikring_utsatt', 4, 0, 10, 1, 0, 0, 1, 1),
-	(NULL, 'Venter analyse', 'venter_analyse', 5, 0, 10, 1, 0, 0, 1, 1),
-	(NULL, 'Analyse utsatt', 'analyse_utsatt', 6, 0, 10, 1, 0, 0, 1, 1),
-	(NULL, 'Analyse', 'analyse', 7, 0, 10, 1, 0, 0, 1, 1),
-	(NULL, 'QA', 'qa', 8, 0, 10, 1, 0, 0, 1, 1),
-	(NULL, 'Ferdig', 'ferdig', 9, 0, 10, 1, 1, 1, 1, 1),
-	(NULL, 'Avvist', 'avvist', 10, 0, 0, 0, 1, 1, 1, 1)
-	") or die(mysqli_error($link));
-
-}
-echo"
-<!-- //edb_statuses -->
 
 
 <!-- edb_case_statuses_district_case_counter -->
@@ -1036,7 +791,8 @@ else{
 	mysqli_query($link, "INSERT INTO $t_edb_case_reports
 	(report_id, report_title, report_title_clean, report_logo_path, report_logo_file, report_type) 
 	VALUES 
-	(NULL, 'Sikringsrapport', 'sikringsrapport', '_uploads/edb/reports', 'sikringsrapport.png', 'acquire_report')
+	(NULL, 'Sikring av digitale beslag', 'sikring_av_digitale_beslag', '_uploads/edb/reports', 'sikring_av_digitale_beslag.png', 'acquire_report'),
+	(NULL, 'Analyse av digitale beslag', 'analyse_av_digitale_beslag', '_uploads/edb/reports', 'analyse_av_digitale_beslag.png', 'analysis_report')
 	") or die(mysqli_error($link));
 
 }
@@ -1045,7 +801,7 @@ echo"
 
 
 
-<!-- edb_case_index_search_book -->
+<!-- edb_glossaries -->
 ";
 
 $query = "SELECT * FROM $t_edb_glossaries LIMIT 1";
@@ -1115,7 +871,7 @@ zadoom";
 
 }
 echo"
-<!-- //edb_case_index_search_book -->
+<!-- //edb_glossaries -->
 
 ";
 ?>

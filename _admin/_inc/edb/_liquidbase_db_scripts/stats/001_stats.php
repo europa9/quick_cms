@@ -79,6 +79,8 @@ else{
 	   stats_case_code_user_id INT,
 	   stats_case_code_code_id INT,
 	   stats_case_code_code_title VARCHAR(100),
+	   stats_case_code_line_color VARCHAR(50),
+	   stats_case_code_fill_color VARCHAR(50),
 	   stats_case_code_counter INT
 	   )")
 	   or die(mysqli_error());
@@ -112,6 +114,8 @@ else{
 	   stats_case_priority_user_id INT,
 	   stats_case_priority_priority_id INT,
 	   stats_case_priority_priority_title VARCHAR(100),
+	   stats_case_priority_line_color VARCHAR(50),
+	   stats_case_priority_fill_color VARCHAR(50),
 	   stats_case_priority_counter INT
 	   )")
 	   or die(mysqli_error());
@@ -146,6 +150,8 @@ else{
 	   stats_item_type_user_id INT,
 	   stats_item_type_item_type_id INT,
 	   stats_item_type_item_type_title VARCHAR(100),
+	   stats_item_type_line_color VARCHAR(50),
+	   stats_item_type_fill_color VARCHAR(50),
 	   stats_item_type_counter INT
 	   )")
 	   or die(mysqli_error());
@@ -195,7 +201,41 @@ echo"
 <!-- //edb_stats_statuses_per_day -->
 
 
-<!-- edb_stats_employee_of_the_month -->
+<!-- edb_stats_acquirements_per_month -->
+";
+
+$query = "SELECT * FROM $t_edb_stats_acquirements_per_month LIMIT 1";
+$result = mysqli_query($link, $query);
+if($result !== FALSE){
+	// Count rows
+	$row_cnt = mysqli_num_rows($result);
+	echo"
+	<p>$t_edb_stats_acquirements_per_month: $row_cnt</p>
+	";
+}
+else{
+
+
+	mysqli_query($link, "CREATE TABLE $t_edb_stats_acquirements_per_month (
+	  acquirements_per_month_id INT NOT NULL AUTO_INCREMENT,
+	  PRIMARY KEY(acquirements_per_month_id), 
+	   acquirements_per_month_year INT,
+	   acquirements_per_month_month INT,
+	   acquirements_per_month_counter INT,
+	   acquirements_per_month_district_id INT,
+	   acquirements_per_month_district_title VARCHAR(200),
+	   acquirements_per_month_station_id INT,
+	   acquirements_per_month_station_title VARCHAR(200),
+	   acquirements_per_month_user_id INT,
+	   acquirements_per_month_user_name VARCHAR(200),
+	   acquirements_per_month_size_bytes VARCHAR(200),
+	   acquirements_per_month_size_human VARCHAR(200)
+	   )")
+	   or die(mysqli_error());
+
+}
+echo"
+<!-- edb_stats_acquirements_per_month  -->
 ";
 
 $query = "SELECT * FROM $t_edb_stats_employee_of_the_month LIMIT 1";

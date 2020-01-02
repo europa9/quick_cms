@@ -337,6 +337,193 @@ else{
 		or die(mysqli_error($link));
 	}
 
+
+	// Insert investigatiors
+	// Create users
+	$user_email = array();
+	$x=0;
+	$user_email[$x] 	 = "jorgen.moen.olsen@politiet.no";
+	$profile_first_name[$x]  = "Jørgen";
+	$profile_middle_name[$x] = "Moen";
+	$profile_last_name[$x]   = "Olsen";
+	$user_name[$x] 		 = "JMO025";
+	$user_alias[$x] 	 = "JMO025";
+	$user_company[$x]	 = "S&oslash;r-Vest politidistrikt";
+	$user_position[$x]	 = "Politibetjent";
+
+	$x=$x+1;
+	$user_email[$x] 	 = "oddgeir.hoyekvam@politiet.no";
+	$profile_first_name[$x]  = "Oddgeir";
+	$profile_middle_name[$x] = "";
+	$profile_last_name[$x]   = "Høyekvam";
+	$user_name[$x] 		 = "OHO024";
+	$user_alias[$x] 	 = "OHO024";
+	$user_company[$x]	 = "S&oslash;r-Vest politidistrikt";
+	$user_position[$x]	 = "Politibetjent";
+
+	$x=$x+1;
+	$user_email[$x] 	 = "gunnar.fuglestad.sikveland@politiet.no";
+	$profile_first_name[$x]  = "Gunnar";
+	$profile_middle_name[$x] = "Fuglestad";
+	$profile_last_name[$x]   = "Sikveland";
+	$user_name[$x] 		 = "GSI005";
+	$user_alias[$x] 	 = "GSI005";
+	$user_company[$x]	 = "S&oslash;r-Vest politidistrikt";
+	$user_position[$x]	 = "Politibetjent";
+
+	$x=$x+1;
+	$user_email[$x] 	 = "Peter.Piros@politiet.no";
+	$profile_first_name[$x]  = "Peter";
+	$profile_middle_name[$x] = "";
+	$profile_last_name[$x]   = "Piros";
+	$user_name[$x] 		 = "PPI001";
+	$user_alias[$x] 	 = "PPI001";
+	$user_company[$x]	 = "S&oslash;r-Vest politidistrikt";
+	$user_position[$x]	 = "Politibetjent";
+
+	$x=$x+1;
+	$user_email[$x] 	 = "torgeir.natvig@politiet.no";
+	$profile_first_name[$x]  = "Torgeir";
+	$profile_middle_name[$x] = "";
+	$profile_last_name[$x]   = "Natvig";
+	$user_name[$x] 		 = "TNA002";
+	$user_alias[$x] 	 = "TNA002";
+	$user_company[$x]	 = "S&oslash;r-Vest politidistrikt";
+	$user_position[$x]	 = "Politibetjent";
+
+	$x=$x+1;
+	$user_email[$x] 	 = "therese.stenlund@politiet.no";
+	$profile_first_name[$x]  = "Therese";
+	$profile_middle_name[$x] = "";
+	$profile_last_name[$x]   = "Stenlund";
+	$user_name[$x] 		 = "TST041";
+	$user_alias[$x] 	 = "TST041";
+	$user_company[$x]	 = "S&oslash;r-Vest politidistrikt";
+	$user_position[$x]	 = "Politibetjent";
+
+	$x=$x+1;
+	$user_email[$x] 	 = "eirik.helland@politiet.no";
+	$profile_first_name[$x]  = "Eirik";
+	$profile_middle_name[$x] = "";
+	$profile_last_name[$x]   = "Helland";
+	$user_name[$x]		 = "EHE024";
+	$user_alias[$x] 	 = "EHE024";
+	$user_company[$x]	 = "S&oslash;r-Vest politidistrikt";
+	$user_position[$x]	 = "Politibetjent";
+
+	$x=$x+1;
+	$user_email[$x] 	 = "janne.lode@politiet.no";
+	$profile_first_name[$x]  = "Janne";
+	$profile_middle_name[$x] = "";
+	$profile_last_name[$x]   = "Rødeseike";
+	$user_name[$x] 		 = "JLO011";
+	$user_alias[$x] 	 = "JLO011";
+	$user_company[$x]	 = "S&oslash;r-Vest politidistrikt";
+	$user_position[$x]	 = "Politibetjent";
+
+
+	$x=$x+1;
+	$user_email[$x] 	 = "camilla.larsen@politiet.no";
+	$profile_first_name[$x]  = "Camilla";
+	$profile_middle_name[$x] = "";
+	$profile_last_name[$x]   = "Larsen";
+	$user_name[$x] 		 = "CLA011";
+	$user_alias[$x] 	 = "CLA011";
+	$user_company[$x]	 = "S&oslash;r-Vest politidistrikt";
+	$user_position[$x]	 = "Politibetjent";
+
+
+
+
+
+	for($x=0;$x<sizeof($user_email);$x++){
+		// Check if exists
+		$inp_user_email_mysql = quote_smart($link, $user_email[$x]);
+		$inp_user_name_mysql = quote_smart($link, strtolower($user_name[$x]));
+		$inp_user_alias_mysql = quote_smart($link, strtolower($user_alias[$x]));
+
+		$inp_profile_first_name_mysql = quote_smart($link, $profile_first_name[$x]);
+		$inp_profile_middle_name_mysql = quote_smart($link, $profile_middle_name[$x]);
+		$inp_profile_last_name_mysql = quote_smart($link, $profile_last_name[$x]);
+
+
+		$query_p = "SELECT user_id FROM $t_users WHERE user_email=$inp_user_email_mysql";
+		$result_p = mysqli_query($link, $query_p);
+		$row_p = mysqli_fetch_row($result_p);
+		list($get_user_id) = $row_p;
+		
+		if($get_user_id == ""){
+			echo"<p><i>Insert user $user_email[$x]</i></p>\n";
+			// Create salt
+			$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    			$charactersLength = strlen($characters);
+    			$salt = '';
+    			for ($i = 0; $i < 6; $i++) {
+        			$salt .= $characters[rand(0, $charactersLength - 1)];
+    			}
+			$inp_user_salt_mysql = quote_smart($link, $salt);
+
+			// Security
+			$inp_user_security = rand(0,9999);
+
+			mysqli_query($link, "INSERT INTO $t_users
+			(`user_id`, `user_email`, `user_name`, `user_alias`, `user_password`, `user_password_replacement`, `user_password_date`, `user_salt`, `user_security`, `user_language`, `user_gender`, `user_height`, `user_measurement`, `user_dob`, `user_date_format`, `user_registered`, `user_registered_time`, `user_last_online`, `user_last_online_time`, `user_rank`, `user_points`, `user_points_rank`, `user_likes`, `user_dislikes`, `user_status`, `user_login_tries`, `user_last_ip`, `user_synchronized`, `user_verified_by_moderator`, `user_notes`, `user_marked_as_spammer`) 
+			VALUES 
+			(NULL, $inp_user_email_mysql, $inp_user_name_mysql, $inp_user_alias_mysql,  '56c1ad870322b4b4bab660d5eea8f6d73f441781', NULL, NULL, $inp_user_salt_mysql, $inp_user_security, 'no', '', NULL, 'metric', NULL, 'l d. f Y', '$datetime', '$time', '$datetime', '$time', 'user', 0, 'Newbie', 0, 0, NULL, NULL, '::1', NULL, '1', NULL, NULL)")
+			or die(mysqli_error($link));
+
+			// Get user id
+			$query = "SELECT user_id FROM $t_users WHERE user_email=$inp_user_email_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_user_id) = $row;
+			
+			// Insert profile			
+			mysqli_query($link, "INSERT INTO $t_users_profile
+			(profile_id, profile_user_id, profile_first_name, profile_middle_name, profile_last_name, profile_newsletter, profile_views, profile_privacy) 
+			VALUES 
+			(NULL, '$get_user_id', $inp_profile_first_name_mysql, $inp_profile_middle_name_mysql, $inp_profile_last_name_mysql, '1', '0', 'public')")
+			or die(mysqli_error($link));
+			
+			// Insert photo
+			$inp_photo_title_mysql = quote_smart($link, $profile_first_name[$x]);
+
+			$inp_photo_destination = strtolower($user_name[$x]) . ".png";
+			$inp_photo_destination_mysql = quote_smart($link, $inp_photo_destination);
+			
+			$inp_photo_thumb_a = strtolower($user_name[$x]) . "_40.png";
+			$inp_photo_thumb_a_mysql = quote_smart($link, $inp_photo_thumb_a);
+			
+			$inp_photo_thumb_b = strtolower($user_name[$x]) . "_50.png";
+			$inp_photo_thumb_b_mysql = quote_smart($link, $inp_photo_thumb_b);
+			
+			$inp_photo_thumb_c = strtolower($user_name[$x]) . "_60.png";
+			$inp_photo_thumb_c_mysql = quote_smart($link, $inp_photo_thumb_c);
+			
+			$inp_photo_thumb_d = strtolower($user_name[$x]) . "_200.png";
+			$inp_photo_thumb_d_mysql = quote_smart($link, $inp_photo_thumb_d);
+
+			$inp_photo_uploaded = date("Y-m-d H:i:s");
+
+			mysqli_query($link, "INSERT INTO $t_users_profile_photo
+			(photo_id, photo_user_id, photo_profile_image, photo_title, photo_destination, photo_thumb_40, photo_thumb_50, photo_thumb_60, photo_thumb_200, photo_uploaded) 
+			VALUES 
+			(NULL, '$get_user_id', 1, $inp_photo_title_mysql, $inp_photo_destination_mysql, $inp_photo_thumb_a_mysql, $inp_photo_thumb_b_mysql, $inp_photo_thumb_c_mysql, $inp_photo_thumb_d_mysql, '$inp_photo_uploaded')")
+			or die(mysqli_error($link));
+			
+			// Insert professional
+			$inp_company_mysql = quote_smart($link, $user_company[$x]);
+			$inp_position_mysql = quote_smart($link, $user_position[$x]);
+
+			mysqli_query($link, "INSERT INTO $t_users_professional
+			(professional_id, professional_user_id, professional_company, professional_company_location, professional_department, professional_work_email, professional_position) 
+			VALUES 
+			(NULL, '$get_user_id', $inp_company_mysql, '', '', '', $inp_position_mysql)")
+			or die(mysqli_error($link));
+
+		}
+	}
+
 }
 echo"
 <!-- //edb_districts_members -->

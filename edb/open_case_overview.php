@@ -1125,7 +1125,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					echo"
 					 <tr>
 					  <td class=\"$style\">
-						<span><a href=\"open_case_evidence_edit_evidence_item_info.php?case_id=$get_current_case_id&amp;item_id=$get_item_id&amp;l=$l\">$get_item_record_seized_year/$get_item_record_seized_journal-$get_item_record_seized_district_number-$get_item_numeric_serial_number</a></span>
+						<span><a href=\"open_case_evidence_edit_evidence_item_item.php?case_id=$get_current_case_id&amp;item_id=$get_item_id&amp;mode=item&amp;l=$l\">$get_item_record_seized_year/$get_item_record_seized_journal-$get_item_record_seized_district_number-$get_item_numeric_serial_number</a></span>
 					  </td>
 					  <td class=\"$style\">
 						<span>$get_item_title</span>
@@ -1146,7 +1146,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						<span>$get_item_out_date_ddmmyy</span>
 				  	  </td>
 					  <td class=\"$style\">
-						<a href=\"$root/users/view_profile.php?user_id=$get_item_requester_user_id&amp;l=$l\" title=\"$get_item_requester_user_first_name $get_item_requester_user_middle_name $get_item_requester_user_last_name\">$get_item_requester_user_name</a>
+						<a href=\"$root/users/view_profile.php?user_id=$get_item_requester_user_id&amp;l=$l\" title=\"$get_item_requester_user_name\">$get_item_requester_user_job_title $get_item_requester_user_first_name $get_item_requester_user_middle_name $get_item_requester_user_last_name</a>
 					  </td>
 					  <td class=\"$style\">
 						<span>$get_item_requester_user_department</span>

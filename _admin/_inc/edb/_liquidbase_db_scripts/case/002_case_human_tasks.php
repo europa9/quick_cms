@@ -56,6 +56,7 @@ else{
 	   human_task_deadline_date_ddmmyy VARCHAR(200), 
 	   human_task_deadline_date_ddmmyyyy VARCHAR(200), 
 	   human_task_deadline_week INT, 
+	   human_task_deadline_year INT, 
 	   human_task_sent_deadline_notification INT, 
 
 	   human_task_is_finished INT, 

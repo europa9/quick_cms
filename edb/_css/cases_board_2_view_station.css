@@ -116,9 +116,13 @@ div.cases_board_box_inner_assigned_to_div > p{
 }
 
 /*- Person view */
+p.case_counter_number_of_cases_now_and_title, a.case_counter_number_of_cases_now_and_title_link{
+	font-size: 105%;
+}
 p.cases_status_p{
 	padding: 10px 0px 0px 0px;
 	margin: 0;
+	font-size: 110%;
 }
 div.cases_board_status_round_box{
 	background: #f1f1f1;

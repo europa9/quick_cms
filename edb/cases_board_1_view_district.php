@@ -657,7 +657,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								echo"
 								  <td style=\"width: 290px;vertical-align:top;padding-right:10px;\" class=\"cases_status_td\" id=\"status_id$get_status_id\">
 									<div class=\"cases_board_status_round_box\">
-										<p><b>$get_district_case_counter_number_of_cases_now</b> $get_status_title</p>
+										<p class=\"case_counter_number_of_cases_now_and_title\"><b>$get_district_case_counter_number_of_cases_now</b> $get_status_title</p>
 								";
 
 							
@@ -783,7 +783,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								  <td style=\"width: 290px;vertical-align:top;padding-right:10px;\">
 									<!-- District Member $get_district_member_user_name - Statuses and cases -->
 										<div class=\"cases_board_status_round_box\">
-											<p><b>$get_user_case_counter_number_of_cases_now</b>
+											<p class=\"case_counter_number_of_cases_now_and_title\"><b>$get_user_case_counter_number_of_cases_now</b>
 											<a href=\"view_profile_and_update_profile_link.php?user_id=$get_district_member_user_id&amp;l=$l&amp;process=1\" style=\"color: black;\">";
 											if($get_district_member_user_first_name == ""){
 												echo"$get_district_member_user_name";
@@ -808,7 +808,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 											<p class=\"cases_status_p\">$get_status_title</p>
 											";
 											// Fetch all cases that has status + assigned to user
-											
+											$count_cases_status_title = 0;
 											$query_cases = "SELECT $t_edb_case_index.case_id, $t_edb_case_index.case_number, $t_edb_case_index.case_title, $t_edb_case_index.case_code_id, $t_edb_case_index.case_code_title, $t_edb_case_index.case_priority_id, $t_edb_case_index.case_last_event_text, $t_edb_case_index.case_assigned_to_date_saying, $t_edb_case_index.case_assigned_to_date_ddmmyy, $t_edb_case_index.case_assigned_to_user_id, $t_edb_case_index.case_assigned_to_user_name, $t_edb_case_index.case_assigned_to_user_image_path, $t_edb_case_index.case_assigned_to_user_image_file, $t_edb_case_index.case_assigned_to_user_image_thumb_40, $t_edb_case_index.case_assigned_to_user_image_thumb_50, $t_edb_case_index.case_assigned_to_user_first_name, $t_edb_case_index.case_assigned_to_user_middle_name, $t_edb_case_index.case_assigned_to_user_last_name, $t_edb_case_index.case_created_date_saying, $t_edb_case_index.case_created_date_ddmmyy, $t_edb_case_priorities.priority_bg_color, $t_edb_case_priorities.priority_border_color, $t_edb_case_priorities.priority_text_color, $t_edb_case_priorities.priority_link_color FROM $t_edb_case_index JOIN $t_edb_case_priorities ON $t_edb_case_index.case_priority_id=$t_edb_case_priorities.priority_id WHERE $t_edb_case_index.case_status_id=$get_status_id AND $t_edb_case_index.case_district_id=$get_current_district_id AND $t_edb_case_index.case_assigned_to_user_id=$get_district_member_user_id AND $t_edb_case_index.case_confirmed_by_human=1 AND $t_edb_case_index.case_human_rejected=0 AND $t_edb_case_index.case_is_closed=0";
 											$result_cases = mysqli_query($link, $query_cases);
 											while($row_cases = mysqli_fetch_row($result_cases)) {
@@ -838,8 +838,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 													</div> <!-- //cases_board_box_inner -->
 												</div> <!-- //cases_board_box_wrapper -->
 												";
+												$count_cases_status_title++;
 												$cases_for_status_counter++;
 											} // cases while
+											if($count_cases_status_title == "0"){
+												echo"<p><br /></p>";
+											}
 										echo"
 											</div> <!-- //cases_status_person_drop_div -->
 										";
@@ -873,7 +877,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								echo"
 								  <td style=\"width: 290px;vertical-align:top;padding-right:10px;\" class=\"cases_status_td\" id=\"status_id$get_status_id\">
 									<div class=\"cases_board_status_round_box\">
-										<p><b>$get_district_case_counter_number_of_cases_now</b> $get_status_title</p>
+										<p class=\"case_counter_number_of_cases_now_and_title\"><b>$get_district_case_counter_number_of_cases_now</b> $get_status_title</p>
 								";
 
 							

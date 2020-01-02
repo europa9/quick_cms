@@ -1,5 +1,5 @@
 <?php
-$l_add_info_group = "Add info group";
-$l_show_on_analysis_report = "Show on analysis report";
-$l_create = "Create";
+$l_add_info_group = "Legg til infogruppe";
+$l_create = "Opprett";
+$l_show_on_analysis_report = "Vis p&aring; analyserapport";
 ?>

@@ -155,13 +155,17 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				$result_update = mysqli_query($link, "UPDATE $t_edb_case_index SET case_path_windows=$inp_case_path_windows_mysql, case_path_linux=$inp_case_path_linux_mysql, case_path_folder_name=$inp_case_path_folder_name_mysql  WHERE case_id=$get_case_id") or die(mysqli_error($link));
 
-				$text = "#1 <span style=\"color:orange;\">Case number $get_case_number: Updated paths. <b>Windows:</b> $inp_case_path_windows <b>Linux:</b> $inp_case_path_linux <b>Folder:</b> $get_case_number</span>";
+				$text = "#1 <span style=\"color:orange;\">Case number $get_case_number: Updated paths (because path was blank). <b>Windows:</b> $inp_case_path_windows <b>Linux:</b> $inp_case_path_linux <b>Folder:</b> $get_case_number</span>";
 				$text_mysql = quote_smart($link, $text);
 				echo" &middot; $text ";
 				mysqli_query($link, "INSERT INTO $t_edb_agent_log
 				(agent_log_id, agent_name, agent_log_datetime, agent_log_date_ddmmyyhi, agent_log_date_ddmmyyyyhi, agent_log_date_saying, agent_log_text)  VALUES (NULL, '02_find_new_mirror_files_root.php', '$datetime', '$date_dmyhi', '$date_ddmmyyyyhi', '$date_saying', $text_mysql)")
 				or die(mysqli_error($link));
-				die;
+
+				// Transfer paths
+				$get_case_path_windows = "$inp_case_path_windows";
+				$get_case_path_linux = "$inp_case_path_linux";
+				$get_case_path_folder_name = "$get_case_number";
 			}
 
 			// Print
@@ -473,11 +477,20 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 													$result_m = mysqli_query($link, $query_m);
 													$row_m = mysqli_fetch_row($result_m);
 													list($get_current_mirror_file_id) = $row_m;
-															
+													
+													// Update EXT (we sometimes get ext 0001, and MySQL stores it as "1" only"
+													$sql = "UPDATE $t_edb_case_index_evidence_items_mirror_files SET mirror_file_ext=? WHERE mirror_file_id='$get_current_mirror_file_id'";
+													$stmt = $link->prepare($sql);
+													$stmt->bind_param("s", $inp_mirror_file_ext);
+													$stmt->execute();
+													if ($stmt->errno) {
+														echo "FAILURE!!! " . $stmt->error; die;
+													}
 	
 													$text = "#8 Found mirror file. <b>Case number:</b> $get_case_number &middot;";
-													$text = $text  . "<b>Mirror file:</b> $mirror_file_path/$inp_mirror_file_file &middot;";
-													$text = $text  . "<b>Mirror file ID:</b> $get_current_mirror_file_id";
+													$text = $text  . "<b>Mirror file:</b> $mirror_file_path/$inp_mirror_file_file ";
+													$text = $text  . "<b>Mirror file ID:</b> $get_current_mirror_file_id ";
+													$text = $text  . "<b>Mirror file EXT:</b> $inp_mirror_file_ext ";
 													$text_mysql = quote_smart($link, $text);
 													echo" &middot; $text ";
 													mysqli_query($link, "INSERT INTO $t_edb_agent_log

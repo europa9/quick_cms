@@ -87,7 +87,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			// Get messages
 			$date_saying = date("j M Y");
-			$query = "SELECT message_id, message_channel_id, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_from_user_id, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent FROM $t_talk_channels_messages WHERE message_id > $last_message_id_mysql AND message_channel_id=$get_current_channel_id AND message_from_user_id != $my_user_id_mysql";
+			$query = "SELECT message_id, message_channel_id, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_from_user_id, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent FROM $t_talk_channels_messages WHERE message_id > $last_message_id_mysql AND message_channel_id=$get_current_channel_id AND message_from_user_id != $my_user_id_mysql  ORDER BY message_id DESC";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
 				list($get_message_id, $get_message_channel_id, $get_message_type, $get_message_text, $get_message_datetime, $get_message_date_saying, $get_message_time_saying, $get_message_time, $get_message_year, $get_message_from_user_id, $get_message_from_user_name, $get_message_from_user_alias, $get_message_from_user_image_path, $get_message_from_user_image_file, $get_message_from_user_image_thumb_40, $get_message_from_user_image_thumb_50, $get_message_from_ip, $get_message_from_hostname, $get_message_from_user_agent) = $row;
@@ -97,11 +97,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 										<!-- Info -->
 											<p class=\"talk_messages_info\">
 											$get_message_text
-											<span class=\"talk_messages_date_and_time\">";
+											<span class=\"talk_messages_date_and_time\">(";
 											if($date_saying != "$get_message_date_saying"){
-											echo"$get_message_date_saying ";
+												echo"$get_message_date_saying ";
 											}
-											echo"$get_message_time_saying</span>
+											echo"$get_message_time_saying)</span>
 											</p>
 										<!-- //Info -->
 										";

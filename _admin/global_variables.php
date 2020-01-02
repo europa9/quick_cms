@@ -1,7 +1,6 @@
 <?php
-$cmsNameSav = "Quick CMS";
+$cmsNameSav = "Sindre CMS";
 $cmsWebsiteSav = "https://codecourses.eu";
-$cmsVersionSav = "4.1.0";
-$cmsCopyrightSav = "&copy; 2010-2020";
+$cmsVersionSav = "4.0.0";
 
 ?>

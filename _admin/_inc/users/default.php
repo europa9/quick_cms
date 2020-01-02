@@ -14,6 +14,30 @@ if(!(isset($define_access_to_control_panel))){
 	die;
 }
 
+/*- Variables -------------------------------------------------------------------------- */
+if(isset($_GET['order_by'])) {
+	$order_by = $_GET['order_by'];
+	$order_by = strip_tags(stripslashes($order_by));
+}
+else{
+	$order_by = "";
+}
+if($order_by == ""){
+	$order_by = "user_name";
+}
+if(isset($_GET['order_method'])) {
+	$order_method = $_GET['order_method'];
+	$order_method = strip_tags(stripslashes($order_method));
+	if($order_method != "asc" && $order_method != "desc"){
+		echo"Wrong order method";
+		die;
+	}
+}
+else{
+	$order_method = "asc";
+}
+
+
 
 
 
@@ -29,12 +53,14 @@ $t_users_status 		= $mysqlPrefixSav . "users_status";
 $t_users_status_comments 	= $mysqlPrefixSav . "users_status_comments";
 $t_users_status_comments_likes 	= $mysqlPrefixSav . "users_status_comments_likes";
 $t_users_status_likes 		= $mysqlPrefixSav . "users_status_likes";
-	
-echo"
-<h1>$l_users</h1>
 
 
-<!-- Feedback -->
+if($action == ""){
+	echo"
+	<h1>$l_users</h1>
+
+
+	<!-- Feedback -->
 	";
 	if($ft != "" && $fm != ""){
 		if($fm == "user_deleted"){
@@ -46,22 +72,164 @@ echo"
 		echo"<div class=\"$ft\"><p>$fm</p></div>";
 	}
 	echo"
-<!-- //Feedback -->
+	<!-- //Feedback -->
 
 
-<!-- Users list -->
+	<!-- Users list -->
 	<p>
 	<a href=\"index.php?open=$open&amp;page=users_new&amp;editor_language=$editor_language\" class=\"btn\">$l_new_user</a>
+	<a href=\"index.php?open=$open&amp;page=check_that_all_users_have_profile&amp;editor_language=$editor_language\" class=\"btn\">Check that all users have profile</a>
 	</p>
 
 		<table class=\"hor-zebra\">
 		 <thead>
 		  <tr>
-		   <th scope=\"col\">
-			<span>$l_user_name</span>
+		   <th scope=\"col\">";
+			if($order_by == "user_id" && $order_method == "asc"){
+				$order_method_link = "desc";
+			}
+			else{
+				$order_method_link = "asc";
+			}
+
+			echo"
+			<span><a href=\"index.php?open=$open&amp;page=$page&amp;order_by=user_id&amp;order_method=$order_method_link&amp;editor_language=$editor_language&amp;l=$l\" style=\"color:black;\"><b>ID</b></a>";
+			if($order_by == "user_id" && $order_method == "asc"){
+				echo"<img src=\"_design/gfx/arrow_down.png\" alt=\"arrow_down.png\" />";
+			}
+			if($order_by == "user_id" && $order_method == "desc"){
+				echo"<img src=\"_design/gfx/arrow_up.png\" alt=\"arrow_up.png\" />";
+			}
+			echo"</span>
+		   </th>
+		   <th scope=\"col\">";
+			if($order_by == "user_name" && $order_method == "asc"){
+				$order_method_link = "desc";
+			}
+			else{
+				$order_method_link = "asc";
+			}
+
+			echo"
+			<span><a href=\"index.php?open=$open&amp;page=$page&amp;order_by=user_name&amp;order_method=$order_method_link&amp;editor_language=$editor_language&amp;l=$l\" style=\"color:black;\"><b>User name</b></a>";
+			if($order_by == "user_name" && $order_method == "asc"){
+				echo"<img src=\"_design/gfx/arrow_down.png\" alt=\"arrow_down.png\" />";
+			}
+			if($order_by == "user_name" && $order_method == "desc"){
+				echo"<img src=\"_design/gfx/arrow_up.png\" alt=\"arrow_up.png\" />";
+			}
+			echo"</span>
+		   </th>
+		   <th scope=\"col\">";
+			
+			if($order_by == "user_alias" && $order_method == "asc"){
+				$order_method_link = "desc";
+			}
+			else{
+				$order_method_link = "asc";
+			}
+			echo"
+			<span><a href=\"index.php?open=$open&amp;page=$page&amp;order_by=user_alias&amp;order_method=$order_method_link&amp;editor_language=$editor_language&amp;l=$l\" style=\"color:black;\"><b>Alias</b></a>";
+			if($order_by == "user_alias" && $order_method == "asc"){
+				echo"<img src=\"_design/gfx/arrow_down.png\" alt=\"arrow_down.png\" />";
+			}
+			if($order_by == "user_alias" && $order_method == "desc"){
+				echo"<img src=\"_design/gfx/arrow_up.png\" alt=\"arrow_up.png\" />";
+			}
+			echo"</span>
+		   </th>
+		   <th scope=\"col\">";
+			if($order_by == "profile_first_name" && $order_method == "asc"){
+				$order_method_link = "desc";
+			}
+			else{
+				$order_method_link = "asc";
+			}
+
+			echo"
+			<span><a href=\"index.php?open=$open&amp;page=$page&amp;order_by=profile_first_name&amp;order_method=$order_method_link&amp;editor_language=$editor_language&amp;l=$l\" style=\"color:black;\"><b>First name</b></a>";
+			if($order_by == "profile_first_name" && $order_method == "asc"){
+				echo"<img src=\"_design/gfx/arrow_down.png\" alt=\"arrow_down.png\" />";
+			}
+			if($order_by == "profile_first_name" && $order_method == "desc"){
+				echo"<img src=\"_design/gfx/arrow_up.png\" alt=\"arrow_up.png\" />";
+			}
+			echo"</span>
+		   </th>
+		   <th scope=\"col\">";
+			if($order_by == "profile_middle_name" && $order_method == "asc"){
+				$order_method_link = "desc";
+			}
+			else{
+				$order_method_link = "asc";
+			}
+
+			echo"
+			<span><a href=\"index.php?open=$open&amp;page=$page&amp;order_by=profile_middle_name&amp;order_method=$order_method_link&amp;editor_language=$editor_language&amp;l=$l\" style=\"color:black;\"><b>Middle name</b></a>";
+			if($order_by == "profile_middle_name" && $order_method == "asc"){
+				echo"<img src=\"_design/gfx/arrow_down.png\" alt=\"arrow_down.png\" />";
+			}
+			if($order_by == "profile_middle_name" && $order_method == "desc"){
+				echo"<img src=\"_design/gfx/arrow_up.png\" alt=\"arrow_up.png\" />";
+			}
+			echo"</span>
+		   </th>
+		   <th scope=\"col\">";
+			if($order_by == "profile_last_name" && $order_method == "asc"){
+				$order_method_link = "desc";
+			}
+			else{
+				$order_method_link = "asc";
+			}
+
+			echo"
+			<span><a href=\"index.php?open=$open&amp;page=$page&amp;order_by=profile_last_name&amp;order_method=$order_method_link&amp;editor_language=$editor_language&amp;l=$l\" style=\"color:black;\"><b>Last name</b></a>";
+			if($order_by == "profile_last_name" && $order_method == "asc"){
+				echo"<img src=\"_design/gfx/arrow_down.png\" alt=\"arrow_down.png\" />";
+			}
+			if($order_by == "profile_last_name" && $order_method == "desc"){
+				echo"<img src=\"_design/gfx/arrow_up.png\" alt=\"arrow_up.png\" />";
+			}
+			echo"</span>
+		   </th>
+		   <th scope=\"col\">";
+			if($order_by == "user_email" && $order_method == "asc"){
+				$order_method_link = "desc";
+			}
+			else{
+				$order_method_link = "asc";
+			}
+
+			echo"
+			<span><a href=\"index.php?open=$open&amp;page=$page&amp;order_by=user_email&amp;order_method=$order_method_link&amp;editor_language=$editor_language&amp;l=$l\" style=\"color:black;\"><b>E-mail</b></a>";
+			if($order_by == "user_email" && $order_method == "asc"){
+				echo"<img src=\"_design/gfx/arrow_down.png\" alt=\"arrow_down.png\" />";
+			}
+			if($order_by == "user_email" && $order_method == "desc"){
+				echo"<img src=\"_design/gfx/arrow_up.png\" alt=\"arrow_up.png\" />";
+			}
+			echo"</span>
+		   </th>
+		   <th scope=\"col\">";
+			if($order_by == "user_rank" && $order_method == "asc"){
+				$order_method_link = "desc";
+			}
+			else{
+				$order_method_link = "asc";
+			}
+
+			echo"
+			<span><a href=\"index.php?open=$open&amp;page=$page&amp;order_by=user_rank&amp;order_method=$order_method_link&amp;editor_language=$editor_language&amp;l=$l\" style=\"color:black;\"><b>Rank</b></a>";
+			if($order_by == "user_rank" && $order_method == "asc"){
+				echo"<img src=\"_design/gfx/arrow_down.png\" alt=\"arrow_down.png\" />";
+			}
+			if($order_by == "user_rank" && $order_method == "desc"){
+				echo"<img src=\"_design/gfx/arrow_up.png\" alt=\"arrow_up.png\" />";
+			}
+			echo"</span>
 		   </th>
 		   <th scope=\"col\">
-			<span>$l_rank</span>
+			<span>Photo</span>
 		   </th>
 		   <th scope=\"col\">
 			<span>$l_actions</span>
@@ -72,18 +240,20 @@ echo"
 
 
 	";
+	$query = "SELECT $t_users.user_id, $t_users.user_email, $t_users.user_name, $t_users.user_alias, $t_users.user_gender, $t_users.user_rank, $t_users_profile.profile_id, $t_users_profile.profile_first_name, $t_users_profile.profile_middle_name, $t_users_profile.profile_last_name FROM $t_users JOIN $t_users_profile ON $t_users.user_id=$t_users_profile.profile_user_id";
+	if($order_by == "user_id" OR $order_by == "user_email" OR $order_by == "user_name" OR $order_by == "user_alias" OR $order_by == "user_rank" OR $order_by == "profile_first_name" OR $order_by == "profile_middle_name" OR $order_by == "profile_last_name"){
+		if($order_method == "asc"){
+			$query = $query . " ORDER BY $order_by ASC";
+		}
+		else{
+			$query = $query . " ORDER BY $order_by DESC";
+		}
+	}
 
-	$query = "SELECT user_id, user_name, user_gender, user_rank FROM $t_users ORDER BY user_last_online DESC";
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
-		list($get_user_id, $get_user_name, $get_user_gender, $get_user_rank) = $row;
+		list($get_user_id, $get_user_email, $get_user_name, $get_user_alias, $get_user_gender, $get_user_rank, $get_profile_id, $get_profile_first_name,  $get_profile_middle_name,  $get_profile_last_name) = $row;
 
-		// Profile
-		$q = "SELECT profile_id, profile_first_name, profile_middle_name, profile_last_name, profile_city, profile_country, profile_work, profile_university, profile_high_school, profile_relationship FROM $t_users_profile WHERE profile_user_id='$get_user_id'";
-		$r = mysqli_query($link, $q);
-		$rowb = mysqli_fetch_row($r);
-		list($get_profile_id, $get_profile_first_name,  $get_profile_middle_name,  $get_profile_last_name,  $get_profile_city, $get_profile_country, $get_profile_work, $get_profile_university, $get_profile_high_school, $get_profile_relationship) = $rowb;
-	
 		// Photo
 		$q = "SELECT photo_id, photo_destination FROM $t_users_profile_photo WHERE photo_user_id='$get_user_id' AND photo_profile_image='1'";
 		$r = mysqli_query($link, $q);
@@ -101,6 +271,30 @@ echo"
 		echo"
 		 <tr>
 		  <td class=\"$style\">
+			<span><a href=\"?open=$open&amp;page=users_edit_user&amp;user_id=$get_user_id&amp;l=$l&amp;editor_language=$editor_language\">$get_user_id</a></span>
+		  </td>
+		  <td class=\"$style\">
+			<span><a href=\"?open=$open&amp;page=users_edit_user&amp;user_id=$get_user_id&amp;l=$l&amp;editor_language=$editor_language\">$get_user_name</a></span>
+		  </td>
+		  <td class=\"$style\">
+			<span>$get_user_alias</span>
+		  </td>
+		  <td class=\"$style\">
+			<span>$get_profile_first_name</span>
+		  </td>
+		  <td class=\"$style\">
+			<span>$get_profile_middle_name</span>
+		  </td>
+		  <td class=\"$style\">
+			<span>$get_profile_last_name</span>
+		  </td>
+		  <td class=\"$style\">
+			<span>$get_user_email</span>
+		  </td>
+		  <td class=\"$style\">
+			<span>$get_user_rank</span>
+		  </td>
+		  <td class=\"$style\">
 			";
 			if($get_photo_id != ""){
 				$thumb = str_replace("_org", "_thumb", $get_photo_destination);
@@ -114,11 +308,6 @@ echo"
 				";
 			}
 			echo"
-			<span>$get_user_name<br />
-			$get_profile_first_name  $get_profile_middle_name  $get_profile_last_name</span>
-		  </td>
-		  <td class=\"$style\">
-			<span>$get_user_rank</span>
 		  </td>
 		  <td class=\"$style\">
 			<span><a href=\"?open=$open&amp;page=users_edit_user&amp;user_id=$get_user_id&amp;l=$l&amp;editor_language=$editor_language\">$l_edit</a>
@@ -140,6 +329,7 @@ echo"
 		});
 	});
 	</script>
-<!-- //Users list -->
+	<!-- //Users list -->
 	";
+}
 ?>

@@ -741,7 +741,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					echo"</span>
 				  </td>
 				  <td class=\"$style\">
-					<a href=\"$root/users/view_profile.php?user_id=$get_item_requester_user_id&amp;l=$l\" title=\"$get_item_requester_user_name\">$get_item_requester_user_first_name $get_item_requester_user_middle_name $get_item_requester_user_last_name</a>
+					<a href=\"$root/users/view_profile.php?user_id=$get_item_requester_user_id&amp;l=$l\" title=\"$get_item_requester_user_name\">$get_item_requester_user_job_title $get_item_requester_user_first_name $get_item_requester_user_middle_name $get_item_requester_user_last_name</a>
 				  </td>
 				  <td class=\"$style\">
 					<span>$get_item_requester_user_department</span>

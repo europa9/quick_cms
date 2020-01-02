@@ -127,10 +127,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 	// 1. Existing mirror files
-	$query = "SELECT mirror_file_id, mirror_file_case_id, mirror_file_record_id, mirror_file_item_id, mirror_file_path_windows, mirror_file_path_linux, mirror_file_file, mirror_file_ext, mirror_file_type, mirror_file_created_datetime, mirror_file_created_time, mirror_file_created_date_saying, mirror_file_created_date_ddmmyy, mirror_file_modified_datetime, mirror_file_modified_time, mirror_file_modified_date_saying, mirror_file_modified_date_ddmmyy, mirror_file_size_bytes, mirror_file_size_mb, mirror_file_size_human, mirror_file_backup_disk, mirror_file_exists, mirror_file_ready_for_automated_machine, mirror_file_ready_agent_tries_counter, mirror_file_comments FROM $t_edb_case_index_evidence_items_mirror_files WHERE mirror_file_ready_for_automated_machine=0 AND mirror_file_ready_agent_tries_counter < 20";
-	$result = mysqli_query($link, $query);
-	while($row = mysqli_fetch_row($result)) {
-		list($get_mirror_file_id, $get_mirror_file_case_id, $get_mirror_file_record_id, $get_mirror_file_item_id, $get_mirror_file_path_windows, $get_mirror_file_path_linux, $get_mirror_file_file, $get_mirror_file_ext, $get_mirror_file_type, $get_mirror_file_created_datetime, $get_mirror_file_created_time, $get_mirror_file_created_date_saying, $get_mirror_file_created_date_ddmmyy, $get_mirror_file_modified_datetime, $get_mirror_file_modified_time, $get_mirror_file_modified_date_saying, $get_mirror_file_modified_date_ddmmyy, $get_mirror_file_size_bytes, $get_mirror_file_size_mb, $get_mirror_file_size_human, $get_mirror_file_backup_disk, $get_mirror_file_exists, $get_mirror_file_ready_for_automated_machine, $get_mirror_file_ready_agent_tries_counter, $get_mirror_file_comments) = $row;
+	$query_mirror_files = "SELECT mirror_file_id, mirror_file_case_id, mirror_file_record_id, mirror_file_item_id, mirror_file_path_windows, mirror_file_path_linux, mirror_file_file, mirror_file_ext, mirror_file_type, mirror_file_created_datetime, mirror_file_created_time, mirror_file_created_date_saying, mirror_file_created_date_ddmmyy, mirror_file_modified_datetime, mirror_file_modified_time, mirror_file_modified_date_saying, mirror_file_modified_date_ddmmyy, mirror_file_size_bytes, mirror_file_size_mb, mirror_file_size_human, mirror_file_backup_disk, mirror_file_exists, mirror_file_ready_for_automated_machine, mirror_file_ready_agent_tries_counter, mirror_file_comments FROM $t_edb_case_index_evidence_items_mirror_files WHERE mirror_file_ready_for_automated_machine=0 AND mirror_file_ready_agent_tries_counter < 20";
+	$result_mirror_files = mysqli_query($link, $query_mirror_files);
+	while($row_mirror_files = mysqli_fetch_row($result_mirror_files)) {
+		list($get_mirror_file_id, $get_mirror_file_case_id, $get_mirror_file_record_id, $get_mirror_file_item_id, $get_mirror_file_path_windows, $get_mirror_file_path_linux, $get_mirror_file_file, $get_mirror_file_ext, $get_mirror_file_type, $get_mirror_file_created_datetime, $get_mirror_file_created_time, $get_mirror_file_created_date_saying, $get_mirror_file_created_date_ddmmyy, $get_mirror_file_modified_datetime, $get_mirror_file_modified_time, $get_mirror_file_modified_date_saying, $get_mirror_file_modified_date_ddmmyy, $get_mirror_file_size_bytes, $get_mirror_file_size_mb, $get_mirror_file_size_human, $get_mirror_file_backup_disk, $get_mirror_file_exists, $get_mirror_file_ready_for_automated_machine, $get_mirror_file_ready_agent_tries_counter, $get_mirror_file_comments) = $row_mirror_files;
 			
 
 		// Does the file exists?
@@ -242,10 +242,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						$sha1_mysql = quote_smart($link, $sha1);
 
 
-						$query = "SELECT hash_id FROM $t_edb_case_index_evidence_items_mirror_files_hash WHERE hash_case_id=$get_mirror_file_case_id AND hash_mirror_file_id=$get_mirror_file_id";
-						$result = mysqli_query($link, $query);
-						$row = mysqli_fetch_row($result);
-						list($get_hash_id) = $row;
+						$query_hash = "SELECT hash_id FROM $t_edb_case_index_evidence_items_mirror_files_hash WHERE hash_case_id=$get_mirror_file_case_id AND hash_mirror_file_id=$get_mirror_file_id";
+						$result_hash = mysqli_query($link, $query_hash);
+						$row_hash = mysqli_fetch_row($result_hash);
+						list($get_hash_id) = $row_hash;
 						if($get_hash_id == ""){
 							mysqli_query($link, "INSERT INTO $t_edb_case_index_evidence_items_mirror_files_hash 
 							(hash_id, hash_case_id, hash_mirror_file_id, hash_md5, hash_sha1, hash_created_datetime, hash_created_ddmmyyhhiiss) 

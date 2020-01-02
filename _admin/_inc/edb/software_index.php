@@ -87,8 +87,8 @@ if($action == ""){
 	<!-- //Navigation -->
 
 
-	<!-- Software -->
-
+	<!-- Active software -->
+		<h2>Active software</h2>
 		<table class=\"hor-zebra\">
 		 <thead>
 		  <tr>
@@ -108,7 +108,7 @@ if($action == ""){
 		 </thead>
 
 		";
-		$query = "SELECT software_id, software_title, software_version, software_used_for, software_description, software_report_text, software_image_path, software_image_file, software_show_in_acquire_list FROM $t_edb_software_index";
+		$query = "SELECT software_id, software_title, software_version, software_used_for, software_description, software_report_text, software_image_path, software_image_file, software_show_in_acquire_list FROM $t_edb_software_index WHERE software_show_in_acquire_list='1'";
 		$query = $query  . " ORDER BY software_title ASC";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
@@ -159,7 +159,83 @@ if($action == ""){
 		echo"
 		 </tbody>
 		</table>
-	<!-- //Software -->
+	<!-- //Active software -->
+
+
+	<!-- Inactive software -->
+		<hr />
+		<h2>Inactive software</h2>
+		<table class=\"hor-zebra\">
+		 <thead>
+		  <tr>
+		   <th scope=\"col\">
+			<span><b>ID</b></span>
+		   </th>
+		   <th scope=\"col\">
+			<span><b>Title</b></span>
+		   </th>
+		   <th scope=\"col\">
+			<span><b>Version</b></span>
+		   </th>
+		   <th scope=\"col\">
+			<span><b>Show in acquire list</b></span>
+		   </th>
+		  </tr>
+		 </thead>
+
+		";
+		$query = "SELECT software_id, software_title, software_version, software_used_for, software_description, software_report_text, software_image_path, software_image_file, software_show_in_acquire_list FROM $t_edb_software_index WHERE software_show_in_acquire_list='0'";
+		$query = $query  . " ORDER BY software_title ASC";
+		$result = mysqli_query($link, $query);
+		while($row = mysqli_fetch_row($result)) {
+			list($get_software_id, $get_software_title, $get_software_version, $get_software_used_for, $get_software_description, $get_software_report_text, $get_software_image_path, $get_software_image_file, $get_software_show_in_acquire_list) = $row;
+			
+			// Style
+			if(isset($style) && $style == ""){
+				$style = "odd";
+			}
+			else{
+				$style = "";
+			}
+
+			echo"
+			 <tr>
+			  <td class=\"$style\">
+				<a id=\"#software$get_software_id\"></a>
+				<span>
+				<a href=\"index.php?open=$open&amp;page=$page&amp;action=edit&amp;software_id=$get_software_id&amp;l=$l&amp;editor_language=$editor_language\">$get_software_id</a>
+				</span>
+			  </td>
+			  <td class=\"$style\">
+				<a id=\"#software$get_software_id\"></a>
+				<span>
+				<a href=\"index.php?open=$open&amp;page=$page&amp;action=edit&amp;software_id=$get_software_id&amp;l=$l&amp;editor_language=$editor_language\">$get_software_title</a>
+				</span>
+			  </td>
+			  <td class=\"$style\">
+				<span>
+				$get_software_version
+				</span>
+			  </td>
+			  <td class=\"$style\">
+				<span>
+				";
+				if($get_software_show_in_acquire_list == "1"){
+					echo"Yes";
+				}
+				else{
+					echo"No";
+				}
+				echo"
+				</span>
+			  </td>
+			 </tr>";
+		} // while
+		
+		echo"
+		 </tbody>
+		</table>
+	<!-- //Inactive software -->
 	";
 } // action == ""
 elseif($action == "edit"){
@@ -202,7 +278,7 @@ elseif($action == "edit"){
 			$inp_show_in_acquire_list = output_html($inp_show_in_acquire_list);
 			$inp_show_in_acquire_list_mysql = quote_smart($link, $inp_show_in_acquire_list);
 
-
+			$datetime = date("Y-m-d H:i:s");
 
 
 			$result = mysqli_query($link, "UPDATE $t_edb_software_index SET 
@@ -210,7 +286,8 @@ elseif($action == "edit"){
 					software_version=$inp_version_mysql,
 					software_used_for=$inp_used_for_mysql,
 					software_description=$inp_description_mysql,
-					software_show_in_acquire_list=$inp_show_in_acquire_list_mysql
+					software_show_in_acquire_list=$inp_show_in_acquire_list_mysql,
+					software_updated_datetime='$datetime'
 					 WHERE software_id=$get_current_software_id") or die(mysqli_error($link));
 
 
@@ -271,7 +348,7 @@ elseif($action == "edit"){
 			<form method=\"post\" action=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;software_id=$get_current_software_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
 			<p>Title:<br />
-			<input type=\"text\" name=\"inp_title\" value=\"$get_current_software_title\" size=\"25\" />
+			<input type=\"text\" name=\"inp_title\" value=\"$get_current_software_title\" size=\"25\" style=\"width: 99%;\" />
 			</p>
 
 			<p>Version:<br />
@@ -308,11 +385,14 @@ elseif($action == "edit"){
 			</p>
 
 
-			<p><input type=\"submit\" value=\"Save changes\" class=\"btn_default\" />
+			<p>
+			<input type=\"submit\" value=\"Save changes\" class=\"btn_default\" />
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=copy&amp;software_id=$get_current_software_id&amp;l=$l\" class=\"btn_default\">Make copy</a>
 			</p>
 	
 			</form>
 		<!-- //Edit form -->
+
 
 		";
 	} // found
@@ -378,10 +458,12 @@ elseif($action == "edit_image"){
 						// image
 						$inp_image = $new_name;
 						$inp_image_mysql = quote_smart($link, $inp_image);
-
+						
+						// Datetime
+						$datetime = date("Y-m-d H:i:s");
 				
 						// Update MySQL
-						$result = mysqli_query($link, "UPDATE $t_edb_software_index SET software_image_path=$inp_image_path_mysql, software_image_file=$inp_image_mysql WHERE software_id=$software_id_mysql") or die(mysqli_error($link));
+						$result = mysqli_query($link, "UPDATE $t_edb_software_index SET software_image_path=$inp_image_path_mysql, software_image_file=$inp_image_mysql, software_updated_datetime='$datetime' WHERE software_id=$software_id_mysql") or die(mysqli_error($link));
 
 					
 						$url = "index.php?open=edb&page=software_index&action=edit_image&software_id=$get_current_software_id&editor_language=$editor_language&l=$l&ft=success&fm=image_uploaded";
@@ -533,6 +615,10 @@ elseif($action == "edit_report"){
 				echo "FAILURE!!! " . $stmt->error; die;
 			}
 
+			// Datetime
+			$datetime = date("Y-m-d H:i:s");
+			$result = mysqli_query($link, "UPDATE $t_edb_software_index SET software_updated_datetime='$datetime' WHERE software_id=$software_id_mysql") or die(mysqli_error($link));
+
 	
 
 			$url = "index.php?open=edb&page=$page&action=$action&software_id=$get_current_software_id&order_by=$order_by&order_method=$order_method&editor_language=$editor_language&l=$l&ft=success&fm=changes_saved";
@@ -591,8 +677,6 @@ elseif($action == "edit_report"){
 					toolbar: 'formatselect | bold italic strikethrough forecolor backcolor permanentpen formatpainter | link image media pageembed | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat | addcomment',
 					image_advtab: true,
 					content_css: [
-						'//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
-						'//www.tiny.cloud/css/codepen.min.css'
 					],
 					link_list: [
 						{ title: 'My page 1', value: 'http://www.tinymce.com' },
@@ -746,10 +830,12 @@ elseif($action == "new"){
 		$inp_show_in_acquire_list = output_html($inp_show_in_acquire_list);
 		$inp_show_in_acquire_list_mysql = quote_smart($link, $inp_show_in_acquire_list);
 
+		$datetime = date("Y-m-d H:i:s");
+
 		mysqli_query($link, "INSERT INTO $t_edb_software_index
-		(software_id, software_title, software_show_in_acquire_list) 
+		(software_id, software_title, software_show_in_acquire_list, software_created_datetime) 
 		VALUES 
-		(NULL, $inp_title_mysql, $inp_show_in_acquire_list_mysql)")
+		(NULL, $inp_title_mysql, $inp_show_in_acquire_list_mysql, '$datetime')")
 		or die(mysqli_error($link));
 
 		$url = "index.php?open=edb&page=$page&action=$action&editor_language=$editor_language&l=$l&ft=success&fm=saved";
@@ -797,7 +883,7 @@ elseif($action == "new"){
 		<form method=\"post\" action=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
 		<p>Title:<br />
-		<input type=\"text\" name=\"inp_title\" value=\"\" size=\"25\" />
+		<input type=\"text\" name=\"inp_title\" value=\"\" size=\"25\" style=\"width: 99%;\" />
 		</p>
 
 		<p>Show in acquire list:<br />
@@ -816,4 +902,65 @@ elseif($action == "new"){
 
 	";
 } // new
+elseif($action == "copy"){
+	// Find
+	$software_id_mysql = quote_smart($link, $software_id);
+	$query = "SELECT software_id, software_title, software_version, software_used_for, software_description, software_report_text, software_image_path, software_image_file, software_show_in_acquire_list FROM $t_edb_software_index WHERE software_id=$software_id_mysql";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_current_software_id, $get_current_software_title, $get_current_software_version, $get_current_software_used_for, $get_current_software_description, $get_current_software_report_text, $get_current_software_image_path, $get_current_software_image_file, $get_current_software_show_in_acquire_list) = $row;
+	
+	if($get_current_software_id == ""){
+		echo"
+		<h1>Server error 404</h1>
+		";
+	}
+	else{
+
+		$inp_title_mysql = quote_smart($link, $get_current_software_title);
+
+		$inp_version_mysql = quote_smart($link, $get_current_software_version);
+
+		$inp_used_for_mysql = quote_smart($link, $get_current_software_used_for);
+
+		$inp_description_mysql = quote_smart($link, $get_current_software_description);
+
+		$inp_show_in_acquire_list_mysql = quote_smart($link, $get_current_software_show_in_acquire_list);
+
+		$inp_image_path_mysql = quote_smart($link, $get_current_software_image_path);
+
+		$inp_image_file_mysql = quote_smart($link, $get_current_software_image_file);
+
+		
+
+		$datetime = date("Y-m-d H:i:s");
+
+		mysqli_query($link, "INSERT INTO $t_edb_software_index
+		(software_id, software_title, software_version, software_used_for, software_description, software_image_path, software_image_file, software_show_in_acquire_list, software_created_datetime) 
+		VALUES 
+		(NULL, $inp_title_mysql, $inp_version_mysql, $inp_used_for_mysql, $inp_description_mysql, $inp_image_path_mysql, $inp_image_file_mysql, $inp_show_in_acquire_list_mysql, '$datetime')")
+		or die(mysqli_error($link));
+		
+		// Get ID
+		$query = "SELECT software_id FROM $t_edb_software_index WHERE software_created_datetime='$datetime'";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_current_software_id) = $row;
+	
+		$sql = "UPDATE $t_edb_software_index SET software_report_text=? WHERE software_id=$get_current_software_id";
+		$stmt = $link->prepare($sql);
+		$stmt->bind_param("s", $get_current_software_report_text);
+		$stmt->execute();
+		if ($stmt->errno) {
+			echo "FAILURE!!! " . $stmt->error; die;
+		}
+		
+		// Header
+		echo"
+		<h1><img src=\"_design/gfx/loading_22.gif\" alt=\"loading_22.gif\" /> Making copy</h1>
+		<meta http-equiv=refresh content=\"0; url=index.php?open=$open&amp;page=$page&amp;action=edit&amp;software_id=$get_current_software_id&amp;l=$l&amp;ft=info&amp;fm=your_now_woring_on_a_copy\">
+		";
+
+	}
+}
 ?>

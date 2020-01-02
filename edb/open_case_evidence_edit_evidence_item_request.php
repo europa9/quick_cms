@@ -248,10 +248,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							list($get_requester_profile_id, $get_requester_profile_first_name, $get_requester_profile_middle_name, $get_requester_profile_last_name, $get_requester_profile_about) = $row;
 
 							// Requester professional
-							$query = "SELECT professional_id, professional_user_id, professional_company, professional_company_location, professional_department, professional_work_email, professional_position FROM $t_users_professional WHERE professional_user_id=$get_requester_user_id";
+							$query = "SELECT professional_id, professional_user_id, professional_company, professional_company_location, professional_department, professional_work_email, professional_position, professional_position_abbr FROM $t_users_professional WHERE professional_user_id=$get_requester_user_id";
 							$result = mysqli_query($link, $query);
 							$row = mysqli_fetch_row($result);
-							list($get_requester_professional_id, $get_requester_professional_user_id, $get_requester_professional_company, $get_requester_professional_company_location, $get_requester_professional_department, $get_requester_professional_work_email, $get_requester_professional_position) = $row;
+							list($get_requester_professional_id, $get_requester_professional_user_id, $get_requester_professional_company, $get_requester_professional_company_location, $get_requester_professional_department, $get_requester_professional_work_email, $get_requester_professional_position, $get_requester_professional_position_abbr) = $row;
 						}
 
 						$inp_requester_user_name_mysql = quote_smart($link, $get_requester_user_name);
@@ -270,7 +270,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						$inp_requester_user_middle_name_mysql = quote_smart($link, $get_requester_profile_middle_name);
 						$inp_requester_user_last_name_mysql = quote_smart($link, $get_requester_profile_last_name);
 			
-						$inp_requester_user_job_title_mysql = quote_smart($link, $get_requester_professional_position);
+						// $inp_requester_user_job_title_mysql = quote_smart($link, $get_requester_professional_position);
+						$inp_requester_user_job_title_mysql = quote_smart($link, $get_requester_professional_position_abbr);
+
 						$inp_requester_user_department_mysql = quote_smart($link, $get_requester_professional_department);
 						$inp_requester_professional_company_location_mysql = quote_smart($link, $get_requester_professional_company_location);
 
@@ -432,22 +434,38 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					}
 					echo"</p>
 
+					<!-- Requester -->
+						<table>
+						 <tr>
+						  <td style=\"vertical-align: top;padding-right: 20px;\">
+							<p>$l_requester_user_name 
+							<span class=\"smal\">
+							(<a href=\"open_case_evidence_new_requester.php?case_id=$get_current_case_id&amp;l=$l\" target=\"_blank\" class=\"smal\">$l_new_requester</a>
+							&middot;
+							<a href=\"$root/_admin/index.php?open=users&amp;editor_language=$l&amp;l=$l\" target=\"_blank\" class=\"smal\">$l_edit_users</a>)</span>:<br />
+							";
+							if($get_my_station_member_rank == "admin" OR $get_my_station_member_rank == "moderator" OR $get_my_station_member_rank == "editor"){
+								echo"<input type=\"text\" name=\"inp_requester_user_name\" id=\"autosearch_inp_search_for_requester\" value=\"$get_current_item_requester_user_name\" size=\"25\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />";
+							}
+							else{
+								echo"$get_current_item_requester_user_name";
+							}
 
-					<p>$l_requester_user_name 
-					<span class=\"smal\">
-					(<a href=\"open_case_evidence_new_requester.php?case_id=$get_current_case_id&amp;l=$l\" target=\"_blank\" class=\"smal\">$l_new_requester</a>
-					&middot;
-					<a href=\"$root/_admin/index.php?open=users&amp;editor_language=$l&amp;l=$l\" target=\"_blank\" class=\"smal\">$l_edit_users</a>)</span>:<br />
-					";
-					if($get_my_station_member_rank == "admin" OR $get_my_station_member_rank == "moderator" OR $get_my_station_member_rank == "editor"){
-						echo"<input type=\"text\" name=\"inp_requester_user_name\" id=\"autosearch_inp_search_for_requester\" value=\"$get_current_item_requester_user_name\" size=\"25\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />";
-					}
-					else{
-						echo"$get_current_item_requester_user_name";
-					}
-					echo"</p>
-					<div class=\"open_requester_results\">
-					</div>
+							if($get_current_item_requester_user_id != ""){
+								echo"
+								<a href=\"$root/users/view_profile.php?user_id=$get_current_item_requester_user_id&amp;l=$l\" title=\"$get_current_item_requester_user_name\">$get_current_item_requester_user_job_title $get_current_item_requester_user_first_name $get_current_item_requester_user_middle_name $get_current_item_requester_user_last_name</a>\n";
+							}
+							echo"
+							</p>
+						  </td>
+						  <td style=\"vertical-align: top;padding-right: 20px;\">
+							<!-- Image of requester -->
+							<!-- //Image of requester -->
+						  </td>
+						 </tr>
+						</table>
+						<div class=\"open_requester_results\">
+						</div>
 
 						<!-- Responsible Autocomplete -->
 						<script>
@@ -479,6 +497,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							</script>
 						<!-- //Responsible Autocomplete -->
 
+					<!-- //Requester -->
 
 
 					<p>$l_in: ";
