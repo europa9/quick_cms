@@ -351,6 +351,7 @@ elseif($mode == "edit_language_file"){
 			$translated_file = file_get_contents("_translations/site/$language/$folder/$file.php");
 			preg_match_all('/"([^"]+)"/', $translated_file, $translations);
 
+
 			$x = 0;
 			$language_mysql = quote_smart($link, $language);
 			$query = "SELECT site_translation_string_id, site_translation_string_variable, site_translation_string_value FROM $t_site_translations_strings WHERE site_translation_string_dir_id=$get_current_site_translation_directory_id AND site_translation_string_file_id=$get_current_site_translation_file_id AND site_translation_string_language='en' ORDER BY site_translation_string_variable ASC";
@@ -369,6 +370,12 @@ elseif($mode == "edit_language_file"){
 				$get_site_translation_string_variable_mysql = quote_smart($link, $get_site_translation_string_variable);
 				$inp_name = str_replace('$', "", $get_site_translation_string_variable);
 
+				// Translated value
+				$inp_site_translation_string_value = $translations[0][$x];
+				$inp_site_translation_string_value = str_replace('"', "", $inp_site_translation_string_value);
+				$inp_site_translation_string_value_mysql = quote_smart($link, $inp_site_translation_string_value);
+				
+
 				// Translated content
 				$query_local = "SELECT site_translation_string_id, site_translation_string_value FROM $t_site_translations_strings WHERE site_translation_string_dir_id=$get_current_site_translation_directory_id AND site_translation_string_file_id=$get_current_site_translation_file_id AND site_translation_string_language=$language_mysql AND site_translation_string_variable=$get_site_translation_string_variable_mysql";
 				$result_local = mysqli_query($link, $query_local);
@@ -380,12 +387,19 @@ elseif($mode == "edit_language_file"){
 					mysqli_query($link, "INSERT INTO $t_site_translations_strings
 					(site_translation_string_id, site_translation_string_dir_id, site_translation_string_file_id, site_translation_string_language, site_translation_string_variable, site_translation_string_value) 
 					VALUES 
-					(NULL, $get_current_site_translation_directory_id, $get_current_site_translation_file_id, $language_mysql, $get_site_translation_string_variable_mysql, '')")
+					(NULL, $get_current_site_translation_directory_id, $get_current_site_translation_file_id, $language_mysql, $get_site_translation_string_variable_mysql, $inp_site_translation_string_value_mysql)")
 					or die(mysqli_error($link));
 
-					echo"<div class=\"info\"><p>Created $query_local</p></div>
+					echo"<p style=\"color:orange;\"><b>Info:</b> Inserted $inp_name: $inp_site_translation_string_value</p>";
+					/*echo"<div class=\"info\"><p>Created $query_local</p></div>
 					<meta http-equiv=refresh content=\"1; URL=index.php?open=settings&amp;page=site_translation&amp;language=$language&amp;mode=$mode&amp;folder=$folder&amp;file=$file&amp;editor_language=$editor_language\">";
+					*/
 
+					// Get content
+					$query_local = "SELECT site_translation_string_id, site_translation_string_value FROM $t_site_translations_strings WHERE site_translation_string_dir_id=$get_current_site_translation_directory_id AND site_translation_string_file_id=$get_current_site_translation_file_id AND site_translation_string_language=$language_mysql AND site_translation_string_variable=$get_site_translation_string_variable_mysql";
+					$result_local = mysqli_query($link, $query_local);
+					$row_local = mysqli_fetch_row($result_local);
+					list($get_local_site_translation_string_id, $get_local_site_translation_string_value) = $row_local;
 
 				}
 
@@ -662,7 +676,7 @@ elseif($mode == "open_language"){
 	}
 
 	// Make sure all files exists in database
-	$debug = "0";
+	$debug = "1";
 	if($debug == "1"){
 		echo"
 			<h2>Check that all strings that are in flat files exists in database</h2>
