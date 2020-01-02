@@ -390,7 +390,7 @@ elseif($mode == "edit_language_file"){
 					(NULL, $get_current_site_translation_directory_id, $get_current_site_translation_file_id, $language_mysql, $get_site_translation_string_variable_mysql, $inp_site_translation_string_value_mysql)")
 					or die(mysqli_error($link));
 
-					echo"<p style=\"color:orange;\"><b>Info:</b> Inserted $inp_name: $inp_site_translation_string_value</p>";
+					// echo"<p style=\"color:orange;\"><b>Info:</b> Inserted $inp_name: $inp_site_translation_string_value</p>";
 					/*echo"<div class=\"info\"><p>Created $query_local</p></div>
 					<meta http-equiv=refresh content=\"1; URL=index.php?open=settings&amp;page=site_translation&amp;language=$language&amp;mode=$mode&amp;folder=$folder&amp;file=$file&amp;editor_language=$editor_language\">";
 					*/
