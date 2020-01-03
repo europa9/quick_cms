@@ -1,0 +1,134 @@
+
+/*- EDB Districts selecter, menu, agent on off ----------------------------------------- */
+p.edb_switch_location_p, p.edb_switch_district_p, p.edb_switch_station_p, p.edb_switch_view_p, p.edb_switch_menu_p {
+	padding: 8px 8px 0px 0px;
+}
+#edb_locations, #edb_districts, #edb_stations, #edb_views, #edb_menu{
+	display: none;
+	position: absolute;
+	margin-top: 2px;
+	border: #e6e6e6 1px solid;
+	background: #f5f5f5;
+	padding: 6px;
+	z-index: 999;
+}
+#edb_locations > ul, #edb_districts > ul, #edb_stations > ul, #edb_views > ul, #edb_menu > ul{
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+#edb_locations > ul > li,#edb_districts > ul > li, #edb_stations > ul > li, #edb_views > ul > li, #edb_menu > ul > li{
+	padding: 0px 0px 4px 0px;
+	margin: 0;
+}
+/*- Search box -------------------------------------- */
+div.search_for_case_and_evidence_query{
+	margin: 18px 0px 0px 0px;
+}
+#inp_search_for_case_and_evidence_query_results {
+	border: 1px solid #cccccc;
+	padding: 0px;
+	margin: -1px 0px 0px 1px;
+	z-index: 9;
+	background: #fff;
+	padding: 3px;
+	position: absolute;
+	visibility: hidden;
+}
+#inp_search_for_case_and_evidence_query_results > ul{
+	list-style:none;
+	margin: 0px 0px 0px 0px;
+	padding: 0;
+}
+#inp_search_for_case_and_evidence_query_results > ul > li{
+	margin: 0px 0px 0px 0px;
+	padding: 0;
+}
+#inp_search_for_case_and_evidence_query_results > ul > li > a{
+	display: block; /* make link fill enitre li */
+	background-color: #fff;
+	color: #000000;
+	padding: 4px 4px 4px 4px;
+}
+#inp_search_for_case_and_evidence_query_results > ul > li > a:hover{
+	background-color: #eeeeee;
+	color: #000000;
+}
+
+
+
+/*- Station jour ------------------------------------- */
+div.station_jour{
+	float: right;
+	text-align: center;
+}
+p.station_jour_headline_p{
+	margin: 0;
+	padding: 4px 0px 0px 0px;
+}
+a.station_jour_headline_a{
+	font-weight: bold;
+	color: black;
+}
+a.station_jour_headline_a > span{
+	font-weight: normal;
+	color: black;
+}
+
+/*- Case box ------------------------------------- */
+div.edb_statuses{
+
+}
+div.cases_board_box_wrapper {
+	background: #fff;
+	border: #d9d9d9 1px solid;
+	margin: 5px 0px 5px 0px;
+	padding: 0;
+}
+div.cases_board_box_inner{
+	margin: 0;
+	padding: 0px 10px 0px 10px;
+} 
+
+div.cases_board_box_inner > p.cases_box_headline_p{
+	margin: 0;
+	padding: 10px 0px 5px 0px;
+	font: normal 15px Arial,"Helvetica Neue",Helvetica,sans-serif;
+}
+div.cases_board_box_inner > a.cases_box_headline_a{
+	margin: 0;
+	font: normal 15px Arial,"Helvetica Neue",Helvetica,sans-serif;
+}
+
+div.cases_board_box_inner > p.cases_box_body_p{
+	margin: 0;
+	padding: 0px 0px 10px 0px;
+	font: normal 14px Arial,"Helvetica Neue",Helvetica,sans-serif;
+}
+
+/* Assigned to */
+div.cases_board_box_inner_assigned_to_div{
+	float: right;
+	text-align: center;
+}
+div.cases_board_box_inner_assigned_to_div > p{
+	line-height: 1;
+}
+
+/*- Person view */
+p.case_counter_number_of_cases_now_and_title, a.case_counter_number_of_cases_now_and_title_link{
+	font-size: 105%;
+}
+p.cases_status_p{
+	padding: 10px 0px 0px 0px;
+	margin: 0;
+	font-size: 110%;
+}
+div.cases_board_status_round_box{
+	background: #f1f1f1;
+	padding: 0px 4px 0px 4px;
+    	border: 0 none;
+    	box-sizing: border-box;
+    	border-radius: 5px;
+	border: #f4f5f7 1px solid;
+}

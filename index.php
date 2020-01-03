@@ -31,9 +31,10 @@ if(file_exists("./favicon.ico")){ $root = "."; }
 elseif(file_exists("../favicon.ico")){ $root = ".."; }
 elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
 elseif(file_exists("../../../favicon.ico")){ $root = "../../.."; }
-include("$root/_webdesign/header.php");
+// include("$root/_webdesign/header.php");
 
-echo"Welcome";
+header("Location: edb/");
+edit;
 
 /*- Footer ----------------------------------------------------------------------------------- */
 include("$root/_webdesign/footer.php");

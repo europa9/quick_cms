@@ -36,12 +36,8 @@ $t_talk_dm_conversations = $mysqlPrefixSav . "talk_dm_conversations";
 $t_talk_dm_messages	 = $mysqlPrefixSav . "talk_dm_messages";
 
 /*- Functions ------------------------------------------------------------------------- */
-if($talkEncryptionMethodSav == "openssl_encrypt(AES-128-CBC)"){
-	include("_encrypt_decrypt/openssl_encrypt_aes-128-cbc.php");
-}
-elseif($talkEncryptionMethodSav == "caesar_cipher(random)"){
-	include("_encrypt_decrypt/caesar_cipher.php");
-}
+include("_encrypt_decrypt/openssl_encrypt_aes-128-cbc.php");
+
 
 /*- Variables ------------------------------------------------------------------------- */
 $tabindex = 0;
@@ -118,15 +114,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			list($get_message_id, $get_message_conversation_key, $get_message_type, $get_message_text, $get_message_datetime, $get_message_date_saying, $get_message_time_saying, $get_message_time, $get_message_year, $get_message_seen, $get_message_attachment_type, $get_message_attachment_path, $get_message_attachment_file, $get_message_from_user_id, $get_message_from_ip, $get_message_from_hostname, $get_message_from_user_agent) = $row;
 	
 			// Decrypt message
-			if($talkEncryptionMethodSav == "none"){
-			}
-			elseif($talkEncryptionMethodSav == "openssl_encrypt(AES-128-CBC)"){
-				$get_message_text = openssl_decrypt_aes_128_cbc_decrypt($get_message_text, $get_current_channel_encryption_key);
-			}
-			elseif($talkEncryptionMethodSav == "caesar_cipher(random)"){
-				$cipher = new KKiernan\CaesarCipher();
-				$get_message_text = $cipher->encrypt($get_message_text, -$get_current_channel_encryption_key);
-			}
+			$get_message_text = openssl_decrypt_aes_128_cbc_decrypt($get_message_text, $get_current_conversation_encryption_key);
+			
 
 
 				if($get_message_from_user_id == "$get_current_conversation_f_user_id"){

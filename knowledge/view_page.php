@@ -191,10 +191,10 @@ else{
 
 				echo"
 				<!-- Where am I ? -->
-				<div class=\"knowledge_where_am_i\">
-				<p>
-				<!-- Look for parent -->
-				";
+					<div class=\"knowledge_where_am_i\">
+					<p>
+					<!-- Look for parent -->
+					";
 
 			
 				if($get_current_page_parent_id != "0"){
@@ -234,10 +234,10 @@ else{
 				}
 				echo"
 				
-				<!-- This page -->
-				<a href=\"view_page.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l\">$get_current_page_title</a>
-				</p>
-				</div>
+					<!-- This page -->
+					<a href=\"view_page.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l\">$get_current_page_title</a>
+					</p>
+					</div>
 				<!-- //Where am I ? -->
 
 				<!-- Head menu -->
@@ -277,6 +277,11 @@ else{
 				</div>
 				<!-- Head menu -->
 				<div class=\"clear\"></div>
+
+
+				<!-- Prism Javascript -->
+					<script type=\"text/javascript\" src=\"_css/prism.js\"></script>
+				<!-- //Prism Javascript -->
 
 				<h1>$get_current_page_title</h1>
 			
