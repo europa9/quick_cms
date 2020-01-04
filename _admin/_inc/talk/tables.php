@@ -25,10 +25,6 @@ $t_talk_dm_messages	 = $mysqlPrefixSav . "talk_dm_messages";
 
 $t_talk_total_unread = $mysqlPrefixSav . "talk_total_unread";
 
-$t_talk_emojies_categories_main	= $mysqlPrefixSav . "talk_emojies_categories_main";
-$t_talk_emojies_categories_sub	= $mysqlPrefixSav . "talk_emojies_categories_sub";
-$t_talk_emojies_index 		= $mysqlPrefixSav . "talk_emojies_index";
-
 
 if($action == ""){
 	echo"

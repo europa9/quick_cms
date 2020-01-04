@@ -24,6 +24,7 @@ else{ $root = "../../.."; }
 
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
+include("$root/_admin/_data/talk.php");
 
 /*- Tables ---------------------------------------------------------------------------- */
 $t_talk_channels_index		= $mysqlPrefixSav . "talk_channels_index";
@@ -33,6 +34,22 @@ $t_talk_users_starred_channels	= $mysqlPrefixSav . "talk_users_starred_channels"
 
 $t_talk_dm_conversations = $mysqlPrefixSav . "talk_dm_conversations";
 $t_talk_dm_messages	 = $mysqlPrefixSav . "talk_dm_messages";
+
+
+/*- Tables emojies -------------------------------------------------------------------- */
+$t_emojies_categories_main	= $mysqlPrefixSav . "emojies_categories_main";
+$t_emojies_categories_sub	= $mysqlPrefixSav . "emojies_categories_sub";
+$t_emojies_index 		= $mysqlPrefixSav . "emojies_index";
+$t_emojies_users_recent_used	= $mysqlPrefixSav . "emojies_users_recent_used";
+
+
+/*- Functions ------------------------------------------------------------------------- */
+if($talkEncryptionMethodDmsSav == "openssl_encrypt(AES-128-CBC)"){
+	include("_encrypt_decrypt/openssl_encrypt_aes-128-cbc.php");
+}
+elseif($talkEncryptionMethodDmsSav == "caesar_cipher(random)"){
+	include("_encrypt_decrypt/caesar_cipher.php");
+}
 
 /*- Variables ------------------------------------------------------------------------- */
 $tabindex = 0;
@@ -52,6 +69,16 @@ $t_user_id_mysql = quote_smart($link, $t_user_id);
 
 
 if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
+
+	// Dates
+	$datetime = date("Y-m-d H:i:s");
+	$time = time();
+	$year = date("Y");
+	$date_saying = date("j M Y");
+	$datetime_saying = date("j M Y H:i");
+	$time_saying = date("H:i");
+				
+
 	// Get my user
 	$my_user_id = $_SESSION['user_id'];
 	$my_user_id = output_html($my_user_id);
@@ -83,10 +110,79 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			die;
 		}
 
+
 		// Get text
 		if(isset($_POST['inp_text'])){
 			$inp_text = $_POST['inp_text'];
+
+			// Replace emoji with title
+			$query_emojies = "SELECT emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_code, emoji_char, emoji_source_path, emoji_source_file, emoji_source_ext, emoji_skin_tone, emoji_created_by_user_id, emoji_created_datetime, emoji_updated_by_user_id, emoji_updated_datetime, emoji_used_count, emoji_last_used_datetime FROM $t_emojies_index";
+			$result_emojies = mysqli_query($link, $query_emojies);
+			while($row_emojies = mysqli_fetch_row($result_emojies)) {
+				list($get_emoji_id, $get_emoji_main_category_id, $get_emoji_sub_category_id, $get_emoji_title, $get_emoji_code, $get_emoji_char, $get_emoji_source_path, $get_emoji_source_file, $get_emoji_source_ext, $get_emoji_skin_tone, $get_emoji_created_by_user_id, $get_emoji_created_datetime, $get_emoji_updated_by_user_id, $get_emoji_updated_datetime, $get_emoji_used_count, $get_emoji_last_used_datetime) = $row_emojies;
+				$inp_text = str_replace("$get_emoji_char", ":$get_emoji_title:", $inp_text);
+			}
+
+			// Make text safe
 			$inp_text = output_html($inp_text);
+
+			// Replace title with emoji 
+			$query_emojies = "SELECT emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_code, emoji_char, emoji_source_path, emoji_source_file, emoji_source_ext, emoji_skin_tone, emoji_created_by_user_id, emoji_created_datetime, emoji_updated_by_user_id, emoji_updated_datetime, emoji_used_count, emoji_last_used_datetime FROM $t_emojies_index";
+			$result_emojies = mysqli_query($link, $query_emojies);
+			while($row_emojies = mysqli_fetch_row($result_emojies)) {
+				list($get_emoji_id, $get_emoji_main_category_id, $get_emoji_sub_category_id, $get_emoji_title, $get_emoji_code, $get_emoji_char, $get_emoji_source_path, $get_emoji_source_file, $get_emoji_source_ext, $get_emoji_skin_tone, $get_emoji_created_by_user_id, $get_emoji_created_datetime, $get_emoji_updated_by_user_id, $get_emoji_updated_datetime, $get_emoji_used_count, $get_emoji_last_used_datetime) = $row_emojies;
+
+
+				// Did I use the smiley?
+				$pos = strpos($inp_text, ":$get_emoji_title:");
+				if ($pos === false) {
+				} else {
+					// Add to recent
+					$query_recent = "SELECT recent_used_id, recent_used_user_id, recent_used_datetime, recent_used_counter, recent_used_emoji_id, recent_used_sub_category_id, recent_used_main_category_id, recent_used_emoji_code, recent_used_emoji_char, recent_used_emoji_source_path, recent_used_emoji_source_file, recent_used_emoji_source_ext FROM $t_emojies_users_recent_used WHERE recent_used_emoji_id=$get_emoji_id AND recent_used_user_id=$get_my_user_id";
+					$result_recent = mysqli_query($link, $query_recent);
+					$row_recent = mysqli_fetch_row($result_recent);
+					list($get_recent_used_id, $get_recent_used_user_id, $get_recent_used_datetime, $get_recent_used_counter, $get_recent_used_emoji_id, $get_recent_used_sub_category_id, $get_recent_used_main_category_id, $get_recent_used_emoji_code, $get_recent_used_emoji_char, $get_recent_used_emoji_source_path, $get_recent_used_emoji_source_file, $get_recent_used_emoji_source_ext) = $row_recent;
+	
+					if($get_recent_used_id == ""){
+						$inp_emoji_code_mysql = quote_smart($link, $get_emoji_code);
+						$inp_emoji_source_path_mysql = quote_smart($link, $get_emoji_source_path);
+						$inp_emoji_source_file_mysql = quote_smart($link, $get_emoji_source_file);
+						$inp_emoji_source_ext_mysql = quote_smart($link, $get_emoji_source_ext);
+						mysqli_query($link, "INSERT INTO $t_emojies_users_recent_used
+						(recent_used_id, recent_used_user_id, recent_used_datetime, recent_used_counter, recent_used_emoji_id, recent_used_sub_category_id, 
+						recent_used_main_category_id, recent_used_emoji_code, recent_used_emoji_char, recent_used_emoji_source_path, recent_used_emoji_source_file, recent_used_emoji_source_ext) 
+						VALUES 
+						(NULL, $get_my_user_id, '$datetime', 1, $get_emoji_id, $get_emoji_sub_category_id, 
+						$get_emoji_main_category_id, $inp_emoji_code_mysql, '', $inp_emoji_source_path_mysql, $inp_emoji_source_file_mysql, $inp_emoji_source_ext_mysql)")
+						or die(mysqli_error($link));
+
+						// Get ID
+						$query_recent = "SELECT recent_used_id FROM $t_emojies_users_recent_used WHERE recent_used_emoji_id=$get_emoji_id AND recent_used_user_id=$get_my_user_id";
+						$result_recent = mysqli_query($link, $query_recent);
+						$row_recent = mysqli_fetch_row($result_recent);
+						list($get_recent_used_id) = $row_recent;
+						
+						// Update with char
+						$sql = "UPDATE $t_emojies_users_recent_used SET recent_used_emoji_char=? WHERE recent_used_id=$get_recent_used_id";
+						$stmt = $link->prepare($sql);
+						$stmt->bind_param("s", $get_emoji_char);
+						$stmt->execute();
+						if ($stmt->errno) {
+							echo "FAILURE!!! " . $stmt->error; die;
+						}
+					}
+					else{
+						$inp_recent_used_counter = $get_recent_used_counter+1;
+						$result = mysqli_query($link, "UPDATE $t_emojies_users_recent_used SET recent_used_counter=$inp_recent_used_counter WHERE recent_used_id=$get_recent_used_id");
+
+					}
+					
+				}
+
+
+				// Replace
+				$inp_text = str_replace(":$get_emoji_title:", "$get_emoji_char", $inp_text);
+			}
 		}
 		else{
 			$inp_text = "";
@@ -108,13 +204,34 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$year = date("Y");
 			$month = date("m");
 			if($year != "$get_current_conversation_encryption_key_year"){
+
 				// make a new encryption string for this year month
-				$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-				$randstring = '';
-				for ($i = 0; $i < 10; $i++) {
-					$randstring = $randstring . $characters[rand(0, strlen($characters))];
+				if($talkEncryptionMethodDmsSav == "none"){
+					$inp_encryption_key_mysql = quote_smart($link, "");
+					// Transfer
+					$get_current_conversation_encryption_key = "";
 				}
-				$inp_encryption_key_mysql = quote_smart($link, $randstring);
+				elseif($talkEncryptionMethodDmsSav == "openssl_encrypt(AES-128-CBC)"){
+					$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+					$randstring = '';
+					for ($i = 0; $i < 10; $i++) {
+						$randstring = $randstring . $characters[rand(0, strlen($characters))];
+					}
+					$inp_encryption_key_mysql = quote_smart($link, $randstring);
+
+					// Transfer
+					$get_current_conversation_encryption_key = "$randstring";
+				}
+				elseif($talkEncryptionMethodDmsSav == "caesar_cipher(random)"){
+					$random = rand(0,10);
+					$inp_encryption_key_mysql = quote_smart($link, $random);
+
+					// Transfer
+					$get_current_conversation_encryption_key = "$random";
+				}
+
+
+				// make a new encryption string for this year month
 				$conversation_key_mysql = quote_smart($link, $get_current_conversation_key);
 				$result_update = mysqli_query($link, "UPDATE $t_talk_dm_conversations SET 
 					conversation_encryption_key=$inp_encryption_key_mysql,
@@ -124,28 +241,24 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				// Delete old messages (new year - new encrytion string)
 				$result_delete = mysqli_query($link, "DELETE FROM $t_talk_dm_messages WHERE message_conversation_key=$conversation_key_mysql") or die(mysqli_error($link));
 					
-				// Transfer
-				$get_current_conversation_encryption_key = "$randstring";
 			}
 
 			// Encrypt text
-			$ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
-			$iv = openssl_random_pseudo_bytes($ivlen);
-			$ciphertext_raw = openssl_encrypt($inp_text, $cipher, $get_current_conversation_encryption_key, $options=OPENSSL_RAW_DATA, $iv);
-			$hmac = hash_hmac('sha256', $ciphertext_raw, $get_current_conversation_encryption_key, $as_binary=true);
-			$ciphertext = base64_encode( $iv.$hmac.$ciphertext_raw );
+			if($talkEncryptionMethodDmsSav == "none"){
+				$inp_text_mysql = quote_smart($link, $inp_text);
+			}
+			elseif($talkEncryptionMethodDmsSav == "openssl_encrypt(AES-128-CBC)"){
+				$inp_text_encrypted = openssl_encrypt_aes_128_cbc_encrypt($inp_text, $get_current_conversation_encryption_key);
+				$inp_text_mysql = quote_smart($link, $inp_text_encrypted);
+			}
+			elseif($talkEncryptionMethodDmsSav == "caesar_cipher(random)"){
+				$cipher = new KKiernan\CaesarCipher(); 
+				$inp_text_encrypted = $cipher->encrypt($inp_text, $get_current_conversation_encryption_key);
+				$inp_text_mysql = quote_smart($link, $inp_text_encrypted);
+			}
 
-			$inp_text_mysql = quote_smart($link, $ciphertext);
 
 
-			// Dates
-			$datetime = date("Y-m-d H:i:s");
-			$time = time();
-			$year = date("Y");
-			$date_saying = date("j M Y");
-			$datetime_saying = date("j M Y H:i");
-			$time_saying = date("H:i");
-				
 			// My IP
 			$inp_my_ip = $_SERVER['REMOTE_ADDR'];
 			$inp_my_ip = output_html($inp_my_ip);
@@ -221,17 +334,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$row = mysqli_fetch_row($result);
 			list($get_message_id, $get_message_conversation_key, $get_message_type, $get_message_text, $get_message_datetime, $get_message_date_saying, $get_message_time_saying, $get_message_time, $get_message_year, $get_message_seen, $get_message_from_user_id, $get_message_attachment_type, $get_message_attachment_path, $get_message_attachment_file, $get_message_from_ip, $get_message_from_hostname, $get_message_from_user_agent) = $row;
 	
-			// Decrypt message
-			$c = base64_decode($get_message_text);
-			$ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
-			$iv = substr($c, 0, $ivlen);
-			$hmac = substr($c, $ivlen, $sha2len=32);
-			$ciphertext_raw = substr($c, $ivlen+$sha2len);
-			$original_plaintext = openssl_decrypt($ciphertext_raw, $cipher, $get_current_conversation_encryption_key, $options=OPENSSL_RAW_DATA, $iv);
-			$calcmac = hash_hmac('sha256', $ciphertext_raw, $get_current_conversation_encryption_key, $as_binary=true);
-			if (hash_equals($hmac, $calcmac)) {
-				 $get_message_text = "$original_plaintext";
-			}
+			
 
 			echo"
 							<table>
@@ -287,7 +390,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 									}
 								}
 								echo"
-								$get_message_text
+								$inp_text
 								</p>
 								<!-- //Name and text -->
 							  </td>

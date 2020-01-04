@@ -1,45 +1,51 @@
 <?php
 /**
 *
-* File: _admin/_inc/talk/_liquibase/talk/004_emojies.php
+* File: _admin/_liquidbase/db_scripts/settings/001_emojies.php
 * Version 1.0.0
 * Date 21:19 28.08.2019
 * Copyright (c) 2019 Sindre Andre Ditlefsen
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
-/*- Access check ----------------------------------------------------------------------- */
-if(!(isset($define_access_to_control_panel))){
-	echo"<h1>Server error 403</h1>";
-	die;
-}
 
-/*- Tables ---------------------------------------------------------------------------- */
+// Access check
+if(isset($_SESSION['admin_user_id'])){
 
-$result = mysqli_query($link, "DROP TABLE IF EXISTS $t_talk_emojies_categories_main") or die(mysqli_error($link)); 
-$result = mysqli_query($link, "DROP TABLE IF EXISTS $t_talk_emojies_categories_sub") or die(mysqli_error($link)); 
-$result = mysqli_query($link, "DROP TABLE IF EXISTS $t_talk_emojies_index") or die(mysqli_error($link)); 
+	/*- Tables ---------------------------------------------------------------------------- */
+
+
+$t_emojies_categories_main	= $mysqlPrefixSav . "emojies_categories_main";
+$t_emojies_categories_sub	= $mysqlPrefixSav . "emojies_categories_sub";
+$t_emojies_index 		= $mysqlPrefixSav . "emojies_index";
+$t_emojies_users_recent_used	= $mysqlPrefixSav . "emojies_users_recent_used";
+
+
+$result = mysqli_query($link, "DROP TABLE IF EXISTS $t_emojies_categories_main") or die(mysqli_error($link)); 
+$result = mysqli_query($link, "DROP TABLE IF EXISTS $t_emojies_categories_sub") or die(mysqli_error($link)); 
+$result = mysqli_query($link, "DROP TABLE IF EXISTS $t_emojies_index") or die(mysqli_error($link)); 
+$result = mysqli_query($link, "DROP TABLE IF EXISTS $t_emojies_users_recent_used") or die(mysqli_error($link)); 
 
 
 
 
 echo"
 
-<!-- talk_emojies_categories -->
+<!-- emojies_categories_main -->
 ";
 
-$query = "SELECT * FROM $t_talk_emojies_categories_main LIMIT 1";
+$query = "SELECT * FROM $t_emojies_categories_main LIMIT 1";
 $result = mysqli_query($link, $query);
 if($result !== FALSE){
 	// Count rows
 	$row_cnt = mysqli_num_rows($result);
 	echo"
-	<p>$t_talk_emojies_categories_main: $row_cnt</p>
+	<p>$t_emojies_categories_main: $row_cnt</p>
 	";
 }
 else{
 
-	mysqli_query($link, "CREATE TABLE $t_talk_emojies_categories_main(
+	mysqli_query($link, "CREATE TABLE $t_emojies_categories_main(
 	  main_category_id INT NOT NULL AUTO_INCREMENT,
 	  PRIMARY KEY(main_category_id), 
 	   main_category_title VARCHAR(200), 
@@ -55,23 +61,23 @@ else{
 	   or die(mysqli_error());
 }
 echo"
-<!-- //talk_emojies_main_categories -->
+<!-- //emojies_categories_main -->
 
-<!-- talk_emojies_categories_sub -->
+<!-- emojies_categories_sub -->
 ";
 
-$query = "SELECT * FROM $t_talk_emojies_categories_sub LIMIT 1";
+$query = "SELECT * FROM $t_emojies_categories_sub LIMIT 1";
 $result = mysqli_query($link, $query);
 if($result !== FALSE){
 	// Count rows
 	$row_cnt = mysqli_num_rows($result);
 	echo"
-	<p>$t_talk_emojies_categories_sub: $row_cnt</p>
+	<p>$t_emojies_categories_sub: $row_cnt</p>
 	";
 }
 else{
 
-	mysqli_query($link, "CREATE TABLE $t_talk_emojies_categories_sub(
+	mysqli_query($link, "CREATE TABLE $t_emojies_categories_sub(
 	  sub_category_id INT NOT NULL AUTO_INCREMENT,
 	  PRIMARY KEY(sub_category_id), 
 	   sub_category_title VARCHAR(200), 
@@ -88,22 +94,22 @@ else{
 	   or die(mysqli_error());
 }
 echo"
-<!-- //talk_emojies_main_categories -->
+<!-- //emojies_sub_categories -->
 
-<!-- talk_emojies_index -->
+<!-- emojies_index -->
 ";
-$query = "SELECT * FROM $t_talk_emojies_index LIMIT 1";
+$query = "SELECT * FROM $t_emojies_index LIMIT 1";
 $result = mysqli_query($link, $query);
 if($result !== FALSE){
 	// Count rows
 	$row_cnt = mysqli_num_rows($result);
 	echo"
-	<p>$t_talk_emojies_index: $row_cnt</p>
+	<p>$t_emojies_index: $row_cnt</p>
 	";
 }
 else{
 
-	mysqli_query($link, "CREATE TABLE $t_talk_emojies_index(
+	mysqli_query($link, "CREATE TABLE $t_emojies_index(
 	  emoji_id INT NOT NULL AUTO_INCREMENT,
 	  PRIMARY KEY(emoji_id), 
 	   emoji_main_category_id INT,
@@ -153,13 +159,13 @@ else{
 		$inp_sub_category_title_mysql = quote_smart($link, $inp_sub_category_title);
 
 		// Get Main Category ID
-		$query = "SELECT main_category_id FROM $t_talk_emojies_categories_main WHERE main_category_title=$inp_main_category_title_mysql";
+		$query = "SELECT main_category_id FROM $t_emojies_categories_main WHERE main_category_title=$inp_main_category_title_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_main_category_id) = $row;
 		if($get_main_category_id == ""){
 			// Insert
-			mysqli_query($link, "INSERT INTO $t_talk_emojies_categories_main 
+			mysqli_query($link, "INSERT INTO $t_emojies_categories_main 
 			(main_category_id, main_category_title, main_category_weight, main_category_is_active, main_category_language) 
 			VALUES 
 			(NULL, $inp_main_category_title_mysql, $main_category_counter, 1, 'en')")
@@ -168,7 +174,7 @@ else{
 			$main_category_counter++;
 
 			// Get ID
-			$query = "SELECT main_category_id FROM $t_talk_emojies_categories_main WHERE main_category_title=$inp_main_category_title_mysql";
+			$query = "SELECT main_category_id FROM $t_emojies_categories_main WHERE main_category_title=$inp_main_category_title_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
 			list($get_main_category_id) = $row;
@@ -176,13 +182,13 @@ else{
 
 		
 		// Get Sub Category ID
-		$query = "SELECT sub_category_id FROM $t_talk_emojies_categories_sub WHERE sub_category_title=$inp_sub_category_title_mysql AND sub_category_parent_id=$get_main_category_id";
+		$query = "SELECT sub_category_id FROM $t_emojies_categories_sub WHERE sub_category_title=$inp_sub_category_title_mysql AND sub_category_parent_id=$get_main_category_id";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_sub_category_id) = $row;
 		if($get_sub_category_id == ""){
 			// Insert
-			mysqli_query($link, "INSERT INTO $t_talk_emojies_categories_sub
+			mysqli_query($link, "INSERT INTO $t_emojies_categories_sub
 			(sub_category_id, sub_category_title, sub_category_parent_id, sub_category_weight, sub_category_is_active, sub_category_language) 
 			VALUES 
 			(NULL, $inp_sub_category_title_mysql, $get_main_category_id, $sub_category_counter, 1, 'en')")
@@ -191,7 +197,7 @@ else{
 			$sub_category_counter++;
 
 			// Get ID
-			$query = "SELECT sub_category_id FROM $t_talk_emojies_categories_sub WHERE sub_category_title=$inp_sub_category_title_mysql AND sub_category_parent_id=$get_main_category_id";
+			$query = "SELECT sub_category_id FROM $t_emojies_categories_sub WHERE sub_category_title=$inp_sub_category_title_mysql AND sub_category_parent_id=$get_main_category_id";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
 			list($get_sub_category_id) = $row;
@@ -224,13 +230,13 @@ else{
 
 
 		// Get Emoji ID
-		$query = "SELECT emoji_id FROM $t_talk_emojies_index WHERE emoji_main_category_id=$get_main_category_id AND emoji_sub_category_id=$get_sub_category_id AND emoji_title=$inp_emoji_title_mysql";
+		$query = "SELECT emoji_id FROM $t_emojies_index WHERE emoji_main_category_id=$get_main_category_id AND emoji_sub_category_id=$get_sub_category_id AND emoji_title=$inp_emoji_title_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_emoji_id) = $row;
 		if($get_emoji_id == ""){
 			// Insert
-			mysqli_query($link, "INSERT INTO $t_talk_emojies_index 
+			mysqli_query($link, "INSERT INTO $t_emojies_index 
 			(emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_is_active, emoji_code, emoji_char, emoji_skin_tone, emoji_created_by_user_id, emoji_created_datetime) 
 			VALUES 
 			(NULL, $get_main_category_id, $get_sub_category_id, $inp_emoji_title_mysql, 1, $inp_emoji_code_mysql, $inp_emoji_char_mysql, $inp_skin_tone_mysql, 1, '$datetime')")
@@ -239,7 +245,7 @@ else{
 			$sub_category_counter++;
 
 			// Get ID
-			$query = "SELECT emoji_id FROM $t_talk_emojies_index WHERE emoji_main_category_id=$get_main_category_id AND emoji_sub_category_id=$get_sub_category_id AND emoji_title=$inp_emoji_title_mysql";
+			$query = "SELECT emoji_id FROM $t_emojies_index WHERE emoji_main_category_id=$get_main_category_id AND emoji_sub_category_id=$get_sub_category_id AND emoji_title=$inp_emoji_title_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
 			list($get_emoji_id) = $row;
@@ -248,13 +254,13 @@ else{
 
 
 	// Fix main category smiley
-	$query_main = "SELECT main_category_id, main_category_title, main_category_code, main_category_char, main_category_source_path, main_main_category_source_file, main_category_source_ext, main_category_weight, main_category_is_active, main_category_language FROM $t_talk_emojies_categories_main";
+	$query_main = "SELECT main_category_id, main_category_title, main_category_code, main_category_char, main_category_source_path, main_main_category_source_file, main_category_source_ext, main_category_weight, main_category_is_active, main_category_language FROM $t_emojies_categories_main";
 	$result_main = mysqli_query($link, $query_main);
 	while($row_main = mysqli_fetch_row($result_main)) {
 		list($get_main_category_id, $get_main_category_title, $get_main_category_code, $get_main_category_char, $get_main_category_source_path, $get_main_main_category_source_file, $get_main_category_source_ext, $get_main_category_weight, $get_main_category_is_active, $get_main_category_language) = $row_main;
 		
 		// Pick a smiley
-		$query = "SELECT emoji_id, emoji_title, emoji_code, emoji_char FROM $t_talk_emojies_index WHERE emoji_main_category_id=$get_main_category_id LIMIT 0,1";
+		$query = "SELECT emoji_id, emoji_title, emoji_code, emoji_char FROM $t_emojies_index WHERE emoji_main_category_id=$get_main_category_id LIMIT 0,1";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_emoji_id, $get_emoji_title, $get_emoji_code, $get_emoji_char) = $row;
@@ -264,17 +270,17 @@ else{
 		
 		// echo"<p>Main category  WHERE $get_main_category_title -&gt; SMiley $get_emoji_char</p>\n";
 
-		$result = mysqli_query($link, "UPDATE $t_talk_emojies_categories_main SET main_category_code=$inp_code_mysql, main_category_char=$inp_char_mysql WHERE main_category_id=$get_main_category_id") or die(mysqli_error($link));
+		$result = mysqli_query($link, "UPDATE $t_emojies_categories_main SET main_category_code=$inp_code_mysql, main_category_char=$inp_char_mysql WHERE main_category_id=$get_main_category_id") or die(mysqli_error($link));
 	}
 
 	// Fix sub category smiley
-	$query_sub = "SELECT sub_category_id, sub_category_title, sub_category_parent_id, sub_category_code, sub_category_char, sub_category_source_path, sub_main_category_source_file, sub_category_source_ext, sub_category_weight, sub_category_is_active, sub_category_language FROM $t_talk_emojies_categories_sub";
+	$query_sub = "SELECT sub_category_id, sub_category_title, sub_category_parent_id, sub_category_code, sub_category_char, sub_category_source_path, sub_main_category_source_file, sub_category_source_ext, sub_category_weight, sub_category_is_active, sub_category_language FROM $t_emojies_categories_sub";
 	$result_sub = mysqli_query($link, $query_sub);
 	while($row_sub = mysqli_fetch_row($result_sub)) {
 		list($get_sub_category_id, $get_sub_category_title, $get_sub_category_parent_id, $get_sub_category_code, $get_sub_category_char, $get_sub_category_source_path, $get_sub_main_category_source_file, $get_sub_category_source_ext, $get_sub_category_weight, $get_sub_category_is_active, $get_sub_category_language) = $row_sub;
 		
 		// Pick a smiley
-		$query = "SELECT emoji_id, emoji_title, emoji_code, emoji_char FROM $t_talk_emojies_index WHERE emoji_sub_category_id=$get_sub_category_id LIMIT 0,1";
+		$query = "SELECT emoji_id, emoji_title, emoji_code, emoji_char FROM $t_emojies_index WHERE emoji_sub_category_id=$get_sub_category_id LIMIT 0,1";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_emoji_id, $get_emoji_title, $get_emoji_code, $get_emoji_char) = $row;
@@ -284,11 +290,47 @@ else{
 		
 		// echo"<p>Sub category  WHERE $get_sub_category_title -&gt; SMiley $get_emoji_char</p>\n";
 
-		$result = mysqli_query($link, "UPDATE $t_talk_emojies_categories_sub SET sub_category_code=$inp_code_mysql, sub_category_char=$inp_char_mysql WHERE sub_category_id=$get_sub_category_id") or die(mysqli_error($link));
+		$result = mysqli_query($link, "UPDATE $t_emojies_categories_sub SET sub_category_code=$inp_code_mysql, sub_category_char=$inp_char_mysql WHERE sub_category_id=$get_sub_category_id") or die(mysqli_error($link));
 	}
 	
 }
 echo"
-<!-- //talk_emojies_index -->
+<!-- //emojies_index -->
+
+	<!-- emojies_users_recent_used -->
+		";
+		$query = "SELECT * FROM $t_emojies_users_recent_used LIMIT 1";
+		$result = mysqli_query($link, $query);
+		if($result !== FALSE){
+			// Count rows
+			$row_cnt = mysqli_num_rows($result);
+			echo"
+			<p>$t_emojies_users_recent_used: $row_cnt</p>
+			";
+		}
+		else{
+
+			mysqli_query($link, "CREATE TABLE $t_emojies_users_recent_used(
+			  recent_used_id INT NOT NULL AUTO_INCREMENT,
+			  PRIMARY KEY(recent_used_id), 
+			   recent_used_user_id INT, 
+			   recent_used_datetime DATETIME, 
+			   recent_used_counter INT,
+			   recent_used_emoji_id INT,
+			   recent_used_sub_category_id INT,
+			   recent_used_main_category_id INT,
+			   recent_used_emoji_code VARCHAR(200),
+	 		   recent_used_emoji_char VARCHAR(200),
+			   recent_used_emoji_source_path VARCHAR(200),
+			   recent_used_emoji_source_file VARCHAR(200),
+			   recent_used_emoji_source_ext VARCHAR(200)
+			   )")
+			   or die(mysqli_error());
+		}
+		echo"
+	<!-- //emojies_users_recent_used -->
+
 ";
+
+} // isset($_SESSION['admin_user_id'])
 ?>

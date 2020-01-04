@@ -221,6 +221,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				}  // if($width == "" OR $height == ""){
 			}
 		} // if($image){
+		else{
+			echo"No image selected";
+		}
 	} // to_user found
 
 } // logged in

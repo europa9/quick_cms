@@ -24,6 +24,7 @@ else{ $root = "../../.."; }
 
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
+include("$root/_admin/_data/talk.php");
 
 /*- Translation ------------------------------------------------------------------------ */
 
@@ -36,6 +37,22 @@ $t_talk_users_starred_channels	= $mysqlPrefixSav . "talk_users_starred_channels"
 
 $t_talk_dm_conversations = $mysqlPrefixSav . "talk_dm_conversations";
 $t_talk_dm_messages	 = $mysqlPrefixSav . "talk_dm_messages";
+
+
+/*- Tables emojies -------------------------------------------------------------------- */
+$t_emojies_categories_main	= $mysqlPrefixSav . "emojies_categories_main";
+$t_emojies_categories_sub	= $mysqlPrefixSav . "emojies_categories_sub";
+$t_emojies_index 		= $mysqlPrefixSav . "emojies_index";
+$t_emojies_users_recent_used	= $mysqlPrefixSav . "emojies_users_recent_used";
+
+
+/*- Functions ------------------------------------------------------------------------- */
+if($talkEncryptionMethodDmsSav == "openssl_encrypt(AES-128-CBC)"){
+	include("_encrypt_decrypt/openssl_encrypt_aes-128-cbc.php");
+}
+elseif($talkEncryptionMethodDmsSav == "caesar_cipher(random)"){
+	include("_encrypt_decrypt/caesar_cipher.php");
+}
 
 
 /*- Variables ------------------------------------------------------------------------- */
@@ -232,19 +249,15 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 						// Decrypt message
-						$c = base64_decode($get_message_text);
-						$ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
-						$iv = substr($c, 0, $ivlen);
-						$hmac = substr($c, $ivlen, $sha2len=32);
-						$ciphertext_raw = substr($c, $ivlen+$sha2len);
-						$original_plaintext = openssl_decrypt($ciphertext_raw, $cipher, $get_current_conversation_encryption_key, $options=OPENSSL_RAW_DATA, $iv);
-						$calcmac = hash_hmac('sha256', $ciphertext_raw, $get_current_conversation_encryption_key, $as_binary=true);
-						if (hash_equals($hmac, $calcmac)) {
-							 $get_message_text = "$original_plaintext";
+						if($talkEncryptionMethodDmsSav == "none"){
 						}
-
-
-
+						elseif($talkEncryptionMethodDmsSav == "openssl_encrypt(AES-128-CBC)"){
+							$get_message_text = openssl_decrypt_aes_128_cbc_decrypt($get_message_text, $get_current_conversation_encryption_key);
+						}
+						elseif($talkEncryptionMethodDmsSav == "caesar_cipher(random)"){
+							$cipher = new KKiernan\CaesarCipher();
+							$get_message_text = $cipher->encrypt($get_message_text, -$get_current_conversation_encryption_key);
+						}
 
 						if($get_message_from_user_id == "$get_current_conversation_f_user_id"){
 							// This is a message that I have written
@@ -469,12 +482,179 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						<label for=\"inp_file\"></label>
 						<input type=\"submit\" value=\"Upload\" style=\"display:none;\" />
 						</span>
-				
 
-					<a href=\"#\" id=\"inp_message_send\" class=\"btn_default\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />$l_send</a>	
-					</p>
+						<a href=\"#\" id=\"emojies_selector_toggle\" class=\"btn_default\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />:)</a>	
+						<a href=\"#\" id=\"inp_message_send\" class=\"btn_default\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />$l_send</a>
+						</p>
 					</form>
+						<!-- emojies_selector_toggle -->
+							<script>
+								$(document).ready(function(){
+									$(\"#emojies_selector_toggle\").click(function () {
+										\$(\"#emojies_selector\").toggle();	
+									});
+								});
+							</script>
+						<!-- //Emojies selector toggle -->
+
+						<!-- Emojies -->
+							<div id=\"emojies_selector\">
+								<div id=\"emojies_selector_header\">
+									<ul>
+										<li><a href=\"#\" class=\"emojies_selector emojies_toggle\" data-divid=\"emojies_selector_recent\">&#128347;</a></li>\n";
+									$query = "SELECT main_category_id, main_category_title, main_category_code, main_category_char, main_category_source_path, main_main_category_source_file, main_category_source_ext, main_category_weight, main_category_is_active, main_category_language FROM $t_emojies_categories_main";
+									$result = mysqli_query($link, $query);
+									while($row = mysqli_fetch_row($result)) {
+										list($get_main_category_id, $get_main_category_title, $get_main_category_code, $get_main_category_char, $get_main_category_source_path, $get_main_main_category_source_file, $get_main_category_source_ext, $get_main_category_weight, $get_main_category_is_active, $get_main_category_language) = $row;
+										echo"									";
+										echo"<li><a href=\"#\" class=\"emojies_selector emojies_toggle\" data-divid=\"emojies_selector_main_category_id_$get_main_category_id\">$get_main_category_char</a></li>\n";
+									}
+									echo"
+									</ul>
+								</div>
+								<div id=\"emojies_selector_body\">
+									";
+									// Recent
+									echo"
+										<div class=\"emojies_selector_emojies emojies_selector_recent\">
+									
+											<table>
+											 <tbody>";
+											$smileys_per_row = 11;
+											$x=0;
+											$query_emojies = "SELECT recent_used_id, recent_used_user_id, recent_used_datetime, recent_used_emoji_id, recent_used_sub_category_id, recent_used_main_category_id, recent_used_emoji_code, recent_used_emoji_char, recent_used_emoji_source_path, recent_used_emoji_source_file, recent_used_emoji_source_ext FROM $t_emojies_users_recent_used WHERE recent_used_user_id=$get_my_user_id ORDER BY recent_used_counter DESC";
+											$result_emojies = mysqli_query($link, $query_emojies);
+											while($row_emojies = mysqli_fetch_row($result_emojies)) {
+												list($get_recent_used_id, $get_recent_used_user_id, $get_recent_used_datetime, $get_recent_used_emoji_id, $get_recent_used_sub_category_id, $get_recent_used_main_category_id, $get_recent_used_emoji_code, $get_recent_used_emoji_char, $get_recent_used_emoji_source_path, $get_recent_used_emoji_source_file, $get_recent_used_emoji_source_ext) = $row_emojies;
+
+												if($x == "0"){
+													echo"											";
+													echo" <tr> <td>\n";
+												}
+												else{
+													echo"											";
+													echo"  <td>\n";
+												}
+												
+												echo"												";
+												echo"<a href=\"#\" class=\"emoji_select\" data-divid=\"$get_recent_used_emoji_char\">$get_recent_used_emoji_char</a>\n";
+
+
+												if($x == "$smileys_per_row"){
+													echo"											";
+													echo" </tr> </td>\n";
+													$x = -1;
+												}
+												else{
+													echo"											";
+													echo"  </td>\n";
+												}
+												$x = $x+1;
+												
+											}
+											if($x != "0"){
+												echo"
+												  </td>
+												 </tr>
+												";
+											}
+											echo"
+											 </tbody>
+											</table>
+										</div> <!-- //emojies_selector_recent -->
+									";
+
+
+									// Rest
+									$query = "SELECT main_category_id, main_category_title, main_category_code, main_category_char, main_category_source_path, main_main_category_source_file, main_category_source_ext, main_category_weight, main_category_is_active, main_category_language FROM $t_emojies_categories_main";
+									$result = mysqli_query($link, $query);
+									while($row = mysqli_fetch_row($result)) {
+										list($get_main_category_id, $get_main_category_title, $get_main_category_code, $get_main_category_char, $get_main_category_source_path, $get_main_main_category_source_file, $get_main_category_source_ext, $get_main_category_weight, $get_main_category_is_active, $get_main_category_language) = $row;
+										echo"
+										<div class=\"emojies_selector_emojies emojies_selector_main_category_id_$get_main_category_id\">
+									
+
+											<table>
+											 <tbody>";
+											$x=0;
+											$query_emojies = "SELECT emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_code, emoji_char, emoji_source_path, emoji_source_file, emoji_source_ext, emoji_skin_tone, emoji_created_by_user_id, emoji_created_datetime, emoji_updated_by_user_id, emoji_updated_datetime, emoji_used_count, emoji_last_used_datetime FROM $t_emojies_index WHERE emoji_main_category_id=$get_main_category_id";
+											$result_emojies = mysqli_query($link, $query_emojies);
+											while($row_emojies = mysqli_fetch_row($result_emojies)) {
+												list($get_emoji_id, $get_emoji_main_category_id, $get_emoji_sub_category_id, $get_emoji_title, $get_emoji_code, $get_emoji_char, $get_emoji_source_path, $get_emoji_source_file, $get_emoji_source_ext, $get_emoji_skin_tone, $get_emoji_created_by_user_id, $get_emoji_created_datetime, $get_emoji_updated_by_user_id, $get_emoji_updated_datetime, $get_emoji_used_count, $get_emoji_last_used_datetime) = $row_emojies;
+
+												if($x == "0"){
+													echo"											";
+													echo" <tr> <td>\n";
+												}
+												else{
+													echo"											";
+													echo"  <td>\n";
+												}
+												
+												echo"												";
+												echo"<a href=\"#\" class=\"emoji_select\" data-divid=\"$get_emoji_char\">$get_emoji_char</a>\n";
+
+
+												if($x == "$smileys_per_row"){
+													echo"											";
+													echo" </tr> </td>\n";
+													$x = -1;
+												}
+												else{
+													echo"											";
+													echo"  </td>\n";
+												}
+												$x = $x+1;
+												
+											}
+											if($x != "0"){
+												echo"
+												  </td>
+												 </tr>
+												";
+											}
+											echo"
+											 </tbody>
+											</table>
+										</div> <!-- //emojies_selector_main_category_id_$get_main_category_id -->
+										";
+									} // categories
+									echo"
+								</div>
+							</div>
+							<!-- Emojies javascript click on headline open emojies  -->
+							<script>
+								$(document).ready(function(){
+									$(\".emojies_toggle\").click(function () {
+										\$(\".emojies_selector_emojies\").hide();
+										var idname= $(this).data('divid');
+										\$(\".\"+idname).toggle();	
+										
+									});
+			
+								});
+							</script>
+							<!-- //Emojies javascript click on headline open emojies -->
+
+							<!-- Emojies javascript click on emoji append to text -->
+								<script type=\"text/javascript\">
+								\$(function() {
+									\$('.emoji_select').click(function() {
+										var emoji = \$(this).data('divid');
+            									\$('#inp_text').val(\$('#inp_text').val() + emoji);
+
+										// Close
+										
+            									return false;
+       									});
+    								});
+								</script>
+							<!-- //Emojies javascript click on emoji append to text -->
+
+						<!-- //Emojies -->
 					<div style=\"height: 5px;\"></div>
+
+
 					<!-- On file selected send form -->
 						<script type=\"text/javascript\">
 							\$(document).ready(function(){
@@ -484,6 +664,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							});
 						</script>
 					<!-- //On file selected send form -->
+
 
 					<!-- Send new message script -->
 							<script id=\"source\" language=\"javascript\" type=\"text/javascript\">

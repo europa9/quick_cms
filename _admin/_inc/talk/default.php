@@ -28,9 +28,6 @@ $t_talk_dm_messages	 = $mysqlPrefixSav . "talk_dm_messages";
 
 $t_talk_total_unread = $mysqlPrefixSav . "talk_total_unread";
 
-$t_talk_emojies_categories_main	= $mysqlPrefixSav . "talk_emojies_categories_main";
-$t_talk_emojies_categories_sub	= $mysqlPrefixSav . "talk_emojies_categories_sub";
-$t_talk_emojies_index 		= $mysqlPrefixSav . "talk_emojies_index";
 
 
 /*- Variables ------------------------------------------------------------------------- */
@@ -47,7 +44,8 @@ else{
 if(!(file_exists("_data/talk.php"))){
 	$update_file="<?php
 // Encryption
-\$talkEncryptionMethodSav		 = \"openssl_encrypt(AES-128-CBC)\";
+\$talkEncryptionMethodChannelsSav	= \"openssl_encrypt(AES-128-CBC)\";
+\$talkEncryptionMethodDmsSav		= \"openssl_encrypt(AES-128-CBC)\";
 ?>";
 
 		$fh = fopen("_data/talk.php", "w+") or die("can not open file");
@@ -63,12 +61,16 @@ $tabindex = 0;
 if($action == ""){
 
 	if($mode == "save"){
-		$inp_encryption_method = $_POST['inp_encryption_method'];
-		$inp_encryption_method = output_html($inp_encryption_method);
+		$inp_encryption_method_channels = $_POST['inp_encryption_method_channels'];
+		$inp_encryption_method_channels = output_html($inp_encryption_method_channels);
+
+		$inp_encryption_method_dms = $_POST['inp_encryption_method_dms'];
+		$inp_encryption_method_dms = output_html($inp_encryption_method_dms);
 
 	$update_file="<?php
 // Encryption
-\$talkEncryptionMethodSav		 = \"$inp_encryption_method\";
+\$talkEncryptionMethodChannelsSav 	= \"$inp_encryption_method_channels\";
+\$talkEncryptionMethodDmsSav 		= \"$inp_encryption_method_dms\";
 ?>";
 
 		$fh = fopen("_data/talk.php", "w+") or die("can not open file");
@@ -83,20 +85,26 @@ if($action == ""){
 		$result_delete = mysqli_query($link, "DELETE FROM $t_talk_channels_messages") or die(mysqli_error($link));
 
 
-		echo"<h1>Saving..</h1>
-		<meta http-equiv=refresh content=\"1; url=index.php?open=$open&page=$page&ft=success&fm=changes_saved\">";
+		$result_update = mysqli_query($link, "UPDATE $t_talk_dm_conversations SET 
+						conversation_encryption_key='',
+						conversation_encryption_key_year=0, 
+						conversation_encryption_key_month=0") or die(mysqli_error($link));
+		$result_delete = mysqli_query($link, "DELETE FROM $t_talk_dm_messages") or die(mysqli_error($link));
+
+		echo"<h1><img src=\"_design/gfx/loading_22.gif\" alt=\"loading_22.gif\" /> Saving..</h1>
+		<meta http-equiv=refresh content=\"2; url=index.php?open=$open&page=$page&ft=success&fm=changes_saved\">";
 		// header("Location: ?open=$open&page=$page&ft=success&fm=changes_saved");
 		// exit;
 	}
+	elseif($mode == ""){
 
-
-	echo"
-	<h1>Talk</h1>
+		echo"
+		<h1>Talk</h1>
 				
 
-	<!-- Feedback -->
-	";
-	if($ft != ""){
+		<!-- Feedback -->
+		";
+		if($ft != ""){
 		if($fm == "changes_saved"){
 			$fm = "$l_changes_saved";
 		}
@@ -104,43 +112,52 @@ if($action == ""){
 			$fm = ucfirst($fm);
 		}
 		echo"<div class=\"$ft\"><span>$fm</span></div>";
-	}
-	echo"	
-	<!-- //Feedback -->
+		}
+		echo"	
+		<!-- //Feedback -->
 
 
-	<!-- Where am I? -->
+		<!-- Where am I? -->
 		<p><b>You are here:</b><br />
 		<a href=\"index.php?open=talk&amp;page=menu&amp;editor_language=$editor_language&amp;l=$l\">Talk</a>
 		&gt;
 		<a href=\"index.php?open=talk&amp;page=default&amp;editor_language=$editor_language&amp;l=$l\">Default</a>
 		</p>
-	<!-- //Where am I? -->
+		<!-- //Where am I? -->
 
 
-	<!-- Focus -->
+		<!-- Focus -->
 		<script>
 		\$(document).ready(function(){
 			\$('[name=\"inp_website_title\"]').focus();
 		});
 		</script>
-	<!-- //Focus -->
-	<!-- Settings -->
+		<!-- //Focus -->
+		<!-- Settings -->
 		<form method=\"post\" action=\"?open=$open&page=$page&amp;mode=save\" enctype=\"multipart/form-data\">
 		
 
-		<p>Encryption method:<br />
-		<select name=\"inp_encryption_method\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">
-			<option value=\"none\""; if($talkEncryptionMethodSav == "none"){ echo" selected=\"selected\""; } echo">None</option>
-			<option value=\"openssl_encrypt(AES-128-CBC)\""; if($talkEncryptionMethodSav == "openssl_encrypt(AES-128-CBC)"){ echo" selected=\"selected\""; } echo">openssl_encrypt(AES-128-CBC)</option>
-			<option value=\"caesar_cipher(random)\""; if($talkEncryptionMethodSav == "caesar_cipher(random)"){ echo" selected=\"selected\""; } echo">Caesar cipher(random)</option>
+		<p>Encryption method channels:<br />
+		<select name=\"inp_encryption_method_channels\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">
+			<option value=\"none\""; if($talkEncryptionMethodChannelsSav == "none"){ echo" selected=\"selected\""; } echo">None</option>
+			<option value=\"openssl_encrypt(AES-128-CBC)\""; if($talkEncryptionMethodChannelsSav == "openssl_encrypt(AES-128-CBC)"){ echo" selected=\"selected\""; } echo">openssl_encrypt(AES-128-CBC)</option>
+			<option value=\"caesar_cipher(random)\""; if($talkEncryptionMethodChannelsSav == "caesar_cipher(random)"){ echo" selected=\"selected\""; } echo">Caesar cipher(random)</option>
+		</select>
+		</p>
+
+		<p>Encryption method direct messages:<br />
+		<select name=\"inp_encryption_method_dms\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">
+			<option value=\"none\""; if($talkEncryptionMethodDmsSav == "none"){ echo" selected=\"selected\""; } echo">None</option>
+			<option value=\"openssl_encrypt(AES-128-CBC)\""; if($talkEncryptionMethodDmsSav == "openssl_encrypt(AES-128-CBC)"){ echo" selected=\"selected\""; } echo">openssl_encrypt(AES-128-CBC)</option>
+			<option value=\"caesar_cipher(random)\""; if($talkEncryptionMethodDmsSav == "caesar_cipher(random)"){ echo" selected=\"selected\""; } echo">Caesar cipher(random)</option>
 		</select>
 		</p>
 
 
 		<p><input type=\"submit\" value=\"Save changes\" class=\"btn\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
 		</form>		
-	<!-- //Settings -->
-	";
+		<!-- //Settings -->
+		";
+	} 
 }
 ?>

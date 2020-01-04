@@ -36,10 +36,10 @@ $t_talk_users_starred_channels	= $mysqlPrefixSav . "talk_users_starred_channels"
 $t_talk_users_starred_users	= $mysqlPrefixSav . "talk_users_starred_users";
 
 /*- Functions ------------------------------------------------------------------------- */
-if($talkEncryptionMethodSav == "openssl_encrypt(AES-128-CBC)"){
+if($talkEncryptionMethodChannelsSav == "openssl_encrypt(AES-128-CBC)"){
 	include("_encrypt_decrypt/openssl_encrypt_aes-128-cbc.php");
 }
-elseif($talkEncryptionMethodSav == "caesar_cipher(random)"){
+elseif($talkEncryptionMethodChannelsSav == "caesar_cipher(random)"){
 	include("_encrypt_decrypt/caesar_cipher.php");
 }
 
@@ -117,13 +117,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				}
 				else{
 					// Decrypt message
-					if($talkEncryptionMethodSav == "none"){
+					if($talkEncryptionMethodChannelsSav == "none"){
 											
 					}
-					elseif($talkEncryptionMethodSav == "openssl_encrypt(AES-128-CBC)"){
+					elseif($talkEncryptionMethodChannelsSav == "openssl_encrypt(AES-128-CBC)"){
 						$get_message_text = openssl_decrypt_aes_128_cbc_decrypt($get_message_text, $get_current_channel_encryption_key);
 					}
-					elseif($talkEncryptionMethodSav == "caesar_cipher(random)"){
+					elseif($talkEncryptionMethodChannelsSav == "caesar_cipher(random)"){
 						$cipher = new KKiernan\CaesarCipher();
 						$get_message_text = $cipher->encrypt($get_message_text, -$get_current_channel_encryption_key);
 					}
