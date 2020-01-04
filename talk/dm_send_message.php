@@ -120,7 +120,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$result_emojies = mysqli_query($link, $query_emojies);
 			while($row_emojies = mysqli_fetch_row($result_emojies)) {
 				list($get_emoji_id, $get_emoji_main_category_id, $get_emoji_sub_category_id, $get_emoji_title, $get_emoji_code, $get_emoji_char, $get_emoji_source_path, $get_emoji_source_file, $get_emoji_source_ext, $get_emoji_skin_tone, $get_emoji_created_by_user_id, $get_emoji_created_datetime, $get_emoji_updated_by_user_id, $get_emoji_updated_datetime, $get_emoji_used_count, $get_emoji_last_used_datetime) = $row_emojies;
-				$inp_text = str_replace("$get_emoji_char", ":$get_emoji_title:", $inp_text);
+				$inp_text = str_replace("$get_emoji_char", ":emoji_id$get_emoji_id:", $inp_text);
 			}
 
 			// Make text safe
@@ -134,7 +134,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 				// Did I use the smiley?
-				$pos = strpos($inp_text, ":$get_emoji_title:");
+				$pos = strpos($inp_text, ":emoji_id$get_emoji_id:");
 				if ($pos === false) {
 				} else {
 					// Add to recent
@@ -181,7 +181,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 				// Replace
-				$inp_text = str_replace(":$get_emoji_title:", "$get_emoji_char", $inp_text);
+				$inp_text = str_replace(":emoji_id$get_emoji_id:", "$get_emoji_char", $inp_text);
 			}
 		}
 		else{
