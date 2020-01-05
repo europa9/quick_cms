@@ -16,6 +16,7 @@ if(!(isset($define_access_to_control_panel))){
 $t_emojies_categories_main	= $mysqlPrefixSav . "emojies_categories_main";
 $t_emojies_categories_sub	= $mysqlPrefixSav . "emojies_categories_sub";
 $t_emojies_index 		= $mysqlPrefixSav . "emojies_index";
+$t_emojies_users_recent_used	= $mysqlPrefixSav . "emojies_users_recent_used";
 
 
 /*- Variables -------------------------------------------------------------------------- */
@@ -51,6 +52,13 @@ if($action == ""){
 		</p>
 	<!-- //Where am I? -->
 
+
+	<!-- Actions -->
+		<p>
+		<a href=\"index.php?open=settings&amp;page=emojies_index&amp;action=fix_output_html&amp;editor_language=$editor_language&amp;l=$l\">Fix output_html for emojies (if emojies wont be saved in example Talk)</a>
+		</p>
+
+	<!-- //Actions -->
 	<!-- Left and right -->
 		<table>
 		 <tr>
@@ -139,7 +147,11 @@ if($action == ""){
 						<span>$get_emoji_skin_tone</span>
 					  </td>
 					  <td class=\"$style\">
+						<span>
 						<a href=\"index.php?open=settings&amp;page=emojies_index&amp;editor_language=$editor_language&amp;l=$l&amp;action=edit_emoji&amp;emoji_id=$get_emoji_id\">Edit</a>
+						|
+						<a href=\"index.php?open=settings&amp;page=emojies_index&amp;editor_language=$editor_language&amp;l=$l&amp;action=delete_emoji&amp;emoji_id=$get_emoji_id\">Delete</a>
+						</span>
 					  </td>
 					 </tr>
 					";
@@ -277,7 +289,11 @@ elseif($action == "open_main_category"){
 						<span>$get_emoji_skin_tone</span>
 					  </td>
 					  <td class=\"$style\">
+						<span>
 						<a href=\"index.php?open=settings&amp;page=emojies_index&amp;editor_language=$editor_language&amp;l=$l&amp;action=edit_emoji&amp;emoji_id=$get_emoji_id\">Edit</a>
+						|
+						<a href=\"index.php?open=settings&amp;page=emojies_index&amp;editor_language=$editor_language&amp;l=$l&amp;action=delete_emoji&amp;emoji_id=$get_emoji_id\">Delete</a>
+						</span>
 					  </td>
 					 </tr>
 					";
@@ -298,10 +314,10 @@ elseif($action == "open_main_category"){
 elseif($action == "edit_emoji"){
 	// find emoji
 	$emoji_id_mysql = quote_smart($link, $emoji_id);
-	$query = "SELECT emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_replace_a, emoji_replace_b, emoji_replace_c, emoji_is_active, emoji_code, emoji_char, emoji_source_path, emoji_source_file, emoji_source_ext, emoji_skin_tone, emoji_is_releated_emoji_id, emoji_created_by_user_id, emoji_created_datetime, emoji_updated_by_user_id, emoji_updated_datetime, emoji_used_count, emoji_last_used_datetime FROM $t_emojies_index WHERE emoji_id=$emoji_id_mysql";
+	$query = "SELECT emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_replace_a, emoji_replace_b, emoji_replace_c, emoji_is_active, emoji_code, emoji_char, emoji_char_output_html, emoji_source_path, emoji_source_file, emoji_source_ext, emoji_skin_tone, emoji_is_releated_emoji_id, emoji_created_by_user_id, emoji_created_datetime, emoji_updated_by_user_id, emoji_updated_datetime, emoji_used_count, emoji_last_used_datetime FROM $t_emojies_index WHERE emoji_id=$emoji_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_emoji_id, $get_current_emoji_main_category_id, $get_current_emoji_sub_category_id, $get_current_emoji_title, $get_current_emoji_replace_a, $get_current_emoji_replace_b, $get_current_emoji_replace_c, $get_current_emoji_is_active, $get_current_emoji_code, $get_current_emoji_char, $get_current_emoji_source_path, $get_current_emoji_source_file, $get_current_emoji_source_ext, $get_current_emoji_skin_tone, $get_current_emoji_is_releated_emoji_id, $get_current_emoji_created_by_user_id, $get_current_emoji_created_datetime, $get_current_emoji_updated_by_user_id, $get_current_emoji_updated_datetime, $get_current_emoji_used_count, $get_current_emoji_last_used_datetime) = $row;
+	list($get_current_emoji_id, $get_current_emoji_main_category_id, $get_current_emoji_sub_category_id, $get_current_emoji_title, $get_current_emoji_replace_a, $get_current_emoji_replace_b, $get_current_emoji_replace_c, $get_current_emoji_is_active, $get_current_emoji_code, $get_current_emoji_char, $get_current_emoji_char_output_html, $get_current_emoji_source_path, $get_current_emoji_source_file, $get_current_emoji_source_ext, $get_current_emoji_skin_tone, $get_current_emoji_is_releated_emoji_id, $get_current_emoji_created_by_user_id, $get_current_emoji_created_datetime, $get_current_emoji_updated_by_user_id, $get_current_emoji_updated_datetime, $get_current_emoji_used_count, $get_current_emoji_last_used_datetime) = $row;
 	
 	if($get_current_emoji_id == ""){
 		echo"
@@ -352,7 +368,17 @@ elseif($action == "edit_emoji"){
 			$inp_emoji_is_releated_emoji_id = output_html($inp_emoji_is_releated_emoji_id);
 			$inp_emoji_is_releated_emoji_id_mysql = quote_smart($link, $inp_emoji_is_releated_emoji_id);
 
+			// Char
+			$inp_emoji_char = $_POST['inp_emoji_char'];
+			$inp_emoji_char = output_html($inp_emoji_char);
+			$inp_emoji_char = str_replace("&amp;", "&", $inp_emoji_char);
+			$inp_emoji_char_mysql = quote_smart($link, $inp_emoji_char);
 
+			// inp_emoji_char_output_html
+			$inp_emoji_char_output_html = $_POST['inp_emoji_char_output_html'];
+			$inp_emoji_char_output_html = output_html($inp_emoji_char_output_html);
+			$inp_emoji_char_output_html_mysql = quote_smart($link, $inp_emoji_char_output_html);
+			
 			$my_user_id = $_SESSION['admin_user_id'];
 			$my_user_id = output_html($my_user_id);
 			$my_user_id_mysql = quote_smart($link, $my_user_id);
@@ -368,18 +394,10 @@ elseif($action == "edit_emoji"){
 							emoji_skin_tone=$inp_emoji_skin_tone_mysql, 
 							emoji_is_releated_emoji_id=$inp_emoji_is_releated_emoji_id_mysql,
 							emoji_updated_by_user_id=$my_user_id_mysql,
-							emoji_updated_datetime='$datetime'
+							emoji_updated_datetime='$datetime',
+							emoji_char=$inp_emoji_char_mysql,
+							emoji_char_output_html=$inp_emoji_char_output_html_mysql 
 							 WHERE emoji_id=$get_current_emoji_id") or die(mysqli_error($link));
-	
-			// Char
-			$inp_emoji_char = $_POST['inp_emoji_char'];
-			$sql = "UPDATE $t_emojies_index SET emoji_char=? WHERE emoji_id=$get_current_emoji_id";
-			$stmt = $link->prepare($sql);
-			$stmt->bind_param("s", $inp_emoji_char);
-			$stmt->execute();
-			if ($stmt->errno) {
-				echo "FAILURE!!! " . $stmt->error; die;
-			}
 
 			// Image
 			
@@ -490,6 +508,11 @@ elseif($action == "edit_emoji"){
 				$fm_category = "category_not_found";
 			
 			}
+
+			// Delete recents
+			$result = mysqli_query($link, "DELETE FROM $t_emojies_users_recent_used") or die(mysqli_error($link));
+			
+
 			$url = "index.php?open=$open&page=emojies_index&action=$action&emoji_id=$get_current_emoji_id&editor_language=$editor_language&l=$l&ft=success&fm=changes_saved&ft_image=$ft_image&fm_image=$fm_image&ft_category=$ft_category&fm_category=$fm_category";
 			header("Location: $url");
 			exit;
@@ -555,13 +578,17 @@ elseif($action == "edit_emoji"){
 			No
 			</p>
 
-			<p>Code:<br />
+			<p>Code (Uni Code):<br />
 			<input type=\"text\" name=\"inp_emoji_code\" value=\"$get_current_emoji_code\" size=\"50\" tabindex=\""; $tabindex=0; $tabindex=$tabindex+1;echo"$tabindex\" /></p>
 
 
-			<p>Char:<br />
-			<input type=\"text\" name=\"inp_emoji_char\" value=\"$get_current_emoji_char\" size=\"50\" tabindex=\""; $tabindex=0; $tabindex=$tabindex+1;echo"$tabindex\" /></p>
+			<p>Char (HTML Code) $get_current_emoji_char:<br />\n";
+			$char = str_replace("&", "&amp;", $get_current_emoji_char);
+			echo"<input type=\"text\" name=\"inp_emoji_char\" value=\"$char\" size=\"50\" tabindex=\""; $tabindex=0; $tabindex=$tabindex+1;echo"$tabindex\" /></p>
 
+
+			<p>Char output html:<br />
+			<input type=\"text\" name=\"inp_emoji_char_output_html\" value=\"$get_current_emoji_char\" size=\"50\" tabindex=\""; $tabindex=0; $tabindex=$tabindex+1;echo"$tabindex\" /></p>
 
 			<p>Skin tone:<br />
 			<select name=\"inp_emoji_skin_tone\" tabindex=\""; $tabindex=0; $tabindex=$tabindex+1;echo"$tabindex\">
@@ -639,4 +666,128 @@ elseif($action == "edit_emoji"){
 		";
 	} // emoji found
 } // edit emoji
+elseif($action == "delete_emoji"){
+	// find emoji
+	$emoji_id_mysql = quote_smart($link, $emoji_id);
+	$query = "SELECT emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_replace_a, emoji_replace_b, emoji_replace_c, emoji_is_active, emoji_code, emoji_char, emoji_source_path, emoji_source_file, emoji_source_ext, emoji_skin_tone, emoji_is_releated_emoji_id, emoji_created_by_user_id, emoji_created_datetime, emoji_updated_by_user_id, emoji_updated_datetime, emoji_used_count, emoji_last_used_datetime FROM $t_emojies_index WHERE emoji_id=$emoji_id_mysql";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_current_emoji_id, $get_current_emoji_main_category_id, $get_current_emoji_sub_category_id, $get_current_emoji_title, $get_current_emoji_replace_a, $get_current_emoji_replace_b, $get_current_emoji_replace_c, $get_current_emoji_is_active, $get_current_emoji_code, $get_current_emoji_char, $get_current_emoji_source_path, $get_current_emoji_source_file, $get_current_emoji_source_ext, $get_current_emoji_skin_tone, $get_current_emoji_is_releated_emoji_id, $get_current_emoji_created_by_user_id, $get_current_emoji_created_datetime, $get_current_emoji_updated_by_user_id, $get_current_emoji_updated_datetime, $get_current_emoji_used_count, $get_current_emoji_last_used_datetime) = $row;
+	
+	if($get_current_emoji_id == ""){
+		echo"
+		<h1>Server error 404</h1>
+		";
+	}
+	else{
+		// find main category
+		$query = "SELECT main_category_id, main_category_title, main_category_code, main_category_char, main_category_source_path, main_main_category_source_file, main_category_source_ext, main_category_weight, main_category_is_active, main_category_language FROM $t_emojies_categories_main WHERE main_category_id=$get_current_emoji_main_category_id";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_current_main_category_id, $get_current_main_category_title, $get_current_main_category_code, $get_current_main_category_char, $get_current_main_category_source_path, $get_current_main_main_category_source_file, $get_current_main_category_source_ext, $get_current_main_category_weight, $get_current_main_category_is_active, $get_current_main_category_language) = $row;
+		
+		if($process == "1"){
+			// Delete emoji
+			$result = mysqli_query($link, "DELETE FROM $t_emojies_index WHERE emoji_id=$get_current_emoji_id") or die(mysqli_error($link));
+
+
+			// Delete recents
+			$result = mysqli_query($link, "DELETE FROM $t_emojies_users_recent_used") or die(mysqli_error($link));
+			
+
+			$url = "index.php?open=$open&page=emojies_index&action=open_main_category&main_category_id=$get_current_main_category_id&editor_language=$editor_language&l=$l&ft=success&fm=emoji_deleted";
+			header("Location: $url");
+			exit;
+		} // process
+
+		echo"
+		<h1>Delete $get_current_emoji_title</h1>
+
+
+		<!-- Where am I? -->
+			<p><b>You are here:</b><br />
+			<a href=\"index.php?open=$open&amp;page=menu&amp;editor_language=$editor_language&amp;l=$l\">Talk</a>
+			&gt;
+			<a href=\"index.php?open=$open&amp;page=emojies_index&amp;editor_language=$editor_language&amp;l=$l\">Emojies index</a>
+			&gt;
+			<a href=\"index.php?open=$open&amp;page=emojies_index&amp;action=open_main_category&amp;main_category_id=$get_current_emoji_main_category_id&amp;editor_language=$editor_language&amp;l=$l\">$get_current_main_category_title</a>
+			&gt;
+			<a href=\"index.php?open=$open&amp;page=emojies_index&amp;action=$action&amp;emoji_id=$get_current_emoji_id&amp;editor_language=$editor_language&amp;l=$l\">$get_current_emoji_title</a>
+			</p>
+		<!-- //Where am I? -->
+
+
+		<!-- Feedback -->
+			";
+			if($ft != ""){
+				if($fm == "changes_saved"){
+					$fm = "$l_changes_saved";
+				}
+				else{
+					$fm = ucfirst($ft);
+				}
+				echo"<div class=\"$ft\"><span>$fm</span></div>";
+			}
+			echo"	
+		<!-- //Feedback -->
+
+		<!-- Delete form -->
+			<p>Are you sure you want to delete?</p>
+
+			<p>
+			<a href=\"index.php?open=$open&amp;page=emojies_index&amp;action=$action&amp;emoji_id=$get_current_emoji_id&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\" class=\"btn_warning\">Confirm</a>
+			</p>
+		<!-- //Delete form -->
+
+		";
+	} // emoji found
+} // delete emoji
+elseif($action == "fix_output_html"){
+	if($process == "1"){
+	
+		$query = "SELECT emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_code, emoji_char, emoji_source_path, emoji_source_file, emoji_source_ext, emoji_skin_tone, emoji_created_by_user_id, emoji_created_datetime, emoji_updated_by_user_id, emoji_updated_datetime, emoji_used_count, emoji_last_used_datetime FROM $t_emojies_index";
+		$result = mysqli_query($link, $query);
+		while($row = mysqli_fetch_row($result)) {
+			list($get_emoji_id, $get_emoji_main_category_id, $get_emoji_sub_category_id, $get_emoji_title, $get_emoji_code, $get_emoji_char, $get_emoji_source_path, $get_emoji_source_file, $get_emoji_source_ext, $get_emoji_skin_tone, $get_emoji_created_by_user_id, $get_emoji_created_datetime, $get_emoji_updated_by_user_id, $get_emoji_updated_datetime, $get_emoji_used_count, $get_emoji_last_used_datetime) = $row;
+
+				// inp_emoji_char_output_html
+				$inp_emoji_char_output_html = $_POST["inp_emoji_char_output_html_$get_emoji_id"];
+				$inp_emoji_char_output_html = output_html($inp_emoji_char_output_html);
+				$inp_emoji_char_output_html_mysql = quote_smart($link, $inp_emoji_char_output_html);
+			
+		
+
+				$result_update = mysqli_query($link, "UPDATE $t_emojies_index SET 
+							emoji_char_output_html=$inp_emoji_char_output_html_mysql 
+							 WHERE emoji_id=$get_emoji_id") or die(mysqli_error($link));
+
+		}
+
+		echo"
+		OK
+		";
+	}
+	echo"
+	<h1>Fix output_html for emojies (if emojies wont be saved in example Talk)</h1>
+
+	<form method=\"post\" action=\"index.php?open=$open&amp;page=emojies_index&amp;action=$action&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+	";
+
+	$query = "SELECT emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_code, emoji_char, emoji_source_path, emoji_source_file, emoji_source_ext, emoji_skin_tone, emoji_created_by_user_id, emoji_created_datetime, emoji_updated_by_user_id, emoji_updated_datetime, emoji_used_count, emoji_last_used_datetime FROM $t_emojies_index";
+	$result = mysqli_query($link, $query);
+	while($row = mysqli_fetch_row($result)) {
+		list($get_emoji_id, $get_emoji_main_category_id, $get_emoji_sub_category_id, $get_emoji_title, $get_emoji_code, $get_emoji_char, $get_emoji_source_path, $get_emoji_source_file, $get_emoji_source_ext, $get_emoji_skin_tone, $get_emoji_created_by_user_id, $get_emoji_created_datetime, $get_emoji_updated_by_user_id, $get_emoji_updated_datetime, $get_emoji_used_count, $get_emoji_last_used_datetime) = $row;
+
+		echo"
+		<p>$get_emoji_title:<br />
+		<input type=\"text\" name=\"inp_emoji_char_output_html_$get_emoji_id\" value=\"$get_emoji_char\" size=\"50\" tabindex=\""; $tabindex=0; $tabindex=$tabindex+1;echo"$tabindex\" /></p>
+
+		";
+	}
+	echo"
+	<input type=\"submit\" value=\"Fix\" />
+	</form>
+
+	";
+}
 ?>

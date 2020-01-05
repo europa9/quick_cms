@@ -625,7 +625,6 @@ if($url_minus_one == "index.php"){
 		$language_file = $language_file . "/$url_minus_two/ts_$url_minus_two.php";
 		$pageCSSFile = "_css/$url_minus_one.css";
 	}
-	
 	// CONTINUE HERE
 	
 	
@@ -636,6 +635,12 @@ else{
 	if($root == ".."){
 		// index.php
 		$language_case = "B";
+		$language_file = $language_file . "/$url_minus_two/ts_$url_minus_one";
+		$pageCSSFile = "_css/$url_minus_one.css";
+	}
+	elseif($root == "../.."){
+		// index.php
+		$language_case = "D";
 		$language_file = $language_file . "/$url_minus_two/ts_$url_minus_one";
 		$pageCSSFile = "_css/$url_minus_one.css";
 	}

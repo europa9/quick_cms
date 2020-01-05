@@ -115,26 +115,28 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		if(isset($_POST['inp_text'])){
 			$inp_text = $_POST['inp_text'];
 
-			// Replace emoji with title
-			$query_emojies = "SELECT emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_code, emoji_char, emoji_source_path, emoji_source_file, emoji_source_ext, emoji_skin_tone, emoji_created_by_user_id, emoji_created_datetime, emoji_updated_by_user_id, emoji_updated_datetime, emoji_used_count, emoji_last_used_datetime FROM $t_emojies_index";
-			$result_emojies = mysqli_query($link, $query_emojies);
-			while($row_emojies = mysqli_fetch_row($result_emojies)) {
-				list($get_emoji_id, $get_emoji_main_category_id, $get_emoji_sub_category_id, $get_emoji_title, $get_emoji_code, $get_emoji_char, $get_emoji_source_path, $get_emoji_source_file, $get_emoji_source_ext, $get_emoji_skin_tone, $get_emoji_created_by_user_id, $get_emoji_created_datetime, $get_emoji_updated_by_user_id, $get_emoji_updated_datetime, $get_emoji_used_count, $get_emoji_last_used_datetime) = $row_emojies;
-				$inp_text = str_replace("$get_emoji_char", ":emoji_id$get_emoji_id:", $inp_text);
-			}
-
 			// Make text safe
 			$inp_text = output_html($inp_text);
 
-			// Replace title with emoji 
-			$query_emojies = "SELECT emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_code, emoji_char, emoji_source_path, emoji_source_file, emoji_source_ext, emoji_skin_tone, emoji_created_by_user_id, emoji_created_datetime, emoji_updated_by_user_id, emoji_updated_datetime, emoji_used_count, emoji_last_used_datetime FROM $t_emojies_index";
+			// Replace emoji with html character
+			$query_emojies = "SELECT emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_code, emoji_char, emoji_char_output_html, emoji_source_path, emoji_source_file, emoji_source_ext, emoji_skin_tone, emoji_created_by_user_id, emoji_created_datetime, emoji_updated_by_user_id, emoji_updated_datetime, emoji_used_count, emoji_last_used_datetime FROM $t_emojies_index";
 			$result_emojies = mysqli_query($link, $query_emojies);
 			while($row_emojies = mysqli_fetch_row($result_emojies)) {
-				list($get_emoji_id, $get_emoji_main_category_id, $get_emoji_sub_category_id, $get_emoji_title, $get_emoji_code, $get_emoji_char, $get_emoji_source_path, $get_emoji_source_file, $get_emoji_source_ext, $get_emoji_skin_tone, $get_emoji_created_by_user_id, $get_emoji_created_datetime, $get_emoji_updated_by_user_id, $get_emoji_updated_datetime, $get_emoji_used_count, $get_emoji_last_used_datetime) = $row_emojies;
+				list($get_emoji_id, $get_emoji_main_category_id, $get_emoji_sub_category_id, $get_emoji_title, $get_emoji_code, $get_emoji_char, $get_emoji_char_output_html, $get_emoji_source_path, $get_emoji_source_file, $get_emoji_source_ext, $get_emoji_skin_tone, $get_emoji_created_by_user_id, $get_emoji_created_datetime, $get_emoji_updated_by_user_id, $get_emoji_updated_datetime, $get_emoji_used_count, $get_emoji_last_used_datetime) = $row_emojies;
+				$inp_text = str_replace("$get_emoji_char_output_html", "$get_emoji_char", $inp_text);
+			}
+
+		
+			// Replace title with emoji 
+			$query_emojies = "SELECT emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_code, emoji_char, emoji_char_output_html, emoji_source_path, emoji_source_file, emoji_source_ext, emoji_skin_tone, emoji_created_by_user_id, emoji_created_datetime, emoji_updated_by_user_id, emoji_updated_datetime, emoji_used_count, emoji_last_used_datetime FROM $t_emojies_index";
+			$result_emojies = mysqli_query($link, $query_emojies);
+			while($row_emojies = mysqli_fetch_row($result_emojies)) {
+				list($get_emoji_id, $get_emoji_main_category_id, $get_emoji_sub_category_id, $get_emoji_title, $get_emoji_code, $get_emoji_char, $get_emoji_char_output_html, $get_emoji_source_path, $get_emoji_source_file, $get_emoji_source_ext, $get_emoji_skin_tone, $get_emoji_created_by_user_id, $get_emoji_created_datetime, $get_emoji_updated_by_user_id, $get_emoji_updated_datetime, $get_emoji_used_count, $get_emoji_last_used_datetime) = $row_emojies;
 
 
 				// Did I use the smiley?
-				$pos = strpos($inp_text, ":emoji_id$get_emoji_id:");
+				
+				$pos = strpos($inp_text, "$get_emoji_char");
 				if ($pos === false) {
 				} else {
 					// Add to recent
