@@ -46,6 +46,8 @@ if(!(file_exists("_data/talk.php"))){
 // Encryption
 \$talkEncryptionMethodChannelsSav	= \"openssl_encrypt(AES-128-CBC)\";
 \$talkEncryptionMethodDmsSav		= \"openssl_encrypt(AES-128-CBC)\";
+
+\$talkWebcameraChatActiveDmsSav		= \"0\";
 ?>";
 
 		$fh = fopen("_data/talk.php", "w+") or die("can not open file");
@@ -67,10 +69,15 @@ if($action == ""){
 		$inp_encryption_method_dms = $_POST['inp_encryption_method_dms'];
 		$inp_encryption_method_dms = output_html($inp_encryption_method_dms);
 
+		$inp_webcamera_chat_active_dms = $_POST['inp_webcamera_chat_active_dms'];
+		$inp_webcamera_chat_active_dms = output_html($inp_webcamera_chat_active_dms);
+
 	$update_file="<?php
 // Encryption
 \$talkEncryptionMethodChannelsSav 	= \"$inp_encryption_method_channels\";
 \$talkEncryptionMethodDmsSav 		= \"$inp_encryption_method_dms\";
+
+\$talkWebcameraChatActiveDmsSav		= \"$inp_webcamera_chat_active_dms\";
 ?>";
 
 		$fh = fopen("_data/talk.php", "w+") or die("can not open file");
@@ -151,6 +158,14 @@ if($action == ""){
 			<option value=\"openssl_encrypt(AES-128-CBC)\""; if($talkEncryptionMethodDmsSav == "openssl_encrypt(AES-128-CBC)"){ echo" selected=\"selected\""; } echo">openssl_encrypt(AES-128-CBC)</option>
 			<option value=\"caesar_cipher(random)\""; if($talkEncryptionMethodDmsSav == "caesar_cipher(random)"){ echo" selected=\"selected\""; } echo">Caesar cipher(random)</option>
 		</select>
+		</p>
+
+		<p>Webcamera chat active for direct messages:<br />
+		<input type=\"radio\" name=\"inp_webcamera_chat_active_dms\" value=\"1\" "; if($talkWebcameraChatActiveDmsSav == "1"){ echo" checked=\"checked\""; } echo" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+		Yes
+		&nbsp;
+		<input type=\"radio\" name=\"inp_webcamera_chat_active_dms\" value=\"0\" "; if($talkWebcameraChatActiveDmsSav == "0"){ echo" checked=\"checked\""; } echo" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+		No
 		</p>
 
 

@@ -317,6 +317,7 @@ elseif($action == "edit_emoji"){
 		
 		if($process == "1"){
 			$inp_emoji_title = $_POST['inp_emoji_title'];
+			$inp_emoji_title = str_replace(" ", "_", $inp_emoji_title);
 			$inp_emoji_title = output_html($inp_emoji_title);
 			$inp_emoji_title_mysql = quote_smart($link, $inp_emoji_title);
 

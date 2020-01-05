@@ -158,98 +158,104 @@ else{
 		$inp_sub_category_title = trim($inp_sub_category_title);
 		$inp_sub_category_title_mysql = quote_smart($link, $inp_sub_category_title);
 
-		// Get Main Category ID
-		$query = "SELECT main_category_id FROM $t_emojies_categories_main WHERE main_category_title=$inp_main_category_title_mysql";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_main_category_id) = $row;
-		if($get_main_category_id == ""){
-			// Insert
-			mysqli_query($link, "INSERT INTO $t_emojies_categories_main 
-			(main_category_id, main_category_title, main_category_weight, main_category_is_active, main_category_language) 
-			VALUES 
-			(NULL, $inp_main_category_title_mysql, $main_category_counter, 1, 'en')")
-			or die(mysqli_error($link));
 
-			$main_category_counter++;
-
-			// Get ID
+		// if($inp_main_category_title != "Component"){
+			// Get Main Category ID
 			$query = "SELECT main_category_id FROM $t_emojies_categories_main WHERE main_category_title=$inp_main_category_title_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
 			list($get_main_category_id) = $row;
-		}
+			if($get_main_category_id == ""){
+				// Insert
+				mysqli_query($link, "INSERT INTO $t_emojies_categories_main 
+				(main_category_id, main_category_title, main_category_weight, main_category_is_active, main_category_language) 
+				VALUES 
+				(NULL, $inp_main_category_title_mysql, $main_category_counter, 1, 'en')")
+				or die(mysqli_error($link));
+
+				$main_category_counter++;
+
+				// Get ID
+				$query = "SELECT main_category_id FROM $t_emojies_categories_main WHERE main_category_title=$inp_main_category_title_mysql";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_main_category_id) = $row;
+			}
 
 		
-		// Get Sub Category ID
-		$query = "SELECT sub_category_id FROM $t_emojies_categories_sub WHERE sub_category_title=$inp_sub_category_title_mysql AND sub_category_parent_id=$get_main_category_id";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_sub_category_id) = $row;
-		if($get_sub_category_id == ""){
-			// Insert
-			mysqli_query($link, "INSERT INTO $t_emojies_categories_sub
-			(sub_category_id, sub_category_title, sub_category_parent_id, sub_category_weight, sub_category_is_active, sub_category_language) 
-			VALUES 
-			(NULL, $inp_sub_category_title_mysql, $get_main_category_id, $sub_category_counter, 1, 'en')")
-			or die(mysqli_error($link));
-
-			$sub_category_counter++;
-
-			// Get ID
+			// Get Sub Category ID
 			$query = "SELECT sub_category_id FROM $t_emojies_categories_sub WHERE sub_category_title=$inp_sub_category_title_mysql AND sub_category_parent_id=$get_main_category_id";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
 			list($get_sub_category_id) = $row;
-		}
+			if($get_sub_category_id == ""){
+				// Insert
+				mysqli_query($link, "INSERT INTO $t_emojies_categories_sub
+				(sub_category_id, sub_category_title, sub_category_parent_id, sub_category_weight, sub_category_is_active, sub_category_language) 
+				VALUES 
+				(NULL, $inp_sub_category_title_mysql, $get_main_category_id, $sub_category_counter, 1, 'en')")
+				or die(mysqli_error($link));
 
-		// Code
-		$inp_emoji_code = $json_object[$a]->codes;
-		$inp_emoji_code_mysql = quote_smart($link, $inp_emoji_code);
+				$sub_category_counter++;
 
-		$inp_emoji_char = $json_object[$a]->char;
-		$inp_emoji_char_mysql = quote_smart($link, $inp_emoji_char);
-
-		$inp_emoji_title = $json_object[$a]->name;
-		$inp_emoji_title_mysql = quote_smart($link, $inp_emoji_title);
-		
-		// Shade
-		$inp_skin_tone = "";
-		$skin_tone_array = explode(":", $inp_emoji_title);
-		$skin_tone_size = sizeof($skin_tone_array);
-		if($skin_tone_size > 1){
-			$inp_skin_tone = trim($skin_tone_array[1]);
-			if($inp_skin_tone == "light skin tone" OR $inp_skin_tone == "medium-light skin tone" OR $inp_skin_tone == "medium skin tone" OR $inp_skin_tone == "medium-dark skin tone" OR $inp_skin_tone == "dark skin tone" OR $inp_skin_tone == "medium-light skin tone, light skin tone" OR $inp_skin_tone == "medium skin tone, light skin tone" OR $inp_skin_tone == "medium skin tone, medium-light skin tone" OR $inp_skin_tone == "medium-dark skin tone, light skin tone" OR $inp_skin_tone == "medium-dark skin tone, medium-light skin tone" OR $inp_skin_tone == "medium-dark skin tone, medium skin tone" OR $inp_skin_tone == "dark skin tone, light skin tone" OR $inp_skin_tone == "dark skin tone, medium-light skin tone" OR $inp_skin_tone == "dark skin tone, medium skin tone" OR $inp_skin_tone == "dark skin tone, medium-dark skin tone"){
+				// Get ID
+				$query = "SELECT sub_category_id FROM $t_emojies_categories_sub WHERE sub_category_title=$inp_sub_category_title_mysql AND sub_category_parent_id=$get_main_category_id";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_sub_category_id) = $row;
 			}
-			else{
-				$inp_skin_tone = "";
+
+			// Code
+			$inp_emoji_code = $json_object[$a]->codes;
+			$inp_emoji_code_mysql = quote_smart($link, $inp_emoji_code);
+
+			$inp_emoji_char = $json_object[$a]->char;
+			$inp_emoji_char_mysql = quote_smart($link, $inp_emoji_char);
+
+			$inp_emoji_title = $json_object[$a]->name;
+			$inp_emoji_title_mysql = quote_smart($link, $inp_emoji_title);
+		
+			// Shade
+			$inp_skin_tone = "";
+			$skin_tone_array = explode(":", $inp_emoji_title);
+			$skin_tone_size = sizeof($skin_tone_array);
+			if($skin_tone_size > 1){
+				$inp_skin_tone = trim($skin_tone_array[1]);
+				if($inp_skin_tone == "light skin tone" OR $inp_skin_tone == "medium-light skin tone" OR $inp_skin_tone == "medium skin tone" OR $inp_skin_tone == "medium-dark skin tone" OR $inp_skin_tone == "dark skin tone" OR $inp_skin_tone == "medium-light skin tone, light skin tone" OR $inp_skin_tone == "medium skin tone, light skin tone" OR $inp_skin_tone == "medium skin tone, medium-light skin tone" OR $inp_skin_tone == "medium-dark skin tone, light skin tone" OR $inp_skin_tone == "medium-dark skin tone, medium-light skin tone" OR $inp_skin_tone == "medium-dark skin tone, medium skin tone" OR $inp_skin_tone == "dark skin tone, light skin tone" OR $inp_skin_tone == "dark skin tone, medium-light skin tone" OR $inp_skin_tone == "dark skin tone, medium skin tone" OR $inp_skin_tone == "dark skin tone, medium-dark skin tone"){
+				}
+				else{
+					$inp_skin_tone = "";
+				}
 			}
-		}
-		$inp_skin_tone_mysql = quote_smart($link, $inp_skin_tone);
+			$inp_skin_tone_mysql = quote_smart($link, $inp_skin_tone);
 		
 
 
-		// Get Emoji ID
-		$query = "SELECT emoji_id FROM $t_emojies_index WHERE emoji_main_category_id=$get_main_category_id AND emoji_sub_category_id=$get_sub_category_id AND emoji_title=$inp_emoji_title_mysql";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_emoji_id) = $row;
-		if($get_emoji_id == ""){
-			// Insert
-			mysqli_query($link, "INSERT INTO $t_emojies_index 
-			(emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_is_active, emoji_code, emoji_char, emoji_skin_tone, emoji_created_by_user_id, emoji_created_datetime) 
-			VALUES 
-			(NULL, $get_main_category_id, $get_sub_category_id, $inp_emoji_title_mysql, 1, $inp_emoji_code_mysql, $inp_emoji_char_mysql, $inp_skin_tone_mysql, 1, '$datetime')")
-			or die(mysqli_error($link));
+			// Get Emoji ID
+			if($inp_skin_tone == ""){
+				// We dont want skin toned emojies
+				$query = "SELECT emoji_id FROM $t_emojies_index WHERE emoji_main_category_id=$get_main_category_id AND emoji_sub_category_id=$get_sub_category_id AND emoji_title=$inp_emoji_title_mysql";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_emoji_id) = $row;
+				if($get_emoji_id == ""){
+					// Insert
+					mysqli_query($link, "INSERT INTO $t_emojies_index 
+					(emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_is_active, emoji_code, emoji_char, emoji_skin_tone, emoji_created_by_user_id, emoji_created_datetime) 
+					VALUES 
+					(NULL, $get_main_category_id, $get_sub_category_id, $inp_emoji_title_mysql, 1, $inp_emoji_code_mysql, $inp_emoji_char_mysql, $inp_skin_tone_mysql, 1, '$datetime')")
+					or die(mysqli_error($link));
 
-			$sub_category_counter++;
-
-			// Get ID
-			$query = "SELECT emoji_id FROM $t_emojies_index WHERE emoji_main_category_id=$get_main_category_id AND emoji_sub_category_id=$get_sub_category_id AND emoji_title=$inp_emoji_title_mysql";
-			$result = mysqli_query($link, $query);
-			$row = mysqli_fetch_row($result);
-			list($get_emoji_id) = $row;
-		}
+					$sub_category_counter++;
+	
+					// Get ID
+					$query = "SELECT emoji_id FROM $t_emojies_index WHERE emoji_main_category_id=$get_main_category_id AND emoji_sub_category_id=$get_sub_category_id AND emoji_title=$inp_emoji_title_mysql";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_emoji_id) = $row;
+				}
+			}
+		// } // Category not "Component"
 	} // for
 
 

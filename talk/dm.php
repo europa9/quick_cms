@@ -54,6 +54,9 @@ elseif($talkEncryptionMethodDmsSav == "caesar_cipher(random)"){
 	include("_encrypt_decrypt/caesar_cipher.php");
 }
 
+// include("_webcamera/VideoStream.php");
+
+
 
 /*- Variables ------------------------------------------------------------------------- */
 $tabindex = 0;
@@ -221,6 +224,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			if($action == ""){
 				$time = time();
 				echo"
+
 
 				<!-- Messages -->
 					<div id=\"messages\">";
@@ -412,6 +416,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					echo"
 
 					</div>
+
+
 					<span id=\"variable_last_message_id\">$variable_last_message_id</span>
 							
 					<!-- Get new message script -->
@@ -443,6 +449,71 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					<!-- //Get new message script -->
 
 				<!-- //Messages -->
+
+
+				<!-- Webamera chat -->
+							
+					<div id=\"webcamera_chat\">
+						<!-- My camera -->
+							<div id=\"webcamera_my_camera\">
+								<video autoplay=\"true\" id=\"my_camera\">
+	
+								</video>
+								<button id=\"start_webcamera\">Start Video</button>
+								<button id=\"stop_webcamera\">Stop Video</button>
+
+							<!-- My camera javascripts -->
+								<script>
+								var video = document.querySelector(\"#my_camera\");
+    								var startVideo = document.querySelector(\"#start_webcamera\");
+    								var stopVideo = document.querySelector(\"#stop_webcamera\");
+
+
+    								startVideo.addEventListener(\"click\", start, false);
+								function start(e) {
+									if (navigator.mediaDevices.getUserMedia) {
+										navigator.mediaDevices.getUserMedia({ video: true })
+										.then(function (stream) {
+											video.srcObject = stream;
+										})
+										.catch(function (err0r) {
+											console.log(\"Something went wrong!\");
+										});
+									}
+								}
+
+
+    								stopVideo.addEventListener(\"click\", stop, false);
+								function stop(e) {
+									var stream = video.srcObject;
+									var tracks = stream.getTracks();
+
+									for (var i = 0; i < tracks.length; i++) {
+										var track = tracks[i];
+										track.stop();
+									}
+
+									video.srcObject = null;
+								}
+								</script>
+							<!-- //My camera javascripts -->
+						</div>
+						<!-- //My camera -->
+
+						<!-- Other camera -->
+
+								";
+
+								// $stream = new VideoStream("_uploads/$get_current_conversation_id.mp4");
+								// $stream->start();
+								echo"
+
+						<!-- //Other camera -->
+						
+					</div>
+				<!-- //Webamera chat -->
+
+
 
 				<!-- New message form -->
 					<!-- Focus -->
@@ -483,19 +554,33 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						<input type=\"submit\" value=\"Upload\" style=\"display:none;\" />
 						</span>
 
-						<a href=\"#\" id=\"emojies_selector_toggle\" class=\"btn_default\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />:)</a>	
+						<a href=\"#\" id=\"emojies_selector_toggle\" class=\"btn_default\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />:)</a>\n";
+						if($talkWebcameraChatActiveDmsSav == "1"){
+							echo"<a href=\"#\" id=\"webcamera_toggle\" class=\"btn_default\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />📷</a>\n";
+						}
+						echo"	
 						<a href=\"#\" id=\"inp_message_send\" class=\"btn_default\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />$l_send</a>
 						</p>
 					</form>
-						<!-- emojies_selector_toggle -->
+						<!-- emojies and webcamera selector_toggle -->
 							<script>
 								$(document).ready(function(){
 									$(\"#emojies_selector_toggle\").click(function () {
 										\$(\"#emojies_selector\").toggle();	
 									});
+									$(\"#webcamera_toggle\").click(function () {
+										\$('#webcamera_chat').toggle('slow', function() {
+											if(\$(this).is(':hidden')) { 
+												\$(\"#stop_webcamera\").click();
+											}
+											else {
+												\$(\"#start_webcamera\").click();
+											}
+										}); 
+									});
 								});
 							</script>
-						<!-- //Emojies selector toggle -->
+						<!-- //emojies and webcamera selector toggle -->
 
 						<!-- Emojies -->
 							<div id=\"emojies_selector\">
@@ -652,6 +737,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							<!-- //Emojies javascript click on emoji append to text -->
 
 						<!-- //Emojies -->
+						
 					<div style=\"height: 5px;\"></div>
 
 
