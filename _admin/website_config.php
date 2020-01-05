@@ -148,6 +148,7 @@ if(file_exists($mysql_config_file)){
 	$t_users_antispam_questions	= $mysqlPrefixSav . "users_antispam_questions";
 	$t_users_antispam_answers	= $mysqlPrefixSav . "users_antispam_answers";
 
+	$t_users_feeds_index		= $mysqlPrefixSav . "users_feeds_index";
 	$t_users_api_sessions		= $mysqlPrefixSav . "users_api_sessions";
 
 	$t_banned_hostnames	= $mysqlPrefixSav . "banned_hostnames";
