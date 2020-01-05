@@ -228,7 +228,20 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	";
 } // logged in
 else{
+	/*- Headers ---------------------------------------------------------------------------------- */
+	$website_title = "$l_talk";
+	if(file_exists("./favicon.ico")){ $root = "."; }
+	elseif(file_exists("../favicon.ico")){ $root = ".."; }
+	elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
+	elseif(file_exists("../../../favicon.ico")){ $root = "../../.."; }
+	include("$root/_webdesign/header.php");
+
+
+
+	
 	echo"
+	<h1>$l_talk</h1>
+
 	<h1><img src=\"_gfx/loading_22.gif\" alt=\"loading_22.gif\" /></h1>
 	<meta http-equiv=\"refresh\" content=\"1;url=$root/users/login.php?l=$l&amp;referer=$root/talk\">
 	";

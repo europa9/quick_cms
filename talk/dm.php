@@ -527,7 +527,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					<form method=\"POST\" action=\"dm_upload_file_as_attachment.php?t_user_id=$t_user_id&amp;l=$l&amp;process=1\" id=\"dm_upload_file_as_attachment_form_data\" enctype=\"multipart/form-data\">
 						
 					<p>
-					<input type=\"text\" name=\"inp_text\" id=\"inp_text\" value=\"\" size=\"25\" style=\"width: 82%;\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />
+					<input type=\"text\" name=\"inp_text\" id=\"inp_text\" value=\"\" size=\"25\" style=\"width: 80%;\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />
 					<input type=\"hidden\" name=\"inp_attachment_file\" id=\"inp_attachment_file\" value=\"$inp_file\" size=\"25\" />
 					
 					";
@@ -607,10 +607,22 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 											 <tbody>";
 											$smileys_per_row = 11;
 											$x=0;
-											$query_emojies = "SELECT recent_used_id, recent_used_user_id, recent_used_datetime, recent_used_emoji_id, recent_used_sub_category_id, recent_used_main_category_id, recent_used_emoji_code, recent_used_emoji_char, recent_used_emoji_source_path, recent_used_emoji_source_file, recent_used_emoji_source_ext FROM $t_emojies_users_recent_used WHERE recent_used_user_id=$get_my_user_id ORDER BY recent_used_counter DESC";
+											$query_emojies = "SELECT recent_used_id, recent_used_user_id, recent_used_datetime, recent_used_emoji_id, recent_used_sub_category_id, recent_used_main_category_id, recent_used_emoji_title, recent_used_emoji_replace_a, recent_used_emoji_code, recent_used_emoji_char, recent_used_emoji_source_path, recent_used_emoji_source_file, recent_used_emoji_source_ext FROM $t_emojies_users_recent_used WHERE recent_used_user_id=$get_my_user_id ORDER BY recent_used_counter DESC";
 											$result_emojies = mysqli_query($link, $query_emojies);
 											while($row_emojies = mysqli_fetch_row($result_emojies)) {
-												list($get_recent_used_id, $get_recent_used_user_id, $get_recent_used_datetime, $get_recent_used_emoji_id, $get_recent_used_sub_category_id, $get_recent_used_main_category_id, $get_recent_used_emoji_code, $get_recent_used_emoji_char, $get_recent_used_emoji_source_path, $get_recent_used_emoji_source_file, $get_recent_used_emoji_source_ext) = $row_emojies;
+												list($get_recent_used_id, $get_recent_used_user_id, $get_recent_used_datetime, $get_recent_used_emoji_id, $get_recent_used_sub_category_id, $get_recent_used_main_category_id, $get_recent_used_emoji_title, $get_recent_used_emoji_replace_a, $get_recent_used_emoji_code, $get_recent_used_emoji_char, $get_recent_used_emoji_source_path, $get_recent_used_emoji_source_file, $get_recent_used_emoji_source_ext) = $row_emojies;
+
+
+												// Div ID
+												$divid = "$get_recent_used_emoji_char";
+												if($talkCompensateForEmojisStringErrorSav == "1"){
+													if($get_recent_used_emoji_replace_a == ""){
+														$divid = ":$get_recent_used_emoji_title:";
+													}
+													else{
+														$divid = "$get_recent_used_emoji_replace_a";
+													}
+												}
 
 												if($x == "0"){
 													echo"											";
@@ -622,7 +634,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 												}
 												
 												echo"												";
-												echo"<a href=\"#\" class=\"emoji_select\" data-divid=\"$get_recent_used_emoji_char\">$get_recent_used_emoji_char</a>\n";
+												echo"<a href=\"#\" class=\"emoji_select\" data-divid=\"$divid\">$get_recent_used_emoji_char</a>\n";
 
 
 												if($x == "$smileys_per_row"){
@@ -662,10 +674,23 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 											<table>
 											 <tbody>";
 											$x=0;
-											$query_emojies = "SELECT emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_code, emoji_char, emoji_source_path, emoji_source_file, emoji_source_ext, emoji_skin_tone, emoji_created_by_user_id, emoji_created_datetime, emoji_updated_by_user_id, emoji_updated_datetime, emoji_used_count, emoji_last_used_datetime FROM $t_emojies_index WHERE emoji_main_category_id=$get_main_category_id";
+											$query_emojies = "SELECT emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_replace_a, emoji_code, emoji_char, emoji_source_path, emoji_source_file, emoji_source_ext, emoji_skin_tone, emoji_created_by_user_id, emoji_created_datetime, emoji_updated_by_user_id, emoji_updated_datetime, emoji_used_count, emoji_last_used_datetime FROM $t_emojies_index WHERE emoji_main_category_id=$get_main_category_id";
 											$result_emojies = mysqli_query($link, $query_emojies);
 											while($row_emojies = mysqli_fetch_row($result_emojies)) {
-												list($get_emoji_id, $get_emoji_main_category_id, $get_emoji_sub_category_id, $get_emoji_title, $get_emoji_code, $get_emoji_char, $get_emoji_source_path, $get_emoji_source_file, $get_emoji_source_ext, $get_emoji_skin_tone, $get_emoji_created_by_user_id, $get_emoji_created_datetime, $get_emoji_updated_by_user_id, $get_emoji_updated_datetime, $get_emoji_used_count, $get_emoji_last_used_datetime) = $row_emojies;
+												list($get_emoji_id, $get_emoji_main_category_id, $get_emoji_sub_category_id, $get_emoji_title, $get_emoji_replace_a, $get_emoji_code, $get_emoji_char, $get_emoji_source_path, $get_emoji_source_file, $get_emoji_source_ext, $get_emoji_skin_tone, $get_emoji_created_by_user_id, $get_emoji_created_datetime, $get_emoji_updated_by_user_id, $get_emoji_updated_datetime, $get_emoji_used_count, $get_emoji_last_used_datetime) = $row_emojies;
+
+
+												// Div ID
+												$divid = "$get_emoji_char";
+												if($talkCompensateForEmojisStringErrorSav == "1"){
+													if($get_emoji_replace_a == ""){
+														$divid = ":$get_emoji_title:";
+													}
+													else{
+														$divid = "$get_emoji_replace_a";
+													}
+												}
+												
 
 												if($x == "0"){
 													echo"											";
@@ -677,7 +702,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 												}
 												
 												echo"												";
-												echo"<a href=\"#\" class=\"emoji_select\" data-divid=\"$get_emoji_char\">$get_emoji_char</a>\n";
+												echo"<a href=\"#\" class=\"emoji_select\" data-divid=\"$divid\">$get_emoji_char</a>\n";
 
 
 												if($x == "$smileys_per_row"){

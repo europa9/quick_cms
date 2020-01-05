@@ -48,6 +48,8 @@ if(!(file_exists("_data/talk.php"))){
 \$talkEncryptionMethodDmsSav		= \"openssl_encrypt(AES-128-CBC)\";
 
 \$talkWebcameraChatActiveDmsSav		= \"0\";
+
+\$talkCompensateForEmojisStringErrorSav = \"0\";
 ?>";
 
 		$fh = fopen("_data/talk.php", "w+") or die("can not open file");
@@ -72,12 +74,17 @@ if($action == ""){
 		$inp_webcamera_chat_active_dms = $_POST['inp_webcamera_chat_active_dms'];
 		$inp_webcamera_chat_active_dms = output_html($inp_webcamera_chat_active_dms);
 
+		$inp_compensate_for_emojis_string_error = $_POST['inp_compensate_for_emojis_string_error'];
+		$inp_compensate_for_emojis_string_error = output_html($inp_compensate_for_emojis_string_error);
+
 	$update_file="<?php
 // Encryption
 \$talkEncryptionMethodChannelsSav 	= \"$inp_encryption_method_channels\";
 \$talkEncryptionMethodDmsSav 		= \"$inp_encryption_method_dms\";
 
 \$talkWebcameraChatActiveDmsSav		= \"$inp_webcamera_chat_active_dms\";
+
+\$talkCompensateForEmojisStringErrorSav = \"$inp_compensate_for_emojis_string_error\";
 ?>";
 
 		$fh = fopen("_data/talk.php", "w+") or die("can not open file");
@@ -167,6 +174,16 @@ if($action == ""){
 		<input type=\"radio\" name=\"inp_webcamera_chat_active_dms\" value=\"0\" "; if($talkWebcameraChatActiveDmsSav == "0"){ echo" checked=\"checked\""; } echo" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 		No
 		</p>
+
+		<p>Compensate for emojis string error (Set to true if you get error message like Incorrect string value: '\&nbsp;x98\&nbsp;x83' for column):<br />
+		<input type=\"radio\" name=\"inp_compensate_for_emojis_string_error\" value=\"1\" "; if($talkCompensateForEmojisStringErrorSav == "1"){ echo" checked=\"checked\""; } echo" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+		Yes
+		&nbsp;
+		<input type=\"radio\" name=\"inp_compensate_for_emojis_string_error\" value=\"0\" "; if($talkCompensateForEmojisStringErrorSav == "0"){ echo" checked=\"checked\""; } echo" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+		No
+		</p>
+
+
 
 
 		<p><input type=\"submit\" value=\"Save changes\" class=\"btn\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>

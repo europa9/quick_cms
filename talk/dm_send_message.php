@@ -119,11 +119,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$inp_text = output_html($inp_text);
 
 			// Replace emoji with html character
-			$query_emojies = "SELECT emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_code, emoji_char, emoji_char_output_html, emoji_source_path, emoji_source_file, emoji_source_ext, emoji_skin_tone, emoji_created_by_user_id, emoji_created_datetime, emoji_updated_by_user_id, emoji_updated_datetime, emoji_used_count, emoji_last_used_datetime FROM $t_emojies_index";
+			$query_emojies = "SELECT emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_replace_a, emoji_code, emoji_char, emoji_char_output_html, emoji_source_path, emoji_source_file, emoji_source_ext, emoji_skin_tone, emoji_created_by_user_id, emoji_created_datetime, emoji_updated_by_user_id, emoji_updated_datetime, emoji_used_count, emoji_last_used_datetime FROM $t_emojies_index";
 			$result_emojies = mysqli_query($link, $query_emojies);
 			while($row_emojies = mysqli_fetch_row($result_emojies)) {
-				list($get_emoji_id, $get_emoji_main_category_id, $get_emoji_sub_category_id, $get_emoji_title, $get_emoji_code, $get_emoji_char, $get_emoji_char_output_html, $get_emoji_source_path, $get_emoji_source_file, $get_emoji_source_ext, $get_emoji_skin_tone, $get_emoji_created_by_user_id, $get_emoji_created_datetime, $get_emoji_updated_by_user_id, $get_emoji_updated_datetime, $get_emoji_used_count, $get_emoji_last_used_datetime) = $row_emojies;
+				list($get_emoji_id, $get_emoji_main_category_id, $get_emoji_sub_category_id, $get_emoji_title, $get_emoji_replace_a, $get_emoji_code, $get_emoji_char, $get_emoji_char_output_html, $get_emoji_source_path, $get_emoji_source_file, $get_emoji_source_ext, $get_emoji_skin_tone, $get_emoji_created_by_user_id, $get_emoji_created_datetime, $get_emoji_updated_by_user_id, $get_emoji_updated_datetime, $get_emoji_used_count, $get_emoji_last_used_datetime) = $row_emojies;
 				$inp_text = str_replace("$get_emoji_char_output_html", "$get_emoji_char", $inp_text);
+				$inp_text = str_replace(":$get_emoji_title:", "$get_emoji_char", $inp_text);
 			}
 
 		
@@ -146,16 +147,18 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					list($get_recent_used_id, $get_recent_used_user_id, $get_recent_used_datetime, $get_recent_used_counter, $get_recent_used_emoji_id, $get_recent_used_sub_category_id, $get_recent_used_main_category_id, $get_recent_used_emoji_code, $get_recent_used_emoji_char, $get_recent_used_emoji_source_path, $get_recent_used_emoji_source_file, $get_recent_used_emoji_source_ext) = $row_recent;
 	
 					if($get_recent_used_id == ""){
+						$inp_emoji_title_mysql = quote_smart($link, $get_emoji_title);
+						$inp_emoji_replace_a_mysql = quote_smart($link, $get_emoji_replace_a);
 						$inp_emoji_code_mysql = quote_smart($link, $get_emoji_code);
 						$inp_emoji_source_path_mysql = quote_smart($link, $get_emoji_source_path);
 						$inp_emoji_source_file_mysql = quote_smart($link, $get_emoji_source_file);
 						$inp_emoji_source_ext_mysql = quote_smart($link, $get_emoji_source_ext);
 						mysqli_query($link, "INSERT INTO $t_emojies_users_recent_used
 						(recent_used_id, recent_used_user_id, recent_used_datetime, recent_used_counter, recent_used_emoji_id, recent_used_sub_category_id, 
-						recent_used_main_category_id, recent_used_emoji_code, recent_used_emoji_char, recent_used_emoji_source_path, recent_used_emoji_source_file, recent_used_emoji_source_ext) 
+						recent_used_main_category_id, recent_used_emoji_title, recent_used_emoji_replace_a, recent_used_emoji_code, recent_used_emoji_char, recent_used_emoji_source_path, recent_used_emoji_source_file, recent_used_emoji_source_ext) 
 						VALUES 
 						(NULL, $get_my_user_id, '$datetime', 1, $get_emoji_id, $get_emoji_sub_category_id, 
-						$get_emoji_main_category_id, $inp_emoji_code_mysql, '', $inp_emoji_source_path_mysql, $inp_emoji_source_file_mysql, $inp_emoji_source_ext_mysql)")
+						$get_emoji_main_category_id, $inp_emoji_title_mysql, $inp_emoji_replace_a_mysql, $inp_emoji_code_mysql, '', $inp_emoji_source_path_mysql, $inp_emoji_source_file_mysql, $inp_emoji_source_ext_mysql)")
 						or die(mysqli_error($link));
 
 						// Get ID

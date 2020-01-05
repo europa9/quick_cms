@@ -745,6 +745,12 @@ elseif($action == "delete_emoji"){
 elseif($action == "fix_output_html"){
 	if($process == "1"){
 	
+		/*
+		$result_update = mysqli_query($link, "ALTER TABLE $t_emojies_index CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci") or die(mysqli_error($link));
+		$result_update = mysqli_query($link, "ALTER TABLE $t_emojies_index DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci") or die(mysqli_error($link));
+		$result_update = mysqli_query($link, "ALTER TABLE $t_emojies_index CHANGE `emoji_char_output_html` `emoji_char_output_html` VARCHAR(200) CHARACTER SET utf8_unicode_ci COLLATE utf8_unicode_ci NULL DEFAULT NULL") or die(mysqli_error($link));
+		*/
+
 		$query = "SELECT emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_code, emoji_char, emoji_source_path, emoji_source_file, emoji_source_ext, emoji_skin_tone, emoji_created_by_user_id, emoji_created_datetime, emoji_updated_by_user_id, emoji_updated_datetime, emoji_used_count, emoji_last_used_datetime FROM $t_emojies_index";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
@@ -753,14 +759,18 @@ elseif($action == "fix_output_html"){
 				// inp_emoji_char_output_html
 				$inp_emoji_char_output_html = $_POST["inp_emoji_char_output_html_$get_emoji_id"];
 				$inp_emoji_char_output_html = output_html($inp_emoji_char_output_html);
+				// $inp_emoji_char_output_html = str_replace("\\", "\\\\\\", $inp_emoji_char_output_html);
 				$inp_emoji_char_output_html_mysql = quote_smart($link, $inp_emoji_char_output_html);
 			
 		
+
+				echo"$get_emoji_id: $inp_emoji_char_output_html ";
 
 				$result_update = mysqli_query($link, "UPDATE $t_emojies_index SET 
 							emoji_char_output_html=$inp_emoji_char_output_html_mysql 
 							 WHERE emoji_id=$get_emoji_id") or die(mysqli_error($link));
 
+				echo"<br />\n";
 		}
 
 		echo"

@@ -61,36 +61,35 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	if($include_as_navigation_main_mode == 0){
 
 		echo"
-		<ul class=\"toc\">
-			<li class=\"header_home\"><a href=\"$root/talk/index.php?l=$l\""; if($minus_one == "index.php" && $minus_two == "talk"){ echo" class=\"navigation_active\"";}echo">$l_talk</a></li>
-		";
+		<ul class=\"toc\"  style=\"margin-bottom:0;padding-bottom:0;\">
+			<li class=\"header_home\"><a href=\"$root/talk/index.php?l=$l\""; if($minus_one == "index.php" && $minus_two == "talk"){ echo" class=\"navigation_active\"";}echo">$l_talk</a></li>\n";
 	}
 	echo"
-	<li><a href=\"$root/talk/channel_list.php?l=$l\""; if($minus_one == "channel_list.php"){ echo" class=\"navigation_active\"";}echo">$l_channel_list</a></li>
+			<li><a href=\"$root/talk/channel_list.php?l=$l\""; if($minus_one == "channel_list.php"){ echo" class=\"navigation_active\"";}echo">$l_channel_list</a></li>
 	
-	<li class=\"header_up\"><a href=\"$root/talk/my_starred_channels.php?l=$l\""; if($minus_one == "my_starred_channels.php"){ echo" class=\"navigation_active\"";}echo">$l_starred_channels</a></li>
-	</ul>
-		<ul class=\"toc\" id=\"navigation_look_for_new_messages_and_conversations_result\" style=\"margin-top:0;margin-bottom:0;padding-top:0;padding-bottom:0;\">";
+			<li class=\"header_up\"><a href=\"$root/talk/my_starred_channels.php?l=$l\""; if($minus_one == "my_starred_channels.php"){ echo" class=\"navigation_active\"";}echo">$l_starred_channels</a></li>
+		</ul>
+
+		<ul class=\"toc\" id=\"navigation_look_for_new_messages_and_conversations_result\" style=\"margin-top:0;margin-bottom:0;padding-top:0;padding-bottom:0;\">\n";
 
 	// My channels
 	$query = "SELECT starred_channel_id, channel_id, channel_name, new_messages, user_id FROM $t_talk_users_starred_channels WHERE user_id=$my_user_id_mysql";
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
 		list($get_starred_channel_id, $get_channel_id, $get_channel_name, $get_new_messages, $get_user_id) = $row;
-		echo"
-		<li><a href=\"$root/talk/open_starred_channel.php?starred_channel_id=$get_starred_channel_id&amp;l=$l\""; if($get_starred_channel_id == "$starred_channel_id"){ echo" class=\"navigation_active\"";}echo">$get_channel_name";
+		echo"			";
+		echo"<li><a href=\"$root/talk/open_starred_channel.php?starred_channel_id=$get_starred_channel_id&amp;l=$l\""; if($get_starred_channel_id == "$starred_channel_id"){ echo" class=\"navigation_active\"";}echo">$get_channel_name";
 		echo" <b id=\"navigation_starred_channel_id$get_starred_channel_id\">";
 		if($get_new_messages != "0"){echo"$get_new_messages"; }
 		echo"</b>";
-		echo"</a></li>
-		";
+		echo"</a></li>\n";
 	}
 	echo"
 	";
 
 	// Conversations
 	echo"
-		<li class=\"header_up\"><a href=\"$root/talk/direct_messages.php?l=$l\""; if($minus_one == "direct_messages.php"){ echo" class=\"navigation_active\"";}echo">$l_direct_messages</a></li>
+			<li class=\"header_up\"><a href=\"$root/talk/direct_messages.php?l=$l\""; if($minus_one == "direct_messages.php"){ echo" class=\"navigation_active\"";}echo">$l_direct_messages</a></li>
 	";
 	$query = "SELECT conversation_id, conversation_key, conversation_f_unread_messages, conversation_t_user_id, conversation_t_user_alias, conversation_t_last_online_time FROM $t_talk_dm_conversations WHERE conversation_f_user_id=$my_user_id_mysql AND conversation_f_has_blocked=0";
 	$result = mysqli_query($link, $query);
@@ -99,7 +98,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$seconds_since_online = $time-$get_conversation_t_last_online_time;
 
 		echo"
-		<li><a href=\"$root/talk/dm.php?t_user_id=$get_conversation_t_user_id&amp;l=$l\""; if($get_conversation_t_user_id == "$t_user_id"){ echo" class=\"navigation_active\"";}echo">";
+			<li><a href=\"$root/talk/dm.php?t_user_id=$get_conversation_t_user_id&amp;l=$l\""; if($get_conversation_t_user_id == "$t_user_id"){ echo" class=\"navigation_active\"";}echo">";
 
 		if($seconds_since_online > 100){
 			echo"<span style=\"color: #42b72a;height: 7px; width: 7px; background-color: #a0a0a0; border-radius: 50%; display: inline-block;float: left;margin: 6px 4px 0px 0px\"></span>";
@@ -112,8 +111,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		echo" <b id=\"conversation_id$get_conversation_id\">";
 		if($get_conversation_f_unread_messages != "0"){echo"$get_conversation_f_unread_messages"; }
 		echo"</b>";
-		echo"</a></li>
-		";
+		echo"</a></li>\n";
 	}
 	
 	// Other nav
