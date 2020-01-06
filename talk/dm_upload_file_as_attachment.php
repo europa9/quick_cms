@@ -90,7 +90,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$inp_my_ip = output_html($inp_my_ip);
 		$inp_my_ip_mysql = quote_smart($link, $inp_my_ip);
 
-		$inp_my_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+		$inp_my_hostname = "";
+		if($configSiteUseGethostbyaddrSav == "1"){
+			$inp_my_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+		}
 		$inp_my_hostname = output_html($inp_my_hostname);
 		$inp_my_hostname_mysql = quote_smart($link, $inp_my_hostname);
 

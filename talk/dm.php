@@ -131,9 +131,14 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$inp_my_ip = $_SERVER['REMOTE_ADDR'];
 		$inp_my_ip = output_html($inp_my_ip);
 		$inp_my_ip_mysql = quote_smart($link, $inp_my_ip);
-		$inp_my_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+
+		$inp_my_hostname = "";
+		if($configSiteUseGethostbyaddrSav == "1"){
+			$inp_my_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+		}
 		$inp_my_hostname = output_html($inp_my_hostname);
 		$inp_my_hostname_mysql = quote_smart($link, $inp_my_hostname);
+
 		$inp_my_user_agent = $_SERVER['HTTP_USER_AGENT'];
 		$inp_my_user_agent = output_html($inp_my_user_agent);
 		$inp_my_user_agent_mysql = quote_smart($link, $inp_my_user_agent);
@@ -443,7 +448,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
               									}
 									});
 								}
-								setInterval(get_messages,4000);
+								setInterval(get_messages,10000);
          				   		});
 						</script>
 					<!-- //Get new message script -->
@@ -639,7 +644,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 												if($x == "$smileys_per_row"){
 													echo"											";
-													echo" </tr> </td>\n";
+													echo"   </td>\n";
+													echo"											";
+													echo"  </tr>\n";
 													$x = -1;
 												}
 												else{
