@@ -290,6 +290,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
                     										\$(\"#messages\").append(html);
 												if(!scrolled){
 													\$('#messages').scrollTop(\$('#messages')[0].scrollHeight);
+													var scrolled = false;
               											}
               										}
        									

@@ -485,6 +485,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 											// We want to scroll to bottom if user is not scrolling
 											if(!scrolled){
 												\$('#messages').scrollTop(\$('#messages')[0].scrollHeight);
+												var scrolled = false;
               										}
               									}
 									});
