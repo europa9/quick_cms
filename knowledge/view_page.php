@@ -273,6 +273,9 @@ else{
 					<li><a href=\"move_page_down.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/keyboard_arrow_down_black_18dp.png\" alt=\"arrow_upward_black_18dp.png\" /></a></li>
 					<li><a href=\"page_history.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l\"><img src=\"_gfx/icons/history_black_18dp.png\" alt=\"history_black_18dp.png\" /></a></li>
 					<li><a href=\"print_page.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/print_black_18dp.png\" alt=\"print_black_18dp.png\" /></a></li>
+
+					<li><a href=\"search.php?l=$l\"><img src=\"_gfx/icons/search_black_18dp.png\" alt=\"search_black_18dp.png\" title=\"$l_search\" /></a></li>
+					<li><a href=\"spaces_overview.php?l=$l\"><img src=\"_gfx/icons/home_black_18dp.png\" alt=\"home_black_18dp.png\" title=\"$l_home\" /></a></li>
 				</ul>
 				</div>
 				<!-- Head menu -->
@@ -300,7 +303,85 @@ else{
 				echo"	
 				<!-- //Feedback -->
 
+				<!-- No text? Add table of contents for sub pages -->";
+					if($get_current_page_text == ""){
+						echo"
 
+						<table class=\"hor-zebra\">
+						 <thead>
+						  <tr>
+						   <th scope=\"col\">
+							<span>$l_page</span>
+						   </th>
+						   <th scope=\"col\">
+							<span>$l_description</span>
+						   </th>
+						  </tr>
+						 </thead>
+						 <tbody>
+						";
+						$style = "";
+						$query = "SELECT page_id, page_title, page_description, page_no_of_children, page_weight FROM $t_knowledge_pages_index WHERE page_space_id=$get_current_space_id AND page_parent_id=$get_current_page_id ORDER BY page_weight ASC";
+						$result = mysqli_query($link, $query);
+						while($row = mysqli_fetch_row($result)) {
+							list($get_page_id_a, $get_page_title_a, $get_page_description_a, $get_page_no_of_children_a, $get_page_weight_a) = $row;
+							if($style == ""){
+								$style = "odd";
+							}
+							else{
+								$style = "";
+							}
+							
+							echo"
+							  <tr>
+							   <td class=\"$style\" style=\"vertical-align: top;\">
+								<span><a href=\"view_page.php?space_id=$get_current_space_id&amp;page_id=$get_page_id_a&amp;l=$l\">$get_page_title_a</a></span>
+							   </td>
+							   <td class=\"$style\" style=\"vertical-align: top;\">
+								<span>$get_page_description_a</span>
+							   </td>
+							  </tr>\n";
+
+							$query_b = "SELECT page_id, page_title, page_description, page_no_of_children, page_weight FROM $t_knowledge_pages_index WHERE page_space_id=$get_current_space_id AND page_parent_id=$get_page_id_a ORDER BY page_weight ASC";
+							$result_b = mysqli_query($link, $query_b);
+							while($row_b = mysqli_fetch_row($result_b)) {
+								list($get_page_id_b, $get_page_title_b, $get_page_description_b, $get_page_no_of_children_b, $get_page_weight_b) = $row_b;
+								echo"
+								  <tr>
+								   <td class=\"$style\" style=\"padding-left: 40px;\">
+									<span><a href=\"view_page.php?space_id=$get_current_space_id&amp;page_id=$get_page_id_b&amp;l=$l\">$get_page_title_b</a></span>
+								   </td>
+								   <td class=\"$style\" style=\"vertical-align: top;\">
+									<span>$get_page_description_b</span>
+								   </td>
+								  </tr>\n";
+
+								// B: Children
+								$query_c = "SELECT page_id, page_title, page_description, page_no_of_children, page_weight FROM $t_knowledge_pages_index WHERE page_space_id=$get_current_space_id AND page_parent_id=$get_page_id_b ORDER BY page_weight ASC";
+								$result_c = mysqli_query($link, $query_c);
+								while($row_c = mysqli_fetch_row($result_c)) {
+									list($get_page_id_c, $get_page_title_c, $get_page_description_c, $get_page_no_of_children_c, $get_page_weight_c) = $row_c;
+									echo"
+									  <tr>
+									   <td class=\"$style\" style=\"padding-left: 80px;\">
+										<span><a href=\"view_page.php?space_id=$get_current_space_id&amp;page_id=$get_page_id_c&amp;l=$l\">$get_page_title_c</a></span>
+									   </td>
+									   <td class=\"$style\" style=\"vertical-align: top;\">
+										<span>$get_page_description_c</span>
+									   </td>
+									  </tr>\n";
+								} // C
+							} // B
+	
+						} // A
+						echo"
+						 </tbody>
+						</table>
+						";
+					}
+					echo"
+				<!-- //No text? Add table of contents for sub pages -->
+				
 				<p>
 				$get_current_page_text
 				</p>

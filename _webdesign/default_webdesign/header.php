@@ -216,7 +216,6 @@ echo"
 				<ul>";
 					// Translation
 					include("$root/_admin/_translations/site/$l/knowledge/ts_header.php");
-					include("$root/_admin/_translations/site/$l/edb/ts_header.php");
 					include("$root/_admin/_translations/site/$l/office_calendar/ts_header.php");
 					include("$root/_admin/_translations/site/$l/talk/ts_header.php");
 					echo"

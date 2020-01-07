@@ -101,6 +101,16 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$inp_my_user_agent = output_html($inp_my_user_agent);
 		$inp_my_user_agent_mysql = quote_smart($link, $inp_my_user_agent);
 
+		// Key
+		$inp_key_mysql = quote_smart($link, $get_current_conversation_key);
+
+		// Dates
+		$datetime = date("Y-m-d H:i:s");
+		$time = time();
+		$year = date("Y");
+		$date_saying = date("j M Y");
+		$datetime_saying = date("j M Y H:i");
+		$time_saying = date("H:i");
 		
 		// Check for file (to be attatched to message)
 		if(!(is_dir("$root/_uploads/"))){
@@ -109,22 +119,28 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		if(!(is_dir("$root/_uploads/talk/"))){
 			mkdir("$root/_uploads/talk/", 0777);
 		}
-		if(!(is_dir("$root/_uploads/talk/images"))){
-			mkdir("$root/_uploads/talk/images", 0777);
+		if(!(is_dir("$root/_uploads/talk/attachments"))){
+			mkdir("$root/_uploads/talk/attachments", 0777);
 		}
-		if(!(is_dir("$root/_uploads/talk/images/$get_current_conversation_id"))){
-			mkdir("$root/_uploads/talk/images/$get_current_conversation_id", 0777);
+		if(!(is_dir("$root/_uploads/talk/attachments/$get_current_conversation_id"))){
+			mkdir("$root/_uploads/talk/attachments/$get_current_conversation_id", 0777);
 		}
-				
+		
+		$allowed_image_formats = array("jpg", "jpeg", "png", "gif");
+		$allowed_other_formats = array(
+    						"pdf"  => "application/pdf",
+    						"odt"  => "application/vnd.oasis.opendocument.text",
+    						"docx"  => "application/octet-stream",
+   						"txt"  => "text/plain"
+					);
+	
+
 		$inp_file_name = $_FILES['inp_file']['name'];
 		$extension = get_extension($inp_file_name);
 		$extension = strtolower($extension);
-		if($inp_file_name){
-			if (($extension != "jpg") && ($extension != "jpeg") && ($extension != "png") && ($extension != "gif")) {
-				$ft = "warning";
-				$fm = "unknown_file_format";	
-			}
-			else{
+		if($inp_file_name){	
+			if (in_array($extension, $allowed_image_formats)) {
+
 				$size=filesize($_FILES['inp_file']['tmp_name']);
 				if($extension=="jpg" || $extension=="jpeg" ){
 					ini_set ('gd.jpeg_ignore_warning', 1);
@@ -158,7 +174,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 					imagecopyresampled($tmp_org,$src,0,0,0,0,$newwidth,$newheight, $width,$height);
 					$datetime = date("ymdhis");
-					$filename = "$root/_uploads/talk/images/$get_current_conversation_id/". $get_my_user_id . "_" . $get_to_user_id . "_" . $datetime_clean . "." . $extension;
+					$filename = "$root/_uploads/talk/attachments/$get_current_conversation_id/". $get_my_user_id . "_" . $get_to_user_id . "_" . $datetime_clean . "." . $extension;
 
 					if($extension=="jpg" || $extension=="jpeg" ){
 						imagejpeg($tmp_org,$filename,100);
@@ -171,48 +187,36 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					}
 					imagedestroy($tmp_org);
 
-					// Make thumb
-					if($width > 41){
-						$newwidth=40;
-					}
-					else{
-						$newwidth=$width;
-					}
-					$newheight=round(($height/$width)*$newwidth, 0);
-					$tmp_org =imagecreatetruecolor($newwidth,$newheight);
 
-					imagecopyresampled($tmp_org,$src,0,0,0,0,$newwidth,$newheight, $width,$height);
-					$datetime = date("ymdhis");
-					$filename = "$root/_uploads/talk/images/$get_current_conversation_id/". $get_my_user_id . "_" . $get_to_user_id . "_" . $datetime_clean . "_thumb." . $extension;
+					// Store
+					$inp_text = output_html($inp_file_name);
+					$inp_text_mysql = quote_smart($link, $inp_text);
 
-					if($extension=="jpg" || $extension=="jpeg" ){
-						imagejpeg($tmp_org,$filename,100);
-					}
-					elseif($extension=="png"){
-						imagepng($tmp_org,$filename);
-					}
-					else{
-						imagegif($tmp_org,$filename);
-					}
-					imagedestroy($tmp_org);
-
-					// Send feedback
 					$inp_attachment_type = "$extension";
 					$inp_attachment_type = output_html($inp_attachment_type);
 					$inp_attachment_type_mysql = quote_smart($link, $inp_attachment_type);
 
-					$inp_attachment_path = "_uploads/talk/images/$get_current_conversation_id/";
+					$inp_attachment_path = "_uploads/talk/attachments/$get_current_conversation_id";
 					$inp_attachment_path_mysql = quote_smart($link, $inp_attachment_path);
 
 					$inp_attachment_file = $get_my_user_id . "_" . $get_to_user_id . "_" . $datetime_clean . "." . $extension;
 					$inp_attachment_file = output_html($inp_attachment_file);
 					$inp_attachment_file_mysql = quote_smart($link, $inp_attachment_file);
 
-					$inp_attachment_thumb = $get_my_user_id . "_" . $get_to_user_id . "_" . $datetime_clean . "_thumb." . $extension;
-					$inp_attachment_thumb = output_html($inp_attachment_thumb);
-					$inp_attachment_thumb_mysql = quote_smart($link, $inp_attachment_thumb);
+					// Add to chat
+					mysqli_query($link, "INSERT INTO $t_talk_dm_messages 
+					(message_id, message_conversation_key, message_type, message_text, message_datetime, 
+					message_date_saying, message_time_saying, message_time, message_year, message_seen, 
+					message_attachment_type, message_attachment_path, message_attachment_file,
+					message_from_user_id, message_from_ip, message_from_hostname, message_from_user_agent) 
+					VALUES 
+					(NULL, $inp_key_mysql, 'chat', $inp_text_mysql, '$datetime', '$date_saying', '$time_saying', '$time', $year, '0', 
+					$inp_attachment_type_mysql, $inp_attachment_path_mysql, $inp_attachment_file_mysql, 
+					$get_my_user_id, $inp_my_ip_mysql, $inp_my_hostname_mysql, $inp_my_user_agent_mysql)")
+					or die(mysqli_error($link));
 
-					$url = "dm.php?t_user_id=$get_to_user_id&inp_file=$inp_attachment_file&inp_thumb=$inp_attachment_thumb&l=$l";
+					// $url = "dm.php?t_user_id=$get_to_user_id&ft_attachment=success&fm_attachment=image_uploaded&l=$l";
+					$url = "dm.php?t_user_id=$get_to_user_id&l=$l";
 					header("Location: $url");
 					exit;
 
@@ -222,10 +226,80 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						
 						
 				}  // if($width == "" OR $height == ""){
+			} // extention = image
+			else{
+				$file_type = $_FILES['inp_file']['type']; //returns the mimetype
+
+
+				if(!in_array($file_type, $allowed_other_formats)) {
+					$url = "dm.php?t_user_id=$get_to_user_id&ft_attachment=error&fm_attachment=unsupported_file_format_$file_type&l=$l";
+					header("Location: $url");
+					exit;
+				}
+
+				// Upload file
+				$inp_file_name_clean = str_replace("$extension", "", $inp_file_name);
+				$inp_file_name_clean = clean($inp_file_name_clean);
+				$target = "$root/_uploads/talk/attachments/$get_current_conversation_id/". $get_my_user_id . "_" . $get_to_user_id . "_" . $datetime_clean . "_" . $inp_file_name_clean . "." . $extension;
+				if (move_uploaded_file($_FILES['inp_file']['tmp_name'], $target)) {
+
+					// Check mime
+					$mime = mime_content_type($target);
+					if(!in_array($file_type, $allowed_other_formats)) {
+						unlink("$target");
+						$url = "dm.php?t_user_id=$get_to_user_id&ft_attachment=error&fm_attachment=unsupported&l=$l";
+						header("Location: $url");
+						exit;
+					}
+					else{
+
+						// Store
+						$inp_attachment_type = "$extension";
+						$inp_attachment_type = output_html($inp_attachment_type);
+						$inp_attachment_type_mysql = quote_smart($link, $inp_attachment_type);
+
+						$inp_attachment_path = "_uploads/talk/attachments/$get_current_conversation_id";
+						$inp_attachment_path_mysql = quote_smart($link, $inp_attachment_path);
+
+						$inp_attachment_file = $get_my_user_id . "_" . $get_to_user_id . "_" . $datetime_clean . "_" . $inp_file_name_clean . "." . $extension;
+						$inp_attachment_file = output_html($inp_attachment_file);
+						$inp_attachment_file_mysql = quote_smart($link, $inp_attachment_file);
+
+						// Add to chat
+						mysqli_query($link, "INSERT INTO $t_talk_dm_messages 
+						(message_id, message_conversation_key, message_type, message_text, message_datetime, 
+						message_date_saying, message_time_saying, message_time, message_year, message_seen, 
+						message_attachment_type, message_attachment_path, message_attachment_file,
+						message_from_user_id, message_from_ip, message_from_hostname, message_from_user_agent) 
+						VALUES 
+						(NULL, $inp_key_mysql, 'chat', '', '$datetime', '$date_saying', '$time_saying', '$time', $year, '0', 
+						$inp_attachment_type_mysql, $inp_attachment_path_mysql, $inp_attachment_file_mysql, 
+						$get_my_user_id, $inp_my_ip_mysql, $inp_my_hostname_mysql, $inp_my_user_agent_mysql)")
+						or die(mysqli_error($link));
+
+						// $url = "dm.php?t_user_id=$get_to_user_id&ft_attachment=success&fm_attachment=file_uploaded&l=$l";
+						$url = "dm.php?t_user_id=$get_to_user_id&l=$l";
+						header("Location: $url");
+						exit;
+					}
+				}
+				else{
+					$url = "dm.php?t_user_id=$get_to_user_id&ft_attachment=error&fm_attachment=file_not_uploaded&l=$l";
+					header("Location: $url");
+					exit;
+				}
+
+
+				die;
+				$ft = "warning";
+				$fm = "unknown_file_format";	
 			}
+		
 		} // if($image){
 		else{
-			echo"No image selected";
+			$url = "dm.php?t_user_id=$get_to_user_id&ft_attachment=warning&fm_attachment=no_file_selected&l=$l";
+			header("Location: $url");
+			exit;
 		}
 	} // to_user found
 

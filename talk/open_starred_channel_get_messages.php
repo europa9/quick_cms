@@ -96,10 +96,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			// Get messages
 			$date_saying = date("j M Y");
-			$query = "SELECT message_id, message_channel_id, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_from_user_id, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent FROM $t_talk_channels_messages WHERE message_id > $last_message_id_mysql AND message_channel_id=$get_current_channel_id AND message_from_user_id != $my_user_id_mysql  ORDER BY message_id DESC";
+			$query = "SELECT message_id, message_channel_id, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_from_user_id, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent, message_attachment_type, message_attachment_path, message_attachment_file FROM $t_talk_channels_messages WHERE message_id > $last_message_id_mysql AND message_channel_id=$get_current_channel_id AND message_from_user_id != $my_user_id_mysql  ORDER BY message_id DESC";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
-				list($get_message_id, $get_message_channel_id, $get_message_type, $get_message_text, $get_message_datetime, $get_message_date_saying, $get_message_time_saying, $get_message_time, $get_message_year, $get_message_from_user_id, $get_message_from_user_name, $get_message_from_user_alias, $get_message_from_user_image_path, $get_message_from_user_image_file, $get_message_from_user_image_thumb_40, $get_message_from_user_image_thumb_50, $get_message_from_ip, $get_message_from_hostname, $get_message_from_user_agent) = $row;
+				list($get_message_id, $get_message_channel_id, $get_message_type, $get_message_text, $get_message_datetime, $get_message_date_saying, $get_message_time_saying, $get_message_time, $get_message_year, $get_message_from_user_id, $get_message_from_user_name, $get_message_from_user_alias, $get_message_from_user_image_path, $get_message_from_user_image_file, $get_message_from_user_image_thumb_40, $get_message_from_user_image_thumb_50, $get_message_from_ip, $get_message_from_hostname, $get_message_from_user_agent, $get_message_attachment_type, $get_message_attachment_path, $get_message_attachment_file) = $row;
 	
 				if($get_message_type == "info"){
 										echo"
@@ -175,8 +175,29 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							<a href=\"open_starred_channel.php?action=delete_message&amp;message_id=$get_message_id&amp;starred_channel_id=$get_current_starred_channel_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/delete_grey_16x16.png\" alt=\"delete.png\" /></a>
 							";
 						}
+											echo"<br />\n";
 
-						echo"<br />
+											// Attachment?
+											if($get_message_attachment_file != ""){
+												if(file_exists("$root/$get_message_attachment_path/$get_message_attachment_file")){
+													if($get_message_attachment_type == "jpg" OR $get_message_attachment_type == "png" OR $get_message_attachment_type == "gif"){
+														echo"
+														<img src=\"$root/$get_message_attachment_path/$get_message_attachment_file\" alt=\"$get_message_attachment_path/$get_message_attachment_file\" /><br />
+														\n";
+													}
+													else{
+														$icon = $get_message_attachment_type . "_32x32.png";
+														echo"
+														<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/$icon\" alt=\"$icon\" style=\"float: left;\"></a>
+														<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\" style=\"float: left;padding: 8px 0px 0px 8px;\">$get_message_attachment_file</a>
+														<br class=\"clear\" />";
+													}
+												}
+												else{
+													echo"<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/dialog_warning_16x16.png\" alt=\"dialog_warning_16x16.png\"> Attachment not found</a>";
+												}
+											}
+											echo"
 						$get_message_text
 						</p>
 						<!-- //Name and text -->

@@ -187,9 +187,23 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								echo"<br />
 								";
 								// Attachment?
-								if($get_message_attachment_file != "" && file_exists("$root/$get_message_attachment_path/$get_message_attachment_file")){
-									if($get_message_attachment_type == "jpg" OR $get_message_attachment_type == "png" OR $get_message_attachment_type == "gif"){
-										echo"<img src=\"$root/$get_message_attachment_path/$get_message_attachment_file\" alt=\"$get_message_attachment_path/$get_message_attachment_file\" /><br />\n";
+								if($get_message_attachment_file != ""){
+									if(file_exists("$root/$get_message_attachment_path/$get_message_attachment_file")){
+										if($get_message_attachment_type == "jpg" OR $get_message_attachment_type == "png" OR $get_message_attachment_type == "gif"){
+											echo"
+											<img src=\"$root/$get_message_attachment_path/$get_message_attachment_file\" alt=\"$get_message_attachment_path/$get_message_attachment_file\" /><br />
+											\n";
+										}
+										else{
+											$icon = $get_message_attachment_type . "_32x32.png";
+											echo"
+											<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/$icon\" alt=\"$icon\" style=\"float: left;\"></a>
+											<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\" style=\"float: left;padding: 8px 0px 0px 8px;\">$get_message_attachment_file</a>
+											<br class=\"clear\" />";
+										}
+									}
+									else{
+										echo"<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/dialog_warning_16x16.png\" alt=\"dialog_warning_16x16.png\"> Attachment not found</a>";
 									}
 								}
 								echo"
@@ -258,9 +272,23 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							echo"<br />
 								";
 								// Attachment?
-								if($get_message_attachment_file != "" && file_exists("$root/$get_message_attachment_path/$get_message_attachment_file")){
-									if($get_message_attachment_type == "jpg" OR $get_message_attachment_type == "png" OR $get_message_attachment_type == "gif"){
-										echo"<img src=\"$root/$get_message_attachment_path/$get_message_attachment_file\" alt=\"$get_message_attachment_path/$get_message_attachment_file\" /><br />\n";
+								if($get_message_attachment_file != ""){
+									if(file_exists("$root/$get_message_attachment_path/$get_message_attachment_file")){
+										if($get_message_attachment_type == "jpg" OR $get_message_attachment_type == "png" OR $get_message_attachment_type == "gif"){
+											echo"
+											<img src=\"$root/$get_message_attachment_path/$get_message_attachment_file\" alt=\"$get_message_attachment_path/$get_message_attachment_file\" /><br />
+											\n";
+										}
+										else{
+											$icon = $get_message_attachment_type . "_32x32.png";
+											echo"
+											<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/$icon\" alt=\"$icon\" style=\"float: left;\"></a>
+											<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\" style=\"float: left;padding: 8px 0px 0px 8px;\">$get_message_attachment_file</a>
+											<br class=\"clear\" />";
+										}
+									}
+									else{
+										echo"<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/dialog_warning_16x16.png\" alt=\"dialog_warning_16x16.png\"> Attachment not found</a>";
 									}
 								}
 								echo"

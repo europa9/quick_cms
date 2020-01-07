@@ -125,6 +125,20 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					  <td style=\"vertical-align: top;\">
 						<!-- Messages -->
 							<div id=\"messages\">
+								<!-- Set messages to 100 % height -->
+								<script language=\"javascript\" type=\"text/javascript\">
+								\$(document).ready(function(){
+									var height = \$(window).height() - 130;
+									\$('#messages').height(height);
+									\$('#users_in_channel').height(height);
+								});
+								\$(window).resize(function(){
+									var height = \$(window).height() - 200;
+									\$('#messages').css('height', \$(window).height());
+									\$('#users_in_channel').css('height', \$(window).height());
+         				   			});
+								</script>
+								<!-- //Set messages to 100 % height -->
 								";
 								// Set all messages read
 								$result = mysqli_query($link, "UPDATE $t_talk_users_starred_channels SET new_messages=0 WHERE starred_channel_id=$get_current_starred_channel_id") or die(mysqli_error($link));
@@ -133,11 +147,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								$variable_last_message_id = "1";
 								$date_saying = date("j M Y");
 								$time = time();
-								$query = "SELECT message_id, message_channel_id, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_from_user_id, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent FROM $t_talk_channels_messages WHERE message_channel_id=$get_current_channel_id ORDER BY message_id ASC";
+								$query = "SELECT message_id, message_channel_id, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_from_user_id, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent, message_attachment_type, message_attachment_path, message_attachment_file FROM $t_talk_channels_messages WHERE message_channel_id=$get_current_channel_id ORDER BY message_id ASC";
 								//echo"$query ";
 								$result = mysqli_query($link, $query);
 								while($row = mysqli_fetch_row($result)) {
-									list($get_message_id, $get_message_channel_id, $get_message_type, $get_message_text, $get_message_datetime, $get_message_date_saying, $get_message_time_saying, $get_message_time, $get_message_year, $get_message_from_user_id, $get_message_from_user_name, $get_message_from_user_alias, $get_message_from_user_image_path, $get_message_from_user_image_file, $get_message_from_user_image_thumb_40, $get_message_from_user_image_thumb_50, $get_message_from_ip, $get_message_from_hostname, $get_message_from_user_agent) = $row;
+									list($get_message_id, $get_message_channel_id, $get_message_type, $get_message_text, $get_message_datetime, $get_message_date_saying, $get_message_time_saying, $get_message_time, $get_message_year, $get_message_from_user_id, $get_message_from_user_name, $get_message_from_user_alias, $get_message_from_user_image_path, $get_message_from_user_image_file, $get_message_from_user_image_thumb_40, $get_message_from_user_image_thumb_50, $get_message_from_ip, $get_message_from_hostname, $get_message_from_user_agent, $get_message_attachment_type, $get_message_attachment_path, $get_message_attachment_file) = $row;
 	
 									// Is the message X days old?
 									$time_since_written = $time-$get_message_time;
@@ -179,19 +193,22 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 										  <td style=\"padding: 5px 5px 0px 0px;vertical-align:top;\">
 											<!-- Img -->
 											<p>";
-											if($get_message_from_user_image_file != "" && file_exists("$root/$get_message_from_user_image_path/$get_message_from_user_image_file")){
-												if(!(file_exists("$root/$get_message_from_user_image_path/$get_message_from_user_image_thumb_40")) && $get_message_from_user_image_thumb_40 != ""){
-													// Make thumb
-													$inp_new_x = 40; // 950
-													$inp_new_y = 40; // 640
-													resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_message_from_user_image_path/$get_message_from_user_image_file", "$root/$get_message_from_user_image_path/$get_message_from_user_image_thumb_40");
+											if($get_message_from_user_image_file != ""){
+												if(file_exists("$root/$get_message_from_user_image_path/$get_message_from_user_image_file")){
+													if(!(file_exists("$root/$get_message_from_user_image_path/$get_message_from_user_image_thumb_40")) && $get_message_from_user_image_thumb_40 != ""){
+														// Make thumb
+														$inp_new_x = 40; // 950
+														$inp_new_y = 40; // 640
+														resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_message_from_user_image_path/$get_message_from_user_image_file", "$root/$get_message_from_user_image_path/$get_message_from_user_image_thumb_40");
 												
-												}
+													}
 
-												if(file_exists("$root/$get_message_from_user_image_path/$get_message_from_user_image_thumb_40") && $get_message_from_user_image_thumb_40 != ""){
 													echo"
 													<a href=\"dm.php?t_user_id=$get_message_from_user_id&amp;l=$l\"><img src=\"$root/$get_message_from_user_image_path/$get_message_from_user_image_thumb_40\" alt=\"$get_message_from_user_image_thumb_40\" class=\"talk_messages_from_user_image\" /></a>
 													";
+												}
+												else{
+													echo"<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/dialog_warning_16x16.png\" alt=\"dialog_warning_16x16.png\"> Attachment not found</a>";
 												}
 											}
 											else{
@@ -218,7 +235,29 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 												<a href=\"open_starred_channel.php?action=delete_message&amp;message_id=$get_message_id&amp;starred_channel_id=$get_current_starred_channel_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/delete_grey_16x16.png\" alt=\"delete.png\" /></a>
 												";
 											}
-											echo"<br />
+											echo"<br />\n";
+
+											// Attachment?
+											if($get_message_attachment_file != ""){
+												if(file_exists("$root/$get_message_attachment_path/$get_message_attachment_file")){
+													if($get_message_attachment_type == "jpg" OR $get_message_attachment_type == "png" OR $get_message_attachment_type == "gif"){
+														echo"
+														<img src=\"$root/$get_message_attachment_path/$get_message_attachment_file\" alt=\"$get_message_attachment_path/$get_message_attachment_file\" /><br />
+														\n";
+													}
+													else{
+														$icon = $get_message_attachment_type . "_32x32.png";
+														echo"
+														<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/$icon\" alt=\"$icon\" style=\"float: left;\"></a>
+														<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\" style=\"float: left;padding: 8px 0px 0px 8px;\">$get_message_attachment_file</a>
+														<br class=\"clear\" />";
+													}
+												}
+												else{
+													echo"<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/dialog_warning_16x16.png\" alt=\"dialog_warning_16x16.png\"> Attachment not found</a>";
+												}
+											}
+											echo"
 											$get_message_text
 											</p>
 											<!-- //Name and text -->
@@ -236,6 +275,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							<!-- Get new message script -->
 								<script language=\"javascript\" type=\"text/javascript\">
 								\$(document).ready(function () {
+									var scrolled = false;
 									\$('#messages').scrollTop(\$('#messages')[0].scrollHeight);
 									function get_messages(){
 										var variable_last_message_id = \$('#variable_last_message_id').html(); 
@@ -248,12 +288,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 											},
                										success: function(html){
                     										\$(\"#messages\").append(html);
-												\$('#messages').scrollTop(\$('#messages')[0].scrollHeight);
+												if(!scrolled){
+													\$('#messages').scrollTop(\$('#messages')[0].scrollHeight);
+              											}
               										}
        									
 										});
 									}
 									setInterval(get_messages,5000);
+
+									// Has the user scrolled?
+									\$(\"#messages\").on('scroll', function(){
+										scrolled=true;
+									});
          				   			});
 								</script>
 							<!-- //Get new message script -->
@@ -324,15 +371,21 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 					<p>
 					<input type=\"text\" name=\"inp_text\" id=\"inp_text\" value=\"\" size=\"25\" style=\"width: 85%;\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />
-						<a href=\"#\" id=\"emojies_selector_toggle\" class=\"btn_default\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />:)</a>	
+					<a href=\"#\" id=\"emojies_selector_toggle\" class=\"btn_default\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />:)</a>
+					<a href=\"#\" id=\"attachment_selector_toggle\" class=\"btn_default\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />&#128206;</a>
+
 					<a href=\"#\" id=\"inp_message_send\" class=\"btn_default\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />$l_send</a>
 					</p>
 
-						<!-- emojies_selector_toggle -->
+						<!-- emojies, attachment _selector_toggle -->
 							<script>
 								$(document).ready(function(){
 									$(\"#emojies_selector_toggle\").click(function () {
 										\$(\"#emojies_selector\").toggle();	
+									});
+									$(\"#attachment_selector_toggle\").click(function () {
+										\$(\"#attachment_selector\").toggle();	
+										\$(\"#attachment_selector\").css('visibility', 'visible');
 									});
 								});
 							</script>
@@ -517,6 +570,53 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							<!-- //Emojies javascript click on emoji append to text -->
 
 						<!-- //Emojies -->
+
+						<!-- Attachment -->";
+
+							if(isset($_GET['ft_attachment']) && isset($_GET['fm_attachment'])){
+								$ft_attachment = $_GET['ft_attachment'];
+								$ft_attachment = output_html($ft_attachment);
+
+								$fm_attachment = $_GET['fm_attachment'];
+								$fm_attachment = output_html($fm_attachment);
+								$fm_attachment = str_replace("_", " ", $fm_attachment);
+								$fm_attachment = ucfirst($fm_attachment);
+								echo"
+								<div id=\"attachment_selector\" style=\"display: block;\">X
+									<div class=\"$ft_attachment\"><span>$fm_attachment</span></div>
+								";
+							}
+							else{
+								echo"
+								<div id=\"attachment_selector\">
+								";
+							}
+							echo"
+								<!-- New attachment upload -->
+									<form method=\"POST\" action=\"open_starred_channel_upload_file_as_attachment.php?starred_channel_id=$get_current_starred_channel_id&amp;l=$l&amp;process=1\" id=\"starred_channel_upload_file_as_attachment_form_data\" enctype=\"multipart/form-data\">
+					
+										<p><b>$l_new_file</b> (jpg, png, gif, docx, pdf, txt)<br />
+										<input type=\"file\" name=\"inp_file\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />
+										<input type=\"submit\" value=\"$l_upload\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />
+										</p>
+									</form>
+						
+								<!-- //New attachment upload -->
+							</div>
+
+
+							<!-- On file selected send form -->
+								<script type=\"text/javascript\">
+								\$(document).ready(function(){
+									\$('input[type=\"file\"]').change(function(){
+            									\$(\"#dm_upload_file_as_attachment_form_data\").submit();
+									});
+								});
+								</script>
+							<!-- //On file selected send form -->
+
+
+						<!-- //Attachment -->
 
 					<!-- Send new message script -->
 						<script id=\"source\" language=\"javascript\" type=\"text/javascript\">

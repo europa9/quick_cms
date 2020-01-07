@@ -31,6 +31,10 @@ $t_knowledge_pages_diagrams	 		= $mysqlPrefixSav . "knowledge_pages_diagrams";
 
 $t_knowledge_preselected_subscribe		= $mysqlPrefixSav . "knowledge_preselected_subscribe";
 
+
+$t_knowledge_home_page_user_remember 		= $mysqlPrefixSav . "knowledge_home_page_user_remember";
+
+
 echo"
 <h1>Tables</h1>
 
@@ -688,6 +692,38 @@ else{
 }
 echo"
 <!-- //knowledge_pages_diagrams -->
+
+
+
+
+
+<!-- home_page_user_remember -->
+";
+
+$query = "SELECT * FROM $t_knowledge_home_page_user_remember LIMIT 1";
+$result = mysqli_query($link, $query);
+if($result !== FALSE){
+	// Count rows
+	$row_cnt = mysqli_num_rows($result);
+	echo"
+	<p>$t_knowledge_home_page_user_remember: $row_cnt</p>
+	";
+}
+else{
+
+
+	mysqli_query($link, "CREATE TABLE $t_knowledge_home_page_user_remember(
+	  user_remember_id INT NOT NULL AUTO_INCREMENT,
+	  PRIMARY KEY(user_remember_id), 
+	   user_remember_user_id INT,
+	   user_remember_space_id INT,
+	   user_remember_space_title VARCHAR(200)
+	   )")
+	   or die(mysqli_error());
+
+}
+echo"
+<!-- //home_page_user_remember -->
 
 
 ";

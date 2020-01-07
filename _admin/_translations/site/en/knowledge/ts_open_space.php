@@ -16,4 +16,5 @@ $l_membership_requests_pending = "Membership requests pending";
 $l_has_requested_membersip_lowercase = "has requested membership.";
 $l_you_sent_a_membersip_request = "You sent a membersip request";
 $l_spaces = "Spaces";
+$l_home = "Home";
 ?>

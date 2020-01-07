@@ -354,7 +354,7 @@ elseif($mode == "edit_language_file"){
 
 			$x = 0;
 			$language_mysql = quote_smart($link, $language);
-			$query = "SELECT site_translation_string_id, site_translation_string_variable, site_translation_string_value FROM $t_site_translations_strings WHERE site_translation_string_dir_id=$get_current_site_translation_directory_id AND site_translation_string_file_id=$get_current_site_translation_file_id AND site_translation_string_language='en' ORDER BY site_translation_string_variable ASC";
+			$query = "SELECT site_translation_string_id, site_translation_string_variable, site_translation_string_value FROM $t_site_translations_strings WHERE site_translation_string_dir_id=$get_current_site_translation_directory_id AND site_translation_string_file_id=$get_current_site_translation_file_id AND site_translation_string_language='en' ORDER BY site_translation_string_id ASC";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
 				list($get_site_translation_file_id, $get_site_translation_string_variable, $get_site_translation_string_value) = $row;
@@ -371,7 +371,13 @@ elseif($mode == "edit_language_file"){
 				$inp_name = str_replace('$', "", $get_site_translation_string_variable);
 
 				// Translated value
-				$inp_site_translation_string_value = $translations[0][$x];
+				$inp_site_translation_string_value = "";
+				if(isset($translations[0][$x])){
+					$inp_site_translation_string_value = $translations[0][$x];
+				}
+				else{
+					echo"<span style=\"color:red;\">Warning! There are strings that are not translated!</span>\n";
+				}
 				$inp_site_translation_string_value = str_replace('"', "", $inp_site_translation_string_value);
 				$inp_site_translation_string_value_mysql = quote_smart($link, $inp_site_translation_string_value);
 				
@@ -676,7 +682,7 @@ elseif($mode == "open_language"){
 	}
 
 	// Make sure all files exists in database
-	$debug = "1";
+	$debug = "0";
 	if($debug == "1"){
 		echo"
 			<h2>Check that all strings that are in flat files exists in database</h2>

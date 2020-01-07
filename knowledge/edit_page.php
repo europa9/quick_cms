@@ -154,6 +154,7 @@ else{
 
 						$inp_text = $_POST['inp_text'];
 
+
 						$inp_description = substr($inp_text, 0, 200);
 						$inp_description = output_html($inp_description);
 						$inp_description = str_replace("&lt;br&gt;", "

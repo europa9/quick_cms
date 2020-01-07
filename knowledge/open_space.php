@@ -29,6 +29,9 @@ include("$root/_admin/website_config.php");
 /*- Translation ------------------------------------------------------------------------------- */
 include("$root/_admin/_translations/site/$l/knowledge/ts_view_page.php");
 
+/*- Tables ---------------------------------------------------------------------------------- */
+$t_knowledge_home_page_user_remember 		= $mysqlPrefixSav . "knowledge_home_page_user_remember";
+
 /*- Variables -------------------------------------------------------------------------------- */
 if (isset($_GET['space_id'])) {
 	$space_id = $_GET['space_id'];
@@ -162,6 +165,25 @@ else{
 			}
 		}
 		else{
+			// Make sure I remember this space 
+			$query = "SELECT user_remember_id, user_remember_user_id, user_remember_space_id, user_remember_space_title FROM $t_knowledge_home_page_user_remember WHERE user_remember_user_id=$my_user_id_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_current_user_remember_id, $get_current_user_remember_user_id, $get_current_user_remember_space_id, $get_current_user_remember_space_title) = $row;
+			if($get_current_user_remember_id == ""){
+				$inp_space_title_mysql = quote_smart($link, $get_current_space_title);
+				mysqli_query($link, "INSERT INTO $t_knowledge_home_page_user_remember 
+				(user_remember_id, user_remember_user_id, user_remember_space_id, user_remember_space_title) 
+				VALUES 
+				(NULL, $my_user_id_mysql, $get_current_space_id, $inp_space_title_mysql )")
+				or die(mysqli_error($link));
+			}
+			else{
+				if($get_current_user_remember_space_id != "$get_current_user_remember_id"){
+					$inp_space_title_mysql = quote_smart($link, $get_current_space_title);
+					$result = mysqli_query($link, "UPDATE $t_knowledge_home_page_user_remember SET user_remember_space_id=$get_current_space_id,  user_remember_space_title=$inp_space_title_mysql WHERE user_remember_id=$get_current_user_remember_id") or die(mysqli_error($link));
+				}
+			}
 
 			// Hits
 			// Hits per user
@@ -220,6 +242,7 @@ else{
 				</div>
 			<!-- //Headline and logo -->
 
+
 			<!-- Space icons -->
 				<div class=\"knowledge_head_menu\">
 					<ul>
@@ -249,7 +272,11 @@ else{
 					echo"
 					<li><a href=\"edit_space.php?space_id=$get_current_space_id&amp;l=$l\"><img src=\"_gfx/icons/edit_black_18dp.png\" alt=\"edit_black_18dp.png\" title=\"$l_edit\" /></a></li>
 					<li><a href=\"delete_space.php?space_id=$get_current_space_id&amp;l=$l\"><img src=\"_gfx/icons/delete_black_18dp.png\" alt=\"delete_black_18dp.png\" title=\"$l_delete\" /></a></li>
+					<li><a href=\"search.php?l=$l\"><img src=\"_gfx/icons/search_black_18dp.png\" alt=\"search_black_18dp.png\" title=\"$l_search\" /></a></li>
+
+					<li><a href=\"spaces_overview.php?l=$l\"><img src=\"_gfx/icons/home_black_18dp.png\" alt=\"home_black_18dp.png\" title=\"$l_home\" /></a></li>
 					</ul>
+				
 				</div>
 			<!-- //Space icons -->
 			<div class=\"clear\" style=\"height: 10px;\"></div>
@@ -293,6 +320,95 @@ else{
 				$get_current_space_text
 			<!-- //Text -->
 
+			<!-- Table of contents -->
+				<h2>$l_table_of_contents</h2>
+				<div style=\"height: 10px;\"></div>
+				<table class=\"hor-zebra\">
+				 <thead>
+				  <tr>
+				   <th scope=\"col\">
+					<span>$l_page</span>
+				   </th>
+				   <th scope=\"col\">
+					<span>$l_description</span>
+				   </th>
+				  </tr>
+				 </thead>
+				 <tbody>
+				";
+				$style = "";
+				$query = "SELECT page_id, page_title, page_description, page_no_of_children, page_weight FROM $t_knowledge_pages_index WHERE page_space_id=$get_current_space_id AND page_parent_id=0 ORDER BY page_weight ASC";
+				$result = mysqli_query($link, $query);
+				while($row = mysqli_fetch_row($result)) {
+					list($get_page_id_a, $get_page_title_a, $get_page_description_a, $get_page_no_of_children_a, $get_page_weight_a) = $row;
+					if($style == ""){
+						$style = "odd";
+					}
+					else{
+						$style = "";
+					}
+							
+					echo"
+					  <tr>
+					   <td class=\"$style\" style=\"vertical-align: top;\">
+						<span><a href=\"view_page.php?space_id=$get_current_space_id&amp;page_id=$get_page_id_a&amp;l=$l\">$get_page_title_a</a></span>
+					   </td>
+					   <td class=\"$style\" style=\"vertical-align: top;\">
+						<span>$get_page_description_a</span>
+					   </td>
+					  </tr>\n";
+
+					$query_b = "SELECT page_id, page_title, page_description, page_no_of_children, page_weight FROM $t_knowledge_pages_index WHERE page_space_id=$get_current_space_id AND page_parent_id=$get_page_id_a ORDER BY page_weight ASC";
+					$result_b = mysqli_query($link, $query_b);
+					while($row_b = mysqli_fetch_row($result_b)) {
+						list($get_page_id_b, $get_page_title_b, $get_page_description_b, $get_page_no_of_children_b, $get_page_weight_b) = $row_b;
+						echo"
+						  <tr>
+						   <td class=\"$style\" style=\"padding-left: 40px;\">
+							<span><a href=\"view_page.php?space_id=$get_current_space_id&amp;page_id=$get_page_id_b&amp;l=$l\">$get_page_title_b</a></span>
+						   </td>
+						   <td class=\"$style\" style=\"vertical-align: top;\">
+							<span>$get_page_description_b</span>
+						   </td>
+						  </tr>\n";
+
+						// B: Children
+						$query_c = "SELECT page_id, page_title, page_description, page_no_of_children, page_weight FROM $t_knowledge_pages_index WHERE page_space_id=$get_current_space_id AND page_parent_id=$get_page_id_b ORDER BY page_weight ASC";
+						$result_c = mysqli_query($link, $query_c);
+						while($row_c = mysqli_fetch_row($result_c)) {
+							list($get_page_id_c, $get_page_title_c, $get_page_description_c, $get_page_no_of_children_c, $get_page_weight_c) = $row_c;
+							echo"
+							  <tr>
+							   <td class=\"$style\" style=\"padding-left: 80px;\">
+								<span><a href=\"view_page.php?space_id=$get_current_space_id&amp;page_id=$get_page_id_c&amp;l=$l\">$get_page_title_c</a></span>
+							   </td>
+							   <td class=\"$style\" style=\"vertical-align: top;\">
+								<span>$get_page_description_c</span>
+							   </td>
+							  </tr>\n";
+
+							$query_d = "SELECT page_id, page_title, page_description, page_no_of_children, page_weight FROM $t_knowledge_pages_index WHERE page_space_id=$get_current_space_id AND page_parent_id=$get_page_id_c ORDER BY page_weight ASC";
+							$result_d = mysqli_query($link, $query_d);
+							while($row_d = mysqli_fetch_row($result_d)) {
+								list($get_page_id_d, $get_page_title_d, $get_page_description_d, $get_page_no_of_children_d, $get_page_weight_d) = $row_d;
+								echo"
+								  <tr>
+								   <td class=\"$style\" style=\"padding-left: 120px;\">
+									<span><a href=\"view_page.php?space_id=$get_current_space_id&amp;page_id=$get_page_id_d&amp;l=$l\">$get_page_title_d</a></span>
+								   </td>
+								   <td class=\"$style\" style=\"vertical-align: top;\">
+									<span>$get_page_description_d</span>
+								   </td>
+								  </tr>\n";
+	
+							} // D
+						} // C
+					} // B
+				} // A
+				echo"
+				 </tbody>
+				</table>
+			<!-- //Table of contents -->
 
 			<!-- Recently updated and popular -->
 				<div class=\"knowledge_recently_updated\">

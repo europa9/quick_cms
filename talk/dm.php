@@ -230,8 +230,21 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$time = time();
 				echo"
 
-
 				<!-- Messages -->
+					<!-- Set messages to 100 % height -->
+						<script language=\"javascript\" type=\"text/javascript\">
+						\$(document).ready(function(){
+							var height = \$(window).height() - 130;
+							\$('#messages').height(height);
+						});
+						\$(window).resize(function(){
+							var height = \$(window).height() - 200;
+							\$('#messages').css('height', \$(window).height());
+         				   	});
+						</script>
+					<!-- //Set messages to 100 % height -->
+
+
 					<div id=\"messages\">";
 					// Set all messages read
 					$result = mysqli_query($link, "UPDATE $t_talk_dm_conversations SET conversation_f_unread_messages=0 WHERE conversation_id=$get_current_conversation_id") or die(mysqli_error($link));
@@ -282,23 +295,23 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								<!-- Img -->
 								<p>";
 								if($get_current_conversation_f_image_file != "" && file_exists("$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_file")){
-								if(!(file_exists("$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_thumb40")) && $get_current_conversation_f_image_thumb40 != ""){
-									// Make thumb
-									$inp_new_x = 40; // 950
-									$inp_new_y = 40; // 640
-									resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_file", "$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_thumb40");
-								}
+									if(!(file_exists("$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_thumb40")) && $get_current_conversation_f_image_thumb40 != ""){
+										// Make thumb
+										$inp_new_x = 40; // 950
+										$inp_new_y = 40; // 640
+										resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_file", "$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_thumb40");
+									}
 
-								if(file_exists("$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_thumb40") && $get_current_conversation_f_image_thumb40 != ""){
-									echo"
-									<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_f_user_id&amp;l=$l\"><img src=\"$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_thumb40\" alt=\"$get_current_conversation_f_image_thumb40\" class=\"talk_messages_from_user_image\" /></a>
-									";
-								}
+									if(file_exists("$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_thumb40") && $get_current_conversation_f_image_thumb40 != ""){
+										echo"
+										<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_f_user_id&amp;l=$l\"><img src=\"$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_thumb40\" alt=\"$get_current_conversation_f_image_thumb40\" class=\"talk_messages_from_user_image\" /></a>
+										";
+									}
 								}
 								else{
-								echo"
-								<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_f_user_id&amp;l=$l\"><img src=\"_gfx/avatar_blank_40.png\" alt=\"avatar_blank_40.png\" class=\"talk_messages_from_user_image\" /></a>
-								";
+									echo"
+									<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_f_user_id&amp;l=$l\"><img src=\"_gfx/avatar_blank_40.png\" alt=\"avatar_blank_40.png\" class=\"talk_messages_from_user_image\" /></a>
+									";
 								}
 								echo"
 								</p>
@@ -325,13 +338,26 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								echo"<br />
 								";
 								// Attachment?
-								if($get_message_attachment_file != "" && file_exists("$root/$get_message_attachment_path/$get_message_attachment_file")){
-									if($get_message_attachment_type == "jpg" OR $get_message_attachment_type == "png" OR $get_message_attachment_type == "gif"){
-										echo"<img src=\"$root/$get_message_attachment_path/$get_message_attachment_file\" alt=\"$get_message_attachment_path/$get_message_attachment_file\" /><br />\n";
+								if($get_message_attachment_file != ""){
+									if(file_exists("$root/$get_message_attachment_path/$get_message_attachment_file")){
+										if($get_message_attachment_type == "jpg" OR $get_message_attachment_type == "png" OR $get_message_attachment_type == "gif"){
+											echo"
+											<img src=\"$root/$get_message_attachment_path/$get_message_attachment_file\" alt=\"$get_message_attachment_path/$get_message_attachment_file\" /><br />
+											\n";
+										}
+										else{
+											$icon = $get_message_attachment_type . "_32x32.png";
+											echo"
+											<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/$icon\" alt=\"$icon\" style=\"float: left;\"></a>
+											<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\" style=\"float: left;padding: 8px 0px 0px 8px;\">$get_message_attachment_file</a>
+											<br class=\"clear\" />";
+										}
+									}
+									else{
+										echo"<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/dialog_warning_16x16.png\" alt=\"dialog_warning_16x16.png\"> Attachment not found</a>";
 									}
 								}
-								echo"
-								$get_message_text
+								echo"$get_message_text
 								</p>
 								<!-- //Name and text -->
 							  </td>
@@ -355,23 +381,23 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								<!-- Img -->
 								<p>";
 								if($get_current_conversation_t_image_file != "" && file_exists("$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_file")){
-								if(!(file_exists("$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_thumb40")) && $get_current_conversation_t_image_thumb40 != ""){
-									// Make thumb
-									$inp_new_x = 40; // 950
-									$inp_new_y = 40; // 640
-									resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_file", "$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_thumb40");
-								}
+									if(!(file_exists("$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_thumb40")) && $get_current_conversation_t_image_thumb40 != ""){
+										// Make thumb
+										$inp_new_x = 40; // 950
+										$inp_new_y = 40; // 640
+										resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_file", "$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_thumb40");
+									}
 
-								if(file_exists("$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_thumb40") && $get_current_conversation_t_image_thumb40 != ""){
-									echo"
-									<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_t_user_id&amp;l=$l\"><img src=\"$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_thumb40\" alt=\"$get_current_conversation_t_image_thumb40\" class=\"talk_messages_from_user_image\" /></a>
-									";
-								}
+									if(file_exists("$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_thumb40") && $get_current_conversation_t_image_thumb40 != ""){
+										echo"
+										<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_t_user_id&amp;l=$l\"><img src=\"$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_thumb40\" alt=\"$get_current_conversation_t_image_thumb40\" class=\"talk_messages_from_user_image\" /></a>
+										";
+									}
 								}
 								else{
-								echo"
-								<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_t_user_id&amp;l=$l\"><img src=\"_gfx/avatar_blank_40.png\" alt=\"avatar_blank_40.png\" class=\"talk_messages_from_user_image\" /></a>
-								";
+									echo"
+									<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_t_user_id&amp;l=$l\"><img src=\"_gfx/avatar_blank_40.png\" alt=\"avatar_blank_40.png\" class=\"talk_messages_from_user_image\" /></a>
+									";
 								}
 								echo"
 								</p>
@@ -397,9 +423,23 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								echo"<br />
 								";
 								// Attachment?
-								if($get_message_attachment_file != "" && file_exists("$root/$get_message_attachment_path/$get_message_attachment_file")){
-									if($get_message_attachment_type == "jpg" OR $get_message_attachment_type == "png" OR $get_message_attachment_type == "gif"){
-										echo"<img src=\"$root/$get_message_attachment_path/$get_message_attachment_file\" alt=\"$get_message_attachment_path/$get_message_attachment_file\" /><br />\n";
+								if($get_message_attachment_file != ""){
+									if(file_exists("$root/$get_message_attachment_path/$get_message_attachment_file")){
+										if($get_message_attachment_type == "jpg" OR $get_message_attachment_type == "png" OR $get_message_attachment_type == "gif"){
+											echo"
+											<img src=\"$root/$get_message_attachment_path/$get_message_attachment_file\" alt=\"$get_message_attachment_path/$get_message_attachment_file\" /><br />
+											\n";
+										}
+										else{
+											$icon = $get_message_attachment_type . "_32x32.png";
+											echo"
+											<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/$icon\" alt=\"$icon\" style=\"float: left;\"></a>
+											<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\" style=\"float: left;padding: 8px 0px 0px 8px;\">$get_message_attachment_file</a>
+											<br class=\"clear\" />";
+										}
+									}
+									else{
+										echo"<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/dialog_warning_16x16.png\" alt=\"dialog_warning_16x16.png\"> Attachment not found</a>";
 									}
 								}
 								echo"
@@ -428,6 +468,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					<!-- Get new message script -->
 						<script language=\"javascript\" type=\"text/javascript\">
 							\$(document).ready(function () {
+								var scrolled = false;
 								\$('#messages').scrollTop(\$('#messages')[0].scrollHeight);
 								function get_messages(){
 									var variable_last_message_id = \$('#variable_last_message_id').html(); 
@@ -442,13 +483,18 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
                     									\$(\"#messages\").append(html);
 
 											// We want to scroll to bottom if user is not scrolling
-											\$('#messages').scrollTop(\$('#messages')[0].scrollHeight);
-											
-											
+											if(!scrolled){
+												\$('#messages').scrollTop(\$('#messages')[0].scrollHeight);
+              										}
               									}
 									});
 								}
-								setInterval(get_messages,10000);
+								setInterval(get_messages,5000);
+
+								// Has the user scrolled?
+								\$(\"#messages\").on('scroll', function(){
+									scrolled=true;
+								});
          				   		});
 						</script>
 					<!-- //Get new message script -->
@@ -521,53 +567,31 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 				<!-- New message form -->
-					<!-- Focus -->
-						<script>
-						\$(document).ready(function(){
-							\$('[name=\"inp_text\"]').focus();
-						});
+					<div id=\"new_message_form\">
+						<!-- Focus -->
+							<script>
+							\$(document).ready(function(){
+								\$('[name=\"inp_text\"]').focus();
+							});
 						</script>
-					<!-- //Focus -->
-
-					<form method=\"POST\" action=\"dm_upload_file_as_attachment.php?t_user_id=$t_user_id&amp;l=$l&amp;process=1\" id=\"dm_upload_file_as_attachment_form_data\" enctype=\"multipart/form-data\">
-						
-					<p>
-					<input type=\"text\" name=\"inp_text\" id=\"inp_text\" value=\"\" size=\"25\" style=\"width: 80%;\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />
-					<input type=\"hidden\" name=\"inp_attachment_file\" id=\"inp_attachment_file\" value=\"$inp_file\" size=\"25\" />
+						<!-- //Focus -->
 					
-					";
-					if($inp_thumb != ""){
-						if(file_exists("$root/_uploads/talk/images/$get_current_conversation_id/$inp_thumb")){
-							echo"
-							<span id=\"dm_upload_file_as_attachment_preview\">
-							<img src=\"$root/_uploads/talk/images/$get_current_conversation_id/$inp_thumb\" alt=\"$inp_thumb\" style=\"float: left;margin: -4px 0px 0px 0px;\" />
-							</span>
-							<span  id=\"dm_upload_file_as_attachment_form\" style=\"visibility:hidden;\">";
-						}
-						else{
-							// echo"<a href=\"$root/_uploads/talk/images/$get_current_conversation_id/$inp_thumb\" style=\"color:red;\">Thumb not found</a>\n";
-						}
-					}
-					else{
-						echo"
-						<span id=\"dm_upload_file_as_attachment_form\">
-						";
-					}
-					echo"
-						<input type=\"file\" name=\"inp_file\" id=\"inp_file\" class=\"inputfile\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />
-						<label for=\"inp_file\"></label>
-						<input type=\"submit\" value=\"Upload\" style=\"display:none;\" />
-						</span>
-
-						<a href=\"#\" id=\"emojies_selector_toggle\" class=\"btn_default\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />:)</a>\n";
+						
+						<form>
+						<p>
+						<input type=\"text\" name=\"inp_text\" id=\"inp_text\" value=\"\" size=\"25\" style=\"width: 80%;\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />
+						<a href=\"#\" id=\"emojies_selector_toggle\" class=\"btn_default\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />&#128578;</a>
+						\n";
 						if($talkWebcameraChatActiveDmsSav == "1"){
-							echo"<a href=\"#\" id=\"webcamera_toggle\" class=\"btn_default\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />📷</a>\n";
+							echo"<a href=\"#\" id=\"webcamera_toggle\" class=\"btn_default\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />&#128247;</a>\n";
 						}
 						echo"	
+						<a href=\"#\" id=\"attachment_selector_toggle\" class=\"btn_default\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />&#128206;</a>
 						<a href=\"#\" id=\"inp_message_send\" class=\"btn_default\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />$l_send</a>
 						</p>
-					</form>
-						<!-- emojies and webcamera selector_toggle -->
+						</form>
+					</div>	
+						<!-- emojies, attachment and webcamera selector_toggle -->
 							<script>
 								$(document).ready(function(){
 									$(\"#emojies_selector_toggle\").click(function () {
@@ -583,9 +607,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 											}
 										}); 
 									});
+									$(\"#attachment_selector_toggle\").click(function () {
+										\$(\"#attachment_selector\").toggle();	
+										\$(\"#attachment_selector\").css('visibility', 'visible');
+									});
 								});
 							</script>
-						<!-- //emojies and webcamera selector toggle -->
+						<!-- //emojies, attachment and webcamera selector toggle -->
 
 						<!-- Emojies -->
 							<div id=\"emojies_selector\">
@@ -770,22 +798,57 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 						<!-- //Emojies -->
 						
+						<!-- Attachment -->";
+
+							if(isset($_GET['ft_attachment']) && isset($_GET['fm_attachment'])){
+								$ft_attachment = $_GET['ft_attachment'];
+								$ft_attachment = output_html($ft_attachment);
+
+								$fm_attachment = $_GET['fm_attachment'];
+								$fm_attachment = output_html($fm_attachment);
+								$fm_attachment = str_replace("_", " ", $fm_attachment);
+								$fm_attachment = ucfirst($fm_attachment);
+								echo"
+								<div id=\"attachment_selector\" style=\"display: block;\">X
+									<div class=\"$ft_attachment\"><span>$fm_attachment</span></div>
+								";
+							}
+							else{
+								echo"
+								<div id=\"attachment_selector\">
+								";
+							}
+							echo"
+								<!-- New attachment upload -->
+									<form method=\"POST\" action=\"dm_upload_file_as_attachment.php?t_user_id=$t_user_id&amp;l=$l&amp;process=1\" id=\"dm_upload_file_as_attachment_form_data\" enctype=\"multipart/form-data\">
+					
+										<p><b>$l_new_file</b> (jpg, png, gif, docx, pdf, txt)<br />
+										<input type=\"file\" name=\"inp_file\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />
+										<input type=\"submit\" value=\"$l_upload\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />
+										</p>
+									</form>
+						
+								<!-- //New attachment upload -->
+							</div>
+
+
+							<!-- On file selected send form -->
+								<script type=\"text/javascript\">
+								\$(document).ready(function(){
+									\$('input[type=\"file\"]').change(function(){
+            									\$(\"#dm_upload_file_as_attachment_form_data\").submit();
+									});
+								});
+								</script>
+							<!-- //On file selected send form -->
+
+
+						<!-- //Attachment -->
+						
 					<div style=\"height: 5px;\"></div>
 
-
-					<!-- On file selected send form -->
-						<script type=\"text/javascript\">
-							\$(document).ready(function(){
-								\$('input[type=\"file\"]').change(function(){
-            								\$(\"#dm_upload_file_as_attachment_form_data\").submit();
-								});
-							});
-						</script>
-					<!-- //On file selected send form -->
-
-
 					<!-- Send new message script -->
-							<script id=\"source\" language=\"javascript\" type=\"text/javascript\">
+						<script id=\"source\" language=\"javascript\" type=\"text/javascript\">
 							\$(document).ready(function () {
 
 							\$('#inp_text').keypress(function (e) {
@@ -837,7 +900,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					<!-- //Send new message script -->
 
 				<!-- //New message form -->
-				
 				";
 			} // action == ""
 			elseif($action == "delete_message"){
