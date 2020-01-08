@@ -1,7 +1,7 @@
 <?php
 $l_accept = "Aksepterer";
 $l_added = "Lagt til";
-$l_add_member = "Add member";
+$l_add_member = "Legg til medlemmer";
 $l_admin = "Admin";
 $l_alias = "Alias";
 $l_are_you_sure = "Er du sikker?";

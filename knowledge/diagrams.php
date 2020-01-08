@@ -195,6 +195,7 @@ else{
 					<p>
 					<a href=\"new_diagram.php?space_id=$space_id&amp;page_id=$page_id&amp;l=$l\" class=\"btn_default\">$l_new_diagram</a>
 					</p>
+					<div style=\"height: 10px;\"></div>
 
 					<table class=\"hor-zebra\">
 					 <thead>
