@@ -1,4 +1,5 @@
 <?php
+$l_contents = "Innhold";
 $l_favorites = "Favoritter";
 $l_has_requested_membersip_lowercase = "har bedt om medlemskap.";
 $l_history = "Historie";
@@ -12,6 +13,7 @@ $l_popular = "Popul&aelig;r";
 $l_recently_updated = "Nylig oppdatert";
 $l_request_membership = "Be om medlemsskap";
 $l_spaces = "Omr&aring;der";
+$l_table_of_contents = "Innhold";
 $l_to_see_your_favorites_lowercase = "for &aring; se dine favoritter.";
 $l_unique_hits_lowercase = "unike treff";
 $l_updated = "Oppdatert";

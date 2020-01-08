@@ -350,6 +350,7 @@ elseif($mode == "edit_language_file"){
 			// Current file - Get data between brackets
 			$translated_file = file_get_contents("_translations/site/$language/$folder/$file.php");
 			preg_match_all('/"([^"]+)"/', $translated_file, $translations);
+			preg_match_all('/\$[A-Za-z0-9-_]+/', $translated_file, $variable_names);
 
 
 			$x = 0;
@@ -371,12 +372,14 @@ elseif($mode == "edit_language_file"){
 				$inp_name = str_replace('$', "", $get_site_translation_string_variable);
 
 				// Translated value
+				$found_translation = 0;
 				$inp_site_translation_string_value = "";
-				if(isset($translations[0][$x])){
-					$inp_site_translation_string_value = $translations[0][$x];
-				}
-				else{
-					echo"<span style=\"color:red;\">Warning! There are strings that are not translated!</span>\n";
+				for($y=0;$y<sizeof($variable_names[0]);$y++){
+					$variable_name = $variable_names[0][$y];
+					if($variable_name == "$get_site_translation_string_variable"){
+						$found_translation = 1;
+						$inp_site_translation_string_value = $translations[0][$y];
+					}
 				}
 				$inp_site_translation_string_value = str_replace('"', "", $inp_site_translation_string_value);
 				$inp_site_translation_string_value_mysql = quote_smart($link, $inp_site_translation_string_value);

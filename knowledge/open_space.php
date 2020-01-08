@@ -321,7 +321,7 @@ else{
 			<!-- //Text -->
 
 			<!-- Table of contents -->
-				<h2>$l_table_of_contents</h2>
+				<h2>$l_contents</h2> 
 				<div style=\"height: 10px;\"></div>
 				<table class=\"hor-zebra\">
 				 <thead>
