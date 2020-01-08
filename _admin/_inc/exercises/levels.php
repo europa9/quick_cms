@@ -401,7 +401,7 @@ elseif($action == "translations"){
 		 <thead>
 		  <tr>
 		   <th scope=\"col\">
-			<span>Name</span>
+			<span>Title</span>
 		   </th>
 		   <th scope=\"col\">
 			<span>Translation</span>

@@ -111,10 +111,16 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 		$inp_from_hour = $_POST['inp_from_hour'];
 		$inp_from_hour = output_html($inp_from_hour);
+		if(!(is_numeric($inp_from_hour))){
+			echo"From hour not numeric!"; die;
+		}
 		$inp_from_hour_mysql = quote_smart($link, $inp_from_hour);
 
 		$inp_from_minute = $_POST['inp_from_minute'];
 		$inp_from_minute = output_html($inp_from_minute);
+		if(!(is_numeric($inp_from_minute))){
+			echo"From minute not numeric!"; die;
+		}
 		$inp_from_minute_mysql = quote_smart($link, $inp_from_minute);
 
 		$inp_from_datetime = "$inp_from_year-$inp_from_month-$inp_from_day $inp_from_hour:$inp_from_minute:00";
@@ -139,10 +145,16 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 		$inp_to_hour = $_POST['inp_to_hour'];
 		$inp_to_hour = output_html($inp_to_hour);
+		if(!(is_numeric($inp_to_hour))){
+			echo"To hour numeric!"; die;
+		}
 		$inp_to_hour_mysql = quote_smart($link, $inp_to_hour);
 
 		$inp_to_minute = $_POST['inp_to_minute'];
 		$inp_to_minute = output_html($inp_to_minute);
+		if(!(is_numeric($inp_to_minute))){
+			echo"From to_minute numeric!"; die;
+		}
 		$inp_to_minute_mysql = quote_smart($link, $inp_to_minute);
 
 		$inp_to_datetime = "$inp_to_year-$inp_to_month-$inp_to_day $inp_to_hour:$inp_to_minute:00";

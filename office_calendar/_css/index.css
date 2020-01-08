@@ -1,4 +1,15 @@
-/*- Calendar ---------------------------------------- */
+/*- Calendar left side, Upcoming events right side ---------------------------------------- */
+td.td_calendar_a_side{
+	vertical-align: top;
+}
+td.td_upcoming_events_b_side{
+	vertical-align: top;
+	width: 48%;
+	padding-right: 4%;
+}
+
+/*- Calendar left side ------------------------------------------------------------ */
+
 table.equipment_calendar {
   width: 100%;
   text-align: left;
@@ -56,4 +67,15 @@ div.calendar_day_number > a:hover{
 div.calendar_event{
 	border-radius: 8px;
 	padding: 0px 6px 0px 6px; 
+}
+
+
+
+
+/*- Upcoming events right side ------------------------------------------------------------ */
+#Upcoming_events_right_side{
+  display: inline-block;
+  vertical-align: top;
+  width: 50%;
+  padding: 1rem;
 }
