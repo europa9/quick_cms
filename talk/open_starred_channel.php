@@ -373,7 +373,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					
 
 					<p>
-					<input type=\"text\" name=\"inp_text\" id=\"inp_text\" value=\"\" size=\"25\" style=\"width: 85%;\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />
+					<input type=\"text\" name=\"inp_text\" id=\"inp_text\" value=\"\" size=\"25\" style=\"width: 80%;\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />
 					<a href=\"#\" id=\"emojies_selector_toggle\" class=\"btn_default\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />:)</a>
 					<a href=\"#\" id=\"attachment_selector_toggle\" class=\"btn_default\" tabindex=\""; $tabindex = $tabindex+1; echo"$tabindex\" />&#128206;</a>
 
