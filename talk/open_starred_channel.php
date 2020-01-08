@@ -208,7 +208,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 													";
 												}
 												else{
-													echo"<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/dialog_warning_16x16.png\" alt=\"dialog_warning_16x16.png\"> Attachment not found</a>";
+													echo"
+													<a href=\"dm.php?t_user_id=$get_message_from_user_id&amp;l=$l\"><img src=\"_gfx/avatar_blank_40.png\" alt=\"avatar_blank_40.png\" class=\"talk_messages_from_user_image\" /></a>
+													";
 												}
 											}
 											else{

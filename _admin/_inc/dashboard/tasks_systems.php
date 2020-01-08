@@ -177,8 +177,6 @@ elseif($action == "new_system"){
 					toolbar: 'formatselect | bold italic strikethrough forecolor backcolor permanentpen formatpainter | link image media pageembed | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat | addcomment',
 					image_advtab: true,
 					content_css: [
-						'//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
-						'//www.tiny.cloud/css/codepen.min.css'
 					],
 					link_list: [
 						{ title: 'My page 1', value: 'http://www.tinymce.com' },
@@ -373,8 +371,6 @@ elseif($action == "edit_system"){
 					toolbar: 'formatselect | bold italic strikethrough forecolor backcolor permanentpen formatpainter | link image media pageembed | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat | addcomment',
 					image_advtab: true,
 					content_css: [
-						'//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
-						'//www.tiny.cloud/css/codepen.min.css'
 					],
 					link_list: [
 						{ title: 'My page 1', value: 'http://www.tinymce.com' },
@@ -557,8 +553,6 @@ elseif($action == "new_system_part"){
 					toolbar: 'formatselect | bold italic strikethrough forecolor backcolor permanentpen formatpainter | link image media pageembed | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat | addcomment',
 					image_advtab: true,
 					content_css: [
-						'//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
-						'//www.tiny.cloud/css/codepen.min.css'
 					],
 					link_list: [
 						{ title: 'My page 1', value: 'http://www.tinymce.com' },
@@ -779,8 +773,6 @@ elseif($action == "edit_system_part"){
 					toolbar: 'formatselect | bold italic strikethrough forecolor backcolor permanentpen formatpainter | link image media pageembed | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat | addcomment',
 					image_advtab: true,
 					content_css: [
-						'//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
-						'//www.tiny.cloud/css/codepen.min.css'
 					],
 					link_list: [
 						{ title: 'My page 1', value: 'http://www.tinymce.com' },
