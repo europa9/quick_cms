@@ -117,6 +117,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			// Make text safe
 			$inp_text = output_html($inp_text);
+			$inp_text = str_replace(":amp;:", "&amp;", $inp_text);
 
 			// Replace emoji with html character
 			$query_emojies = "SELECT emoji_id, emoji_main_category_id, emoji_sub_category_id, emoji_title, emoji_replace_a, emoji_code, emoji_char, emoji_char_output_html, emoji_source_path, emoji_source_file, emoji_source_ext, emoji_skin_tone, emoji_created_by_user_id, emoji_created_datetime, emoji_updated_by_user_id, emoji_updated_datetime, emoji_used_count, emoji_last_used_datetime FROM $t_emojies_index";
@@ -188,6 +189,14 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				// Replace
 				$inp_text = str_replace(":emoji_id$get_emoji_id:", "$get_emoji_char", $inp_text);
 			}
+
+			// Add links
+			// $inp_text = str_replace("&amp;", "§§", $inp_text);
+			// $inp_text = str_replace("&", "§", $inp_text);
+			$inp_text = preg_replace(
+            					  "/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/",
+          				 	   "<a href=\"\\0\">\\0</a>", 
+         					     $inp_text);
 		}
 		else{
 			$inp_text = "";

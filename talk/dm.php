@@ -868,6 +868,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							function myfunc () {
 								// getting the value that user typed
        								var inp_text = $(\"#inp_text\").val();
+								inp_text = inp_text.replace(\"&\", \":amp;:\");
        								var inp_attachment_file = $(\"#inp_attachment_file\").val();
  								// forming the queryString
 								var data = 'l=$l&t_user_id=$get_current_conversation_t_user_id&inp_attachment_file='+ inp_attachment_file + '&inp_text='+ inp_text;

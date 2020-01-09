@@ -641,6 +641,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							function myfunc () {
 								// getting the value that user typed
        								var inp_text = $(\"#inp_text\").val();
+								inp_text = inp_text.replace(\"&\", \":amp;:\");
+
  								// forming the queryString
 								var data            = 'l=$l&starred_channel_id=$get_current_starred_channel_id&inp_text='+ inp_text;
          
