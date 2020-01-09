@@ -11,6 +11,8 @@ if(isset($_SESSION['admin_user_id'])){
 	$t_tasks_read			= $mysqlPrefixSav . "tasks_read";
 	$t_tasks_subscribers  		= $mysqlPrefixSav . "tasks_subscribers";
 	$t_tasks_history		= $mysqlPrefixSav . "tasks_history";
+	$t_tasks_last_used_systems	= $mysqlPrefixSav . "tasks_last_used_systems";
+	$t_tasks_last_used_projects	= $mysqlPrefixSav . "tasks_last_used_projects";
 
 
 	mysqli_query($link,"DROP TABLE IF EXISTS $t_tasks_index") or die(mysqli_error());
@@ -22,6 +24,8 @@ if(isset($_SESSION['admin_user_id'])){
 	mysqli_query($link,"DROP TABLE IF EXISTS $t_tasks_read") or die(mysqli_error());
 	mysqli_query($link,"DROP TABLE IF EXISTS $t_tasks_subscribers") or die(mysqli_error());
 	mysqli_query($link,"DROP TABLE IF EXISTS $t_tasks_history") or die(mysqli_error());
+	mysqli_query($link,"DROP TABLE IF EXISTS $t_tasks_last_used_systems") or die(mysqli_error());
+	mysqli_query($link,"DROP TABLE IF EXISTS $t_tasks_last_used_projects") or die(mysqli_error());
 
 
 $query = "SELECT * FROM $t_tasks_index LIMIT 1";
@@ -262,6 +266,33 @@ else{
 }
 
 
+$query = "SELECT * FROM $t_tasks_last_used_systems LIMIT 1";
+$result = mysqli_query($link, $query);
+if($result !== FALSE){
+}
+else{
+	mysqli_query($link, "CREATE TABLE $t_tasks_last_used_systems(
+	   last_used_system_id INT NOT NULL AUTO_INCREMENT,
+	   PRIMARY KEY(last_used_system_id), 
+	   last_used_system_user_id INT,
+	   last_used_system_system_id INT
+	)")
+	or die(mysqli_error($link));
+}
+
+$query = "SELECT * FROM $t_tasks_last_used_projects LIMIT 1";
+$result = mysqli_query($link, $query);
+if($result !== FALSE){
+}
+else{
+	mysqli_query($link, "CREATE TABLE $t_tasks_last_used_projects(
+	   last_used_project_id INT NOT NULL AUTO_INCREMENT,
+	   PRIMARY KEY(last_used_project_id), 
+	   last_used_project_user_id INT,
+	   last_used_project_project_id INT
+	)")
+	or die(mysqli_error($link));
+}
 
 }
 ?>

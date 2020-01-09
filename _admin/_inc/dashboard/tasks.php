@@ -27,6 +27,9 @@ $t_tasks_read				= $mysqlPrefixSav . "tasks_read";
 $t_tasks_subscriptions_to_new_tasks 	= $mysqlPrefixSav . "tasks_subscriptions_to_new_tasks";
 $t_tasks_history		 	= $mysqlPrefixSav . "tasks_history";
 
+$t_tasks_last_used_systems	= $mysqlPrefixSav . "tasks_last_used_systems";
+$t_tasks_last_used_projects	= $mysqlPrefixSav . "tasks_last_used_projects";
+
 $t_users_notifications 		= $mysqlPrefixSav . "users_notifications";
 
 
@@ -286,6 +289,10 @@ if($action == ""){
 }
 elseif($action == "new_task"){
 	if($process == 1){
+		// me
+		$my_user_id = $_SESSION['user_id'];
+		$my_user_id = output_html($my_user_id);
+		$my_user_id_mysql = quote_smart($link, $my_user_id);
 
 		$inp_title = $_POST['inp_title'];
 		$inp_title = output_html($inp_title);
@@ -411,6 +418,23 @@ elseif($action == "new_task"){
 		$inp_system_title_mysql = quote_smart($link, $get_system_title);
 
 
+		// Last used system
+		$query = "SELECT last_used_system_id, last_used_system_user_id, last_used_system_system_id FROM $t_tasks_last_used_systems WHERE last_used_system_user_id=$my_user_id_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_last_used_system_id, $get_last_used_system_user_id, $get_last_used_system_system_id) = $row;
+		if($get_last_used_system_id == ""){
+			mysqli_query($link, "INSERT INTO $t_tasks_last_used_systems 
+			(last_used_system_id, last_used_system_user_id, last_used_system_system_id) 
+			VALUES 
+			(NULL, $my_user_id_mysql, $inp_system_id_mysql)") or die(mysqli_error($link));
+		}
+		else{
+			if($get_last_used_system_system_id != "$inp_system_id"){
+				$result = mysqli_query($link, "UPDATE $t_tasks_last_used_systems  SET last_used_system_system_id=$inp_system_id_mysql WHERE last_used_system_id=$get_last_used_system_id");
+			}
+		}
+
 
 		// Project id
 		$inp_project_id = $_POST['inp_project_id'];
@@ -425,11 +449,26 @@ elseif($action == "new_task"){
 		$inp_project_title_mysql = quote_smart($link, $get_project_title);
 
 
+		// Last used project
+		$query = "SELECT last_used_project_id, last_used_project_user_id, last_used_project_project_id FROM $t_tasks_last_used_projects WHERE last_used_project_user_id=$my_user_id_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_last_used_project_id, $get_last_used_project_user_id, $get_last_used_project_project_id) = $row;
+		if($get_last_used_project_id == ""){
+			mysqli_query($link, "INSERT INTO $t_tasks_last_used_projects 
+			(last_used_project_id, last_used_project_user_id, last_used_project_project_id) 
+			VALUES 
+			(NULL, $my_user_id_mysql, $inp_project_id_mysql)") or die(mysqli_error($link));
+		}
+		else{
+			if($get_last_used_project_project_id != "$inp_project_id"){
+				$result = mysqli_query($link, "UPDATE $t_tasks_last_used_projects  SET last_used_project_project_id=$inp_project_id_mysql WHERE last_used_project_id=$get_last_used_project_id");
+			}
+		}
+
+
 
 		// Creator
-		$my_user_id = $_SESSION['user_id'];
-		$my_user_id = output_html($my_user_id);
-		$my_user_id_mysql = quote_smart($link, $my_user_id);
 		$query = "SELECT user_id, user_email, user_name, user_alias, user_rank FROM $t_users WHERE user_id=$my_user_id_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
@@ -909,6 +948,27 @@ elseif($action == "new_task"){
 		</script>
 		<!-- //Assign to search script -->
 
+		";
+
+		// me
+		$my_user_id = $_SESSION['user_id'];
+		$my_user_id = output_html($my_user_id);
+		$my_user_id_mysql = quote_smart($link, $my_user_id);
+
+		// Last used system
+		$query = "SELECT last_used_system_id, last_used_system_user_id, last_used_system_system_id FROM $t_tasks_last_used_systems WHERE last_used_system_user_id=$my_user_id_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_last_used_system_id, $get_last_used_system_user_id, $get_last_used_system_system_id) = $row;	
+	
+		// Last used project
+		$query = "SELECT last_used_project_id, last_used_project_user_id, last_used_project_project_id FROM $t_tasks_last_used_projects WHERE last_used_project_user_id=$my_user_id_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_last_used_project_id, $get_last_used_project_user_id, $get_last_used_project_project_id) = $row;
+
+		echo"
+
 
 		<p>System: <a href=\"index.php?open=$open&amp;page=tasks_systems&amp;action=new_system&amp;l=$l\" target=\"_blank\">New</a><br />
 		<select name=\"inp_system_id\">
@@ -917,7 +977,7 @@ elseif($action == "new_task"){
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
 			list($get_system_id, $get_system_title) = $row;
-			echo"			<option value=\"$get_system_id\">$get_system_title</option>\n";
+			echo"			<option value=\"$get_system_id\""; if($get_system_id == "$get_last_used_system_id"){ echo" selected=\"selected\""; } echo">$get_system_title</option>\n";
 		}
 		echo"
 		</select>
@@ -930,7 +990,7 @@ elseif($action == "new_task"){
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
 			list($get_project_id, $get_project_title) = $row;
-			echo"			<option value=\"$get_project_id\">$get_project_title</option>\n";
+			echo"			<option value=\"$get_project_id\""; if($get_project_id == "$get_last_used_project_id"){ echo" selected=\"selected\""; } echo">$get_project_title</option>\n";
 		}
 		echo"
 		</select>
@@ -1013,6 +1073,7 @@ elseif($action == "open_task"){
 
 		<!-- Menu -->
 			<p>
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_task&amp;l=$l\" class=\"btn_default\">New task</a>
 			<a href=\"index.php?open=$open&amp;page=$page&amp;action=edit_task&amp;task_id=$get_current_task_id&amp;l=$l\" class=\"btn_default\">Edit task</a>
 			<a href=\"index.php?open=$open&amp;page=$page&amp;action=delete_task&amp;task_id=$get_current_task_id&amp;l=$l\" class=\"btn_default\">Delete task</a>
 			<a href=\"index.php?open=$open&amp;page=$page&amp;action=archive_task&amp;task_id=$get_current_task_id&amp;l=$l\" class=\"btn_default\">Archive task</a>
