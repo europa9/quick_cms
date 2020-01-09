@@ -148,10 +148,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				 <tbody>";
 	
 				$time = time();
-				$query = "SELECT event_id, event_user_id, event_user_name, event_location_id, event_location_title, event_equipment_id, event_equipment_title, event_text, event_bg_color, event_text_color, event_from_datetime, event_from_time, event_from_day, event_from_month, event_from_year, event_from_hour, event_from_minute, event_to_datetime, event_to_time, event_to_day, event_to_month, event_to_year, event_to_hour, event_to_minute FROM $t_office_calendar_events WHERE event_from_time > '$time' ORDER BY event_from_datetime ASC";
+				$query = "SELECT event_id, event_user_id, event_user_name, event_location_id, event_location_title, event_equipment_id, event_equipment_title, event_text, event_bg_color, event_text_color, event_from_datetime, event_from_time, event_from_day, event_from_month, event_from_year, event_from_hour, event_from_minute, event_from_saying_date_time, event_to_datetime, event_to_time, event_to_day, event_to_month, event_to_year, event_to_hour, event_to_minute, event_to_saying_date_time FROM $t_office_calendar_events WHERE event_from_time > '$time' ORDER BY event_from_datetime ASC";
 				$result = mysqli_query($link, $query);
 				while($row = mysqli_fetch_row($result)) {
-					list($get_event_id, $get_event_user_id, $get_event_user_name, $get_event_location_id, $get_event_location_title, $get_event_equipment_id, $get_event_equipment_title, $get_event_text, $get_event_bg_color, $get_event_text_color, $get_event_from_datetime, $get_event_from_time, $get_event_from_day, $get_event_from_month, $get_event_from_year, $get_event_from_hour, $get_event_from_minute, $get_event_to_datetime, $get_event_to_time, $get_event_to_day, $get_event_to_month, $get_event_to_year, $get_event_to_hour, $get_event_to_minute) = $row;
+					list($get_event_id, $get_event_user_id, $get_event_user_name, $get_event_location_id, $get_event_location_title, $get_event_equipment_id, $get_event_equipment_title, $get_event_text, $get_event_bg_color, $get_event_text_color, $get_event_from_datetime, $get_event_from_time, $get_event_from_day, $get_event_from_month, $get_event_from_year, $get_event_from_hour, $get_event_from_minute, $get_event_from_saying_date_time, $get_event_to_datetime, $get_event_to_time, $get_event_to_day, $get_event_to_month, $get_event_to_year, $get_event_to_hour, $get_event_to_minute, $get_event_to_saying_date_time) = $row;
 
 					// Style
 					if(isset($style) && $style == ""){
@@ -161,50 +161,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						$style = "";
 					}
 
-					// Month
-
-					$event_from_month = "x";
-					if($get_event_from_month == "01" OR $get_event_from_month == "1"){
-						$event_from_month = "$l_month_january";
-					}
-					elseif($get_event_from_month == "02" OR $get_event_from_month == "2"){
-						$event_from_month = "$l_month_february";
-					}
-					elseif($get_event_from_month == "03" OR $get_event_from_month == "3"){
-						$event_from_month = "$l_month_march";
-					}
-					elseif($get_event_from_month == "04" OR $get_event_from_month == "4"){
-						$event_from_month = "$l_month_april";
-					}
-					elseif($get_event_from_month == "05" OR $get_event_from_month == "5"){
-						$event_from_month = "$l_month_may";
-					}
-					elseif($get_event_from_month == "06" OR $get_event_from_month == "6"){
-						$event_from_month = "$l_month_june";
-					}
-					elseif($get_event_from_month == "07" OR $get_event_from_month == "7"){
-						$event_from_month = "$l_month_juli";
-					}
-					elseif($get_event_from_month == "08" OR $get_event_from_month == "8"){
-						$event_from_month = "$l_month_august";
-					}
-					elseif($get_event_from_month == "09" OR $get_event_from_month == "9"){
-						$event_from_month = "$l_month_september";
-					}
-					elseif($get_event_from_month == "10"){
-						$event_from_month = "$l_month_october";
-					}
-					elseif($get_event_from_month == "11"){
-						$event_from_month = "$l_month_november";
-					}
-					else{
-						$event_from_month = "$l_month_december";
-					}
-
 					echo"
 					  <tr>
 					   <td class=\"$style\">
-						<span><a href=\"edit_event.php?event_id=$get_event_id&amp;l=$l\">$get_event_from_day. $event_from_month $get_event_from_year  $get_event_from_hour:$get_event_from_minute</a></span>
+						<span><a href=\"edit_event.php?event_id=$get_event_id&amp;l=$l\">$get_event_from_saying_date_time</a></span>
 					   </td>
 					   <td class=\"$style\">
 						<span>$get_event_text";

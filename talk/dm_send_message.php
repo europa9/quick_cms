@@ -217,15 +217,18 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$get_current_conversation_encryption_key = "";
 				}
 				elseif($talkEncryptionMethodDmsSav == "openssl_encrypt(AES-128-CBC)"){
-					$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-					$randstring = '';
-					for ($i = 0; $i < 10; $i++) {
-						$randstring = $randstring . $characters[rand(0, strlen($characters))];
+					$alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+					$pass = array(); //remember to declare $pass as an array
+					$alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+					$pass = "";
+					for ($i = 0; $i < 8; $i++) {
+						$n = rand(0, $alphaLength);
+						$pass = $pass . $alphabet[$n];
 					}
-					$inp_encryption_key_mysql = quote_smart($link, $randstring);
+					$inp_encryption_key_mysql = quote_smart($link, $pass);
 
 					// Transfer
-					$get_current_conversation_encryption_key = "$randstring";
+					$get_current_conversation_encryption_key = "$pass";
 				}
 				elseif($talkEncryptionMethodDmsSav == "caesar_cipher(random)"){
 					$random = rand(0,10);
