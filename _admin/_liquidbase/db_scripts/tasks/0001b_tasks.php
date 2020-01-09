@@ -9,6 +9,8 @@ if(isset($_SESSION['admin_user_id'])){
 	$t_tasks_systems  		= $mysqlPrefixSav . "tasks_systems";
 	$t_tasks_systems_parts  	= $mysqlPrefixSav . "tasks_systems_parts";
 	$t_tasks_read			= $mysqlPrefixSav . "tasks_read";
+	$t_tasks_subscribers  		= $mysqlPrefixSav . "tasks_subscribers";
+	$t_tasks_history		= $mysqlPrefixSav . "tasks_history";
 
 
 	mysqli_query($link,"DROP TABLE IF EXISTS $t_tasks_index") or die(mysqli_error());
@@ -18,6 +20,8 @@ if(isset($_SESSION['admin_user_id'])){
 	mysqli_query($link,"DROP TABLE IF EXISTS $t_tasks_systems") or die(mysqli_error());
 	mysqli_query($link,"DROP TABLE IF EXISTS $t_tasks_systems_parts") or die(mysqli_error());
 	mysqli_query($link,"DROP TABLE IF EXISTS $t_tasks_read") or die(mysqli_error());
+	mysqli_query($link,"DROP TABLE IF EXISTS $t_tasks_subscribers") or die(mysqli_error());
+	mysqli_query($link,"DROP TABLE IF EXISTS $t_tasks_history") or die(mysqli_error());
 
 
 $query = "SELECT * FROM $t_tasks_index LIMIT 1";
@@ -31,10 +35,12 @@ else{
 	   task_title VARCHAR(200),
 	   task_text TEXT,
 	   task_status_code_id INT,
+	   task_status_code_title VARCHAR(200),
 	   task_priority_id INT,
 	   task_created_datetime DATETIME,
 	   task_created_translated VARCHAR(200),
 	   task_created_by_user_id INT,
+	   task_created_by_user_name VARCHAR(200),
 	   task_created_by_user_alias VARCHAR(200),
 	   task_created_by_user_image VARCHAR(200),
 	   task_created_by_user_email VARCHAR(200),
@@ -43,26 +49,38 @@ else{
 	   task_due_datetime DATETIME,
 	   task_due_time VARCHAR(200),
 	   task_due_translated VARCHAR(200),
+	   task_due_warning_sent INT,
 	   task_assigned_to_user_id INT,
+	   task_assigned_to_user_name VARCHAR(200),
 	   task_assigned_to_user_alias VARCHAR(200),
 	   task_assigned_to_user_image VARCHAR(200),
 	   task_assigned_to_user_email VARCHAR(200),
+	   task_hours_planned VARCHAR(20),
+	   task_hours_used VARCHAR(20),
+	   task_hours_diff_number VARCHAR(20),
+	   task_hours_diff_percentage VARCHAR(20),
 	   task_qa_datetime DATETIME,
 	   task_qa_by_user_id INT,
+	   task_qa_by_user_name VARCHAR(200),
 	   task_qa_by_user_alias VARCHAR(200),
 	   task_qa_by_user_image VARCHAR(200),
 	   task_qa_by_user_email VARCHAR(200),
 	   task_finished_datetime DATETIME,
 	   task_finished_by_user_id INT,
+	   task_finished_by_user_name VARCHAR(200),
 	   task_finished_by_user_alias VARCHAR(200),
 	   task_finished_by_user_image VARCHAR(200),
 	   task_finished_by_user_email VARCHAR(200),
 	   task_is_archived INT,
 	   task_comments INT,
 	   task_project_id INT,
+	   task_project_title VARCHAR(200),
 	   task_project_part_id INT,
+	   task_project_part_title VARCHAR(200),
 	   task_system_id INT,
-	   task_system_part_id INT)")
+	   task_system_title VARCHAR(200),
+	   task_system_part_id INT,
+	   task_system_part_title VARCHAR(200))")
 	or die(mysqli_error($link));
 }
 
@@ -162,8 +180,7 @@ else{
 	mysqli_query($link, "INSERT INTO $t_tasks_systems
 	(system_id, system_title, system_description, system_logo, system_is_active) 
 	VALUES 
-	(NULL, 'Website', 'This webside', 'website.jpg', 1),
-	(NULL, 'App', 'The app', 'app.jpg', 1)")
+	(NULL, 'Website', 'This webside', 'website.jpg', 1)")
 	or die(mysqli_error($link));
 
 
@@ -186,6 +203,7 @@ else{
 	   system_part_updated DATETIME)")
 	or die(mysqli_error($link));
 
+	/*
 	mysqli_query($link, "INSERT INTO $t_tasks_systems_parts
 	(system_part_id, system_part_system_id, system_part_title, system_part_description, system_part_logo, system_part_is_active) 
 	VALUES 
@@ -193,6 +211,7 @@ else{
 	(NULL, 2, 'Android', 'Android app', 'android.jpg', 1),
 	(NULL, 2, 'iPhone', 'iPhone app', 'iphone.jpg', 1)")
 	or die(mysqli_error($link));
+	*/
 }
 
 
@@ -209,6 +228,38 @@ else{
 	or die(mysqli_error($link));
 }
 
+
+$query = "SELECT * FROM $t_tasks_history LIMIT 1";
+$result = mysqli_query($link, $query);
+if($result !== FALSE){
+}
+else{
+	mysqli_query($link, "CREATE TABLE $t_tasks_history(
+	   history_id INT NOT NULL AUTO_INCREMENT,
+	   PRIMARY KEY(history_id), 
+	   history_task_id INT,
+	   history_updated_by_user_id INT,
+	   history_updated_by_user_name VARCHAR(200),
+	   history_updated_by_user_alias VARCHAR(200),
+	   history_updated_by_user_email VARCHAR(200),
+	   history_updated_datetime DATETIME,
+	   history_updated_datetime_saying VARCHAR(200),
+	   history_summary TEXT,
+	   history_new_title VARCHAR(200),
+	   history_new_text TEXT,
+	   history_new_status_code_id INT,
+	   history_new_status_code_title VARCHAR(200),
+	   history_new_priority_id INT,
+	   history_new_assigned_to_user_id INT,
+	   history_new_assigned_to_user_name VARCHAR(200),
+	   history_new_assigned_to_user_alias VARCHAR(200),
+	   history_new_assigned_to_user_image VARCHAR(200),
+	   history_new_assigned_to_user_email VARCHAR(200),
+	   history_new_hours_planned INT,
+	   history_new_hours_used INT
+	)")
+	or die(mysqli_error($link));
+}
 
 
 

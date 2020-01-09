@@ -287,23 +287,6 @@ $result = mysqli_query($link, $query);
 		}
 
 		
-$query = "SELECT * FROM $t_users_notifications LIMIT 1";
-$result = mysqli_query($link, $query);
-		if($result !== FALSE){
-		}
-		else{
-			mysqli_query($link, "CREATE TABLE $t_users_notifications(
-			   notification_id INT NOT NULL AUTO_INCREMENT,
-		 	  PRIMARY KEY(notification_id), 
-		 	  	notification_user_id INT,
-		 	  notification_seen INT,
-		 	  notification_url VARCHAR(200),
-		 	  notification_text VARCHAR(120),
-		  	 notification_datetime DATETIME,
-		  	 notification_emailed INT,
-		  	 notification_week INT)")
-		  	 or die(mysqli_error($link));
-		}
 
 
 $query = "SELECT * FROM $t_users_email_subscriptions LIMIT 1";
