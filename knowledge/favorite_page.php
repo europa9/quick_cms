@@ -100,7 +100,7 @@ else{
 			$query = "SELECT favorite_id, favorite_page_id, favorite_user_id, favorite_category_id, favorite_page_title, favorite_page_description FROM $t_knowledge_pages_favorites WHERE favorite_page_id=$get_current_page_id AND favorite_user_id=$my_user_id_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
-			list($get_favorite_id, $get_favorite_page_id, $get_favorite_user_id, $get_favorite_category_id, >$get_favorite_page_description) = $row;
+			list($get_favorite_id, $get_favorite_page_id, $get_favorite_user_id, $get_favorite_category_id, $get_favorite_page_description) = $row;
 			if($get_favorite_id == ""){
 
 				// Title
