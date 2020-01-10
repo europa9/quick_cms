@@ -365,28 +365,24 @@ $l_user_name:<br />
 
 <p>
 $l_language:<br />
-<select name=\"inp_user_language\">";
-$filenames = "";
-$dir = "_translations/site/";
-$dirLen = strlen($dir);
-$dp = @opendir($dir);
-while($file = @readdir($dp)) $filenames [] = $file;
-	for ($i = 0; $i < count($filenames); $i++){
-		$content = $filenames[$i];
-		$file_path = "$dir$content";
+<select name=\"inp_user_language\">\n";
+$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+$result = mysqli_query($link, $query);
+while($row = mysqli_fetch_row($result)) {
+	list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
 
-		if($file_path != "$dir." && $file_path != "$dir.."){
+
+
 			echo"			";
-			echo"<option value=\"$content\""; 
+			echo"<option value=\"$get_language_active_iso_two\""; 
 			if(isset($inp_user_language)){
-				if($content == "$inp_user_language"){ echo" selected=\"selected\""; } 
+				if($inp_user_language == "$inp_user_language"){ echo" selected=\"selected\""; } 
 			}
 			else{
-				if($content == "$get_my_user_language"){ echo" selected=\"selected\""; } 
+				if($get_language_active_iso_two == "$get_my_user_language"){ echo" selected=\"selected\""; } 
 			}
-			echo">$content</option>\n";
-		}
-	}
+			echo">$get_language_active_name</option>\n";
+}
 echo"
 </select>
 </p>

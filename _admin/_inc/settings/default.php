@@ -14,9 +14,18 @@ if(!(isset($define_access_to_control_panel))){
 }
 
 
+/*- Variables ------------------------------------------------------------------------ */
+if (isset($_GET['mode'])) {
+	$mode = $_GET['mode'];
+	$mode = stripslashes(strip_tags($mode));
+}
+else{
+	$mode = "";
+}
 
 
-if($process == "1"){
+if($mode == "save"){
+
 	$inp_website_title = $_POST['inp_website_title'];
 	$inp_website_title = output_html($inp_website_title);
 
@@ -119,42 +128,45 @@ if($process == "1"){
 	fclose($fh);
 
 
-	echo"<h1><img src=\"_design/gfx/loading_22.gif\" alt=\"loading_22.gif\" /> Saving...</h1>
+	echo"
+	<h1>$l_meta_data</h1>
+	<h2><img src=\"_design/gfx/loading_22.gif\" alt=\"loading_22.gif\" /> Saving...</h2>
 	<meta http-equiv=refresh content=\"3; url=index.php?open=settings&page=default&focus=inp_website_title&ft=success&fm=changes_saved\">
 	";
 	// header("Location: ?open=settings&page=default&focus=inp_website_title&ft=success&fm=changes_saved");
 	// exit;
 }
+if($mode == ""){
 
-$tabindex = 0;
-echo"
-<h1>$l_meta_data</h1>
-<form method=\"post\" action=\"?open=settings&amp;page=default&amp;process=1\" enctype=\"multipart/form-data\">
+	$tabindex = 0;
+	echo"
+	<h1>$l_meta_data</h1>
+	<form method=\"post\" action=\"index.php?open=settings&amp;page=default&amp;mode=save\" enctype=\"multipart/form-data\">
 				
 	
-<!-- Feedback -->
-";
-if($ft != ""){
-	if($fm == "changes_saved"){
-		$fm = "$l_changes_saved";
+	<!-- Feedback -->
+	";
+	if($ft != ""){
+		if($fm == "changes_saved"){
+			$fm = "$l_changes_saved";
+		}
+		else{
+			$fm = ucfirst($ft);
+		}
+		echo"<div class=\"$ft\"><span>$fm</span></div>";
 	}
-	else{
-		$fm = ucfirst($ft);
-	}
-	echo"<div class=\"$ft\"><span>$fm</span></div>";
-}
-echo"	
-<!-- //Feedback -->
+	echo"	
+	<!-- //Feedback -->
 
-<!-- Focus -->
+	<!-- Focus -->
 	<script>
 	\$(document).ready(function(){
 		\$('[name=\"inp_website_title\"]').focus();
 	});
 	</script>
-<!-- //Focus -->
+	<!-- //Focus -->
 
-<h2>General</h2>
+	<h2>General</h2>
 	<p>$l_website_title:<br />
 	<input type=\"text\" name=\"inp_website_title\" value=\"$configWebsiteTitleSav\" size=\"50\" tabindex=\""; $tabindex=0; $tabindex=$tabindex+1;echo"$tabindex\" /></p>
 
@@ -178,7 +190,7 @@ echo"
 	</p>
 
 
-<h2>Webmaster</h2>
+	<h2>Webmaster</h2>
 
 	<p>$l_webmaster_name:<br />
 	<input type=\"text\" name=\"inp_website_webmaster\" value=\"$configWebsiteWebmasterSav\" size=\"50\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
@@ -187,7 +199,7 @@ echo"
 	<p>$l_webmaster_email:<br />
 	<input type=\"text\" name=\"inp_website_webmaster_email\" value=\"$configWebsiteWebmasterEmailSav\" size=\"50\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
 
-<h2>URLs</h2>
+	<h2>URLs</h2>
 
 	<p>$l_site_url:<br />
 	<input type=\"text\" name=\"inp_site_url\" value=\"$configSiteURLSav\" size=\"30\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
@@ -201,7 +213,7 @@ echo"
 	<p>$l_control_panel_url:<br />
 	<input type=\"text\" name=\"inp_control_panel_url\" value=\"$configControlPanelURLSav\" size=\"50\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
 
-<h2>Statistics</h2>
+	<h2>Statistics</h2>
 
 	<p>Use gethostbyaddr<br />
 	<input type=\"radio\" name=\"inp_site_use_gethostbyaddr\" value=\"1\""; if($configSiteUseGethostbyaddrSav == "1"){ echo" checked=\"checked\""; } echo" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /> Yes
@@ -209,7 +221,7 @@ echo"
 	<input type=\"radio\" name=\"inp_site_use_gethostbyaddr\" value=\"0\""; if($configSiteUseGethostbyaddrSav == "0"){ echo" checked=\"checked\""; } echo" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /> No
 	</p>
 
-<h2>Test mode</h2>
+	<h2>Test mode</h2>
 
 	<p>Site is test-site<br />
 	<input type=\"radio\" name=\"inp_site_is_test\" value=\"1\""; if($configSiteIsTestSav == "1"){ echo" checked=\"checked\""; } echo" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /> Yes
@@ -220,7 +232,8 @@ echo"
 
 	<p><input type=\"submit\" value=\"$l_save_changes\" class=\"btn\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
 
-</form>
+	</form>
 
-";
+	";
+} // mode == ""
 ?>

@@ -34,6 +34,7 @@ echo"
 			<li";if($page == "pending_users"){echo" class=\"down\"";}echo"><a href=\"./?open=$open&amp;page=pending_users&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "pending_users"){echo" class=\"selected\"";}echo">$l_pending_users</a></li>
 			<li";if($page == "user_system"){echo" class=\"down\"";}echo"><a href=\"./?open=$open&amp;page=user_system&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "user_system"){echo" class=\"selected\"";}echo">$l_user_system</a></li>
 			<li";if($page == "user_system"){echo" class=\"down\"";}echo"><a href=\"./?open=$open&amp;page=anti_spam&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "anti_spam"){echo" class=\"selected\"";}echo">$l_anti_spam</a></li>
+			<li";if($page == "professional_settings"){echo" class=\"down\"";}echo"><a href=\"./?open=$open&amp;page=professional_settings&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "professional_settings"){echo" class=\"selected\"";}echo">Professional settings</a></li>
 		
 
 ";

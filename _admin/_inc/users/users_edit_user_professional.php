@@ -12,7 +12,6 @@ $t_users_status_comments 	= $mysqlPrefixSav . "users_status_comments";
 $t_users_status_comments_likes 	= $mysqlPrefixSav . "users_status_comments_likes";
 $t_users_status_likes 		= $mysqlPrefixSav . "users_status_likes";
 
-
 /*- Access check -------------------------------------------------- */
 if(!(isset($define_access_to_control_panel))){
 	echo"<h1>Server error 403</h1>";
