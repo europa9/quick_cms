@@ -193,6 +193,8 @@ if($action == ""){
 			if($get_task_due_warning_sent != "1" && $get_task_due_time < "$time" && $get_task_assigned_to_user_id != "0"){
 				$result_update = mysqli_query($link, "UPDATE $t_tasks_index SET task_due_warning_sent=1 WHERE task_id=$get_task_id") or die(mysqli_error($link));
 
+				$inp_notification_reference_id_text = "task_" . $get_task_id;
+				$inp_notification_reference_id_text_mysql = quote_smart($link, $inp_notification_reference_id_text);
 
 				$inp_notification_url = "$configControlPanelURLSav/index.php?open=dashboard&page=tasks&action=open_task&task_id=$get_task_id&editor_language=$editor_language&l=$l";
 				$inp_notification_url_mysql = quote_smart($link, $inp_notification_url);
@@ -202,11 +204,20 @@ if($action == ""){
 
 				$datetime = date("Y-m-d H:i:s");
 				$week = date("W");
+
+				// Check if notification already exists, if it does, then delete, then insert
+				$query = "SELECT notification_id FROM $t_users_notifications WHERE notification_user_id=$get_task_assigned_to_user_id AND notification_reference_id_text=$inp_notification_reference_id_text_mysql";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_notification_id) = $row;
+				if($get_notification_id != ""){
+					$result = mysqli_query($link, "DELETE FROM $t_users_notifications WHERE notification_id=$get_notification_id") or die(mysqli_error($link));
+				}
 					
 				mysqli_query($link, "INSERT INTO $t_users_notifications
-				(notification_id, notification_user_id, notification_seen, notification_url, notification_text, notification_datetime, notification_emailed, notification_week) 
+				(notification_id, notification_user_id, notification_reference_id_text, notification_seen, notification_url, notification_text, notification_datetime, notification_emailed, notification_week) 
 				VALUES 
-				(NULL, $get_task_assigned_to_user_id, 0, $inp_notification_url_mysql, $inp_notification_text_mysql, '$datetime', 0, $week)")
+				(NULL, $get_task_assigned_to_user_id, $inp_notification_reference_id_text_mysql, 0, $inp_notification_url_mysql, $inp_notification_text_mysql, '$datetime', 0, $week)")
 				or die(mysqli_error($link));
 			}
 		
@@ -714,6 +725,9 @@ elseif($action == "new_task"){
 
 		// Notification to assigned to user
 		if($inp_assigned_to_user_id != "$my_user_id"){
+			$inp_notification_reference_id_text = "task_" . $get_task_id;
+			$inp_notification_reference_id_text_mysql = quote_smart($link, $inp_notification_reference_id_text);
+
 			$inp_notification_url = "$configControlPanelURLSav/index.php?open=dashboard&page=tasks&action=open_task&task_id=$get_task_id&editor_language=$editor_language&l=$l";
 			$inp_notification_url_mysql = quote_smart($link, $inp_notification_url);
 
@@ -722,11 +736,20 @@ elseif($action == "new_task"){
 			$inp_notification_text_mysql = quote_smart($link, $inp_notification_text);
 
 			$week = date("W");
-					
+
+			// Check if notification already exists, if it does, then delete, then insert
+			$query = "SELECT notification_id FROM $t_users_notifications WHERE notification_user_id=$inp_assigned_to_user_id AND notification_reference_id_text=$inp_notification_reference_id_text_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_notification_id) = $row;
+			if($get_notification_id != ""){
+				$result = mysqli_query($link, "DELETE FROM $t_users_notifications WHERE notification_id=$get_notification_id") or die(mysqli_error($link));
+			}
+
 			mysqli_query($link, "INSERT INTO $t_users_notifications
-			(notification_id, notification_user_id, notification_seen, notification_url, notification_text, notification_datetime, notification_emailed, notification_week) 
+			(notification_id, notification_user_id, notification_reference_id_text, notification_seen, notification_url, notification_text, notification_datetime, notification_emailed, notification_week) 
 			VALUES 
-			(NULL, $inp_assigned_to_user_id, 0, $inp_notification_url_mysql, $inp_notification_text_mysql, '$datetime', 0, $week)")
+			(NULL, $inp_assigned_to_user_id, $inp_notification_reference_id_text_mysql, 0, $inp_notification_url_mysql, $inp_notification_text_mysql, '$datetime', 0, $week)")
 			or die(mysqli_error($link));
 		}
 
@@ -1754,6 +1777,9 @@ $inp_history_new_hours_planned_mysql , $inp_history_new_hours_used_mysql )")
 
 
 				// Notification to assigned to user
+				$inp_notification_reference_id_text = "task_" . $get_current_task_id;
+				$inp_notification_reference_id_text_mysql = quote_smart($link, $inp_notification_reference_id_text);
+
 				$inp_notification_url = "$configControlPanelURLSav/index.php?open=dashboard&page=tasks&action=open_task&task_id=$get_current_task_id&editor_language=$editor_language&l=$l";
 				$inp_notification_url_mysql = quote_smart($link, $inp_notification_url);
 	
@@ -1762,10 +1788,20 @@ $inp_history_new_hours_planned_mysql , $inp_history_new_hours_used_mysql )")
 
 				$week = date("W");
 				
+				// Check if notification already exists, if it does, then delete, then insert
+				$query = "SELECT notification_id FROM $t_users_notifications WHERE notification_user_id=$inp_assigned_to_user_id AND notification_reference_id_text=$inp_notification_reference_id_text_mysql";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_notification_id) = $row;
+				if($get_notification_id != ""){
+					$result = mysqli_query($link, "DELETE FROM $t_users_notifications WHERE notification_id=$get_notification_id") or die(mysqli_error($link));
+				}
+
+
 				mysqli_query($link, "INSERT INTO $t_users_notifications
-				(notification_id, notification_user_id, notification_seen, notification_url, notification_text, notification_datetime, notification_emailed, notification_week) 
+				(notification_id, notification_user_id, notification_reference_id_text, notification_seen, notification_url, notification_text, notification_datetime, notification_emailed, notification_week) 
 				VALUES 
-				(NULL, $inp_assigned_to_user_id, 0, $inp_notification_url_mysql, $inp_notification_text_mysql, '$datetime', 0, $week)")
+				(NULL, $inp_assigned_to_user_id, $inp_notification_reference_id_text_mysql, 0, $inp_notification_url_mysql, $inp_notification_text_mysql, '$datetime', 0, $week)")
 				or die(mysqli_error($link));
 			}
 
@@ -1825,6 +1861,9 @@ $inp_history_new_hours_planned_mysql , $inp_history_new_hours_used_mysql )")
 
 
 					// Notification to users
+					$inp_notification_reference_id_text = "task_" . $get_current_task_id;
+					$inp_notification_reference_id_text_mysql = quote_smart($link, $inp_notification_reference_id_text);
+
 					$inp_notification_url = "$configControlPanelURLSav/index.php?open=dashboard&page=tasks&action=open_task&task_id=$get_current_task_id&editor_language=$editor_language&l=$l";
 					$inp_notification_url_mysql = quote_smart($link, $inp_notification_url);
 	
@@ -1832,11 +1871,20 @@ $inp_history_new_hours_planned_mysql , $inp_history_new_hours_used_mysql )")
 					$inp_notification_text_mysql = quote_smart($link, $inp_notification_text);
 
 					$week = date("W");
+
+					// Check if notification already exists, if it does, then delete, then insert
+					$query = "SELECT notification_id FROM $t_users_notifications WHERE notification_user_id=$get_subscription_user_id AND notification_reference_id_text=$inp_notification_reference_id_text_mysql";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_notification_id) = $row;
+					if($get_notification_id != ""){
+						$result = mysqli_query($link, "DELETE FROM $t_users_notifications WHERE notification_id=$get_notification_id") or die(mysqli_error($link));
+					}
 					
 					mysqli_query($link, "INSERT INTO $t_users_notifications
-					(notification_id, notification_user_id, notification_seen, notification_url, notification_text, notification_datetime, notification_emailed, notification_week) 
+					(notification_id, notification_user_id, notification_reference_id_text, notification_seen, notification_url, notification_text, notification_datetime, notification_emailed, notification_week) 
 					VALUES 
-					(NULL, $inp_assigned_to_user_id, 0, $inp_notification_url_mysql, $inp_notification_text_mysql, '$datetime', 0, $week)")
+					(NULL, $get_subscription_user_id, $inp_notification_reference_id_text_mysql, 0, $inp_notification_url_mysql, $inp_notification_text_mysql, '$datetime', 0, $week)")
 					or die(mysqli_error($link));
 
 				} // not extra emails
