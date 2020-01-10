@@ -69,6 +69,7 @@ if($process == "1"){
 	\$configFromNameSav 		 = \"$inp_site_title\";
 
 	\$configWebsiteVersionSav	= \"1.0.0\";
+	\$configMailSendActiveSav	= \"1\";
 
 	// Webmaster
 	\$configWebsiteWebmasterSav	 = \"\";

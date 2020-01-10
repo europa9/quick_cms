@@ -41,6 +41,10 @@ if($process == "1"){
 	$inp_website_version = output_html($inp_website_version);
 
 
+	$inp_mail_send_active = $_POST['inp_mail_send_active'];
+	$inp_mail_send_active = output_html($inp_mail_send_active);
+
+
 
 	// CP URL
 	$inp_control_panel_url = $_POST['inp_control_panel_url'];
@@ -80,8 +84,9 @@ if($process == "1"){
 \$configWebsiteCopyrightSav	 = \"$inp_website_copyright\";
 \$configFromEmailSav 		 = \"$inp_from_email\";
 \$configFromNameSav 		 = \"$inp_from_name\";
-
+ 
 \$configWebsiteVersionSav	= \"$inp_website_version\";
+\$configMailSendActiveSav	= \"$inp_mail_send_active\";
 
 // Webmaster
 \$configWebsiteWebmasterSav	 = \"$inp_website_webmaster\";
@@ -113,8 +118,12 @@ if($process == "1"){
 	fwrite($fh, $update_file);
 	fclose($fh);
 
-	header("Location: ?open=settings&page=default&focus=inp_website_title&ft=success&fm=changes_saved");
-	exit;
+
+	echo"<h1><img src=\"_design/gfx/loading_22.gif\" alt=\"loading_22.gif\" /> Saving...</h1>
+	<meta http-equiv=refresh content=\"3; url=index.php?open=settings&page=default&focus=inp_website_title&ft=success&fm=changes_saved\">
+	";
+	// header("Location: ?open=settings&page=default&focus=inp_website_title&ft=success&fm=changes_saved");
+	// exit;
 }
 
 $tabindex = 0;
@@ -160,6 +169,14 @@ echo"
 
 	<p>Website version:<br />
 	<input type=\"text\" name=\"inp_website_version\" value=\"$configWebsiteVersionSav\" size=\"50\" tabindex=\""; $tabindex=$tabindex+1;echo"$tabindex\" /></p>
+
+	<p>Mail send active<br />
+	<span class=\"smal\">If turned off then the web site will never send emails. Suitable for testing and server that doesnt have internet connection.</span><br />
+	<input type=\"radio\" name=\"inp_mail_send_active\" value=\"1\""; if($configMailSendActiveSav == "1"){ echo" checked=\"checked\""; } echo" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /> Yes
+	&nbsp;
+	<input type=\"radio\" name=\"inp_mail_send_active\" value=\"0\""; if($configMailSendActiveSav == "0"){ echo" checked=\"checked\""; } echo" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /> No
+	</p>
+
 
 <h2>Webmaster</h2>
 

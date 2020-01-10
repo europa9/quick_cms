@@ -1269,7 +1269,7 @@ elseif($action == "open_task"){
 						 </thead>
 						 <tbody>
 						";
-						$query = "SELECT history_id, history_task_id, history_updated_by_user_id, history_updated_by_user_name, history_updated_datetime_saying, history_summary FROM $t_tasks_history WHERE history_task_id=$get_current_task_id";
+						$query = "SELECT history_id, history_task_id, history_updated_by_user_id, history_updated_by_user_name, history_updated_datetime_saying, history_summary FROM $t_tasks_history WHERE history_task_id=$get_current_task_id ORDER BY history_id DESC";
 						$result = mysqli_query($link, $query);
 						while($row = mysqli_fetch_row($result)) {
 							list($get_history_id, $get_history_task_id, $get_history_updated_by_user_id, $get_history_updated_by_user_name, $get_history_updated_datetime_saying, $get_history_summary) = $row;
@@ -1283,17 +1283,17 @@ elseif($action == "open_task"){
 							}
 							echo"
 							 <tr>
-							  <td class=\"$style\">
+							  <td class=\"$style\" style=\"vertical-align:top;\">
 								<span>
 								$get_history_updated_datetime_saying
 								</span>
 							  </td>
-							  <td class=\"$style\">
+							  <td class=\"$style\" style=\"vertical-align:top;\">
 								<span>
 								$get_history_updated_by_user_name
 								</span>
 							  </td>
-							  <td class=\"$style\">
+							  <td class=\"$style\" style=\"vertical-align:top;\">
 								<span>
 								$get_history_summary
 								</span>
