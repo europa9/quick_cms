@@ -459,6 +459,18 @@ else{
 							],
 							importcss_append: true,
 							height: 400,
+							table_default_styles: {
+								'width': '100%'
+							},
+							table_class_list: [
+								{title: 'None', value: ''},
+								{title: 'hor_zebra', value: 'hor_zebra'}
+							],
+							table_row_class_list: [
+								{title: 'None', value: ''},
+								{title: 'important', value: 'important'},
+								{title: 'danger', value: 'danger'}
+							],
 							file_picker_callback: function (callback, value, meta) {
 								/* Provide file and text for the link dialog */
 								if (meta.filetype === 'file') {

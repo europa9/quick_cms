@@ -35,6 +35,11 @@ echo"
 			<li";if($page == "user_system"){echo" class=\"down\"";}echo"><a href=\"./?open=$open&amp;page=user_system&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "user_system"){echo" class=\"selected\"";}echo">$l_user_system</a></li>
 			<li";if($page == "user_system"){echo" class=\"down\"";}echo"><a href=\"./?open=$open&amp;page=anti_spam&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "anti_spam"){echo" class=\"selected\"";}echo">$l_anti_spam</a></li>
 			<li";if($page == "professional_settings"){echo" class=\"down\"";}echo"><a href=\"./?open=$open&amp;page=professional_settings&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "professional_settings"){echo" class=\"selected\"";}echo">Professional settings</a></li>
+			<li";if($page == "professional_allowed_companies"){echo" class=\"down\"";}echo"><a href=\"./?open=$open&amp;page=professional_allowed_companies&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "professional_allowed_companies"){echo" class=\"selected\"";}echo">Allowed companies</a></li>
+			<li";if($page == "professional_allowed_company_locations"){echo" class=\"down\"";}echo"><a href=\"./?open=$open&amp;page=professional_allowed_company_locations&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "professional_company_locations"){echo" class=\"selected\"";}echo">Allowed c. locations</a></li>
+			<li";if($page == "professional_allowed_departments"){echo" class=\"down\"";}echo"><a href=\"./?open=$open&amp;page=professional_allowed_departments&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "professional_allowed_departments"){echo" class=\"selected\"";}echo">Allowed departments</a></li>
+			<li";if($page == "professional_allowed_positions"){echo" class=\"down\"";}echo"><a href=\"./?open=$open&amp;page=professional_allowed_positions&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "professional_allowed_positions"){echo" class=\"selected\"";}echo">Allowed positions</a></li>
+			<li";if($page == "professional_allowed_districts"){echo" class=\"down\"";}echo"><a href=\"./?open=$open&amp;page=professional_allowed_districts&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "professional_allowed_districts"){echo" class=\"selected\"";}echo">Allowed districts</a></li>
 		
 
 ";

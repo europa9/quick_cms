@@ -406,11 +406,9 @@ else{
 						tinymce.init({
 							selector: 'textarea.editor',
 							plugins: 'print preview searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern help',
-							toolbar: 'formatselect | bold italic strikethrough forecolor backcolor permanentpen formatpainter | link image media pageembed | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat | addcomment',
+							toolbar: 'formatselect | bold italic strikethrough forecolor backcolor permanentpen formatpainter | link image media pageembed | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat | addcomment | table tabledelete | tableprops tablerowprops tablecellprops | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol',
 							image_advtab: true,
 							content_css: [
-								'$root/_admin/_javascripts/tinymce_includes/fonts/lato/lato_300_300i_400_400i.css',
-								'$root/_admin/_javascripts/tinymce_includes/codepen.min.css'
 							],
 							link_list: [\n";
 
@@ -474,6 +472,18 @@ else{
 							],
 							importcss_append: true,
 							height: 400,
+							table_default_styles: {
+								'width': '100%'
+							},
+							table_class_list: [
+								{title: 'None', value: ''},
+								{title: 'hor_zebra', value: 'hor_zebra'}
+							],
+							table_row_class_list: [
+								{title: 'None', value: ''},
+								{title: 'important', value: 'important'},
+								{title: 'danger', value: 'danger'}
+							],
 							file_picker_callback: function (callback, value, meta) {
 								/* Provide file and text for the link dialog */
 								if (meta.filetype === 'file') {

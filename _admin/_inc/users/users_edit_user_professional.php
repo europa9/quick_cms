@@ -12,11 +12,21 @@ $t_users_status_comments 	= $mysqlPrefixSav . "users_status_comments";
 $t_users_status_comments_likes 	= $mysqlPrefixSav . "users_status_comments_likes";
 $t_users_status_likes 		= $mysqlPrefixSav . "users_status_likes";
 
+$t_users_professional_allowed_companies			= $mysqlPrefixSav . "users_professional_allowed_companies";
+$t_users_professional_allowed_company_locations		= $mysqlPrefixSav . "users_professional_allowed_company_locations";
+$t_users_professional_allowed_departments		= $mysqlPrefixSav . "users_professional_allowed_departments";
+$t_users_professional_allowed_positions			= $mysqlPrefixSav . "users_professional_allowed_positions";
+$t_users_professional_allowed_districts			= $mysqlPrefixSav . "users_professional_allowed_districts";
+
+
 /*- Access check -------------------------------------------------- */
 if(!(isset($define_access_to_control_panel))){
 	echo"<h1>Server error 403</h1>";
 	die;
 }
+
+/*- Config  ----------------------------------------------------------------------------- */
+include("_data/user_professional_allowed_settings.php");
 
 /*- Language ------------------------------------------------------ */
 include("_translations/admin/$l/users/t_users_edit_user.php");
@@ -202,18 +212,79 @@ echo"
 
 
 		<p>
-		Company:<br />
-		<input type=\"text\" name=\"inp_company\" size=\"25\" value=\"$get_professional_company\" /><br />
+		Company:\n";
+		if($configUsersCanOnlyUseAllowedCompaniesSav == "0"){
+			echo"<br />		<input type=\"text\" name=\"inp_company\" size=\"25\" value=\"$get_professional_company\" />\n";
+		}
+		else{
+			echo"(<a href=\"index.php?open=users&amp;page=professional_allowed_companies&amp;editor_language=$editor_language&amp;l=$l\">edit</a>)<br />
+			<select name=\"inp_company\">
+				<option value=\"\""; if($get_professional_company == ""){ echo" selected=\"selected\""; } echo">-</option>\n";
+
+			$query = "SELECT allowed_company_id, allowed_company_title, allowed_company_title_clean FROM $t_users_professional_allowed_companies ORDER BY allowed_company_title ASC";
+			$result = mysqli_query($link, $query);
+			while($row = mysqli_fetch_row($result)) {
+				list($get_row_id, $get_title, $get_title_clean) = $row;
+				echo"				";
+				echo"<option value=\"$get_title\""; if($get_professional_company == "$get_title"){ echo" selected=\"selected\""; } echo">$get_title</option>\n";
+			}
+			echo"
+			</select>
+			
+			";
+		}
+		echo"
 		</p>
 
 		<p>
-		Company location:<br />
-		<input type=\"text\" name=\"inp_company_location\" size=\"25\" value=\"$get_professional_company_location\" /><br />
+		Company location:\n";
+		if($configUsersCanOnlyUseAllowedCompanyLocationsSav == "0"){
+			echo"<br />		<input type=\"text\" name=\"inp_company_location\" size=\"25\" value=\"$get_professional_company_location\" />\n";
+		}
+		else{
+			echo"(<a href=\"index.php?open=users&amp;page=professional_allowed_company_locations&amp;editor_language=$editor_language&amp;l=$l\">edit</a>)<br />
+			<select name=\"inp_company_location\">
+				<option value=\"\""; if($get_professional_company_location == ""){ echo" selected=\"selected\""; } echo">-</option>\n";
+
+			$query = "SELECT allowed_company_location_id, allowed_company_location_title, allowed_company_location_title_clean FROM $t_users_professional_allowed_company_locations ORDER BY allowed_company_location_title ASC";
+			$result = mysqli_query($link, $query);
+			while($row = mysqli_fetch_row($result)) {
+				list($get_row_id, $get_title,  $get_title_clean) = $row;
+				echo"				";
+				echo"<option value=\"$get_title\""; if($get_professional_company_location == "$get_title"){ echo" selected=\"selected\""; } echo">$get_title</option>\n";
+			}
+			echo"
+			</select>
+			";
+		}
+		echo"
 		</p>
 
 		<p>
-		Department<br />
-		<input type=\"text\" name=\"inp_department\" size=\"25\" value=\"$get_professional_department\" /><br />
+		Department:\n";
+		if($configUsersCanOnlyUseAllowedDepartmentsSav == "0"){
+			echo"<br />		<input type=\"text\" name=\"inp_department\" size=\"25\" value=\"$get_professional_department\" />\n";
+		}
+		else{
+			echo"(<a href=\"index.php?open=users&amp;page=professional_allowed_departments&amp;editor_language=$editor_language&amp;l=$l\">edit</a>)<br />
+			<select name=\"inp_department\">
+				<option value=\"\""; if($get_professional_department == ""){ echo" selected=\"selected\""; } echo">-</option>\n";
+
+			
+			$query = "SELECT allowed_department_id, allowed_department_title, allowed_department_title_clean FROM $t_users_professional_allowed_departments ORDER BY allowed_department_title ASC";
+			$result = mysqli_query($link, $query);
+			while($row = mysqli_fetch_row($result)) {
+				list($get_row_id, $get_title,  $get_title_clean) = $row;
+				echo"				";
+				echo"<option value=\"$get_title\""; if($get_professional_department == "$get_title"){ echo" selected=\"selected\""; } echo">$get_title</option>\n";
+			}
+			echo"
+			</select>
+			
+			";
+		}
+		echo"
+		<br />
 		</p>
 
 		<p>
@@ -222,22 +293,87 @@ echo"
 		</p>
 
 		<p>
-		Position:<br />
-		<input type=\"text\" name=\"inp_position\" size=\"25\" value=\"$get_professional_position\" /><br />
+		Position:\n";
+		if($configUsersCanOnlyUseAllowedPositionsSav == "0"){
+			echo"<br />		<input type=\"text\" name=\"inp_position\" size=\"25\" value=\"$get_professional_position\" />\n";
+		}
+		else{
+			echo"(<a href=\"index.php?open=users&amp;page=professional_allowed_positions&amp;editor_language=$editor_language&amp;l=$l\">edit</a>)<br />
+			<select name=\"inp_position\">
+				<option value=\"\""; if($get_professional_position == ""){ echo" selected=\"selected\""; } echo">-</option>\n";
+
+		
+			$query = "SELECT allowed_position_id, allowed_position_title, allowed_position_title_clean, allowed_position_title_abbr, allowed_position_title_abbr_clean FROM $t_users_professional_allowed_positions ORDER BY allowed_position_title ASC";
+			$result = mysqli_query($link, $query);
+			while($row = mysqli_fetch_row($result)) {
+				list($get_row_id, $get_title,  $get_title_clean, $get_title_abbr, $get_title_abbr_clean) = $row;
+				echo"				";
+				echo"<option value=\"$get_title\""; if($get_professional_position == "$get_title"){ echo" selected=\"selected\""; } echo">$get_title</option>\n";
+			}
+			echo"
+			</select>
+			
+			";
+		}
+		echo"
+		<br />
 		</p>
 
 		<p>
-		Position abbreviation:<br />
-		<input type=\"text\" name=\"inp_position_abbr\" size=\"25\" value=\"$get_professional_position_abbr\" /><br />
+		Position abbreviation:\n";
+		if($configUsersCanOnlyUseAllowedPositionsSav == "0"){
+			echo"<br />		<input type=\"text\" name=\"inp_position_abbr\" size=\"25\" value=\"$get_professional_position_abbr\" />\n";
+		}
+		else{
+			echo"(<a href=\"index.php?open=users&amp;page=professional_allowed_positions&amp;editor_language=$editor_language&amp;l=$l\">edit</a>)<br />
+			<select name=\"inp_position_abbr\">
+				<option value=\"\""; if($get_professional_position_abbr == ""){ echo" selected=\"selected\""; } echo">-</option>\n";
+
+		
+			$query = "SELECT allowed_position_id, allowed_position_title, allowed_position_title_clean, allowed_position_title_abbr, allowed_position_title_abbr_clean FROM $t_users_professional_allowed_positions ORDER BY allowed_position_title ASC";
+			$result = mysqli_query($link, $query);
+			while($row = mysqli_fetch_row($result)) {
+				list($get_row_id, $get_title,  $get_title_clean, $get_title_abbr, $get_title_abbr_clean) = $row;
+				echo"				";
+				echo"<option value=\"$get_title_abbr\""; if($get_professional_position_abbr == "$get_title_abbr"){ echo" selected=\"selected\""; } echo">$get_title_abbr</option>\n";
+			}
+			echo"
+			</select>
+			";
+		}
+		echo"
 		</p>
 
 		<p>
-		District:<br />
-		<input type=\"text\" name=\"inp_district\" size=\"25\" value=\"$get_professional_district\" /><br />
+		District:\n";
+		if($configUsersCanOnlyUseAllowedDistrictsSav == "0"){
+			echo"<br />		<input type=\"text\" name=\"inp_district\" size=\"25\" value=\"$get_professional_district\" />\n";
+		}
+		else{
+			echo"(<a href=\"index.php?open=users&amp;page=professional_allowed_districts&amp;editor_language=$editor_language&amp;l=$l\">edit</a>)<br />
+			<select name=\"inp_district\">
+				<option value=\"\""; if($get_professional_district == ""){ echo" selected=\"selected\""; } echo">-</option>\n";
+
+			
+			$query = "SELECT allowed_district_id, allowed_district_title, allowed_district_title_clean, allowed_district_title_abbr, allowed_district_title_abbr_clean FROM $t_users_professional_allowed_districts ORDER BY allowed_district_title ASC";
+			$result = mysqli_query($link, $query);
+			while($row = mysqli_fetch_row($result)) {
+				list($get_row_id, $get_title, $get_title_clean, $get_title_abbr, $get_title_abbr_clean) = $row;
+
+				echo"				";
+				echo"<option value=\"$get_title\""; if($get_professional_district == "$get_title"){ echo" selected=\"selected\""; } echo">$get_title</option>\n";
+			}
+			echo"
+			</select>
+			
+			";
+		}
+		echo"
+		<br />
 		</p>
 
 			<p>
-			<input type=\"submit\" value=\"$l_save\" />
+			<input type=\"submit\" value=\"$l_save\" class=\"btn_default\" />
 			</p>
 
 			</form>

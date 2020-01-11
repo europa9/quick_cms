@@ -253,8 +253,9 @@ if(!(isset($_SESSION['user_id']))){
 				$headers[] = 'MIME-Version: 1.0';
 				$headers[] = 'Content-type: text/html; charset=utf-8';
 				$headers[] = "From: $configFromNameSav <" . $configFromEmailSav . ">";
-				mail($inp_email, $subject, $message, implode("\r\n", $headers));
-
+				if($configMailSendActiveSav == "1"){
+					mail($inp_email, $subject, $message, implode("\r\n", $headers));
+				}
 				
 			
 
@@ -394,8 +395,9 @@ if(!(isset($_SESSION['user_id']))){
 					$headers_mail[] = 'MIME-Version: 1.0';
 					$headers_mail[] = 'Content-type: text/html; charset=utf-8';
 					$headers_mail[] = "From: $configFromNameSav <" . $configFromEmailSav . ">";
-					mail($get_moderator_user_email, $subject, $message, implode("\r\n", $headers_mail));
-
+					if($configMailSendActiveSav == "1"){
+						mail($get_moderator_user_email, $subject, $message, implode("\r\n", $headers_mail));
+					}
 
 
 				
@@ -468,8 +470,9 @@ if(!(isset($_SESSION['user_id']))){
 					$headers_email[] = 'MIME-Version: 1.0';
 					$headers_email[] = 'Content-type: text/html; charset=utf-8';
 					$headers_email[] = "From: $configFromNameSav <" . $configFromEmailSav . ">";
-					mail($get_moderator_user_email, $subject, $message, implode("\r\n", $headers_email));
-
+					if($configMailSendActiveSav == "1"){
+						mail($get_moderator_user_email, $subject, $message, implode("\r\n", $headers_email));
+					}
 
 
 					$url = "index.php?page=create_free_account_awaiting_approvement&l=$l"; 

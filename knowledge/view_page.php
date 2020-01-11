@@ -302,6 +302,10 @@ else{
 				}
 				echo"	
 				<!-- //Feedback -->
+				
+				$get_current_page_text
+				
+
 
 				<!-- No text? Add table of contents for sub pages -->";
 					if($get_current_page_text == ""){
@@ -382,10 +386,6 @@ else{
 					echo"
 				<!-- //No text? Add table of contents for sub pages -->
 				
-				<p>
-				$get_current_page_text
-				</p>
-
 				<!-- Tags -->
 					<div class=\"knowledge_tags\">
 						";
