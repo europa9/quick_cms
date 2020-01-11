@@ -1,4 +1,5 @@
 <?php
+$l_is_online_lowercase = "er online";
 $l_joined_lowercase = "ble med i";
 $l_new_file = "Ny fil";
 $l_seconds_lowercase = "sekunder";

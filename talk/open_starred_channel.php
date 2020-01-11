@@ -317,15 +317,29 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								<ul>
 								";
 								// Get users
-								$query = "SELECT online_id, online_channel_id, online_time, online_user_id, online_user_name, online_user_alias, online_user_image_path, online_user_image_file, online_user_image_thumb_40, online_user_image_thumb_50, online_ip, online_hostname, online_user_agent FROM $t_talk_channels_users_online WHERE online_channel_id=$get_current_channel_id";
+								$query = "SELECT online_id, online_channel_id, online_time, online_is_online, online_user_id, online_user_name, online_user_alias, online_user_image_path, online_user_image_file, online_user_image_thumb_40, online_user_image_thumb_50, online_ip, online_hostname, online_user_agent FROM $t_talk_channels_users_online WHERE online_channel_id=$get_current_channel_id AND online_is_online=1 ORDER BY online_user_name";
 								$result = mysqli_query($link, $query);
 								while($row = mysqli_fetch_row($result)) {
-									list($get_online_id, $get_online_channel_id, $get_online_time, $get_online_user_id, $get_online_user_name, $get_online_user_alias, $get_online_user_image_path, $get_online_user_image_file, $get_online_user_image_thumb_40, $get_online_user_image_thumb_50, $get_online_ip, $get_online_hostname, $get_online_user_agent) = $row;
+									list($get_online_id, $get_online_channel_id, $get_online_time, $get_online_is_online, $get_online_user_id, $get_online_user_name, $get_online_user_alias, $get_online_user_image_path, $get_online_user_image_file, $get_online_user_image_thumb_40, $get_online_user_image_thumb_50, $get_online_ip, $get_online_hostname, $get_online_user_agent) = $row;
 
-									echo"
-									<li><a href=\"dm.php?t_user_id=$get_online_user_id&amp;l=$l\" class=\"users_in_channel_user_alias\">$get_online_user_alias</a></li>";
+									echo"									";
+									echo"<li><a href=\"dm.php?t_user_id=$get_online_user_id&amp;l=$l\" class=\"users_in_channel_user_alias\"><span style=\"color: #42b72a;height: 7px; width: 7px; background-color: #42b72a; border-radius: 50%; display: inline-block;float: left;margin: 6px 4px 0px 0px\"></span>$get_online_user_alias</a></li>";
+									
 
-								} // users
+									echo"";
+								} // users online
+
+								$query = "SELECT online_id, online_channel_id, online_time, online_is_online, online_user_id, online_user_name, online_user_alias, online_user_image_path, online_user_image_file, online_user_image_thumb_40, online_user_image_thumb_50, online_ip, online_hostname, online_user_agent FROM $t_talk_channels_users_online WHERE online_channel_id=$get_current_channel_id AND online_is_online=0 ORDER BY online_user_name";
+								$result = mysqli_query($link, $query);
+								while($row = mysqli_fetch_row($result)) {
+									list($get_online_id, $get_online_channel_id, $get_online_time, $get_online_is_online, $get_online_user_id, $get_online_user_name, $get_online_user_alias, $get_online_user_image_path, $get_online_user_image_file, $get_online_user_image_thumb_40, $get_online_user_image_thumb_50, $get_online_ip, $get_online_hostname, $get_online_user_agent) = $row;
+
+									echo"									";
+									echo"<li><a href=\"dm.php?t_user_id=$get_online_user_id&amp;l=$l\" class=\"users_in_channel_user_alias_offline\"><span style=\"color: #d4d4d4;height: 7px; width: 7px; background-color: #d4d4d4; border-radius: 50%; display: inline-block;float: left;margin: 6px 4px 0px 0px\"></span>$get_online_user_alias</a></li>";
+									
+
+									echo"";
+								} // users offline
 								echo"
 								</ul>
 							</div>

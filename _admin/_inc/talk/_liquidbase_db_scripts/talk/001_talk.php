@@ -97,41 +97,6 @@ echo"
 <!-- //talk_channels_messages -->
 
 
-<!-- talk_channels_users_online -->
-";
-
-$query = "SELECT * FROM $t_talk_channels_users_online LIMIT 1";
-$result = mysqli_query($link, $query);
-if($result !== FALSE){
-	// Count rows
-	$row_cnt = mysqli_num_rows($result);
-	echo"
-	<p>$t_talk_channels_users_online: $row_cnt</p>
-	";
-}
-else{
-
-
-	mysqli_query($link, "CREATE TABLE $t_talk_channels_users_online(
-	  online_id INT NOT NULL AUTO_INCREMENT,
-	  PRIMARY KEY(online_id), 
-	   online_channel_id INT,
-	   online_time VARCHAR(200),
-	   online_user_id INT,
-	   online_user_name VARCHAR(200),
-	   online_user_alias VARCHAR(200),
-	   online_user_image_path VARCHAR(200),
-	   online_user_image_file VARCHAR(200),
-	   online_user_image_thumb_40 VARCHAR(200),
-	   online_user_image_thumb_50 VARCHAR(200),
-	   online_ip VARCHAR(200),
-	   online_hostname VARCHAR(200),
-	   online_user_agent VARCHAR(200)
-	   )")
-	   or die(mysqli_error());
-}
-echo"
-<!-- //talk_channels_users_online -->
 
 
 <!-- talk_users_starred_channels -->

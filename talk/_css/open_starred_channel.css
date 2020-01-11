@@ -46,7 +46,13 @@ p.talk_messages_info{
 	text-decoration:none;
 	padding: 5px 8px 5px 8px;
 }
-#users_in_channel ul > li > a.users_in_channel_user_alias:hover{
+#users_in_channel ul > li > a.users_in_channel_user_alias_offline{
+	display:block;
+	color: #a0a0a0;
+	text-decoration:none;
+	padding: 5px 8px 5px 8px;
+}
+#users_in_channel ul > li > a.users_in_channel_user_alias:hover, #users_in_channel ul > li > a.users_in_channel_user_alias_offline:hover{
 	background: #f5f5f5;
 }
 #variable_last_time{
