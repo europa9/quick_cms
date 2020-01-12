@@ -74,15 +74,15 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	echo"
 		<li class=\"header_up\"><a href=\"$root/talk/direct_messages.php?l=$l\""; if($minus_one == "direct_messages.php"){ echo" class=\"navigation_active\"";}echo">$l_direct_messages</a></li>
 	";
-	$query = "SELECT conversation_id, conversation_key, conversation_f_unread_messages, conversation_t_user_id, conversation_t_user_alias, conversation_t_last_online_time FROM $t_talk_dm_conversations WHERE conversation_f_user_id=$my_user_id_mysql AND conversation_f_has_blocked=0";
+	$query = "SELECT conversation_id, conversation_key, conversation_f_unread_messages, conversation_t_user_id, conversation_t_user_nickname, conversation_t_user_alias, conversation_t_last_online_time FROM $t_talk_dm_conversations WHERE conversation_f_user_id=$my_user_id_mysql AND conversation_f_has_blocked=0";
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
-		list($get_conversation_id, $get_conversation_key, $get_conversation_f_unread_messages, $get_conversation_t_user_id, $get_conversation_t_user_alias, $get_conversation_t_last_online_time) = $row;
+		list($get_conversation_id, $get_conversation_key, $get_conversation_f_unread_messages, $get_conversation_t_user_id, $get_conversation_t_user_nickname, $get_conversation_t_user_alias, $get_conversation_t_last_online_time) = $row;
 
 		$seconds_since_online = $time-$get_conversation_t_last_online_time;
 
 		echo"
-		<li><a href=\"$root/talk/dm.php?t_user_id=$get_conversation_t_user_id&amp;l=$l\""; if($get_conversation_t_user_id == "$t_user_id"){ echo" class=\"navigation_active\"";}echo">";
+		<li><a href=\"$root/talk/dm.php?t_user_id=$get_conversation_t_user_id&amp;l=$l\""; if($get_conversation_t_user_id == "$t_user_id"){ echo" class=\"navigation_active\"";}echo" title=\"$get_conversation_t_user_alias\">";
 
 		if($seconds_since_online > 100){
 			echo"<span style=\"color: #42b72a;height: 7px; width: 7px; background-color: #a0a0a0; border-radius: 50%; display: inline-block;float: left;margin: 6px 4px 0px 0px\"></span>";
@@ -91,7 +91,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			echo"<span style=\"color: #42b72a;height: 7px; width: 7px; background-color: #42b72a; border-radius: 50%; display: inline-block;float: left;margin: 6px 4px 0px 0px\"></span>";
 		}
 
-		echo"$get_conversation_t_user_alias";
+		echo"$get_conversation_t_user_nickname";
 		echo" <b id=\"conversation_id$get_conversation_id\">";
 		if($get_conversation_f_unread_messages != "0"){echo"$get_conversation_f_unread_messages"; }
 		echo"</b>";

@@ -35,6 +35,9 @@ $t_talk_private			= $mysqlPrefixSav . "talk_private";
 $t_talk_users_starred_channels	= $mysqlPrefixSav . "talk_users_starred_channels";
 $t_talk_users_starred_users	= $mysqlPrefixSav . "talk_users_starred_users";
 
+$t_talk_nicknames 		= $mysqlPrefixSav . "talk_nicknames";
+$t_talk_nicknames_changes 	= $mysqlPrefixSav . "talk_nicknames_changes";
+
 
 /*- Content ---------------------------------------------------------------------------------- */
 if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
@@ -47,6 +50,80 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	$row = mysqli_fetch_row($result);
 	list($get_my_user_id, $get_my_user_email, $get_my_user_name, $get_my_user_alias, $get_my_user_rank) = $row;
 
+
+	// Make sure that I have a nickname
+	$query = "SELECT nickname_id, nickname_user_id, nickname_value, nickname_datetime, nickname_datetime_saying FROM $t_talk_nicknames WHERE nickname_user_id=$get_my_user_id";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_my_nickname_id, $get_my_nickname_user_id, $get_my_nickname_value, $get_my_nickname_datetime, $get_my_nickname_datetime_saying) = $row;
+	if($get_my_nickname_id == ""){
+		// Dates
+		$datetime = date("Y-m-d H:i:s");
+		$datetime_saying = date("j. M Y H:i");
+
+		// nickname variables
+		$found_nickname = "0";
+
+		// Create a nickname
+		$query = "SELECT profile_id, profile_user_id, profile_first_name, profile_middle_name, profile_last_name FROM $t_users_profile WHERE profile_user_id=$get_my_user_id";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_my_profile_id, $get_my_profile_user_id, $get_my_profile_first_name, $get_my_profile_middle_name, $get_my_profile_last_name) = $row;
+		
+		if($get_my_profile_first_name != ""){
+			$inp_nickname_value = "$get_my_profile_first_name";
+			$inp_nickname_value_mysql = quote_smart($link, $inp_nickname_value);
+	
+			$query = "SELECT nickname_id FROM $t_talk_nicknames WHERE nickname_value=$inp_nickname_value_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_check_nickname_id) = $row;
+			if($get_check_nickname_id == ""){
+				// We can take this nickname
+				mysqli_query($link, "INSERT INTO $t_talk_nicknames 
+				(nickname_id, nickname_user_id, nickname_value, nickname_datetime, nickname_datetime_saying) 
+				VALUES 
+				(NULL, $get_my_user_id, $inp_nickname_value_mysql, '$datetime', '$datetime_saying')")
+				or die(mysqli_error($link));
+
+				$found_nickname = "1";
+			}
+			else{
+				// Try first name, middle name
+				if($get_my_profile_middle_name != ""){
+					$inp_nickname_value = "$get_my_profile_first_name $get_my_profile_middle_name";
+					$inp_nickname_value_mysql = quote_smart($link, $inp_nickname_value);
+	
+					$query = "SELECT nickname_id FROM $t_talk_nicknames WHERE nickname_value=$inp_nickname_value_mysql";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_check_nickname_id) = $row;
+					if($get_check_nickname_id == ""){
+						// We can take this nickname
+						mysqli_query($link, "INSERT INTO $t_talk_nicknames 
+						(nickname_id, nickname_user_id, nickname_value, nickname_datetime, nickname_datetime_saying) 
+						VALUES 
+						(NULL, $get_my_user_id, $inp_nickname_value_mysql, '$datetime', '$datetime_saying')")
+						or die(mysqli_error($link));
+
+						$found_nickname = "1";
+					}
+				
+				}
+			}
+		}
+		if($found_nickname == "0"){
+			// Take username as nickname
+			$inp_nickname_value_mysql = quote_smart($link, $get_my_user_name);
+			mysqli_query($link, "INSERT INTO $t_talk_nicknames 
+			(nickname_id, nickname_user_id, nickname_value, nickname_datetime, nickname_datetime_saying) 
+			VALUES 
+			(NULL, $get_my_user_id, $inp_nickname_value_mysql, '$datetime', '$datetime_saying')")
+			or die(mysqli_error($link));
+
+			
+		}
+	} // Create nickname
 
 	// Count number of starred channels
 	$query = "SELECT count(starred_channel_id) FROM $t_talk_users_starred_channels WHERE user_id=$my_user_id_mysql";

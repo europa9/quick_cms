@@ -8,4 +8,5 @@ $l_user_online_lowercase = "user online";
 $l_users_online_lowercase = "users online";
 $l_last_message_at = "Last message at";
 $l_direct_messages = "Direct messages";
+$l_settings = "Settings";
 ?>

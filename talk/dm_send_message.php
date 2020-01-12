@@ -35,6 +35,9 @@ $t_talk_users_starred_channels	= $mysqlPrefixSav . "talk_users_starred_channels"
 $t_talk_dm_conversations = $mysqlPrefixSav . "talk_dm_conversations";
 $t_talk_dm_messages	 = $mysqlPrefixSav . "talk_dm_messages";
 
+$t_talk_nicknames 		= $mysqlPrefixSav . "talk_nicknames";
+$t_talk_nicknames_changes 	= $mysqlPrefixSav . "talk_nicknames_changes";
+
 
 /*- Tables emojies -------------------------------------------------------------------- */
 $t_emojies_categories_main	= $mysqlPrefixSav . "emojies_categories_main";
@@ -100,10 +103,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	}
 	else{
 		// Find conversation (we need conversation key)
-		$query = "SELECT conversation_id, conversation_key, conversation_f_user_id, conversation_f_user_name, conversation_f_user_alias, conversation_f_image_path, conversation_f_image_file, conversation_f_image_thumb40, conversation_f_image_thumb50, conversation_f_has_blocked, conversation_f_unread_messages, conversation_t_user_id, conversation_t_user_name, conversation_t_user_alias, conversation_t_image_path, conversation_t_image_file, conversation_t_image_thumb40, conversation_t_image_thumb50, conversation_t_has_blocked, conversation_t_unread_messages, conversation_encryption_key, conversation_encryption_key_year, conversation_encryption_key_month FROM $t_talk_dm_conversations WHERE conversation_f_user_id=$get_my_user_id AND conversation_t_user_id=$get_to_user_id";
+		$query = "SELECT conversation_id, conversation_key, conversation_f_user_id, conversation_f_user_nickname, conversation_f_user_name, conversation_f_user_alias, conversation_f_image_path, conversation_f_image_file, conversation_f_image_thumb40, conversation_f_image_thumb50, conversation_f_has_blocked, conversation_f_unread_messages, conversation_t_user_id, conversation_t_user_nickname, conversation_t_user_name, conversation_t_user_alias, conversation_t_image_path, conversation_t_image_file, conversation_t_image_thumb40, conversation_t_image_thumb50, conversation_t_has_blocked, conversation_t_unread_messages, conversation_encryption_key, conversation_encryption_key_year, conversation_encryption_key_month FROM $t_talk_dm_conversations WHERE conversation_f_user_id=$get_my_user_id AND conversation_t_user_id=$get_to_user_id";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
-		list($get_current_conversation_id, $get_current_conversation_key, $get_current_conversation_f_user_id, $get_current_conversation_f_user_name, $get_current_conversation_f_user_alias, $get_current_conversation_f_image_path, $get_current_conversation_f_image_file, $get_current_conversation_f_image_thumb40, $get_current_conversation_f_image_thumb50, $get_current_conversation_f_has_blocked, $get_current_conversation_f_unread_messages, $get_current_conversation_t_user_id, $get_current_conversation_t_user_name, $get_current_conversation_t_user_alias, $get_current_conversation_t_image_path, $get_current_conversation_t_image_file, $get_current_conversation_t_image_thumb40, $get_current_conversation_t_image_thumb50, $get_current_conversation_t_has_blocked, $get_current_conversation_t_unread_messages, $get_current_conversation_encryption_key, $get_current_conversation_encryption_key_year, $get_current_conversation_encryption_key_month) = $row;
+		list($get_current_conversation_id, $get_current_conversation_key, $get_current_conversation_f_user_id, $get_current_conversation_f_user_nickname, $get_current_conversation_f_user_name, $get_current_conversation_f_user_alias, $get_current_conversation_f_image_path, $get_current_conversation_f_image_file, $get_current_conversation_f_image_thumb40, $get_current_conversation_f_image_thumb50, $get_current_conversation_f_has_blocked, $get_current_conversation_f_unread_messages, $get_current_conversation_t_user_id, $get_current_conversation_t_user_nickname, $get_current_conversation_t_user_name, $get_current_conversation_t_user_alias, $get_current_conversation_t_image_path, $get_current_conversation_t_image_file, $get_current_conversation_t_image_thumb40, $get_current_conversation_t_image_thumb50, $get_current_conversation_t_has_blocked, $get_current_conversation_t_unread_messages, $get_current_conversation_encryption_key, $get_current_conversation_encryption_key_year, $get_current_conversation_encryption_key_month) = $row;
 
 		if($get_current_conversation_id == ""){
 			echo"Create conversation";
@@ -337,10 +340,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 			// Update new messages box for to user
-			$query = "SELECT conversation_id, conversation_key, conversation_f_user_id, conversation_f_user_name, conversation_f_user_alias, conversation_f_image_path, conversation_f_image_file, conversation_f_image_thumb40, conversation_f_image_thumb50, conversation_f_has_blocked, conversation_f_unread_messages, conversation_t_user_id, conversation_t_user_name, conversation_t_user_alias, conversation_t_image_path, conversation_t_image_file, conversation_t_image_thumb40, conversation_t_image_thumb50, conversation_t_has_blocked, conversation_t_unread_messages FROM $t_talk_dm_conversations WHERE conversation_f_user_id=$get_to_user_id AND conversation_t_user_id=$get_my_user_id";
+			$query = "SELECT conversation_id, conversation_key, conversation_f_user_id, conversation_f_user_nickname, conversation_f_user_name, conversation_f_user_alias, conversation_f_image_path, conversation_f_image_file, conversation_f_image_thumb40, conversation_f_image_thumb50, conversation_f_has_blocked, conversation_f_unread_messages, conversation_t_user_id, conversation_t_user_nickname, conversation_t_user_name, conversation_t_user_alias, conversation_t_image_path, conversation_t_image_file, conversation_t_image_thumb40, conversation_t_image_thumb50, conversation_t_has_blocked, conversation_t_unread_messages FROM $t_talk_dm_conversations WHERE conversation_f_user_id=$get_to_user_id AND conversation_t_user_id=$get_my_user_id";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
-			list($get_to_conversation_id, $get_to_conversation_key, $get_to_conversation_f_user_id, $get_to_conversation_f_user_name, $get_to_conversation_f_user_alias, $get_to_conversation_f_image_path, $get_to_conversation_f_image_file, $get_to_conversation_f_image_thumb40, $get_to_conversation_f_image_thumb50, $get_to_conversation_f_has_blocked, $get_to_conversation_f_unread_messages, $get_to_conversation_t_user_id, $get_to_conversation_t_user_name, $get_to_conversation_t_user_alias, $get_to_conversation_t_image_path, $get_to_conversation_t_image_file, $get_to_conversation_t_image_thumb40, $get_to_conversation_t_image_thumb50, $get_to_conversation_t_has_blocked, $get_to_conversation_t_unread_messages) = $row;
+			list($get_to_conversation_id, $get_to_conversation_key, $get_to_conversation_f_user_id, $get_to_conversation_f_user_nickname, $get_to_conversation_f_user_name, $get_to_conversation_f_user_alias, $get_to_conversation_f_image_path, $get_to_conversation_f_image_file, $get_to_conversation_f_image_thumb40, $get_to_conversation_f_image_thumb50, $get_to_conversation_f_has_blocked, $get_to_conversation_f_unread_messages, $get_to_conversation_t_user_id, $get_to_conversation_t_user_nickname, $get_to_conversation_t_user_name, $get_to_conversation_t_user_alias, $get_to_conversation_t_image_path, $get_to_conversation_t_image_file, $get_to_conversation_t_image_thumb40, $get_to_conversation_t_image_thumb50, $get_to_conversation_t_has_blocked, $get_to_conversation_t_unread_messages) = $row;
 
 			$inp_new_messages = $get_to_conversation_f_unread_messages+1;
 
@@ -388,7 +391,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							  <td style=\"vertical-align:top;\">
 								<!-- Name and text -->	
 								<p>
-								<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_f_user_id&amp;l=$l\" class=\"talk_messages_from_user_alias\">$get_current_conversation_f_user_alias</a>
+								<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_f_user_id&amp;l=$l\" class=\"talk_messages_from_user_alias\" title=\"$get_current_conversation_f_user_alias\">$get_current_conversation_f_user_nickname</a>
 								<span class=\"talk_messages_date_and_time\">";
 								if($date_saying != "$get_message_date_saying"){
 									echo"$get_message_date_saying ";

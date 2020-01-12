@@ -36,6 +36,8 @@ $t_talk_users_starred_channels	= $mysqlPrefixSav . "talk_users_starred_channels"
 $t_talk_users_starred_users	= $mysqlPrefixSav . "talk_users_starred_users";
 
 
+$t_talk_nicknames 		= $mysqlPrefixSav . "talk_nicknames";
+$t_talk_nicknames_changes 	= $mysqlPrefixSav . "talk_nicknames_changes";
 
 /*- Tables emojies -------------------------------------------------------------------- */
 $t_emojies_categories_main	= $mysqlPrefixSav . "emojies_categories_main";
@@ -54,7 +56,6 @@ elseif($talkEncryptionMethodChannelsSav == "caesar_cipher(random)"){
 /*- Variables ------------------------------------------------------------------------- */
 $tabindex = 0;
 $l_mysql = quote_smart($link, $l);
-
 
 
 
@@ -77,6 +78,84 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	$my_user_id = $_SESSION['user_id'];
 	$my_user_id = output_html($my_user_id);
 	$my_user_id_mysql = quote_smart($link, $my_user_id);
+
+	// Make sure that I have a nickname
+	$query = "SELECT nickname_id, nickname_user_id, nickname_value, nickname_datetime, nickname_datetime_saying FROM $t_talk_nicknames WHERE nickname_user_id=$my_user_id_mysql";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_my_nickname_id, $get_my_nickname_user_id, $get_my_nickname_value, $get_my_nickname_datetime, $get_my_nickname_datetime_saying) = $row;
+	if($get_my_nickname_id == ""){
+		// Dates
+		$datetime = date("Y-m-d H:i:s");
+		$datetime_saying = date("j. M Y H:i");
+
+		// nickname variables
+		$found_nickname = "0";
+
+		// Create a nickname
+		$query = "SELECT profile_id, profile_user_id, profile_first_name, profile_middle_name, profile_last_name FROM $t_users_profile WHERE profile_user_id=$my_user_id_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_my_profile_id, $get_my_profile_user_id, $get_my_profile_first_name, $get_my_profile_middle_name, $get_my_profile_last_name) = $row;
+		
+		if($get_my_profile_first_name != ""){
+			$inp_nickname_value = "$get_my_profile_first_name";
+			$inp_nickname_value_mysql = quote_smart($link, $inp_nickname_value);
+	
+			$query = "SELECT nickname_id FROM $t_talk_nicknames WHERE nickname_value=$inp_nickname_value_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_check_nickname_id) = $row;
+			if($get_check_nickname_id == ""){
+				// We can take this nickname
+				mysqli_query($link, "INSERT INTO $t_talk_nicknames 
+				(nickname_id, nickname_user_id, nickname_value, nickname_datetime, nickname_datetime_saying) 
+				VALUES 
+				(NULL, $get_my_profile_user_id, $inp_nickname_value_mysql, '$datetime', '$datetime_saying')")
+				or die(mysqli_error($link));
+
+				$found_nickname = "1";
+			}
+			else{
+				// Try first name, middle name
+				if($get_my_profile_middle_name != ""){
+					$inp_nickname_value = "$get_my_profile_first_name $get_my_profile_middle_name";
+					$inp_nickname_value_mysql = quote_smart($link, $inp_nickname_value);
+	
+					$query = "SELECT nickname_id FROM $t_talk_nicknames WHERE nickname_value=$inp_nickname_value_mysql";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_check_nickname_id) = $row;
+					if($get_check_nickname_id == ""){
+						// We can take this nickname
+						mysqli_query($link, "INSERT INTO $t_talk_nicknames 
+						(nickname_id, nickname_user_id, nickname_value, nickname_datetime, nickname_datetime_saying) 
+						VALUES 
+						(NULL, $get_my_profile_user_id, $inp_nickname_value_mysql, '$datetime', '$datetime_saying')")
+						or die(mysqli_error($link));
+
+						$found_nickname = "1";
+					}
+				
+				}
+			}
+		}
+		if($found_nickname == "0"){
+			// Take username as nickname
+			$query = "SELECT user_id, user_email, user_name, user_alias, user_rank FROM $t_users WHERE user_id=$my_user_id_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_my_user_id, $get_my_user_email, $get_my_user_name, $get_my_user_alias, $get_my_user_rank) = $row;
+			$inp_nickname_value_mysql = quote_smart($link, $get_my_user_name);
+			mysqli_query($link, "INSERT INTO $t_talk_nicknames 
+			(nickname_id, nickname_user_id, nickname_value, nickname_datetime, nickname_datetime_saying) 
+			VALUES 
+			(NULL, $get_my_user_id, $inp_nickname_value_mysql, '$datetime', '$datetime_saying')")
+			or die(mysqli_error($link));
+
+			
+		}
+	} // Create nickname
 
 	// Get starred
 	$query = "SELECT starred_channel_id, channel_id, channel_name, new_messages, user_id FROM $t_talk_users_starred_channels WHERE starred_channel_id=$starred_channel_id_mysql AND user_id=$my_user_id_mysql";
@@ -147,11 +226,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								$variable_last_message_id = "1";
 								$date_saying = date("j M Y");
 								$time = time();
-								$query = "SELECT message_id, message_channel_id, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_from_user_id, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent, message_attachment_type, message_attachment_path, message_attachment_file FROM $t_talk_channels_messages WHERE message_channel_id=$get_current_channel_id ORDER BY message_id ASC";
+								$query = "SELECT message_id, message_channel_id, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_from_user_id, message_from_user_nickname, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent, message_attachment_type, message_attachment_path, message_attachment_file FROM $t_talk_channels_messages WHERE message_channel_id=$get_current_channel_id ORDER BY message_id ASC";
 								//echo"$query ";
 								$result = mysqli_query($link, $query);
 								while($row = mysqli_fetch_row($result)) {
-									list($get_message_id, $get_message_channel_id, $get_message_type, $get_message_text, $get_message_datetime, $get_message_date_saying, $get_message_time_saying, $get_message_time, $get_message_year, $get_message_from_user_id, $get_message_from_user_name, $get_message_from_user_alias, $get_message_from_user_image_path, $get_message_from_user_image_file, $get_message_from_user_image_thumb_40, $get_message_from_user_image_thumb_50, $get_message_from_ip, $get_message_from_hostname, $get_message_from_user_agent, $get_message_attachment_type, $get_message_attachment_path, $get_message_attachment_file) = $row;
+									list($get_message_id, $get_message_channel_id, $get_message_type, $get_message_text, $get_message_datetime, $get_message_date_saying, $get_message_time_saying, $get_message_time, $get_message_year, $get_message_from_user_id, $get_message_from_user_nickname, $get_message_from_user_name, $get_message_from_user_alias, $get_message_from_user_image_path, $get_message_from_user_image_file, $get_message_from_user_image_thumb_40, $get_message_from_user_image_thumb_50, $get_message_from_ip, $get_message_from_hostname, $get_message_from_user_agent, $get_message_attachment_type, $get_message_attachment_path, $get_message_attachment_file) = $row;
 	
 									// Is the message X days old?
 									$time_since_written = $time-$get_message_time;
@@ -225,7 +304,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 										  <td style=\"vertical-align:top;\">
 											<!-- Name and text -->	
 											<p>
-											<a href=\"dm.php?t_user_id=$get_message_from_user_id&amp;l=$l\" class=\"talk_messages_from_user_alias\">$get_message_from_user_alias</a>
+											<a href=\"dm.php?t_user_id=$get_message_from_user_id&amp;l=$l\" class=\"talk_messages_from_user_alias\" title=\"$get_message_from_user_alias\">$get_message_from_user_nickname</a>
 											<span class=\"talk_messages_date_and_time\">";
 											if($date_saying != "$get_message_date_saying"){
 												echo"$get_message_date_saying ";
@@ -317,25 +396,25 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								<ul>
 								";
 								// Get users
-								$query = "SELECT online_id, online_channel_id, online_time, online_is_online, online_user_id, online_user_name, online_user_alias, online_user_image_path, online_user_image_file, online_user_image_thumb_40, online_user_image_thumb_50, online_ip, online_hostname, online_user_agent FROM $t_talk_channels_users_online WHERE online_channel_id=$get_current_channel_id AND online_is_online=1 ORDER BY online_user_name";
+								$query = "SELECT online_id, online_channel_id, online_time, online_is_online, online_user_id, online_user_nickname, online_user_name, online_user_alias, online_user_image_path, online_user_image_file, online_user_image_thumb_40, online_user_image_thumb_50, online_ip, online_hostname, online_user_agent FROM $t_talk_channels_users_online WHERE online_channel_id=$get_current_channel_id AND online_is_online=1 ORDER BY online_user_name";
 								$result = mysqli_query($link, $query);
 								while($row = mysqli_fetch_row($result)) {
-									list($get_online_id, $get_online_channel_id, $get_online_time, $get_online_is_online, $get_online_user_id, $get_online_user_name, $get_online_user_alias, $get_online_user_image_path, $get_online_user_image_file, $get_online_user_image_thumb_40, $get_online_user_image_thumb_50, $get_online_ip, $get_online_hostname, $get_online_user_agent) = $row;
+									list($get_online_id, $get_online_channel_id, $get_online_time, $get_online_is_online, $get_online_user_id, $get_online_user_nickname, $get_online_user_name, $get_online_user_alias, $get_online_user_image_path, $get_online_user_image_file, $get_online_user_image_thumb_40, $get_online_user_image_thumb_50, $get_online_ip, $get_online_hostname, $get_online_user_agent) = $row;
 
 									echo"									";
-									echo"<li><a href=\"dm.php?t_user_id=$get_online_user_id&amp;l=$l\" class=\"users_in_channel_user_alias\"><span style=\"color: #42b72a;height: 7px; width: 7px; background-color: #42b72a; border-radius: 50%; display: inline-block;float: left;margin: 6px 4px 0px 0px\"></span>$get_online_user_alias</a></li>";
+									echo"<li><a href=\"dm.php?t_user_id=$get_online_user_id&amp;l=$l\" class=\"users_in_channel_user_alias\" title=\"$get_online_user_alias\"><span style=\"color: #42b72a;height: 7px; width: 7px; background-color: #42b72a; border-radius: 50%; display: inline-block;float: left;margin: 6px 4px 0px 0px\"></span>$get_online_user_nickname</a></li>";
 									
 
 									echo"";
 								} // users online
 
-								$query = "SELECT online_id, online_channel_id, online_time, online_is_online, online_user_id, online_user_name, online_user_alias, online_user_image_path, online_user_image_file, online_user_image_thumb_40, online_user_image_thumb_50, online_ip, online_hostname, online_user_agent FROM $t_talk_channels_users_online WHERE online_channel_id=$get_current_channel_id AND online_is_online=0 ORDER BY online_user_name";
+								$query = "SELECT online_id, online_channel_id, online_time, online_is_online, online_user_id, online_user_nickname, online_user_name, online_user_alias, online_user_image_path, online_user_image_file, online_user_image_thumb_40, online_user_image_thumb_50, online_ip, online_hostname, online_user_agent FROM $t_talk_channels_users_online WHERE online_channel_id=$get_current_channel_id AND online_is_online=0 ORDER BY online_user_name";
 								$result = mysqli_query($link, $query);
 								while($row = mysqli_fetch_row($result)) {
-									list($get_online_id, $get_online_channel_id, $get_online_time, $get_online_is_online, $get_online_user_id, $get_online_user_name, $get_online_user_alias, $get_online_user_image_path, $get_online_user_image_file, $get_online_user_image_thumb_40, $get_online_user_image_thumb_50, $get_online_ip, $get_online_hostname, $get_online_user_agent) = $row;
+									list($get_online_id, $get_online_channel_id, $get_online_time, $get_online_is_online, $get_online_user_id, $get_online_user_nickname, $get_online_user_name, $get_online_user_alias, $get_online_user_image_path, $get_online_user_image_file, $get_online_user_image_thumb_40, $get_online_user_image_thumb_50, $get_online_ip, $get_online_hostname, $get_online_user_agent) = $row;
 
 									echo"									";
-									echo"<li><a href=\"dm.php?t_user_id=$get_online_user_id&amp;l=$l\" class=\"users_in_channel_user_alias_offline\"><span style=\"color: #d4d4d4;height: 7px; width: 7px; background-color: #d4d4d4; border-radius: 50%; display: inline-block;float: left;margin: 6px 4px 0px 0px\"></span>$get_online_user_alias</a></li>";
+									echo"<li><a href=\"dm.php?t_user_id=$get_online_user_id&amp;l=$l\" class=\"users_in_channel_user_alias_offline\" title=\"$get_online_user_alias\"><span style=\"color: #d4d4d4;height: 7px; width: 7px; background-color: #d4d4d4; border-radius: 50%; display: inline-block;float: left;margin: 6px 4px 0px 0px\"></span>$get_online_user_nickname</a></li>";
 									
 
 									echo"";

@@ -35,6 +35,9 @@ $t_talk_private			= $mysqlPrefixSav . "talk_private";
 $t_talk_users_starred_channels	= $mysqlPrefixSav . "talk_users_starred_channels";
 $t_talk_users_starred_users	= $mysqlPrefixSav . "talk_users_starred_users";
 
+$t_talk_nicknames 		= $mysqlPrefixSav . "talk_nicknames";
+$t_talk_nicknames_changes 	= $mysqlPrefixSav . "talk_nicknames_changes";
+
 
 /*- Tables emojies -------------------------------------------------------------------- */
 $t_emojies_categories_main	= $mysqlPrefixSav . "emojies_categories_main";
@@ -260,6 +263,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$row = mysqli_fetch_row($result);
 				list($get_my_photo_id, $get_my_photo_destination, $get_my_photo_thumb_40, $get_my_photo_thumb_50) = $row;
 
+				// My nickname
+				$query = "SELECT nickname_id, nickname_user_id, nickname_value, nickname_datetime, nickname_datetime_saying FROM $t_talk_nicknames WHERE nickname_user_id=$get_my_user_id";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_my_nickname_id, $get_my_nickname_user_id, $get_my_nickname_value, $get_my_nickname_datetime, $get_my_nickname_datetime_saying) = $row;
+
+				$inp_my_user_nickname_mysql = quote_smart($link, $get_my_nickname_value);
 
 				$inp_my_user_name_mysql = quote_smart($link, $get_my_user_name);
 				$inp_my_user_alias_mysql = quote_smart($link, $get_my_user_alias);
@@ -294,9 +304,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				// Insert
 				mysqli_query($link, "INSERT INTO $t_talk_channels_messages
-				(message_id, message_channel_id, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_from_user_id, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent) 
+				(message_id, message_channel_id, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_from_user_id, message_from_user_nickname, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent) 
 				VALUES 
-				(NULL, $get_current_channel_id, 'chat', $inp_text_mysql, '$datetime', '$date_saying', '$time_saying', '$time', $year, $get_my_user_id, $inp_my_user_name_mysql, $inp_my_user_alias_mysql, $inp_my_user_image_path_mysql, $inp_my_user_image_file_mysql, $inp_my_user_image_thumb_a_mysql, $inp_my_user_image_thumb_b_mysql, $inp_my_ip_mysql, $inp_my_hostname_mysql, $inp_my_user_agent_mysql)")
+				(NULL, $get_current_channel_id, 'chat', $inp_text_mysql, '$datetime', '$date_saying', '$time_saying', '$time', $year, $get_my_user_id, $inp_my_user_nickname_mysql, $inp_my_user_name_mysql, $inp_my_user_alias_mysql, $inp_my_user_image_path_mysql, $inp_my_user_image_file_mysql, $inp_my_user_image_thumb_a_mysql, $inp_my_user_image_thumb_b_mysql, $inp_my_ip_mysql, $inp_my_hostname_mysql, $inp_my_user_agent_mysql)")
 				or die(mysqli_error($link));
 
 
@@ -317,10 +327,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$result_del = mysqli_query($link, "UPDATE $t_talk_channels_index SET channel_last_message_time='$time', channel_last_message_saying='$datetime_saying' WHERE channel_id=$get_current_channel_id");
 
 				// Echo this msg
-				$query = "SELECT message_id, message_channel_id, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_from_user_id, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent FROM $t_talk_channels_messages WHERE message_channel_id=$get_current_channel_id AND message_datetime='$datetime' AND message_from_user_id=$my_user_id_mysql";
+				$query = "SELECT message_id, message_channel_id, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_from_user_id, message_from_user_nickname, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent FROM $t_talk_channels_messages WHERE message_channel_id=$get_current_channel_id AND message_datetime='$datetime' AND message_from_user_id=$my_user_id_mysql";
 				$result = mysqli_query($link, $query);
 				$row = mysqli_fetch_row($result);
-				list($get_message_id, $get_message_channel_id, $get_message_text, $get_message_datetime, $get_message_date_saying, $get_message_time_saying, $get_message_time, $get_message_year, $get_message_from_user_id, $get_message_from_user_name, $get_message_from_user_alias, $get_message_from_user_image_path, $get_message_from_user_image_file, $get_message_from_user_image_thumb_40, $get_message_from_user_image_thumb_50, $get_message_from_ip, $get_message_from_hostname, $get_message_from_user_agente) = $row;
+				list($get_message_id, $get_message_channel_id, $get_message_text, $get_message_datetime, $get_message_date_saying, $get_message_time_saying, $get_message_time, $get_message_year, $get_message_from_user_id, $get_message_from_user_nickname, $get_message_from_user_name, $get_message_from_user_alias, $get_message_from_user_image_path, $get_message_from_user_image_file, $get_message_from_user_image_thumb_40, $get_message_from_user_image_thumb_50, $get_message_from_ip, $get_message_from_hostname, $get_message_from_user_agente) = $row;
 
 				// Decrypt message	
 				/*
@@ -370,7 +380,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				  <td style=\"vertical-align:top;\">
 					<!-- Name and text -->	
 						<p>
-						<a href=\"dm.php?t_user_id=$get_message_from_user_id&amp;l=$l\" class=\"talk_messages_from_user_alias\">$get_message_from_user_alias</a>
+						<a href=\"dm.php?t_user_id=$get_message_from_user_id&amp;l=$l\" class=\"talk_messages_from_user_alias\">$get_message_from_user_nickname</a>
 						<span class=\"talk_messages_date_and_time\">";
 						if($date_saying != "$get_message_date_saying"){
 							echo"$get_message_date_saying ";

@@ -36,6 +36,9 @@ $t_talk_private			= $mysqlPrefixSav . "talk_private";
 $t_talk_users_starred_channels	= $mysqlPrefixSav . "talk_users_starred_channels";
 $t_talk_users_starred_users	= $mysqlPrefixSav . "talk_users_starred_users";
 
+$t_talk_nicknames 		= $mysqlPrefixSav . "talk_nicknames";
+$t_talk_nicknames_changes 	= $mysqlPrefixSav . "talk_nicknames_changes";
+
 /*- Variables ------------------------------------------------------------------------- */
 $tabindex = 0;
 $l_mysql = quote_smart($link, $l);
@@ -112,7 +115,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$row = mysqli_fetch_row($result);
 				list($get_my_photo_id, $get_my_photo_destination, $get_my_photo_thumb_40, $get_my_photo_thumb_50) = $row;
 
+				// My nickname
+				$query = "SELECT nickname_id, nickname_user_id, nickname_value, nickname_datetime, nickname_datetime_saying FROM $t_talk_nicknames WHERE nickname_user_id=$get_my_user_id";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_my_nickname_id, $get_my_nickname_user_id, $get_my_nickname_value, $get_my_nickname_datetime, $get_my_nickname_datetime_saying) = $row;
 
+				$inp_my_user_nickname_mysql = quote_smart($link, $get_my_nickname_value);
 				$inp_my_user_name_mysql = quote_smart($link, $get_my_user_name);
 				$inp_my_user_alias_mysql = quote_smart($link, $get_my_user_alias);
 
@@ -144,12 +153,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				// Insert
 				mysqli_query($link, "INSERT INTO $t_talk_channels_users_online 
-				(online_id, online_channel_id, online_time, online_is_online, online_user_id, online_user_name, online_user_alias, online_user_image_path, online_user_image_file, online_user_image_thumb_40, online_user_image_thumb_50, online_ip, online_hostname, online_user_agent) 
+				(online_id, online_channel_id, online_time, online_is_online, online_user_id, online_user_nickname, online_user_name, online_user_alias, online_user_image_path, online_user_image_file, online_user_image_thumb_40, online_user_image_thumb_50, online_ip, online_hostname, online_user_agent) 
 				VALUES 
-				(NULL, $get_current_channel_id, '$time', 1, $get_my_user_id, $inp_my_user_name_mysql, $inp_my_user_alias_mysql, $inp_my_user_image_path_mysql, $inp_my_user_image_file_mysql, $inp_my_user_image_thumb_a_mysql, $inp_my_user_image_thumb_b_mysql, $inp_my_ip_mysql, $inp_my_hostname_mysql, $inp_my_user_agent_mysql)")
+				(NULL, $get_current_channel_id, '$time', 1, $get_my_user_id, $inp_my_user_nickname_mysql, $inp_my_user_name_mysql, $inp_my_user_alias_mysql, $inp_my_user_image_path_mysql, $inp_my_user_image_file_mysql, $inp_my_user_image_thumb_a_mysql, $inp_my_user_image_thumb_b_mysql, $inp_my_ip_mysql, $inp_my_hostname_mysql, $inp_my_user_agent_mysql)")
 				or die(mysqli_error($link));
 
-				$inp_text = "$get_my_user_alias $l_joined_lowercase #$get_current_channel_name";
+				$inp_text = "<a href=\"users/view_profile.php?user_id=$get_my_user_id&amp;l=$l\">$get_my_nickname_value</a> $l_joined_lowercase #$get_current_channel_name";
 				$inp_text = ucfirst($inp_text);
 				$inp_text_mysql  = quote_smart($link, $inp_text);
 
@@ -173,7 +182,14 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$row = mysqli_fetch_row($result);
 					list($get_my_photo_id, $get_my_photo_destination, $get_my_photo_thumb_40, $get_my_photo_thumb_50) = $row;
 
+					// My nickname
+					$query = "SELECT nickname_id, nickname_user_id, nickname_value, nickname_datetime, nickname_datetime_saying FROM $t_talk_nicknames WHERE nickname_user_id=$get_my_user_id";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_my_nickname_id, $get_my_nickname_user_id, $get_my_nickname_value, $get_my_nickname_datetime, $get_my_nickname_datetime_saying) = $row;
 
+
+					$inp_my_user_nickname_mysql = quote_smart($link, $get_my_nickname_value);
 					$inp_my_user_name_mysql = quote_smart($link, $get_my_user_name);
 					$inp_my_user_alias_mysql = quote_smart($link, $get_my_user_alias);
 
@@ -204,19 +220,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$inp_my_user_agent_mysql = quote_smart($link, $inp_my_user_agent);
 
 					// Im back online 
-					$inp_text = "$get_online_user_alias $l_is_online_lowercase.";
+					$inp_text = "$get_my_nickname_value $l_is_online_lowercase.";
 					$inp_text = ucfirst($inp_text);
 					$inp_text_mysql  = quote_smart($link, $inp_text);
 
 					mysqli_query($link, "INSERT INTO $t_talk_channels_messages
 					(message_id, message_channel_id, message_type, message_text, message_datetime, 
 					message_date_saying, message_time_saying, message_time, message_year, message_from_user_id, 
-					message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, 
+					message_from_user_nickname, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, 
 					message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent) 
 					VALUES 
 					(NULL, $get_current_channel_id, 'info', $inp_text_mysql, '$datetime', 
 					'$date_saying', '$time_saying', '$time', $year, $get_my_user_id, 
-					$inp_my_user_name_mysql, $inp_my_user_alias_mysql, $inp_my_user_image_path_mysql, $inp_my_user_image_file_mysql, $inp_my_user_image_thumb_a_mysql, $inp_my_user_image_thumb_b_mysql, $inp_my_ip_mysql, $inp_my_hostname_mysql, $inp_my_user_agent_mysql)")
+					$inp_my_user_nickname_mysql, $inp_my_user_name_mysql, $inp_my_user_alias_mysql, $inp_my_user_image_path_mysql, $inp_my_user_image_file_mysql, $inp_my_user_image_thumb_a_mysql, $inp_my_user_image_thumb_b_mysql, $inp_my_ip_mysql, $inp_my_hostname_mysql, $inp_my_user_agent_mysql)")
 					or die(mysqli_error($link));
 
 
@@ -230,13 +246,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			";
 			$count_users_online = 0;
 			// Get users online
-			$query = "SELECT online_id, online_channel_id, online_time, online_is_online, online_user_id, online_user_name, online_user_alias, online_user_image_path, online_user_image_file, online_user_image_thumb_40, online_user_image_thumb_50, online_ip, online_hostname, online_user_agent FROM $t_talk_channels_users_online WHERE online_channel_id=$get_current_channel_id AND online_is_online=1 ORDER BY online_user_name";
+			$query = "SELECT online_id, online_channel_id, online_time, online_is_online, online_user_id, online_user_nickname, online_user_name, online_user_alias, online_user_image_path, online_user_image_file, online_user_image_thumb_40, online_user_image_thumb_50, online_ip, online_hostname, online_user_agent FROM $t_talk_channels_users_online WHERE online_channel_id=$get_current_channel_id AND online_is_online=1 ORDER BY online_user_name";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
-				list($get_online_id, $get_online_channel_id, $get_online_time, $get_online_is_online, $get_online_user_id, $get_online_user_name, $get_online_user_alias, $get_online_user_image_path, $get_online_user_image_file, $get_online_user_image_thumb_40, $get_online_user_image_thumb_50, $get_online_ip, $get_online_hostname, $get_online_user_agent) = $row;
+				list($get_online_id, $get_online_channel_id, $get_online_time, $get_online_is_online, $get_online_user_id, $get_online_user_nickname, $get_online_user_name, $get_online_user_alias, $get_online_user_image_path, $get_online_user_image_file, $get_online_user_image_thumb_40, $get_online_user_image_thumb_50, $get_online_ip, $get_online_hostname, $get_online_user_agent) = $row;
 			
 				echo"				";
-				echo"<li><a href=\"dm.php?t_user_id=$get_online_user_id&amp;l=$l\" class=\"users_in_channel_user_alias\"><span style=\"color: #42b72a;height: 7px; width: 7px; background-color: #42b72a; border-radius: 50%; display: inline-block;float: left;margin: 6px 4px 0px 0px\"></span>$get_online_user_alias</a></li>\n";
+				echo"<li><a href=\"dm.php?t_user_id=$get_online_user_id&amp;l=$l\" class=\"users_in_channel_user_alias\" title=\"$get_online_user_alias\"><span style=\"color: #42b72a;height: 7px; width: 7px; background-color: #42b72a; border-radius: 50%; display: inline-block;float: left;margin: 6px 4px 0px 0px\"></span>$get_online_user_nickname</a></li>\n";
 				$count_users_online++;
 
 
@@ -250,7 +266,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				$seconds_since_online = $time-$get_user_last_online_time;
 				if($seconds_since_online > 180){
-					$inp_text = "$get_online_user_alias $l_timed_out_after_lowercase $seconds_since_online $l_seconds_lowercase.";
+					$inp_text = "$get_online_user_nickname $l_timed_out_after_lowercase $seconds_since_online $l_seconds_lowercase.";
 					$inp_text = ucfirst($inp_text);
 					$inp_text_mysql  = quote_smart($link, $inp_text);
 
@@ -260,6 +276,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$row_p = mysqli_fetch_row($result_p);
 					list($get_photo_id, $get_photo_destination, $get_photo_thumb_40, $get_photo_thumb_50) = $row_p;
 
+
+					$inp_user_nickname_mysql = quote_smart($link, $get_online_user_nickname);
 					$inp_user_name_mysql = quote_smart($link, $get_user_name);
 					$inp_user_alias_mysql = quote_smart($link, $get_user_alias);
 
@@ -288,9 +306,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$inp_user_agent_mysql = quote_smart($link, $inp_user_agent);
 
 					mysqli_query($link, "INSERT INTO $t_talk_channels_messages
-					(message_id, message_channel_id, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_from_user_id, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent) 
+					(message_id, message_channel_id, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_from_user_id, message_from_user_nickname, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent) 
 					VALUES 
-					(NULL, $get_current_channel_id, 'info', $inp_text_mysql, '$datetime', '$date_saying', '$time_saying', '$time', $year, $get_user_id, $inp_user_name_mysql, $inp_user_alias_mysql, $inp_user_image_path_mysql, $inp_user_image_file_mysql, $inp_user_image_thumb_a_mysql, $inp_user_image_thumb_b_mysql, $inp_ip_mysql, $inp_hostname_mysql, $inp_user_agent_mysql)")
+					(NULL, $get_current_channel_id, 'info', $inp_text_mysql, '$datetime', '$date_saying', '$time_saying', '$time', $year, $get_user_id, $inp_user_nickname_mysql, $inp_user_name_mysql, $inp_user_alias_mysql, $inp_user_image_path_mysql, $inp_user_image_file_mysql, $inp_user_image_thumb_a_mysql, $inp_user_image_thumb_b_mysql, $inp_ip_mysql, $inp_hostname_mysql, $inp_user_agent_mysql)")
 					or die(mysqli_error($link));
 					$result_update_online = mysqli_query($link, "UPDATE $t_talk_channels_users_online SET online_is_online=0 WHERE online_id=$get_online_id");
 				} // user has been inactive over 180 sec
@@ -298,13 +316,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			}
 
 			// Get users offline
-			$query = "SELECT online_id, online_channel_id, online_time, online_is_online, online_user_id, online_user_name, online_user_alias, online_user_image_path, online_user_image_file, online_user_image_thumb_40, online_user_image_thumb_50, online_ip, online_hostname, online_user_agent FROM $t_talk_channels_users_online WHERE online_channel_id=$get_current_channel_id AND online_is_online=0 ORDER BY online_user_name";
+			$query = "SELECT online_id, online_channel_id, online_time, online_is_online, online_user_id, online_user_nickname, online_user_name, online_user_alias, online_user_image_path, online_user_image_file, online_user_image_thumb_40, online_user_image_thumb_50, online_ip, online_hostname, online_user_agent FROM $t_talk_channels_users_online WHERE online_channel_id=$get_current_channel_id AND online_is_online=0 ORDER BY online_user_name";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
-				list($get_online_id, $get_online_channel_id, $get_online_time, $get_online_is_online, $get_online_user_id, $get_online_user_name, $get_online_user_alias, $get_online_user_image_path, $get_online_user_image_file, $get_online_user_image_thumb_40, $get_online_user_image_thumb_50, $get_online_ip, $get_online_hostname, $get_online_user_agent) = $row;
+				list($get_online_id, $get_online_channel_id, $get_online_time, $get_online_is_online, $get_online_user_id, $get_online_user_nickname, $get_online_user_name, $get_online_user_alias, $get_online_user_image_path, $get_online_user_image_file, $get_online_user_image_thumb_40, $get_online_user_image_thumb_50, $get_online_ip, $get_online_hostname, $get_online_user_agent) = $row;
 			
 				echo"				";
-				echo"<li><a href=\"dm.php?t_user_id=$get_online_user_id&amp;l=$l\" class=\"users_in_channel_user_alias_offline\"><span style=\"color: #a0a0a0;height: 7px; width: 7px; background-color: #a0a0a0; border-radius: 50%; display: inline-block;float: left;margin: 6px 4px 0px 0px\"></span>$get_online_user_alias</a></li>\n";
+				echo"<li><a href=\"dm.php?t_user_id=$get_online_user_id&amp;l=$l\" class=\"users_in_channel_user_alias_offline\" title=\"$get_online_user_alias\"><span style=\"color: #a0a0a0;height: 7px; width: 7px; background-color: #a0a0a0; border-radius: 50%; display: inline-block;float: left;margin: 6px 4px 0px 0px\"></span>$get_online_user_nickname</a></li>\n";
 			}
 
 			

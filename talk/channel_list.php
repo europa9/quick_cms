@@ -124,7 +124,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						else{
 							echo"$l_users_online_lowercase";
 						}
-						echo" &middot; $l_last_message_at $get_channel_last_message_saying</span></a></li>\n";
+						echo" &middot; $l_last_message $get_channel_last_message_saying</span></a></li>\n";
 					}
 				}
 				echo"

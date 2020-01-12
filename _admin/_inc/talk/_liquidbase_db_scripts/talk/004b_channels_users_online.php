@@ -42,6 +42,7 @@ else{
 	   online_time VARCHAR(200),
 	   online_is_online VARCHAR(200),
 	   online_user_id INT,
+	   online_user_nickname VARCHAR(200),
 	   online_user_name VARCHAR(200),
 	   online_user_alias VARCHAR(200),
 	   online_user_image_path VARCHAR(200),
