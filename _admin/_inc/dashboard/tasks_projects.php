@@ -99,6 +99,17 @@ elseif($action == "new_project"){
 		$inp_title = output_html($inp_title);
 		$inp_title_mysql = quote_smart($link, $inp_title);
 
+		$title_len = strlen($inp_title);
+		if($title_len > 3){
+			$inp_task_abbr = substr($inp_title, 0, 4);
+		}
+		else{
+			$inp_task_abbr = "$inp_title";
+		}
+		$inp_task_abbr = strtoupper($inp_task_abbr);
+		$inp_task_abbr = output_html($inp_task_abbr);
+		$inp_task_abbr_mysql = quote_smart($link, $inp_task_abbr);
+
 
 		$inp_description = $_POST['inp_description'];
 
@@ -110,9 +121,9 @@ elseif($action == "new_project"){
 
 		// Insert
 		mysqli_query($link, "INSERT INTO $t_tasks_projects
-		(project_id, project_system_id, project_title, project_description, project_logo, project_is_active, project_created, project_updated) 
+		(project_id, project_system_id, project_title, project_task_abbr, project_description, project_logo, project_is_active, project_created, project_updated) 
 		VALUES 
-		(NULL, $inp_system_id_mysql, $inp_title_mysql, '', '', 1, '$datetime', '$datetime')")
+		(NULL, $inp_system_id_mysql, $inp_title_mysql, $inp_task_abbr_mysql, '', '', 1, '$datetime', '$datetime')")
 		or die(mysqli_error($link));
 
 		// Get ID
@@ -319,10 +330,10 @@ elseif($action == "open_project"){
 elseif($action == "edit_project"){
 	// Get ID
 	$project_id_mysql = quote_smart($link, $project_id);
-	$query = "SELECT project_id, project_system_id, project_title, project_description, project_logo, project_is_active, project_created, project_updated FROM $t_tasks_projects WHERE project_id=$project_id_mysql";
+	$query = "SELECT project_id, project_system_id, project_title, project_task_abbr, project_description, project_logo, project_is_active, project_created, project_updated FROM $t_tasks_projects WHERE project_id=$project_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_project_id, $get_current_project_system_id, $get_current_project_title, $get_current_project_description, $get_current_project_logo, $get_current_project_is_active, $get_current_project_created, $get_current_project_updated) = $row;
+	list($get_current_project_id, $get_current_project_system_id, $get_current_project_title, $get_current_project_task_abbr, $get_current_project_description, $get_current_project_logo, $get_current_project_is_active, $get_current_project_created, $get_current_project_updated) = $row;
 
 	if($get_current_project_id == ""){
 		echo"<p>404 server error</p>";
@@ -332,6 +343,9 @@ elseif($action == "edit_project"){
 
 			$inp_title = $_POST['inp_title'];
 			$inp_title = output_html($inp_title);
+
+			$inp_task_abbr = $_POST['inp_task_abbr'];
+			$inp_task_abbr = output_html($inp_task_abbr);
 
 			$inp_description = $_POST['inp_description'];
 
@@ -345,9 +359,9 @@ elseif($action == "edit_project"){
 			$datetime = date("Y-m-d H:i:s");
 
 			// Insert content
-			$sql = "UPDATE $t_tasks_projects SET project_system_id=?, project_title=?, project_description=?, project_updated=? WHERE project_id='$get_current_project_id'";
+			$sql = "UPDATE $t_tasks_projects SET project_system_id=?, project_title=?, project_task_abbr=?, project_description=?, project_updated=? WHERE project_id='$get_current_project_id'";
 			$stmt = $link->prepare($sql);
-			$stmt->bind_param("isss", $inp_system_id, $inp_title, $inp_description, $datetime);
+			$stmt->bind_param("issss", $inp_system_id, $inp_title, $inp_task_abbr, $inp_description, $datetime);
 			$stmt->execute();
 			if ($stmt->errno) {
 				echo "FAILURE!!! $inp_title<br />$inp_description<br />$datetime<br />$get_current_project_id " . $stmt->error; die;
@@ -431,6 +445,9 @@ elseif($action == "edit_project"){
 		<form method=\"post\" action=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;project_id=$get_current_project_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 		<p>Title:<br />
 		<input type=\"text\" name=\"inp_title\" value=\"$get_current_project_title\" size=\"25\" />
+		</p>
+		<p>Task abbreviation for this project:<br />
+		<input type=\"text\" name=\"inp_task_abbr\" value=\"$get_current_project_task_abbr\" size=\"25\" />
 		</p>
 
 		<p>Description:<br />
