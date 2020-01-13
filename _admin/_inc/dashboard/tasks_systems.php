@@ -99,6 +99,16 @@ elseif($action == "new_system"){
 		$inp_title = output_html($inp_title);
 		$inp_title_mysql = quote_smart($link, $inp_title);
 
+		$title_len = strlen($inp_title);
+		if($title_len > 3){
+			$inp_task_abbr = substr($inp_title, 0, 4);
+		}
+		else{
+			$inp_task_abbr = "$inp_title";
+		}
+		$inp_task_abbr = strtoupper($inp_task_abbr);
+		$inp_task_abbr = output_html($inp_task_abbr);
+		$inp_task_abbr_mysql = quote_smart($link, $inp_task_abbr);
 
 		$inp_description = $_POST['inp_description'];
 
@@ -107,9 +117,9 @@ elseif($action == "new_system"){
 
 		// Insert
 		mysqli_query($link, "INSERT INTO $t_tasks_systems
-		(system_id, system_title, system_description, system_logo, system_is_active, system_created, system_updated) 
+		(system_id, system_title, system_task_abbr, system_description, system_logo, system_is_active, system_increment_tasks_counter, system_created, system_updated) 
 		VALUES 
-		(NULL, $inp_title_mysql, '', '', 1, '$datetime', '$datetime')")
+		(NULL, $inp_title_mysql, $inp_task_abbr_mysql, '', '', 1, 1, '$datetime', '$datetime')")
 		or die(mysqli_error($link));
 
 		// Get ID
@@ -304,10 +314,10 @@ elseif($action == "open_system"){
 elseif($action == "edit_system"){
 	// Get ID
 	$system_id_mysql = quote_smart($link, $system_id);
-	$query = "SELECT system_id, system_title, system_description, system_logo, system_is_active, system_created, system_updated FROM $t_tasks_systems WHERE system_id=$system_id_mysql";
+	$query = "SELECT system_id, system_title, system_task_abbr, system_description, system_logo, system_is_active, system_created, system_updated FROM $t_tasks_systems WHERE system_id=$system_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_system_id, $get_current_system_title, $get_current_system_description, $get_current_system_logo, $get_current_system_is_active, $get_current_system_created, $get_current_system_updated) = $row;
+	list($get_current_system_id, $get_current_system_title, $get_current_system_task_abbr, $get_current_system_description, $get_current_system_logo, $get_current_system_is_active, $get_current_system_created, $get_current_system_updated) = $row;
 
 	if($get_current_system_id == ""){
 		echo"<p>404 server error</p>";
@@ -318,15 +328,18 @@ elseif($action == "edit_system"){
 			$inp_title = $_POST['inp_title'];
 			$inp_title = output_html($inp_title);
 
+			$inp_task_abbr = $_POST['inp_task_abbr'];
+			$inp_task_abbr = output_html($inp_task_abbr);
+
 			$inp_description = $_POST['inp_description'];
 
 
 			$datetime = date("Y-m-d H:i:s");
 
 			// Insert content
-			$sql = "UPDATE $t_tasks_systems SET system_title=?, system_description=?, system_updated=? WHERE system_id='$get_current_system_id'";
+			$sql = "UPDATE $t_tasks_systems SET system_title=?, system_task_abbr=?, system_description=?, system_updated=? WHERE system_id='$get_current_system_id'";
 			$stmt = $link->prepare($sql);
-			$stmt->bind_param("sss", $inp_title, $inp_description, $datetime);
+			$stmt->bind_param("ssss", $inp_title, $inp_task_abbr, $inp_description, $datetime);
 			$stmt->execute();
 			if ($stmt->errno) {
 				echo "FAILURE!!! $inp_title<br />$inp_description<br />$datetime<br />$get_current_system_id " . $stmt->error; die;
@@ -407,16 +420,20 @@ elseif($action == "edit_system"){
 		<!-- Edit system form -->";
 		
 		echo"
-		<form method=\"post\" action=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;system_id=$get_current_system_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
-		<p>Title:<br />
-		<input type=\"text\" name=\"inp_title\" value=\"$get_current_system_title\" size=\"25\" />
-		</p>
+			<form method=\"post\" action=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;system_id=$get_current_system_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+			<p>Title:<br />
+			<input type=\"text\" name=\"inp_title\" value=\"$get_current_system_title\" size=\"25\" />
+			</p>
+			<p>Task abbreviation for this system:<br />
+			<input type=\"text\" name=\"inp_task_abbr\" value=\"$get_current_system_task_abbr\" size=\"25\" />
+			</p>
 
-		<p>Description:<br />
-		<textarea name=\"inp_description\" rows=\"10\" cols=\"80\" class=\"editor\">$get_current_system_description</textarea><br />
-		</p>
 
-		<p><input type=\"submit\" value=\"Save\" class=\"btn_default\" /></p>
+			<p>Description:<br />
+			<textarea name=\"inp_description\" rows=\"10\" cols=\"80\" class=\"editor\">$get_current_system_description</textarea><br />
+			</p>
+
+			<p><input type=\"submit\" value=\"Save\" class=\"btn_default\" /></p>
 
 		</form>
 		<!-- //Edit system form -->

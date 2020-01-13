@@ -421,12 +421,19 @@ elseif($action == "new_task"){
 		$inp_system_id = output_html($inp_system_id);
 		$inp_system_id_mysql = quote_smart($link, $inp_system_id);
 
-		$query = "SELECT system_id, system_title, system_description, system_logo, system_is_active, system_created, system_updated FROM $t_tasks_systems WHERE system_id=$inp_system_id_mysql";
+		$query = "SELECT system_id, system_title, system_task_abbr, system_description, system_logo, system_is_active, system_increment_tasks_counter, system_created, system_updated FROM $t_tasks_systems WHERE system_id=$inp_system_id_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
-		list($get_system_id, $get_system_title, $get_system_description, $get_system_logo, $get_system_is_active, $get_system_created, $get_system_updated) = $row;
-
+		list($get_system_id, $get_system_title, $get_system_task_abbr, $get_system_description, $get_system_logo, $get_system_is_active, $get_system_increment_tasks_counter, $get_system_created, $get_system_updated) = $row;
+		if($get_system_id != ""){
+			// Update counter
+			$inp_increment_tasks_counter = $get_system_increment_tasks_counter+1;
+			$result = mysqli_query($link, "UPDATE $t_tasks_systems SET system_increment_tasks_counter=$inp_increment_tasks_counter WHERE system_id=$get_system_id");
+		}
 		$inp_system_title_mysql = quote_smart($link, $get_system_title);
+		$inp_system_task_abbr_mysql = quote_smart($link, $get_system_task_abbr);
+		if($get_system_increment_tasks_counter == ""){ $get_system_increment_tasks_counter = 0; } 
+		$inp_system_increment_tasks_counter_mysql = quote_smart($link, $get_system_increment_tasks_counter);
 
 
 		// Last used system
@@ -442,7 +449,7 @@ elseif($action == "new_task"){
 		}
 		else{
 			if($get_last_used_system_system_id != "$inp_system_id"){
-				$result = mysqli_query($link, "UPDATE $t_tasks_last_used_systems  SET last_used_system_system_id=$inp_system_id_mysql WHERE last_used_system_id=$get_last_used_system_id");
+				$result = mysqli_query($link, "UPDATE $t_tasks_last_used_systems SET last_used_system_system_id=$inp_system_id_mysql WHERE last_used_system_id=$get_last_used_system_id");
 			}
 		}
 
@@ -569,7 +576,7 @@ elseif($action == "new_task"){
 
 		// Insert
 		mysqli_query($link, "INSERT INTO $t_tasks_index
-		(task_id, task_title, task_text, task_status_code_id, task_status_code_title, 
+		(task_id, task_system_task_abbr, task_system_incremented_number, task_title, task_text, task_status_code_id, task_status_code_title, 
 		task_priority_id, task_created_datetime, task_created_translated, task_created_by_user_id, task_created_by_user_name, 
 		task_created_by_user_alias, task_created_by_user_image, task_created_by_user_email, task_updated_datetime, task_updated_translated, 
 		task_due_datetime, task_due_time, task_due_translated, task_assigned_to_user_id, task_assigned_to_user_name,
@@ -578,7 +585,7 @@ elseif($action == "new_task"){
 		task_project_id, task_project_title, task_project_part_id, task_project_part_title, task_system_id, 
 		task_system_title, task_system_part_id, task_system_part_title) 
 		VALUES 
-		(NULL, $inp_title_mysql, '', $inp_status_code_id_mysql, $inp_status_code_title_mysql,
+		(NULL, $inp_system_task_abbr_mysql, $inp_system_increment_tasks_counter_mysql, $inp_title_mysql, '', $inp_status_code_id_mysql, $inp_status_code_title_mysql,
 		 $inp_priority_id_mysql, '$datetime', $inp_created_translated_mysql, $inp_created_by_user_id_mysql, $inp_created_by_user_name_mysql,
 		$inp_created_by_user_alias_mysql, $inp_created_by_user_image_mysql, $inp_created_by_user_email_mysql, '$datetime', $inp_created_translated_mysql, 
 		$inp_due_datetime_mysql, $inp_due_time_mysql, $inp_due_translated_mysql, $inp_assigned_to_user_id_mysql, $inp_assigned_to_user_name_mysql, 
@@ -661,7 +668,9 @@ elseif($action == "new_task"){
 			    "Reply-To: $configFromEmailSav" . "\r\n" .
 			    'X-Mailer: PHP/' . phpversion();
 
-			mail($inp_assigned_to_user_email, $subject, $message, $headers);
+			if($configMailSendActiveSav == "1"){
+				mail($inp_assigned_to_user_email, $subject, $message, $headers);
+			}
 			$fm_email = "email_sent_to_" . "$inp_assigned_to_user_email";
 		}
 
@@ -719,7 +728,9 @@ elseif($action == "new_task"){
 				    "Reply-To: $configFromEmailSav" . "\r\n" .
 				    'X-Mailer: PHP/' . phpversion();
 
-				mail($inp_assigned_to_user_email, $subject, $message, $headers);
+				if($configMailSendActiveSav == "1"){
+					mail($inp_assigned_to_user_email, $subject, $message, $headers);
+				}
 			} // email ok
 		}
 
@@ -994,8 +1005,7 @@ elseif($action == "new_task"){
 
 
 		<p>System: <a href=\"index.php?open=$open&amp;page=tasks_systems&amp;action=new_system&amp;l=$l\" target=\"_blank\">New</a><br />
-		<select name=\"inp_system_id\">
-			<option value=\"0\">None</option>\n";
+		<select name=\"inp_system_id\">\n";
 		$query = "SELECT system_id, system_title FROM $t_tasks_systems WHERE system_is_active=1 ORDER BY system_title ASC";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
@@ -1315,10 +1325,10 @@ elseif($action == "open_task"){
 elseif($action == "edit_task"){
 	// Get task
 	$task_id_mysql = quote_smart($link, $task_id);
-	$query = "SELECT task_id, task_title, task_text, task_status_code_id, task_priority_id, task_created_datetime, task_created_translated,  task_created_by_user_id, task_created_by_user_alias, task_created_by_user_image, task_created_by_user_email, task_updated_datetime, task_updated_translated, task_due_datetime, task_due_time, task_due_translated, task_assigned_to_user_id, task_assigned_to_user_alias, task_assigned_to_user_image, task_assigned_to_user_email, task_hours_planned, task_hours_used, task_qa_datetime, task_qa_by_user_id, task_qa_by_user_alias, task_qa_by_user_image, task_qa_by_user_email, task_finished_datetime, task_finished_by_user_id, task_finished_by_user_alias, task_finished_by_user_image, task_finished_by_user_email, task_is_archived, task_comments, task_project_id, task_project_part_id, task_system_id, task_system_part_id FROM $t_tasks_index WHERE task_id=$task_id_mysql";
+	$query = "SELECT task_id, task_system_task_abbr, task_system_incremented_number, task_title, task_text, task_status_code_id, task_priority_id, task_created_datetime, task_created_translated,  task_created_by_user_id, task_created_by_user_alias, task_created_by_user_image, task_created_by_user_email, task_updated_datetime, task_updated_translated, task_due_datetime, task_due_time, task_due_translated, task_assigned_to_user_id, task_assigned_to_user_alias, task_assigned_to_user_image, task_assigned_to_user_email, task_hours_planned, task_hours_used, task_qa_datetime, task_qa_by_user_id, task_qa_by_user_alias, task_qa_by_user_image, task_qa_by_user_email, task_finished_datetime, task_finished_by_user_id, task_finished_by_user_alias, task_finished_by_user_image, task_finished_by_user_email, task_is_archived, task_comments, task_project_id, task_project_part_id, task_system_id, task_system_part_id FROM $t_tasks_index WHERE task_id=$task_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_task_id, $get_current_task_title, $get_current_task_text, $get_current_task_status_code_id, $get_current_task_priority_id, $get_current_task_created_datetime, $get_current_task_created_translated, $get_current_task_created_by_user_id, $get_current_task_created_by_user_alias, $get_current_task_created_by_user_image, $get_current_task_created_by_user_email, $get_current_task_updated_datetime, $get_current_task_updated_translated, $get_current_task_due_datetime, $get_current_task_due_time, $get_current_task_due_translated, $get_current_task_assigned_to_user_id, $get_current_task_assigned_to_user_alias, $get_current_task_assigned_to_user_image, $get_current_task_assigned_to_user_email, $get_current_task_hours_planned, $get_current_task_hours_used, $get_current_task_qa_datetime, $get_current_task_qa_by_user_id, $get_current_task_qa_by_user_alias, $get_current_task_qa_by_user_image, $get_current_task_qa_by_user_email, $get_current_task_finished_datetime, $get_current_task_finished_by_user_id, $get_current_task_finished_by_user_alias, $get_current_task_finished_by_user_image, $get_current_task_finished_by_user_email, $get_current_task_is_archived, $get_current_task_comments, $get_current_task_project_id, $get_current_task_project_part_id, $get_current_task_system_id, $get_current_task_system_part_id) = $row;
+	list($get_current_task_id, $get_current_task_system_task_abbr, $get_current_task_system_incremented_number, $get_current_task_title, $get_current_task_text, $get_current_task_status_code_id, $get_current_task_priority_id, $get_current_task_created_datetime, $get_current_task_created_translated, $get_current_task_created_by_user_id, $get_current_task_created_by_user_alias, $get_current_task_created_by_user_image, $get_current_task_created_by_user_email, $get_current_task_updated_datetime, $get_current_task_updated_translated, $get_current_task_due_datetime, $get_current_task_due_time, $get_current_task_due_translated, $get_current_task_assigned_to_user_id, $get_current_task_assigned_to_user_alias, $get_current_task_assigned_to_user_image, $get_current_task_assigned_to_user_email, $get_current_task_hours_planned, $get_current_task_hours_used, $get_current_task_qa_datetime, $get_current_task_qa_by_user_id, $get_current_task_qa_by_user_alias, $get_current_task_qa_by_user_image, $get_current_task_qa_by_user_email, $get_current_task_finished_datetime, $get_current_task_finished_by_user_id, $get_current_task_finished_by_user_alias, $get_current_task_finished_by_user_image, $get_current_task_finished_by_user_email, $get_current_task_is_archived, $get_current_task_comments, $get_current_task_project_id, $get_current_task_project_part_id, $get_current_task_system_id, $get_current_task_system_part_id) = $row;
 	if($get_current_task_id == ""){
 		echo"<p>Server error 404</p>";
 	}
@@ -1517,12 +1527,29 @@ elseif($action == "edit_task"){
 			$inp_system_id = output_html($inp_system_id);
 			$inp_system_id_mysql = quote_smart($link, $inp_system_id);
 
-			$query = "SELECT system_id, system_title, system_description, system_logo, system_is_active, system_created, system_updated FROM $t_tasks_systems WHERE system_id=$inp_system_id_mysql";
+
+			$query = "SELECT system_id, system_title, system_task_abbr, system_description, system_logo, system_is_active, system_increment_tasks_counter, system_created, system_updated FROM $t_tasks_systems WHERE system_id=$inp_system_id_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
-			list($get_system_id, $get_system_title, $get_system_description, $get_system_logo, $get_system_is_active, $get_system_created, $get_system_updated) = $row;
+			list($get_system_id, $get_system_title, $get_system_task_abbr, $get_system_description, $get_system_logo, $get_system_is_active, $get_system_increment_tasks_counter, $get_system_created, $get_system_updated) = $row;
 
 			$inp_system_title_mysql = quote_smart($link, $get_system_title);
+
+			if($get_current_task_system_id != "$inp_system_id"){
+				// Update increment tasks counter
+				$inp_system_task_abbr_mysql = quote_smart($link, $get_system_task_abbr);
+				$inp_system_increment_tasks_counter_mysql = quote_smart($link, $get_system_increment_tasks_counter);
+
+				// Update counter
+				$inp_increment_tasks_counter = $get_system_increment_tasks_counter+1;
+				$result = mysqli_query($link, "UPDATE $t_tasks_systems SET system_increment_tasks_counter=$inp_increment_tasks_counter WHERE system_id=$get_system_id");
+			}
+			else{
+				// Use old 
+				$inp_system_task_abbr_mysql = quote_smart($link, $get_current_task_system_task_abbr);
+				$inp_system_increment_tasks_counter_mysql = quote_smart($link, $get_current_task_system_incremented_number);
+
+			}
 	
 			// Project id
 			$inp_project_id = $_POST['inp_project_id'];
@@ -1627,6 +1654,8 @@ elseif($action == "edit_task"){
 
 			// Update
 			$result = mysqli_query($link, "UPDATE $t_tasks_index SET 
+							task_system_task_abbr=$inp_system_task_abbr_mysql, 
+							task_system_incremented_number=$inp_system_increment_tasks_counter_mysql, 
 							task_title=$inp_title_mysql, 
 							task_status_code_id=$inp_status_code_id_mysql, 
 							task_status_code_title=$inp_status_code_title_mysql,
@@ -1770,8 +1799,10 @@ $inp_history_new_hours_planned_mysql , $inp_history_new_hours_used_mysql )")
 				    "From: $configFromEmailSav" . "\r\n" .
 				    "Reply-To: $configFromEmailSav" . "\r\n" .
 				    'X-Mailer: PHP/' . phpversion();
-				mail($inp_assigned_to_user_email, $subject, $message, $headers);
-
+				
+				if($configMailSendActiveSav == "1"){
+					mail($inp_assigned_to_user_email, $subject, $message, $headers);
+				}
 
 				$fm_email = "email_sent_to_" . "$inp_assigned_to_user_email" . "_from_" . $configFromEmailSav;
 
@@ -1856,8 +1887,10 @@ $inp_history_new_hours_planned_mysql , $inp_history_new_hours_used_mysql )")
 					    "From: $configFromEmailSav" . "\r\n" .
 					    "Reply-To: $configFromEmailSav" . "\r\n" .
 					    'X-Mailer: PHP/' . phpversion();
-					mail($get_subscription_user_email, $subject, $message, $headers);
-					
+
+					if($configMailSendActiveSav == "1"){
+						mail($get_subscription_user_email, $subject, $message, $headers);
+					}
 
 
 					// Notification to users

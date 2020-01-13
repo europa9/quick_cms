@@ -36,6 +36,8 @@ else{
 	mysqli_query($link, "CREATE TABLE $t_tasks_index(
 	   task_id INT NOT NULL AUTO_INCREMENT,
 	   PRIMARY KEY(task_id), 
+	   task_system_task_abbr VARCHAR(200),
+	   task_system_incremented_number INT,
 	   task_title VARCHAR(200),
 	   task_text TEXT,
 	   task_status_code_id INT,
@@ -48,6 +50,14 @@ else{
 	   task_created_by_user_alias VARCHAR(200),
 	   task_created_by_user_image VARCHAR(200),
 	   task_created_by_user_email VARCHAR(200),
+	   task_system_id INT,
+	   task_system_title VARCHAR(200),
+	   task_system_part_id INT,
+	   task_system_part_title VARCHAR(200),
+	   task_project_id INT,
+	   task_project_title VARCHAR(200),
+	   task_project_part_id INT,
+	   task_project_part_title VARCHAR(200),
 	   task_updated_datetime DATETIME,
 	   task_updated_translated VARCHAR(200),
 	   task_due_datetime DATETIME,
@@ -76,15 +86,8 @@ else{
 	   task_finished_by_user_image VARCHAR(200),
 	   task_finished_by_user_email VARCHAR(200),
 	   task_is_archived INT,
-	   task_comments INT,
-	   task_project_id INT,
-	   task_project_title VARCHAR(200),
-	   task_project_part_id INT,
-	   task_project_part_title VARCHAR(200),
-	   task_system_id INT,
-	   task_system_title VARCHAR(200),
-	   task_system_part_id INT,
-	   task_system_part_title VARCHAR(200))")
+	   task_comments INT
+		)")
 	or die(mysqli_error($link));
 }
 
@@ -174,17 +177,19 @@ else{
 	   system_id INT NOT NULL AUTO_INCREMENT,
 	   PRIMARY KEY(system_id), 
 	   system_title VARCHAR(200),
+	   system_task_abbr VARCHAR(200),
 	   system_description TEXT,
 	   system_logo VARCHAR(200),
 	   system_is_active INT,
+	   system_increment_tasks_counter INT,
 	   system_created DATETIME,
 	   system_updated DATETIME)")
 	or die(mysqli_error($link));
 
 	mysqli_query($link, "INSERT INTO $t_tasks_systems
-	(system_id, system_title, system_description, system_logo, system_is_active) 
+	(system_id, system_title, system_task_abbr, system_description, system_logo, system_is_active, system_increment_tasks_counter) 
 	VALUES 
-	(NULL, 'Website', 'This webside', 'website.jpg', 1)")
+	(NULL, 'Website', 'SWCR', 'This webside', 'website.jpg', 1, 1)")
 	or die(mysqli_error($link));
 
 
