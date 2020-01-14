@@ -35,6 +35,7 @@ echo"
 			<li><a href=\"./?open=dashboard&amp;page=moderator_of_the_week&amp;editor_language=$editor_language\"";if($page == "moderator_of_the_week"){echo" class=\"selected\"";}echo">Moderator ofw</a></li>
 			<li><a href=\"./?open=dashboard&amp;page=user_agents&amp;editor_language=$editor_language\"";if($page == "user_agents"){echo" class=\"selected\"";}echo">User agents</a></li>
 			<li><a href=\"./?open=dashboard&amp;page=statistics&amp;editor_language=$editor_language\"";if($page == "statistics"){echo" class=\"selected\"";}echo">Statistics</a></li>
+			<li><a href=\"./?open=dashboard&amp;page=search_engine_index&amp;editor_language=$editor_language\"";if($page == "search_engine_index"){echo" class=\"selected\"";}echo">Search engine index</a></li>
 ";
 
 
