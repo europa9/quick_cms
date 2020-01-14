@@ -443,7 +443,12 @@ elseif($action == "new_task"){
 	list($get_last_used_system_id, $get_last_used_system_user_id, $get_last_used_system_system_id) = $row;	
 
 	// System id
-	$inp_system_id = "$get_last_used_system_id";
+	if($get_last_used_system_id == ""){
+		$inp_system_id = "0";
+	}
+	else{
+		$inp_system_id = "$get_last_used_system_id";
+	}
 	$inp_system_id = output_html($inp_system_id);
 	$inp_system_id_mysql = quote_smart($link, $inp_system_id);
 
@@ -469,7 +474,12 @@ elseif($action == "new_task"){
 	list($get_last_used_project_id, $get_last_used_project_user_id, $get_last_used_project_project_id) = $row;
 
 	// Project id
-	$inp_project_id = "$get_last_used_project_id";
+	if($get_last_used_project_id == ""){
+		$inp_project_id = "0";
+	}
+	else{
+		$inp_project_id = "$get_last_used_project_id";
+	}
 	$inp_project_id = output_html($inp_project_id);
 	$inp_project_id_mysql = quote_smart($link, $inp_project_id);
 
