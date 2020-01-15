@@ -634,7 +634,7 @@ if($action == ""){
 					<p>
 					<a href=\"index.php?open=dashboard&amp;page=tasks&amp;status_code_id=$get_status_code_id&amp;l=$l\">Open</a>	
 					&middot;	
-					<a href=\"index.php?open=dashboard&amp;page=tasks&amp;action=new_task&amp;status_code_id=$get_status_code_id&amp;l=$l\">New task</a>
+					<a href=\"index.php?open=dashboard&amp;page=tasks&amp;action=new_task&amp;status_code_id=$get_status_code_id&amp;l=$l&amp;process=1\">New task</a>
 					</p>
 				</div>
 

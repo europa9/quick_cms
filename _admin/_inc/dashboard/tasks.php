@@ -631,10 +631,10 @@ elseif($action == "new_task"){
 elseif($action == "open_task"){
 	// Get task
 	$task_id_mysql = quote_smart($link, $task_id);
-	$query = "SELECT task_id, task_title, task_text, task_status_code_id, task_priority_id, task_created_datetime, task_created_translated,  task_created_by_user_id, task_created_by_user_alias, task_created_by_user_image, task_created_by_user_email, task_updated_datetime, task_updated_translated, task_due_datetime, task_due_time, task_due_translated, task_assigned_to_user_id, task_assigned_to_user_alias, task_assigned_to_user_image, task_assigned_to_user_email, task_hours_planned, task_hours_used, task_hours_diff_number, task_hours_diff_percentage, task_qa_datetime, task_qa_by_user_id, task_qa_by_user_alias, task_qa_by_user_image, task_qa_by_user_email, task_finished_datetime, task_finished_by_user_id, task_finished_by_user_alias, task_finished_by_user_image, task_finished_by_user_email, task_is_archived, task_comments, task_project_id, task_project_part_id, task_system_id, task_system_part_id FROM $t_tasks_index WHERE task_id=$task_id_mysql";
+	$query = "SELECT task_id, task_system_task_abbr, task_system_incremented_number, task_project_task_abbr, task_project_incremented_number, task_title, task_text, task_status_code_id, task_priority_id, task_created_datetime, task_created_translated,  task_created_by_user_id, task_created_by_user_alias, task_created_by_user_image, task_created_by_user_email, task_updated_datetime, task_updated_translated, task_due_datetime, task_due_time, task_due_translated, task_assigned_to_user_id, task_assigned_to_user_alias, task_assigned_to_user_image, task_assigned_to_user_email, task_hours_planned, task_hours_used, task_hours_diff_number, task_hours_diff_percentage, task_qa_datetime, task_qa_by_user_id, task_qa_by_user_alias, task_qa_by_user_image, task_qa_by_user_email, task_finished_datetime, task_finished_by_user_id, task_finished_by_user_alias, task_finished_by_user_image, task_finished_by_user_email, task_is_archived, task_comments, task_project_id, task_project_part_id, task_system_id, task_system_part_id FROM $t_tasks_index WHERE task_id=$task_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_task_id, $get_current_task_title, $get_current_task_text, $get_current_task_status_code_id, $get_current_task_priority_id, $get_current_task_created_datetime, $get_current_task_created_translated, $get_current_task_created_by_user_id, $get_current_task_created_by_user_alias, $get_current_task_created_by_user_image, $get_current_task_created_by_user_email, $get_current_task_updated_datetime, $get_current_task_updated_translated, $get_current_task_due_datetime, $get_current_task_due_time, $get_current_task_due_translated, $get_current_task_assigned_to_user_id, $get_current_task_assigned_to_user_alias, $get_current_task_assigned_to_user_image, $get_current_task_assigned_to_user_email, $get_current_task_hours_planned, $get_current_task_hours_used, $get_current_task_hours_diff_number, $get_current_task_hours_diff_percentage, $get_current_task_qa_datetime, $get_current_task_qa_by_user_id, $get_current_task_qa_by_user_alias, $get_current_task_qa_by_user_image, $get_current_task_qa_by_user_email, $get_current_task_finished_datetime, $get_current_task_finished_by_user_id, $get_current_task_finished_by_user_alias, $get_current_task_finished_by_user_image, $get_current_task_finished_by_user_email, $get_current_task_is_archived, $get_current_task_comments, $get_current_task_project_id, $get_current_task_project_part_id, $get_current_task_system_id, $get_current_task_system_part_id) = $row;
+	list($get_current_task_id, $get_current_task_system_task_abbr, $get_current_task_system_incremented_number, $get_current_task_project_task_abbr, $get_current_task_project_incremented_number, $get_current_task_title, $get_current_task_text, $get_current_task_status_code_id, $get_current_task_priority_id, $get_current_task_created_datetime, $get_current_task_created_translated, $get_current_task_created_by_user_id, $get_current_task_created_by_user_alias, $get_current_task_created_by_user_image, $get_current_task_created_by_user_email, $get_current_task_updated_datetime, $get_current_task_updated_translated, $get_current_task_due_datetime, $get_current_task_due_time, $get_current_task_due_translated, $get_current_task_assigned_to_user_id, $get_current_task_assigned_to_user_alias, $get_current_task_assigned_to_user_image, $get_current_task_assigned_to_user_email, $get_current_task_hours_planned, $get_current_task_hours_used, $get_current_task_hours_diff_number, $get_current_task_hours_diff_percentage, $get_current_task_qa_datetime, $get_current_task_qa_by_user_id, $get_current_task_qa_by_user_alias, $get_current_task_qa_by_user_image, $get_current_task_qa_by_user_email, $get_current_task_finished_datetime, $get_current_task_finished_by_user_id, $get_current_task_finished_by_user_alias, $get_current_task_finished_by_user_image, $get_current_task_finished_by_user_email, $get_current_task_is_archived, $get_current_task_comments, $get_current_task_project_id, $get_current_task_project_part_id, $get_current_task_system_id, $get_current_task_system_part_id) = $row;
 	if($get_current_task_id == ""){
 		echo"<p>Server error 404</p>";
 	}
@@ -657,9 +657,23 @@ elseif($action == "open_task"){
 			or die(mysqli_error($link));
 		}
 
+		// Number
+		$number = "";
+		if($get_current_task_project_incremented_number == "0" OR $get_current_task_project_incremented_number == ""){
+			if($get_current_task_system_incremented_number == "0" OR $get_current_task_system_incremented_number == ""){
+				$number = "$get_current_task_id";
+			}
+			else{
+				$number = "$get_current_task_system_task_abbr-$get_current_task_system_incremented_number";
+			}
+		}
+		else{
+			$number = "$get_current_task_project_task_abbr-$get_current_task_project_incremented_number";
+		}
+
 
 		echo"
-		<h1>$get_current_task_title</h1>
+		<h1>$number $get_current_task_title</h1>
 		<!-- Where am I? -->
 			<p><b>You are here:</b><br />
 			<a href=\"index.php?open=$open&amp;page=tasks&amp;l=$l\">Tasks</a>
@@ -674,7 +688,7 @@ elseif($action == "open_task"){
 			&gt;
 			<a href=\"index.php?open=$open&amp;page=$page&amp;status_code_id=$get_status_code_id&amp;l=$l\">$get_status_code_title</a>
 			&gt;
-			<a href=\"index.php?open=$open&amp;page=$page&amp;action=open_task&amp;task_id=$get_current_task_id&amp;l=$l\">$get_current_task_title</a>
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=open_task&amp;task_id=$get_current_task_id&amp;l=$l\">$number $get_current_task_title</a>
 			</p>
 		<!-- //Where am I? -->
 
@@ -920,7 +934,8 @@ elseif($action == "edit_task"){
 	if($get_current_task_id == ""){
 		echo"<p>Server error 404</p>";
 	}
-	else{	if($process == 1){
+	else{
+		if($process == 1){
 
 			// History
 			$inp_history_summary = "";
@@ -1122,19 +1137,25 @@ elseif($action == "edit_task"){
 			list($get_system_id, $get_system_title, $get_system_task_abbr, $get_system_description, $get_system_logo, $get_system_is_active, $get_system_increment_tasks_counter, $get_system_created, $get_system_updated) = $row;
 
 			$inp_system_title_mysql = quote_smart($link, $get_system_title);
-
 			if($get_current_task_system_id != "$inp_system_id"){
-				// Update increment tasks counter
-				$inp_system_task_abbr_mysql = quote_smart($link, $get_system_task_abbr);
-				$inp_system_increment_tasks_counter_mysql = quote_smart($link, $get_system_increment_tasks_counter);
+				if($get_system_id == ""){
+					$inp_system_task_abbr_mysql = quote_smart($link, "");
+					$inp_system_increment_tasks_counter_mysql = quote_smart($link, "0");
 
-				// Update counter
-				$inp_increment_tasks_counter = $get_system_increment_tasks_counter+1;
-				$result = mysqli_query($link, "UPDATE $t_tasks_systems SET system_increment_tasks_counter=$inp_increment_tasks_counter WHERE system_id=$get_system_id");
+				}
+				else{
+					// Update increment tasks counter
+					$inp_system_task_abbr_mysql = quote_smart($link, $get_system_task_abbr);
+					$inp_system_increment_tasks_counter_mysql = quote_smart($link, $get_system_increment_tasks_counter);
+
+					// Update counter
+					$inp_increment_tasks_counter = $get_system_increment_tasks_counter+1;
+
+					$result = mysqli_query($link, "UPDATE $t_tasks_systems SET system_increment_tasks_counter=$inp_increment_tasks_counter WHERE system_id=$get_system_id") or die(mysqli_error($link));
+				}
 			}
 			else{
 				// Use old 
-				if($get_current_task_system_incremented_number == ""){ $get_current_task_system_incremented_number = "0"; }
 				$inp_system_task_abbr_mysql = quote_smart($link, $get_current_task_system_task_abbr);
 				$inp_system_increment_tasks_counter_mysql = quote_smart($link, $get_current_task_system_incremented_number);
 			}
@@ -1152,18 +1173,23 @@ elseif($action == "edit_task"){
 			$inp_project_title_mysql = quote_smart($link, $get_project_title);
 
 			if($get_current_task_project_id != "$inp_project_id"){
-				// Update increment tasks counter
-				$inp_project_task_abbr_mysql = quote_smart($link, $get_project_task_abbr);
-				if($get_project_increment_tasks_counter == ""){ $get_project_increment_tasks_counter = "0"; } 
-				$inp_project_increment_tasks_counter_mysql = quote_smart($link, $get_project_increment_tasks_counter);
+				if($get_project_id == ""){
+					$inp_project_task_abbr_mysql = quote_smart($link, "");
+					$inp_project_increment_tasks_counter_mysql = quote_smart($link, "0");
+				}
+				else{
+					// Update increment tasks counter
+					$inp_project_task_abbr_mysql = quote_smart($link, $get_project_task_abbr);
+					if($get_project_increment_tasks_counter == ""){ $get_project_increment_tasks_counter = "0"; } 
+					$inp_project_increment_tasks_counter_mysql = quote_smart($link, $get_project_increment_tasks_counter);
 
-				// Update counter
-				$inp_project_increment_tasks_counter = $get_project_increment_tasks_counter+1;
-				$result = mysqli_query($link, "UPDATE $t_tasks_projects SET project_increment_tasks_counter=$inp_project_increment_tasks_counter WHERE project_id=$get_project_id") or die(mysqli_error($link));
+					// Update counter
+					$inp_project_increment_tasks_counter = $get_project_increment_tasks_counter+1;
+					$result = mysqli_query($link, "UPDATE $t_tasks_projects SET project_increment_tasks_counter=$inp_project_increment_tasks_counter WHERE project_id=$get_project_id") or die(mysqli_error($link));
+				}
 			}
 			else{
 				// Use old 
-				if($get_current_task_project_incremented_number == ""){ $get_current_task_project_incremented_number = "0"; }
 				$inp_project_task_abbr_mysql = quote_smart($link, $get_current_task_project_task_abbr);
 				$inp_project_increment_tasks_counter_mysql = quote_smart($link, $get_current_task_project_incremented_number);
 			}
@@ -1539,8 +1565,25 @@ $inp_history_new_hours_planned_mysql , $inp_history_new_hours_used_mysql )")
 			header("Location: index.php?open=dashboard&page=tasks&action=open_task&task_id=$get_current_task_id&ft=success&fm=changes_saved&fm_email=$fm_email");
 			exit;
 		}
+
+
+		// Number
+		$number = "";
+		if($get_current_task_project_incremented_number == "0" OR $get_current_task_project_incremented_number == ""){
+			if($get_current_task_system_incremented_number == "0" OR $get_current_task_system_incremented_number == ""){
+				$number = "$get_current_task_id";
+			}
+			else{
+				$number = "$get_current_task_system_task_abbr-$get_current_task_system_incremented_number";
+			}
+		}
+		else{
+			$number = "$get_current_task_project_task_abbr-$get_current_task_project_incremented_number";
+		}
+
+
 		echo"
-		<h1>$get_current_task_title</h1>
+		<h1>$number $get_current_task_title</h1>
 		<!-- Where am I? -->
 			<p><b>You are here:</b><br />
 			<a href=\"index.php?open=$open&amp;page=tasks&amp;l=$l\">Tasks</a>
