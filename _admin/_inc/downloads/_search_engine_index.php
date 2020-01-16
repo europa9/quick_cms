@@ -21,6 +21,12 @@ $t_downloads_index 				= $mysqlPrefixSav . "downloads_index";
 $datetime = date("Y-m-d H:i:s");
 $datetime_saying = date("j. M Y H:i");
 
+
+$query_exists = "SELECT * FROM $t_downloads_index";
+$result_exists = mysqli_query($link, $query);
+if($result_exists !== FALSE){
+
+
 /* Find all entries */
 $query_w = "SELECT download_id, download_title, download_title_short, download_title_length, download_language, download_introduction, download_description, download_video, download_image_path, download_image_store, download_image_store_thumb, download_image_thumb_a, download_image_thumb_b, download_image_thumb_c, download_image_thumb_d, download_image_file_a, download_image_file_b, download_image_file_c, download_image_file_d, download_read_more_url, download_main_category_id, download_sub_category_id, download_dir, download_file, download_type, download_version, download_file_size, download_file_date, download_file_date_print, download_last_download, download_hits, download_unique_hits, download_ip_block, download_tag_a, download_tag_b, download_tag_c, download_created_datetime, download_updated_datetime, download_updated_print, download_have_to_be_logged_in_to_download FROM $t_downloads_index";
 $result_w = mysqli_query($link, $query_w);
@@ -67,4 +73,7 @@ while($row_w = mysqli_fetch_row($result_w)) {
 	}
 	
 } // all downloads
+
+
+}
 ?>

@@ -21,6 +21,10 @@ $t_discuss_topics	= $mysqlPrefixSav . "discuss_topics";
 $datetime = date("Y-m-d H:i:s");
 $datetime_saying = date("j. M Y H:i");
 
+$query_exists = "SELECT * FROM $t_discuss_topics";
+$result_exists = mysqli_query($link, $query);
+if($result_exists !== FALSE){
+
 /* Find all entries */
 $query_w = "SELECT topic_id, topic_user_id, topic_user_alias, topic_user_image, topic_language, topic_title, topic_text FROM $t_discuss_topics ORDER BY topic_last_replied DESC";
 $result_w = mysqli_query($link, $query_w);
@@ -60,4 +64,6 @@ while($row_w = mysqli_fetch_row($result_w)) {
 	}
 	
 } // all discuess topics
+
+}
 ?>

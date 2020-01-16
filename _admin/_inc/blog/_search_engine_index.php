@@ -22,6 +22,10 @@ $t_blog_posts_tags 	= $mysqlPrefixSav . "blog_posts_tags";
 $datetime = date("Y-m-d H:i:s");
 $datetime_saying = date("j. M Y H:i");
 
+$query_exists = "SELECT * FROM $t_blog_posts";
+$result_exists = mysqli_query($link, $query);
+if($result_exists !== FALSE){
+
 /* Find all entries */
 $query_w = "SELECT blog_post_id, blog_post_user_id, blog_post_title, blog_post_language, blog_post_category_id, blog_post_introduction, blog_post_privacy_level, blog_post_image_path, blog_post_image_thumb_small, blog_post_image_thumb_medium, blog_post_image_thumb_large, blog_post_image_file, blog_post_ad, blog_post_updated, blog_post_comments FROM $t_blog_posts WHERE blog_post_privacy_level='everyone' ORDER BY blog_post_id DESC";
 $result_w = mysqli_query($link, $query_w);
@@ -60,4 +64,6 @@ while($row_w = mysqli_fetch_row($result_w)) {
 	}
 	
 } // all blog posts
+
+}
 ?>

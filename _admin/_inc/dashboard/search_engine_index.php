@@ -16,7 +16,8 @@ if(!(isset($define_access_to_control_panel))){
 
 
 /*- Tables ---------------------------------------------------------------------------- */
-$t_search_engine_index = $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
 
 
 
@@ -302,7 +303,7 @@ elseif($action == "scan_all_modules_and_insert_into_index"){
 
 
 						echo"
-						<a href=\"index.php?open=$open&amp;page=$page&amp;action=scan_all_modules_and_insert_into_index&amp;mode=insert_and_update_search_index&amp;module=$module_name&amp;l=$l\""; if($module_name == "$module"){ echo" style=\"font-weight: bold;\""; } echo">$module_name</a><br />\n";
+						<a href=\"index.php?open=$open&amp;page=$page&amp;action=scan_all_modules_and_insert_into_index&amp;mode=insert_and_update_search_index&amp;module=$module_name&amp;order_by=$order_by&amp;order_method=$order_method&amp;l=$l\""; if($module_name == "$module"){ echo" style=\"font-weight: bold;\""; } echo">$module_name</a><br />\n";
 
 						if($module_name == "$module"){ 
 							$pick_next_module = "true";

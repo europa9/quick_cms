@@ -22,6 +22,10 @@ $t_exercise_equipments 				= $mysqlPrefixSav . "exercise_equipments";
 $datetime = date("Y-m-d H:i:s");
 $datetime_saying = date("j. M Y H:i");
 
+$query_exists = "SELECT * FROM $t_exercise_index";
+$result_exists = mysqli_query($link, $query);
+if($result_exists !== FALSE){
+
 /* Exercise index */
 $query_w = "SELECT exercise_id, exercise_title, exercise_title_clean, exercise_title_alternative, exercise_user_id, exercise_language, exercise_muscle_group_id_main, exercise_muscle_group_id_sub, exercise_muscle_part_of_id, exercise_equipment_id, exercise_type_id, exercise_level_id, exercise_preparation, exercise_guide, exercise_important, exercise_created_datetime, exercise_updated_datetime, exercise_user_ip, exercise_uniqe_hits, exercise_uniqe_hits_ip_block, exercise_likes, exercise_dislikes, exercise_rating, exercise_rating_ip_block, exercise_number_of_comments, exercise_reported, exercise_reported_checked, exercise_reported_reason, exercise_last_viewed FROM $t_exercise_index";
 $result_w = mysqli_query($link, $query_w);
@@ -104,4 +108,6 @@ while($row_w = mysqli_fetch_row($result_w)) {
 	}
 	
 } // all equipments
+
+}
 ?>

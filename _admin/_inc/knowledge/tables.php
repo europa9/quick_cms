@@ -311,6 +311,7 @@ else{
 	   page_title_clean VARCHAR(200), 
 	   page_description TEXT, 
 	   page_text TEXT,
+	   page_language VARCHAR(200), 
 	   page_parent_id INT, 
 	   page_no_of_children INT, 
 	   page_weight INT, 
