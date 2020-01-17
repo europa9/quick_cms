@@ -28,6 +28,13 @@ include("$root/_admin/website_config.php");
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/meal_plans/ts_new_meal_plan.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_meal_plans 		= $mysqlPrefixSav . "meal_plans";
+$t_meal_plans_days	= $mysqlPrefixSav . "meal_plans_days";
+$t_meal_plans_meals	= $mysqlPrefixSav . "meal_plans_meals";
+$t_meal_plans_entries	= $mysqlPrefixSav . "meal_plans_entries";
+
+
 /*- Variables ------------------------------------------------------------------------- */
 if(isset($_GET['meal_plan_id'])){
 	$meal_plan_id = $_GET['meal_plan_id'];

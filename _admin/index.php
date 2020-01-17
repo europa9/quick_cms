@@ -316,6 +316,10 @@ include("_translations/admin/$l/common/t_common.php");
 if($open != ""){
 	// Example: _translations/admin/en/settings/t_common.php
 	if(!(file_exists("_translations/admin/$l/$open/t_common.php"))){
+		if(!(is_dir("_translations/admin/$l/$open"))){
+			echo"<p>Making dir _translations/admin/$l/$open</p>";
+			mkdir("_translations/admin/$l/$open");
+		}
 		$fh = fopen("_translations/admin/$l/$open/t_common.php", "w+") or die("can not open file");
 		fwrite($fh, "<?php ?>");
 		fclose($fh);

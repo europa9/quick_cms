@@ -83,7 +83,7 @@ if($result_exists !== FALSE){
 
 		$inp_index_module_name_mysql = quote_smart($link, "knowledge");
 
-		$inp_index_module_part_name_mysql = quote_smart($link, "$get_page_space_id");
+		$inp_index_module_part_name_mysql = quote_smart($link, "space_id$get_page_space_id");
 
 		$inp_index_reference_id_mysql = quote_smart($link, "page_id$get_page_id");
 
@@ -124,7 +124,7 @@ if($result_exists !== FALSE){
 		$inp_control_user_id_mysql 				= quote_smart($link, $get_member_id);
 		$inp_control_user_name_mysql 				= quote_smart($link, $get_member_user_alias);
 		$inp_control_has_access_to_module_name_mysql 		= quote_smart($link, "knowledge");
-		$inp_control_has_access_to_module_part_name_mysql 	= quote_smart($link, "$get_page_space_id");
+		$inp_control_has_access_to_module_part_name_mysql 	= quote_smart($link, "space_id$get_page_space_id");
 
 
 

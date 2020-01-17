@@ -29,14 +29,14 @@ if(isset($_GET['order_by'])) {
 	$order_by = strip_tags(stripslashes($order_by));
 }
 else{
-	$order_by = "";
+	$order_by = "index_id";
 }
 if(isset($_GET['order_method'])) {
 	$order_method = $_GET['order_method'];
 	$order_method = strip_tags(stripslashes($order_method));
 }
 else{
-	$order_method = "";
+	$order_method = "desc";
 }
 if(isset($_GET['mode'])) {
 	$mode = $_GET['mode'];
@@ -59,27 +59,80 @@ else{
 if($action == ""){
 	
 	echo"
-	<h1>Search engine index</h1>
+	<!-- Headline and about -->
+		<table>
+		 <tr>
+		  <td style=\"padding-right: 14px;\">
+			<h1>Search engine index</h1>
+		  </td>
+		  <td>
+			<span>The search engine holds links to all pages that are in your website. 
+			The title is used as search query. 
+			<br />Title is build up like this: PageName | PageNameSub  | Sub module | Module
+		  </td>
+		 </tr>
+		</table>
+	<!-- //Headline and about -->
 
 	<!-- Menu -->
-		<p>
-		<a href=\"index.php?open=$open&amp;page=$page&amp;action=scan_all_modules_and_insert_into_index&amp;mode=create_module_list&amp;order_method=$order_method&amp;order_by=$order_by&amp;&amp;l=$l\" class=\"btn_default\">Scan all modules and insert into index</a>
-		</p>
+		<table>
+		 <tr>
+		  <td style=\"padding-right: 14px;\">
+			<!-- Editor language -->
+			<p>
+			<select name=\"editor_language\" class=\"on_select_go_to_url\">
+				<option value=\"index.php?open=$open&amp;page=$page&amp;order_method=$order_method&amp;order_by=$order_by&amp;&amp;l=$l\">- Editor language -</option>\n";
+				$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+				$result = mysqli_query($link, $query);
+				while($row = mysqli_fetch_row($result)) {
+					list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
+					echo"	<option value=\"index.php?open=$open&amp;page=$page&amp;order_method=$order_method&amp;order_by=$order_by&amp;&amp;l=$l&amp;editor_language=$get_language_active_iso_two\""; if($editor_language == "$get_language_active_iso_two"){ echo" selected=\"selected\""; } echo">$get_language_active_name</option>\n";
+				}
+				echo"
+			</select>
+			</p>
+				<!-- On select go to url -->
+					<script>
+					\$(function(){
+						// bind change event to select
+						\$('.on_select_go_to_url').on('change', function () {
+          					var url = \$(this).val(); // get selected value
+        						if (url) { // require a URL
+        							window.location = url; // redirect
+							}
+							return false;
+						});
+					});
+					</script>
+				<!-- //On select go to url -->
+
+				
+			<!-- //Editor language -->
+		  </td>
+		  <td>
+			<p>
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=scan_all_modules_and_insert_into_index&amp;mode=create_module_list&amp;order_method=$order_method&amp;order_by=$order_by&amp;editor_language=$editor_language&amp;l=$l\" class=\"btn_default\">Scan all modules and insert into index</a>
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=truncate_table&amp;order_method=$order_method&amp;order_by=$order_by&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\" class=\"btn_default\">Truncate tables</a>
+			</p>
+		  </td>
+		 </tr>
+		</table>
 	<!-- Menu -->
 
 	<!-- Feedback -->
-			";
-			if($ft != ""){
-				if($fm == "changes_saved"){
-					$fm = "$l_changes_saved";
-				}
-				else{
-					$fm = ucfirst($fm);
+		";
+		if($ft != ""){
+			if($fm == "changes_saved"){
+				$fm = "$l_changes_saved";
 			}
-				echo"<div class=\"$ft\"><span>$fm</span></div>";
-			}
-			echo"	
+			else{
+				$fm = ucfirst($fm);
+		}
+			echo"<div class=\"$ft\"><span>$fm</span></div>";
+		}
+		echo"	
 	<!-- //Feedback -->
+
 
 	<!-- Index -->
 		
@@ -141,6 +194,24 @@ if($action == ""){
 			echo"</span>
 		   </th>
 		   <th scope=\"col\">";
+			if($order_by == "index_module_part_name" && $order_method == "asc"){
+				$order_method_link = "desc";
+			}
+			else{
+				$order_method_link = "asc";
+			}
+
+			echo"
+			<span><a href=\"index.php?open=$open&amp;page=$page&amp;order_by=index_module_part_name&amp;order_method=$order_method_link&amp;editor_language=$editor_language&amp;l=$l\" style=\"color:black;\"><b>Module part</b></a>";
+			if($order_by == "index_module_part_name" && $order_method == "asc"){
+				echo"<img src=\"_design/gfx/arrow_down.png\" alt=\"arrow_down.png\" />";
+			}
+			if($order_by == "index_module_part_name" && $order_method == "desc"){
+				echo"<img src=\"_design/gfx/arrow_up.png\" alt=\"arrow_up.png\" />";
+			}
+			echo"</span>
+		   </th>
+		   <th scope=\"col\">";
 			if($order_by == "index_unique_hits" && $order_method == "asc"){
 				$order_method_link = "desc";
 			}
@@ -158,12 +229,34 @@ if($action == ""){
 			}
 			echo"</span>
 		   </th>
+		   <th scope=\"col\">";
+			if($order_by == "index_language" && $order_method == "asc"){
+				$order_method_link = "desc";
+			}
+			else{
+				$order_method_link = "asc";
+			}
+
+			echo"
+			<span><a href=\"index.php?open=$open&amp;page=$page&amp;order_by=index_language&amp;order_method=$order_method_link&amp;editor_language=$editor_language&amp;l=$l\" style=\"color:black;\"><b>Language</b></a>";
+			if($order_by == "index_language" && $order_method == "asc"){
+				echo"<img src=\"_design/gfx/arrow_down.png\" alt=\"arrow_down.png\" />";
+			}
+			if($order_by == "index_language" && $order_method == "desc"){
+				echo"<img src=\"_design/gfx/arrow_up.png\" alt=\"arrow_up.png\" />";
+			}
+			echo"</span>
+		   </th>
 		  </tr>
 		 </thead>
 		";
 
-		$query = "SELECT index_id, index_title, index_url, index_short_description, index_module_name, index_reference_id, index_is_ad, index_created_datetime, index_created_datetime_print, index_updated_datetime, index_updated_datetime_print, index_language, index_unique_hits, index_hits_ipblock FROM $t_search_engine_index";
-		if($order_by == "index_id" OR $order_by == "index_title" OR $order_by == "index_module_name" OR $order_by == "index_unique_hits"){
+		$query = "SELECT index_id, index_title, index_url, index_short_description, index_module_name, index_module_part_name, index_reference_id, index_is_ad, index_created_datetime, index_created_datetime_print, index_updated_datetime, index_updated_datetime_print, index_language, index_unique_hits, index_hits_ipblock FROM $t_search_engine_index";
+		if($editor_language != ""){
+			$editor_language_mysql = quote_smart($link, $editor_language);
+			$query = $query . " WHERE index_language=$editor_language_mysql OR index_language=''";
+		}
+		if($order_by == "index_id" OR $order_by == "index_title" OR $order_by == "index_module_name" OR $order_by == "index_module_part_name" OR $order_by == "index_language" OR $order_by == "index_unique_hits"){
 			if($order_method == "asc" OR $order_method == "desc"){
 				$query = $query . " ORDER BY $order_by $order_method";
 			}
@@ -171,7 +264,7 @@ if($action == ""){
 
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
-			list($get_index_id, $get_index_title, $get_index_url, $get_index_short_description, $get_index_module_name, $get_index_reference_id, $get_index_is_ad, $get_index_created_datetime, $get_index_created_datetime_print, $get_index_updated_datetime, $get_index_updated_datetime_print, $get_index_language, $get_index_unique_hits, $get_index_hits_ipblock) = $row;
+			list($get_index_id, $get_index_title, $get_index_url, $get_index_short_description, $get_index_module_name, $get_index_module_part_name, $get_index_reference_id, $get_index_is_ad, $get_index_created_datetime, $get_index_created_datetime_print, $get_index_updated_datetime, $get_index_updated_datetime_print, $get_index_language, $get_index_unique_hits, $get_index_hits_ipblock) = $row;
 			
 			// Style
 			if(isset($style) && $style == ""){
@@ -202,7 +295,17 @@ if($action == ""){
 			  </td>
 			  <td class=\"$style\">
 				<span>
+				$get_index_module_part_name
+				</span>
+			  </td>
+			  <td class=\"$style\">
+				<span>
 				$get_index_unique_hits
+				</span>
+			  </td>
+			  <td class=\"$style\">
+				<span>
+				$get_index_language
 				</span>
 			  </td>
 			 </tr>";
@@ -303,7 +406,7 @@ elseif($action == "scan_all_modules_and_insert_into_index"){
 
 
 						echo"
-						<a href=\"index.php?open=$open&amp;page=$page&amp;action=scan_all_modules_and_insert_into_index&amp;mode=insert_and_update_search_index&amp;module=$module_name&amp;order_by=$order_by&amp;order_method=$order_method&amp;l=$l\""; if($module_name == "$module"){ echo" style=\"font-weight: bold;\""; } echo">$module_name</a><br />\n";
+						<a href=\"index.php?open=$open&amp;page=$page&amp;action=scan_all_modules_and_insert_into_index&amp;mode=insert_and_update_search_index&amp;module=$module_name&amp;order_by=$order_by&amp;order_method=$order_method&amp;editor_language=$editor_language&amp;l=$l\""; if($module_name == "$module"){ echo" style=\"font-weight: bold;\""; } echo">$module_name</a><br />\n";
 
 						if($module_name == "$module"){ 
 							$pick_next_module = "true";
@@ -332,7 +435,7 @@ elseif($action == "scan_all_modules_and_insert_into_index"){
 		";
 		if($next_module != ""){
 			echo"
-			<meta http-equiv=refresh content=\"1; URL=index.php?open=$open&amp;page=$page&amp;action=scan_all_modules_and_insert_into_index&amp;mode=insert_and_update_search_index&amp;module=$next_module&amp;order_by=$order_by&amp;order_method=$order_method&amp;l=$l\">
+			<meta http-equiv=refresh content=\"1; URL=index.php?open=$open&amp;page=$page&amp;action=scan_all_modules_and_insert_into_index&amp;mode=insert_and_update_search_index&amp;module=$next_module&amp;order_by=$order_by&amp;order_method=$order_method&amp;editor_language=$editor_language&amp;l=$l\">
 	
 			<!-- Jquery go to URL after x seconds -->
 			<!-- In case meta refresh doesnt work -->
@@ -340,7 +443,7 @@ elseif($action == "scan_all_modules_and_insert_into_index"){
 			\$(document).ready(function(){
 				window.setTimeout(function(){
         				// Move to a new location or you can do something else
-					window.location.href = \"index.php?open=$open&page=$page&action=scan_all_modules_and_insert_into_index&mode=insert_and_update_search_index&module=$next_module&order_by=$order_by&order_method=$order_method&l=$l\";
+					window.location.href = \"index.php?open=$open&page=$page&action=scan_all_modules_and_insert_into_index&mode=insert_and_update_search_index&module=$next_module&order_by=$order_by&order_method=$order_method&editor_language=$editor_language&l=$l\";
 				}, 10000);
 			});
    			</script>
@@ -349,7 +452,7 @@ elseif($action == "scan_all_modules_and_insert_into_index"){
 		}
 		else{
 			echo"
-			<meta http-equiv=refresh content=\"1; URL=index.php?open=$open&amp;page=$page&amp;order_by=$order_by&amp;order_method=$order_method&amp;l=$l&amp;ft=success&amp;fm=index_complete\">
+			<meta http-equiv=refresh content=\"1; URL=index.php?open=$open&amp;page=$page&amp;order_by=$order_by&amp;order_method=$order_method&amp;editor_language=$editor_language&amp;l=$l&amp;ft=success&amp;fm=index_complete\">
 	
 			<!-- Jquery go to URL after x seconds -->
 			<!-- In case meta refresh doesnt work -->
@@ -357,7 +460,7 @@ elseif($action == "scan_all_modules_and_insert_into_index"){
 			\$(document).ready(function(){
 				window.setTimeout(function(){
         				// Move to a new location or you can do something else
-					window.location.href = \"index.php?open=$open&page=$page&order_by=$order_by&order_method=$order_method&l=$l&ft=success&fm=index_complete\";
+					window.location.href = \"index.php?open=$open&page=$page&order_by=$order_by&order_method=$order_method&editor_language=$editor_language&l=$l&ft=success&fm=index_complete\";
 				}, 10000);
 			});
    			</script>
@@ -367,4 +470,12 @@ elseif($action == "scan_all_modules_and_insert_into_index"){
 	} // mode insert and update_search_index
 	
 } // scan_all_modules_and_insert_into_index
+elseif($action == "truncate_table"){
+	$result = mysqli_query($link, "TRUNCATE TABLE $t_search_engine_access_control");
+	$result = mysqli_query($link, "TRUNCATE TABLE $t_search_engine_index");
+	
+	$url = "index.php?open=$open&page=$page&order_by=$order_by&order_method=$order_method&editor_language=$editor_language&l=$l&ft=success&fm=tables_trucated";
+	header("Location: $url");
+	exit;
+} // truncate_table
 ?>

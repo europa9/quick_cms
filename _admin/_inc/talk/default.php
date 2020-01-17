@@ -43,6 +43,8 @@ else{
 /*- Config ------------------------------------------------------------------------------- */
 if(!(file_exists("_data/talk.php"))){
 	$update_file="<?php
+\$talkTitleSav	= \"Talk\";
+
 // Encryption
 \$talkEncryptionMethodChannelsSav	= \"openssl_encrypt(AES-128-CBC)\";
 \$talkEncryptionMethodDmsSav		= \"openssl_encrypt(AES-128-CBC)\";
@@ -65,6 +67,9 @@ $tabindex = 0;
 if($action == ""){
 
 	if($mode == "save"){
+		$inp_title = $_POST['inp_title'];
+		$inp_title = output_html($inp_title);
+
 		$inp_encryption_method_channels = $_POST['inp_encryption_method_channels'];
 		$inp_encryption_method_channels = output_html($inp_encryption_method_channels);
 
@@ -78,6 +83,8 @@ if($action == ""){
 		$inp_compensate_for_emojis_string_error = output_html($inp_compensate_for_emojis_string_error);
 
 	$update_file="<?php
+\$talkTitleSav	= \"$inp_title\";
+
 // Encryption
 \$talkEncryptionMethodChannelsSav 	= \"$inp_encryption_method_channels\";
 \$talkEncryptionMethodDmsSav 		= \"$inp_encryption_method_dms\";
@@ -141,15 +148,20 @@ if($action == ""){
 
 
 		<!-- Focus -->
-		<script>
-		\$(document).ready(function(){
-			\$('[name=\"inp_website_title\"]').focus();
-		});
-		</script>
+			<script>
+			\$(document).ready(function(){
+				\$('[name=\"inp_title\"]').focus();
+			});
+			</script>
 		<!-- //Focus -->
+
 		<!-- Settings -->
 		<form method=\"post\" action=\"?open=$open&page=$page&amp;mode=save\" enctype=\"multipart/form-data\">
 		
+
+		<p>Talk title:<br />
+		<input type=\"text\" name=\"inp_title\" value=\"$talkTitleSav\" value=\"25\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+		</p>
 
 		<p>Encryption method channels:<br />
 		<select name=\"inp_encryption_method_channels\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">
