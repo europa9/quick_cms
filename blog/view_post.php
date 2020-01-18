@@ -376,7 +376,9 @@ else{
 
 			<!-- Ad -->
 				";
-				include("$root/ad/_includes/ad_main_below_headline.php");
+				if(file_exists("$root/ad/_includes/ad_main_below_headline.php")){
+					include("$root/ad/_includes/ad_main_below_headline.php");
+				}
 				echo"
 			<!-- //Ad -->
 

@@ -29,6 +29,10 @@ include("$root/_admin/website_config.php");
 include("$root/_admin/_translations/site/$l/blog/ts_blog.php");
 include("$root/_admin/_translations/site/$l/blog/ts_my_blog.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Variables ------------------------------------------------------------------------- */
 $tabindex = 0;
 $l_mysql = quote_smart($link, $l);
@@ -117,7 +121,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 				
 				
 				// Delete
-				$result = mysqli_query($link, "DELETE FROM $t_blog_posts  WHERE blog_post_id=$get_blog_post_id");
+				$result = mysqli_query($link, "DELETE FROM $t_blog_posts WHERE blog_post_id=$get_blog_post_id");
+
+				// Delete from search engine
+				$reference_id_mysql = quote_smart($link, "blog_post_id$get_blog_post_id");
+				$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_module_name='blog' AND index_reference_id=$reference_id_mysql");
+
 
 				// Image	
 				if($get_blog_post_image_file != "" && file_exists("$root/$get_blog_post_image_path/$get_blog_post_image_file")){

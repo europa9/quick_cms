@@ -26,6 +26,7 @@ if($page == "menu"){
 
 
 echo"
+			<li><a href=\"index.php?open=ads&amp;page=ads_settings&amp;editor_language=$editor_language\""; if($page == "ads_settings"){ echo" class=\"selected\""; } echo">Ads settings</a></li>
 			<li><a href=\"index.php?open=ads&amp;page=tables&amp;editor_language=$editor_language\""; if($page == "tables"){ echo" class=\"selected\""; } echo">Tables</a></li>
 	
 ";

@@ -28,9 +28,12 @@ include("$root/_admin/website_config.php");
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/blog/ts_my_blog.php");
 
+
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Variables ------------------------------------------------------------------------- */
-
-
 $tabindex = 0;
 $l_mysql = quote_smart($link, $l);
 
@@ -84,6 +87,35 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		(NULL, $my_user_id_mysql, $l_mysql, $inp_blog_title_mysql, '$datetime', '$datetime', '$datetime_rss', '0', '0', '0', $inp_user_ip_mysql)
 		")
 		or die(mysqli_error($link));
+
+		// Get ID
+		$query = "SELECT blog_info_id, blog_user_id, blog_language, blog_title, blog_description, blog_created, blog_updated, blog_posts, blog_comments, blog_views, blog_user_ip FROM $t_blog_info WHERE blog_user_id=$my_user_id_mysql AND blog_language=$l_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_blog_info_id, $get_blog_user_id, $get_blog_language, $get_blog_title, $get_blog_description, $get_blog_created, $get_blog_updated, $get_blog_posts, $get_blog_comments, $get_blog_views, $get_blog_user_ip) = $row;
+
+		
+
+		// Search engine
+		$inp_index_title = "$get_blog_title | $l_blog";
+		$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+		$inp_index_url = "blog/view_blog.php?info_id=$get_blog_info_id";
+		$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+		$datetime = date("Y-m-d H:i:s");
+		$datetime_saying = date("j. M Y H:i");
+
+		$inp_index_language_mysql = quote_smart($link, $get_blog_language);
+
+		mysqli_query($link, "INSERT INTO $t_search_engine_index 
+		(index_id, index_title, index_url, index_short_description, index_keywords, 
+		index_module_name, index_reference_id, index_is_ad, index_created_datetime, index_created_datetime_print, 
+		index_language) 
+		VALUES 
+		(NULL, $inp_index_title_mysql, $inp_index_url_mysql, '', '', 
+		'blog', 'blog_info_id$get_blog_info_id', 0, '$datetime', '$datetime_saying', $inp_index_language_mysql)")
+		or die(mysqli_error($link));
 	}
 
 	// Do I have categories?
@@ -121,7 +153,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 	echo"
 	<h1>
-	<img src=\"$root/_webdesign/images/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
+	<img src=\"_gfx/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
 	Loading...</h1>
 	<meta http-equiv=\"refresh\" content=\"1;url=$url\">
 
@@ -132,7 +164,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 else{
 	echo"
 	<h1>
-	<img src=\"$root/_webdesign/images/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
+	<img src=\"_gfx/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
 	Loading...</h1>
 	<meta http-equiv=\"refresh\" content=\"1;url=$root/users/index.php?page=login&amp;l=$l&amp;refer=$root/blog/my_blog.php\">
 	";

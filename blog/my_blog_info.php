@@ -29,6 +29,10 @@ include("$root/_admin/website_config.php");
 include("$root/_admin/_translations/site/$l/blog/ts_blog.php");
 include("$root/_admin/_translations/site/$l/blog/ts_my_blog.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Variables ------------------------------------------------------------------------- */
 
 

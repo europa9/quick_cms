@@ -37,9 +37,13 @@ include("$root/_admin/_translations/site/$l/blog/ts_my_blog.php");
 include("$root/_admin/_data/blog.php");
 
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
+
+
 /*- Variables ------------------------------------------------------------------------- */
-
-
 $tabindex = 0;
 $l_mysql = quote_smart($link, $l);
 
@@ -223,6 +227,29 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$row = $result->fetch_row();
 					$result = mysqli_query($link, "UPDATE $t_blog_info SET blog_updated='$datetime', blog_updated_rss='$datetime_rss', blog_posts=$row[0]  WHERE blog_info_id=$get_blog_info_id");
 
+
+					// Search engine
+					if($inp_privacy_level == "everyone"){
+						$inp_index_title = "$inp_title | $get_blog_title | $l_blog";
+						$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+						$inp_index_url = "blog/view_post.php?post_id=$get_blog_post_id";
+						$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+						$datetime = date("Y-m-d H:i:s");
+						$datetime_saying = date("j. M Y H:i");
+
+						$inp_index_language_mysql = quote_smart($link, $get_blog_language);
+
+						mysqli_query($link, "INSERT INTO $t_search_engine_index 
+						(index_id, index_title, index_url, index_short_description, index_keywords, 
+						index_module_name, index_reference_id, index_is_ad, index_created_datetime, index_created_datetime_print, 
+						index_language) 
+						VALUES 
+						(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $blog_post_introduction_mysql, '', 
+						'blog', 'blog_post_id$get_blog_post_id', 0, '$datetime', '$datetime_saying', $inp_index_language_mysql)")
+						or die(mysqli_error($link));
+					}
 
 					$url = "my_blog_new_post.php?action=meta&blog_post_id=$get_blog_post_id&l=$l";
 					header("Location: $url");
@@ -465,6 +492,18 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 						$result = mysqli_query($link, "UPDATE $t_blog_categories SET blog_category_posts=$row[0]
 						 WHERE blog_category_id=$inp_category_mysql AND blog_category_user_id=$my_user_id_mysql");
+
+
+						// Search engine
+						$reference_id_mysql = quote_smart($link, "blog_post_id$get_blog_post_id");
+						$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='blog' AND index_reference_id=$reference_id_mysql";
+						$result_exists = mysqli_query($link, $query_exists);
+						$row_exists = mysqli_fetch_row($result_exists);
+						list($get_index_id) = $row_exists;
+						if($get_index_id != ""){
+							$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+											index_is_ad=$inp_ad_mysql WHERE index_id=$get_index_id");
+						}
 
 
 						// Image

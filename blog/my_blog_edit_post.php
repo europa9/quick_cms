@@ -33,6 +33,10 @@ include("$root/_admin/_functions/decode_national_letters.php");
 include("$root/_admin/_translations/site/$l/blog/ts_blog.php");
 include("$root/_admin/_translations/site/$l/blog/ts_my_blog.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Blog config -------------------------------------------------------------------- */
 include("$root/_admin/_data/blog.php");
 
@@ -168,6 +172,21 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 					$result = mysqli_query($link, "UPDATE $t_blog_posts SET blog_post_title=$inp_title_mysql,
 						blog_post_updated='$datetime', blog_post_updated_rss='$datetime_rss', blog_post_user_ip=$inp_user_ip_mysql
 					 WHERE blog_post_id=$get_blog_post_id");
+
+
+					
+					// Search engine
+					$reference_id_mysql = quote_smart($link, "blog_post_id$get_blog_post_id");
+					$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='blog' AND index_reference_id=$reference_id_mysql";
+					$result_exists = mysqli_query($link, $query_exists);
+					$row_exists = mysqli_fetch_row($result_exists);
+					list($get_index_id) = $row_exists;
+					if($get_index_id != ""){
+						$inp_index_title = "$inp_title | $get_blog_title | $l_blog";
+						$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+						$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+										index_title=$inp_index_title_mysql WHERE index_id=$get_index_id") or die(mysqli_error($link));
+					}
 
 
 					$url = "my_blog_edit_post.php?post_id=$get_blog_post_id&l=$l&ft=success&fm=changes_saved";
