@@ -28,6 +28,10 @@ include("$root/_admin/website_config.php");
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/exercises/ts_new_equipment.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Variables ------------------------------------------------------------------------- */
 if(isset($_GET['equipment_id'])){
 	$equipment_id = $_GET['equipment_id'];
@@ -117,7 +121,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			// Update
 			$result = mysqli_query($link, "UPDATE $t_exercise_equipments SET equipment_muscle_group_id_main=$get_main_muscle_group_id,
 							equipment_muscle_group_id_sub=$get_sub_muscle_group_id WHERE equipment_id=$equipment_id_mysql");
-
 
 
 

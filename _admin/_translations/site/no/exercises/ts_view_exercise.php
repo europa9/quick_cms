@@ -14,4 +14,5 @@ $l_preparation = "Forberedelse";
 $l_tags = "Tags";
 $l_translate = "Oversett";
 $l_translate_to = "Oversett til";
+$l_unique_hits = "Unike treff";
 ?>

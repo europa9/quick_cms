@@ -29,6 +29,11 @@ include("$root/_admin/website_config.php");
 include("$root/_admin/_translations/site/$l/exercises/ts_new_exercise.php");
 include("$root/_admin/_translations/site/$l/exercises/ts_edit_exercise_tags.php");
 
+
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Variables ------------------------------------------------------------------------- */
 if(isset($_GET['exercise_id'])){
 	$exercise_id = $_GET['exercise_id'];
@@ -151,6 +156,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					mysqli_query($link, "UPDATE $t_exercise_tags_cloud SET cloud_occurrences=$inp_occurrences WHERE cloud_id=$get_cloud_id") or die(mysqli_error($link)); 
 				}
 
+
+				
 				$url = "new_exercise_step_9_tags.php?exercise_id=$exercise_id&l=$l";
 				$url = $url . "&ft=success&fm=tag_added";
 				header("Location: $url");

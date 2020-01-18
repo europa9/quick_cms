@@ -25,6 +25,10 @@ else{ $root = "../../.."; }
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/exercises/ts_new_exercise.php");
 include("$root/_admin/_translations/site/$l/exercises/ts_edit_exercise.php");
@@ -123,6 +127,21 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							exercise_title_alternative=$inp_exercise_title_alternative_mysql,
 							exercise_updated_datetime='$datetime', exercise_user_ip=$inp_user_ip_mysql WHERE exercise_id=$exercise_id_mysql");
 
+
+			// Search engine
+			$reference_name_mysql = quote_smart($link, "exercise_id");
+			$reference_id_mysql = quote_smart($link, "$get_exercise_id");
+			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='exercises' AND index_reference_name=$reference_name_mysql AND index_reference_id=$reference_id_mysql";
+			$result_exists = mysqli_query($link, $query_exists);
+			$row_exists = mysqli_fetch_row($result_exists);
+			list($get_index_id) = $row_exists;
+			if($get_index_id != ""){
+				$inp_index_title = "$inp_exercise_title | $l_exercises";
+				$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+				$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+								index_title=$inp_index_title_mysql WHERE index_id=$get_index_id") or die(mysqli_error($link));
+
+			}
 
 			$url = "edit_exercise_title.php?exercise_id=$exercise_id&main_muscle_group_id=$main_muscle_group_id&type_id=$type_id&l=$l";
 			$url = $url . "&ft=success&fm=changes_saved";

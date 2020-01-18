@@ -14,4 +14,5 @@ $l_alt_title = "Alt title";
 $l_author = "Author";
 $l_level = "Level";
 $l_extra_information = "Extra information";
+$l_unique_hits = "Unique hits";
 ?>

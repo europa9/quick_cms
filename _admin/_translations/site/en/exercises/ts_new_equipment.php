@@ -11,5 +11,6 @@ $l_save = "Save";
 $l_text = "Text";
 $l_new_image = "New image";
 $l_view_equipment = "View equipment";
+$l_equipments = "Equipments";
 
 ?>
