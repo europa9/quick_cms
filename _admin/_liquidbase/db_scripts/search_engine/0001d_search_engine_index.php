@@ -39,6 +39,7 @@ if(isset($_SESSION['admin_user_id'])){
 			   control_user_name VARCHAR(200),
 			   control_has_access_to_module_name VARCHAR(200),
 			   control_has_access_to_module_part_name VARCHAR(200),
+			   control_has_access_to_module_part_id INT,
 			   control_created_datetime DATETIME,
 			   control_created_datetime_print VARCHAR(200),
 			   control_updated_datetime DATETIME,

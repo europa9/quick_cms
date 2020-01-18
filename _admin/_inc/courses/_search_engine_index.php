@@ -76,9 +76,11 @@ if($result_exists !== FALSE){
 
 		$inp_index_module_name_mysql = quote_smart($link, "courses");
 
-		$inp_index_module_part_name_mysql = quote_smart($link, "");
+		$inp_index_module_part_name_mysql = quote_smart($link, "course");
 
-		$inp_index_reference_id_mysql = quote_smart($link, "course_id$get_course_id");
+		$inp_index_reference_name_mysql = quote_smart($link, "course_id");
+
+		$inp_index_reference_id_mysql = quote_smart($link, "$get_course_id");
 
 		$inp_index_has_access_control_mysql = quote_smart($link, 1);
 
@@ -87,20 +89,23 @@ if($result_exists !== FALSE){
 		$inp_index_language_mysql = quote_smart($link, $get_course_language);
 
 		// Check if course exists
-		$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name=$inp_index_module_name_mysql AND index_reference_id=$inp_index_reference_id_mysql";
+		$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name=$inp_index_module_name_mysql AND index_reference_name=$inp_index_reference_name_mysql AND index_reference_id=$inp_index_reference_id_mysql";
 		$result_exists = mysqli_query($link, $query_exists);
 		$row_exists = mysqli_fetch_row($result_exists);
 		list($get_index_id) = $row_exists;
 		if($get_index_id == ""){
 			// Insert
+			echo"<span>Insert $inp_index_title<br /></span>\n";
 			mysqli_query($link, "INSERT INTO $t_search_engine_index 
 			(index_id, index_title, index_url, index_short_description, index_keywords, 
-			index_module_name, index_module_part_name, index_reference_id, index_has_access_control, index_is_ad, 
-			index_created_datetime, index_created_datetime_print, index_language) 
+			index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+			index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+			index_unique_hits) 
 			VALUES 
 			(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_index_short_description_mysql, $inp_index_keywords_mysql, 
-			$inp_index_module_name_mysql, $inp_index_module_part_name_mysql, $inp_index_reference_id_mysql, $inp_index_has_access_control_mysql, $inp_index_is_ad_mysql, 
-			'$datetime', '$datetime_saying', $inp_index_language_mysql)")
+			$inp_index_module_name_mysql, $inp_index_module_part_name_mysql, '0', $inp_index_reference_name_mysql, $inp_index_reference_id_mysql,
+			'0', $inp_index_is_ad_mysql, '$datetime', '$datetime_saying', $inp_index_language_mysql,
+			0)")
 			or die(mysqli_error($link));
 		}
 

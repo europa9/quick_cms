@@ -83,9 +83,14 @@ if($result_exists !== FALSE){
 
 		$inp_index_module_name_mysql = quote_smart($link, "knowledge");
 
-		$inp_index_module_part_name_mysql = quote_smart($link, "space_id$get_page_space_id");
+		$inp_index_module_part_name_mysql = quote_smart($link, "spaces");
 
-		$inp_index_reference_id_mysql = quote_smart($link, "page_id$get_page_id");
+		if($get_page_space_id == ""){ $get_page_space_id = "0"; } 
+		$inp_index_module_part_id_mysql = quote_smart($link, "$get_page_space_id");
+
+		$inp_index_reference_name_mysql = quote_smart($link, "page_id");
+
+		$inp_index_reference_id_mysql = quote_smart($link, "$get_page_id");
 
 		$inp_index_has_access_control_mysql = quote_smart($link, 1);
 
@@ -94,23 +99,25 @@ if($result_exists !== FALSE){
 		$inp_index_language_mysql = quote_smart($link, $get_page_language);
 
 		// Check if exists
-		$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name=$inp_index_module_name_mysql AND index_reference_id=$inp_index_reference_id_mysql";
+		$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name=$inp_index_module_name_mysql AND index_reference_name=$inp_index_reference_name_mysql AND index_reference_id=$inp_index_reference_id_mysql";
 		$result_exists = mysqli_query($link, $query_exists);
 		$row_exists = mysqli_fetch_row($result_exists);
 		list($get_index_id) = $row_exists;
 		if($get_index_id == ""){
 			// Insert
+			echo"<span>Insert $inp_index_title<br /></span>\n";
 			mysqli_query($link, "INSERT INTO $t_search_engine_index 
 			(index_id, index_title, index_url, index_short_description, index_keywords, 
-			index_module_name, index_module_part_name, index_reference_id, index_has_access_control, index_is_ad, 
-			index_created_datetime, index_created_datetime_print, index_language) 
+			index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+			index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+			index_unique_hits) 
 			VALUES 
 			(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_index_short_description_mysql, $inp_index_keywords_mysql, 
-			$inp_index_module_name_mysql, $inp_index_module_part_name_mysql, $inp_index_reference_id_mysql, $inp_index_has_access_control_mysql, $inp_index_is_ad_mysql, 
-			'$datetime', '$datetime_saying', $inp_index_language_mysql)")
+			$inp_index_module_name_mysql, $inp_index_module_part_name_mysql, $inp_index_module_part_id_mysql, $inp_index_reference_name_mysql, $inp_index_reference_id_mysql,
+			'0', $inp_index_is_ad_mysql, '$datetime', '$datetime_saying', $inp_index_language_mysql,
+			0)")
 			or die(mysqli_error($link));
 		}
-
 
 		
 	} // all pages 
@@ -124,23 +131,26 @@ if($result_exists !== FALSE){
 		$inp_control_user_id_mysql 				= quote_smart($link, $get_member_id);
 		$inp_control_user_name_mysql 				= quote_smart($link, $get_member_user_alias);
 		$inp_control_has_access_to_module_name_mysql 		= quote_smart($link, "knowledge");
-		$inp_control_has_access_to_module_part_name_mysql 	= quote_smart($link, "space_id$get_page_space_id");
+		$inp_control_has_access_to_module_part_name_mysql 	= quote_smart($link, "spaces");
+		$inp_control_has_access_to_module_part_id_mysql		= quote_smart($link, "$get_page_space_id");
 
 
 
 		// Check if exists
-		$query_exists = "SELECT control_id FROM $t_search_engine_access_control WHERE control_user_id=$inp_control_user_id_mysql AND control_has_access_to_module_name=$inp_control_has_access_to_module_name_mysql AND control_has_access_to_module_part_name=$inp_control_has_access_to_module_part_name_mysql ";
+		$query_exists = "SELECT control_id FROM $t_search_engine_access_control WHERE control_user_id=$inp_control_user_id_mysql AND control_has_access_to_module_name=$inp_control_has_access_to_module_name_mysql AND control_has_access_to_module_part_name=$inp_control_has_access_to_module_part_name_mysql AND control_has_access_to_module_part_id=$inp_control_has_access_to_module_part_id_mysql";
 		$result_exists = mysqli_query($link, $query_exists);
 		$row_exists = mysqli_fetch_row($result_exists);
 		list($get_index_id) = $row_exists;
 		if($get_index_id == ""){
 			// Insert
+			echo"<span>Insert access $get_member_user_alias for space $get_page_space_id<br /></span>\n";
+
 			mysqli_query($link, "INSERT INTO $t_search_engine_access_control 
 			(control_id, control_user_id, control_user_name, control_has_access_to_module_name, control_has_access_to_module_part_name, 
-			control_created_datetime, control_created_datetime_print) 
+			control_has_access_to_module_part_id, control_created_datetime, control_created_datetime_print) 
 			VALUES 
 			(NULL, $inp_control_user_id_mysql, $inp_control_user_name_mysql, $inp_control_has_access_to_module_name_mysql, $inp_control_has_access_to_module_part_name_mysql, 
-			'$datetime', '$datetime_saying')")
+			$inp_control_has_access_to_module_part_id_mysql, '$datetime', '$datetime_saying')")
 			or die(mysqli_error($link));
 		}
 	} // access
