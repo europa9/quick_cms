@@ -110,11 +110,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 		mysqli_query($link, "INSERT INTO $t_search_engine_index 
 		(index_id, index_title, index_url, index_short_description, index_keywords, 
-		index_module_name, index_reference_id, index_is_ad, index_created_datetime, index_created_datetime_print, 
+		index_module_name, index_reference_name, index_reference_id, index_is_ad, index_created_datetime, index_created_datetime_print, 
 		index_language) 
 		VALUES 
 		(NULL, $inp_index_title_mysql, $inp_index_url_mysql, '', '', 
-		'blog', 'blog_info_id$get_blog_info_id', 0, '$datetime', '$datetime_saying', $inp_index_language_mysql)")
+		'blog', 'blog_info_id', '$get_blog_info_id', 0, '$datetime', '$datetime_saying', $inp_index_language_mysql)")
 		or die(mysqli_error($link));
 	}
 

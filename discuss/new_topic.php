@@ -33,6 +33,11 @@ include("$root/_admin/_functions/decode_national_letters.php");
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/discuss/ts_discuss.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
+
 /*- Variables ------------------------------------------------------------------------- */
 
 
@@ -585,8 +590,34 @@ div.topics_chat_view_text {
 		}
 
 
+		// Search engine
+		$inp_index_title = "$inp_title | $get_current_title_value";
+		$inp_index_title_mysql = quote_smart($link, $inp_index_title);
 
+		$inp_index_url = "discuss/view_topic.php?topic_id=$get_topic_id";
+		$inp_index_url_mysql = quote_smart($link, $inp_index_url);
 
+		$inp_index_short_description = substr($inp_text, 0, 200);
+		$inp_index_short_description = output_html($inp_index_short_description);
+		$inp_index_short_description_mysql = quote_smart($link, $inp_index_short_description);
+
+		$inp_index_keywords = "$inp_tags";
+		$inp_index_keywords_mysql = quote_smart($link, $inp_index_keywords);
+		
+		
+		$datetime = date("Y-m-d H:i:s");
+		$datetime_saying = date("j. M Y H:i");
+
+		$inp_index_language_mysql = quote_smart($link, $l);
+
+		mysqli_query($link, "INSERT INTO $t_search_engine_index 
+		(index_id, index_title, index_url, index_short_description, index_keywords, 
+		index_module_name, index_reference_name, index_reference_id, index_is_ad, index_created_datetime, index_created_datetime_print, 
+		index_language) 
+		VALUES 
+		(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_index_short_description_mysql, $inp_index_keywords_mysql, 
+		'discuss', 'topic_id','$get_topic_id', 0, '$datetime', '$datetime_saying', $inp_index_language_mysql)")
+		or die(mysqli_error($link));
 
 		// Header
 		$url = "view_topic.php?topic_id=$get_topic_id&l=$l";

@@ -176,8 +176,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 
 					
 					// Search engine
-					$reference_id_mysql = quote_smart($link, "blog_post_id$get_blog_post_id");
-					$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='blog' AND index_reference_id=$reference_id_mysql";
+					$reference_name_mysql = quote_smart($link, "blog_post_id");
+					$reference_id_mysql = quote_smart($link, "$get_blog_post_id");
+					$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='blog' AND index_reference_name=$reference_name_mysql AND index_reference_id=$reference_id_mysql";
 					$result_exists = mysqli_query($link, $query_exists);
 					$row_exists = mysqli_fetch_row($result_exists);
 					list($get_index_id) = $row_exists;

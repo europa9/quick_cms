@@ -91,13 +91,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			echo"
 			<h1>$l_my_blog</h1>
 		
-			<!-- Where am I? -->
+			<!-- Where am I ? -->
 				<p><b>$l_you_are_here:</b><br />
 				<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
 				&gt;
 				<a href=\"my_blog_links.php?l=$l\">$l_links</a>
 				</p>
-			<!-- //Where am I? -->
+			<!-- //Where am I ? -->
 				
 			<!-- Feedback -->
 				";

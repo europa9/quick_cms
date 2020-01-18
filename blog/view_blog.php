@@ -134,15 +134,16 @@ else{
 	<!-- //Headline and language -->
 
 
-	<!-- Where am I ? + RSS Icons -->
+	<!-- Where am I ? -->
 		<p><b>$l_you_are_here</b><br />
 		<a href=\"view_blog.php?info_id=$get_current_blog_info_id&amp;l=$l\">$get_current_blog_title</a>
 		</p>
-	<!-- //Where am I ? + RSS Icons -->
+	<!-- //Where am I ? -->
 
 
 
 	<!-- Blog navigation -->
+		<div style=\"height: 10px;\"></div>
 		<div class=\"tabs\">
 			<ul>
 				<li><a href=\"view_blog.php?info_id=$get_current_blog_info_id&amp;l=$l\" class=\"selected\">$l_blog</a></li>

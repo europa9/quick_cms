@@ -85,7 +85,8 @@ if($result_exists !== FALSE){
 
 		$inp_index_module_part_name_mysql = quote_smart($link, "recipes");
 
-		$inp_index_reference_id_mysql = quote_smart($link, "recipe_id$get_recipe_id");
+		$inp_index_reference_name_mysql = quote_smart($link, "recipe_id");
+		$inp_index_reference_id_mysql = quote_smart($link, "$get_recipe_id");
 
 		$inp_index_has_access_control_mysql = quote_smart($link, 0);
 
@@ -94,23 +95,25 @@ if($result_exists !== FALSE){
 		$inp_index_language_mysql = quote_smart($link, "$get_recipe_language");
 
 		// Check if exists
-		$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name=$inp_index_module_name_mysql AND index_reference_id=$inp_index_reference_id_mysql AND index_language=$inp_index_language_mysql";
+		$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name=$inp_index_module_name_mysql AND index_reference_name=$inp_index_reference_name_mysql AND index_reference_id=$inp_index_reference_id_mysql";
 		$result_exists = mysqli_query($link, $query_exists);
 		$row_exists = mysqli_fetch_row($result_exists);
 		list($get_index_id) = $row_exists;
 		if($get_index_id == ""){
 			// Insert
+			echo"<span>Insert $inp_index_title<br /></span>\n";
 			mysqli_query($link, "INSERT INTO $t_search_engine_index 
 			(index_id, index_title, index_url, index_short_description, index_keywords, 
-			index_module_name, index_module_part_name, index_reference_id, index_has_access_control, index_is_ad, 
-			index_created_datetime, index_created_datetime_print, index_language) 
+			index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+			index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+			index_unique_hits) 
 			VALUES 
 			(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_index_short_description_mysql, $inp_index_keywords_mysql, 
-			$inp_index_module_name_mysql, $inp_index_module_part_name_mysql, $inp_index_reference_id_mysql, $inp_index_has_access_control_mysql, $inp_index_is_ad_mysql, 
-			'$datetime', '$datetime_saying', $inp_index_language_mysql)")
+			$inp_index_module_name_mysql, $inp_index_module_part_name_mysql, '0', $inp_index_reference_name_mysql, $inp_index_reference_id_mysql,
+			'0', $inp_index_is_ad_mysql, '$datetime', '$datetime_saying', $inp_index_language_mysql,
+			0)")
 			or die(mysqli_error($link));
 		}
-
 
 		
 	} // recipes
@@ -141,7 +144,8 @@ if($result_exists !== FALSE){
 
 		$inp_index_module_part_name_mysql = quote_smart($link, "categories");
 
-		$inp_index_reference_id_mysql = quote_smart($link, "category_id$get_category_id");
+		$inp_index_reference_name_mysql = quote_smart($link, "category_id");
+		$inp_index_reference_id_mysql = quote_smart($link, "$get_category_id");
 
 		$inp_index_has_access_control_mysql = quote_smart($link, 0);
 
@@ -150,22 +154,26 @@ if($result_exists !== FALSE){
 		$inp_index_language_mysql = quote_smart($link, "$get_category_translation_language");
 
 		// Check if exists
-		$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name=$inp_index_module_name_mysql AND index_reference_id=$inp_index_reference_id_mysql AND index_language=$inp_index_language_mysql";
+		$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name=$inp_index_module_name_mysql AND index_reference_name=$inp_index_reference_name_mysql AND index_reference_id=$inp_index_reference_id_mysql";
 		$result_exists = mysqli_query($link, $query_exists);
 		$row_exists = mysqli_fetch_row($result_exists);
 		list($get_index_id) = $row_exists;
 		if($get_index_id == ""){
 			// Insert
+			echo"<span>Insert $inp_index_title<br /></span>\n";
 			mysqli_query($link, "INSERT INTO $t_search_engine_index 
 			(index_id, index_title, index_url, index_short_description, index_keywords, 
-			index_module_name, index_module_part_name, index_reference_id, index_has_access_control, index_is_ad, 
-			index_created_datetime, index_created_datetime_print, index_language) 
+			index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+			index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+			index_unique_hits) 
 			VALUES 
 			(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_index_short_description_mysql, $inp_index_keywords_mysql, 
-			$inp_index_module_name_mysql, $inp_index_module_part_name_mysql, $inp_index_reference_id_mysql, $inp_index_has_access_control_mysql, $inp_index_is_ad_mysql, 
-			'$datetime', '$datetime_saying', $inp_index_language_mysql)")
+			$inp_index_module_name_mysql, $inp_index_module_part_name_mysql, '0', $inp_index_reference_name_mysql, $inp_index_reference_id_mysql,
+			'0', $inp_index_is_ad_mysql, '$datetime', '$datetime_saying', $inp_index_language_mysql,
+			0)")
 			or die(mysqli_error($link));
 		}
+
 
 
 		
@@ -197,7 +205,8 @@ if($result_exists !== FALSE){
 
 		$inp_index_module_part_name_mysql = quote_smart($link, "cuisines");
 
-		$inp_index_reference_id_mysql = quote_smart($link, "cuisine_id$get_cuisine_id");
+		$inp_index_reference_name_mysql = quote_smart($link, "cuisine_id");
+		$inp_index_reference_id_mysql = quote_smart($link, "$get_cuisine_id");
 
 		$inp_index_has_access_control_mysql = quote_smart($link, 0);
 
@@ -206,23 +215,24 @@ if($result_exists !== FALSE){
 		$inp_index_language_mysql = quote_smart($link, "$get_cuisine_translation_language");
 
 		// Check if exists
-		if($get_cuisine_translation_value != ""){
-			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name=$inp_index_module_name_mysql AND index_reference_id=$inp_index_reference_id_mysql AND index_language=$inp_index_language_mysql";
-			$result_exists = mysqli_query($link, $query_exists);
-			$row_exists = mysqli_fetch_row($result_exists);
-			list($get_index_id) = $row_exists;
-			if($get_index_id == ""){
+		$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name=$inp_index_module_name_mysql AND index_reference_name=$inp_index_reference_name_mysql AND index_reference_id=$inp_index_reference_id_mysql";
+		$result_exists = mysqli_query($link, $query_exists);
+		$row_exists = mysqli_fetch_row($result_exists);
+		list($get_index_id) = $row_exists;
+		if($get_index_id == ""){
 			// Insert
-				mysqli_query($link, "INSERT INTO $t_search_engine_index 
-				(index_id, index_title, index_url, index_short_description, index_keywords, 
-				index_module_name, index_module_part_name, index_reference_id, index_has_access_control, index_is_ad, 
-				index_created_datetime, index_created_datetime_print, index_language) 
-				VALUES 
-				(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_index_short_description_mysql, $inp_index_keywords_mysql, 
-				$inp_index_module_name_mysql, $inp_index_module_part_name_mysql, $inp_index_reference_id_mysql, $inp_index_has_access_control_mysql, $inp_index_is_ad_mysql, 
-				'$datetime', '$datetime_saying', $inp_index_language_mysql)")
-				or die(mysqli_error($link));
-			}
+			echo"<span>Insert $inp_index_title<br /></span>\n";
+			mysqli_query($link, "INSERT INTO $t_search_engine_index 
+			(index_id, index_title, index_url, index_short_description, index_keywords, 
+			index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+			index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+			index_unique_hits) 
+			VALUES 
+			(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_index_short_description_mysql, $inp_index_keywords_mysql, 
+			$inp_index_module_name_mysql, $inp_index_module_part_name_mysql, '0', $inp_index_reference_name_mysql, $inp_index_reference_id_mysql,
+			'0', $inp_index_is_ad_mysql, '$datetime', '$datetime_saying', $inp_index_language_mysql,
+			0)")
+			or die(mysqli_error($link));
 		}
 
 		
@@ -254,7 +264,8 @@ if($result_exists !== FALSE){
 
 		$inp_index_module_part_name_mysql = quote_smart($link, "occasions");
 
-		$inp_index_reference_id_mysql = quote_smart($link, "occasion_id$get_occasion_id");
+		$inp_index_reference_name_mysql = quote_smart($link, "occasion_id");
+		$inp_index_reference_id_mysql = quote_smart($link, "$get_occasion_id");
 
 		$inp_index_has_access_control_mysql = quote_smart($link, 0);
 
@@ -263,24 +274,26 @@ if($result_exists !== FALSE){
 		$inp_index_language_mysql = quote_smart($link, "$get_occasion_translation_language");
 
 		// Check if exists
-		if($get_occasion_translation_value != ""){
-			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name=$inp_index_module_name_mysql AND index_reference_id=$inp_index_reference_id_mysql AND index_language=$inp_index_language_mysql";
-			$result_exists = mysqli_query($link, $query_exists);
-			$row_exists = mysqli_fetch_row($result_exists);
-			list($get_index_id) = $row_exists;
-			if($get_index_id == ""){
+		$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name=$inp_index_module_name_mysql AND index_reference_name=$inp_index_reference_name_mysql AND index_reference_id=$inp_index_reference_id_mysql";
+		$result_exists = mysqli_query($link, $query_exists);
+		$row_exists = mysqli_fetch_row($result_exists);
+		list($get_index_id) = $row_exists;
+		if($get_index_id == ""){
 			// Insert
-				mysqli_query($link, "INSERT INTO $t_search_engine_index 
-				(index_id, index_title, index_url, index_short_description, index_keywords, 
-				index_module_name, index_module_part_name, index_reference_id, index_has_access_control, index_is_ad, 
-				index_created_datetime, index_created_datetime_print, index_language) 
-				VALUES 
-				(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_index_short_description_mysql, $inp_index_keywords_mysql, 
-				$inp_index_module_name_mysql, $inp_index_module_part_name_mysql, $inp_index_reference_id_mysql, $inp_index_has_access_control_mysql, $inp_index_is_ad_mysql, 
-				'$datetime', '$datetime_saying', $inp_index_language_mysql)")
-				or die(mysqli_error($link));
-			}
+			echo"<span>Insert $inp_index_title<br /></span>\n";
+			mysqli_query($link, "INSERT INTO $t_search_engine_index 
+			(index_id, index_title, index_url, index_short_description, index_keywords, 
+			index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+			index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+			index_unique_hits) 
+			VALUES 
+			(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_index_short_description_mysql, $inp_index_keywords_mysql, 
+			$inp_index_module_name_mysql, $inp_index_module_part_name_mysql, '0', $inp_index_reference_name_mysql, $inp_index_reference_id_mysql,
+			'0', $inp_index_is_ad_mysql, '$datetime', '$datetime_saying', $inp_index_language_mysql,
+			0)")
+			or die(mysqli_error($link));
 		}
+
 
 		
 	} // occasions
@@ -311,7 +324,8 @@ if($result_exists !== FALSE){
 
 		$inp_index_module_part_name_mysql = quote_smart($link, "seasons");
 
-		$inp_index_reference_id_mysql = quote_smart($link, "season_id$get_season_id");
+		$inp_index_reference_name_mysql = quote_smart($link, "season_id");
+		$inp_index_reference_id_mysql = quote_smart($link, "$get_season_id");
 
 		$inp_index_has_access_control_mysql = quote_smart($link, 0);
 
@@ -320,23 +334,24 @@ if($result_exists !== FALSE){
 		$inp_index_language_mysql = quote_smart($link, "$get_season_translation_language");
 
 		// Check if exists
-		if($get_season_translation_value != ""){
-			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name=$inp_index_module_name_mysql AND index_reference_id=$inp_index_reference_id_mysql AND index_language=$inp_index_language_mysql";
-			$result_exists = mysqli_query($link, $query_exists);
-			$row_exists = mysqli_fetch_row($result_exists);
-			list($get_index_id) = $row_exists;
-			if($get_index_id == ""){
+		$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name=$inp_index_module_name_mysql AND index_reference_name=$inp_index_reference_name_mysql AND index_reference_id=$inp_index_reference_id_mysql";
+		$result_exists = mysqli_query($link, $query_exists);
+		$row_exists = mysqli_fetch_row($result_exists);
+		list($get_index_id) = $row_exists;
+		if($get_index_id == ""){
 			// Insert
-				mysqli_query($link, "INSERT INTO $t_search_engine_index 
-				(index_id, index_title, index_url, index_short_description, index_keywords, 
-				index_module_name, index_module_part_name, index_reference_id, index_has_access_control, index_is_ad, 
-				index_created_datetime, index_created_datetime_print, index_language) 
-				VALUES 
-				(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_index_short_description_mysql, $inp_index_keywords_mysql, 
-				$inp_index_module_name_mysql, $inp_index_module_part_name_mysql, $inp_index_reference_id_mysql, $inp_index_has_access_control_mysql, $inp_index_is_ad_mysql, 
-				'$datetime', '$datetime_saying', $inp_index_language_mysql)")
-				or die(mysqli_error($link));
-			}
+			echo"<span>Insert $inp_index_title<br /></span>\n";
+			mysqli_query($link, "INSERT INTO $t_search_engine_index 
+			(index_id, index_title, index_url, index_short_description, index_keywords, 
+			index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+			index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+			index_unique_hits) 
+			VALUES 
+			(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_index_short_description_mysql, $inp_index_keywords_mysql, 
+			$inp_index_module_name_mysql, $inp_index_module_part_name_mysql, '0', $inp_index_reference_name_mysql, $inp_index_reference_id_mysql,
+			'0', $inp_index_is_ad_mysql, '$datetime', '$datetime_saying', $inp_index_language_mysql,
+			0)")
+			or die(mysqli_error($link));
 		}
 
 		

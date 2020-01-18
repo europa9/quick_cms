@@ -29,6 +29,10 @@ include("$root/_admin/website_config.php");
 include("$root/_admin/_translations/site/$l/discuss/ts_discuss.php");
 include("$root/_admin/_translations/site/$l/discuss/ts_new_topic.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Variables ------------------------------------------------------------------------- */
 $tabindex = 0;
 $l_mysql = quote_smart($link, $l);
@@ -108,6 +112,9 @@ else{
 				$result = mysqli_query($link, "DELETE FROM $t_discuss_topics_read_by_user WHERE topic_read_topic_id=$topic_id_mysql");
 				$result = mysqli_query($link, "DELETE FROM $t_discuss_topics_subscribers WHERE topic_id=$topic_id_mysql");
 				$result = mysqli_query($link, "DELETE FROM $t_discuss_topics_tags WHERE topic_id=$topic_id_mysql");
+
+				// Search engine
+				$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_module_name='discuss' AND index_reference_name='topic_id' AND index_reference_id=$get_current_topic_id");
 
 				$url = "index.php?l=$l&ft=success&fm=topic_deleted";
 				header("Location: $url");

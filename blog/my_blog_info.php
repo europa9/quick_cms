@@ -98,6 +98,22 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				
 
 
+					
+			// Search engine
+			$reference_name_mysql = quote_smart($link, "blog_info_id");
+			$reference_id_mysql = quote_smart($link, "$get_blog_info_id");
+			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='blog' AND index_reference_name=$reference_name_mysql AND index_reference_id=$reference_id_mysql";
+			$result_exists = mysqli_query($link, $query_exists);
+			$row_exists = mysqli_fetch_row($result_exists);
+			list($get_index_id) = $row_exists;
+			if($get_index_id != ""){
+				$inp_index_title = "$inp_title | $l_blog";
+				$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+				$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+								index_title=$inp_index_title_mysql,
+								index_short_description=$inp_description_mysql WHERE index_id=$get_index_id") or die(mysqli_error($link));
+			}
+
 			$url = "my_blog_info.php?l=$l";
 			$url = $url . "&ft=success&fm=changes_saved";
 			header("Location: $url");

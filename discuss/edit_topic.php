@@ -34,6 +34,10 @@ include("$root/_admin/_functions/decode_national_letters.php");
 include("$root/_admin/_translations/site/$l/discuss/ts_discuss.php");
 include("$root/_admin/_translations/site/$l/discuss/ts_new_topic.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Variables ------------------------------------------------------------------------- */
 $tabindex = 0;
 $l_mysql = quote_smart($link, $l);
@@ -56,6 +60,13 @@ if(isset($_GET['show'])) {
 else{
 	$show = "";
 }
+
+
+/*- Title ---------------------------------------------------------------------------------- */
+$query_t = "SELECT title_id, title_language, title_value FROM $t_discuss_titles WHERE title_language=$l_mysql";
+$result_t = mysqli_query($link, $query_t);
+$row_t = mysqli_fetch_row($result_t);
+list($get_current_title_id, $get_current_title_language, $get_current_title_value) = $row_t;
 
 // Get topic
 $topic_id_mysql = quote_smart($link, $topic_id);
@@ -314,6 +325,31 @@ else{
 					}	
 				}
 
+				// Search engine
+				$reference_name_mysql = quote_smart($link, "topic_id");
+				$reference_id_mysql = quote_smart($link, "$get_current_topic_id");
+				$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='discuss' AND index_reference_name=$reference_name_mysql AND index_reference_id=$reference_id_mysql";
+				$result_exists = mysqli_query($link, $query_exists);
+				$row_exists = mysqli_fetch_row($result_exists);
+				list($get_index_id) = $row_exists;
+				if($get_index_id != ""){
+
+					$inp_index_title = "$inp_title | $get_current_title_value";
+					$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+					$inp_index_short_description = substr($inp_text, 0, 200);
+					$inp_index_short_description = output_html($inp_index_short_description);
+					$inp_index_short_description_mysql = quote_smart($link, $inp_index_short_description);
+
+					$inp_index_keywords = "$inp_tags";
+					$inp_index_keywords_mysql = quote_smart($link, $inp_index_keywords);
+
+					$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+									index_title=$inp_index_title_mysql,
+									index_short_description=$inp_index_short_description_mysql,
+									index_keywords=$inp_index_keywords_mysql
+									 WHERE index_id=$get_index_id") or die(mysqli_error($link));
+				}
 
 	
 				$url = "view_topic.php?topic_id=$topic_id&l=$l&ft=success&fm=changes_saved";
