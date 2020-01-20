@@ -40,6 +40,12 @@ $t_courses_exams_qa			= $mysqlPrefixSav . "courses_exams_qa";
 $t_courses_exams_user_tries		= $mysqlPrefixSav . "courses_exams_user_tries";
 $t_courses_exams_user_tries_qa		= $mysqlPrefixSav . "courses_exams_user_tries_qa";
 
+
+/*- Tables search --------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
+
 /*- Variables ------------------------------------------------------------------------ */
 $tabindex = 0;
 if(isset($_GET['course_id'])){
@@ -72,11 +78,27 @@ else{
 	list($get_current_sub_category_id, $get_current_sub_category_title, $get_current_sub_category_title_clean, $get_current_sub_category_description, $get_current_sub_category_main_category_id, $get_current_sub_category_main_category_title, $get_current_sub_category_language, $get_current_sub_category_created, $get_current_sub_category_updated) = $row;
 
 
+	// Title
+	$l_mysql = quote_smart($link, $get_current_course_language);
+	$query = "SELECT courses_title_translation_id, courses_title_translation_title FROM $t_courses_title_translations WHERE courses_title_translation_language=$l_mysql";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_current_courses_title_translation_id, $get_current_courses_title_translation_title) = $row;
+	if($get_current_courses_title_translation_id == ""){
+		mysqli_query($link, "INSERT INTO $t_courses_title_translations
+		(courses_title_translation_id, courses_title_translation_title, courses_title_translation_language) 
+		VALUES 
+		(NULL, 'Courses', $l_mysql)")
+		or die(mysqli_error($link));
+		$get_current_courses_title_translation_title = "Courses";
+	}
+
 
 	if($action == ""){
 		if($process == "1"){
 			// Datetime
 			$datetime = date("Y-m-d H:i:s");
+			$datetime_saying = date("j M Y H:i");
 
 			// _course.php
 			if(file_exists("../$get_current_course_title_clean/_course.php")){
@@ -364,6 +386,116 @@ else{
 					} // isset lessons
 				} // for modules
 			} // file_exists("../$get_current_course_title_clean/_modules_and_lessons.php")
+
+
+
+			// Search engine :: 1) Find course  Delete search engine course
+			$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_module_name='courses' AND index_reference_name='course_id' AND index_reference_id='$get_current_course_id'") or die(mysqli_error($link));
+
+			// Search engine :: 2) Find all modules
+			$query_m = "SELECT module_id, module_course_id, module_course_title, module_number, module_title, module_title_clean, module_read_times, module_read_ipblock, module_created, module_updated, module_last_read_datetime, module_last_read_date_formatted FROM $t_courses_modules WHERE module_course_id=$get_current_course_id";
+			$result_m = mysqli_query($link, $query_m);
+			while($row_m = mysqli_fetch_row($result_m)) {
+				list($get_module_id, $get_module_course_id, $get_module_course_title, $get_module_number, $get_module_title, $get_module_title_clean, $get_module_read_times, $get_module_read_ipblock, $get_module_created, $get_module_updated, $get_module_last_read_datetime, $get_module_last_read_date_formatted) = $row_m;
+
+				// Delete search engine module	
+				$result_delete = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_module_name='courses' AND index_reference_name='module_id' AND index_reference_id=$get_module_id") or die(mysqli_error($link));
+
+				// Lessons
+				$query_l = "SELECT lesson_id, lesson_number, lesson_title, lesson_title_clean, lesson_title_length, lesson_title_short, lesson_description, lesson_content, lesson_course_id, lesson_course_title, lesson_module_id, lesson_module_title, lesson_read_times, lesson_read_times_ipblock, lesson_created_datetime, lesson_created_date_formatted, lesson_last_read_datetime, lesson_last_read_date_formatted FROM $t_courses_lessons WHERE lesson_module_id=$get_module_id";
+				$result_l = mysqli_query($link, $query_l);
+				while($row_l = mysqli_fetch_row($result_l)) {
+					list($get_lesson_id, $get_lesson_number, $get_lesson_title, $get_lesson_title_clean, $get_lesson_title_length, $get_lesson_title_short, $get_lesson_description, $get_lesson_content, $get_lesson_course_id, $get_lesson_course_title, $get_lesson_module_id, $get_lesson_module_title, $get_lesson_read_times, $get_lesson_read_times_ipblock, $get_lesson_created_datetime, $get_lesson_created_date_formatted, $get_lesson_last_read_datetime, $get_lesson_last_read_date_formatted) = $row_l;
+
+					// Delete search engine lessons
+					$result_delete = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_module_name='courses' AND index_reference_name='lesson_id' AND index_reference_id=$get_lesson_id") or die(mysqli_error($link));
+				}
+				
+			}
+
+	
+			// Search engine :: 3) Insert course
+			$inp_index_title = "$get_current_course_title | $get_current_courses_title_translation_title";
+			$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+			$inp_index_url = "$get_current_course_title_clean";
+			$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+			$inp_short_description_mysql = quote_smart($link, $get_current_course_front_page_intro);
+
+			mysqli_query($link, "INSERT INTO $t_search_engine_index 
+			(index_id, index_title, index_url, index_short_description, index_keywords, 
+			index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+			index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+			index_unique_hits) 
+			VALUES 
+			(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_short_description_mysql, '', 
+			'courses', 'course', 0, 'course_id', $get_current_course_id, 
+			0, 0, '$datetime', '$datetime_saying', $l_mysql,
+			0)")
+			or die(mysqli_error($link));
+
+
+			// Search engine :: 3) Insert  Modules
+			$query_m = "SELECT module_id, module_course_id, module_course_title, module_number, module_title, module_title_clean, module_read_times, module_read_ipblock, module_created, module_updated, module_last_read_datetime, module_last_read_date_formatted FROM $t_courses_modules WHERE module_course_id=$get_current_course_id";
+			$result_m = mysqli_query($link, $query_m);
+			while($row_m = mysqli_fetch_row($result_m)) {
+				list($get_module_id, $get_module_course_id, $get_module_course_title, $get_module_number, $get_module_title, $get_module_title_clean, $get_module_read_times, $get_module_read_ipblock, $get_module_created, $get_module_updated, $get_module_last_read_datetime, $get_module_last_read_date_formatted) = $row_m;
+
+	
+
+				$inp_index_title = "$get_module_title | $get_current_course_title | $get_current_courses_title_translation_title";
+				$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+				$inp_index_url = "$get_current_course_title_clean/$get_module_title_clean/index.php?course_id=$get_current_course_id&module_id=$get_module_id";
+				$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+
+				mysqli_query($link, "INSERT INTO $t_search_engine_index 
+				(index_id, index_title, index_url, index_short_description, index_keywords, 
+				index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+				index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+				index_unique_hits) 
+				VALUES 
+				(NULL, $inp_index_title_mysql, $inp_index_url_mysql, '', '', 
+				'courses', 'module', '0', 'module_id', $get_module_id,
+				'0', 0, '$datetime', '$datetime_saying', $l_mysql,
+				0)")
+				or die(mysqli_error($link));
+
+
+
+				// Lessons
+				$query_l = "SELECT lesson_id, lesson_number, lesson_title, lesson_title_clean, lesson_title_length, lesson_title_short, lesson_description, lesson_content, lesson_course_id, lesson_course_title, lesson_module_id, lesson_module_title, lesson_read_times, lesson_read_times_ipblock, lesson_created_datetime, lesson_created_date_formatted, lesson_last_read_datetime, lesson_last_read_date_formatted FROM $t_courses_lessons WHERE lesson_module_id=$get_module_id";
+				$result_l = mysqli_query($link, $query_l);
+				while($row_l = mysqli_fetch_row($result_l)) {
+					list($get_lesson_id, $get_lesson_number, $get_lesson_title, $get_lesson_title_clean, $get_lesson_title_length, $get_lesson_title_short, $get_lesson_description, $get_lesson_content, $get_lesson_course_id, $get_lesson_course_title, $get_lesson_module_id, $get_lesson_module_title, $get_lesson_read_times, $get_lesson_read_times_ipblock, $get_lesson_created_datetime, $get_lesson_created_date_formatted, $get_lesson_last_read_datetime, $get_lesson_last_read_date_formatted) = $row_l;
+
+					$inp_index_title = "$get_lesson_title | $get_current_course_title | $get_current_courses_title_translation_title";
+					$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+					$inp_index_url = "$get_current_course_title_clean/$get_module_title_clean/$get_lesson_title_clean.php?course_id=$get_current_course_id&module_id=$get_module_id&lesson_id=$get_lesson_id";
+					$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+					$inp_index_short_description = "$get_lesson_description";
+					$inp_index_short_description_mysql = quote_smart($link, $inp_index_short_description);
+
+
+					mysqli_query($link, "INSERT INTO $t_search_engine_index 
+					(index_id, index_title, index_url, index_short_description, index_keywords, 
+					index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+					index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+					index_unique_hits) 
+					VALUES 
+					(NULL, $inp_index_title_mysql, $inp_index_url_mysql, '', '', 
+					'courses', 'lesson', '0', 'lesson_id', $get_lesson_id,
+					'0', 0, '$datetime', '$datetime_saying', $l_mysql,
+					0)")
+					or die(mysqli_error($link));
+
+				} // lessons
+
+			} // modules
 
 
 			$url = "index.php?open=courses&page=$page&course_id=$get_current_course_id&editor_language=$editor_language&l=$l&ft=success&fm=data_read";
