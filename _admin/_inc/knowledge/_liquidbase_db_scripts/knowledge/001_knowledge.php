@@ -60,6 +60,7 @@ else{
 	   space_image VARCHAR(200), 
 	   space_thumb_32 VARCHAR(200), 
 	   space_thumb_16 VARCHAR(200), 
+	   space_language VARCHAR(200), 
 	   space_is_archived INT, 
 	   space_unique_hits INT, 
 	   space_unique_hits_ip_block TEXT, 
