@@ -40,6 +40,10 @@ $t_courses_exams_qa			= $mysqlPrefixSav . "courses_exams_qa";
 $t_courses_exams_user_tries		= $mysqlPrefixSav . "courses_exams_user_tries";
 $t_courses_exams_user_tries_qa		= $mysqlPrefixSav . "courses_exams_user_tries_qa";
 
+/*- Tables search --------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Variables ------------------------------------------------------------------------ */
 $tabindex = 0;
 if(isset($_GET['course_id'])){
@@ -70,6 +74,22 @@ else{
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
 	list($get_current_sub_category_id, $get_current_sub_category_title, $get_current_sub_category_title_clean, $get_current_sub_category_description, $get_current_sub_category_main_category_id, $get_current_sub_category_main_category_title, $get_current_sub_category_language, $get_current_sub_category_created, $get_current_sub_category_updated) = $row;
+
+	// Title
+	$l_mysql = quote_smart($link, $get_current_course_language);
+	$query = "SELECT courses_title_translation_id, courses_title_translation_title FROM $t_courses_title_translations WHERE courses_title_translation_language=$l_mysql";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_current_courses_title_translation_id, $get_current_courses_title_translation_title) = $row;
+	if($get_current_courses_title_translation_id == ""){
+		mysqli_query($link, "INSERT INTO $t_courses_title_translations
+		(courses_title_translation_id, courses_title_translation_title, courses_title_translation_language) 
+		VALUES 
+		(NULL, 'Courses', $l_mysql)")
+		or die(mysqli_error($link));
+		$get_current_courses_title_translation_title = "Courses";
+	}
+
 
 	if($action == ""){
 		if($process == "1"){
@@ -249,12 +269,45 @@ else{
 			$inp_course_title_mysql = quote_smart($link, $get_current_course_title);
 
 			$datetime = date("Y-m-d H:i:s");
+			$datetime_saying = date("j M Y H:i");
 
 			mysqli_query($link, "INSERT INTO $t_courses_modules 
 			(module_id, module_course_id, module_course_title, module_number, module_title, module_title_clean, module_read_times, module_created) 
 			VALUES 
 			(NULL, $get_current_course_id, $inp_course_title_mysql, 99, $inp_title_mysql, $inp_title_clean_mysql, 0, '$datetime')")
 			or die(mysqli_error($link));
+
+			// Get ID
+			$query = "SELECT module_id FROM $t_courses_modules WHERE module_title=$inp_title_mysql AND module_created='$datetime'";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_current_module_id) = $row;
+
+
+
+			// Search engine
+			$inp_index_title = "$inp_title | $get_current_course_title | $get_current_courses_title_translation_title";
+			$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+			$inp_index_url = "$get_current_course_title_clean/$inp_title_clean/index.php?course_id=$get_current_course_id&module_id=$get_current_module_id";
+			$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+			$inp_index_language_mysql = quote_smart($link, $get_current_course_language);
+
+			mysqli_query($link, "INSERT INTO $t_search_engine_index 
+			(index_id, index_title, index_url, index_short_description, index_keywords, 
+			index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+			index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+			index_unique_hits) 
+			VALUES 
+			(NULL, $inp_index_title_mysql, $inp_index_url_mysql, '', '', 
+			'courses', 'module', '0', 'module_id', $get_current_module_id,
+			'0', 0, '$datetime', '$datetime_saying', $inp_index_language_mysql,
+			0)")
+			or die(mysqli_error($link));
+
+
+
 
 			$url = "index.php?open=$open&page=$page&course_id=$course_id&action=new_module&editor_language=$editor_language&ft=success&fm=module_$inp_title" . "_saved";
 			header("Location: $url");
@@ -315,7 +368,7 @@ else{
 		<!-- Left and right -->
 			<table>
 			 <tr>
-			  <td style=\"padding: 0px 50px 0px 0px;vertical-align: top;\">
+			  <td style=\"padding: 0px 50px 0px 0px;vertical-align: top;width: 50%;\">
 				<!-- New module form -->
 					<h2>New module</h2>
 					<script>
@@ -327,9 +380,8 @@ else{
 					<form method=\"post\" action=\"index.php?open=$open&amp;page=$page&amp;course_id=$course_id&amp;action=$action&amp;editor_language=$editor_language&amp;process=1\" enctype=\"multipart/form-data\">
 
 					<p><b>Module title:</b><br />
-					<input type=\"text\" name=\"inp_title\" value=\"\" size=\"25\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" style=\"width: 90%;\" />
-					</p>
-					<p>
+					<input type=\"text\" name=\"inp_title\" value=\"\" size=\"25\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" style=\"width: 60%;\" />
+					
 					<input type=\"submit\" value=\"Create\" class=\"btn_default\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 					</p>
 				<!-- //New module form -->
@@ -434,6 +486,7 @@ else{
 				$inp_course_title_mysql = quote_smart($link, $get_current_course_title);
 
 				$datetime = date("Y-m-d H:i:s");
+				$datetime_saying = date("j M Y H:i");
 
 				$result = mysqli_query($link, "UPDATE $t_courses_modules SET 
 								module_course_title=$inp_course_title_mysql,
@@ -441,6 +494,28 @@ else{
 								module_title_clean=$inp_title_clean_mysql,
 								module_updated='$datetime'
 								WHERE module_id=$get_current_module_id") or die(mysqli_error($link));
+
+				// Search engine
+				$inp_index_title = "$inp_title | $get_current_course_title | $get_current_courses_title_translation_title";
+				$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+				$inp_index_url = "$get_current_course_title_clean/$inp_title_clean/index.php?course_id=$get_current_course_id&module_id=$get_current_module_id";
+				$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+			
+
+				$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='courses' AND index_reference_name='module_id' AND index_reference_id=$get_current_module_id";
+				$result_exists = mysqli_query($link, $query_exists);
+				$row_exists = mysqli_fetch_row($result_exists);
+				list($get_index_id) = $row_exists;
+				if($get_index_id != ""){
+					$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+								index_title=$inp_index_title_mysql, 
+								index_url=$inp_index_url_mysql, 
+								index_updated_datetime='$datetime',
+								index_updated_datetime_print='$datetime_saying'
+								WHERE index_id=$get_index_id") or die(mysqli_error($link));
+				}
+
 
 				$url = "index.php?open=$open&page=$page&course_id=$course_id&action=$action&module_id=$get_current_module_id&editor_language=$editor_language&ft=success&fm=changes_saved";
 				header("Location: $url");
@@ -501,7 +576,7 @@ else{
 			<!-- Left and right -->
 				<table>
 				 <tr>
-				  <td style=\"padding: 0px 50px 0px 0px;vertical-align: top;\">
+				  <td style=\"padding: 0px 50px 0px 0px;vertical-align: top;width: 50%;\">
 					<!-- Edit module form -->
 						<h2>Edit module</h2>
 						<script>
@@ -514,9 +589,7 @@ else{
 
 						<p><b>Title:</b><br />
 						<input type=\"text\" name=\"inp_title\" value=\"$get_current_module_title\" size=\"25\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
-						</p>
-
-						<p>
+						
 						<input type=\"submit\" value=\"Save changes\" class=\"btn_default\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 						</p>
 					<!-- //Edit module form -->
@@ -615,6 +688,14 @@ else{
 			if($process == "1"){
 
 				$result = mysqli_query($link, "DELETE FROM $t_courses_modules WHERE module_id=$get_current_module_id") or die(mysqli_error($link));
+
+
+
+				// Search engine module
+				$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_module_name='courses' AND index_reference_name='module_id' AND index_reference_id=$get_current_module_id") or die(mysqli_error($link));
+				
+				// TODO: Search engine lessons
+
 
 				$url = "index.php?open=$open&page=$page&course_id=$course_id&editor_language=$editor_language&ft=success&fm=module_deleted";
 				header("Location: $url");
@@ -729,6 +810,37 @@ else{
 				0, '$datetime', '$date_formatted')")
 				or die(mysqli_error($link));
 
+				// Get ID
+				$query = "SELECT lesson_id, lesson_number, lesson_title, lesson_title_clean, lesson_description, lesson_content, lesson_course_id, lesson_course_title, lesson_module_id, lesson_module_title, lesson_read_times, lesson_read_times_ipblock, lesson_created_datetime, lesson_created_date_formatted, lesson_last_read_datetime, lesson_last_read_date_formatted FROM $t_courses_lessons WHERE lesson_created_datetime='$datetime'";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_current_lesson_id, $get_current_lesson_number, $get_current_lesson_title, $get_current_lesson_title_clean, $get_current_lesson_description, $get_current_lesson_content, $get_current_lesson_course_id, $get_current_lesson_course_title, $get_current_lesson_module_id, $get_current_lesson_module_title, $get_current_lesson_read_times, $get_current_lesson_read_times_ipblock, $get_current_lesson_created_datetime, $get_current_lesson_created_date_formatted, $get_current_lesson_last_read_datetime, $get_current_lesson_last_read_date_formatted) = $row;
+
+
+				// Search engine
+				$datetime = date("Y-m-d H:i:s");
+				$datetime_saying = date("j M Y H:i");
+
+				$inp_index_title = "$inp_title | $get_current_module_title | $get_current_course_title | $get_current_courses_title_translation_title";
+				$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+				$inp_index_url = "$get_course_title_clean/$get_current_module_title_clean/$get_current_lesson_title_clean.php?course_id=$get_current_course_id&module_id=$get_current_module_id&lesson_id=$get_current_lesson_id";
+				$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+				$inp_index_language_mysql = quote_smart($link, $get_current_course_language);
+			
+				mysqli_query($link, "INSERT INTO $t_search_engine_index 
+				(index_id, index_title, index_url, index_short_description, index_keywords, 
+				index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+				index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+				index_unique_hits) 
+				VALUES 
+				(NULL, $inp_index_title_mysql, $inp_index_url_mysql, '', '', 
+				'courses', 'lesson', '0', 'lesson_id', $get_current_lesson_id,
+				'0', 0, '$datetime', '$datetime_saying', $inp_index_language_mysql,
+				0)")
+				or die(mysqli_error($link));
+
 
 				$url = "index.php?open=$open&page=$page&course_id=$course_id&action=$action&module_id=$get_current_module_id&editor_language=$editor_language&ft=success&fm=creaded_lesson_$inp_title" . "_saved";
 				header("Location: $url");
@@ -787,9 +899,9 @@ else{
 			<!-- //Course navigation -->
 
 			<!-- Left and right -->
-				<table>
+				<table style=\"width: 100%;\">
 				 <tr>
-				  <td style=\"padding: 0px 50px 0px 0px;vertical-align: top;\">
+				  <td style=\"padding: 0px 50px 0px 0px;vertical-align: top;width: 50%;\">
 					<!-- New lesson form -->
 						<h2>New lesson to module <em>$get_current_module_title</em></h2>
 						<script>
@@ -801,10 +913,8 @@ else{
 						<form method=\"post\" action=\"index.php?open=$open&amp;page=$page&amp;course_id=$course_id&amp;action=$action&amp;module_id=$get_current_module_id&amp;editor_language=$editor_language&amp;process=1\" enctype=\"multipart/form-data\">
 
 						<p><b>Title:</b><br />
-						<input type=\"text\" name=\"inp_title\" value=\"\" size=\"25\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" style=\"width: 90%;\" />
-						</p>
-
-						<p>
+						<input type=\"text\" name=\"inp_title\" value=\"\" size=\"25\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" style=\"width: 50%;\" />
+						
 						<input type=\"submit\" value=\"Create lesson\" class=\"btn_default\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 						</p>
 					<!-- //New lesson form -->
@@ -1070,6 +1180,36 @@ else{
 								lesson_title_short=$inp_title_short_mysql
 								WHERE lesson_id=$get_current_lesson_id");
 
+				// Get new data
+				$query = "SELECT lesson_id, lesson_number, lesson_title, lesson_title_clean, lesson_description, lesson_content, lesson_course_id, lesson_course_title, lesson_module_id, lesson_module_title, lesson_read_times, lesson_read_times_ipblock, lesson_created_datetime, lesson_created_date_formatted, lesson_last_read_datetime, lesson_last_read_date_formatted FROM $t_courses_lessons WHERE lesson_created_datetime='$datetime'";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_current_lesson_id, $get_current_lesson_number, $get_current_lesson_title, $get_current_lesson_title_clean, $get_current_lesson_description, $get_current_lesson_content, $get_current_lesson_course_id, $get_current_lesson_course_title, $get_current_lesson_module_id, $get_current_lesson_module_title, $get_current_lesson_read_times, $get_current_lesson_read_times_ipblock, $get_current_lesson_created_datetime, $get_current_lesson_created_date_formatted, $get_current_lesson_last_read_datetime, $get_current_lesson_last_read_date_formatted) = $row;
+
+
+				// Search engine
+				$datetime = date("Y-m-d H:i:s");
+				$datetime_saying = date("j M Y H:i");
+
+				$inp_index_title = "$inp_title | $get_current_module_title | $get_current_course_title | $get_current_courses_title_translation_title";
+				$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+				$inp_index_url = "$get_course_title_clean/$get_current_module_title_clean/$get_current_lesson_title_clean.php?course_id=$get_current_course_id&module_id=$get_current_module_id&lesson_id=$get_current_lesson_id";
+				$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+			
+
+				$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='courses' AND index_reference_name='lesson_id' AND index_reference_id=$get_current_lesson_id";
+				$result_exists = mysqli_query($link, $query_exists);
+				$row_exists = mysqli_fetch_row($result_exists);
+				list($get_index_id) = $row_exists;
+				if($get_index_id != ""){
+					$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+								index_title=$inp_index_title_mysql, 
+								index_url=$inp_index_url_mysql, 
+								index_updated_datetime='$datetime',
+								index_updated_datetime_print='$datetime_saying'
+								WHERE index_id=$get_index_id") or die(mysqli_error($link));
+				}
 
 
 				$url = "index.php?open=$open&page=$page&course_id=$course_id&action=$action&lesson_id=$get_current_lesson_id&editor_language=$editor_language&ft=success&fm=changes_saved";
@@ -1129,9 +1269,9 @@ else{
 			<!-- //Course navigation -->
 
 			<!-- Left and right -->
-				<table>
+				<table style=\"width: 100%;\">
 				 <tr>
-				  <td style=\"padding: 0px 50px 0px 0px;vertical-align: top;\">
+				  <td style=\"padding: 0px 50px 0px 0px;vertical-align: top;width:50%;\">
 					
 					<!-- Edit module form -->
 						<h2>Edit lesson</h2>
@@ -1144,9 +1284,7 @@ else{
 		
 						<p><b>Title:</b><br />
 						<input type=\"text\" name=\"inp_title\" value=\"$get_current_lesson_title\" size=\"25\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" style=\"width: 90%;\" />
-						</p>
-
-						<p>
+						
 						<input type=\"submit\" value=\"Save lesson\" class=\"btn_default\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 						</p>
 					<!-- //New module form -->
@@ -1275,6 +1413,10 @@ else{
 		else{
 			if($process == "1"){
 				$result = mysqli_query($link, "DELETE FROM $t_courses_lessons WHERE lesson_id=$get_current_lesson_id");
+
+				// Search engine
+				$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_module_name='courses' AND index_reference_name='lesson_id' AND index_reference_id=$get_lesson_id") or die(mysqli_error($link));
+			
 
 
 

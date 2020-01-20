@@ -38,83 +38,20 @@ $t_courses_exams_index  		= $mysqlPrefixSav . "courses_exams_index";
 $t_courses_exams_qa			= $mysqlPrefixSav . "courses_exams_qa";
 $t_courses_exams_user_tries		= $mysqlPrefixSav . "courses_exams_user_tries";
 $t_courses_exams_user_tries_qa		= $mysqlPrefixSav . "courses_exams_user_tries_qa";
+
+
+/*- Tables search --------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
+
+
 /*- Variables ------------------------------------------------------------------------ */
 $tabindex = 0;
 
 
 if($action == ""){
 
-
-	if($process == "1"){
-		$inp_title = $_POST['inp_title'];
-		$inp_title = output_html($inp_title);
-		$inp_title_mysql = quote_smart($link, $inp_title);
-
-		$inp_title_clean = clean($inp_title);
-		$inp_title_clean_mysql = quote_smart($link, $inp_title_clean);
-
-		$inp_description = $_POST['inp_description'];
-		$inp_description = output_html($inp_description);
-		$inp_description_mysql = quote_smart($link, $inp_description);
-
-		$inp_contents = $_POST['inp_contents'];
-		$inp_contents = output_html($inp_contents);
-		$inp_contents_mysql = quote_smart($link, $inp_contents);
-
-		$inp_language = $_POST['inp_language'];
-		$inp_language = output_html($inp_language);
-		$inp_language_mysql = quote_smart($link, $inp_language);
-
-		$inp_category_id = $_POST['inp_category_id'];
-		$inp_category_id = output_html($inp_category_id);
-		$inp_category_id_mysql = quote_smart($link, $inp_category_id);
-
-		$query = "SELECT main_category_id, main_category_title, main_category_title_clean, main_category_description, main_category_language, main_category_created, main_category_updated FROM $t_courses_categories_main WHERE main_category_id=$main_category_id_mysql";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_current_main_category_id, $get_current_main_category_title, $get_current_main_category_title_clean, $get_current_main_category_description, $get_current_main_category_language, $get_current_main_category_created, $get_current_main_category_updated) = $row;
-
-		$query = "SELECT sub_category_id, sub_category_title, sub_category_title_clean, sub_category_description, sub_category_main_category_id, sub_category_main_category_title, sub_category_language, sub_category_created, sub_category_updated FROM $t_courses_categories_sub WHERE sub_category_id=$sub_category_id_mysql";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_current_sub_category_id, $get_current_sub_category_title, $get_current_sub_category_title_clean, $get_current_sub_category_description, $get_current_sub_category_main_category_id, $get_current_sub_category_main_category_title, $get_current_sub_category_language, $get_current_sub_category_created, $get_current_sub_category_updated) = $row;
-
-		$inp_intro_video_embedded = $_POST['inp_intro_video_embedded'];
-		$inp_intro_video_embedded = output_html($inp_intro_video_embedded);
-		$inp_intro_video_embedded_mysql = quote_smart($link, $inp_intro_video_embedded);
-
-
-		$inp_icon_a = $inp_dir_name . "_48x48.png";
-		$inp_icon_a_mysql = quote_smart($link, $inp_icon_a);
-
-		$inp_icon_b = $inp_dir_name . "_64x64.png";
-		$inp_icon_b_mysql = quote_smart($link, $inp_icon_b);
-
-		$inp_icon_c = $inp_dir_name . "_96x96.png";
-		$inp_icon_c_mysql = quote_smart($link, $inp_icon_c);
-
-		$datetime = date("Y-m-d H:i:s");
-		
-		mysqli_query($link, "INSERT INTO $t_courses_index
-		(course_id, course_title, course_title_clean, course_description, course_contents, course_language, course_main_category_id, course_main_category_title, course_sub_category_id, course_sub_category_title, course_intro_video_embedded, course_icon_48, course_icon_64, course_icon_96, course_modules_count, course_lessons_count, course_quizzes_count, course_users_enrolled_count, course_read_times, course_created, course_updated) 
-		VALUES 
-		(NULL, $inp_title_mysql, $inp_title_clean_mysql, $inp_description_mysql, $inp_contents_mysql, $inp_language_mysql, $inp_dir_name_mysql, $inp_category_id_mysql, $inp_intro_video_embedded_mysql, $inp_icon_a_mysql, $inp_icon_b_mysql, $inp_icon_c_mysql, 0, 0, 0, 0, 0, '$datetime', '$datetime')")
-		or die(mysqli_error($link));
-
-		// Get ID
-		$query = "SELECT course_id FROM $t_courses_index WHERE course_created='$datetime'";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_current_course_id) = $row;
-
-
-
-
-		// Header
-		$url = "index.php?open=$open&page=courses_index&category_id=$inp_category_id&editor_language=$editor_language&ft=success&fm=course_created";
-		header("Location: $url");
-		exit;
-	}
 
 	echo"
 	<h1>New course</h1>
@@ -362,6 +299,7 @@ elseif($action == "step_3_course_info"){
 				$inp_icon_f_mysql = quote_smart($link, $inp_icon_f);
 
 				$datetime = date("Y-m-d H:i:s");
+				$datetime_saying = date("j M Y H:i");
 		
 				mysqli_query($link, "INSERT INTO $t_courses_index
 				(course_id, course_title, course_title_clean, course_front_page_intro, course_description,
@@ -384,7 +322,42 @@ elseif($action == "step_3_course_info"){
 				$row = mysqli_fetch_row($result);
 				list($get_current_course_id) = $row;
 
-	
+				// Title
+				$query = "SELECT courses_title_translation_id, courses_title_translation_title FROM $t_courses_title_translations WHERE courses_title_translation_language=$inp_language_mysql";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_current_courses_title_translation_id, $get_current_courses_title_translation_title) = $row;
+				if($get_current_courses_title_translation_id == ""){
+					mysqli_query($link, "INSERT INTO $t_courses_title_translations
+					(courses_title_translation_id, courses_title_translation_title, courses_title_translation_language) 
+					VALUES 
+					(NULL, 'Courses', $inp_language_mysql)")
+					or die(mysqli_error($link));
+					$get_current_courses_title_translation_title = "Courses";
+				}
+
+
+
+				// Search engine
+				$inp_index_title = "$inp_title | $get_current_courses_title_translation_title";
+				$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+				$inp_index_url = "$inp_title_clean";
+				$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+				mysqli_query($link, "INSERT INTO $t_search_engine_index 
+				(index_id, index_title, index_url, index_short_description, index_keywords, 
+				index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+				index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+				index_unique_hits) 
+				VALUES 
+				(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_front_page_intro_mysql, '', 
+				'courses', 'course', 0, 'course_id', $get_current_course_id, 
+				0, 0, '$datetime', '$datetime_saying', $inp_language_mysql,
+				0)")
+				or die(mysqli_error($link));
+
+
 				// Header
 				$url = "index.php?open=$open&page=default&main_category_id=$get_current_main_category_id&sub_category_id=$get_current_sub_category_id&editor_language=$editor_language&ft=success&fm=course_created";
 				header("Location: $url");

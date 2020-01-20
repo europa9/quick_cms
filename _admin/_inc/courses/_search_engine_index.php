@@ -144,7 +144,7 @@ if($result_exists !== FALSE){
 	
 			$inp_index_language_mysql = quote_smart($link, $get_course_language);
 
-			// Check if course exists
+			// Check if module exists
 			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name=$inp_index_module_name_mysql AND index_reference_name=$inp_index_reference_name_mysql AND index_reference_id=$inp_index_reference_id_mysql";
 			$result_exists = mysqli_query($link, $query_exists);
 			$row_exists = mysqli_fetch_row($result_exists);

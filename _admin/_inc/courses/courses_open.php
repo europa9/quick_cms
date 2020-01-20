@@ -40,6 +40,11 @@ $t_courses_exams_qa			= $mysqlPrefixSav . "courses_exams_qa";
 $t_courses_exams_user_tries		= $mysqlPrefixSav . "courses_exams_user_tries";
 $t_courses_exams_user_tries_qa		= $mysqlPrefixSav . "courses_exams_user_tries_qa";
 
+/*- Tables search --------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
+
 /*- Variables ------------------------------------------------------------------------ */
 $tabindex = 0;
 if(isset($_GET['course_id'])){
@@ -146,7 +151,47 @@ else{
 							WHERE course_id=$get_current_course_id") or die(mysqli_error($link));
 				}
 			} // new category
-			
+
+
+			// Title
+			$l_mysql = quote_smart($link, $l);
+			$query = "SELECT courses_title_translation_id, courses_title_translation_title FROM $t_courses_title_translations WHERE courses_title_translation_language=$l_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_current_courses_title_translation_id, $get_current_courses_title_translation_title) = $row;
+			if($get_current_courses_title_translation_id == ""){
+				mysqli_query($link, "INSERT INTO $t_courses_title_translations
+				(courses_title_translation_id, courses_title_translation_title, courses_title_translation_language) 
+				VALUES 
+				(NULL, 'Courses', $l_mysql)")
+				or die(mysqli_error($link));
+				$get_current_courses_title_translation_title = "Courses";
+			}
+
+
+
+			// Search engine
+			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='courses' AND index_reference_name='course_id' AND index_reference_id=$get_current_course_id";
+			$result_exists = mysqli_query($link, $query_exists);
+			$row_exists = mysqli_fetch_row($result_exists);
+			list($get_index_id) = $row_exists;
+			if($get_index_id != ""){
+				$datetime = date("Y-m-d H:i:s");
+				$datetime_saying = date("j M Y H:i");
+				
+				$inp_index_title = "$inp_title | $get_current_courses_title_translation_title";
+				$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+				
+				$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+								index_title=$inp_index_title_mysql, 
+								index_url=$inp_title_clean_mysql,
+								index_short_description=$inp_front_page_intro_mysql,
+								index_updated_datetime='$datetime', 
+								index_updated_datetime_print='$datetime_saying'
+							WHERE index_id=$get_index_id") or die(mysqli_error($link));
+			}
+
+
 			$url = "index.php?open=courses&page=courses_open&course_id=$get_current_course_id&editor_language=$editor_language&l=$l&ft=success&fm=changes_saved";
 			header("Location: $url");
 			exit;
