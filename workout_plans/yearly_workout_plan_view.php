@@ -149,37 +149,37 @@ else{
 				$day = substr($day, 1, 1);
 			}
 		
-			if($month == 01){
+			if($month == "01"){
 				$month_saying = $l_january;
 			}
-			elseif($month == 02){
+			elseif($month == "02"){
 				$month_saying = $l_february;
 			}
-			elseif($month == 03){
+			elseif($month == "03"){
 				$month_saying = $l_march;
 			}
-			elseif($month == 04){
+			elseif($month == "04"){
 				$month_saying = $l_april;
 			}
-			elseif($month == 05){
+			elseif($month == "05"){
 				$month_saying = $l_may;
 			}
-			elseif($month == 06){
+			elseif($month == "06"){
 				$month_saying = $l_june;
 			}
-			elseif($month == 07){
+			elseif($month == "07"){
 				$month_saying = $l_july;
 			}
-			elseif($month == 08){
+			elseif($month == "08"){
 				$month_saying = $l_august;
 			}
-			elseif($month == 09){
+			elseif($month == "09"){
 				$month_saying = $l_september;
 			}
-			elseif($month == 10){
+			elseif($month == "10"){
 				$month_saying = $l_october;
 			}
-			elseif($month == 11){
+			elseif($month == "11"){
 				$month_saying = $l_november;
 			}
 			else{

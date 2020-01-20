@@ -167,7 +167,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			echo"
 			 <tr>
 			  <td class=\"$style\">
-				<span><a href=\"my_workout_plans.php?action=open_yearly&amp;duration_type=year&amp;yearly_id=$get_workout_yearly_id\"";
+				<span><a href=\"yearly_workout_plan_edit.php?yearly_id=$get_workout_yearly_id\"";
 				if($yearly_id == "$get_workout_yearly_id"){
 					echo" style=\"font-weight: bold;\""; 
 				}
@@ -180,7 +180,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			
 			// Get period
-			if($yearly_id == "$get_workout_yearly_id"){
+			
 	
 				$query_p = "SELECT workout_period_id, workout_period_title, workout_period_updated FROM $t_workout_plans_period WHERE workout_period_user_id=$my_user_id_mysql AND workout_period_yearly_id=$get_workout_yearly_id AND workout_period_language=$l_mysql ORDER BY workout_period_title ASC";
 				$result_p = mysqli_query($link, $query_p);
@@ -197,7 +197,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					echo"
 					<tr>
 					  <td class=\"$style\">
-						<span>&nbsp; &nbsp; <a href=\"my_workout_plans.php?action=open_period&amp;duration_type=year&amp;yearly_id=$yearly_id&amp;period_id=$get_workout_period_id\"";
+						<span>&nbsp; &nbsp; <a href=\"period_workout_plan_view.php?duration_type=year&amp;yearly_id=$yearly_id&amp;period_id=$get_workout_period_id\"";
 						if($action == "open_period" && $period_id == "$get_workout_period_id"){
 							echo" style=\"font-weight: bold;\""; 
 						}
@@ -236,7 +236,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						} // while week
 					}
 				} // while period
-			}
 
 		} // while
 
@@ -279,7 +278,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					";
 				}
 
-				echo"$get_workout_period_title</span>
+				echo"<a href=\"period_workout_plan_edit.php?period_id=$get_workout_period_id\">$get_workout_period_title</a></span>
 			 </td>
 			</tr>
 			";

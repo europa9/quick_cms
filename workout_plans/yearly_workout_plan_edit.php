@@ -25,6 +25,10 @@ else{ $root = "../../.."; }
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/workout_plans/ts_new_workout_plan.php");
 
@@ -102,6 +106,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			// Year
 			$inp_year = $_POST['inp_year'];
+			if($inp_year == ""){
+				$inp_year = date("Y");
+			}
 			$inp_year = output_html($inp_year);			
 			$inp_year_mysql = quote_smart($link, $inp_year);
 
@@ -116,7 +123,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$result = mysqli_query($link, "UPDATE $t_workout_plans_yearly SET workout_yearly_title=$inp_title_mysql, 
 				workout_yearly_title_clean=$inp_title_clean_mysql,
 				workout_yearly_introduction=$inp_introduction_mysql, 
-				workout_yearly_year=$inp_year_mysql WHERE workout_yearly_id=$yearly_id_mysql");
+				workout_yearly_year=$inp_year_mysql WHERE workout_yearly_id=$yearly_id_mysql") or die(mysqli_error($link));
 
 
 
@@ -145,6 +152,26 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$stmt->execute();
 			if ($stmt->errno) {
 				echo "FAILURE!!! " . $stmt->error; die;
+			}
+
+			// Search engine index
+			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='workout_plans' AND index_reference_name='workout_yearly_id' AND index_reference_id=$get_workout_yearly_id";
+			$result_exists = mysqli_query($link, $query_exists);
+			$row_exists = mysqli_fetch_row($result_exists);
+			list($get_index_id) = $row_exists;
+			if($get_index_id != ""){
+				$datetime = date("Y-m-d H:i:s");
+				$datetime_saying = date("j. M Y H:i");
+
+				$inp_index_title = "$inp_title | $l_workout_plans";
+				$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+				$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+								index_title=$inp_index_title_mysql, 
+								index_short_description=$inp_introduction_mysql,
+								index_updated_datetime='$datetime',
+								index_updated_datetime_print='$datetime_saying'
+								 WHERE index_id=$get_index_id") or die(mysqli_error($link));
 			}
 
 

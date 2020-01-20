@@ -25,7 +25,11 @@ else{ $root = "../../.."; }
 /*- Website config --------------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 include("$root/_admin/_data/logo.php");
+include("$root/_admin/_data/config/user_system.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
 
 /*- Translation ------------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/users/ts_users.php");
@@ -40,9 +44,6 @@ elseif(file_exists("../../../favicon.ico")){ $root = "../../.."; }
 include("$root/_webdesign/header.php");
 
 
-/*- Config -------------------------------------------------------------------------- */
-include("$root/_admin/_data/logo.php");
-
 /*- Variables ----------------------------------------------------------------------- */
 
 if(!(isset($_SESSION['user_id']))){
@@ -50,6 +51,10 @@ if(!(isset($_SESSION['user_id']))){
 	if($_SESSION['antispam_ok']){
 
 		if($action == "create_new_user"){
+			// Dates
+			$datetime = date("Y-m-d H:i:s");
+			$datetime_saying = date("j. M Y H:i");
+
 
 			// User information
 			$inp_alias = $_POST['inp_alias'];
@@ -214,6 +219,31 @@ if(!(isset($_SESSION['user_id']))){
 				VALUES 
 				(NULL, '$get_my_user_id', $inp_country_mysql, $inp_newsletter_mysql, '0', 'public')")
 				or die(mysqli_error($link));
+
+
+				// Search engine
+				if($configShowUsersOnSearchEngineIndexSav == "1"){
+
+					$inp_index_title = "$inp_alias | $l_users";
+					$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+					$inp_index_url = "users/view_profile.php?user_id=$get_my_user_id";
+					$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+					// Insert
+					mysqli_query($link, "INSERT INTO $t_search_engine_index 
+					(index_id, index_title, index_url, index_short_description, index_keywords, 
+					index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+					index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+					index_unique_hits) 
+					VALUES 
+					(NULL, $inp_index_title_mysql, $inp_index_url_mysql, '', '', 
+					'users', 'users', '0', 'user_id', '$get_my_user_id',
+					'0', '0', '$datetime', '$datetime_saying', '',
+					0)")
+					or die(mysqli_error($link));
+
+				}
 
 			
 				// Send welcome mail

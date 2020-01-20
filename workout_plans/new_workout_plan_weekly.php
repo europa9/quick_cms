@@ -25,6 +25,10 @@ else{ $root = "../../.."; }
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/workout_plans/ts_new_workout_plan.php");
 
@@ -234,6 +238,21 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				or die(mysqli_error($link));
 			}
 
+
+			// Search engine index
+			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='workout_plans' AND index_reference_name='workout_weekly_id' AND index_reference_id=$get_current_workout_weekly_id";
+			$result_exists = mysqli_query($link, $query_exists);
+			$row_exists = mysqli_fetch_row($result_exists);
+			list($get_index_id) = $row_exists;
+			if($get_index_id != ""){
+				$datetime = date("Y-m-d H:i:s");
+				$datetime_saying = date("j. M Y H:i");
+
+				$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+								index_short_description=$inp_introduction_mysql 
+								 WHERE index_id=$get_index_id") or die(mysqli_error($link));
+			}
+
 			// Header
 			$url = "new_workout_plan_weekly_step_2_template_image.php?weekly_id=$weekly_id&action=new_session&l=$l";
 			header("Location: $url");
@@ -269,8 +288,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					toolbar: 'formatselect | bold italic strikethrough forecolor backcolor permanentpen formatpainter | link image media pageembed | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat | addcomment',
 					image_advtab: true,
 					content_css: [
-						'//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
-						'//www.tiny.cloud/css/codepen.min.css'
 					],
 					link_list: [
 						{ title: 'My page 1', value: 'http://www.tinymce.com' },
@@ -350,7 +367,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			</p>
 
 			<p><b>$l_introduction:</b><br />
-			<textarea name=\"inp_introduction\" rows=\"10\" cols=\"29\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">";
+			<textarea name=\"inp_introduction\" rows=\"10\" cols=\"29\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" style=\"width: 99%;\">";
 			$get_current_workout_weekly_introduction = str_replace("<br />", "\n", $get_current_workout_weekly_introduction);
 			echo"$get_current_workout_weekly_introduction</textarea>
 			</p>

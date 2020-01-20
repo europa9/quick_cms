@@ -39,6 +39,14 @@ elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
 elseif(file_exists("../../../favicon.ico")){ $root = "../../.."; }
 include("$root/_webdesign/header.php");
 
+/*- Translation ------------------------------------------------------------------------ */
+include("$root/_admin/_translations/site/$l/blog/ts_blog.php");
+include("$root/_admin/_translations/site/$l/blog/ts_my_blog.php");
+
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Content ---------------------------------------------------------------------------------- */
 // Logged in?
 if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
@@ -224,10 +232,53 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$headers[] = 'MIME-Version: 1.0';
 			$headers[] = 'Content-type: text/html; charset=utf-8';
 			$headers[] = "From: $configFromNameSav <" . $configFromEmailSav . ">";
-			mail($get_admin_user_email, $subject, $message, implode("\r\n", $headers));
-
+			if($configMailSendActiveSav == "1"){
+				mail($get_admin_user_email, $subject, $message, implode("\r\n", $headers));
+			}
 		}
 
+
+		// Search engine
+		$inp_index_title = "$inp_title | $l_workout_plans";
+		$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+		$inp_index_url = "";
+		$inp_index_module_part_name = "";
+		$inp_index_reference_name = "";
+		if($inp_duration == "yearly"){
+			$inp_index_url = "workout_plans/yearly_workout_plan_view.php?yearly_id=$get_workout_plan_id";
+			$inp_index_module_part_name = "workout_plan_yearly";
+			$inp_index_reference_name = "workout_yearly_id";
+		}
+		elseif($inp_duration == "period"){
+			$inp_index_url = "workout_plans/period_workout_plan_view.php?period_id=$get_workout_plan_id";
+			$inp_index_module_part_name = "workout_plan_period";
+			$inp_index_reference_name = "workout_period_id";
+		}
+		elseif($inp_duration == "weekly"){
+			$inp_index_url = "workout_plans/weekly_workout_plan_view.php?weekly_id=$get_workout_plan_id";
+			$inp_index_module_part_name = "workout_plan_weekly";
+			$inp_index_reference_name = "workout_weekly_id";
+		}
+		$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+		$inp_index_module_part_name_mysql = quote_smart($link, $inp_index_module_part_name);
+		$inp_index_reference_name_mysql = quote_smart($link, $inp_index_reference_name);
+		$inp_index_reference_id_mysql = quote_smart($link, "$get_workout_plan_id");
+
+		$datetime = date("Y-m-d H:i:s");
+		$datetime_saying = date("j. M Y H:i");
+
+		mysqli_query($link, "INSERT INTO $t_search_engine_index 
+		(index_id, index_title, index_url, index_short_description, index_keywords, 
+		index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+		index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+		index_unique_hits) 
+		VALUES 
+		(NULL, $inp_index_title_mysql, $inp_index_url_mysql, '', '', 
+		'workout_plans', $inp_index_module_part_name_mysql, 0, $inp_index_reference_name_mysql, $inp_index_reference_id_mysql, 
+		0, 0, '$datetime', '$datetime_saying', $inp_language_mysql,
+		0)")
+		or die(mysqli_error($link));
 
 		// Header
 		if($inp_duration == "yearly"){

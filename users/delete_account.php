@@ -25,6 +25,10 @@ else{ $root = "../../.."; }
 /*- Website config --------------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
+/*- Tables ----------------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Translation ------------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/users/ts_users.php");
 
@@ -93,6 +97,14 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$result = mysqli_query($link, "DELETE FROM $t_users_profile_photo WHERE photo_user_id=$user_id_mysql");
 
 			
+			// Search engine
+			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='users' AND index_reference_name='user_id' AND index_reference_id=$get_user_id";
+			$result_exists = mysqli_query($link, $query_exists);
+			$row_exists = mysqli_fetch_row($result_exists);
+			list($get_index_id) = $row_exists;
+			if($get_index_id != ""){
+				$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_id=$get_index_id") or die(mysqli_error($link));
+			}
 
 			$url = "logout.php?process=1";
 			header("Location: $url");

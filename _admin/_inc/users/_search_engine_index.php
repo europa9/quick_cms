@@ -13,6 +13,8 @@ if(!(isset($define_access_to_control_panel))){
 	die;
 }
 
+/*- Translation ------------------------------------------------------------------------------ */
+include("_translations/site/$l/users/ts_users.php");
 
 /*- Tables ---------------------------------------------------------------------------- */
 $t_users		= $mysqlPrefixSav . "users";
@@ -73,6 +75,7 @@ if($result_exists !== FALSE){
 					$inp_index_title = $inp_index_title . " | $get_professional_district";
 				}
 			}
+			$inp_index_title = $inp_index_title . " | $l_users";
 			$inp_index_title_mysql = quote_smart($link, $inp_index_title);
 
 			$inp_index_url = "users/view_profile.php?user_id=$get_user_id";

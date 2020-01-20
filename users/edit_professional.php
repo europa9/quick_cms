@@ -24,7 +24,8 @@ else{ $root = "../../.."; }
 
 /*- Website config --------------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
-
+include("$root/_admin/_data/logo.php");
+include("$root/_admin/_data/config/user_system.php");
 include("$root/_admin/_data/user_professional_allowed_settings.php");
 
 /*- Translation ------------------------------------------------------------------------------ */
@@ -46,6 +47,10 @@ $t_users_professional_allowed_departments		= $mysqlPrefixSav . "users_profession
 $t_users_professional_allowed_positions			= $mysqlPrefixSav . "users_professional_allowed_positions";
 $t_users_professional_allowed_districts			= $mysqlPrefixSav . "users_professional_allowed_districts";
 
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
+
 
 /*- Content --------------------------------------------------------------------------- */
 
@@ -66,6 +71,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		session_destroy();
 		die;
 	}
+
+	$query = "SELECT profile_id, profile_user_id, profile_first_name, profile_middle_name, profile_last_name, profile_address_line_a, profile_address_line_b, profile_zip, profile_city, profile_country, profile_phone, profile_work, profile_university, profile_high_school, profile_languages, profile_website, profile_interested_in, profile_relationship, profile_about, profile_newsletter FROM $t_users_profile WHERE profile_user_id=$get_my_user_id";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_my_profile_id, $get_my_profile_user_id, $get_my_profile_first_name, $get_my_profile_middle_name, $get_my_profile_last_name, $get_my_profile_address_line_a, $get_my_profile_address_line_b, $get_my_profile_zip, $get_my_profile_city, $get_my_profile_country, $get_my_profile_phone, $get_my_profile_work, $get_my_profile_university, $get_my_profile_high_school, $get_my_profile_languages, $get_my_profile_website, $get_my_profile_interested_in, $get_my_profile_relationship, $get_my_profile_about, $get_my_profile_newsletter) = $row;
 
 	$query = "SELECT professional_id, professional_user_id, professional_company, professional_company_location, professional_department, professional_work_email, professional_position, professional_position_abbr, professional_district FROM $t_users_professional WHERE professional_user_id=$user_id_mysql";
 	$result = mysqli_query($link, $query);
@@ -138,6 +148,54 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
  					professional_district=$inp_district_mysql 
 					WHERE professional_user_id=$user_id_mysql");
 			
+		// Get new information
+		$query = "SELECT professional_id, professional_user_id, professional_company, professional_company_location, professional_department, professional_work_email, professional_position, professional_position_abbr, professional_district FROM $t_users_professional WHERE professional_user_id=$user_id_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_my_professional_id, $get_my_professional_user_id, $get_my_professional_company, $get_my_professional_company_location, $get_my_professional_department, $get_my_professional_work_email, $get_my_professional_position, $get_my_professional_position_abbr, $get_my_professional_district) = $row;
+
+
+		// Search engine
+		if($configShowUsersOnSearchEngineIndexSav == "1"){
+			$inp_index_title = "$get_my_user_name";
+			if($configIncludeFirstNameLastNameOnSearchEngineIndexSav == "1"){
+				if($get_my_profile_first_name != "" OR  $get_my_profile_middle_name != "" OR $get_my_profile_last_name != ""){
+					$inp_index_title = $inp_index_title . " | $get_my_profile_first_name $get_my_profile_middle_name $inp_profile_last_name";
+				}
+			}
+			if($configIncludeProfessionalOnSearchEngineIndexSav == "1"){
+				if($get_my_professional_company != ""){
+					$inp_index_title = $inp_index_title . " | $get_my_professional_company";
+				}
+				if($get_my_professional_company_location != ""){
+					$inp_index_title = $inp_index_title . " | $get_my_professional_company_location";
+				}
+				if($get_my_professional_department != ""){
+					$inp_index_title = $inp_index_title . " | $get_my_professional_department";
+				}
+				if($get_my_professional_position_abbr != ""){
+					$inp_index_title = $inp_index_title . " | $get_my_professional_position_abbr";
+				}
+				if($get_my_professional_district != ""){
+					$inp_index_title = $inp_index_title . " | $get_my_professional_district";
+				}
+			}
+			$inp_index_title = $inp_index_title . " | $l_users";
+			$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+
+			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='users' AND index_reference_name='user_id' AND index_reference_id=$get_my_user_id";
+			$result_exists = mysqli_query($link, $query_exists);
+			$row_exists = mysqli_fetch_row($result_exists);
+			list($get_index_id) = $row_exists;
+			if($get_index_id != ""){
+				$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+								index_title=$inp_index_title_mysql 
+								WHERE index_id=$get_index_id") or die(mysqli_error($link));
+			}
+		} // search engine
+
+
 		$url = "edit_professional.php?l=$l&ft=success&fm=changes_saved"; 
 		if($process == "1"){
 			header("Location: $url");

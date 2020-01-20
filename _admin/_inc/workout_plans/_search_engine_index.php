@@ -55,7 +55,7 @@ if($result_exists !== FALSE){
 
 		$inp_index_module_name_mysql = quote_smart($link, "workout_plans");
 
-		$inp_index_module_part_name_mysql = quote_smart($link, "plans_weekly");
+		$inp_index_module_part_name_mysql = quote_smart($link, "workout_plan_weekly");
 
 		$inp_index_reference_name_mysql = quote_smart($link, "workout_weekly_id");
 		$inp_index_reference_id_mysql = quote_smart($link, "$get_workout_weekly_id");

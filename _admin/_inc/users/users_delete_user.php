@@ -18,6 +18,9 @@ $t_users_status_comments 	= $mysqlPrefixSav . "users_status_comments";
 $t_users_status_comments_likes 	= $mysqlPrefixSav . "users_status_comments_likes";
 $t_users_status_likes 		= $mysqlPrefixSav . "users_status_likes";
 
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 // Variables
 if(isset($_GET['user_id'])) {
 	$user_id = $_GET['user_id'];
@@ -109,6 +112,16 @@ if(isset($_SESSION['admin_user_id']) && isset($_SESSION['admin_security'])){
 						
 		// Delete photos
 		$result = mysqli_query($link, "DELETE FROM $t_users_profile_photo WHERE photo_user_id=$user_id_mysql");
+
+		// Search engine
+		$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='users' AND index_reference_name='user_id' AND index_reference_id=$user_id_mysql";
+		$result_exists = mysqli_query($link, $query_exists);
+		$row_exists = mysqli_fetch_row($result_exists);
+		list($get_index_id) = $row_exists;
+		if($get_index_id != ""){
+			$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_id=$get_index_id") or die(mysqli_error($link));
+		}
+
 
 		// Header
 		$url = "index.php?open=$open&page=default&l=$l&ft=success&fm=user_deleted&editor_language=$editor_language";

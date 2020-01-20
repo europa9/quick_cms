@@ -25,6 +25,10 @@ else{ $root = "../../.."; }
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/workout_plans/ts_new_workout_plan.php");
 
@@ -123,6 +127,20 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$stmt->execute();
 			if ($stmt->errno) {
 				echo "FAILURE!!! " . $stmt->error; die;
+			}
+
+			// Search engine index
+			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='workout_plans' AND index_reference_name='workout_period_id' AND index_reference_id=$get_workout_period_id";
+			$result_exists = mysqli_query($link, $query_exists);
+			$row_exists = mysqli_fetch_row($result_exists);
+			list($get_index_id) = $row_exists;
+			if($get_index_id != ""){
+				$datetime = date("Y-m-d H:i:s");
+				$datetime_saying = date("j. M Y H:i");
+
+				$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+								index_short_description=$inp_introduction_mysql 
+								 WHERE index_id=$get_index_id") or die(mysqli_error($link));
 			}
 
 
