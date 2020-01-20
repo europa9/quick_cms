@@ -26,6 +26,9 @@ else{ $root = "../../.."; }
 /*- Website config --------------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
+include("$root/_admin/_data/talk.php");
+
+
 
 /*- Tables ---------------------------------------------------------------------------- */
 $t_talk_channels_index		= $mysqlPrefixSav . "talk_channels_index";
@@ -37,6 +40,10 @@ $t_talk_users_starred_users	= $mysqlPrefixSav . "talk_users_starred_users";
 
 $t_talk_nicknames 		= $mysqlPrefixSav . "talk_nicknames";
 $t_talk_nicknames_changes 	= $mysqlPrefixSav . "talk_nicknames_changes";
+
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
 
 
 /*- Content ---------------------------------------------------------------------------------- */
@@ -151,6 +158,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$datetime = date("Y-m-d H:i:s");
 			$time = time();
 			$date_saying = date("j. M Y H:i");
+			$datetime_saying = date("j. M Y H:i");
+
 			$inp_name_mysql = quote_smart($link, $configWebsiteTitleSav);
 			mysqli_query($link, "INSERT INTO $t_talk_channels_index
 			(channel_id, channel_name, channel_password, channel_created_by_user_id, channel_created_by_user_ip, channel_created_datetime, channel_created_saying, channel_last_message_time, channel_last_message_saying, channel_users_online) 
@@ -177,6 +186,27 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$row = mysqli_fetch_row($result);
 			list($get_current_starred_channel_id, $get_current_channel_id, $get_current_channel_name, $get_current_new_messages, $get_current_user_id) = $row;
 			
+
+			// Search engine
+			$inp_index_title = "$configWebsiteTitleSav | $talkTitleSav";
+			$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+			$inp_index_url = "talk/channel_list.php?action=join_without_password&channel_id=$get_channel_id&process=1";
+			$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+	
+			$inp_index_language_mysql = quote_smart($link, $l);
+
+			mysqli_query($link, "INSERT INTO $t_search_engine_index 
+			(index_id, index_title, index_url, index_short_description, index_keywords, 
+			index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+			index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+			index_unique_hits) 
+			VALUES 
+			(NULL, $inp_index_title_mysql, $inp_index_url_mysql, '', '', 
+			'talk', '', '0', 'channel_id', '$get_channel_id',
+			'0', 0, '$datetime', '$datetime_saying', $inp_index_language_mysql,
+			0)")
+			or die(mysqli_error($link));
 
 			// Go to that channel
 			$url = "$root/talk/open_starred_channel.php?starred_channel_id=$get_current_starred_channel_id&l=$l";

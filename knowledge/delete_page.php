@@ -33,6 +33,9 @@ include("$root/_admin/_translations/site/$l/knowledge/ts_new_page.php");
 include("$root/_admin/_functions/encode_national_letters.php");
 include("$root/_admin/_functions/decode_national_letters.php");
 
+/*- Tables ------------------------------------------------------------------------------------ */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
 
 /*- Variables -------------------------------------------------------------------------------- */
 if (isset($_GET['space_id'])) {
@@ -203,6 +206,14 @@ else{
 						}
 
 						
+						// Search engine
+						$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='knowledge' AND index_reference_name='page_id' AND index_reference_id=$get_current_page_id";
+						$result_exists = mysqli_query($link, $query_exists);
+						$row_exists = mysqli_fetch_row($result_exists);
+						list($get_index_id) = $row_exists;
+						if($get_index_id != ""){
+							$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_id=$get_index_id") or die(mysqli_error($link));
+						}
 
 						// Go to parent if any, else go to space
 						if($get_current_page_parent_id != ""){

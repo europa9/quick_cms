@@ -29,6 +29,10 @@ include("$root/_admin/website_config.php");
 /*- Translation ------------------------------------------------------------------------------- */
 include("$root/_admin/_translations/site/$l/knowledge/ts_view_page.php");
 
+/*- Tables ------------------------------------------------------------------------------------ */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Variables -------------------------------------------------------------------------------- */
 if (isset($_GET['space_id'])) {
 	$space_id = $_GET['space_id'];
@@ -138,6 +142,15 @@ else{
 			if($process == "1"){
 				$result = mysqli_query($link, "DELETE FROM $t_knowledge_spaces_index WHERE space_id=$get_current_space_id");
 				$result = mysqli_query($link, "DELETE FROM $t_knowledge_spaces_members WHERE member_space_id=$get_current_space_id");
+
+				// Search engine index: space
+				$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_module_name='knowledge' AND index_reference_name='space_id' AND index_reference_id=$get_current_space_id") or die(mysqli_error($link));
+
+				// Search engine index: pages
+				$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_module_name='knowledge' AND index_module_part_name='spaces' AND index_module_part_id=$get_current_space_id") or die(mysqli_error($link));
+
+				// Search engine index: access
+				$result = mysqli_query($link, "DELETE FROM $t_search_engine_access_control WHERE control_has_access_to_module_name='knowledge' AND control_has_access_to_module_part_name='spaces' AND control_has_access_to_module_part_id=$get_current_space_id") or die(mysqli_error($link));
 
 				header("Location: index.php?l=$l&ft=success&fm=space_deleted");
 				exit;

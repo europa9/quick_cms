@@ -183,10 +183,17 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 					$row_exists = mysqli_fetch_row($result_exists);
 					list($get_index_id) = $row_exists;
 					if($get_index_id != ""){
+						$datetime = date("Y-m-d H:i:s");
+						$datetime_saying = date("j. M Y H:i");
+
 						$inp_index_title = "$inp_title | $get_blog_title | $l_blog";
 						$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
 						$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
-										index_title=$inp_index_title_mysql WHERE index_id=$get_index_id") or die(mysqli_error($link));
+										index_title=$inp_index_title_mysql,
+										index_updated_datetime='$datetime',
+										index_updated_datetime_print='$datetime_saying'
+										 WHERE index_id=$get_index_id") or die(mysqli_error($link));
 					}
 
 

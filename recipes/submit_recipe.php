@@ -29,6 +29,12 @@ include("$root/_admin/website_config.php");
 include("$root/_admin/_translations/site/$l/recipes/ts_recipes.php");
 
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
+
+
 /*- Variables ------------------------------------------------------------------------- */
 if(isset($_GET['mode'])){
 	$mode = $_GET['mode'];
@@ -131,6 +137,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 		$inp_recipe_date = date("Y-m-d");
 		$inp_recipe_time = date("H:i:s");
+		$datetime = date("Y-m-d H:i:s");
+		$datetime_saying = date("j. M Y H:i");
 
 		$inp_recipe_user_ip = $_SERVER['REMOTE_ADDR'];
 		$inp_recipe_user_ip = output_html($inp_recipe_user_ip);
@@ -234,7 +242,21 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			list($get_group_id, $get_group_recipe_id, $get_group_title) = $row;
 			
 
+			// Search engine
+			$inp_index_title = "$inp_recipe_title | $l_recipes";
+			$inp_index_title_mysql = quote_smart($link, $inp_index_title);
 
+			$inp_index_url = "recipes/view_recipe.php?recipe_id=$get_recipe_id";
+			$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+			mysqli_query($link, "INSERT INTO $t_search_engine_index 
+			(index_id, index_title, index_url, index_short_description, index_keywords, 
+			index_module_name, index_module_part_name, index_reference_name, index_reference_id, index_is_ad, 
+			index_created_datetime, index_created_datetime_print, index_language) 
+			VALUES 
+			(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_recipe_introduction_mysql, '', 
+			'recipes', 'recipes', 'recipe_id','$get_recipe_id', 0, '$datetime', '$datetime_saying', $inp_recipe_language_mysql)")
+			or die(mysqli_error($link));
 
 
 			echo"

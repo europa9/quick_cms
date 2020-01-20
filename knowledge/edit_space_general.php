@@ -35,6 +35,10 @@ include("$root/_admin/_translations/site/$l/knowledge/ts_edit_space.php");
 include("$root/_admin/_functions/encode_national_letters.php");
 include("$root/_admin/_functions/decode_national_letters.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Variables -------------------------------------------------------------------------------- */
 if (isset($_GET['space_id'])) {
 	$space_id = $_GET['space_id'];
@@ -174,6 +178,7 @@ else{
 
 			$datetime = date("Y-m-d H:i:s");
 			$date_saying = date("j M Y");
+			$datetime_saying = date("j. M Y H:i");
 	
 			// Me
 			$query = "SELECT user_id, user_email, user_name, user_alias, user_language, user_last_online, user_rank, user_login_tries FROM $t_users WHERE user_id=$my_user_id_mysql";
@@ -231,6 +236,49 @@ else{
 			if ($stmt->errno) {
 				echo "FAILURE!!! " . $stmt->error; die;
 			}
+
+
+
+			// Search engine
+			$inp_index_title = "$inp_title | $l_spaces";
+			$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+			$inp_index_short_description = output_html($inp_text);
+			$inp_index_short_description = substr($inp_index_short_description, 0, 200);
+			$inp_index_short_description_mysql = quote_smart($link, $inp_index_short_description);
+
+			$inp_index_url = "knowledge/open_space.php?space_id=$get_current_space_id";
+			$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+			$inp_index_language_mysql = quote_smart($link, $l);
+
+			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='knowledge' AND index_reference_name='space_id' AND index_reference_id=$get_current_space_id";
+			$result_exists = mysqli_query($link, $query_exists);
+			$row_exists = mysqli_fetch_row($result_exists);
+			list($get_index_id) = $row_exists;
+			if($get_index_id == ""){
+				// Insert
+				echo"<span>Insert $inp_index_title<br /></span>\n";
+				mysqli_query($link, "INSERT INTO $t_search_engine_index 
+				(index_id, index_title, index_url, index_short_description, index_keywords, 
+				index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+				index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+				index_unique_hits) 
+				VALUES 
+				(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_index_short_description_mysql, '', 
+				'knowledge', 'space', 0, 'space_id', $get_current_space_id,
+				'0', 0, '$datetime', '$datetime_saying', $inp_index_language_mysql,
+				0)")
+				or die(mysqli_error($link));
+			}
+			else{
+				$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+							index_title=$inp_index_title_mysql, 
+							index_short_description=$inp_index_short_description_mysql 
+							 WHERE index_id=$get_index_id");
+			}
+
+
 
 			// Image
 			// Dir

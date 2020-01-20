@@ -33,6 +33,10 @@ include("$root/_admin/_translations/site/$l/knowledge/ts_new_page.php");
 include("$root/_admin/_functions/encode_national_letters.php");
 include("$root/_admin/_functions/decode_national_letters.php");
 
+/*- Tables ------------------------------------------------------------------------------------ */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 
 /*- Variables -------------------------------------------------------------------------------- */
 $tabindex = 0;
@@ -254,6 +258,53 @@ else{
 						}
 
 
+
+						// Tags
+						$result = mysqli_query($link, "DELETE FROM $t_knowledge_pages_tags WHERE tag_page_id='$get_current_page_id'");
+						$inp_tags = $_POST['inp_tags'];
+						$inp_tags = output_html($inp_tags);
+						$inp_tags_array = explode(" ", $inp_tags);
+						for($x=0;$x<sizeof($inp_tags_array);$x++){
+							if($inp_tags_array[$x] != ""){
+								$inp_tag_title = "$inp_tags_array[$x]";
+								$inp_tag_title_mysql = quote_smart($link, $inp_tag_title);
+
+								$inp_tag_title_clean = "$inp_tags_array[$x]";
+								$inp_tag_title_clean = strtolower($inp_tag_title_clean);
+								$inp_tag_title_clean_mysql = quote_smart($link, $inp_tag_title_clean);
+
+								mysqli_query($link, "INSERT INTO $t_knowledge_pages_tags
+								(tag_id, tag_page_id, tag_title, tag_title_clean) 
+								VALUES 
+								(NULL, $get_current_page_id, $inp_tag_title_mysql, $inp_tag_title_clean_mysql)")
+								or die(mysqli_error($link));
+							}
+						}
+
+
+
+						// Search engine
+						$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='knowledge' AND index_reference_name='page_id' AND index_reference_id=$get_current_page_id";
+						$result_exists = mysqli_query($link, $query_exists);
+						$row_exists = mysqli_fetch_row($result_exists);
+						list($get_index_id) = $row_exists;
+						if($get_index_id != ""){
+							$inp_index_title = "$inp_title | $get_current_space_title | $l_spaces";
+							$inp_index_title_mysql = quote_smart($link, "$inp_index_title");
+
+							$inp_index_keywords = "$inp_tags";
+							$inp_index_keywords_mysql = quote_smart($link, "$inp_index_keywords");
+
+							$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+											index_title=$inp_index_title_mysql,
+											index_short_description=$inp_description_mysql,
+											index_keywords=$inp_index_keywords_mysql,
+											index_updated_datetime='$datetime', 
+											index_updated_datetime_print='$datetime_saying'
+											 WHERE index_id=$get_index_id") or die(mysqli_error($link));
+							
+						}
+
 						// Create history
 						$my_ip = $_SERVER['REMOTE_ADDR'];
 						$my_ip = output_html($inp_ip);
@@ -290,29 +341,6 @@ else{
 						if ($stmt->errno) {
 							echo "FAILURE!!! " . $stmt->error; die;
 						}
-
-						// Tags
-						$result = mysqli_query($link, "DELETE FROM $t_knowledge_pages_tags WHERE tag_page_id='$get_current_page_id'");
-						$inp_tags = $_POST['inp_tags'];
-						$inp_tags = output_html($inp_tags);
-						$inp_tags_array = explode(" ", $inp_tags);
-						for($x=0;$x<sizeof($inp_tags_array);$x++){
-							if($inp_tags_array[$x] != ""){
-								$inp_tag_title = "$inp_tags_array[$x]";
-								$inp_tag_title_mysql = quote_smart($link, $inp_tag_title);
-
-								$inp_tag_title_clean = "$inp_tags_array[$x]";
-								$inp_tag_title_clean = strtolower($inp_tag_title_clean);
-								$inp_tag_title_clean_mysql = quote_smart($link, $inp_tag_title_clean);
-
-								mysqli_query($link, "INSERT INTO $t_knowledge_pages_tags
-								(tag_id, tag_page_id, tag_title, tag_title_clean) 
-								VALUES 
-								(NULL, $get_current_page_id, $inp_tag_title_mysql, $inp_tag_title_clean_mysql)")
-								or die(mysqli_error($link));
-							}
-						}
-
 						
 
 

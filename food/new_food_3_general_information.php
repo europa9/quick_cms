@@ -25,6 +25,11 @@ else{ $root = "../../.."; }
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
+
 
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/food/ts_food.php");
@@ -261,8 +266,38 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				else{
 					$inp_count = $get_food_country_count_food+1;
 					$result = mysqli_query($link, "UPDATE $t_food_countries_used SET food_country_count_food=$inp_count WHERE food_country_id=$get_food_country_id");
-				}	
+				}
 
+				
+
+				// Search engine
+				$inp_index_title = "$inp_food_manufacturer_name $inp_food_name";
+				$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+				$inp_index_url = "food/view_food.php?food_id=$get_food_id";
+				$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+				$inp_index_short_description = substr($inp_food_description , 0, 200);
+				$inp_index_short_description_mysql = quote_smart($link, $inp_index_short_description);
+
+				$datetime = date("Y-m-d H:i:s");
+				$datetime_saying = date("j. M Y H:i");
+
+				$inp_index_language = output_html($l);
+				$inp_index_language_mysql = quote_smart($link, $inp_index_language);
+
+				mysqli_query($link, "INSERT INTO $t_search_engine_index 
+				(index_id, index_title, index_url, index_short_description, index_keywords, 
+				index_module_name, index_module_part_name, index_reference_name, index_reference_id, index_is_ad, 
+				index_created_datetime, index_created_datetime_print, index_language) 
+				VALUES 
+				(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_index_short_description_mysql, '', 
+				'food', 'food', 'food_id','$get_food_id', 0, 
+				'$datetime', '$datetime_saying', $inp_index_language_mysql)")
+				or die(mysqli_error($link));
+				
+
+die;
 				// Header
 				if($inp_food_country == "United States"){
 					$url = "new_food_4_serving_size_united_states.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&food_id=$get_food_id&el=$l";

@@ -34,6 +34,9 @@ include("$root/_admin/_translations/site/$l/knowledge/ts_edit_page.php");
 include("$root/_admin/_functions/encode_national_letters.php");
 include("$root/_admin/_functions/decode_national_letters.php");
 
+/*- Tables ------------------------------------------------------------------------------------ */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
 
 /*- Variables -------------------------------------------------------------------------------- */
 if (isset($_GET['space_id'])) {
@@ -157,6 +160,7 @@ else{
 
 						$datetime = date("Y-m-d H:i:s");
 						$date_saying = date("j M Y");
+						$datetime_saying = date("j. M Y H:i");
 	
 						// Me
 						$query = "SELECT user_id, user_email, user_name, user_alias, user_language, user_last_online, user_rank, user_login_tries FROM $t_users WHERE user_id=$my_user_id_mysql";
@@ -211,6 +215,20 @@ else{
 
 
 
+						// Search engine
+						$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='knowledge' AND index_reference_name='page_id' AND index_reference_id=$get_current_page_id";
+						$result_exists = mysqli_query($link, $query_exists);
+						$row_exists = mysqli_fetch_row($result_exists);
+						list($get_index_id) = $row_exists;
+						if($get_index_id != ""){
+							$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+											index_short_description=$inp_description_mysql,
+											index_updated_datetime='$datetime', 
+											index_updated_datetime_print='$datetime_saying'
+											 WHERE index_id=$get_index_id") or die(mysqli_error($link));
+							
+						}
+
 						// Create history
 						$inp_title_mysql = quote_smart($link, $get_current_page_title);
 						$inp_title_clean_mysql = quote_smart($link, $get_current_page_title_clean);
@@ -253,6 +271,8 @@ else{
 						if ($stmt->errno) {
 							echo "FAILURE!!! " . $stmt->error; die;
 						}
+
+
 
 						$url = "edit_page.php?space_id=$space_id&page_id=$get_current_page_id&l=$l&ft=success&fm=changes_saved";
 						header("Location: $url");

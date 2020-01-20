@@ -28,6 +28,13 @@ include("$root/_admin/website_config.php");
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/meal_plans/ts_new_meal_plan.php");
 
+
+
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
+
 /*- Variables ------------------------------------------------------------------------- */
 if(isset($_GET['meal_plan_id'])){
 	$meal_plan_id = $_GET['meal_plan_id'];
@@ -98,7 +105,15 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$result = mysqli_query($link, "DELETE FROM $t_meal_plans_days WHERE day_meal_plan_id='$get_current_meal_plan_id'");
 			$result = mysqli_query($link, "DELETE FROM $t_meal_plans_entries WHERE entry_meal_plan_id='$get_current_meal_plan_id'");
 			$result = mysqli_query($link, "DELETE FROM $t_meal_plans_meals WHERE meal_meal_plan_id='$get_current_meal_plan_id'");
- 
+
+  			// Search engine
+			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='meal_plans' AND index_reference_name='meal_plan_id' AND index_reference_id=$get_current_meal_plan_id";
+			$result_exists = mysqli_query($link, $query_exists);
+			$row_exists = mysqli_fetch_row($result_exists);
+			list($get_index_id) = $row_exists;
+			if($get_index_id != ""){
+				$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_id=$get_index_id") or die(mysqli_error($link));
+			}
 
 			// Img
 			if($get_current_meal_plan_image_file != "" && file_exists("$root/$get_current_meal_plan_image_path/$get_current_meal_plan_image_file")){

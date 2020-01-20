@@ -3,8 +3,8 @@
 *
 * File: meal_plans/new_meal_plan.php
 * Version 1.0.0
-* Date 12:05 10.02.2018
-* Copyright (c) 2011-2018 S. A. Ditlefsen
+* Date 14:20 19.01.2020
+* Copyright (c) 2011-2020 S. A. Ditlefsen
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -24,6 +24,11 @@ else{ $root = "../../.."; }
 
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
+
+
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
 
 
 /*- Variables ------------------------------------------------------------------------- */
@@ -330,7 +335,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$inp_number_of_days = output_html($inp_number_of_days);
 			$inp_number_of_days_mysql = quote_smart($link, $inp_number_of_days);
 
+			// Dates
 			$datetime = date("Y-m-d H:i:s");
+			$datetime_saying = date("j. M Y H:i");
 
 			$inp_user_ip = $_SERVER['REMOTE_ADDR'];
 			$inp_user_ip = output_html($inp_user_ip);
@@ -353,6 +360,23 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$row_t = mysqli_fetch_row($result_t);
 			list($get_meal_plan_id) = $row_t;
 			
+			// Search engine
+			$inp_index_title = "$inp_title | $l_meal_plans";
+			$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+			$inp_index_url = "meal_plans/meal_plan_view_1.php?meal_plan_id=$get_meal_plan_id";
+			$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+
+			mysqli_query($link, "INSERT INTO $t_search_engine_index 
+			(index_id, index_title, index_url, index_short_description, index_keywords, 
+			index_module_name, index_reference_name, index_reference_id, index_is_ad, index_created_datetime, index_created_datetime_print, 
+			index_language) 
+			VALUES 
+			(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_introduction_mysql , '', 
+			'meal_plans', 'meal_plan_id', '$get_meal_plan_id', 0, '$datetime', '$datetime_saying', $inp_language_mysql)")
+			or die(mysqli_error($link));
+
 			// Header
 			$url = "new_meal_plan_step_2_entries.php?meal_plan_id=$get_meal_plan_id&entry_day_number=1&l=$l";
 			header("Location: $url");

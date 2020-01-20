@@ -7,5 +7,6 @@ $l_image_gallery = "Bildegalleri";
 $l_media = "Media";
 $l_no = "Nei";
 $l_save_changes = "Lagre endringer";
+$l_spaces = "Omr&aring;der";
 $l_yes = "Ja";
 ?>

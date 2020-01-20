@@ -7,4 +7,5 @@ $l_category = "Category";
 $l_add_edit = "Add/Edit";
 $l_image_gallery = "Image gallery";
 $l_media = "Media";
+$l_spaces = "Spaces";
 ?>

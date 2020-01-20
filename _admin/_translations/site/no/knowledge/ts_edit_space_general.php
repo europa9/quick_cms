@@ -7,4 +7,5 @@ $l_image_gallery = "Bildegalleri";
 $l_media = "Media";
 $l_new_image = "Nytt bilde";
 $l_save_changes = "Lagre endringer";
+$l_spaces = "Omr&aring;der";
 ?>

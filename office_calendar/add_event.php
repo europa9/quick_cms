@@ -31,6 +31,10 @@ include("$root/_admin/_translations/site/$l/office_calendar/ts_office_calendar.p
 include("$root/_admin/_translations/site/$l/users/ts_users.php");
 
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Variables -------------------------------------------------------------------------- */
 $tabindex = 0;
 if(isset($_GET['year'])){
@@ -92,6 +96,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	include("$root/_webdesign/header.php");
 
 	if($process == "1"){
+		// Dates
+		$datetime = date("Y-m-d H:i:s");
+		$datetime_saying = date("j. M Y H:i");
+
 
 		$inp_text = $_POST['inp_text'];
 		$inp_text = output_html($inp_text);
@@ -294,17 +302,49 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$inp_user_name_mysql = quote_smart($link, $get_user_name);
 		
 		// Insert
-
 		mysqli_query($link, "INSERT INTO $t_office_calendar_events
-		(event_id, event_user_id, event_user_name, event_location_id, event_location_title, event_equipment_id, event_equipment_title, event_text, event_bg_color, event_text_color, 
+		(event_id, event_user_id, event_user_name, event_created_datetime, event_location_id, event_location_title, event_equipment_id, event_equipment_title, event_text, event_bg_color, event_text_color, 
 		event_from_datetime, event_from_time, event_from_day, event_from_month, event_from_year, event_from_hour, event_from_minute, event_from_saying_date_time, 
 		event_to_datetime, event_to_time, event_to_day, event_to_month, event_to_year, event_to_hour, event_to_minute, event_to_saying_date_time) 
 		VALUES 
-		(NULL, $get_user_id, $inp_user_name_mysql, $inp_location_id_mysql,$inp_location_title_mysql, $inp_equipment_id_mysql, $inp_equipment_title_mysql, $inp_text_mysql, $inp_bg_color_mysql, $inp_text_color_mysql,
+		(NULL, $get_user_id, $inp_user_name_mysql, '$datetime', $inp_location_id_mysql,$inp_location_title_mysql, $inp_equipment_id_mysql, $inp_equipment_title_mysql, $inp_text_mysql, $inp_bg_color_mysql, $inp_text_color_mysql,
 		$inp_from_datetime_mysql, $inp_from_time_mysql, $inp_from_day_mysql, $inp_from_month_mysql, $inp_from_year_mysql, $inp_from_hour_mysql, $inp_from_minute_mysql, $inp_from_saying_mysql,
 		$inp_to_datetime_mysql, $inp_to_time_mysql, $inp_to_day_mysql, $inp_to_month_mysql, $inp_to_year_mysql, $inp_to_hour_mysql, $inp_to_minute_mysql, $inp_to_saying_mysql)
 		") or die(mysqli_error($link));
 
+
+		// Get ID
+		$query = "SELECT event_id, event_user_id, event_user_name, event_location_id, event_location_title, event_equipment_id, event_equipment_title, event_text, event_bg_color, event_text_color, event_from_datetime, event_from_time, event_from_day, event_from_month, event_from_year, event_from_hour, event_from_minute, event_to_datetime, event_to_time, event_to_day, event_to_month, event_to_year, event_to_hour, event_to_minute FROM $t_office_calendar_events WHERE event_user_id=$get_user_id AND event_created_datetime='$datetime'";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_current_event_id, $get_current_event_user_id, $get_current_event_user_name, $get_current_event_location_id, $get_current_event_location_title, $get_current_event_equipment_id, $get_current_event_equipment_title, $get_current_event_text, $get_current_event_bg_color, $get_current_event_text_color, $get_current_event_from_datetime, $get_current_event_from_time, $get_current_event_from_day, $get_current_event_from_month, $get_current_event_from_year, $get_current_event_from_hour, $get_current_event_from_minute, $get_current_event_to_datetime, $get_current_event_to_time, $get_current_event_to_day, $get_current_event_to_month, $get_current_event_to_year, $get_current_event_to_hour, $get_current_event_to_minute) = $row;
+	
+		
+
+		// Search engine
+		$inp_index_title = substr($inp_text, 0, 50);
+		$inp_index_title = "$inp_to_saying  $inp_index_title | $l_office_calendar"; 
+		$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+		$inp_index_url = "office_calendar/index.php?year=$inp_from_year&month=$inp_from_month";
+		$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+		$inp_index_short_description = substr($inp_text, 0, 200);
+		$inp_index_short_description_mysql = quote_smart($link, $inp_index_short_description);
+
+
+		$inp_index_language_mysql = quote_smart($link, $l);
+
+		mysqli_query($link, "INSERT INTO $t_search_engine_index 
+		(index_id, index_title, index_url, index_short_description, index_keywords, 
+		index_module_name, index_reference_name, index_reference_id, index_is_ad, index_created_datetime, index_created_datetime_print, 
+		index_language) 
+		VALUES 
+		(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_index_short_description_mysql, '', 
+		'office_calendar', 'event_id','$get_current_event_id', 0, '$datetime', '$datetime_saying', $inp_index_language_mysql)")
+		or die(mysqli_error($link));
+
+		// Header
 		$url = "index.php?year=$inp_from_year&month=$inp_from_month&day=$inp_from_day&l=$l&ft=success&fm=created_event";
 		$url = str_replace("\n", "", $url);
 		$url = str_replace("\r", "", $url);

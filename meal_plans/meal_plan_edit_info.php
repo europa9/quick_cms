@@ -25,6 +25,11 @@ else{ $root = "../../.."; }
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
+
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/meal_plans/ts_new_meal_plan.php");
 include("$root/_admin/_translations/site/$l/meal_plans/ts_meal_plan_edit.php");
@@ -115,18 +120,36 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$inp_number_of_days = $_POST['inp_number_of_days'];
 			$inp_number_of_days = output_html($inp_number_of_days);
 			$inp_number_of_days_mysql = quote_smart($link, $inp_number_of_days);
-
+			
+			// Dates
+			$datetime = date("Y-m-d H:i:s");
+			$datetime_saying = date("j. M Y H:i");
 
 			// Update
 			$result = mysqli_query($link, "UPDATE $t_meal_plans SET 
-
 							meal_plan_title=$inp_title_mysql,
 							meal_plan_title_clean=$inp_title_clean_mysql,
 							meal_plan_number_of_days=$inp_number_of_days_mysql,
 							meal_plan_introduction=$inp_introduction_mysql
+							 WHERE meal_plan_id=$meal_plan_id_mysql AND meal_plan_user_id=$my_user_id_mysql") or die(mysqli_error($link));
 
-				 WHERE meal_plan_id=$meal_plan_id_mysql AND meal_plan_user_id=$my_user_id_mysql");
- 
+ 			// Search engine
+			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='meal_plans' AND index_reference_name='meal_plan_id' AND index_reference_id=$get_current_meal_plan_id";
+			$result_exists = mysqli_query($link, $query_exists);
+			$row_exists = mysqli_fetch_row($result_exists);
+			list($get_index_id) = $row_exists;
+			if($get_index_id != ""){
+				$inp_index_title = "$inp_title | $l_meal_plans";
+				$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+				$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+							index_title=$inp_title_mysql,
+							index_short_description=$inp_introduction_mysql, 
+							index_updated_datetime='$datetime', 
+							index_updated_datetime_print='$datetime_saying'
+							 WHERE index_id=$get_index_id") or die(mysqli_error($link));
+			}
+
 			$url = "meal_plan_edit_info.php?meal_plan_id=$get_current_meal_plan_id&l=$l&ft=success&fm=changes_saved";
 			header("Location: $url");
 			exit;

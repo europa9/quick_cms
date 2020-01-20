@@ -158,7 +158,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				(NULL, $get_current_channel_id, '$time', 1, $get_my_user_id, $inp_my_user_nickname_mysql, $inp_my_user_name_mysql, $inp_my_user_alias_mysql, $inp_my_user_image_path_mysql, $inp_my_user_image_file_mysql, $inp_my_user_image_thumb_a_mysql, $inp_my_user_image_thumb_b_mysql, $inp_my_ip_mysql, $inp_my_hostname_mysql, $inp_my_user_agent_mysql)")
 				or die(mysqli_error($link));
 
-				$inp_text = "<a href=\"users/view_profile.php?user_id=$get_my_user_id&amp;l=$l\">$get_my_nickname_value</a> $l_joined_lowercase #$get_current_channel_name";
+				$inp_text = "<a href=\"../users/view_profile.php?user_id=$get_my_user_id&amp;l=$l\">$get_my_nickname_value</a> $l_joined_lowercase #$get_current_channel_name";
 				$inp_text = ucfirst($inp_text);
 				$inp_text_mysql  = quote_smart($link, $inp_text);
 

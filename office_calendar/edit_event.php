@@ -31,6 +31,10 @@ include("$root/_admin/_translations/site/$l/office_calendar/ts_office_calendar.p
 include("$root/_admin/_translations/site/$l/office_calendar/ts_add_event.php");
 include("$root/_admin/_translations/site/$l/users/ts_users.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 
 /*- Variables -------------------------------------------------------------------------- */
 $tabindex = 0;
@@ -85,6 +89,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		include("$root/_webdesign/header.php");
 
 		if($process == "1"){
+			// Dates
+			$datetime = date("Y-m-d H:i:s");
+			$datetime_saying = date("j. M Y H:i");
+
 			$inp_text = $_POST['inp_text'];
 			$inp_text = output_html($inp_text);
 			$inp_text_mysql = quote_smart($link, $inp_text);
@@ -116,47 +124,47 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$inp_from_time = strtotime($inp_from_datetime);
 			$inp_from_time_mysql = quote_smart($link, $inp_from_time);
 		
-		// From saying
-		$from_month_saying = "";
-		if($inp_from_month == "01" OR $inp_from_month == "1"){
-			$from_month_saying = "$l_month_january";
-		}
-		elseif($inp_from_month == "02" OR $inp_from_month == "2"){
-			$from_month_saying = "$l_month_february";
-		}
-		elseif($inp_from_month == "03" OR $inp_from_month == "3"){
-			$from_month_saying = "$l_month_march";
-		}
-		elseif($inp_from_month == "04" OR $inp_from_month == "4"){
-			$from_month_saying = "$l_month_april";
-		}
-		elseif($inp_from_month == "05" OR $inp_from_month == "5"){
-			$from_month_saying = "$l_month_may";
-		}
-		elseif($inp_from_month == "06" OR $inp_from_month == "6"){
-			$from_month_saying = "$l_month_june";
-		}
-		elseif($inp_from_month == "07" OR $inp_from_month == "7"){
-			$from_month_saying = "$l_month_juli";
-		}
-		elseif($inp_from_month == "08" OR $inp_from_month == "8"){
-			$from_month_saying = "$l_month_august";
-		}
-		elseif($inp_from_month == "09" OR $inp_from_month == "9"){
-			$from_month_saying = "$l_month_september";
-		}
-		elseif($inp_from_month == "10"){
-			$from_month_saying = "$l_month_october";
-		}
-		elseif($inp_from_month == "11"){
-			$from_month_saying = "$l_month_november";
-		}
-		else{
-			$from_month_saying = "$l_month_december";
-		}
-		
-		$inp_from_saying = "$inp_from_day $from_month_saying $inp_from_year $inp_from_hour:$inp_from_minute";
-		$inp_from_saying_mysql = quote_smart($link, $inp_from_saying);
+			// From saying
+			$from_month_saying = "";
+			if($inp_from_month == "01" OR $inp_from_month == "1"){
+				$from_month_saying = "$l_month_january";
+			}
+			elseif($inp_from_month == "02" OR $inp_from_month == "2"){
+				$from_month_saying = "$l_month_february";
+			}
+			elseif($inp_from_month == "03" OR $inp_from_month == "3"){
+				$from_month_saying = "$l_month_march";
+			}
+			elseif($inp_from_month == "04" OR $inp_from_month == "4"){
+				$from_month_saying = "$l_month_april";
+			}
+			elseif($inp_from_month == "05" OR $inp_from_month == "5"){
+				$from_month_saying = "$l_month_may";
+			}
+			elseif($inp_from_month == "06" OR $inp_from_month == "6"){
+				$from_month_saying = "$l_month_june";
+			}
+			elseif($inp_from_month == "07" OR $inp_from_month == "7"){
+				$from_month_saying = "$l_month_juli";
+			}
+			elseif($inp_from_month == "08" OR $inp_from_month == "8"){
+				$from_month_saying = "$l_month_august";
+			}
+			elseif($inp_from_month == "09" OR $inp_from_month == "9"){
+				$from_month_saying = "$l_month_september";
+			}
+			elseif($inp_from_month == "10"){
+				$from_month_saying = "$l_month_october";
+			}
+			elseif($inp_from_month == "11"){
+				$from_month_saying = "$l_month_november";
+			}
+			else{
+				$from_month_saying = "$l_month_december";
+			}
+			
+			$inp_from_saying = "$inp_from_day $from_month_saying $inp_from_year $inp_from_hour:$inp_from_minute";
+			$inp_from_saying_mysql = quote_smart($link, $inp_from_saying);
 
 			// To
 			$inp_to_day = $_POST['inp_to_day'];
@@ -275,6 +283,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$result = mysqli_query($link, "UPDATE $t_office_calendar_events SET 
 event_user_id=$get_user_id, 
 event_user_name=$inp_user_name_mysql, 
+event_user_name=$inp_user_name_mysql, 
+event_updated_datetime='$datetime',
 event_location_id=$inp_location_id_mysql, 
 event_location_title=$inp_location_title_mysql,
 event_equipment_id=$inp_equipment_id_mysql,
@@ -299,7 +309,26 @@ event_to_hour=$inp_to_hour_mysql,
 event_to_minute=$inp_to_minute_mysql,
 event_to_saying_date_time=$inp_to_saying_mysql
 			WHERE event_id=$get_current_event_id") or die(mysqli_error($link));
-	
+
+			// Search engine 
+			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='office_calendar' AND index_reference_name='event_id' AND index_reference_id=$get_current_event_id";
+			$result_exists = mysqli_query($link, $query_exists);
+			$row_exists = mysqli_fetch_row($result_exists);
+			list($get_index_id) = $row_exists;
+			if($get_index_id != ""){
+				$inp_index_title = substr($inp_text, 0, 50);
+				$inp_index_title = "$inp_to_saying  $inp_index_title | $l_office_calendar"; 
+				$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+				$inp_index_short_description = substr($inp_text, 0, 200);
+				$inp_index_short_description_mysql = quote_smart($link, $inp_index_short_description);
+
+				$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+									index_title=$inp_index_title_mysql, 
+									index_short_description=$inp_index_short_description_mysql 
+									WHERE index_id=$get_index_id") or die(mysqli_error($link));
+			}
+
 			$url = "index.php?year=$inp_from_year&month=$inp_from_month&day=$inp_from_day&l=$l&ft=success&fm=saved_event";
 			header("Location: $url");
 			exit;

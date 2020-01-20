@@ -26,6 +26,10 @@ else{ $root = "../../.."; }
 /*- Website config --------------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
+/*- Tables ------------------------------------------------------------------------------------ */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Functions ------------------------------------------------------------------------- */
 include("$root/_admin/_functions/encode_national_letters.php");
 include("$root/_admin/_functions/decode_national_letters.php");
@@ -181,6 +185,7 @@ else{
 
 						$datetime = date("Y-m-d H:i:s");
 						$date_saying = date("j M Y");
+						$datetime_saying = date("j. M Y H:i");
 	
 						// Me
 						$query = "SELECT user_id, user_email, user_name, user_alias, user_language, user_last_online, user_rank, user_login_tries FROM $t_users WHERE user_id=$my_user_id_mysql";
@@ -232,6 +237,33 @@ else{
 							}
 						}
 
+
+						// Search engine
+						$inp_index_title = "$inp_title | $get_current_space_title | $l_spaces";
+						$inp_index_title_mysql = quote_smart($link, "$inp_index_title");
+
+						$inp_index_url = "knowledge/view_page.php?space_id=$get_current_space_id&page_id=$get_current_page_id";
+						$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+						$inp_index_keywords = "$inp_tags";
+						$inp_index_keywords_mysql = quote_smart($link, "$inp_index_keywords");
+
+						$inp_index_language_mysql = quote_smart($link, $l);
+
+						mysqli_query($link, "INSERT INTO $t_search_engine_index 
+						(index_id, index_title, index_url, index_short_description, index_keywords, 
+						index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+						index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+						index_unique_hits) 
+						VALUES 
+						(NULL, $inp_index_title_mysql, $inp_index_url_mysql, '', $inp_index_keywords_mysql, 
+						'knowledge', 'spaces', $get_current_space_id, 'page_id', $get_current_page_id,
+						'0', 0, '$datetime', '$datetime_saying', $inp_index_language_mysql,
+						0)")
+						or die(mysqli_error($link));
+						
+
+
 						// Header
 						header("Location: new_page_step_2_body.php?space_id=$space_id&page_id=$get_current_page_id&l=$l&ft=success&fm=page_created");
 						exit;
@@ -256,6 +288,7 @@ else{
 						<p><b>$l_parent</b><br />
 						<select name=\"inp_parent\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 							<option value=\"0\">$l_this_is_parent</option>\n";
+
 						$query = "SELECT page_id, page_title FROM $t_knowledge_pages_index WHERE page_space_id=$get_current_space_id AND page_parent_id='0' ORDER BY page_weight ASC";
 						$result = mysqli_query($link, $query);
 						while($row = mysqli_fetch_row($result)) {

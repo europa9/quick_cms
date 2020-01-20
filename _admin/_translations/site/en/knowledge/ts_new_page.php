@@ -15,4 +15,5 @@ $l_only_admins_moderators_and_editors_can_add_new_pages = "Only admins, moderato
 $l_subscribe_to_comments = "Subscribe to comments";
 $l_yes = "Yes";
 $l_no = "No";
+$l_spaces = "Spaces";
 ?>

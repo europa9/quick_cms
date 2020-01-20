@@ -30,6 +30,10 @@ include("$root/_admin/website_config.php");
 include("$root/_admin/_functions/encode_national_letters.php");
 include("$root/_admin/_functions/decode_national_letters.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Variables -------------------------------------------------------------------------------- */
 $tabindex = 0;
 
@@ -64,6 +68,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 		$datetime = date("Y-m-d H:i:s");
 		$date_saying = date("j M Y");
+		$datetime_saying = date("j. M Y H:i");
 
 		$inp_category = $_POST['inp_category'];
 		$inp_category = output_html($inp_category);
@@ -106,6 +111,28 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		(NULL, $get_current_space_id, 'admin', $get_my_user_id, $inp_my_user_alias_mysql, $inp_my_user_email_mysql, $inp_my_user_image_mysql, '', '$datetime', '$date_saying', $get_my_user_id, $inp_my_user_alias_mysql, $inp_my_user_image_mysql)")
 		or die(mysqli_error($link));
 		
+		// Search engine index
+		$inp_index_title = "$inp_title | $l_spaces";
+		$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+		$inp_index_url = "knowledge/open_space.php?space_id=$get_current_space_id";
+		$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+		$inp_index_language_mysql = quote_smart($link, $l);
+
+		mysqli_query($link, "INSERT INTO $t_search_engine_index 
+		(index_id, index_title, index_url, index_short_description, index_keywords, 
+		index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+		index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+		index_unique_hits) 
+		VALUES 
+		(NULL, $inp_index_title_mysql, $inp_index_url_mysql, '', '', 
+		'knowledge', 'spaces', '0', 'space_id', '$get_current_space_id', 
+		0, 0, '$datetime', '$datetime_saying', $inp_index_language_mysql,
+		0)")
+		or die(mysqli_error($link));
+
+
 		// Image
 		// Dir
 		if(!(is_dir("../_uploads"))){

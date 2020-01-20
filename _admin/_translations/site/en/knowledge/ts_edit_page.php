@@ -8,4 +8,5 @@ $l_allow_comments = "Allow comments";
 $l_media = "Media";
 $l_image_gallery = "Image gallery";
 $l_diagrams = "Diagrams";
+$l_spaces = "Spaces";
 ?>

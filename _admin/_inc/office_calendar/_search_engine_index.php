@@ -40,7 +40,6 @@ if($result_exists !== FALSE){
 		list($get_event_id, $get_event_user_id, $get_event_user_name, $get_event_location_id, $get_event_location_title, $get_event_equipment_id, $get_event_equipment_title, $get_event_text, $get_event_bg_color, $get_event_text_color, $get_event_from_datetime, $get_event_from_time, $get_event_from_day, $get_event_from_month, $get_event_from_year, $get_event_from_hour, $get_event_from_minute, $get_event_from_saying_date_time, $get_event_to_datetime, $get_event_to_time, $get_event_to_day, $get_event_to_month, $get_event_to_year, $get_event_to_hour, $get_event_to_minute, $get_event_to_saying_date_time) = $row_w;
 
 
-		$inp_index_title = substr($get_event_text, 0, 50);
 		$inp_index_title = "$get_event_from_saying_date_time $inp_index_title"; 
 		$inp_index_title_mysql = quote_smart($link, $inp_index_title);
 

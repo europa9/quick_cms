@@ -243,7 +243,7 @@ else{
 				<!-- Head menu -->
 				<div class=\"knowledge_head_menu\">
 				<ul>
-					<li><a href=\"new_page.php?space_id=$get_current_space_id&amp;l=$l\"><img src=\"_gfx/icons/new_black_18dp.png\" alt=\"new_black_18dp.png\" title=\"$l_new\" /></a></li>";
+					<li><a href=\"new_page.php?space_id=$get_current_space_id&amp;page_id=$get_current_page_id&amp;l=$l\"><img src=\"_gfx/icons/new_black_18dp.png\" alt=\"new_black_18dp.png\" title=\"$l_new\" /></a></li>";
 				
 				// Favorited?
 				if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){

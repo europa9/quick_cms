@@ -31,6 +31,10 @@ include("$root/_admin/_translations/site/$l/office_calendar/ts_office_calendar.p
 include("$root/_admin/_translations/site/$l/office_calendar/ts_add_event.php");
 include("$root/_admin/_translations/site/$l/users/ts_users.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 
 /*- Variables -------------------------------------------------------------------------- */
 $tabindex = 0;
@@ -88,7 +92,16 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			
 			// Delete
 			$result = mysqli_query($link, "DELETE FROM $t_office_calendar_events WHERE event_id=$get_current_event_id") or die(mysqli_error($link));
-	
+
+			// Search engine 
+			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='office_calendar' AND index_reference_name='event_id' AND index_reference_id=$get_current_event_id";
+			$result_exists = mysqli_query($link, $query_exists);
+			$row_exists = mysqli_fetch_row($result_exists);
+			list($get_index_id) = $row_exists;
+			if($get_index_id != ""){
+				$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_id=$get_index_id") or die(mysqli_error($link));
+			}
+
 			$url = "index.php?year=$get_current_event_from_year&month=$get_current_event_from_month&l=$l&ft=success&fm=deleted_event";
 			header("Location: $url");
 			exit;

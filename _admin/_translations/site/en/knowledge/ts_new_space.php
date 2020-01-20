@@ -6,4 +6,5 @@ $l_image = "Image";
 $l_create_space = "Create space";
 $l_category = "Categegory";
 $l_add_edit = "Add/edit";
+$l_spaces = "Spaces";
 ?>

@@ -26,6 +26,11 @@ else{ $root = "../../.."; }
 /*- Website config --------------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
+
 /*- Translation ------------------------------------------------------------------------------- */
 include("$root/_admin/_translations/site/$l/knowledge/ts_new_page.php");
 include("$root/_admin/_translations/site/$l/knowledge/ts_view_page.php");
@@ -166,6 +171,7 @@ else{
 
 			<!-- Member list -->
 				<p><a href=\"edit_space_members.php?space_id=$get_current_space_id&amp;action=add_member&amp;l=$l\" class=\"btn_default\">$l_add_member</a></p>
+				<div style=\"height: 10px;\"></div>
 				<table class=\"hor-zebra\">
 				 <thead>
 				  <tr>
@@ -293,6 +299,7 @@ else{
 					$row_p = mysqli_fetch_row($result_p);
 					list($get_photo_id, $get_photo_destination, $get_photo_thumb_40) = $row_p;
 
+					$inp_user_name_mysql  = quote_smart($link, $get_user_name);
 					$inp_user_alias_mysql = quote_smart($link, $get_user_alias);
 					$inp_user_image_mysql = quote_smart($link, $get_photo_destination);
 
@@ -300,7 +307,7 @@ else{
 					// Dates
 					$datetime = date("Y-m-d H:i:s");
 					$date_saying = date("j M Y");
-
+					$datetime_saying = date("j. M Y H:i");
 
 					// Get my user
 					$query = "SELECT user_id, user_email, user_name, user_alias, user_language, user_last_online, user_rank, user_login_tries FROM $t_users WHERE user_id=$my_user_id_mysql";
@@ -314,6 +321,7 @@ else{
 					list($get_my_photo_id, $get_my_photo_destination, $get_my_photo_thumb_40) = $row_p;
 
 					
+					$inp_my_user_name_mysql  = quote_smart($link, $get_my_user_name);
 					$inp_my_user_alias_mysql = quote_smart($link, $get_my_user_alias);
 					$inp_my_user_email_mysql = quote_smart($link, $get_my_user_email);
 					$inp_my_user_image_mysql = quote_smart($link, $get_my_photo_destination);
@@ -325,7 +333,15 @@ else{
 					or die(mysqli_error($link));
 
 
-					
+					// Search engine index: access
+					mysqli_query($link, "INSERT INTO $t_search_engine_access_control 
+					(control_id, control_user_id, control_user_name, control_has_access_to_module_name, control_has_access_to_module_part_name, 
+					control_has_access_to_module_part_id, control_created_datetime, control_created_datetime_print) 
+					VALUES 
+					(NULL, $get_user_id, $inp_user_name_mysql, 'knowledge', 'spaces', 
+					$get_current_space_id, '$datetime', '$datetime_saying')")
+					or die(mysqli_error($link));
+
 					$url = "edit_space_members.php?space_id=$get_current_space_id&l=$l&ft=success&fm=member_added";
 					header("Location: $url");
 					exit;
@@ -549,6 +565,11 @@ else{
 					
 					$result = mysqli_query($link, "DELETE FROM $t_knowledge_spaces_members WHERE member_id=$get_current_member_id");
 
+
+					// Search engine index: access
+					$result = mysqli_query($link, "DELETE FROM $t_search_engine_access_control WHERE control_user_id=$get_current_member_user_id AND control_has_access_to_module_name='knowledge' AND control_has_access_to_module_part_name='spaces' AND control_has_access_to_module_part_id=$get_current_space_id") or die(mysqli_error($link));
+
+
 					$url = "edit_space_members.php?space_id=$get_current_space_id&l=$l&ft=success&fm=member_deleted";
 					header("Location: $url");
 					exit;
@@ -630,7 +651,16 @@ else{
 					// Delete
 					$result = mysqli_query($link, "DELETE FROM $t_knowledge_spaces_requested_memberships WHERE requested_membership_id=$get_requested_membership_id");
 					
+					// Find user
+					$query = "SELECT user_id, user_email, user_name, user_alias, user_language, user_last_online, user_rank, user_login_tries FROM $t_users WHERE user_id=$get_requested_membership_user_id";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_user_id, $get_user_email, $get_user_name, $get_user_alias, $get_user_language, $get_user_last_online, $get_user_rank, $get_user_login_tries) = $row;
+	
+
+
 					// Insert
+					$inp_user_name_mysql  = quote_smart($link, $get_user_name);
 					$inp_alias_mysql = quote_smart($link, $get_requested_membership_user_alias);
 					$inp_email_mysql = quote_smart($link, $get_requested_membership_user_email);
 					$inp_image_mysql = quote_smart($link, $get_requested_membership_user_image);
@@ -685,7 +715,20 @@ else{
 					$headers = "From: $configFromEmailSav" . "\r\n" .
 					    "Reply-To: $configFromEmailSav" . "\r\n" .
 					    'X-Mailer: PHP/' . phpversion();
-					mail($get_requested_membership_user_email, $subject, $send_message, $headers);
+					if($configMailSendActiveSav == "1"){
+						mail($get_requested_membership_user_email, $subject, $send_message, $headers);
+					}
+
+					// Search engine index: access
+					mysqli_query($link, "INSERT INTO $t_search_engine_access_control 
+					(control_id, control_user_id, control_user_name, control_has_access_to_module_name, control_has_access_to_module_part_name, 
+					control_has_access_to_module_part_id, control_created_datetime, control_created_datetime_print) 
+					VALUES 
+					(NULL, $get_user_id, $inp_user_name_mysql, 'knowledge', 'spaces', 
+					$get_current_space_id, '$datetime', '$datetime_saying')")
+					or die(mysqli_error($link));
+
+
 
 					$url = "edit_space_members.php?space_id=$get_current_space_id&l=$l&ft=success&fm=member_accepted";
 					header("Location: $url");
@@ -737,7 +780,9 @@ else{
 					$headers = "From: $configFromEmailSav" . "\r\n" .
 					    "Reply-To: $configFromEmailSav" . "\r\n" .
 					    'X-Mailer: PHP/' . phpversion();
-					mail($get_requested_membership_user_email, $subject, $send_message, $headers);
+					if($configMailSendActiveSav == "1"){
+						mail($get_requested_membership_user_email, $subject, $send_message, $headers);
+					}
 
 					$url = "edit_space_members.php?space_id=$get_current_space_id&l=$l&ft=success&fm=member_declined";
 					header("Location: $url");

@@ -25,9 +25,18 @@ else{ $root = "../../.."; }
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/talk/ts_talk.php");
+
+
+/*- Config ---------------------------------------------------------------------------- */
+include("$root/_admin/_data/talk.php");
+
 
 /*- Tables ---------------------------------------------------------------------------- */
 $t_talk_channels_index		= $mysqlPrefixSav . "talk_channels_index";
@@ -102,6 +111,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		// Dates
 		$time = time();
 		$date_saying = date("j M Y H:i");
+		$datetime = date("Y-m-d H:i:s");
+		$datetime_saying = date("j. M Y H:i");
+
 
 		// My IP
 		$inp_my_ip = $_SERVER['REMOTE_ADDR'];
@@ -135,7 +147,28 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$row = mysqli_fetch_row($result);
 		list($get_current_starred_channel_id, $get_current_channel_id, $get_current_channel_name, $get_current_new_messages, $get_current_user_id) = $row;
 
-		
+		// Search engine
+		$inp_index_title = "$inp_name | $talkTitleSav";
+		$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+		$inp_index_url = "talk/channel_list.php?action=join_without_password&channel_id=$get_channel_id&process=1";
+		$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+	
+		$inp_index_language_mysql = quote_smart($link, $l);
+
+		mysqli_query($link, "INSERT INTO $t_search_engine_index 
+		(index_id, index_title, index_url, index_short_description, index_keywords, 
+		index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+		index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+		index_unique_hits) 
+		VALUES 
+		(NULL, $inp_index_title_mysql, $inp_index_url_mysql, '', '', 
+		'talk', '', '0', 'channel_id', '$get_channel_id',
+		'0', 0, '$datetime', '$datetime_saying', $inp_index_language_mysql,
+		0)")
+		or die(mysqli_error($link));
+
+
 		// Header
 		$url = "open_starred_channel.php?starred_channel_id=$get_current_starred_channel_id&ft=success&fm=channel_created&l=$l";
 		header("Location: $url");
