@@ -19,7 +19,7 @@ $t_downloads_index 				= $mysqlPrefixSav . "downloads_index";
 
 /*- Variables ---------------------------------------------------------------------------- */
 $datetime = date("Y-m-d H:i:s");
-$datetime_saying = date("j. M Y H:i");
+$datetime_saying = date("j M Y H:i");
 
 
 $query_exists = "SELECT * FROM $t_downloads_index";
@@ -53,7 +53,7 @@ if($result_exists !== FALSE){
 
 		$inp_index_module_name_mysql = quote_smart($link, "downloads");
 
-		$inp_index_module_part_name_mysql = quote_smart($link, "");
+		$inp_index_module_part_name_mysql = quote_smart($link, "downloads");
 
 		$inp_index_reference_name_mysql = quote_smart($link, "download_id");
 

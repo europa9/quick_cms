@@ -21,6 +21,10 @@ $t_references_index		 = $mysqlPrefixSav . "references_index";
 $t_references_index_groups	 = $mysqlPrefixSav . "references_index_groups";
 $t_references_index_guides	 = $mysqlPrefixSav . "references_index_guides";
 
+/*- Tables search --------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Variables ------------------------------------------------------------------------ */
 $tabindex = 0;
 
@@ -267,6 +271,7 @@ elseif($action == "step_3_info"){
 				$inp_icon_f_mysql = quote_smart($link, $inp_icon_f);
 
 				$datetime = date("Y-m-d H:i:s");
+				$datetime_saying = date("j M Y H:i");
 		
 				mysqli_query($link, "INSERT INTO $t_references_index
 				(reference_id, reference_title, reference_title_clean, reference_is_active, reference_front_page_intro, 
@@ -287,6 +292,29 @@ elseif($action == "step_3_info"){
 				$result = mysqli_query($link, $query);
 				$row = mysqli_fetch_row($result);
 				list($get_current_reference_id) = $row;
+
+				// Title
+				include("_translations/site/$inp_language/references/ts_references.php");
+
+
+				// Search engine
+				$inp_index_title = "$inp_title | $l_references";
+				$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+				$inp_index_url = "$inp_title_clean";
+				$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+				mysqli_query($link, "INSERT INTO $t_search_engine_index 
+				(index_id, index_title, index_url, index_short_description, index_keywords, 
+				index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+				index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+				index_unique_hits) 
+				VALUES 
+				(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_front_page_intro_mysql, '', 
+				'references', 'references', 0, 'reference_id', $get_current_reference_id, 
+				0, 0, '$datetime', '$datetime_saying', $inp_language_mysql,
+				0)")
+				or die(mysqli_error($link));
 
 	
 				// Header

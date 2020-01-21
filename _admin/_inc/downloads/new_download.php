@@ -22,6 +22,11 @@ $t_downloads_sub_categories 			= $mysqlPrefixSav . "downloads_sub_categories";
 $t_downloads_sub_categories_translations 	= $mysqlPrefixSav . "downloads_sub_categories_translations";
 
 
+/*- Tables search --------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
+
 
 /*- Varialbes  ---------------------------------------------------- */
 if(isset($_GET['main_category_id'])) {
@@ -76,6 +81,7 @@ if($action == ""){
 		// Insert
 		$datetime = date("Y-m-d H:i:s");
 		$date_print = date('j M Y');
+		$datetime_saying = date("j M Y H:i");
 
 		mysqli_query($link, "INSERT INTO $t_downloads_index
 		(download_id, download_title, download_title_short, download_title_length, download_language, download_main_category_id, download_sub_category_id, download_created_datetime, download_updated_datetime, download_updated_print) 
@@ -89,6 +95,27 @@ if($action == ""){
 		$row = mysqli_fetch_row($result);
 		list($get_current_download_id) = $row;
 
+		// Title
+		include("_translations/site/$inp_language/downloads/ts_downloads.php");
+
+		// Search engine
+		$inp_index_title = "$inp_title | $l_downloads";
+		$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+		$inp_index_url = "downloads/view_download.php?download_id=$get_current_download_id";
+		$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+		mysqli_query($link, "INSERT INTO $t_search_engine_index 
+		(index_id, index_title, index_url, index_short_description, index_keywords, 
+		index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+		index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+		index_unique_hits) 
+		VALUES 
+		(NULL, $inp_index_title_mysql, $inp_index_url_mysql, '', '', 
+		'downloads', 'downloads', 0, 'download_id', $get_current_download_id, 
+		0, 0, '$datetime', '$datetime_saying', $inp_language_mysql,
+		0)")
+		or die(mysqli_error($link));
 
 		$url = "index.php?open=$open&page=edit_download&download_id=$get_current_download_id&main_category_id=$inp_main_category_id&editor_language=$editor_language";
 		header("Location: $url");

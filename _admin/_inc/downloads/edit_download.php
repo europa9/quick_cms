@@ -21,6 +21,10 @@ $t_downloads_main_categories_translations 	= $mysqlPrefixSav . "downloads_main_c
 $t_downloads_sub_categories 			= $mysqlPrefixSav . "downloads_sub_categories";
 $t_downloads_sub_categories_translations 	= $mysqlPrefixSav . "downloads_sub_categories_translations";
 
+/*- Tables search --------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 
 
 /*- Varialbes  ---------------------------------------------------- */
@@ -207,6 +211,7 @@ else{
 			// Datetime
 			$datetime = date("Y-m-d H:i:s");
 			$date_print = date('j M Y');
+			$datetime_saying = date("j M Y H:i");
 
 			// Update
 			$result = mysqli_query($link, "UPDATE $t_downloads_index SET 
@@ -228,7 +233,35 @@ else{
 				echo "FAILURE!!! " . $stmt->error; die;
 			}
 
+			// Title
+			include("_translations/site/$inp_language/downloads/ts_downloads.php");
+		
+			// Search engine
+			$inp_index_title = "$inp_title | $l_downloads";
+			$inp_index_title_mysql = quote_smart($link, $inp_index_title);
 	
+			$inp_index_keywords_mysql = quote_smart($link, $inp_tags);
+
+
+
+
+			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='downloads' AND index_reference_name='download_id' AND index_reference_id=$get_current_download_id";
+			$result_exists = mysqli_query($link, $query_exists);
+			$row_exists = mysqli_fetch_row($result_exists);
+			list($get_index_id) = $row_exists;
+			if($get_index_id != ""){
+				$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+							index_title=$inp_index_title_mysql,
+							index_short_description=$inp_introduction_mysql, 
+							index_keywords=$inp_index_keywords_mysql, 
+							index_updated_datetime='$datetime',
+							index_updated_datetime_print='$datetime_saying'
+							 WHERE index_id=$get_index_id") or die(mysqli_error($link));
+
+				
+			}
+
+
 			$url = "index.php?open=downloads&page=edit_download&download_id=$download_id&main_category_id=$main_category_id&sub_category_id=$sub_category_id&l=$l&editor_language=$editor_language&ft=success&fm=changes_saved";
 			header("Location: $url");
 			exit;
