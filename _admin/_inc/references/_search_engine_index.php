@@ -28,7 +28,7 @@ $t_references_index_guides_comments	= $mysqlPrefixSav . "references_index_guides
 
 /*- Variables ---------------------------------------------------------------------------- */
 $datetime = date("Y-m-d H:i:s");
-$datetime_saying = date("j. M Y H:i");
+$datetime_saying = date("j M Y H:i");
 
 $query_exists = "SELECT * FROM $t_references_index";
 $result_exists = mysqli_query($link, $query);

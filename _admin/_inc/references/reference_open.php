@@ -22,6 +22,14 @@ $t_references_index		 = $mysqlPrefixSav . "references_index";
 $t_references_index_groups	 = $mysqlPrefixSav . "references_index_groups";
 $t_references_index_guides	 = $mysqlPrefixSav . "references_index_guides";
 
+/*- Tables search --------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
+// Title
+include("_translations/site/$l/references/ts_references.php");
+
+
 /*- Variables ------------------------------------------------------------------------ */
 $tabindex = 0;
 if(isset($_GET['reference_id'])){
@@ -77,6 +85,7 @@ else{
 
 
 			$datetime = date("Y-m-d H:i:s");
+			$datetime_saying = date("j M Y H:i");
 
 
 			$result = mysqli_query($link, "UPDATE $t_references_index SET 
@@ -120,6 +129,28 @@ else{
 				}
 			} // new category
 			
+			// Title
+			include("_translations/site/$inp_language/references/ts_references.php");
+
+			// Search engine
+			$inp_index_title = "$inp_title | $l_references";
+			$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='references' AND index_reference_name='reference_id' AND index_reference_id=$get_current_reference_id";
+			$result_exists = mysqli_query($link, $query_exists);
+			$row_exists = mysqli_fetch_row($result_exists);
+			list($get_index_id) = $row_exists;
+
+			$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+								index_title=$inp_index_title_mysql,
+								index_url=$inp_title_clean_mysql,
+								index_short_description=$inp_front_page_intro_mysql,
+								index_updated_datetime='$datetime',
+								index_updated_datetime_print='$datetime_saying'
+							WHERE index_id=$get_index_id") or die(mysqli_error($link));
+			
+			
+
 			$url = "index.php?open=$open&page=$page&reference_id=$get_current_reference_id&editor_language=$editor_language&l=$l&ft=success&fm=changes_saved";
 			header("Location: $url");
 			exit;

@@ -22,6 +22,10 @@ $t_references_index		 = $mysqlPrefixSav . "references_index";
 $t_references_index_groups	 = $mysqlPrefixSav . "references_index_groups";
 $t_references_index_guides	 = $mysqlPrefixSav . "references_index_guides";
 
+/*- Tables search --------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Variables ------------------------------------------------------------------------ */
 $tabindex = 0;
 if(isset($_GET['reference_id'])){
@@ -42,6 +46,10 @@ if($get_current_reference_id == ""){
 	echo"<p>Server error 404.</p>";
 }
 else{
+
+	// Title
+	include("_translations/site/$get_current_reference_language/references/ts_references.php");
+
 	// Find category
 	$query = "SELECT main_category_id, main_category_title, main_category_title_clean, main_category_description, main_category_language, main_category_created, main_category_updated FROM $t_references_categories_main WHERE main_category_id=$get_current_reference_main_category_id";
 	$result = mysqli_query($link, $query);
@@ -227,12 +235,44 @@ else{
 			$inp_reference_title_mysql = quote_smart($link, $get_current_reference_title);
 
 			$datetime = date("Y-m-d H:i:s");
+			$datetime_saying = date("j M Y H:i");
 
 			mysqli_query($link, "INSERT INTO $t_references_index_groups
 			(group_id, group_title, group_title_clean, group_number, group_reference_id, group_reference_title, group_read_times, group_created_datetime, group_updated_datetime) 
 			VALUES 
 			(NULL, $inp_title_mysql, $inp_title_clean_mysql, 99, $get_current_reference_id, $inp_reference_title_mysql, 0, '$datetime', '$datetime')")
 			or die(mysqli_error($link));
+
+			// Get ID
+			$query = "SELECT group_id FROM $t_references_index_groups WHERE group_created_datetime='$datetime'";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_current_group_id) = $row;
+
+			
+
+			// Search engine
+			$inp_index_title = "$inp_title | $get_current_reference_title | $l_references";
+			$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+			$inp_index_url = "$get_current_reference_title_clean/index.php?reference_id=$get_current_reference_id&group_id=$get_current_group_id";
+			$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+	
+			$inp_index_language_mysql = quote_smart($link, $get_current_reference_language);
+			
+			mysqli_query($link, "INSERT INTO $t_search_engine_index 
+			(index_id, index_title, index_url, index_short_description, index_keywords, 
+			index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+			index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+			index_unique_hits) 
+			VALUES 
+			(NULL, $inp_index_title_mysql, $inp_index_url_mysql, '', '', 
+			'references', 'groups', '0', 'group_id', $get_current_group_id,
+			'0', 0, '$datetime', '$datetime_saying', $inp_index_language_mysql,
+			0)")
+			or die(mysqli_error($link));
+
 
 			$url = "index.php?open=$open&page=$page&reference_id=$reference_id&action=new_group&editor_language=$editor_language&ft=success&fm=group_$inp_title" . "_saved";
 			header("Location: $url");
@@ -394,6 +434,7 @@ else{
 				$inp_reference_title_mysql = quote_smart($link, $get_current_reference_title);
 
 				$datetime = date("Y-m-d H:i:s");
+				$datetime_saying = date("j M Y H:i");
 
 				$result = mysqli_query($link, "UPDATE $t_references_index_groups SET 
 								group_title=$inp_title_mysql, 
@@ -401,6 +442,31 @@ else{
 								group_reference_title=$inp_reference_title_mysql,
 								group_updated_datetime='$datetime'
 								WHERE group_id=$get_current_group_id") or die(mysqli_error($link));
+
+
+
+				// Search engine
+				$inp_index_title = "$inp_title | $get_current_reference_title | $l_references";
+				$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+				$inp_index_url = "$get_current_reference_title_clean/index.php?reference_id=$get_current_reference_id&group_id=$get_current_group_id";
+				$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+	
+				$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='references' AND index_reference_name='group_id' AND index_reference_id=$get_current_group_id";
+				$result_exists = mysqli_query($link, $query_exists);
+				$row_exists = mysqli_fetch_row($result_exists);
+				list($get_index_id) = $row_exists;
+
+				$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+								index_title=$inp_index_title_mysql, 
+								index_url=$inp_index_url_mysql,
+								index_updated_datetime='$datetime',
+								index_updated_datetime_print='$datetime_saying'
+								WHERE index_id=$get_index_id") or die(mysqli_error($link));
+
+
+
 
 				$url = "index.php?open=$open&page=$page&reference_id=$reference_id&action=$action&group_id=$get_current_group_id&editor_language=$editor_language&ft=success&fm=changes_saved";
 				header("Location: $url");
@@ -556,6 +622,15 @@ else{
 				
 
 				$result = mysqli_query($link, "DELETE FROM $t_references_index_groups WHERE group_id=$get_current_group_id") or die(mysqli_error($link));
+
+				// Search engine :: Group
+
+
+				// Search engine
+				$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_module_name='references' AND index_reference_name='group_id' AND index_reference_id=$get_current_group_id") or die(mysqli_error($link));
+			
+
+				// Search engine :: Lessons (TODO)
 
 				$url = "index.php?open=$open&page=$page&reference_id=$reference_id&group_id=$get_current_group_id&editor_language=$editor_language&ft=success&fm=group_deleted";
 				header("Location: $url");
@@ -727,12 +802,42 @@ else{
 				$inp_group_title_mysql = quote_smart($link, $get_current_group_title);
 
 				$datetime = date("Y-m-d H:i:s");
+				$datetime_saying = date("j M Y H:i");
 
 				mysqli_query($link, "INSERT INTO $t_references_index_guides
 				(guide_id, guide_number, guide_title, guide_title_clean, guide_title_short, guide_title_length, guide_short_description, guide_group_id, guide_group_title, guide_reference_id, guide_reference_title, guide_read_times, guide_created, guide_updated, guide_comments) 
 				VALUES 
 				(NULL, 99, $inp_title_mysql, $inp_title_clean_mysql, $inp_title_short_mysql, $inp_title_length_mysql, $inp_short_description_mysql, $get_current_group_id, $inp_group_title_mysql, $get_current_reference_id, $inp_reference_title_mysql, 0, '$datetime', '$datetime', 0)")
 				or die(mysqli_error($link));
+
+				// Get ID
+				$query = "SELECT guide_id, guide_number, guide_title, guide_title_clean, guide_short_description, guide_group_id, guide_group_title, guide_reference_id, guide_reference_title, guide_read_times, guide_read_ipblock, guide_created, guide_updated, guide_comments FROM $t_references_index_guides WHERE guide_created='$datetime'";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_current_guide_id, $get_current_guide_number, $get_current_guide_title, $get_current_guide_title_clean, $get_current_guide_short_description, $get_current_guide_group_id, $get_current_guide_group_title, $get_current_guide_reference_id, $get_current_guide_reference_title, $get_current_guide_read_times, $get_current_guide_read_ipblock, $get_current_guide_created, $get_current_guide_updated, $get_current_guide_comments) = $row;
+
+				// Search engine
+				$inp_index_title = "$inp_title |  $get_current_group_title | $get_current_reference_title | $l_references";
+				$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+				$inp_index_url = "$get_current_reference_title_clean/$get_current_group_title_clean/$inp_title_clean.php?reference_id=$get_current_reference_id&group_id=$get_current_group_id&guide_id=$get_current_guide_id";
+				$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+				$inp_index_language_mysql = quote_smart($link, $get_current_reference_language);
+			
+				mysqli_query($link, "INSERT INTO $t_search_engine_index 
+				(index_id, index_title, index_url, index_short_description, index_keywords, 
+				index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+				index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+				index_unique_hits) 
+				VALUES 
+				(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_short_description_mysql, '', 
+				'references', 'guides', '0', 'guide_id', $get_current_guide_id,
+				'0', 0, '$datetime', '$datetime_saying', $inp_index_language_mysql,
+				0)")
+				or die(mysqli_error($link));
+	
+
 
 
 				$url = "index.php?open=$open&page=$page&reference_id=$reference_id&action=$action&group_id=$get_current_group_id&editor_language=$editor_language&ft=success&fm=guide_created";
@@ -962,6 +1067,7 @@ else{
 				$inp_group_title_mysql = quote_smart($link, $get_current_group_title);
 
 				$datetime = date("Y-m-d H:i:s");
+				$datetime_saying = date("j M Y H:i");
 
 
 
@@ -976,7 +1082,26 @@ else{
 								guide_updated='$datetime'
 								WHERE guide_id=$get_current_guide_id") or die(mysqli_error($link));
 
-		
+				// Search engine
+				$inp_index_title = "$inp_title |  $get_current_group_title | $get_current_reference_title | $l_references";
+				$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+				$inp_index_url = "$get_current_reference_title_clean/$get_current_group_title_clean/$inp_title_clean.php?reference_id=$get_current_reference_id&group_id=$get_current_group_id&guide_id=$get_current_guide_id";
+				$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+				$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='references' AND index_reference_name='guide_id' AND index_reference_id=$get_current_guide_id";
+				$result_exists = mysqli_query($link, $query_exists);
+				$row_exists = mysqli_fetch_row($result_exists);
+				list($get_index_id) = $row_exists;
+
+				$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+								index_title=$inp_index_title_mysql,
+								index_url=$inp_index_url_mysql,
+								index_short_description=$inp_short_description_mysql,
+								index_updated_datetime='$datetime',
+								index_updated_datetime_print='$datetime_saying'
+							WHERE index_id=$get_index_id") or die(mysqli_error($link));
+			
 
 
 				$url = "index.php?open=$open&page=$page&reference_id=$reference_id&action=$action&guide_id=$get_current_guide_id&editor_language=$editor_language&ft=success&fm=changes_saved";
@@ -1183,7 +1308,9 @@ else{
 
 				$result = mysqli_query($link, "DELETE FROM $t_references_index_guides WHERE guide_id=$get_current_guide_id") or die(mysqli_error($link));
 
-		
+				// Search engine
+				$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_module_name='references' AND index_reference_name='guide_id' AND index_reference_id=$get_current_guide_id") or die(mysqli_error($link));
+
 
 
 				$url = "index.php?open=$open&page=$page&reference_id=$reference_id&editor_language=$editor_language&ft=success&fm=guide_deleted";

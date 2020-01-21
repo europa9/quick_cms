@@ -35,6 +35,8 @@ $t_users_professional_allowed_departments		= $mysqlPrefixSav . "users_profession
 $t_users_professional_allowed_positions			= $mysqlPrefixSav . "users_professional_allowed_positions";
 $t_users_professional_allowed_districts			= $mysqlPrefixSav . "users_professional_allowed_districts";
 
+$t_users_professional 		= $mysqlPrefixSav . "users_professional";
+
 $t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
 $t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
 

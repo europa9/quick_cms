@@ -53,7 +53,7 @@ if(!(isset($_SESSION['user_id']))){
 		if($action == "create_new_user"){
 			// Dates
 			$datetime = date("Y-m-d H:i:s");
-			$datetime_saying = date("j. M Y H:i");
+			$datetime_saying = date("j M Y H:i");
 
 
 			// User information

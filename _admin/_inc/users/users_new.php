@@ -12,12 +12,20 @@ $t_users_status_comments_likes 	= $mysqlPrefixSav . "users_status_comments_likes
 $t_users_status_likes 		= $mysqlPrefixSav . "users_status_likes";
 
 
+/*- Tables search --------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
+
 /*- Access check -------------------------------------------------- */
 if(!(isset($define_access_to_control_panel))){
 	echo"<h1>Server error 403</h1>";
 	die;
 }
 
+/*- Config ---------------------------------------------------------------------------- */
+include("_data/logo.php");
+include("_data/config/user_system.php");
 
 /*- Varialbes  ---------------------------------------------------- */
 if(isset($_GET['mode'])) {
@@ -197,6 +205,7 @@ if($process == "1"){
 
 	// Registered
 	$datetime = date("Y-m-d H:i:s");
+	$datetime_saying = date("j M Y H:i");
 
 	// Date format
 	if($l == "no"){
@@ -255,7 +264,33 @@ if($process == "1"){
 	$headers = "From: $from" . "\r\n" .
 	    "Reply-To: $reply" . "\r\n" .
 	    'X-Mailer: PHP/' . phpversion();
-	mail($inp_user_email, $subject, $message, $headers);
+	if($configMailSendActiveSav == "1"){
+		mail($inp_user_email, $subject, $message, $headers);
+	}
+
+	// Search engine
+	if($configShowUsersOnSearchEngineIndexSav == "1"){
+		// Title
+		include("_translations/site/$l/users/ts_users.php");
+
+		$inp_index_title = "$inp_user_name | $l_users";
+		$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+		$inp_index_url = "users/view_profile.php?user_id=$get_user_id";
+		$inp_index_url_mysql = quote_smart($link, $inp_index_url);
+
+		mysqli_query($link, "INSERT INTO $t_search_engine_index 
+		(index_id, index_title, index_url, index_short_description, index_keywords, 
+		index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
+		index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
+		index_unique_hits) 
+		VALUES 
+		(NULL, $inp_index_title_mysql, $inp_index_url_mysql, '', '', 
+		'users', 'users', '0', 'user_id', '$get_user_id',
+		'0', '0', '$datetime', '$datetime_saying', '',
+		0)")
+		or die(mysqli_error($link));
+	}
 
 	// Header
 	$url = "index.php?open=$open&page=users_new&ft=success&fm=user_created_and_mail_sent&editor_language=$editor_language";

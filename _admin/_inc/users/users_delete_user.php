@@ -21,6 +21,11 @@ $t_users_status_likes 		= $mysqlPrefixSav . "users_status_likes";
 $t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
 $t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
 
+
+/*- Tables search --------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 // Variables
 if(isset($_GET['user_id'])) {
 	$user_id = $_GET['user_id'];

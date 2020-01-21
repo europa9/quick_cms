@@ -19,6 +19,11 @@ $t_users_professional_allowed_positions			= $mysqlPrefixSav . "users_professiona
 $t_users_professional_allowed_districts			= $mysqlPrefixSav . "users_professional_allowed_districts";
 
 
+
+/*- Tables search --------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+
 /*- Access check -------------------------------------------------- */
 if(!(isset($define_access_to_control_panel))){
 	echo"<h1>Server error 403</h1>";
@@ -164,6 +169,55 @@ if($mode == "save"){
 					professional_position_abbr=$inp_position_abbr_mysql,
  					professional_district=$inp_district_mysql 
 					WHERE professional_user_id=$user_id_mysql");
+
+
+		// Get professional
+		$query = "SELECT professional_id, professional_user_id, professional_company, professional_company_location, professional_department, professional_work_email, professional_position, professional_position_abbr, professional_district FROM $t_users_professional WHERE professional_user_id=$get_user_id";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_professional_id, $get_professional_user_id, $get_professional_company, $get_professional_company_location, $get_professional_department, $get_professional_work_email, $get_professional_position, $get_professional_position_abbr, $get_professional_district) = $row;
+
+
+
+		// Search engine
+		if($configShowUsersOnSearchEngineIndexSav == "1"){
+			$inp_index_title = "$get_user_name";
+			if($configIncludeFirstNameLastNameOnSearchEngineIndexSav == "1"){
+				if($get_profile_first_name != "" OR  $get_profile_middle_name != "" OR $get_profile_last_name != ""){
+					$inp_index_title = $inp_index_title . " | $get_profile_first_name $get_profile_middle_name $get_profile_last_name";
+				}
+			}
+			if($configIncludeProfessionalOnSearchEngineIndexSav == "1"){
+				if($get_professional_company != ""){
+					$inp_index_title = $inp_index_title . " | $get_professional_company";
+				}
+				if($get_professional_company_location != ""){
+					$inp_index_title = $inp_index_title . " | $get_professional_company_location";
+				}
+				if($get_professional_department != ""){
+					$inp_index_title = $inp_index_title . " | $get_professional_department";
+				}
+				if($get_professional_position_abbr != ""){
+					$inp_index_title = $inp_index_title . " | $get_professional_position_abbr";
+				}
+				if($get_professional_district != ""){
+					$inp_index_title = $inp_index_title . " | $get_professional_district";
+				}
+			}
+			$inp_index_title = $inp_index_title . " | $l_users";
+			$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+
+			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='users' AND index_reference_name='user_id' AND index_reference_id=$get_user_id";
+			$result_exists = mysqli_query($link, $query_exists);
+			$row_exists = mysqli_fetch_row($result_exists);
+			list($get_index_id) = $row_exists;
+			if($get_index_id != ""){
+				$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+								index_title=$inp_index_title_mysql 
+								WHERE index_id=$get_index_id") or die(mysqli_error($link));
+			}
+		} // search engine
+
 
 				// Send success
 				$fm = "changes_saved";
