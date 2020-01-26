@@ -151,7 +151,7 @@ if($action == ""){
 		<form method=\"post\" action=\"index.php?open=$open&amp;page=$page&amp;l=$l&amp;editor_language=$editor_language&amp;process=1\" enctype=\"multipart/form-data\">
 
 		<p><b>Title:</b><br />
-		<input type=\"text\" name=\"inp_title\" value=\"\" size=\"25\" />
+		<input type=\"text\" name=\"inp_title\" value=\"\" size=\"25\" style=\"width: 99%;\" />
 		</p>
 
 		<p>Language:<br />

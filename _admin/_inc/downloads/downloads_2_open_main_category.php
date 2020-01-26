@@ -85,6 +85,20 @@ if($action == ""){
 			</p>
 		<!-- //Where am I ? -->
 
+		<!-- Feedback -->
+		";
+		if($ft != "" && $fm != ""){
+			if($fm == "category_deleted"){
+				$fm = "Category deleted";
+			}
+			else{
+				$fm = ucfirst($fm);
+				$fm = str_replace("_", " ", $fm);
+			}
+			echo"<div class=\"$ft\"><p>$fm</p></div>";
+		}
+		echo"
+		<!-- //Feedback -->
 
 		<!-- Sub categories -->
 			<div class=\"vertical\">

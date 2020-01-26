@@ -1,0 +1,16 @@
+blog
+courses
+discuss
+downloads
+exercises
+food
+knowledge
+meal_plans
+muscles
+office_calendar
+pages
+recipes
+references
+talk
+users
+workout_plans

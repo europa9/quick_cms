@@ -292,6 +292,7 @@ else{
 					<li><a href=\"index.php?open=$open&amp;page=edit_download&amp;download_id=$get_current_download_id&amp;main_category_id=$get_current_download_main_category_id&amp;sub_category_id=$get_current_download_sub_category_id&l=$l&amp;editor_language=$editor_language\" class=\"active\">Edit</a></li>
 					<li><a href=\"index.php?open=$open&amp;page=edit_download&amp;action=file&amp;download_id=$get_current_download_id&amp;main_category_id=$get_current_download_main_category_id&amp;sub_category_id=$get_current_download_sub_category_id&l=$l&amp;editor_language=$editor_language\">File</a></li>
 					<li><a href=\"index.php?open=$open&amp;page=edit_download&amp;action=images&amp;download_id=$get_current_download_id&amp;main_category_id=$get_current_download_main_category_id&amp;sub_category_id=$get_current_download_sub_category_id&l=$l&amp;editor_language=$editor_language\">Images</a></li>
+					<li><a href=\"index.php?open=$open&amp;page=edit_download&amp;action=delete&amp;download_id=$get_current_download_id&amp;main_category_id=$get_current_download_main_category_id&amp;sub_category_id=$get_current_download_sub_category_id&l=$l&amp;editor_language=$editor_language\">Delete</a></li>
 				</ul>
 			</div>
 			<div class=\"clear\"></div>
@@ -366,7 +367,7 @@ else{
 			<form method=\"post\" action=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;download_id=$download_id&amp;sub_category_id=$get_current_download_sub_category_id&amp;main_category_id=$get_current_download_main_category_id&amp;l=$l&amp;editor_language=$editor_language&amp;process=1\" enctype=\"multipart/form-data\">
 
 			<p><b>Title:</b><br />
-			<input type=\"text\" name=\"inp_title\" value=\"$get_current_download_title\" size=\"25\" />
+			<input type=\"text\" name=\"inp_title\" value=\"$get_current_download_title\" size=\"25\" style=\"width: 99%;\" />
 			</p>
 
 			<p><b>Introduction:</b><br />
@@ -497,7 +498,7 @@ else{
 
 			// Upload
 			
-			if (($inp_type != "zip") && ($inp_type != "rar") && ($inp_type != "pdf") && ($inp_type != "docx") && ($inp_type != "xlsx")) {
+			if (($inp_type != "zip") && ($inp_type != "rar") && ($inp_type != "pdf") && ($inp_type != "docx") && ($inp_type != "xlsx") && ($inp_type != "txt")) {
 				$url = "index.php?open=downloads&page=edit_download&download_id=$download_id&action=file&main_category_id=$main_category_id&sub_category_id=$sub_category_id&l=$l&editor_language=$editor_language&ft=error&fm=unknown_file_format";
 				header("Location: $url");
 				exit;
@@ -568,6 +569,7 @@ else{
 					<li><a href=\"index.php?open=$open&amp;page=edit_download&amp;download_id=$get_current_download_id&amp;main_category_id=$get_current_download_main_category_id&amp;sub_category_id=$get_current_download_sub_category_id&l=$l&amp;editor_language=$editor_language\">Edit</a></li>
 					<li><a href=\"index.php?open=$open&amp;page=edit_download&amp;action=file&amp;download_id=$get_current_download_id&amp;main_category_id=$get_current_download_main_category_id&amp;sub_category_id=$get_current_download_sub_category_id&l=$l&amp;editor_language=$editor_language\" class=\"active\">File</a></li>
 					<li><a href=\"index.php?open=$open&amp;page=edit_download&amp;action=images&amp;download_id=$get_current_download_id&amp;main_category_id=$get_current_download_main_category_id&amp;sub_category_id=$get_current_download_sub_category_id&l=$l&amp;editor_language=$editor_language\">Images</a></li>
+					<li><a href=\"index.php?open=$open&amp;page=edit_download&amp;action=delete&amp;download_id=$get_current_download_id&amp;main_category_id=$get_current_download_main_category_id&amp;sub_category_id=$get_current_download_sub_category_id&l=$l&amp;editor_language=$editor_language\">Delete</a></li>
 				</ul>
 			</div>
 			<div class=\"clear\"></div>
@@ -628,10 +630,28 @@ else{
 			<form method=\"post\" action=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;download_id=$download_id&amp;sub_category_id=$get_current_download_sub_category_id&amp;main_category_id=$get_current_download_main_category_id&amp;l=$l&amp;editor_language=$editor_language&amp;process=1\" enctype=\"multipart/form-data\">
 
 			
-			<p><b>Version:</b><br />
-			<input type=\"text\" name=\"inp_version\" value=\"$get_current_download_version\" size=\"25\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
-			</p>
+			<p><b>Version:</b><br />";
+			$inp_version = "1.0.0";
+			if($get_current_download_version != ""){
+				$version_array = explode(".", $get_current_download_version);
+				$size = sizeof($version_array);
+				$minor = $version_array[$size-1];
+				$new_minor = $minor+1;
 
+				$inp_version = "";
+				for($x=0;$x<$size-1;$x++){
+					if($inp_version  == ""){
+						$inp_version = $version_array[$x];
+					}
+					else{
+						$inp_version = $inp_version . "." . $version_array[$x];
+					}
+				}
+				$inp_version = $inp_version . "." . $new_minor;
+			}
+			echo"
+			<input type=\"text\" name=\"inp_version\" value=\"$inp_version\" size=\"25\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
+			</p>
 
 			<p>File:<br />
 			<input name=\"inp_file\" type=\"file\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
@@ -863,6 +883,7 @@ else{
 					<li><a href=\"index.php?open=$open&amp;page=edit_download&amp;download_id=$get_current_download_id&amp;main_category_id=$get_current_download_main_category_id&amp;sub_category_id=$get_current_download_sub_category_id&l=$l&amp;editor_language=$editor_language\">Edit</a></li>
 					<li><a href=\"index.php?open=$open&amp;page=edit_download&amp;action=file&amp;download_id=$get_current_download_id&amp;main_category_id=$get_current_download_main_category_id&amp;sub_category_id=$get_current_download_sub_category_id&l=$l&amp;editor_language=$editor_language\">File</a></li>
 					<li><a href=\"index.php?open=$open&amp;page=edit_download&amp;action=images&amp;download_id=$get_current_download_id&amp;main_category_id=$get_current_download_main_category_id&amp;sub_category_id=$get_current_download_sub_category_id&l=$l&amp;editor_language=$editor_language\" class=\"active\">Images</a></li>
+					<li><a href=\"index.php?open=$open&amp;page=edit_download&amp;action=delete&amp;download_id=$get_current_download_id&amp;main_category_id=$get_current_download_main_category_id&amp;sub_category_id=$get_current_download_sub_category_id&l=$l&amp;editor_language=$editor_language\">Delete</a></li>
 				</ul>
 			</div>
 			<div class=\"clear\"></div>
@@ -995,5 +1016,59 @@ else{
 		<!-- //Img D -->
 	";
 	} // action == "images"
+	elseif($action == "delete"){
+		if($process == "1"){
+			// Update
+			$result = mysqli_query($link, "DELETE FROM $t_downloads_index WHERE download_id='$get_current_download_id'") or die(mysqli_error($link));
+
+			$url = "index.php?open=downloads&page=downloads_2_open_main_category&main_category_id=$get_current_download_main_category_id&l=$l&editor_language=$editor_language&ft=success&fm=download_deleted";
+			header("Location: $url");
+			exit;
+		}
+
+		echo"
+		<h1>$get_current_download_title</h1>
+		<!-- Where am I -->
+			<p>
+			<a href=\"index.php?open=$open&amp;page=downloads&amp;main_category_id=$get_current_download_main_category_id&l=$l&amp;editor_language=$editor_language\">Downloads</a>
+			&gt;
+			<a href=\"index.php?open=$open&amp;page=downloads_2_open_main_category&amp;main_category_id=$get_current_download_main_category_id&l=$l&amp;editor_language=$editor_language\">$get_current_main_category_translation_value</a>
+			&gt;";
+			if($get_current_sub_category_id != ""){
+				echo"
+				<a href=\"index.php?open=$open&amp;page=downloads_3_open_sub_category&amp;main_category_id=$get_current_download_main_category_id&sub_category_id=$get_current_sub_category_id&amp;l=$l&amp;editor_language=$editor_language\">$get_current_sub_category_translation_value</a>
+				&gt;
+				";
+			}
+			echo"
+			<a href=\"index.php?open=$open&amp;page=edit_download&amp;download_id=$get_current_download_id&amp;main_category_id=$get_current_download_main_category_id&amp;sub_category_id=$get_current_download_sub_category_id&l=$l&amp;editor_language=$editor_language\">$get_current_download_title</a>
+			</p>
+		<!-- //Where am I -->
+		
+		<!-- Menu -->
+			<div class=\"tabs\">
+				<ul>
+					<li><a href=\"index.php?open=$open&amp;page=edit_download&amp;download_id=$get_current_download_id&amp;main_category_id=$get_current_download_main_category_id&amp;sub_category_id=$get_current_download_sub_category_id&l=$l&amp;editor_language=$editor_language\">Edit</a></li>
+					<li><a href=\"index.php?open=$open&amp;page=edit_download&amp;action=file&amp;download_id=$get_current_download_id&amp;main_category_id=$get_current_download_main_category_id&amp;sub_category_id=$get_current_download_sub_category_id&l=$l&amp;editor_language=$editor_language\">File</a></li>
+					<li><a href=\"index.php?open=$open&amp;page=edit_download&amp;action=images&amp;download_id=$get_current_download_id&amp;main_category_id=$get_current_download_main_category_id&amp;sub_category_id=$get_current_download_sub_category_id&l=$l&amp;editor_language=$editor_language\">Images</a></li>
+					<li><a href=\"index.php?open=$open&amp;page=edit_download&amp;action=delete&amp;download_id=$get_current_download_id&amp;main_category_id=$get_current_download_main_category_id&amp;sub_category_id=$get_current_download_sub_category_id&l=$l&amp;editor_language=$editor_language\" class=\"active\">Delete</a></li>
+				</ul>
+			</div>
+			<div class=\"clear\"></div>
+		<!-- //Menu -->
+
+		
+		
+		<!-- Delete File -->
+			<h2>Delete</h2>
+
+			<p>Are you sure?</p>
+
+			<p>
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;download_id=$download_id&amp;sub_category_id=$get_current_download_sub_category_id&amp;main_category_id=$get_current_download_main_category_id&amp;l=$l&amp;editor_language=$editor_language&amp;process=1\" class=\"btn_warning\">Confirm</a>
+			</p>
+		<!-- //Delete File -->
+	";
+	} // action == delete
 } // download found
 ?>
