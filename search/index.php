@@ -47,47 +47,52 @@ echo"
 <h1>$l_search</h1>
 	
 <!-- Search -->
-			<div class=\"search_for_case_and_evidence_query\">
-				<form method=\"get\" action=\"search_for_case_and_evidence.php\" enctype=\"multipart/form-data\" id=\"search_for_case_and_evidence_form\">
-				<input type=\"text\" name=\"inp_search_for_case_and_evidence_query\" id=\"inp_search_for_case_and_evidence_query\" class='auto' value=\"$inp_search_for_case_and_evidence_query\" size=\"25\" />
-				<input type=\"submit\" value=\"$l_search\" class=\"btn_default\" />
-				</form>
-				<div id=\"inp_search_for_case_and_evidence_query_results\"></div>
-			</div>
+	<div class=\"search_search_div\">
+		<form method=\"get\" action=\"search.php\" enctype=\"multipart/form-data\">
+		<input type=\"text\" name=\"inp_search_query\" id=\"inp_search_query\" class='auto' value=\"\" size=\"25\" />
+		<input type=\"submit\" value=\"$l_search\" class=\"btn_default\" />
+		</form>
+		<div id=\"inp_search_results\"></div>
+	</div>
+	<!-- Focus -->
+		<script>
+		\$(document).ready(function(){
+			\$('[name=\"inp_search_query\"]').focus();
+		});
+		</script>
+	<!-- //Focus -->
 
-			<!-- Search engines Autocomplete -->
-				<script id=\"source\" language=\"javascript\" type=\"text/javascript\">
-					\$(document).ready(function () {
-						\$('#inp_search_for_case_and_evidence_query').keyup(function () {
-							// getting the value that user typed
-       							var searchString    = \$(\"#inp_search_for_case_and_evidence_query\").val();
- 							// forming the queryString
-      							var data            = 'inp_search_for_case_and_evidence_query='+ searchString;
+	<!-- Search engines Autocomplete -->
+		<script id=\"source\" language=\"javascript\" type=\"text/javascript\">
+			\$(document).ready(function () {
+				\$('#inp_search_query').keyup(function () {
+					// getting the value that user typed
+					var searchString    = \$(\"#inp_search_query\").val();
+					// forming the queryString
+      					var data            = 'inp_search_query='+ searchString;
          
-        						// if searchString is not empty
-        						if(searchString) {
-								\$(\"#inp_search_for_case_and_evidence_query_results\").css('visibility','visible');
-
-           							// ajax call
-            							\$.ajax({
-                							type: \"POST\",
-               								url: \"search_for_case_and_evidence_autocomplete.php\",
-                							data: data,
-									beforeSend: function(html) { // this happens before actual call
-									\$(\"#inp_search_for_case_and_evidence_query_results\").html(''); 
-								},
-               							success: function(html){
-                    							\$(\"#inp_search_for_case_and_evidence_query_results\").append(html);
-              							}
-            						});
-       						}
-        					return false;
-            				});
-         				});
-				</script>
-			<!-- //Search engines Autocomplete -->
+        				// if searchString is not empty
+        				if(searchString) {
+						\$(\"#inp_search_results\").css('visibility','visible');
+						// ajax call
+        					\$.ajax({
+        						type: \"GET\",
+        						url: \"search_autocomplete.php\",
+                					data: data,
+							beforeSend: function(html) { // this happens before actual call
+								\$(\"#inp_search_results\").html(''); 
+							},
+               						success: function(html){
+                    						\$(\"#inp_search_results\").append(html);
+              						}
+            					});
+       					}
+        				return false;
+            			});
+         		});
+		</script>
+	<!-- //Search engines Autocomplete -->
 <!-- //Search -->
-
 
 ";
 

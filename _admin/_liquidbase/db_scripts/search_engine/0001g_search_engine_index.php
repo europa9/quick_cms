@@ -52,10 +52,11 @@ if(isset($_SESSION['admin_user_id'])){
 	mysqli_query($link, "CREATE TABLE $t_search_engine_searches(
 			   search_id INT NOT NULL AUTO_INCREMENT,
 			   PRIMARY KEY(search_id), 
-			   search_keyword VARCHAR(200),
+			   search_query VARCHAR(200),
 			   search_unique_counter INT,
 			   search_unique_ip_block TEXT,
 			   search_number_of_results INT,
+			   search_language_used VARCHAR(200),
 			   search_created_datetime DATETIME,
 			   search_created_datetime_print VARCHAR(200),
 			   search_updated_datetime DATETIME,

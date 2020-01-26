@@ -30,6 +30,7 @@ include("$root/_admin/website_config.php");
 /*- Tables Search Engine ---------------------------------------------------------------- */
 $t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
 $t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+$t_search_engine_searches 	= $mysqlPrefixSav . "search_engine_searches";
 
 
 /*- Query --------------------------------------------------------------------------- */
@@ -64,7 +65,7 @@ if(isset($_GET['inp_search_query']) && $_GET['inp_search_query'] != ''){
 					<div class=\"search_result_box\">
 						<p>
 						<a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\" class=\"search_index_title\">$get_index_title</a><br />
-						<a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\" class=\"search_index_url\">$get_index_url</a>
+						<a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\" class=\"search_index_url\">$get_index_url</a><br />
 						<span class=\"search_index_description\">$get_index_short_description</span>
 						</p>
 					</div>";
@@ -94,7 +95,7 @@ if(isset($_GET['inp_search_query']) && $_GET['inp_search_query'] != ''){
 						<div class=\"search_result_box\">
 							<p>
 							<a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\" class=\"search_index_title\">$get_index_title</a><br />
-							<a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\" class=\"search_index_url\">$get_index_url</a>
+							<a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\" class=\"search_index_url\">$get_index_url</a><br />
 							<span class=\"search_index_description\">$get_index_short_description</span>
 							</p>
 						</div>";
@@ -108,6 +109,62 @@ if(isset($_GET['inp_search_query']) && $_GET['inp_search_query'] != ''){
 
 		} // no results
 
+		// IP
+		$my_ip = $_SERVER['REMOTE_ADDR'];
+		$my_ip = output_html($my_ip);
+
+		$inp_search_query_mysql = quote_smart($link, $inp_search_query);
+
+		$datetime = date("Y-m-d H:i:s");
+		$datetime_saying = date("j M Y H:i:s");
+
+		// Insert into searches
+		$query = "SELECT search_id, search_query, search_unique_counter, search_unique_ip_block, search_number_of_results FROM $t_search_engine_searches WHERE search_query=$inp_search_query_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_search_id, $get_search_query, $get_search_unique_counter, $get_search_unique_ip_block, $get_search_number_of_results) = $row;
+		if($get_search_id == ""){
+
+			$inp_unique_ip_block_mysql = quote_smart($link, $my_ip);
+			$inp_language_used_mysql = quote_smart($link, $l);
+			
+
+			mysqli_query($link, "INSERT INTO $t_search_engine_searches 
+			(search_id, search_query, search_unique_counter, search_unique_ip_block, search_number_of_results, search_language_used, search_created_datetime, search_created_datetime_print) 
+			VALUES 
+			(NULL, $inp_search_query_mysql, 1, $inp_unique_ip_block_mysql, $results_counter, $inp_language_used_mysql, '$datetime', '$datetime_saying')")
+			or die(mysqli_error($link)); 
+
+		} // first time search
+		else{
+			// IP block 
+			$array = explode("\n", $get_search_unique_ip_block);
+			$size = sizeof($array);
+			$found_my_ip = "false";
+			for($x=0;$x<$size;$x++){
+				$temp = $array[$x];
+				if($temp == "$my_ip"){
+					$found_my_ip = "true";
+				}
+			}
+	
+			if($found_my_ip == "false"){
+				$inp_unique_counter = $get_search_unique_counter+1;
+
+				$inp_ip_block = $my_ip . "\n" . $get_search_unique_ip_block;
+				$inp_ip_block = substr($inp_ip_block, 0, 450);
+				$inp_ip_block_mysql = quote_smart($link, $inp_ip_block);
+
+		
+				$result = mysqli_query($link, "UPDATE $t_search_engine_searches SET 
+						search_unique_counter=$inp_unique_counter,
+						search_unique_ip_block=$inp_ip_block_mysql,
+						search_updated_datetime='$datetime', 
+						search_updated_datetime_print='$datetime_saying'
+						WHERE search_id='$get_search_id'");
+			}
+
+		}
 	echo"
 	</div>
 	";

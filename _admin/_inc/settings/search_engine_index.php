@@ -18,6 +18,7 @@ if(!(isset($define_access_to_control_panel))){
 /*- Tables ---------------------------------------------------------------------------- */
 $t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
 $t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+$t_search_engine_searches 	= $mysqlPrefixSav . "search_engine_searches";
 
 
 
@@ -113,6 +114,7 @@ if($action == ""){
 			<p>
 			<a href=\"index.php?open=$open&amp;page=$page&amp;action=scan_all_modules_and_insert_into_index&amp;mode=create_module_list&amp;order_method=$order_method&amp;order_by=$order_by&amp;editor_language=$editor_language&amp;l=$l\" class=\"btn_default\">Scan all modules and insert into index</a>
 			<a href=\"index.php?open=$open&amp;page=$page&amp;action=truncate_table&amp;order_method=$order_method&amp;order_by=$order_by&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\" class=\"btn_default\">Truncate tables</a>
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=show_searches&amp;order_method=$order_method&amp;order_by=$order_by&amp;editor_language=$editor_language&amp;l=$l\" class=\"btn_default\">Show searches</a>
 			</p>
 		  </td>
 		 </tr>
@@ -478,4 +480,231 @@ elseif($action == "truncate_table"){
 	header("Location: $url");
 	exit;
 } // truncate_table
+elseif($action == "show_searches"){
+	
+	echo"
+	<!-- Headline and about -->
+		<table>
+		 <tr>
+		  <td style=\"padding-right: 14px;\">
+			<h1>Search engine index</h1>
+		  </td>
+		  <td>
+			<span>The search engine holds links to all pages that are in your website. 
+			The title is used as search query. 
+			<br />Title is build up like this: PageName | PageNameSub  | Sub module | Module
+		  </td>
+		 </tr>
+		</table>
+	<!-- //Headline and about -->
+
+	<!-- Where am I? -->
+		<p><b>You are here:</b><br />
+		<a href=\"index.php?open=settings&amp;page=search_engine_index&amp;editor_language=$editor_language&amp;l=$l\">Search engine index</a>
+		&gt;
+		<a href=\"index.php?open=settings&amp;page=search_engine_index&amp;action=$action&amp;editor_language=$editor_language&amp;l=$l\">Searches</a>
+		</p>
+	<!-- Where am I?  -->
+	<!-- Menu -->
+		
+	<!-- Menu -->
+
+	<!-- Feedback -->
+		";
+		if($ft != ""){
+			if($fm == "changes_saved"){
+				$fm = "$l_changes_saved";
+			}
+			else{
+				$fm = ucfirst($fm);
+		}
+			echo"<div class=\"$ft\"><span>$fm</span></div>";
+		}
+		echo"	
+	<!-- //Feedback -->
+
+
+	<!-- Index -->
+		
+		<table class=\"hor-zebra\">
+		 <thead>
+		  <tr>
+		   <th scope=\"col\">";
+			if($order_by == "search_id" && $order_method == "asc"){
+				$order_method_link = "desc";
+			}
+			else{
+				$order_method_link = "asc";
+			}
+
+			echo"
+			<span><a href=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;order_by=search_id&amp;order_method=$order_method_link&amp;editor_language=$editor_language&amp;l=$l\" style=\"color:black;\"><b>ID</b></a>";
+			if($order_by == "search_id" && $order_method == "asc"){
+				echo"<img src=\"_design/gfx/arrow_down.png\" alt=\"arrow_down.png\" />";
+			}
+			if($order_by == "search_id" && $order_method == "desc"){
+				echo"<img src=\"_design/gfx/arrow_up.png\" alt=\"arrow_up.png\" />";
+			}
+			echo"</span>
+		   </th>
+		   <th scope=\"col\">";
+			if($order_by == "search_query" && $order_method == "asc"){
+				$order_method_link = "desc";
+			}
+			else{
+				$order_method_link = "asc";
+			}
+
+			echo"
+			<span><a href=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;order_by=search_keyword&amp;order_method=$order_method_link&amp;editor_language=$editor_language&amp;l=$l\" style=\"color:black;\"><b>Query</b></a>";
+			if($order_by == "search_query" && $order_method == "asc"){
+				echo"<img src=\"_design/gfx/arrow_down.png\" alt=\"arrow_down.png\" />";
+			}
+			if($order_by == "search_query" && $order_method == "desc"){
+				echo"<img src=\"_design/gfx/arrow_up.png\" alt=\"arrow_up.png\" />";
+			}
+			echo"</span>
+		   </th>
+		   <th scope=\"col\">";
+			if($order_by == "search_unique_counter" && $order_method == "asc"){
+				$order_method_link = "desc";
+			}
+			else{
+				$order_method_link = "asc";
+			}
+
+			echo"
+			<span><a href=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;order_by=search_unique_counter&amp;order_method=$order_method_link&amp;editor_language=$editor_language&amp;l=$l\" style=\"color:black;\"><b>Search counter</b></a>";
+			if($order_by == "search_unique_counter" && $order_method == "asc"){
+				echo"<img src=\"_design/gfx/arrow_down.png\" alt=\"arrow_down.png\" />";
+			}
+			if($order_by == "search_unique_counter" && $order_method == "desc"){
+				echo"<img src=\"_design/gfx/arrow_up.png\" alt=\"arrow_up.png\" />";
+			}
+			echo"</span>
+		   </th>
+		   <th scope=\"col\">";
+			if($order_by == "search_number_of_results" && $order_method == "asc"){
+				$order_method_link = "desc";
+			}
+			else{
+				$order_method_link = "asc";
+			}
+
+			echo"
+			<span><a href=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;order_by=search_number_of_results&amp;order_method=$order_method_link&amp;editor_language=$editor_language&amp;l=$l\" style=\"color:black;\"><b>Results</b></a>";
+			if($order_by == "search_number_of_results" && $order_method == "asc"){
+				echo"<img src=\"_design/gfx/arrow_down.png\" alt=\"arrow_down.png\" />";
+			}
+			if($order_by == "search_number_of_results" && $order_method == "desc"){
+				echo"<img src=\"_design/gfx/arrow_up.png\" alt=\"arrow_up.png\" />";
+			}
+			echo"</span>
+		   </th>
+		   <th scope=\"col\">";
+			if($order_by == "search_created_datetime" && $order_method == "asc"){
+				$order_method_link = "desc";
+			}
+			else{
+				$order_method_link = "asc";
+			}
+
+			echo"
+			<span><a href=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;order_by=search_created_datetime&amp;order_method=$order_method_link&amp;editor_language=$editor_language&amp;l=$l\" style=\"color:black;\"><b>Created</b></a>";
+			if($order_by == "search_created_datetime" && $order_method == "asc"){
+				echo"<img src=\"_design/gfx/arrow_down.png\" alt=\"arrow_down.png\" />";
+			}
+			if($order_by == "search_created_datetime" && $order_method == "desc"){
+				echo"<img src=\"_design/gfx/arrow_up.png\" alt=\"arrow_up.png\" />";
+			}
+			echo"</span>
+		   </th>
+		   <th scope=\"col\">";
+			if($order_by == "search_updated_datetime" && $order_method == "asc"){
+				$order_method_link = "desc";
+			}
+			else{
+				$order_method_link = "asc";
+			}
+
+			echo"
+			<span><a href=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;order_by=search_updated_datetime&amp;order_method=$order_method_link&amp;editor_language=$editor_language&amp;l=$l\" style=\"color:black;\"><b>Updated</b></a>";
+			if($order_by == "search_updated_datetime" && $order_method == "asc"){
+				echo"<img src=\"_design/gfx/arrow_down.png\" alt=\"arrow_down.png\" />";
+			}
+			if($order_by == "search_updated_datetime" && $order_method == "desc"){
+				echo"<img src=\"_design/gfx/arrow_up.png\" alt=\"arrow_up.png\" />";
+			}
+			echo"</span>
+		   </th>
+		  </tr>
+		 </thead>
+		";
+
+		$query = "SELECT search_id, search_query, search_unique_counter, search_unique_ip_block, search_number_of_results, search_created_datetime, search_created_datetime_print, search_updated_datetime, search_updated_datetime_print FROM $t_search_engine_searches";
+		
+		if($order_by == "search_id" OR $order_by == "search_keyword" OR $order_by == "search_unique_counter" OR $order_by == "search_number_of_results" OR $order_by == "search_created_datetime" OR $order_by == "search_updated_datetime"){
+			if($order_method == "asc" OR $order_method == "desc"){
+				$query = $query . " ORDER BY $order_by $order_method";
+			}
+		}
+
+		$result = mysqli_query($link, $query);
+		while($row = mysqli_fetch_row($result)) {
+			list($get_search_id, $get_search_query, $get_search_unique_counter, $get_search_unique_ip_block, $get_search_number_of_results, $get_search_created_datetime, $get_search_created_datetime_print, $get_search_updated_datetime, $get_search_updated_datetime_print) = $row;
+			
+			// Style
+			if(isset($style) && $style == ""){
+				$style = "odd";
+			}
+			else{
+				$style = "";
+			}
+
+
+		
+			echo"
+			 <tr>
+			  <td class=\"$style\">
+				<span>
+				$get_search_id
+				</span>
+			  </td>
+			  <td class=\"$style\">
+				<span>
+				$get_search_query
+				</span>
+			  </td>
+			  <td class=\"$style\">
+				<span>
+				$get_search_unique_counter
+				</span>
+			  </td>
+			  <td class=\"$style\">
+				<span>
+				$get_search_number_of_results
+				</span>
+			  </td>
+			  <td class=\"$style\">
+				<span>
+				$get_search_created_datetime_print
+				</span>
+			  </td>
+			  <td class=\"$style\">
+				<span>
+				$get_search_updated_datetime_print
+				</span>
+			  </td>
+			 </tr>";
+		}
+		
+		echo"
+			</table>
+		  </td>
+		 </tr>
+		</table>
+	<!-- //Index  -->
+
+	";
+}
 ?>
