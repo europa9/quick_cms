@@ -12,7 +12,7 @@
 
 /*- Course content --------------------------------------------------------------------------- */
 // Usage:
-// include("$root/courses/_includes/view_content.php");
+// include("$root/courses/_includes/content_after_content.php");
 
 
 
@@ -21,29 +21,27 @@ include("$root/_admin/_translations/site/$l/courses/ts_courses.php");
 
 
 /*- Variables ------------------------------------------------------------------------ */
-if(isset($_GET['course'])) {
-	$course = $_GET['course'];
-	$course = strip_tags(stripslashes($course));
+if(isset($_GET['course_id'])) {
+	$course_id = $_GET['course_id'];
+	$course_id = strip_tags(stripslashes($course_id));
 }
 else{
-	$course = "";
+	$course_id = "";
 }
-if(isset($_GET['module'])) {
-	$module = $_GET['module'];
-	$module = strip_tags(stripslashes($module));
-}
-else{
-	$module = "";
-}
-if(isset($_GET['content'])) {
-	$content = $_GET['content'];
-	$content = strip_tags(stripslashes($content));
+if(isset($_GET['module_id'])) {
+	$module_id = $_GET['module_id'];
+	$module_id = strip_tags(stripslashes($module_id));
 }
 else{
-	$content = "";
+	$module_id = "";
 }
-
-
+if(isset($_GET['lesson_id'])) {
+	$lesson_id = $_GET['lesson_id'];
+	$lesson_id = strip_tags(stripslashes($lesson_id));
+}
+else{
+	$lesson_id = "";
+}
 if(isset($_GET['course_action'])) {
 	$course_action = $_GET['course_action'];
 	$course_action = strip_tags(stripslashes($course_action));
@@ -52,27 +50,27 @@ else{
 	$course_action = "";
 }
 
-if($content != ""){
+if($lesson_id != ""){
 	// Search for content
-	$course_mysql = quote_smart($link, $course);
-	$module_mysql = quote_smart($link, $module);
-	$content_mysql = quote_smart($link, $content);
-	$query = "SELECT content_id, content_course_id, content_course_dir_name, content_module_id, content_module_title_clean, content_type, content_number, content_title, content_title_clean, content_description, content_url, content_url_type, content_read_times, content_read_times_ipblock, content_created_datetime, content_created_date_formatted, content_last_read_datetime, content_last_read_date_formatted FROM $t_courses_modules_contents WHERE content_course_dir_name=$course_mysql AND content_module_title_clean=$module_mysql AND content_title_clean=$content_mysql";
+	$course_id_mysql = quote_smart($link, $course_id);
+	$module_id_mysql = quote_smart($link, $module_id);
+	$lesson_id_mysql = quote_smart($link, $lesson_id);
+	$query = "SELECT lesson_id, lesson_number, lesson_title, lesson_title_clean, lesson_description, lesson_content, lesson_course_id, lesson_course_title, lesson_module_id, lesson_module_title, lesson_read_times, lesson_read_times_ipblock, lesson_created_datetime, lesson_created_date_formatted, lesson_last_read_datetime, lesson_last_read_date_formatted FROM $t_courses_lessons WHERE lesson_id=$lesson_id_mysql AND lesson_course_id=$course_id_mysql AND lesson_module_id=$module_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_content_id, $get_current_content_course_id, $get_current_content_course_dir_name, $get_current_content_module_id, $get_current_content_module_title_clean, $get_current_content_type, $get_current_content_number, $get_current_content_title, $get_current_content_title_clean, $get_current_content_description, $get_current_content_url, $get_current_content_url_type, $get_current_content_read_times, $get_current_content_read_times_ipblock, $get_current_content_created_datetime, $get_current_content_created_date_formatted, $get_current_content_last_read_datetime, $get_current_content_last_read_date_formatted) = $row;
+	list($get_current_lesson_id, $get_current_lesson_number, $get_current_lesson_title, $get_current_lesson_title_clean, $get_current_lesson_description, $get_current_lesson_content, $get_current_lesson_course_id, $get_current_lesson_course_title, $get_current_lesson_module_id, $get_current_lesson_module_title, $get_current_lesson_read_times, $get_current_lesson_read_times_ipblock, $get_current_lesson_created_datetime, $get_current_lesson_created_date_formatted, $get_current_lesson_last_read_datetime, $get_current_lesson_last_read_date_formatted) = $row;
 
-	if($get_current_content_id != ""){
+	if($get_current_lesson_id != ""){
 		// Last read
 		$datetime = date("Y-m-d H:i:s");
 		$date_formatted = date("j M Y");
-		$result = mysqli_query($link, "UPDATE $t_courses_modules_contents SET content_last_read_datetime='$datetime', content_last_read_date_formatted='$date_formatted' WHERE content_id=$get_current_content_id");
+		$result = mysqli_query($link, "UPDATE $t_courses_lessons SET lesson_last_read_datetime='$datetime', lesson_last_read_date_formatted='$date_formatted' WHERE lesson_id=$get_current_lesson_id");
 
 		// Visits
 		$my_ip = $_SERVER['REMOTE_ADDR'];
 		$my_ip = output_html($my_ip);
 		
-		$ipblock_array = explode("\n", $get_current_content_read_times_ipblock);
+		$ipblock_array = explode("\n", $get_current_lesson_read_times_ipblock);
 		$size = sizeof($ipblock_array);
 		$i_have_visited_before = "false";
 		for($x=0;$x<$size;$x++){
@@ -80,19 +78,18 @@ if($content != ""){
 				$i_have_visited_before = "true";
 			}
 		}
-		
 		if($i_have_visited_before == "false"){
-			$inp_content_read_times = $get_current_content_read_times+1;
+			$inp_read_times = $get_current_lesson_read_times+1;
 			
-			if($get_current_content_read_times_ipblock == ""){
-				$inp_content_read_times_ipblock = "$my_ip";
+			if($get_current_lesson_read_times_ipblock == ""){
+				$inp_read_times_ipblock = "$my_ip";
 			}
 			else{
-				$inp_content_read_times_ipblock = "$my_ip\n" . substr($get_current_content_read_times_ipblock, 0, 400);
+				$inp_read_times_ipblock = "$my_ip\n" . substr($get_current_lesson_read_times_ipblock, 0, 400);
 			}
-			$inp_content_read_times_ipblock_mysql = quote_smart($link, $inp_content_read_times_ipblock);
+			$inp_read_times_ipblock_mysql = quote_smart($link, $inp_read_times_ipblock);
 
-			$result = mysqli_query($link, "UPDATE $t_courses_modules_contents SET content_read_times=$inp_content_read_times, content_read_times_ipblock=$inp_content_read_times_ipblock_mysql WHERE content_id=$get_current_content_id");
+			$result = mysqli_query($link, "UPDATE $t_courses_lessons SET lesson_read_times=$inp_read_times, lesson_read_times_ipblock=$inp_read_times_ipblock_mysql WHERE lesson_id=$get_current_lesson_id") or die(mysqli_error($link));
 
 
 		}
@@ -106,18 +103,20 @@ if($content != ""){
 
 			
 			// Check if I have read it
-			$course_dir_name_mysql = quote_smart($link, $get_current_content_course_dir_name);
-			$module_title_clean_mysql = quote_smart($link, $get_current_content_module_title_clean);
-			$content_title_clean_mysql = quote_smart($link, $get_current_content_title_clean);
-			$query = "SELECT content_read_id FROM $t_courses_modules_contents_read WHERE read_course_dir_name=$course_dir_name_mysql AND read_module_title_clean=$module_title_clean_mysql AND read_content_title_clean=$content_title_clean_mysql AND read_user_id=$my_user_id_mysql";
-			$result = mysqli_query($link, $query);
-			$row = mysqli_fetch_row($result);
-			list($get_content_read_id) = $row;
-			if($get_content_read_id == ""){
-				mysqli_query($link, "INSERT INTO $t_courses_modules_contents_read 
-				(content_read_id, read_course_id, read_course_dir_name, 	read_module_id, read_module_title_clean, read_content_id, read_content_title_clean, read_user_id) 
+			$query_m = "SELECT lesson_read_id FROM $t_courses_lessons_read WHERE read_course_id=$get_current_lesson_course_id AND read_lesson_id=$get_current_lesson_id AND read_user_id=$my_user_id_mysql";
+			$result_m = mysqli_query($link, $query_m);
+			$row_m = mysqli_fetch_row($result_m);
+			list($get_lesson_read_id) = $row_m;
+
+			if($get_lesson_read_id == ""){
+				$inp_course_title_mysql = quote_smart($link, $get_current_lesson_course_title);
+				$inp_module_title_mysql = quote_smart($link, $get_current_lesson_module_title);
+				$inp_lesson_title_mysql = quote_smart($link, $get_current_lesson_title);
+
+				mysqli_query($link, "INSERT INTO $t_courses_lessons_read 
+				(lesson_read_id, read_course_id, read_course_title, read_module_id, read_module_title, read_lesson_id, read_lesson_title, read_user_id) 
 				VALUES 
-				(NULL, $get_current_content_course_id, $course_dir_name_mysql, $get_current_content_module_id, $module_title_clean_mysql, $get_current_content_id, $content_title_clean_mysql, $my_user_id_mysql)");
+				(NULL, $get_current_lesson_course_id, $inp_course_title_mysql, $get_current_lesson_module_id, $inp_module_title_mysql, $get_current_lesson_id, $inp_lesson_title_mysql, $my_user_id_mysql)");
 
 
 
@@ -166,14 +165,14 @@ if($content != ""){
 				if(isset($_SESSION['user_id'])){
 					echo"
 					<p>
-					<a href=\"$root/courses/new_comment_to_content.php?course=$get_current_content_course_dir_name&amp;module=$get_current_content_module_title_clean&amp;content=$get_current_content_title_clean&amp;l=$l\" class=\"btn_default\">$l_write_a_comment</a>	
+					<a href=\"$root/courses/new_comment_to_lesson.php?course_id=$get_current_lesson_course_id&amp;module_id=$get_current_lesson_module_id&amp;lesson_id=$get_current_lesson_id&amp;l=$l\" class=\"btn_default\">$l_write_a_comment</a>	
 					</p>
 					";
 				}
 				else{
 					echo"
 					<p>
-					<a href=\"$root/users/login.php?l=$l&amp;referer=$root/courses/new_comment_to_content.php?course=$get_current_content_course_dir_name&amp;module=$get_current_content_module_title_clean&amp;content=$get_current_content_title_clean&amp;l=$\" class=\"btn_default\">$l_write_a_comment</a>	
+					<a href=\"$root/users/login.php?l=$l&amp;referer=$root/courses/new_comment_to_lesson.php?course_id=$get_current_lesson_course_id&amp;module_id=$get_current_lesson_module_id&amp;lesson_id=$get_current_lesson_id&amp;l=$\" class=\"btn_default\">$l_write_a_comment</a>	
 					</p>
 					";
 				}
@@ -194,14 +193,11 @@ if($content != ""){
 					list($get_my_user_id, $get_my_user_email, $get_my_user_name, $get_my_user_alias, $get_my_user_rank) = $row;
 				}
 
-				$comment_course_dir_name_mysql = quote_smart($link, $get_current_content_course_dir_name);
-				$comment_module_title_clean_mysql = quote_smart($link, $get_current_content_module_title_clean);
-				$comment_content_title_clean_mysql = quote_smart($link, $get_current_content_title_clean);
 
-				$query_groups = "SELECT comment_id, comment_course_id, comment_course_dir_name, comment_module_id, comment_module_title_clean, comment_content_id, comment_content_title_clean, comment_language, comment_approved, comment_datetime, comment_time, comment_date_print, comment_user_id, comment_user_alias, comment_user_image_path, comment_user_image_file, comment_user_ip, comment_user_hostname, comment_user_agent, comment_title, comment_text, comment_rating, comment_helpful_clicks, comment_useless_clicks, comment_marked_as_spam, comment_spam_checked, comment_spam_checked_comment FROM $t_courses_modules_contents_comments WHERE comment_course_dir_name=$comment_course_dir_name_mysql AND comment_module_title_clean=$comment_module_title_clean_mysql AND comment_content_title_clean=$comment_content_title_clean_mysql ORDER BY comment_id ASC";
+				$query_groups = "SELECT comment_id, comment_course_id, comment_course_title, comment_module_id, comment_module_title, comment_lesson_id, comment_lesson_title, comment_language, comment_approved, comment_datetime, comment_time, comment_date_print, comment_user_id, comment_user_alias, comment_user_image_path, comment_user_image_file, comment_user_ip, comment_user_hostname, comment_user_agent, comment_title, comment_text, comment_rating, comment_helpful_clicks, comment_useless_clicks, comment_marked_as_spam, comment_spam_checked, comment_spam_checked_comment FROM $t_courses_lessons_comments WHERE comment_course_id=$get_current_lesson_course_id AND comment_module_id=$get_current_lesson_module_id AND comment_lesson_id=$get_current_lesson_id ORDER BY comment_id ASC";
 				$result_groups = mysqli_query($link, $query_groups);
 				while($row_groups = mysqli_fetch_row($result_groups)) {
-					list($get_comment_id, $get_comment_course_id, $get_comment_course_dir_name, $get_comment_module_id, $get_comment_module_title_clean, $get_comment_content_id, $get_comment_content_title_clean, $get_comment_language, $get_comment_approved, $get_comment_datetime, $get_comment_time, $get_comment_date_print, $get_comment_user_id, $get_comment_user_alias, $get_comment_user_image_path, $get_comment_user_image_file, $get_comment_user_ip, $get_comment_user_hostname, $get_comment_user_agent, $get_comment_title, $get_comment_text, $get_comment_rating, $get_comment_helpful_clicks, $get_comment_useless_clicks, $get_comment_marked_as_spam, $get_comment_spam_checked, $get_comment_spam_checked_comment) = $row_groups;
+					list($get_comment_id, $get_comment_course_id, $get_comment_course_title, $get_comment_module_id, $get_comment_module_title, $get_comment_lesson_id, $get_comment_lesson_title, $get_comment_language, $get_comment_approved, $get_comment_datetime, $get_comment_time, $get_comment_date_print, $get_comment_user_id, $get_comment_user_alias, $get_comment_user_image_path, $get_comment_user_image_file, $get_comment_user_ip, $get_comment_user_hostname, $get_comment_user_agent, $get_comment_title, $get_comment_text, $get_comment_rating, $get_comment_helpful_clicks, $get_comment_useless_clicks, $get_comment_marked_as_spam, $get_comment_spam_checked, $get_comment_spam_checked_comment) = $row_groups;
 		
 					echo"
 					<a id=\"comment$get_comment_id\"></a>
@@ -244,13 +240,13 @@ if($content != ""){
 							if(isset($my_user_id)){
 								if($get_comment_user_id == "$my_user_id" OR $get_my_user_rank == "admin" OR $get_my_user_rank == "moderator"){
 									echo"
-									<a href=\"$root/courses/edit_comment_to_content.php?comment_id=$get_comment_id&amp;course=$get_current_content_course_dir_name&amp;module=$get_current_content_module_title_clean&amp;content=$get_current_content_title_clean&amp;l=$l#comments\"><img src=\"$root/users/_gfx/edit.png\" alt=\"edit.png\" title=\"$l_edit\" /></a>
-									<a href=\"$root/courses/delete_comment_to_content.php?comment_id=$get_comment_id&amp;course=$get_current_content_course_dir_name&amp;module=$get_current_content_module_title_clean&amp;content=$get_current_content_title_clean&amp;l=$l#comments\"><img src=\"$root/users/_gfx/delete.png\" alt=\"delete.png\" title=\"$l_delete\" /></a>
+									<a href=\"$root/courses/edit_comment_to_lesson.php?comment_id=$get_comment_id&amp;course_id=$get_comment_course_id&amp;module_id=$get_comment_module_id&amp;lesson_id=$get_current_lesson_id&amp;l=$l#comments\"><img src=\"$root/users/_gfx/edit.png\" alt=\"edit.png\" title=\"$l_edit\" /></a>
+									<a href=\"$root/courses/delete_comment_to_lesson.php?comment_id=$get_comment_id&amp;course_id=$get_comment_course_id&amp;module_id=$get_comment_module_id&amp;lesson_id=$get_current_lesson_id&amp;l=$l#comments\"><img src=\"$root/users/_gfx/delete.png\" alt=\"delete.png\" title=\"$l_delete\" /></a>
 									";
 								}
 								else{
 									echo"
-									<a href=\"$root/courses/report_comment_to_content.php?comment_id=$get_comment_id&amp;course=$get_current_content_course_dir_name&amp;module=$get_current_content_module_title_clean&amp;content=$get_current_content_title_clean&amp;l=$l#comments\"><img src=\"$root/comments/_gfx/report_grey.png\" alt=\"report_grey.png\" title=\"$l_report\" /></a>
+									<a href=\"$root/courses/report_comment_to_lesson.php?comment_id=$get_comment_id&amp;course_id=$get_comment_course_id&amp;module_id=$get_comment_module_id&amp;lesson_id=$get_current_lesson_id&amp;l=$l#comments\"><img src=\"$root/comments/_gfx/report_grey.png\" alt=\"report_grey.png\" title=\"$l_report\" /></a>
 									";
 								}
 							}
@@ -288,17 +284,17 @@ if($content != ""){
 		";
 		
 	} // Content found
-} // content
+} // lesson
 else{
 
-	if($course != "" && $module != ""){
+	if($course_id != "" && $module_id != ""){
 		// Search for module
-		$course_mysql = quote_smart($link, $course);
-		$module_mysql = quote_smart($link, $module);
-		$query = "SELECT module_id, module_course_id, module_course_dir_name, module_title_clean, module_read_times, module_read_ipblock FROM $t_courses_modules WHERE module_course_dir_name=$course_mysql AND module_title_clean=$module_mysql";
+		$course_id_mysql = quote_smart($link, $course_id);
+		$module_id_mysql = quote_smart($link, $module_id);
+		$query = "SELECT module_id, module_course_id, module_course_title, module_number, module_title, module_title_clean, module_read_times, module_read_ipblock, module_created, module_updated, module_last_read_datetime, module_last_read_date_formatted FROM $t_courses_modules WHERE module_id=$module_id_mysql AND module_course_id=$course_id_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
-		list($get_current_module_id, $get_current_module_course_id, $get_current_module_course_dir_name, $get_current_module_title_clean, $get_current_module_read_times, $get_current_module_read_ipblock) = $row;
+		list($get_current_module_id, $get_current_module_course_id, $get_current_module_course_title, $get_current_module_number, $get_current_module_title, $get_current_module_title_clean, $get_current_module_read_times, $get_current_module_read_ipblock, $get_current_module_created, $get_current_module_updated, $get_current_module_last_read_datetime, $get_current_module_last_read_date_formatted) = $row;
 
 		if($get_current_module_id != ""){
 			// Last read
@@ -343,18 +339,18 @@ else{
 
 			
 				// Check if I have read it
-				$course_dir_name_mysql = quote_smart($link, $get_current_module_course_dir_name);
-				$module_title_clean_mysql = quote_smart($link, $get_current_module_title_clean);
-				$query = "SELECT module_read_id FROM $t_courses_modules_read WHERE read_course_dir_name=$course_dir_name_mysql AND read_module_title_clean=$module_title_clean_mysql AND read_user_id=$my_user_id_mysql";
-
+				$query = "SELECT module_read_id FROM $t_courses_modules_read WHERE read_course_id=$get_current_module_course_id AND read_module_id=$get_current_module_id AND read_user_id=$my_user_id_mysql";
 				$result = mysqli_query($link, $query);
 				$row = mysqli_fetch_row($result);
 				list($get_module_read_id) = $row;
 				if($get_module_read_id == ""){
+					$inp_course_title_mysql = quote_smart($link, $get_current_module_course_title);
+					$inp_module_title_mysql = quote_smart($link, $get_current_module_title);
+
 					mysqli_query($link, "INSERT INTO $t_courses_modules_read 
-					(module_read_id, read_course_id, read_course_dir_name, read_module_id, read_module_title_clean, read_user_id) 
+					(module_read_id, read_course_id, read_course_title, read_module_id, read_module_title, read_user_id) 
 					VALUES 
-					(NULL, $get_current_module_course_id, $course_dir_name_mysql, $get_current_module_id, $module_title_clean_mysql, $my_user_id_mysql)");
+					(NULL, $get_current_module_course_id, $inp_course_title_mysql, $get_current_module_id, $inp_module_title_mysql, $my_user_id_mysql)");
 
 					// Give point
 					$query = "SELECT user_id, user_name, user_alias, user_points FROM $t_users WHERE user_id=$my_user_id_mysql";

@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* File: courses/index.php
+* File: courses/open_main_category.php
 * Version 2.0.0
 * Date 22:38 03.05.2019
 * Copyright (c) 2011-2019 Localhost
@@ -60,6 +60,17 @@ $t_courses_exams_qa			= $mysqlPrefixSav . "courses_exams_qa";
 $t_courses_exams_user_tries		= $mysqlPrefixSav . "courses_exams_user_tries";
 $t_courses_exams_user_tries_qa		= $mysqlPrefixSav . "courses_exams_user_tries_qa";
 
+/*- Variables ------------------------------------------------------------------------ */
+if(isset($_GET['main_category_id'])){
+	$main_category_id = $_GET['main_category_id'];
+	$main_category_id = strip_tags(stripslashes($main_category_id));
+}
+else{
+	$main_category_id = "";
+}
+$main_category_id_mysql = quote_smart($link, $main_category_id);
+
+
 /*- Content ---------------------------------------------------------- */
 
 // Title
@@ -78,22 +89,42 @@ if($get_current_courses_title_translation_id == ""){
 }
 
 
-
-
-echo"
-<h1>$get_current_courses_title_translation_title</h1> 
-";
-
-// Get all courses
-$l_mysql = quote_smart($link, $l);
-$query = "SELECT course_id, course_title, course_title_clean, course_front_page_intro, course_main_category_id, course_main_category_title, course_sub_category_id, course_sub_category_title, course_image_file, course_image_thumb, course_modules_count, course_lessons_count, course_quizzes_count, course_users_enrolled_count, course_read_times FROM $t_courses_index WHERE course_language=$l_mysql ORDER BY course_read_times DESC";
+// Main category 
+$query = "SELECT main_category_id, main_category_title, main_category_title_clean, main_category_description FROM $t_courses_categories_main WHERE main_category_id=$main_category_id_mysql";
 $result = mysqli_query($link, $query);
-while($row = mysqli_fetch_row($result)) {
-	list($get_course_id, $get_course_title, $get_course_title_clean, $get_course_front_page_intro, $get_course_main_category_id, $get_course_main_category_title, $get_course_sub_category_id, $get_course_sub_category_title, $get_course_image_file, $get_course_image_thumb, $get_course_modules_count, $get_course_lessons_count, $get_course_quizzes_count, $get_course_users_enrolled_count, $get_course_read_times) = $row;
+$row = mysqli_fetch_row($result);
+list($get_current_main_category_id, $get_current_main_category_title, $get_current_main_category_title_clean, $get_current_main_category_description ) = $row;
+if($get_current_main_category_id == ""){
 	echo"
+	<h1>Server error 404</h1>
+	<p>Main category not found.</p>
+	";
+}
+else{
+
+
+	echo"
+	<h1>$get_current_main_category_title</h1>
+
+	<!-- Where am I? -->
+		<p><b>$l_you_are_here:</b><br />
+		<a href=\"index.php?l=$l\">$get_current_courses_title_translation_title</a>
+		&gt;
+		<a href=\"open_main_category.php?main_category_id=$get_current_main_category_id&amp;l=$l\">$get_current_main_category_title</a>
+		</p>
+	<!-- //Where am I? -->
+	";
+
+	// Get all courses
+	$l_mysql = quote_smart($link, $l);
+	$query = "SELECT course_id, course_title, course_title_clean, course_front_page_intro, course_main_category_id, course_main_category_title, course_sub_category_id, course_sub_category_title, course_image_file, course_image_thumb, course_modules_count, course_lessons_count, course_quizzes_count, course_users_enrolled_count, course_read_times FROM $t_courses_index WHERE course_main_category_id=$get_current_main_category_id AND course_language=$l_mysql ORDER BY course_read_times DESC";
+	$result = mysqli_query($link, $query);
+	while($row = mysqli_fetch_row($result)) {
+		list($get_course_id, $get_course_title, $get_course_title_clean, $get_course_front_page_intro, $get_course_main_category_id, $get_course_main_category_title, $get_course_sub_category_id, $get_course_sub_category_title, $get_course_image_file, $get_course_image_thumb, $get_course_modules_count, $get_course_lessons_count, $get_course_quizzes_count, $get_course_users_enrolled_count, $get_course_read_times) = $row;
+		echo"
 		<table style=\"width: 100%;\">
 		  <tr>";
-	if(file_exists("$root/$get_course_title_clean/_gfx/$get_course_image_thumb")){
+		if(file_exists("$root/$get_course_title_clean/_gfx/$get_course_image_thumb")){
 		echo"
 		   <td style=\"width: 210px;vertical-align:top;padding-right: 15px;\">
 			<p>
@@ -101,8 +132,8 @@ while($row = mysqli_fetch_row($result)) {
 			</p>
 		   </td>
 		";
-	}
-	echo"
+		}
+		echo"
 		   <td style=\"vertical-align:top;padding-right: 10px;\">
 			<p class=\"courses_sub_category\">
 			<a href=\"open_sub_category.php?main_category_id=$get_course_main_category_id&amp;sub_category_id=$get_course_sub_category_id&amp;l=$l\" class=\"courses_sub_category\">$get_course_sub_category_title</a>
@@ -128,14 +159,15 @@ while($row = mysqli_fetch_row($result)) {
 		   </td>
 		 </tr>
 		</table>
-	<div class=\"courses_after\"></div>
+		<div class=\"courses_after\"></div>
+		";
+	}
+	echo"
+	<p>
+	&nbsp;
+	</p>
 	";
-}
-echo"
-<p>
-&nbsp;
-</p>
-";
+} // main category found
 
 /*- Footer ----------------------------------------------------------- */
 include("$root/_webdesign/footer.php");
