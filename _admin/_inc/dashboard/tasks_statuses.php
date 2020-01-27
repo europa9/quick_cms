@@ -263,12 +263,12 @@ elseif($action == "edit"){
 
 			$result = mysqli_query($link, "UPDATE $t_tasks_status_codes SET
 					status_code_title=$inp_title_mysql, 
-					status_text_code_color=$inp_text_color_mysql, 
+					status_code_text_color=$inp_text_color_mysql, 
 					status_code_show_on_board=$inp_show_on_board_mysql
-					WHERE status_code_id=$get_current_status_code_id");
+					WHERE status_code_id=$get_current_status_code_id") or die(mysqli_error($link));
 
 
-			header("Location: index.php?open=dashboard&page=$page&action=$action&status_code_id=$get_current_status_code_id&ft=success&fm=created");
+			header("Location: index.php?open=dashboard&page=$page&action=$action&status_code_id=$get_current_status_code_id&ft=success&fm=changes_saved");
 			exit;
 		}
 		echo"

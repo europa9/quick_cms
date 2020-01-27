@@ -62,7 +62,7 @@ if(isset($_GET['inp_search_query']) && $_GET['inp_search_query'] != ''){
 
 				if($get_index_id != "$last_printed_id"){
 					echo"
-					<li><a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\">$get_index_title</a></li>
+					<li><a href=\"$root/search/go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\">$get_index_title</a></li>
 					";
 					$results_counter++;
 				}
@@ -87,7 +87,7 @@ if(isset($_GET['inp_search_query']) && $_GET['inp_search_query'] != ''){
 
 					if($get_index_id != "$last_printed_id"){
 						echo"
-						<li><a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\">$get_index_title</a></li>
+						<li><a href=\"$root/search/go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\">$get_index_title</a></li>
 						";
 						$results_counter++;
 					}
