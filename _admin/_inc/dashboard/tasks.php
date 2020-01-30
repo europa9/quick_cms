@@ -392,6 +392,13 @@ elseif($action == "new_task"){
 	$month = date("m");
 	$next_month = $month+1;
 	$inp_due_month = "$next_month";
+	$inp_due_month_lenght = strlen($inp_due_month);
+	if($inp_due_month_lenght == "1"){
+		$inp_due_month = "0" . $inp_due_month;
+	}
+	if($inp_due_day > 28){
+		$inp_due_day = "27";
+	}
 
 	$inp_due_year = date("Y");
 
@@ -476,7 +483,7 @@ elseif($action == "new_task"){
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
 	list($get_last_used_system_id, $get_last_used_system_user_id, $get_last_used_system_system_id) = $row;	
-
+	// echo"$query  $get_last_used_system_id, $get_last_used_system_user_id, $get_last_used_system_system_id"; die;
 	// System id
 	if($get_last_used_system_id == ""){
 		$inp_system_id = "0";
@@ -1208,7 +1215,25 @@ elseif($action == "edit_task"){
 				$inp_system_task_abbr_mysql = quote_smart($link, $get_current_task_system_task_abbr);
 				$inp_system_increment_tasks_counter_mysql = quote_smart($link, $get_current_task_system_incremented_number);
 			}
-	
+
+			// Insert last used system
+			$query = "SELECT last_used_system_id, last_used_system_user_id, last_used_system_system_id FROM $t_tasks_last_used_systems WHERE last_used_system_user_id=$my_user_id_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_last_used_system_id, $get_last_used_system_user_id, $get_last_used_system_system_id) = $row;	
+			if($get_last_used_system_id == ""){
+				// No last used system
+				mysqli_query($link, "INSERT INTO $t_tasks_last_used_systems 
+				(last_used_system_id, last_used_system_user_id, last_used_system_system_id) 
+				VALUES 
+				(NULL, $my_user_id_mysql, $inp_system_id_mysql)")
+				or die(mysqli_error($link));
+			}
+			else{
+				$result = mysqli_query($link, "UPDATE $t_tasks_last_used_systems SET last_used_system_system_id=$inp_system_id_mysql WHERE last_used_system_id=$get_last_used_system_id") or die(mysqli_error($link));
+
+			}
+
 			// Project id
 			$inp_project_id = $_POST['inp_project_id'];
 			$inp_project_id = output_html($inp_project_id);
@@ -1241,6 +1266,24 @@ elseif($action == "edit_task"){
 				// Use old 
 				$inp_project_task_abbr_mysql = quote_smart($link, $get_current_task_project_task_abbr);
 				$inp_project_increment_tasks_counter_mysql = quote_smart($link, $get_current_task_project_incremented_number);
+			}
+
+			// Insert last used project
+			$query = "SELECT last_used_project_id, last_used_project_user_id, last_used_project_project_id FROM $t_tasks_last_used_projects WHERE last_used_project_user_id=$my_user_id_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_last_used_project_id, $get_last_used_project_user_id, $get_last_used_project_project_id) = $row;
+			if($get_last_used_project_id == ""){
+				// No last used system
+				mysqli_query($link, "INSERT INTO $t_tasks_last_used_projects 
+				(last_used_project_id, last_used_project_user_id, last_used_project_project_id) 
+				VALUES 
+				(NULL, $my_user_id_mysql, $inp_project_id_mysql)")
+				or die(mysqli_error($link));
+			}
+			else{
+				$result = mysqli_query($link, "UPDATE $t_tasks_last_used_projects SET last_used_project_project_id=$inp_project_id_mysql WHERE last_used_project_id=$get_last_used_project_id") or die(mysqli_error($link));
+
 			}
 
 		
