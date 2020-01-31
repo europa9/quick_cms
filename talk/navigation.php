@@ -96,6 +96,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
 		list($get_conversation_id, $get_conversation_key, $get_conversation_f_unread_messages, $get_conversation_t_user_id, $get_conversation_t_user_nickname, $get_conversation_t_user_alias, $get_conversation_t_last_online_time) = $row;
+		if($get_conversation_t_last_online_time == ""){
+			$get_conversation_t_last_online_time = 0;
+		}
 		$seconds_since_online = $time-$get_conversation_t_last_online_time;
 
 		echo"
