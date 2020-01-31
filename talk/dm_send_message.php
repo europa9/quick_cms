@@ -194,12 +194,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			}
 
 			// Add links
-			// $inp_text = str_replace("&amp;", "§§", $inp_text);
-			// $inp_text = str_replace("&", "§", $inp_text);
-			$inp_text = preg_replace(
-            					  "/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/",
-          				 	   "<a href=\"\\0\">\\0</a>", 
-         					     $inp_text);
+			$url_pattern = '/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/';
+			$inp_text = preg_replace($url_pattern, '<a href="$0">$0</a>', $inp_text);
 		}
 		else{
 			$inp_text = "";
