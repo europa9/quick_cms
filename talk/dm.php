@@ -271,6 +271,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$date_saying = date("j M Y");
 					$time = time();
 					$x = 0;
+
+					$last_conversation_user_id = "";
+
 					$query = "SELECT message_id, message_conversation_key, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_seen, message_attachment_type, message_attachment_path, message_attachment_file, message_from_user_id, message_from_ip, message_from_hostname, message_from_user_agent FROM $t_talk_dm_messages WHERE message_conversation_key='$get_current_conversation_key' ORDER BY message_id ASC";
 					$result = mysqli_query($link, $query);
 					while($row = mysqli_fetch_row($result)) {
@@ -305,83 +308,98 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								$get_message_seen = "1";
 							}
 							echo"
-
 							<table>
 							 <tr>
 							  <td style=\"padding: 5px 5px 0px 0px;vertical-align:top;\">
-								<!-- Img -->
-								<p>";
-								if($get_current_conversation_f_image_file != "" && file_exists("$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_file")){
-									if(!(file_exists("$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_thumb40")) && $get_current_conversation_f_image_thumb40 != ""){
-										// Make thumb
-										$inp_new_x = 40; // 950
-										$inp_new_y = 40; // 640
-										resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_file", "$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_thumb40");
-									}
-
-									if(file_exists("$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_thumb40") && $get_current_conversation_f_image_thumb40 != ""){
+								<!-- Img -->";
+									if($last_conversation_user_id == "$get_current_conversation_f_user_id"){
 										echo"
-										<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_f_user_id&amp;l=$l\"><img src=\"$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_thumb40\" alt=\"$get_current_conversation_f_image_thumb40\" class=\"talk_messages_from_user_image\" /></a>
-										";
+										<div style=\"width: 40px;\"></div>";
 									}
-								}
-								else{
+									else{
+										echo"
+										<p>";
+										if($get_current_conversation_f_image_file != "" && file_exists("$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_file")){
+											if(!(file_exists("$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_thumb40")) && $get_current_conversation_f_image_thumb40 != ""){
+												// Make thumb
+												$inp_new_x = 40; // 950
+												$inp_new_y = 40; // 640
+												resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_file", "$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_thumb40");
+											}
+
+											if(file_exists("$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_thumb40") && $get_current_conversation_f_image_thumb40 != ""){
+												echo"
+												<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_f_user_id&amp;l=$l\"><img src=\"$root/$get_current_conversation_f_image_path/$get_current_conversation_f_image_thumb40\" alt=\"$get_current_conversation_f_image_thumb40\" class=\"talk_messages_from_user_image\" /></a>
+												";
+											}
+										}
+										else{
+											echo"
+											<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_f_user_id&amp;l=$l\"><img src=\"_gfx/avatar_blank_40.png\" alt=\"avatar_blank_40.png\" class=\"talk_messages_from_user_image\" /></a>
+											";
+										}
+										echo"
+										</p>";
+									}
 									echo"
-									<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_f_user_id&amp;l=$l\"><img src=\"_gfx/avatar_blank_40.png\" alt=\"avatar_blank_40.png\" class=\"talk_messages_from_user_image\" /></a>
-									";
-								}
-								echo"
-								</p>
 								<!-- //Img -->
 							  </td>
 							  <td style=\"vertical-align:top;\">
-								<!-- Name and text -->	
-								<p>
-								<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_f_user_id&amp;l=$l\" class=\"talk_messages_from_user_alias\" title=\"$get_current_conversation_f_user_alias\">$get_current_conversation_f_user_nickname</a>
-								<span class=\"talk_messages_date_and_time\">";
-								if($date_saying != "$get_message_date_saying"){
-									echo"$get_message_date_saying ";
-								}
-								echo"$get_message_time_saying</span>";
-						
-								if($get_message_seen == "2"){
-									echo" <img src=\"_gfx/seen_$get_message_seen.png\" alt=\"seen_$get_message_seen.png\" class=\"dm_message_seen_icon\" />";
-								}
-								if($get_current_conversation_f_user_id == "$my_user_id"){
-									echo"
-									<a href=\"dm.php?action=delete_message&amp;message_id=$get_message_id&amp;t_user_id=$get_to_user_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/delete_grey_16x16.png\" alt=\"delete.png\" /></a>
-									";
-								}
-								echo"<br />
-								";
-								// Attachment?
-								if($get_message_attachment_file != ""){
-									if(file_exists("$root/$get_message_attachment_path/$get_message_attachment_file")){
-										if($get_message_attachment_type == "jpg" OR $get_message_attachment_type == "png" OR $get_message_attachment_type == "gif"){
-											echo"
-											<img src=\"$root/$get_message_attachment_path/$get_message_attachment_file\" alt=\"$get_message_attachment_path/$get_message_attachment_file\" /><br />
-											\n";
-										}
-										else{
-											$icon = $get_message_attachment_type . "_32x32.png";
-											echo"
-											<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/$icon\" alt=\"$icon\" style=\"float: left;\"></a>
-											<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\" style=\"float: left;padding: 8px 0px 0px 8px;\">$get_message_attachment_file</a>
-											<br class=\"clear\" />";
-										}
+								<!-- Name and text -->
+									<p>";
+									if($last_conversation_user_id == "$get_current_conversation_f_user_id"){
 									}
 									else{
-										echo"<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/dialog_warning_16x16.png\" alt=\"dialog_warning_16x16.png\"> Attachment not found</a>";
+										echo"
+										<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_f_user_id&amp;l=$l\" class=\"talk_messages_from_user_alias\" title=\"$get_current_conversation_f_user_alias\">$get_current_conversation_f_user_nickname</a>
+										<span class=\"talk_messages_date_and_time\">";
+										if($date_saying != "$get_message_date_saying"){
+											echo"$get_message_date_saying ";
+										}
+										echo"$get_message_time_saying</span>";
+						
+										if($get_message_seen == "2"){
+											echo" <img src=\"_gfx/seen_$get_message_seen.png\" alt=\"seen_$get_message_seen.png\" class=\"dm_message_seen_icon\" />";
+										}
+										if($get_current_conversation_f_user_id == "$my_user_id"){
+											echo"
+											<a href=\"dm.php?action=delete_message&amp;message_id=$get_message_id&amp;t_user_id=$get_to_user_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/delete_grey_16x16.png\" alt=\"delete.png\" /></a>
+											";
+										}
+										echo"<br />
+										";
 									}
-								}
-								echo"$get_message_text
-								</p>
+									// Attachment?
+									if($get_message_attachment_file != ""){
+										if(file_exists("$root/$get_message_attachment_path/$get_message_attachment_file")){
+											if($get_message_attachment_type == "jpg" OR $get_message_attachment_type == "png" OR $get_message_attachment_type == "gif"){
+												echo"
+												<img src=\"$root/$get_message_attachment_path/$get_message_attachment_file\" alt=\"$get_message_attachment_path/$get_message_attachment_file\" /><br />
+												\n";
+											}
+											else{
+												$icon = $get_message_attachment_type . "_32x32.png";
+												echo"
+												<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/$icon\" alt=\"$icon\" style=\"float: left;\"></a>
+												<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\" style=\"float: left;padding: 8px 0px 0px 8px;\">$get_message_attachment_file</a>
+												<br class=\"clear\" />";
+											}
+										}
+										else{
+											echo"<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/dialog_warning_16x16.png\" alt=\"dialog_warning_16x16.png\"> Attachment not found</a>";
+										}
+									}
+									echo"$get_message_text
+									</p>
 								<!-- //Name and text -->
 							  </td>
 							 </tr>
 							</table>
 							";
 
+
+							// Last conversation user id 
+							$last_conversation_user_id = "$get_current_conversation_f_user_id";
 
 		
 						}
@@ -395,70 +413,86 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							<table>
 							 <tr>
 							  <td style=\"padding: 5px 5px 0px 0px;vertical-align:top;\">
-								<!-- Img -->
-								<p>";
-								if($get_current_conversation_t_image_file != "" && file_exists("$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_file")){
-									if(!(file_exists("$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_thumb40")) && $get_current_conversation_t_image_thumb40 != ""){
-										// Make thumb
-										$inp_new_x = 40; // 950
-										$inp_new_y = 40; // 640
-										resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_file", "$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_thumb40");
-									}
-
-									if(file_exists("$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_thumb40") && $get_current_conversation_t_image_thumb40 != ""){
+								<!-- Img -->";
+									if($last_conversation_user_id == "$get_current_conversation_t_user_id"){
 										echo"
-										<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_t_user_id&amp;l=$l\"><img src=\"$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_thumb40\" alt=\"$get_current_conversation_t_image_thumb40\" class=\"talk_messages_from_user_image\" /></a>
+										<div style=\"width: 40px;\"></div>";
+									}
+									else{
+										echo"
+										<p>";
+										if($get_current_conversation_t_image_file != "" && file_exists("$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_file")){
+											if(!(file_exists("$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_thumb40")) && $get_current_conversation_t_image_thumb40 != ""){
+												// Make thumb
+												$inp_new_x = 40; // 950
+												$inp_new_y = 40; // 640
+												resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_file", "$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_thumb40");
+											}
+
+											if(file_exists("$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_thumb40") && $get_current_conversation_t_image_thumb40 != ""){
+												echo"
+												<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_t_user_id&amp;l=$l\"><img src=\"$root/$get_current_conversation_t_image_path/$get_current_conversation_t_image_thumb40\" alt=\"$get_current_conversation_t_image_thumb40\" class=\"talk_messages_from_user_image\" /></a>
+												";
+											}
+										}
+										else{
+											echo"
+											<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_t_user_id&amp;l=$l\"><img src=\"_gfx/avatar_blank_40.png\" alt=\"avatar_blank_40.png\" class=\"talk_messages_from_user_image\" /></a>
+											";
+										}
+										echo"
+										</p>
 										";
 									}
-								}
-								else{
 									echo"
-									<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_t_user_id&amp;l=$l\"><img src=\"_gfx/avatar_blank_40.png\" alt=\"avatar_blank_40.png\" class=\"talk_messages_from_user_image\" /></a>
-									";
-								}
-								echo"
-								</p>
 								<!-- //Img -->
 							  </td>
 							  <td style=\"vertical-align:top;\">
-								<!-- Name and text -->	
-								<p>
-								<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_t_user_id&amp;l=$l\" class=\"talk_messages_from_user_alias\" title=\"$get_current_conversation_t_user_alias\">$get_current_conversation_t_user_nickname</a>
-								<span class=\"talk_messages_date_and_time\">";
-								if($date_saying != "$get_message_date_saying"){
-									echo"$get_message_date_saying ";
-								}
-								echo"$get_message_time_saying</span>";
-								if($get_message_seen == "2"){
-									echo" <img src=\"_gfx/seen_$get_message_seen.png\" alt=\"seen_$get_message_seen.png\" class=\"dm_message_seen_icon\" />";
-								}
-								if($get_current_conversation_t_user_id == "$my_user_id"){
-									echo"
-									<a href=\"dm.php?action=delete_message&amp;message_id=$get_message_id&amp;t_user_id=$get_to_user_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/delete_grey_16x16.png\" alt=\"delete.png\" /></a>
-									";
-								}
-								echo"<br />
-								";
-								// Attachment?
-								if($get_message_attachment_file != ""){
-									if(file_exists("$root/$get_message_attachment_path/$get_message_attachment_file")){
-										if($get_message_attachment_type == "jpg" OR $get_message_attachment_type == "png" OR $get_message_attachment_type == "gif"){
-											echo"
-											<img src=\"$root/$get_message_attachment_path/$get_message_attachment_file\" alt=\"$get_message_attachment_path/$get_message_attachment_file\" /><br />
-											\n";
-										}
-										else{
-											$icon = $get_message_attachment_type . "_32x32.png";
-											echo"
-											<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/$icon\" alt=\"$icon\" style=\"float: left;\"></a>
-											<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\" style=\"float: left;padding: 8px 0px 0px 8px;\">$get_message_attachment_file</a>
-											<br class=\"clear\" />";
-										}
+								<!-- Name and text -->
+									<p>";
+									if($last_conversation_user_id == "$get_current_conversation_t_user_id"){
+										echo"
+										";
 									}
 									else{
-										echo"<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/dialog_warning_16x16.png\" alt=\"dialog_warning_16x16.png\"> Attachment not found</a>";
+										echo"
+										<a href=\"$root/users/view_profile.php?user_id=$get_current_conversation_t_user_id&amp;l=$l\" class=\"talk_messages_from_user_alias\" title=\"$get_current_conversation_t_user_alias\">$get_current_conversation_t_user_nickname</a>
+										<span class=\"talk_messages_date_and_time\">";
+										if($date_saying != "$get_message_date_saying"){
+											echo"$get_message_date_saying ";
+										}
+										echo"$get_message_time_saying</span>";
+										if($get_message_seen == "2"){
+											echo" <img src=\"_gfx/seen_$get_message_seen.png\" alt=\"seen_$get_message_seen.png\" class=\"dm_message_seen_icon\" />";
+										}
+										if($get_current_conversation_t_user_id == "$my_user_id"){
+											echo"
+											<a href=\"dm.php?action=delete_message&amp;message_id=$get_message_id&amp;t_user_id=$get_to_user_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/delete_grey_16x16.png\" alt=\"delete.png\" /></a>
+											";
+										}
+										echo"<br />
+										";
 									}
-								}
+									// Attachment?
+									if($get_message_attachment_file != ""){
+										if(file_exists("$root/$get_message_attachment_path/$get_message_attachment_file")){
+											if($get_message_attachment_type == "jpg" OR $get_message_attachment_type == "png" OR $get_message_attachment_type == "gif"){
+												echo"
+												<img src=\"$root/$get_message_attachment_path/$get_message_attachment_file\" alt=\"$get_message_attachment_path/$get_message_attachment_file\" /><br />
+												\n";
+											}
+											else{
+												$icon = $get_message_attachment_type . "_32x32.png";
+												echo"
+												<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/$icon\" alt=\"$icon\" style=\"float: left;\"></a>
+												<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\" style=\"float: left;padding: 8px 0px 0px 8px;\">$get_message_attachment_file</a>
+												<br class=\"clear\" />";
+											}
+										}
+										else{
+											echo"<a href=\"$root/$get_message_attachment_path/$get_message_attachment_file\"><img src=\"_gfx/dialog_warning_16x16.png\" alt=\"dialog_warning_16x16.png\"> Attachment not found</a>";
+										}
+									}
 								echo"
 								$get_message_text
 								</p>
@@ -467,6 +501,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							 </tr>
 							</table>
 							";
+
+							// Last conversation user id 
+							$last_conversation_user_id = "$get_current_conversation_t_user_id";
 						}
 
 

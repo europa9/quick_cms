@@ -24,6 +24,7 @@ else{ $root = "../../.."; }
 
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
+include("$root/_admin/_data/talk.php");
 
 /*- Tables ---------------------------------------------------------------------------- */
 $t_talk_channels_index		= $mysqlPrefixSav . "talk_channels_index";
@@ -33,6 +34,14 @@ $t_talk_users_starred_channels	= $mysqlPrefixSav . "talk_users_starred_channels"
 
 $t_talk_dm_conversations = $mysqlPrefixSav . "talk_dm_conversations";
 $t_talk_dm_messages	 = $mysqlPrefixSav . "talk_dm_messages";
+
+/*- Functions ------------------------------------------------------------------------- */
+if($talkEncryptionMethodDmsSav == "openssl_encrypt(AES-128-CBC)"){
+	include("_encrypt_decrypt/openssl_encrypt_aes-128-cbc.php");
+}
+elseif($talkEncryptionMethodDmsSav == "caesar_cipher(random)"){
+	include("_encrypt_decrypt/caesar_cipher.php");
+}
 
 /*- Variables ------------------------------------------------------------------------- */
 $tabindex = 0;
@@ -190,7 +199,21 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 					// Store
 					$inp_text = output_html($inp_file_name);
-					$inp_text_mysql = quote_smart($link, $inp_text);
+
+					// Encrypt text
+					if($talkEncryptionMethodDmsSav == "none"){
+						$inp_text_mysql = quote_smart($link, $inp_text);
+					}
+					elseif($talkEncryptionMethodDmsSav == "openssl_encrypt(AES-128-CBC)"){
+						$inp_text_encrypted = openssl_encrypt_aes_128_cbc_encrypt($inp_text, $get_current_conversation_encryption_key);
+						$inp_text_mysql = quote_smart($link, $inp_text_encrypted);
+					}
+					elseif($talkEncryptionMethodDmsSav == "caesar_cipher(random)"){
+						$cipher = new KKiernan\CaesarCipher(); 
+						$inp_text_encrypted = $cipher->encrypt($inp_text, $get_current_conversation_encryption_key);
+						$inp_text_mysql = quote_smart($link, $inp_text_encrypted);
+					}
+
 
 					$inp_attachment_type = "$extension";
 					$inp_attachment_type = output_html($inp_attachment_type);

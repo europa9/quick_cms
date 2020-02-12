@@ -223,6 +223,7 @@ if($action == ""){
 				$inp_notification_text_mysql = quote_smart($link, $inp_notification_text);
 
 				$datetime = date("Y-m-d H:i:s");
+				$datetime_saying = date("j M Y H:i");
 				$week = date("W");
 
 				// Check if notification already exists, if it does, then delete, then insert
@@ -235,9 +236,9 @@ if($action == ""){
 				}
 					
 				mysqli_query($link, "INSERT INTO $t_users_notifications
-				(notification_id, notification_user_id, notification_reference_id_text, notification_seen, notification_url, notification_text, notification_datetime, notification_emailed, notification_week) 
+				(notification_id, notification_user_id, notification_reference_id_text, notification_seen, notification_url, notification_text, notification_datetime, notification_datetime_saying, notification_emailed, notification_week) 
 				VALUES 
-				(NULL, $get_task_assigned_to_user_id, $inp_notification_reference_id_text_mysql, 0, $inp_notification_url_mysql, $inp_notification_text_mysql, '$datetime', 0, $week)")
+				(NULL, $get_task_assigned_to_user_id, $inp_notification_reference_id_text_mysql, 0, $inp_notification_url_mysql, $inp_notification_text_mysql, '$datetime', '$datetime_saying', 0, $week)")
 				or die(mysqli_error($link));
 			}
 		
@@ -1487,7 +1488,7 @@ $inp_history_new_hours_planned_mysql , $inp_history_new_hours_used_mysql )")
 			
 			// Email if assigned to new person
 			$fm_email = "";
-			if($get_current_task_assigned_to_user_id != "$inp_assigned_to_user_id" && $inp_assigned_to_user_email != ""){
+			if($get_current_task_assigned_to_user_id != "$inp_assigned_to_user_id" && $inp_assigned_to_user_email != "" && $inp_assigned_to_user_id != "$get_my_user_id"){
 				
 				$subject = "Task $inp_title reassiged to you at $configWebsiteTitleSav";
 
@@ -1547,10 +1548,11 @@ $inp_history_new_hours_planned_mysql , $inp_history_new_hours_used_mysql )")
 				$inp_notification_url = "$configControlPanelURLSav/index.php?open=dashboard&page=tasks&action=open_task&task_id=$get_current_task_id&editor_language=$editor_language&l=$l";
 				$inp_notification_url_mysql = quote_smart($link, $inp_notification_url);
 	
-				$inp_notification_text = "Task &quot;$inp_title&quot;  has been reassigned to you by $get_my_user_alias";
+				$inp_notification_text = "Task &quot;$inp_title&quot; has been reassigned to you by $get_my_user_alias";
 				$inp_notification_text_mysql = quote_smart($link, $inp_notification_text);
 
 				$week = date("W");
+				$datetime_saying = date("j M Y H:i");
 				
 				// Check if notification already exists, if it does, then delete, then insert
 				$query = "SELECT notification_id FROM $t_users_notifications WHERE notification_user_id=$inp_assigned_to_user_id AND notification_reference_id_text=$inp_notification_reference_id_text_mysql";
@@ -1563,9 +1565,9 @@ $inp_history_new_hours_planned_mysql , $inp_history_new_hours_used_mysql )")
 
 
 				mysqli_query($link, "INSERT INTO $t_users_notifications
-				(notification_id, notification_user_id, notification_reference_id_text, notification_seen, notification_url, notification_text, notification_datetime, notification_emailed, notification_week) 
+				(notification_id, notification_user_id, notification_reference_id_text, notification_seen, notification_url, notification_text, notification_datetime, notification_datetime_saying, notification_emailed, notification_week) 
 				VALUES 
-				(NULL, $inp_assigned_to_user_id, $inp_notification_reference_id_text_mysql, 0, $inp_notification_url_mysql, $inp_notification_text_mysql, '$datetime', 0, $week)")
+				(NULL, $inp_assigned_to_user_id, $inp_notification_reference_id_text_mysql, 0, $inp_notification_url_mysql, $inp_notification_text_mysql, '$datetime', '$datetime_saying', 0, $week)")
 				or die(mysqli_error($link));
 			}
 
@@ -1637,6 +1639,7 @@ $inp_history_new_hours_planned_mysql , $inp_history_new_hours_used_mysql )")
 					$inp_notification_text_mysql = quote_smart($link, $inp_notification_text);
 
 					$week = date("W");
+					$datetime_saying = date("j M Y H:i");
 
 					// Check if notification already exists, if it does, then delete, then insert
 					$query = "SELECT notification_id FROM $t_users_notifications WHERE notification_user_id=$get_subscription_user_id AND notification_reference_id_text=$inp_notification_reference_id_text_mysql";
@@ -1648,9 +1651,9 @@ $inp_history_new_hours_planned_mysql , $inp_history_new_hours_used_mysql )")
 					}
 					
 					mysqli_query($link, "INSERT INTO $t_users_notifications
-					(notification_id, notification_user_id, notification_reference_id_text, notification_seen, notification_url, notification_text, notification_datetime, notification_emailed, notification_week) 
+					(notification_id, notification_user_id, notification_reference_id_text, notification_seen, notification_url, notification_text, notification_datetime, notification_datetime_saying, notification_emailed, notification_week) 
 					VALUES 
-					(NULL, $get_subscription_user_id, $inp_notification_reference_id_text_mysql, 0, $inp_notification_url_mysql, $inp_notification_text_mysql, '$datetime', 0, $week)")
+					(NULL, $get_subscription_user_id, $inp_notification_reference_id_text_mysql, 0, $inp_notification_url_mysql, $inp_notification_text_mysql, '$datetime', '$datetime_saying', 0, $week)")
 					or die(mysqli_error($link));
 
 				} // not extra emails
@@ -1867,7 +1870,18 @@ $inp_history_new_hours_planned_mysql , $inp_history_new_hours_used_mysql )")
 	
 
 			<p>Text: (<a href=\"index.php?open=dashboard&amp;page=tasks_attachments&amp;task_id=$get_current_task_id&amp;l=$l\" target=\"_blank\">Attachments</a>)<br />
-			<textarea name=\"inp_text\" rows=\"10\" cols=\"80\" class=\"editor\">$get_current_task_text</textarea><br />
+			";
+			$my_user_id = $_SESSION['user_id'];
+			$my_user_id = output_html($my_user_id);
+			$my_user_id_mysql = quote_smart($link, $my_user_id);
+			$query = "SELECT user_id, user_email, user_name, user_alias, user_rank FROM $t_users WHERE user_id=$my_user_id_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_my_user_id, $get_my_user_email, $get_my_user_name, $get_my_user_alias, $get_my_user_rank) = $row;
+			$date_saying = date("j M Y");
+			echo"<textarea name=\"inp_text\" rows=\"10\" cols=\"80\" class=\"editor\">$get_current_task_text
+			<p><br /><br /><b>$date_saying $get_my_user_name</b><br />
+			-</p></textarea><br />
 			</p>
 
 

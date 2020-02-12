@@ -106,6 +106,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<span>$l_notification</span>
 		   </th>
 		   <th scope=\"col\">
+			<span>$l_date</span>
+		   </th>
+		   <th scope=\"col\">
 			<span>$l_actions</span>
 		   </th>
 		  </tr>
@@ -113,10 +116,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		 <tbody>
 		";
 		$x = 0;		
-		$query = "SELECT notification_id, notification_user_id, notification_seen, notification_url, notification_text, notification_datetime, notification_emailed, notification_week FROM $t_users_notifications WHERE notification_user_id=$get_user_id ORDER BY notification_id DESC";
+		$query = "SELECT notification_id, notification_user_id, notification_seen, notification_url, notification_text, notification_datetime, notification_datetime_saying, notification_emailed, notification_week FROM $t_users_notifications WHERE notification_user_id=$get_user_id ORDER BY notification_id DESC";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
-			list($get_notification_id, $get_notification_user_id, $get_notification_seen, $get_notification_url, $get_notification_text, $get_notification_datetime, $get_notification_emailed, $get_notification_week) = $row;
+			list($get_notification_id, $get_notification_user_id, $get_notification_seen, $get_notification_url, $get_notification_text, $get_notification_datetime, $get_notification_datetime_saying, $get_notification_emailed, $get_notification_week) = $row;
 
 			if(isset($odd) && $odd == false){
 				$odd = true;
@@ -126,14 +129,17 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			}
 	
 			echo"
-			<tr>
+			 <tr>
 			  <td"; if($odd == true){ echo" class=\"odd\""; } echo">
-				<span><a href=\"notifications.php?action=visit&amp;notification_id=$get_notification_id&amp;l=$l&amp;process=1\">$get_notification_text</a></span>
+				<span><a href=\"notifications.php?action=visit&amp;notification_id=$get_notification_id&amp;l=$l&amp;process=1\""; if($get_notification_seen == "0"){ echo"style=\"font-weight: bold;\""; } echo">$get_notification_text</a></span>
+			  </td>
+			  <td"; if($odd == true){ echo" class=\"odd\""; } echo">
+				<span>$get_notification_datetime_saying</span>
 			  </td>
 			  <td"; if($odd == true){ echo" class=\"odd\""; } echo">
 				<span><a href=\"notifications.php?action=delete&amp;notification_id=$get_notification_id&amp;l=$l&amp;process=1\">$l_delete</a></span>
 			  </td>
-			</tr>
+			 </tr>
 			";
 
 			$x++;
@@ -180,10 +186,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		}
 		$notification_id_mysql = quote_smart($link, $notification_id);
 		
-		$query = "SELECT notification_id, notification_user_id, notification_seen, notification_url, notification_text, notification_datetime, notification_emailed, notification_week FROM $t_users_notifications WHERE notification_id=$notification_id_mysql AND notification_user_id=$get_user_id";
+		$query = "SELECT notification_id, notification_user_id, notification_seen, notification_url, notification_text, notification_datetime, notification_datetime_saying, notification_emailed, notification_week FROM $t_users_notifications WHERE notification_id=$notification_id_mysql AND notification_user_id=$get_user_id";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
-		list($get_current_notification_id, $get_current_notification_user_id, $get_current_notification_seen, $get_current_notification_url, $get_current_notification_text, $get_current_notification_datetime, $get_current_notification_emailed, $get_current_notification_week) = $row;
+		list($get_current_notification_id, $get_current_notification_user_id, $get_current_notification_seen, $get_current_notification_url, $get_current_notification_text, $get_current_notification_datetime, $get_current_notification_datetime_saying, $get_current_notification_emailed, $get_current_notification_week) = $row;
 			
 		// Delete
 		$result = mysqli_query($link, "DELETE FROM $t_users_notifications WHERE notification_id=$get_current_notification_id");
