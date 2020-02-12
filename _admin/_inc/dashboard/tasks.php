@@ -759,7 +759,7 @@ elseif($action == "open_task"){
 			<a href=\"index.php?open=$open&amp;page=$page&amp;action=edit_task&amp;task_id=$get_current_task_id&amp;l=$l\" class=\"btn_default\">Edit task</a>
 			<a href=\"index.php?open=$open&amp;page=$page&amp;action=delete_task&amp;task_id=$get_current_task_id&amp;l=$l\" class=\"btn_default\">Delete task</a>
 			<a href=\"index.php?open=$open&amp;page=$page&amp;action=archive_task&amp;task_id=$get_current_task_id&amp;l=$l\" class=\"btn_default\">Archive task</a>
-			</p>
+			</p> 
 		<!-- Menu -->
 
 
@@ -839,16 +839,48 @@ elseif($action == "open_task"){
 					 </tr>
 					 <tr>
 					  <td style=\"padding-right: 4px;\">
-						<span style=\"font-weight: bold;\">Due:</span>
+						<span style=\"font-weight: bold;\">Status:</span>
 					  </td>
 					  <td>
-						<span>$get_current_task_due_translated</span>
+						<span><select name=\"inp_status_code_id\" class=\"on_select_go_to_url\">";
+						$query = "SELECT status_code_id, status_code_title FROM $t_tasks_status_codes ORDER BY status_code_weight ASC";
+						$result = mysqli_query($link, $query);
+						while($row = mysqli_fetch_row($result)) {
+						list($get_status_code_id, $get_status_code_title) = $row;
+							echo"			<option value=\"index.php?open=dashboard&amp;page=tasks&amp;action=edit_task_status&amp;task_id=$get_current_task_id&amp;status_code_id=$get_status_code_id&amp;l=$l&amp;process=1\""; if($get_current_task_status_code_id == "$get_status_code_id"){ echo" selected=\"selected\""; } echo">$get_status_code_title</option>\n";
+						}
+						echo"
+						</select></span>
+
+						<!-- On select go to url -->
+						<script>
+							\$(function(){
+								// bind change event to select
+								\$('.on_select_go_to_url').on('change', function () {
+       									var url = \$(this).val(); // get selected value
+      									if (url) { // require a URL
+       										window.location = url; // redirect
+      									}
+									return false;
+								});
+							});
+						</script>
+						<!-- //On select go to url -->
+
 					  </td>
 					 </tr>
 					</table>
 				</div>
 				<div style=\"flex: 1;\">
 					<table>
+					 <tr>
+					  <td style=\"padding-right: 4px;\">
+						<span style=\"font-weight: bold;\">Due:</span>
+					  </td>
+					  <td>
+						<span>$get_current_task_due_translated</span>
+					  </td>
+					 </tr>
 					 <tr>
 					  <td style=\"padding-right: 4px;\">
 						<span style=\"font-weight: bold;\">Created by:</span>
@@ -2006,6 +2038,171 @@ $inp_history_new_hours_planned_mysql , $inp_history_new_hours_used_mysql )")
 		";
 	}
 } // edit task
+elseif($action == "edit_task_status"){
+	// Get task
+	$task_id_mysql = quote_smart($link, $task_id);
+	$query = "SELECT task_id, task_system_task_abbr, task_system_incremented_number, task_project_task_abbr, task_project_incremented_number, task_title, task_text, task_status_code_id, task_priority_id, task_created_datetime, task_created_translated,  task_created_by_user_id, task_created_by_user_alias, task_created_by_user_image, task_created_by_user_email, task_updated_datetime, task_updated_translated, task_due_datetime, task_due_time, task_due_translated, task_assigned_to_user_id, task_assigned_to_user_alias, task_assigned_to_user_image, task_assigned_to_user_email, task_hours_planned, task_hours_used, task_qa_datetime, task_qa_by_user_id, task_qa_by_user_alias, task_qa_by_user_image, task_qa_by_user_email, task_finished_datetime, task_finished_by_user_id, task_finished_by_user_alias, task_finished_by_user_image, task_finished_by_user_email, task_is_archived, task_comments, task_project_id, task_project_part_id, task_system_id, task_system_part_id FROM $t_tasks_index WHERE task_id=$task_id_mysql";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_current_task_id, $get_current_task_system_task_abbr, $get_current_task_system_incremented_number, $get_current_task_project_task_abbr, $get_current_task_project_incremented_number, $get_current_task_title, $get_current_task_text, $get_current_task_status_code_id, $get_current_task_priority_id, $get_current_task_created_datetime, $get_current_task_created_translated, $get_current_task_created_by_user_id, $get_current_task_created_by_user_alias, $get_current_task_created_by_user_image, $get_current_task_created_by_user_email, $get_current_task_updated_datetime, $get_current_task_updated_translated, $get_current_task_due_datetime, $get_current_task_due_time, $get_current_task_due_translated, $get_current_task_assigned_to_user_id, $get_current_task_assigned_to_user_alias, $get_current_task_assigned_to_user_image, $get_current_task_assigned_to_user_email, $get_current_task_hours_planned, $get_current_task_hours_used, $get_current_task_qa_datetime, $get_current_task_qa_by_user_id, $get_current_task_qa_by_user_alias, $get_current_task_qa_by_user_image, $get_current_task_qa_by_user_email, $get_current_task_finished_datetime, $get_current_task_finished_by_user_id, $get_current_task_finished_by_user_alias, $get_current_task_finished_by_user_image, $get_current_task_finished_by_user_email, $get_current_task_is_archived, $get_current_task_comments, $get_current_task_project_id, $get_current_task_project_part_id, $get_current_task_system_id, $get_current_task_system_part_id) = $row;
+	if($get_current_task_id == ""){
+		echo"<p>Server error 404</p>";
+	}
+	else{
+		if($process == 1){
+
+
+			$inp_status_code_id = $_GET['status_code_id'];
+			$inp_status_code_id = output_html($inp_status_code_id);
+			$inp_status_code_id_mysql = quote_smart($link, $inp_status_code_id);
+
+		
+			// Update status_code_count_tasks
+			$query = "SELECT status_code_id, status_code_title, status_code_count_tasks FROM $t_tasks_status_codes WHERE status_code_id=$inp_status_code_id_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_status_code_id, $get_status_code_title, $get_status_code_count_tasks) = $row;
+			if($get_status_code_id != "$get_current_task_status_code_id"){
+				// Update new status code with +1
+				$inp_status_code_count_tasks = $get_status_code_count_tasks+1;
+				$result = mysqli_query($link, "UPDATE $t_tasks_status_codes SET status_code_count_tasks='$inp_status_code_count_tasks' WHERE status_code_id=$get_status_code_id");
+
+				// Update old status code with -1
+				$query = "SELECT status_code_id, status_code_count_tasks FROM $t_tasks_status_codes WHERE status_code_id=$get_current_task_status_code_id";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_status_code_id, $get_status_code_count_tasks) = $row;
+				$inp_status_code_count_tasks = $get_status_code_count_tasks-1;
+				$result = mysqli_query($link, "UPDATE $t_tasks_status_codes SET status_code_count_tasks='$inp_status_code_count_tasks' WHERE status_code_id=$get_current_task_status_code_id");
+
+			}
+			$inp_status_code_title_mysql = quote_smart($link, $get_status_code_title);
+
+			$inp_history_new_status_code_id = "0";
+			$inp_history_new_status_code_title = "";
+			if($get_current_task_status_code_id != "$inp_status_code_id"){
+				$inp_history_new_status_code_id = "$inp_status_code_id";
+				$inp_history_new_status_code_title = "$get_status_code_title";
+
+				$inp_history_summary = "New status: $get_status_code_title";
+			}
+			$inp_history_new_status_code_id_mysql = quote_smart($link, $inp_history_new_status_code_id);
+			$inp_history_new_status_code_title_mysql = quote_smart($link, $inp_history_new_status_code_title);
+			
+
+			// Updated
+			$datetime = date("Y-m-d H:i:s");
+			$inp_updated_translated = date("d");
+			$month = date("m");
+			$year = date("Y");
+			if($month == "01"){
+				$inp_updated_translated = $inp_updated_translated . " $l_january";
+			}
+			elseif($month == "2"){
+				$inp_updated_translated = $inp_updated_translated . " $l_february";
+			}
+			elseif($month == "03"){
+				$inp_updated_translated = $inp_updated_translated . " $l_march";
+			}
+			elseif($month == "04"){
+				$inp_updated_translated = $inp_updated_translated . " $l_april";
+			}
+			elseif($month == "05"){
+				$inp_updated_translated = $inp_updated_translated . " $l_may";
+			}
+			elseif($month == "06"){
+				$inp_updated_translated = $inp_updated_translated . " $l_june";
+			}
+			elseif($month == "07"){
+				$inp_updated_translated = $inp_updated_translated . " $l_juli";
+			}
+			elseif($month == "08"){
+				$inp_updated_translated = $inp_updated_translated . " $l_august";
+			}
+			elseif($month == "09"){
+				$inp_updated_translated = $inp_updated_translated . " $l_september";
+			}
+			elseif($month == "10"){
+				$inp_updated_translated = $inp_updated_translated . " $l_october";
+			}
+			elseif($month == "11"){
+				$inp_updated_translated = $inp_updated_translated . " $l_november";
+			}
+			elseif($month == "12"){
+				$inp_updated_translated = $inp_updated_translated . " $l_december";
+			}
+			$inp_updated_translated = $inp_updated_translated . " $year";
+			$inp_updated_translated = output_html($inp_updated_translated);
+			$inp_updated_translated_mysql = quote_smart($link, $inp_updated_translated);
+
+			// Update
+			$result = mysqli_query($link, "UPDATE $t_tasks_index SET 
+							task_status_code_id=$inp_status_code_id_mysql, 
+							task_status_code_title=$inp_status_code_title_mysql,
+							task_updated_datetime='$datetime', 
+							task_updated_translated=$inp_updated_translated_mysql
+							 WHERE task_id=$get_current_task_id") or die(mysqli_error($link));
+
+
+			// Fetch my id and alias
+			$my_user_id = $_SESSION['user_id'];
+			$my_user_id = output_html($my_user_id);
+			$my_user_id_mysql = quote_smart($link, $my_user_id);
+			$query = "SELECT user_id, user_email, user_name, user_alias, user_rank FROM $t_users WHERE user_id=$my_user_id_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_my_user_id, $get_my_user_email, $get_my_user_name, $get_my_user_alias, $get_my_user_rank) = $row;
+
+			$query = "SELECT photo_id, photo_destination, photo_thumb_40, photo_thumb_50 FROM $t_users_profile_photo WHERE photo_user_id=$get_my_user_id AND photo_profile_image='1'";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_photo_id, $get_photo_destination, $get_photo_thumb_40, $get_photo_thumb_50) = $row;
+
+			$inp_updated_by_user_id = $get_my_user_id;
+			$inp_updated_by_user_id = output_html($inp_updated_by_user_id);
+			$inp_updated_by_user_id_mysql = quote_smart($link, $inp_updated_by_user_id);
+
+			$inp_updated_by_user_name = "$get_my_user_name";
+			$inp_updated_by_user_name = output_html($inp_updated_by_user_name);
+			$inp_updated_by_user_name_mysql = quote_smart($link, $inp_updated_by_user_name);
+
+			$inp_updated_by_user_alias = "$get_my_user_alias";
+			$inp_updated_by_user_alias = output_html($inp_updated_by_user_alias);
+			$inp_updated_by_user_alias_mysql = quote_smart($link, $inp_updated_by_user_alias);
+
+			$inp_updated_by_user_image = "$get_photo_destination";
+			$inp_updated_by_user_image = output_html($inp_updated_by_user_image);
+			$inp_updated_by_user_image_mysql = quote_smart($link, $inp_updated_by_user_image);
+
+			$inp_updated_by_user_thumb_a_mysql = quote_smart($link, $get_photo_thumb_40);
+			$inp_updated_by_user_thumb_b_mysql = quote_smart($link, $get_photo_thumb_50);
+
+			$inp_updated_by_user_email = "$get_my_user_email";
+			$inp_updated_by_user_email = output_html($inp_updated_by_user_email);
+			$inp_updated_by_user_email_mysql = quote_smart($link, $inp_updated_by_user_email);
+
+
+			// What has been changed? (t_tasks_history)
+			$inp_datetime_saying = date("d. M. Y H:i");			
+
+			$inp_history_summary_mysql = quote_smart($link, $inp_history_summary);
+			mysqli_query($link, "INSERT INTO $t_tasks_history 
+			(history_id, history_task_id, history_updated_by_user_id, history_updated_by_user_name, history_updated_by_user_alias, 
+			history_updated_by_user_email, history_updated_datetime, history_updated_datetime_saying, history_summary, 
+			history_new_status_code_id, history_new_status_code_title) 
+			VALUES 
+			(NULL, $get_current_task_id, $my_user_id_mysql, $inp_updated_by_user_name_mysql, $inp_updated_by_user_alias_mysql,
+			$inp_updated_by_user_email_mysql, '$datetime', '$inp_datetime_saying',  $inp_history_summary_mysql, 
+			$inp_history_new_status_code_id_mysql, $inp_history_new_status_code_title_mysql)")
+			or die(mysqli_error($link));
+
+			
+
+			header("Location: index.php?open=dashboard&page=tasks&action=open_task&task_id=$get_current_task_id&ft=success&fm=changes_saved&fm_email=$fm_email");
+			exit;
+		}
+	}
+} // change_task_status
 elseif($action == "delete_task"){
 	// Get task
 	$task_id_mysql = quote_smart($link, $task_id);
