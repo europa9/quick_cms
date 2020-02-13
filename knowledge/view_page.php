@@ -243,7 +243,7 @@ else{
 				<!-- Head menu -->
 				<div class=\"knowledge_head_menu\">
 				<ul>
-					<li><a href=\"new_page.php?space_id=$get_current_space_id&amp;page_id=$get_current_page_id&amp;l=$l\"><img src=\"_gfx/icons/new_black_18dp.png\" alt=\"new_black_18dp.png\" title=\"$l_new\" /></a></li>";
+					<li><a href=\"new_page.php?space_id=$get_current_space_id&amp;page_id=$get_current_page_id&amp;l=$l\"><img src=\"_gfx/icons/new_black_18dp.png\" alt=\"new_black_18dp.png\" title=\"$l_new\" /> $l_new</a></li>";
 				
 				// Favorited?
 				if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
@@ -257,25 +257,25 @@ else{
 					$row = mysqli_fetch_row($result);
 					list($get_favorite_id, $get_favorite_page_id, $get_favorite_user_id, $get_favorite_category_id, $get_favorite_page_title, $get_favorite_page_description) = $row;
 					if($get_favorite_id == ""){
-						echo"					<li><a href=\"favorite_page.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/favorite_border_black_18dp.png\" alt=\"favorite_border_black_18dp.png\" title=\"$l_add_favorite\" /></a></li>\n";
+						echo"					<li><a href=\"favorite_page.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/favorite_border_black_18dp.png\" alt=\"favorite_border_black_18dp.png\" title=\"$l_add_favorite\" /> $l_add_favorite</a></li>\n";
 					}
 					else{
-						echo"					<li><a href=\"favorite_page.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/favorite_black_18dp.png\" alt=\"favorite_black_18dp.png\" title=\"$l_favorited\" /></a></li>\n";
+						echo"					<li><a href=\"favorite_page.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/favorite_black_18dp.png\" alt=\"favorite_black_18dp.png\" title=\"$l_favorited\" /> $l_favorited</a></li>\n";
 					}
 				}
 				else{
-					echo"					<li><a href=\"favorite_page.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/favorite_border_black_18dp.png\" alt=\"favorite_border_black_18dp.png\" title=\"$l_favorite\" /></a></li>\n";
+					echo"					<li><a href=\"favorite_page.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/favorite_border_black_18dp.png\" alt=\"favorite_border_black_18dp.png\" title=\"$l_favorite\" /> $l_favorite</a></li>\n";
 				}
 				echo"
-					<li><a href=\"edit_page.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l\"><img src=\"_gfx/icons/edit_black_18dp.png\" alt=\"edit_black_18dp.png\" title=\"$l_edit\" /></a></li>
-					<li><a href=\"delete_page.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l\"><img src=\"_gfx/icons/delete_black_18dp.png\" alt=\"delete_black_18dp.png\" title=\"$l_delete\" /></a></li>
-					<li><a href=\"move_page_up.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/keyboard_arrow_up_black_18dp.png\" alt=\"arrow_upward_black_18dp.png\" /></a></li>
-					<li><a href=\"move_page_down.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/keyboard_arrow_down_black_18dp.png\" alt=\"arrow_upward_black_18dp.png\" /></a></li>
-					<li><a href=\"page_history.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l\"><img src=\"_gfx/icons/history_black_18dp.png\" alt=\"history_black_18dp.png\" /></a></li>
-					<li><a href=\"print_page.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/print_black_18dp.png\" alt=\"print_black_18dp.png\" /></a></li>
+					<li><a href=\"edit_page.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l\"><img src=\"_gfx/icons/edit_black_18dp.png\" alt=\"edit_black_18dp.png\" title=\"$l_edit\" /> $l_edit</a></li>
+					<li><a href=\"delete_page.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l\"><img src=\"_gfx/icons/delete_black_18dp.png\" alt=\"delete_black_18dp.png\" title=\"$l_delete\" /> $l_delete</a></li>
+					<li><a href=\"move_page_up.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/keyboard_arrow_up_black_18dp.png\" alt=\"arrow_upward_black_18dp.png\" /> $l_up</a></li>
+					<li><a href=\"move_page_down.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/keyboard_arrow_down_black_18dp.png\" alt=\"arrow_upward_black_18dp.png\" /> $l_down</a></li>
+					<li><a href=\"page_history.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l\"><img src=\"_gfx/icons/history_black_18dp.png\" alt=\"history_black_18dp.png\" /> $l_history</a></li>
+					<li><a href=\"print_page.php?space_id=$get_current_page_space_id&amp;page_id=$get_current_page_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/print_black_18dp.png\" alt=\"print_black_18dp.png\" /> $l_print</a></li>
 
-					<li><a href=\"search.php?l=$l\"><img src=\"_gfx/icons/search_black_18dp.png\" alt=\"search_black_18dp.png\" title=\"$l_search\" /></a></li>
-					<li><a href=\"spaces_overview.php?l=$l\"><img src=\"_gfx/icons/home_black_18dp.png\" alt=\"home_black_18dp.png\" title=\"$l_home\" /></a></li>
+					<li><a href=\"search.php?l=$l\"><img src=\"_gfx/icons/search_black_18dp.png\" alt=\"search_black_18dp.png\" title=\"$l_search\" /> $l_search</a></li>
+					<li><a href=\"spaces_overview.php?l=$l\"><img src=\"_gfx/icons/home_black_18dp.png\" alt=\"home_black_18dp.png\" title=\"$l_home\" /> $l_home</a></li>
 				</ul>
 				</div>
 				<!-- Head menu -->

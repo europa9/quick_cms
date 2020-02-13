@@ -1,4 +1,5 @@
 <?php
+$l_change_space = "Velg omr&aring;de";
 $l_contents = "Innhold";
 $l_favorites = "Favoritter";
 $l_has_requested_membersip_lowercase = "har bedt om medlemskap.";

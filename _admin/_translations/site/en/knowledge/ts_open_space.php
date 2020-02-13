@@ -19,4 +19,5 @@ $l_spaces = "Spaces";
 $l_home = "Home";
 $l_table_of_contents = "Table of contents";
 $l_contents = "Contents";
+$l_change_space = "Change space";
 ?>

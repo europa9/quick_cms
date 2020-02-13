@@ -17,4 +17,8 @@ $l_table_of_contents = "Table of contents";
 $l_page = "Page";
 $l_description = "Description";
 $l_home = "Home";
+$l_up = "Up";
+$l_down = "Down";
+$l_history = "History";
+$l_print = "Print";
 ?>

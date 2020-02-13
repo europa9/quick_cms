@@ -235,7 +235,7 @@ else{
 						resize_crop_image(32, 32, "$root/_uploads/knowledge/space_$get_current_space_id/$get_current_space_image", "$root/_uploads/knowledge/space_$get_current_space_id/$get_current_space_thumb_32");
 					}
 
-					echo"<img src=\"$root/_uploads/knowledge/space_$get_current_space_id/$get_current_space_thumb_32\" alt=\"$get_current_space_image\" />\n";
+					echo"<img src=\"$root/_uploads/knowledge/space_$get_current_space_id/$get_current_space_thumb_32\" alt=\"Image $get_current_space_image\" />\n";
 				}
 				echo"
 				<h1>$get_current_space_title</h1>
@@ -246,19 +246,8 @@ else{
 			<!-- Space icons -->
 				<div class=\"knowledge_head_menu\">
 					<ul>
-						<li><select name=\"knowledge_spaces\" class=\"on_select_go_to_url\">";
-						$query_space = "SELECT space_id, space_title FROM $t_knowledge_spaces_index WHERE space_is_archived='0' ORDER BY space_title ASC";
-						$result_space = mysqli_query($link, $query_space);
-						while($row_space = mysqli_fetch_row($result_space)) {
-							list($get_space_id, $get_space_title) = $row_space;
-							echo"			";
-							echo"<option value=\"open_space.php?space_id=$get_space_id&amp;l=$l\""; if($get_space_id == "$get_current_space_id"){ echo" selected=\"selected\""; } echo">$get_space_title</option>\n";
-						}
-				
 
-						echo"</select></li>
-
-						<li><a href=\"new_page.php?space_id=$get_current_space_id&amp;l=$l\"><img src=\"_gfx/icons/new_black_18dp.png\" alt=\"new_black_18dp.png\" title=\"$l_new\" /></a></li>";
+						<li><a href=\"new_page.php?space_id=$get_current_space_id&amp;l=$l\" class=\"btn_default\"><img src=\"_gfx/icons/new_black_18dp.png\" alt=\"new_black_18dp.png\" title=\"$l_new\" /> $l_new</a></li>";
 				
 					// Favorited?
 					if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
@@ -272,21 +261,32 @@ else{
 						$row = mysqli_fetch_row($result);
 						list($get_favorite_id, $get_favorite_user_id) = $row;
 						if($get_favorite_id == ""){
-							echo"					<li><a href=\"favorite_space.php?space_id=$get_current_space_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/favorite_border_black_18dp.png\" alt=\"favorite_border_black_18dp.png\" title=\"$l_add_favorite\" /></a></li>\n";
+							echo"					<li><a href=\"favorite_space.php?space_id=$get_current_space_id&amp;l=$l&amp;process=1\" class=\"btn_default\"><img src=\"_gfx/icons/favorite_border_black_18dp.png\" alt=\"favorite_border_black_18dp.png\" title=\"$l_add_favorite\" /> $l_add_favorite</a></li>\n";
 						}
 						else{
-							echo"					<li><a href=\"favorite_space.php?space_id=$get_current_space_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/favorite_black_18dp.png\" alt=\"favorite_black_18dp.png\" title=\"$l_favorited\" /></a></li>\n";
+							echo"					<li><a href=\"favorite_space.php?space_id=$get_current_space_id&amp;l=$l&amp;process=1\" class=\"btn_default\"><img src=\"_gfx/icons/favorite_black_18dp.png\" alt=\"favorite_black_18dp.png\" title=\"$l_favorited\" /> $l_favorited</a></li>\n";
 						}
 					}
 					else{
-						echo"					<li><a href=\"favorite_space.php?space_id=$get_current_space_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/favorite_border_black_18dp.png\" alt=\"favorite_border_black_18dp.png\" title=\"$l_favorite\" /></a></li>\n";
+						echo"					<li><a href=\"favorite_space.php?space_id=$get_current_space_id&amp;l=$l&amp;process=1\" class=\"btn_default\"><img src=\"_gfx/icons/favorite_border_black_18dp.png\" alt=\"favorite_border_black_18dp.png\" title=\"$l_favorite\" /> $l_favorite</a></li>\n";
 					}
 					echo"
-					<li><a href=\"edit_space.php?space_id=$get_current_space_id&amp;l=$l\"><img src=\"_gfx/icons/edit_black_18dp.png\" alt=\"edit_black_18dp.png\" title=\"$l_edit\" /></a></li>
-					<li><a href=\"delete_space.php?space_id=$get_current_space_id&amp;l=$l\"><img src=\"_gfx/icons/delete_black_18dp.png\" alt=\"delete_black_18dp.png\" title=\"$l_delete\" /></a></li>
-					<li><a href=\"search.php?l=$l\"><img src=\"_gfx/icons/search_black_18dp.png\" alt=\"search_black_18dp.png\" title=\"$l_search\" /></a></li>
+					<li><a href=\"edit_space.php?space_id=$get_current_space_id&amp;l=$l\" class=\"btn_default\"><img src=\"_gfx/icons/edit_black_18dp.png\" alt=\"edit_black_18dp.png\" title=\"$l_edit\" /> $l_edit</a></li>
+					<li><a href=\"delete_space.php?space_id=$get_current_space_id&amp;l=$l\" class=\"btn_default\"><img src=\"_gfx/icons/delete_black_18dp.png\" alt=\"delete_black_18dp.png\" title=\"$l_delete\" /> $l_delete</a></li>
+					<li><a href=\"search.php?l=$l\" class=\"btn_default\"><img src=\"_gfx/icons/search_black_18dp.png\" alt=\"search_black_18dp.png\" title=\"$l_search\" /> $l_search</a></li>
 
-					<li><a href=\"spaces_overview.php?l=$l\"><img src=\"_gfx/icons/home_black_18dp.png\" alt=\"home_black_18dp.png\" title=\"$l_home\" /></a></li>
+					<li><a href=\"spaces_overview.php?l=$l\" class=\"btn_default\"><img src=\"_gfx/icons/home_black_18dp.png\" alt=\"home_black_18dp.png\" title=\"$l_home\" /> $l_home</a></li>
+					
+					<li><span><select name=\"knowledge_spaces\" class=\"on_select_go_to_url\">
+							<option value=\"spaces_overview.php?l=$l\">- $l_change_space -</option>\n";
+						$query_space = "SELECT space_id, space_title FROM $t_knowledge_spaces_index WHERE space_is_archived='0' ORDER BY space_title ASC";
+						$result_space = mysqli_query($link, $query_space);
+						while($row_space = mysqli_fetch_row($result_space)) {
+							list($get_space_id, $get_space_title) = $row_space;
+							echo"			";
+							echo"<option value=\"open_space.php?space_id=$get_space_id&amp;l=$l\""; if($get_space_id == "$get_current_space_id"){ echo" selected=\"selected\""; } echo">$get_space_title</option>\n";
+						}
+						echo"</select></span></li>
 					</ul>
 				
 				</div>

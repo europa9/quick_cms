@@ -32,18 +32,25 @@ div.knowledge_head_menu > ul{
 div.knowledge_head_menu > ul > li{
 	float:left;
 	padding: 0px 0px 0px 0px;
-	margin: 20px 0px 0px 0px;
+	margin: 14px 0px 0px 0px;
 }
 div.knowledge_head_menu > ul > li > a{
 	font-size: 90%;
 	display:block;
-	color: #344563;
-	text-decoration:none;
-	padding: 0px 0px 0px 8px;
+	padding: 4px 10px 4px 10px; 
+	margin: 0 3px; 
+	background: #fff;
+	border: #cccccc 1px solid; 
+	border-radius: 5px;
+	color: #333333;
 }
 div.knowledge_head_menu > ul > li > a > img{
 	float: left;
 	padding-right: 4px;
+}
+div.knowledge_head_menu > ul > li > span > select{
+	margin-top: 3px;
+	margin-left: 3px;
 }
 
 
