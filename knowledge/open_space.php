@@ -246,7 +246,19 @@ else{
 			<!-- Space icons -->
 				<div class=\"knowledge_head_menu\">
 					<ul>
-					<li><a href=\"new_page.php?space_id=$get_current_space_id&amp;l=$l\"><img src=\"_gfx/icons/new_black_18dp.png\" alt=\"new_black_18dp.png\" title=\"$l_new\" /></a></li>";
+						<li><select name=\"knowledge_spaces\" class=\"on_select_go_to_url\">";
+						$query_space = "SELECT space_id, space_title FROM $t_knowledge_spaces_index WHERE space_is_archived='0' ORDER BY space_title ASC";
+						$result_space = mysqli_query($link, $query_space);
+						while($row_space = mysqli_fetch_row($result_space)) {
+							list($get_space_id, $get_space_title) = $row_space;
+							echo"			";
+							echo"<option value=\"open_space.php?space_id=$get_space_id&amp;l=$l\""; if($get_space_id == "$get_current_space_id"){ echo" selected=\"selected\""; } echo">$get_space_title</option>\n";
+						}
+				
+
+						echo"</select></li>
+
+						<li><a href=\"new_page.php?space_id=$get_current_space_id&amp;l=$l\"><img src=\"_gfx/icons/new_black_18dp.png\" alt=\"new_black_18dp.png\" title=\"$l_new\" /></a></li>";
 				
 					// Favorited?
 					if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
@@ -278,6 +290,21 @@ else{
 					</ul>
 				
 				</div>
+				<!-- On select go to url -->
+					<script>
+					\$(function(){
+						// bind change event to select
+						\$('.on_select_go_to_url').on('change', function () {
+							var url = \$(this).val(); // get selected value
+							if (url) { // require a URL
+								window.location = url; // redirect
+							}
+							return false;
+						});
+					});
+					</script>
+				<!-- //On select go to url -->
+				
 			<!-- //Space icons -->
 			<div class=\"clear\" style=\"height: 10px;\"></div>
 
