@@ -39,6 +39,8 @@ $t_talk_users_starred_users	= $mysqlPrefixSav . "talk_users_starred_users";
 $t_talk_nicknames 		= $mysqlPrefixSav . "talk_nicknames";
 $t_talk_nicknames_changes 	= $mysqlPrefixSav . "talk_nicknames_changes";
 
+$t_talk_user_settings 		= $mysqlPrefixSav . "talk_user_settings";
+
 /*- Tables emojies -------------------------------------------------------------------- */
 $t_emojies_categories_main	= $mysqlPrefixSav . "emojies_categories_main";
 $t_emojies_categories_sub	= $mysqlPrefixSav . "emojies_categories_sub";
@@ -157,6 +159,20 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		}
 	} // Create nickname
 
+	// Get my settings
+	$query = "SELECT user_setting_id, user_setting_user_id, user_setting_show_channel_info FROM $t_talk_user_settings WHERE user_setting_user_id=$my_user_id_mysql";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_current_user_setting_id, $get_current_user_setting_user_id, $get_current_user_setting_show_channel_info) = $row;
+	if($get_current_user_setting_id == ""){
+		mysqli_query($link, "INSERT INTO $t_talk_user_settings 
+		(user_setting_id, user_setting_user_id, user_setting_show_channel_info) 
+		VALUES 
+		(NULL, $my_user_id_mysql, 0)")
+		or die(mysqli_error($link));
+	}
+
+
 	// Get starred
 	$query = "SELECT starred_channel_id, channel_id, channel_name, new_messages, user_id FROM $t_talk_users_starred_channels WHERE starred_channel_id=$starred_channel_id_mysql AND user_id=$my_user_id_mysql";
 	$result = mysqli_query($link, $query);
@@ -241,8 +257,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 									}
 
 									if($get_message_type == "info"){
-										echo"
-										<!-- Info -->
+										if($get_current_user_setting_show_channel_info == "1"){
+											echo"
+											<!-- Info -->
 											<p class=\"talk_messages_info\">
 											$get_message_text
 											<span class=\"talk_messages_date_and_time\">";
@@ -251,8 +268,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 											}
 											echo"$get_message_time_saying</span>
 											</p>
-										<!-- //Info -->
-										";
+											<!-- //Info -->
+											";
+										} // show info
 									}
 									else{
 										// Decrypt message

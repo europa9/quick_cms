@@ -28,6 +28,8 @@ $t_talk_total_unread = $mysqlPrefixSav . "talk_total_unread";
 $t_talk_nicknames 		= $mysqlPrefixSav . "talk_nicknames";
 $t_talk_nicknames_changes 	= $mysqlPrefixSav . "talk_nicknames_changes";
 
+$t_talk_user_settings 		= $mysqlPrefixSav . "talk_user_settings";
+
 
 if($action == ""){
 	echo"

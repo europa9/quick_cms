@@ -44,6 +44,8 @@ $t_talk_dm_messages	 = $mysqlPrefixSav . "talk_dm_messages";
 $t_talk_nicknames 		= $mysqlPrefixSav . "talk_nicknames";
 $t_talk_nicknames_changes 	= $mysqlPrefixSav . "talk_nicknames_changes";
 
+$t_talk_user_settings 		= $mysqlPrefixSav . "talk_user_settings";
+
 /*- Variables ------------------------------------------------------------------------- */
 $tabindex = 0;
 $l_mysql = quote_smart($link, $l);
@@ -77,7 +79,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
 	list($get_my_nickname_id, $get_my_nickname_user_id, $get_my_nickname_value, $get_my_nickname_datetime, $get_my_nickname_datetime_saying) = $row;
-	
+
+	// Get my settings
+	$query = "SELECT user_setting_id, user_setting_user_id, user_setting_show_channel_info FROM $t_talk_user_settings WHERE user_setting_user_id=$get_my_user_id";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_current_user_setting_id, $get_current_user_setting_user_id, $get_current_user_setting_show_channel_info) = $row;
+	if($get_current_user_setting_id == ""){
+		mysqli_query($link, "INSERT INTO $t_talk_user_settings 
+		(user_setting_id, user_setting_user_id, user_setting_show_channel_info) 
+		VALUES 
+		(NULL, $get_my_user_id, 0)")
+		or die(mysqli_error($link));
+	}
 
 	if($action == ""){
 		if($process == "1"){
@@ -198,12 +212,20 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			else{
 				// Is it my nickname?
 				if($get_check_nickname_user_id == "$get_my_user_id"){
-					$url = "settings.php?l=$l&ft=info&fm=no_changes";
-					header("Location: $url");
-					exit;
+					// $url = "settings.php?l=$l&ft=info&fm=no_changes";
+					// header("Location: $url");
+					// exit;
 				}
 			}
-				
+			
+			// Settings
+			$inp_show_channel_info = $_POST['inp_show_channel_info'];
+			$inp_show_channel_info = output_html($inp_show_channel_info);
+			$inp_show_channel_info_mysql = quote_smart($link, $inp_show_channel_info);
+			$result_update = mysqli_query($link, "UPDATE $t_talk_user_settings SET user_setting_show_channel_info=$inp_show_channel_info_mysql WHERE user_setting_user_id=$get_my_user_id") or die(mysqli_error($link));
+
+
+
 			$url = "settings.php?l=$l&ft=success&fm=changes_saved";
 			header("Location: $url");
 			exit;
@@ -235,10 +257,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	
 			<form method=\"post\" action=\"settings.php?l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 	
-			<p><b>$l_my_nickname:</b>
+			<p><b>$l_my_nickname:</b><br />
 			<input type=\"text\" name=\"inp_nickname_value\" value=\"$get_my_nickname_value\" size=\"25\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
-			<input type=\"submit\" value=\"$l_save_changes\" class=\"btn btn_default\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 			</p>
+	
+			<p><b>$l_show_channel_info:</b> <span class=\"smal\">($l_example_join_and_timeouts)</span><br />
+			<input type=\"radio\" name=\"inp_show_channel_info\" value=\"1\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\""; if($get_current_user_setting_show_channel_info == "1"){ echo" checked=\"checked\""; } echo" />
+			$l_yes
+			&nbsp;
+			<input type=\"radio\" name=\"inp_show_channel_info\" value=\"0\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\""; if($get_current_user_setting_show_channel_info == "0"){ echo" checked=\"checked\""; } echo" />
+			$l_no
+			</p>
+
+			<p><input type=\"submit\" value=\"$l_save_changes\" class=\"btn btn_default\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>			
 			</form>
 		<!-- //Form -->
 		";
