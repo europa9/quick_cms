@@ -721,23 +721,8 @@ elseif($action == "open_task"){
 
 		echo"
 		<h1>$number $get_current_task_title</h1>
-		<!-- Where am I? -->
-			<p><b>You are here:</b><br />
-			<a href=\"index.php?open=$open&amp;page=tasks&amp;l=$l\">Tasks</a>
-			";
 
-			// Status
-			$query = "SELECT status_code_id, status_code_title FROM $t_tasks_status_codes WHERE status_code_id=$get_current_task_status_code_id";
-			$result = mysqli_query($link, $query);
-			$row = mysqli_fetch_row($result);
-			list($get_status_code_id, $get_status_code_title) = $row;
-			echo"
-			&gt;
-			<a href=\"index.php?open=$open&amp;page=$page&amp;status_code_id=$get_status_code_id&amp;l=$l\">$get_status_code_title</a>
-			&gt;
-			<a href=\"index.php?open=$open&amp;page=$page&amp;action=open_task&amp;task_id=$get_current_task_id&amp;l=$l\">$number $get_current_task_title</a>
-			</p>
-		<!-- //Where am I? -->
+
 
 		<!-- Feedback -->
 			";
@@ -762,7 +747,23 @@ elseif($action == "open_task"){
 			</p> 
 		<!-- Menu -->
 
+		<!-- Task tabs -->
+		<div class=\"clear\" style=\"height: 10px;\"></div>
+		<div class=\"tabs\">
+			<ul>";
 
+			$query = "SELECT status_code_id, status_code_title, status_code_text_color, status_code_count_tasks FROM $t_tasks_status_codes ORDER BY status_code_weight ASC";
+			$result = mysqli_query($link, $query);
+			while($row = mysqli_fetch_row($result)) {
+				list($get_status_code_id, $get_status_code_title, $get_status_text_code_color, $get_status_code_count_tasks) = $row;
+				echo"				";
+				echo"<li><a href=\"index.php?open=$open&amp;page=$page&amp;status_code_id=$get_status_code_id&amp;l=$l\""; if($get_status_code_id == "$get_current_task_status_code_id"){ echo" class=\"active\""; } echo">$get_status_code_title ($get_status_code_count_tasks)</a></li>\n";
+			}
+			echo"
+			</ul>
+		</div>
+		<div class=\"clear\" style=\"height: 20px;\"></div>
+		<!-- //Task tabs -->
 		<!-- View task header-->
 			<div style=\"display: flex;\">
 				<div style=\"flex: 1;\">
