@@ -64,12 +64,6 @@ if($action == ""){
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
 				list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
-
-
-				$flag_path 	= "_design/gfx/flags/16x16/$get_language_active_flag" . "_16x16.png";
-			
-
-
 				echo"	<option value=\"$get_language_active_id\" style=\"background: url('$flag_path') no-repeat;padding-left: 20px;\"";if($get_language_active_default == "1"){ echo" selected=\"selected\"";}echo">$get_language_active_name</option>\n";
 			}
 			echo"
@@ -125,10 +119,22 @@ if($action == ""){
 						 <tr>
        						  <td style=\"padding-right:4px;\">
 							";
-							$flag_path = "_design/gfx/flags/16x16/$get_language_flag" . "_16x16.png";
+							$flag_path = "_design/gfx/flags/16x16/$get_language_flag.png";
+							/*
+							*/
+
+
+							// 32
+							$ico_a = "_design/gfx/flags/32x32/$get_language_iso_two.png";
+							$ico_b = "_design/gfx/flags/32x32/$get_language_flag.png";
+							if(file_exists("$ico_a")){
+								copy($ico_a, $ico_b);
+								// unlink($ico_a);
+							}
+
 							echo"<span><a href=\"?open=settings&amp;page=languages&amp;action=add_language&amp;process=1&amp;language_id=$get_language_id\" style=\"color:#000;\"><img src=\"$flag_path\" alt=\"$flag_path\" /></a></span>";
 							
-							echo"
+							echo"<a href=\"$ico_a\">$ico_a</a>
 						  </td>
        						  <td>
           						<span><a href=\"?open=settings&amp;page=languages&amp;action=add_language&amp;process=1&amp;language_id=$get_language_id\" style=\"color:#000;\">$get_language_name</a></span>
@@ -165,11 +171,7 @@ if($action == ""){
 					list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
 
 
-					$flag_path 	= "_design/gfx/flags/16x16/$get_language_active_flag" . "_16x16.png";
-
 					
-					
-
 					if(isset($odd) && $odd == false){
 						$odd = true;
 					}
@@ -185,7 +187,7 @@ if($action == ""){
 						 <tr>
        						  <td style=\"padding-right:4px;\">
 							";
-							$flag_path = "_design/gfx/flags/16x16/$get_language_active_flag" . "_16x16.png";
+							$flag_path = "_design/gfx/flags/16x16/$get_language_active_flag.png";
 							echo"<span><a href=\"?open=settings&amp;page=languages&amp;action=remove_language&amp;process=1&amp;language_id=$get_language_active_id\" style=\"color:#000;\"><img src=\"$flag_path\" alt=\"$flag_path\" /></a></span>";
 						
 							echo"
