@@ -12,6 +12,42 @@ ini_set('arg_separator.output', '&amp;');
 *
 */
 
+/*- Make sure we are on the correct web site ----------------------------------------- */
+if(file_exists("_data/config/meta.php")){
+	include("_data/config/meta.php");
+	if ($_SERVER["SERVER_PORT"] != "80" && $_SERVER["SERVER_PORT"] != "443") {
+		$page = $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+	} 
+	else {
+		$page = $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+	}
+	if(isset($configSLLActiveSav) && $configSLLActiveSav == 1){
+		$page_url = 'https://' . $page;
+	}
+	else{
+		$page_url = 'http://' . $page;
+	}
+	if(isset($configControlPanelURLSav)){
+		
+		$page_url_substr = substr($page_url, 0, strlen($configControlPanelURLSav));
+
+		if($configControlPanelURLSav != "$page_url_substr"){
+			// Check for localhost
+			$check_localhost = substr($page_url, 0, 16);
+			if($check_localhost != "http://localhost"){
+	
+				echo"<p>Security error. Page url is not the same as configured. Please fix meta.php.
+				</p>
+
+				<p>
+				<a href=\"$configControlPanelURLSav\">$configControlPanelURLSav</a> != $page_url_substr
+				</p>
+				";
+				die;
+			}
+		}
+	}
+}
 
 /*- Check for admin ----------------------------------------------------------------- */
 

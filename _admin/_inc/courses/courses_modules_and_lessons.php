@@ -202,6 +202,8 @@ else{
 				   </td>
 				   <td>
 					<span><b>
+					<a href=\"index.php?open=courses&amp;page=$page&amp;course_id=$course_id&amp;action=move_module_up&amp;module_id=$get_module_id&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\">Move up</a>
+					&middot;
 					<a href=\"index.php?open=courses&amp;page=$page&amp;course_id=$course_id&amp;action=new_lesson&amp;module_id=$get_module_id&amp;editor_language=$editor_language&amp;l=$l\">New lesson</a>
 					&middot;
 					<a href=\"index.php?open=courses&amp;page=$page&amp;course_id=$course_id&amp;action=edit_module&amp;module_id=$get_module_id&amp;editor_language=$editor_language&amp;l=$l\">Edit</a>
@@ -752,6 +754,58 @@ else{
 			";
 		} // module found
 	} // action == delete module
+	elseif($action == "move_module_up"){
+		if(isset($_GET['module_id'])){
+			$module_id = $_GET['module_id'];
+			$module_id = strip_tags(stripslashes($module_id));
+		}
+		else{
+			$module_id = "";
+		}
+		$module_id_mysql = quote_smart($link, $module_id);
+
+		$query = "SELECT module_id, module_course_id, module_course_title, module_number, module_title, module_title_clean, module_read_times, module_read_ipblock, module_created, module_updated, module_last_read_datetime, module_last_read_date_formatted FROM $t_courses_modules WHERE module_id=$module_id_mysql AND module_course_id=$get_current_course_id";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_current_module_id, $get_current_module_course_id, $get_current_module_course_title, $get_current_module_number, $get_current_module_title, $get_current_module_title_clean, $get_current_module_read_times, $get_current_module_read_ipblock, $get_current_module_created, $get_current_module_updated, $get_current_module_last_read_datetime, $get_current_module_last_read_date_formatted) = $row;
+
+		if($get_current_module_id == ""){
+			echo"<p>Server error 404.</p>";
+		}
+		else{
+
+			// Find the module to change with
+			$current_module_number_minus_one = $get_current_module_number-1;
+	
+			$query = "SELECT module_id, module_course_id, module_course_title, module_number, module_title, module_title_clean, module_read_times, module_read_ipblock, module_created, module_updated, module_last_read_datetime, module_last_read_date_formatted FROM $t_courses_modules WHERE module_number=$current_module_number_minus_one AND module_course_id=$get_current_module_course_id";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_change_module_id, $get_change_module_course_id, $get_change_module_course_title, $get_change_module_number, $get_change_module_title, $get_change_module_title_clean, $get_change_module_read_times, $get_change_module_read_ipblock, $get_change_module_created, $get_change_module_updated, $get_change_module_last_read_datetime, $get_change_module_last_read_date_formatted) = $row;
+
+			if($get_change_module_id == ""){
+				$url = "index.php?open=courses&page=courses_modules_and_lessons&course_id=$get_current_module_course_id&editor_language=$editor_language&l=$l&ft=error&fm=change_module_not_found#module$get_current_module_id";
+				header("Location: $url");
+				exit;
+			}
+			else{
+				// Update current
+				$result = mysqli_query($link, "UPDATE $t_courses_modules SET 
+								module_number=$current_module_number_minus_one
+								WHERE module_id=$get_current_module_id") or die(mysqli_error($link));
+
+				// Update change
+				$result = mysqli_query($link, "UPDATE $t_courses_modules SET 
+								module_number=$get_current_module_number
+								WHERE module_id=$get_change_module_id") or die(mysqli_error($link));
+
+
+				$url = "index.php?open=courses&page=courses_modules_and_lessons&course_id=$get_current_module_course_id&editor_language=$editor_language&l=$l&ft=success&fm=changes_saved#module$get_current_module_id";
+				header("Location: $url");
+				exit;
+			}
+
+		} // module found
+	} // action == move_module_up
 	elseif($action == "new_lesson"){
 		if(isset($_GET['module_id'])){
 			$module_id = $_GET['module_id'];
@@ -1153,7 +1207,27 @@ else{
 			echo"<p>Server error 404.</p>";
 		}
 		else{
+			// Get module
+			$query = "SELECT module_id, module_course_id, module_course_title, module_number, module_title, module_title_clean, module_read_times, module_read_ipblock, module_created, module_updated, module_last_read_datetime, module_last_read_date_formatted FROM $t_courses_modules WHERE module_id=$get_current_lesson_module_id";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_current_module_id, $get_current_module_course_id, $get_current_module_course_title, $get_current_module_number, $get_current_module_title, $get_current_module_title_clean, $get_current_module_read_times, $get_current_module_read_ipblock, $get_current_module_created, $get_current_module_updated, $get_current_module_last_read_datetime, $get_current_module_last_read_date_formatted) = $row;
+
+			// Get course
+			$query = "SELECT course_id, course_title, course_title_clean, course_is_active, course_front_page_intro, course_description, course_contents, course_language, course_main_category_id, course_main_category_title, course_sub_category_id, course_sub_category_title, course_intro_video_embedded, course_image_file, course_image_thumb, course_icon_16, course_icon_32, course_icon_48, course_icon_64, course_icon_96, course_icon_260, course_modules_count, course_lessons_count, course_quizzes_count, course_users_enrolled_count, course_read_times, course_read_times_ip_block, course_created, course_updated FROM $t_courses_index WHERE course_id=$get_current_lesson_course_id";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_current_course_id, $get_current_course_title, $get_current_course_title_clean, $get_current_course_is_active, $get_current_course_front_page_intro, $get_current_course_description, $get_current_course_contents, $get_current_course_language, $get_current_course_main_category_id, $get_current_course_main_category_title, $get_current_course_sub_category_id, $get_current_course_sub_category_title, $get_current_course_intro_video_embedded, $get_current_course_image_file, $get_current_course_image_thumb, $get_current_course_icon_16, $get_current_course_icon_32, $get_current_course_icon_48, $get_current_course_icon_64, $get_current_course_icon_96, $get_current_course_icon_260, $get_current_course_modules_count, $get_current_course_lessons_count, $get_current_course_quizzes_count, $get_current_course_users_enrolled_count, $get_current_course_read_times, $get_current_course_read_times_ip_block, $get_current_course_created, $get_current_course_updated) = $row;
+
+
+
 			if($process == "1"){
+				// Dates
+				$datetime = date("Y-m-d H:i:s");
+				$datetime_saying = date("j M Y H:i");
+
+
+
 				$inp_title = $_POST['inp_title'];
 				$inp_title = output_html($inp_title);
 				$inp_title_mysql = quote_smart($link, $inp_title);
@@ -1181,20 +1255,17 @@ else{
 								WHERE lesson_id=$get_current_lesson_id");
 
 				// Get new data
-				$query = "SELECT lesson_id, lesson_number, lesson_title, lesson_title_clean, lesson_description, lesson_content, lesson_course_id, lesson_course_title, lesson_module_id, lesson_module_title, lesson_read_times, lesson_read_times_ipblock, lesson_created_datetime, lesson_created_date_formatted, lesson_last_read_datetime, lesson_last_read_date_formatted FROM $t_courses_lessons WHERE lesson_created_datetime='$datetime'";
+				$query = "SELECT lesson_id, lesson_number, lesson_title, lesson_title_clean, lesson_description, lesson_content, lesson_course_id, lesson_course_title, lesson_module_id, lesson_module_title, lesson_read_times, lesson_read_times_ipblock, lesson_created_datetime, lesson_created_date_formatted, lesson_last_read_datetime, lesson_last_read_date_formatted FROM $t_courses_lessons WHERE lesson_id='$get_current_lesson_id'";
 				$result = mysqli_query($link, $query);
 				$row = mysqli_fetch_row($result);
 				list($get_current_lesson_id, $get_current_lesson_number, $get_current_lesson_title, $get_current_lesson_title_clean, $get_current_lesson_description, $get_current_lesson_content, $get_current_lesson_course_id, $get_current_lesson_course_title, $get_current_lesson_module_id, $get_current_lesson_module_title, $get_current_lesson_read_times, $get_current_lesson_read_times_ipblock, $get_current_lesson_created_datetime, $get_current_lesson_created_date_formatted, $get_current_lesson_last_read_datetime, $get_current_lesson_last_read_date_formatted) = $row;
 
 
 				// Search engine
-				$datetime = date("Y-m-d H:i:s");
-				$datetime_saying = date("j M Y H:i");
-
 				$inp_index_title = "$inp_title | $get_current_module_title | $get_current_course_title | $get_current_courses_title_translation_title";
 				$inp_index_title_mysql = quote_smart($link, $inp_index_title);
 
-				$inp_index_url = "$get_course_title_clean/$get_current_module_title_clean/$get_current_lesson_title_clean.php?course_id=$get_current_course_id&module_id=$get_current_module_id&lesson_id=$get_current_lesson_id";
+				$inp_index_url = "$get_current_course_title_clean/$get_current_module_title_clean/$get_current_lesson_title_clean.php?course_id=$get_current_course_id&module_id=$get_current_module_id&lesson_id=$get_current_lesson_id";
 				$inp_index_url_mysql = quote_smart($link, $inp_index_url);
 			
 
@@ -1212,7 +1283,7 @@ else{
 				}
 
 
-				$url = "index.php?open=$open&page=$page&course_id=$course_id&action=$action&lesson_id=$get_current_lesson_id&editor_language=$editor_language&ft=success&fm=changes_saved";
+				$url = "index.php?open=$open&page=$page&course_id=$course_id&action=edit_lesson&lesson_id=$get_current_lesson_id&editor_language=$editor_language&ft=success&fm=changes_saved";
 				header("Location: $url");
 				exit;
 			}
