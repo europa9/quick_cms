@@ -12,9 +12,25 @@ ini_set('arg_separator.output', '&amp;');
 *
 */
 
+/*- Functions ------------------------------------------------------------------------ */
+include("_functions/output_html.php");
+include("_functions/clean.php");
+include("_functions/quote_smart.php");
+include("_functions/resize_crop_image.php");
+
+
 /*- Make sure we are on the correct web site ----------------------------------------- */
 if(file_exists("_data/config/meta.php")){
 	include("_data/config/meta.php");
+		
+	// SSL
+	$server_name = $_SERVER['HTTP_HOST'];
+	$server_name_saying = ucfirst($server_name);
+	$server_name = clean($server_name);
+	$ssl_config_file = "ssl_" . $server_name . ".php";
+	include("_data/config/$ssl_config_file");
+
+	// URL
 	if ($_SERVER["SERVER_PORT"] != "80" && $_SERVER["SERVER_PORT"] != "443") {
 		$page = $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
 	} 
@@ -59,13 +75,6 @@ if(!(isset($_SESSION['admin_user_id']))){
 else{
 	$current_user_id = $_SESSION['admin_user_id'];
 }
-/*- Functions ------------------------------------------------------------------------ */
-include("_functions/output_html.php");
-include("_functions/clean.php");
-include("_functions/quote_smart.php");
-include("_functions/resize_crop_image.php");
-
-
 /*- Check if setup is run ------------------------------------------------------------ */
 $server_name = $_SERVER['HTTP_HOST'];
 $server_name = clean($server_name);
