@@ -316,10 +316,10 @@ else{
 				// Todo: update comments references
 
 				// Delete all modules
-				$result = mysqli_query($link, "$t_courses_modules WHERE module_course_id=$get_current_course_id") or die(mysqli_error($link));
+				$result = mysqli_query($link, "DELETE FROM $t_courses_modules WHERE module_course_id=$get_current_course_id") or die(mysqli_error($link));
 
 				// Delete all lessons
-				$result = mysqli_query($link, "$t_courses_lessons WHERE lesson_course_id=$get_current_course_id") or die(mysqli_error($link));
+				$result = mysqli_query($link, "DELETE FROM $t_courses_lessons WHERE lesson_course_id=$get_current_course_id") or die(mysqli_error($link));
 				
 				// Loop trough file
 				for($x=0;$x<sizeof($module_title_sav);$x++){

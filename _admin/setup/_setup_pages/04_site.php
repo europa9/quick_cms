@@ -49,7 +49,12 @@ if($process == "1"){
 
 
 	// Page URL
-	$server_name = "http://" . $_SERVER["SERVER_NAME"];
+	if ($_SERVER["SERVER_PORT"] != "80" && $_SERVER["SERVER_PORT"] != "443") {
+		$server_name = "http://" . $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"];
+	} 
+	else {
+		$server_name = "http://" . $_SERVER["SERVER_NAME"];
+	}
 	$request_uri = $_SERVER["REQUEST_URI"];
 
 	$pageURL = $server_name.$request_uri;
