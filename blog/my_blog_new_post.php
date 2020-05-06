@@ -192,7 +192,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$row = mysqli_fetch_row($result);
 					list($get_blog_post_id) = $row;
 
-					echo"$inp_text ";
 					if($blogEditModeSav == "bbcode"){
 						$inp_text = $_POST['inp_text'];
 						$inp_text = output_html($inp_text);
