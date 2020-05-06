@@ -62,4 +62,5 @@ $l_carbs_abbreviation = "Carbs";
 $l_salt = "Salt";
 $l_please_select_your_country = "Please select your country";
 $l_agree = "Agree";
+$l_you_may_also_like = "You may also like";
 ?>

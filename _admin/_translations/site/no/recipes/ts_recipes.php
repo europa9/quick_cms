@@ -1,5 +1,8 @@
 <?php
 $l_categories = "Kategorier";
+$l_fresh_recipes_headline = "Nye oppskrifter";
+$l_more = "Mer";
+$l_more_new_recipes = "Flere nye oppskrifter";
 $l_my_favorites = "Mine favoritter";
 $l_my_recipes = "Mine oppskrifter";
 $l_recent_recipes = "Nylige oppskrifter";

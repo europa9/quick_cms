@@ -62,4 +62,5 @@ $l_votes_lovercase = "stemmer";
 $l_vote_lovercase = "stemme";
 $l_write_a_comment = "Skriv en kommentar";
 $l_you_have_alreaddy_voted = "Du har allerede stemt";
+$l_you_may_also_like = "Du kan ogs&aring; kanskje like";
 ?>

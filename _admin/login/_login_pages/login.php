@@ -10,12 +10,12 @@ if($process == "1"){
 		$inp_email = $_POST['inp_email'];
 		$inp_email = output_html($inp_email);
 		$inp_email = strtolower($inp_email);
-		$inp_email_mysql = quote_smart($link, $inp_email);
 		if(empty($inp_email)){
 			header("Location: index.php?ft=error&fm=please_enter_your_email");
 			exit;
 		}
-		
+		$inp_email_mysql = quote_smart($link, $inp_email);
+
 		// Validate email
 		// if (!filter_var($inp_email, FILTER_VALIDATE_EMAIL)) {
 		//	header("Location: index.php?ft=error&fm=invalid_email_format");

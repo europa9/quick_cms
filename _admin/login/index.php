@@ -70,6 +70,10 @@ if(file_exists("$mysql_config_file")){
 	$t_pages 	= $mysqlPrefixSav . "pages";
 	$t_navigation 	= $mysqlPrefixSav . "navigation";
 }
+else{
+	echo"No MySQL connection. Missing mysql_";echo"$server_name file";
+	die;
+}
 
 /*- Variables ------------------------------------------------------------------------ */
 if(isset($_GET['page'])) {

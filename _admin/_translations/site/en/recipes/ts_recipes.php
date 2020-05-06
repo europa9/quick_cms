@@ -9,4 +9,7 @@ $l_recipe_of = "Recipe of";
 $l_the_day = "the day";
 $l_recent_recipes = "Recent recipes";
 $l_weekly_special = "Weekly special";
+$l_fresh_recipes_headline = "Fresh recipes";
+$l_more = "More";
+$l_more_new_recipes = "More new recipes";
 ?>
