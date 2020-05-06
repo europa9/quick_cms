@@ -85,22 +85,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	else{
 		if($action == ""){
 			echo"
-			<h1>$l_my_blog</h1>
+			<h1>$l_my_blog $l_images</h1>
 		
-			<!-- My blog menu -->
-				<div class=\"tabs\">
-					<ul>
-						<li><a href=\"my_blog.php?l=$l\">$l_posts</a></li>
-						<li><a href=\"my_blog_new_post.php?l=$l\">$l_new_post</a></li>
-						<li><a href=\"my_blog_images.php?l=$l\" class=\"selected\">$l_images</a></li>
-						<li><a href=\"my_blog_info.php?l=$l\">$l_info</a></li>
-						<li><a href=\"my_blog_categories.php?l=$l\">$l_categories</a></li>
-					</ul>
-				
-				</div>
-				<div class=\"clear\" style=\"height: 20px;\"></div>
-			<!-- //My blog menu -->
-		
+			<!-- Where am I ? -->
+				<p><b>$l_you_are_here:</b><br />
+				<a href=\"index.php?l=$l\">$l_blog</a>
+				&gt;
+				<a href=\"view_blog.php?info_id=$get_blog_info_id&amp;l=$l\">$get_blog_title</a>
+				&gt;
+				<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
+				&gt;
+				<a href=\"my_blog_images.php?l=$l\">$l_images</a>
+				</p>
+			<!-- Where am I ? -->
 				
 			<!-- Feedback -->
 				";
@@ -148,9 +145,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 					echo"
-					<table>
+					<table style=\"width: 100%;\">
 					 <tr>
-					  <td style=\"vertical-align: top;padding: 0px 10px 0px 0px;\">
+					  <td style=\"vertical-align: top;padding: 0px 10px 0px 0px;width: 200px;\">
 						<p>
 						<a href=\"$root/$get_image_path/$get_image_file\"><img src=\"$root/$get_image_path/$get_image_thumb\" alt=\"$get_image_thumb\" /></a>
 						</p>
@@ -160,7 +157,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						<p><b>$get_image_title</b></p>
 
 						<p>$l_url_to_copy:<br />
-						<input type=\"text\" name=\"img_$get_image_id\" value=\"$configSiteURLSav/$get_image_path/$get_image_file\" />
+						<input type=\"text\" name=\"img_$get_image_id\" size=\"25\" value=\"$configSiteURLSav/$get_image_path/$get_image_file\" style=\"width: 50%;\" />
 						</p>
 						
 						<p>
@@ -331,17 +328,17 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<h1>$l_my_blog</h1>
 		
 			<!-- My blog menu -->
-				<div class=\"tabs\">
-					<ul>
-						<li><a href=\"my_blog.php?l=$l\">$l_posts</a></li>
-						<li><a href=\"my_blog_new_post.php?l=$l\">$l_new_post</a></li>
-						<li><a href=\"my_blog_images.php?l=$l\" class=\"selected\">$l_images</a></li>
-						<li><a href=\"my_blog_info.php?l=$l\">$l_info</a></li>
-						<li><a href=\"my_blog_categories.php?l=$l\">$l_categories</a></li>
-					</ul>
-				
-				</div>
-				<div class=\"clear\" style=\"height: 20px;\"></div>
+				<p><b>$l_you_are_here:</b><br />
+				<a href=\"index.php?l=$l\">$l_blog</a>
+				&gt;
+				<a href=\"view_blog.php?info_id=$get_blog_info_id&amp;l=$l\">$get_blog_title</a>
+				&gt;
+				<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
+				&gt;
+				<a href=\"my_blog_images.php?l=$l\">$l_images</a>
+				&gt;
+				<a href=\"my_blog_images.php?action=upload_image&amp;l=$l\">$l_upload</a>
+				</p>
 			<!-- //My blog menu -->
 		
 				

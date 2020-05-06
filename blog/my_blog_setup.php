@@ -28,12 +28,28 @@ include("$root/_admin/website_config.php");
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/blog/ts_my_blog.php");
 
-
 /*- Tables ---------------------------------------------------------------------------- */
-$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
-$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+$t_blog_info 		= $mysqlPrefixSav . "blog_info";
+$t_blog_categories	= $mysqlPrefixSav . "blog_categories";
+$t_blog_posts 		= $mysqlPrefixSav . "blog_posts";
+$t_blog_posts_tags 	= $mysqlPrefixSav . "blog_posts_tags";
+$t_blog_images 		= $mysqlPrefixSav . "blog_images";
+$t_blog_logos		= $mysqlPrefixSav . "blog_logos";
+
+$t_blog_links_index		= $mysqlPrefixSav . "blog_links_index";
+$t_blog_links_categories	= $mysqlPrefixSav . "blog_links_categories";
+
+$t_blog_ping_list_per_blog	= $mysqlPrefixSav . "blog_ping_list_per_blog";
+
+
+$t_blog_stats_most_used_categories	= $mysqlPrefixSav . "blog_stats_most_used_categories";
+
+$t_blog_default_categories = $mysqlPrefixSav . "blog_default_categories";
+
 
 /*- Variables ------------------------------------------------------------------------- */
+
+
 $tabindex = 0;
 $l_mysql = quote_smart($link, $l);
 
@@ -87,35 +103,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		(NULL, $my_user_id_mysql, $l_mysql, $inp_blog_title_mysql, '$datetime', '$datetime', '$datetime_rss', '0', '0', '0', $inp_user_ip_mysql)
 		")
 		or die(mysqli_error($link));
-
-		// Get ID
-		$query = "SELECT blog_info_id, blog_user_id, blog_language, blog_title, blog_description, blog_created, blog_updated, blog_posts, blog_comments, blog_views, blog_user_ip FROM $t_blog_info WHERE blog_user_id=$my_user_id_mysql AND blog_language=$l_mysql";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_blog_info_id, $get_blog_user_id, $get_blog_language, $get_blog_title, $get_blog_description, $get_blog_created, $get_blog_updated, $get_blog_posts, $get_blog_comments, $get_blog_views, $get_blog_user_ip) = $row;
-
-		
-
-		// Search engine
-		$inp_index_title = "$get_blog_title | $l_blog";
-		$inp_index_title_mysql = quote_smart($link, $inp_index_title);
-
-		$inp_index_url = "blog/view_blog.php?info_id=$get_blog_info_id";
-		$inp_index_url_mysql = quote_smart($link, $inp_index_url);
-
-		$datetime = date("Y-m-d H:i:s");
-		$datetime_saying = date("j. M Y H:i");
-
-		$inp_index_language_mysql = quote_smart($link, $get_blog_language);
-
-		mysqli_query($link, "INSERT INTO $t_search_engine_index 
-		(index_id, index_title, index_url, index_short_description, index_keywords, 
-		index_module_name, index_reference_name, index_reference_id, index_is_ad, index_created_datetime, index_created_datetime_print, 
-		index_language) 
-		VALUES 
-		(NULL, $inp_index_title_mysql, $inp_index_url_mysql, '', '', 
-		'blog', 'blog_info_id', '$get_blog_info_id', 0, '$datetime', '$datetime_saying', $inp_index_language_mysql)")
-		or die(mysqli_error($link));
 	}
 
 	// Do I have categories?
@@ -126,6 +113,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 	if($get_blog_category_id == ""){
 		
+
+
 		$inp_blog_category_title = "$l_blog";
 		$inp_blog_category_title = output_html($inp_blog_category_title);
 		$inp_blog_category_title_mysql = quote_smart($link, $inp_blog_category_title);
@@ -142,6 +131,25 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		(NULL, $my_user_id_mysql, $l_mysql, $inp_blog_category_title_mysql, '0')
 		")
 		or die(mysqli_error($link));
+
+
+		// Also insert default categories
+		$query = "SELECT default_category_id, default_category_title FROM $t_blog_default_categories WHERE default_category_language=$l_mysql";
+		$result = mysqli_query($link, $query);
+		while($row = mysqli_fetch_row($result)) {
+			list($get_default_category_id, $get_default_category_title) = $row;
+			
+			$inp_blog_category_title_mysql = quote_smart($link, $get_default_category_title);
+
+			mysqli_query($link, "INSERT INTO $t_blog_categories
+			(blog_category_id, blog_category_user_id, blog_category_language, blog_category_title, blog_category_posts) 
+			VALUES 
+			(NULL, $my_user_id_mysql, $l_mysql, $inp_blog_category_title_mysql, '0')
+			")
+			or die(mysqli_error($link));
+
+		}
+
 	}
 
 	if(isset($_GET['reference'])){
@@ -164,7 +172,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 else{
 	echo"
 	<h1>
-	<img src=\"_gfx/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
+	<img src=\"$root/_webdesign/images/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
 	Loading...</h1>
 	<meta http-equiv=\"refresh\" content=\"1;url=$root/users/index.php?page=login&amp;l=$l&amp;refer=$root/blog/my_blog.php\">
 	";

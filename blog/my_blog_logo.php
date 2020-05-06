@@ -90,6 +90,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		
 			<!-- Where am I ? -->
 				<p><b>$l_you_are_here:</b><br />
+				<a href=\"index.php?l=$l\">$l_blog</a>
+				&gt;
+				<a href=\"view_blog.php?info_id=$get_blog_info_id&amp;l=$l\">$get_blog_title</a>
+				&gt;
 				<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
 				&gt;
 				<a href=\"my_blog_logo.php?l=$l\">$l_logo</a>
@@ -316,6 +320,10 @@ logo_reported='0', logo_reported_checked=''
 			
 			<!-- Where am I ? -->
 				<p><b>$l_you_are_here:</b><br />
+				<a href=\"index.php?l=$l\">$l_blog</a>
+				&gt;
+				<a href=\"view_blog.php?info_id=$get_blog_info_id&amp;l=$l\">$get_blog_title</a>
+				&gt;
 				<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
 				&gt;
 				<a href=\"my_blog_logo.php?l=$l\">$l_logo</a>

@@ -33,10 +33,6 @@ include("$root/_admin/_functions/decode_national_letters.php");
 include("$root/_admin/_translations/site/$l/blog/ts_blog.php");
 include("$root/_admin/_translations/site/$l/blog/ts_my_blog.php");
 
-/*- Tables ---------------------------------------------------------------------------- */
-$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
-$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
-
 /*- Blog config -------------------------------------------------------------------- */
 include("$root/_admin/_data/blog.php");
 
@@ -172,29 +168,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 					$result = mysqli_query($link, "UPDATE $t_blog_posts SET blog_post_title=$inp_title_mysql,
 						blog_post_updated='$datetime', blog_post_updated_rss='$datetime_rss', blog_post_user_ip=$inp_user_ip_mysql
 					 WHERE blog_post_id=$get_blog_post_id");
-
-
-					
-					// Search engine
-					$reference_name_mysql = quote_smart($link, "blog_post_id");
-					$reference_id_mysql = quote_smart($link, "$get_blog_post_id");
-					$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='blog' AND index_reference_name=$reference_name_mysql AND index_reference_id=$reference_id_mysql";
-					$result_exists = mysqli_query($link, $query_exists);
-					$row_exists = mysqli_fetch_row($result_exists);
-					list($get_index_id) = $row_exists;
-					if($get_index_id != ""){
-						$datetime = date("Y-m-d H:i:s");
-						$datetime_saying = date("j. M Y H:i");
-
-						$inp_index_title = "$inp_title | $get_blog_title | $l_blog";
-						$inp_index_title_mysql = quote_smart($link, $inp_index_title);
-
-						$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
-										index_title=$inp_index_title_mysql,
-										index_updated_datetime='$datetime',
-										index_updated_datetime_print='$datetime_saying'
-										 WHERE index_id=$get_index_id") or die(mysqli_error($link));
-					}
 
 
 					$url = "my_blog_edit_post.php?post_id=$get_blog_post_id&l=$l&ft=success&fm=changes_saved";
@@ -396,9 +369,16 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 					$inp_introduction = output_html($inp_introduction);
 					$inp_introduction_mysql = quote_smart($link, $inp_introduction);
 
+					// Category
 					$inp_category = $_POST['inp_category'];
 					$inp_category = output_html($inp_category);
 					$inp_category_mysql = quote_smart($link, $inp_category);
+					$query = "SELECT blog_category_id, blog_category_title FROM $t_blog_categories WHERE blog_category_id=$inp_category_mysql AND blog_category_user_id=$my_user_id_mysql";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_blog_category_id, $get_blog_category_title) = $row;
+					$inp_category_title_mysql = quote_smart($link, $get_blog_category_title);
+
 
 					$inp_privacy_level = $_POST['inp_privacy_level'];
 					$inp_privacy_level = output_html($inp_privacy_level);
@@ -415,7 +395,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 					$inp_ad_mysql = quote_smart($link, $inp_ad);
 
 					
-					$result = mysqli_query($link, "UPDATE $t_blog_posts SET blog_post_category_id=$inp_category_mysql,
+					$result = mysqli_query($link, "UPDATE $t_blog_posts SET 
+						blog_post_category_id=$inp_category_mysql,
+						blog_post_category_title=$inp_category_title_mysql,
 						blog_post_introduction=$inp_introduction_mysql,
 						blog_post_privacy_level=$inp_privacy_level_mysql,
 						blog_post_ad=$inp_ad_mysql
@@ -594,8 +576,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 
 								// Dette bildet er OK
 								// Resize it
-								$inp_new_x = 950;
-								$inp_new_y = 640;
+								$inp_new_x = $blogPostsImageSizeXSav;
+								$inp_new_y = $blogPostsImageSizeYSav;
 								if($width > $inp_new_x OR $height > $inp_new_y) {
 									resize_crop_image($inp_new_x, $inp_new_y, "$root/$inp_image_path/$inp_image_file", "$root/$inp_image_path/$inp_image_file");
 								}
@@ -606,15 +588,15 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 								resize_crop_image($blogPostsThumbSmallSizeXSav, $blogPostsThumbSmallSizeYSav, "$root/$inp_image_path/$inp_image_file", "$root/$inp_image_path/$inp_thumb_small");
 		
 								// Create thumb medium
-								$inp_new_x = 150;
-								$inp_new_y = 150;
+								$inp_new_x = $blogPostsThumbMediumSizeXSav;
+								$inp_new_y = $blogPostsThumbMediumSizeYSav;
 								$inp_thumb_medium = $get_blog_post_id . "_thumb_" . $blogPostsThumbMediumSizeXSav . "x" . $blogPostsThumbMediumSizeYSav . "." . $file_type;
 								$inp_thumb_medium_mysql = quote_smart($link, $inp_thumb_medium);
 								resize_crop_image($blogPostsThumbMediumSizeXSav, $blogPostsThumbMediumSizeYSav, "$root/$inp_image_path/$inp_image_file", "$root/$inp_image_path/$inp_thumb_medium");
 		
 								// Create thumb large
-								$inp_new_x = 420;
-								$inp_new_y = 283;
+								$inp_new_x = $blogPostsThumbLargeSizeXSav;
+								$inp_new_y = $blogPostsThumbLargeSizeYSav;
 								$inp_thumb_large = $get_blog_post_id . "_thumb_" . $blogPostsThumbLargeSizeXSav . "x" . $blogPostsThumbLargeSizeYSav . "." . $file_type;
 								$inp_thumb_large_mysql = quote_smart($link, $inp_thumb_large);
 								resize_crop_image($blogPostsThumbLargeSizeXSav, $blogPostsThumbLargeSizeYSav, "$root/$inp_image_path/$inp_image_file", "$root/$inp_image_path/$inp_thumb_large");

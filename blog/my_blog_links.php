@@ -91,13 +91,17 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			echo"
 			<h1>$l_my_blog</h1>
 		
-			<!-- Where am I ? -->
+			<!-- Where am I? -->
 				<p><b>$l_you_are_here:</b><br />
+				<a href=\"index.php?l=$l\">$l_blog</a>
+				&gt;
+				<a href=\"view_blog.php?info_id=$get_blog_info_id&amp;l=$l\">$get_blog_title</a>
+				&gt;
 				<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
 				&gt;
 				<a href=\"my_blog_links.php?l=$l\">$l_links</a>
 				</p>
-			<!-- //Where am I ? -->
+			<!-- //Where am I? -->
 				
 			<!-- Feedback -->
 				";
@@ -200,6 +204,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			<!-- Where am I? -->
 				<p><b>$l_you_are_here:</b><br />
+				<a href=\"index.php?l=$l\">$l_blog</a>
+				&gt;
+				<a href=\"view_blog.php?info_id=$get_blog_info_id&amp;l=$l\">$get_blog_title</a>
+				&gt;
 				<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
 				&gt;
 				<a href=\"my_blog_links.php?l=$l\">$l_links</a>
@@ -285,6 +293,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				<!-- Where am I? -->
 					<p><b>$l_you_are_here:</b><br />
+					<a href=\"index.php?l=$l\">$l_blog</a>
+					&gt;
+					<a href=\"view_blog.php?info_id=$get_blog_info_id&amp;l=$l\">$get_blog_title</a>
+					&gt;
 					<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
 					&gt;
 					<a href=\"my_blog_links.php?l=$l\">$l_links</a>
@@ -361,6 +373,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		
 				<!-- Where am I? -->
 					<p><b>$l_you_are_here:</b><br />
+					<a href=\"index.php?l=$l\">$l_blog</a>
+					&gt;
+					<a href=\"view_blog.php?info_id=$get_blog_info_id&amp;l=$l\">$get_blog_title</a>
+					&gt;
 					<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
 					&gt;
 					<a href=\"my_blog_links.php?l=$l\">$l_links</a>
@@ -465,6 +481,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				<!-- Where am I? -->
 					<p><b>$l_you_are_here:</b><br />
+					<a href=\"index.php?l=$l\">$l_blog</a>
+					&gt;
+					<a href=\"view_blog.php?info_id=$get_blog_info_id&amp;l=$l\">$get_blog_title</a>
+					&gt;
 					<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
 					&gt;
 					<a href=\"my_blog_links.php?l=$l\">$l_links</a>
@@ -601,6 +621,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				<!-- Where am I? -->
 					<p><b>$l_you_are_here:</b><br />
+					<a href=\"index.php?l=$l\">$l_blog</a>
+					&gt;
+					<a href=\"view_blog.php?info_id=$get_blog_info_id&amp;l=$l\">$get_blog_title</a>
+					&gt;
 					<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
 					&gt;
 					<a href=\"my_blog_links.php?l=$l\">$l_links</a>
@@ -709,6 +733,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				<!-- Where am I? -->
 					<p><b>$l_you_are_here:</b><br />
+					<a href=\"index.php?l=$l\">$l_blog</a>
+					&gt;
+					<a href=\"view_blog.php?info_id=$get_blog_info_id&amp;l=$l\">$get_blog_title</a>
+					&gt;
 					<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
 					&gt;
 					<a href=\"my_blog_links.php?l=$l\">$l_links</a>

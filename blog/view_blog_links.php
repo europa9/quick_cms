@@ -94,17 +94,16 @@ else{
 		<!-- //Headline and language -->
 
 
-		<!-- Where am I ? -->
+		<!-- Where am I ? + RSS Icons -->
 			<p><b>$l_you_are_here</b><br />
 			<a href=\"view_blog.php?info_id=$get_current_blog_info_id&amp;l=$l\">$get_current_blog_title</a>
 			&gt;
 			<a href=\"view_blog_links.php?info_id=$get_current_blog_info_id&amp;l=$l\">$l_links</a>
 			</p>
-		<!-- //Where am I ? -->
+		<!-- //Where am I ? + RSS Icons -->
 
 
 		<!-- Blog navigation -->
-			<div style=\"height: 10px;\"></div>
 			<div class=\"tabs\">
 				<ul>
 					<li><a href=\"view_blog.php?info_id=$get_current_blog_info_id&amp;l=$l\">$l_blog</a></li>

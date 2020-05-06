@@ -36,14 +36,13 @@ include("$root/_admin/_translations/site/$l/blog/ts_my_blog.php");
 /*- Blog config -------------------------------------------------------------------- */
 include("$root/_admin/_data/blog.php");
 
-
-/*- Tables ---------------------------------------------------------------------------- */
-$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
-$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
-
+/*- Tables -------------------------------------------------------------------- */
+$t_blog_stats_most_used_categories	= $mysqlPrefixSav . "blog_stats_most_used_categories";
 
 
 /*- Variables ------------------------------------------------------------------------- */
+
+
 $tabindex = 0;
 $l_mysql = quote_smart($link, $l);
 
@@ -95,10 +94,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	$my_user_id = $_SESSION['user_id'];
 	$my_user_id = output_html($my_user_id);
 	$my_user_id_mysql = quote_smart($link, $my_user_id);
-	$query = "SELECT user_id, user_email, user_name, user_alias, user_rank FROM $t_users WHERE user_id=$my_user_id_mysql";
+	$query = "SELECT user_id, user_email, user_email, user_name, user_alias, user_rank FROM $t_users WHERE user_id=$my_user_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_user_id, $get_user_email, $get_user_name, $get_user_alias, $get_user_rank) = $row;
+	list($get_my_user_id, $get_my_user_email, $get_my_user_email, $get_my_user_name, $get_my_user_alias, $get_my_user_rank) = $row;
 
 	// Get blog info
 	$query = "SELECT blog_info_id, blog_user_id, blog_language, blog_title, blog_description, blog_created, blog_updated, blog_posts, blog_comments, blog_views, blog_user_ip FROM $t_blog_info WHERE blog_user_id=$my_user_id_mysql AND blog_language=$l_mysql";
@@ -110,13 +109,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	// Can I have a blog?
 	$can_post = "true";
 	if($blogWhoCanHaveBlogSav == "admin"){
-		if($get_user_rank != "admin"){
+		if($get_my_user_rank != "admin"){
 			$can_post = "false";
 			echo"<p>Sorry, you can not post. Only admin can post.</p>";
 		}
 	}
 	elseif($blogWhoCanHaveBlogSav == "admin_and_moderator"){
-		if($get_user_rank == "admin" OR $get_user_rank == "moderator"){
+		if($get_my_user_rank == "admin" OR $get_my_user_rank == "moderator"){
 		}
 		else{
 			$can_post = "false";
@@ -124,7 +123,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		}
 	}
 	elseif($blogWhoCanHaveBlogSav == "admin_moderator_and_editor"){
-		if($get_user_rank == "admin" OR $get_user_rank == "moderator" OR $get_user_rank == "editor"){
+		if($get_my_user_rank == "admin" OR $get_my_user_rank == "moderator" OR $get_my_user_rank == "editor"){
 		}
 		else{
 			$can_post = "false";
@@ -132,7 +131,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		}
 	}
 	elseif($blogWhoCanHaveBlogSav == "admin_moderator_editor_and_trusted"){
-		if($get_user_rank == "admin" OR $get_user_rank == "moderator" OR $get_user_rank == "editor" OR $get_user_rank == "trusted"){
+		if($get_my_user_rank == "admin" OR $get_my_user_rank == "moderator" OR $get_my_user_rank == "editor" OR $get_my_user_rank == "trusted"){
 		}
 		else{
 			$can_post = "false";
@@ -151,6 +150,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		else{
 			if($action == ""){
 				if($process == "1"){
+					$inp_title_pre = $_POST['inp_title_pre'];
+					$inp_title_pre = output_html($inp_title_pre);
+					$inp_title_pre_mysql = quote_smart($link, $inp_title_pre);
+
 					$inp_title = $_POST['inp_title'];
 					$inp_title = output_html($inp_title);
 					$inp_title_mysql = quote_smart($link, $inp_title);
@@ -180,9 +183,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$blog_post_introduction_mysql = quote_smart($link, $blog_post_introduction);
 					
 					mysqli_query($link, "INSERT INTO $t_blog_posts
-					(blog_post_id, blog_post_user_id, blog_post_title, blog_post_introduction, blog_post_text, blog_post_language, blog_post_privacy_level, blog_post_image_thumb_small, blog_post_image_thumb_medium, blog_post_image_thumb_large, blog_post_created, blog_post_created_rss, blog_post_updated, blog_post_updated_rss, blog_post_comments, blog_post_views, blog_post_user_ip) 
+					(blog_post_id, blog_post_user_id, blog_post_title, blog_post_title_pre, blog_post_introduction, blog_post_text, blog_post_language, blog_post_privacy_level, blog_post_image_thumb_small, blog_post_image_thumb_medium, blog_post_image_thumb_large, blog_post_created, blog_post_created_rss, blog_post_updated, blog_post_updated_rss, blog_post_comments, blog_post_views, blog_post_user_ip) 
 					VALUES 
-					(NULL, $my_user_id_mysql, $inp_title_mysql, $blog_post_introduction_mysql, '', $l_mysql, $inp_privacy_level_mysql, '', '', '', '$datetime', '$datetime_rss', '$datetime', '$datetime_rss', '0', '0', $inp_user_ip_mysql)")
+					(NULL, $my_user_id_mysql, $inp_title_mysql, $inp_title_pre_mysql, $blog_post_introduction_mysql, '', $l_mysql, $inp_privacy_level_mysql, '', '', '', '$datetime', '$datetime_rss', '$datetime', '$datetime_rss', '0', '0', $inp_user_ip_mysql)")
 					or die(mysqli_error($link));
 
 
@@ -192,6 +195,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$row = mysqli_fetch_row($result);
 					list($get_blog_post_id) = $row;
 
+					
 					if($blogEditModeSav == "bbcode"){
 						$inp_text = $_POST['inp_text'];
 						$inp_text = output_html($inp_text);
@@ -227,28 +231,82 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$result = mysqli_query($link, "UPDATE $t_blog_info SET blog_updated='$datetime', blog_updated_rss='$datetime_rss', blog_posts=$row[0]  WHERE blog_info_id=$get_blog_info_id");
 
 
-					// Search engine
-					if($inp_privacy_level == "everyone"){
-						$inp_index_title = "$inp_title | $get_blog_title | $l_blog";
-						$inp_index_title_mysql = quote_smart($link, $inp_index_title);
+					// Feed: Get my photo
+					$query = "SELECT photo_id, photo_destination, photo_thumb_40, photo_thumb_50, photo_thumb_60, photo_thumb_200 FROM $t_users_profile_photo WHERE photo_user_id='$get_my_user_id' AND photo_profile_image='1'";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_my_photo_id, $get_my_photo_destination, $get_my_photo_thumb_40, $get_my_photo_thumb_50, $get_my_photo_thumb_60, $get_my_photo_thumb_200) = $row;
 
-						$inp_index_url = "blog/view_post.php?post_id=$get_blog_post_id";
-						$inp_index_url_mysql = quote_smart($link, $inp_index_url);
 
-						$datetime = date("Y-m-d H:i:s");
-						$datetime_saying = date("j. M Y H:i");
+					// Feed: Subscriptions?
+					$q = "SELECT es_on_off FROM $t_users_email_subscriptions WHERE es_user_id=$get_my_user_id AND es_type='status_comments'";
+					$r = mysqli_query($link, $q);
+					$rowb = mysqli_fetch_row($r);
+					list($get_es_status_comments) = $rowb;
 
-						$inp_index_language_mysql = quote_smart($link, $get_blog_language);
 
-						mysqli_query($link, "INSERT INTO $t_search_engine_index 
-						(index_id, index_title, index_url, index_short_description, index_keywords, 
-						index_module_name, index_reference_name, index_reference_id, index_is_ad, index_created_datetime, index_created_datetime_print, 
-						index_language) 
-						VALUES 
-						(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $blog_post_introduction_mysql, '', 
-						'blog', 'blog_post_id','$get_blog_post_id', 0, '$datetime', '$datetime_saying', $inp_index_language_mysql)")
-						or die(mysqli_error($link));
+					// Feed: Get my ip
+					$inp_feed_user_ip = $_SERVER['REMOTE_ADDR'];
+					$inp_feed_user_ip = output_html($inp_feed_user_ip);
+					$inp_feed_user_ip_mysql = quote_smart($link, $inp_feed_user_ip);
+
+					$inp_feed_user_hostname = "";
+					if($configSiteUseGethostbyaddrSav == "1"){
+						$inp_feed_user_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
 					}
+					$inp_feed_user_hostname = output_html($inp_feed_user_hostname);
+					$inp_feed_user_hostname_mysql = quote_smart($link, $inp_feed_user_hostname);
+
+					// Feed meta
+					$inp_feed_user_id_mysql = quote_smart($link, $get_my_user_id);
+					$inp_feed_user_email_mysql = quote_smart($link, $get_my_user_email);
+					$inp_feed_user_name_mysql = quote_smart($link, $get_my_user_name);
+					$inp_feed_user_alias_mysql = quote_smart($link, $get_my_user_alias);
+					$inp_feed_user_photo_file_mysql = quote_smart($link, $get_my_photo_destination);
+					$inp_feed_user_photo_thumb_a_mysql = quote_smart($link, $get_my_photo_thumb_40);
+					$inp_feed_user_photo_thumb_b_mysql = quote_smart($link, $get_my_photo_thumb_50);
+					$inp_feed_user_photo_thumb_c_mysql = quote_smart($link, $get_my_photo_thumb_60);
+					$inp_feed_user_photo_thumb_d_mysql = quote_smart($link, $get_my_photo_thumb_200);
+
+					$inp_feed_local_id_mysql = quote_smart($link, $get_blog_post_id);
+
+					$inp_feed_main_category_id_mysql = quote_smart($link, 0);
+					$inp_feed_main_category_name_mysql = quote_smart($link, 'blog');
+					$inp_feed_sub_category_id_mysql = quote_smart($link, 0);
+					$inp_feed_sub_category_name_mysql = quote_smart($link, 'new_post');
+					
+					$inp_feed_language_mysql = quote_smart($link, $l);
+					$inp_feed_time = time();
+					$inp_feed_datetime = date('Y-m-d H:i:s');
+					$inp_feed_date_saying = date('j M Y H:i');
+				
+					// Feed info
+					$inp_feed_text_mysql = quote_smart($link, $inp_title);
+
+					$inp_feed_link_url = "blog/view_post.php?post_id=$get_blog_post_id&amp;l=$l";
+					$inp_feed_link_url_mysql = quote_smart($link, $inp_feed_link_url);
+
+					$inp_feed_link_name = "$l_read_post";
+					$inp_feed_link_name_mysql = quote_smart($link, $inp_feed_link_name);
+					
+
+					mysqli_query($link, "INSERT INTO $t_users_feeds_index
+					(feed_id, feed_user_id, feed_user_email, feed_user_name, feed_user_alias, 
+					feed_user_photo_file, feed_user_photo_thumb_40, feed_user_photo_thumb_50, feed_user_photo_thumb_60, feed_user_photo_thumb_200, 
+					feed_user_subscribe, feed_text, feed_image_path, feed_image_file, feed_image_thumb_540, 
+					feed_link_url, feed_link_name, feed_local_id, feed_main_category_id, feed_main_category_name, 
+					feed_sub_category_id, feed_sub_category_name, feed_user_ip, feed_user_hostname, feed_language, 
+					feed_created_datetime, feed_created_time, feed_created_date_saying, feed_modified_datetime, feed_likes, 
+					feed_dislikes, feed_comments,  feed_reported, feed_reported_checked) 
+					VALUES 
+					(NULL, $inp_feed_user_id_mysql, $inp_feed_user_email_mysql, $inp_feed_user_name_mysql, $inp_feed_user_alias_mysql, 
+					$inp_feed_user_photo_file_mysql, $inp_feed_user_photo_thumb_a_mysql, $inp_feed_user_photo_thumb_b_mysql, $inp_feed_user_photo_thumb_c_mysql, $inp_feed_user_photo_thumb_d_mysql, 
+					$get_es_status_comments, $inp_feed_text_mysql, '', '', '', 
+					$inp_feed_link_url_mysql, $inp_feed_link_name_mysql, $inp_feed_local_id_mysql, $inp_feed_main_category_id_mysql, $inp_feed_main_category_name_mysql, 
+					$inp_feed_sub_category_id_mysql, $inp_feed_sub_category_name_mysql, $inp_feed_user_ip_mysql, $inp_feed_user_hostname_mysql, $inp_feed_language_mysql, 
+					'$inp_feed_datetime', '$inp_feed_time', '$inp_feed_date_saying', '$inp_feed_datetime', 0, 
+					0, 0, 0, '0')")
+					or die(mysqli_error($link));
 
 					$url = "my_blog_new_post.php?action=meta&blog_post_id=$get_blog_post_id&l=$l";
 					header("Location: $url");
@@ -256,21 +314,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				}
 				echo"
-				<h1>$l_my_blog</h1>
+				<h1>$l_new_post</h1>
 	
-				<!-- My blog menu -->
-				<div class=\"tabs\">
-					<ul>
-						<li><a href=\"my_blog.php?l=$l\">$l_posts</a></li>
-						<li><a href=\"my_blog_new_post.php?l=$l\" class=\"selected\">$l_new_post</a></li>
-						<li><a href=\"my_blog_images.php?l=$l\">$l_images</a></li>
-						<li><a href=\"my_blog_info.php?l=$l\">$l_info</a></li>
-						<li><a href=\"my_blog_categories.php?l=$l\">$l_categories</a></li>
-					</ul>
-				
-				</div>
-				<div class=\"clear\" style=\"height: 20px;\"></div>
-				<!-- //My blog menu -->
+				<!-- Where am I? -->
+					<p><b>$l_you_are_here:</b><br />
+					<a href=\"index.php?l=$l\">$l_blog</a>
+					&gt;
+					<a href=\"view_blog.php?info_id=$get_blog_info_id&amp;l=$l\">$get_blog_title</a>
+					&gt;
+					<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
+					&gt;
+					<a href=\"my_blog_new_post.php?l=$l\" class=\"selected\">$l_new_post</a>
+					</p>
+				<!-- //Where am I? -->
 		
 				
 				<!-- Feedback -->
@@ -287,15 +343,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				echo"	
 				<!-- //Feedback -->
 
-
-
 			
 				<!-- Form -->
-				<h2>$l_new_post</h2>
 
 				<script>
 				\$(document).ready(function(){
-					\$('[name=\"inp_title\"]').focus();
+					\$('[name=\"inp_pre_title\"]').focus();
 				});
 					
 				</script>
@@ -398,8 +451,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		
 				<form method=\"post\" action=\"my_blog_new_post.php?l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 				
+				<p><b>$l_pre_title:</b><br />
+				<input type=\"text\" name=\"inp_title_pre\" value=\"\" size=\"55\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" style=\"width:99%;\" />
+				</p>
+
 				<p><b>$l_title:</b><br />
-				<input type=\"text\" name=\"inp_title\" value=\"\" size=\"55\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+				<input type=\"text\" name=\"inp_title\" value=\"\" size=\"55\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" style=\"width:99%;\" />
 				</p>
 
 				<p style=\"padding-bottom:0;margin-bottom:0;\"><b>$l_text:</b>
@@ -451,6 +508,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$row = mysqli_fetch_row($result);
 				list($get_blog_post_id, $get_blog_post_user_id, $get_blog_post_title, $get_blog_post_language, $get_blog_post_category_id, $get_blog_post_introduction, $get_blog_post_text, $get_blog_post_image_path, $get_blog_post_image_file, $get_blog_post_image_text, $get_blog_post_ad, $get_blog_post_created, $get_blog_post_updated, $get_blog_post_comments, $get_blog_post_views, $get_blog_post_user_ip) = $row;
 			
+
 				if($get_blog_post_id == ""){
 					echo"<p>Blog post not found.</p>";
 				}
@@ -460,9 +518,15 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						//$inp_introduction = output_html($inp_introduction);
 						//$inp_introduction_mysql = quote_smart($link, $inp_introduction);
 
+						// Category
 						$inp_category = $_POST['inp_category'];
 						$inp_category = output_html($inp_category);
 						$inp_category_mysql = quote_smart($link, $inp_category);
+						$query = "SELECT blog_category_id, blog_category_title FROM $t_blog_categories WHERE blog_category_id=$inp_category_mysql AND blog_category_user_id=$my_user_id_mysql";
+						$result = mysqli_query($link, $query);
+						$row = mysqli_fetch_row($result);
+						list($get_blog_category_id, $get_blog_category_title) = $row;
+						$inp_category_title_mysql = quote_smart($link, $get_blog_category_title);
 
 						$inp_image_text = $_POST['inp_image_text'];
 						$inp_image_text = output_html($inp_image_text);
@@ -479,9 +543,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						$inp_ad_mysql = quote_smart($link, $inp_ad);
 
 					
-						$result = mysqli_query($link, "UPDATE $t_blog_posts SET blog_post_category_id=$inp_category_mysql, 
-						blog_post_image_text=$inp_image_text_mysql,
-						blog_post_ad=$inp_ad_mysql WHERE blog_post_id=$get_blog_post_id");
+						$result = mysqli_query($link, "UPDATE $t_blog_posts SET 
+										blog_post_category_id=$inp_category_mysql, 
+										blog_post_category_title=$inp_category_title_mysql, 
+										blog_post_image_text=$inp_image_text_mysql,
+										blog_post_ad=$inp_ad_mysql 
+										WHERE blog_post_id=$get_blog_post_id");
 
 
 
@@ -493,17 +560,56 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						 WHERE blog_category_id=$inp_category_mysql AND blog_category_user_id=$my_user_id_mysql");
 
 
-						// Search engine
-						$reference_id_mysql = quote_smart($link, "blog_post_id$get_blog_post_id");
-						$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='blog' AND index_reference_id=$reference_id_mysql";
-						$result_exists = mysqli_query($link, $query_exists);
-						$row_exists = mysqli_fetch_row($result_exists);
-						list($get_index_id) = $row_exists;
-						if($get_index_id != ""){
-							$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
-											index_is_ad=$inp_ad_mysql WHERE index_id=$get_index_id");
-						}
 
+						// Stats: Most used categories (for all users)
+						$inp_title_clean = clean($get_blog_category_title);
+						$inp_title_clean_mysql = quote_smart($link, $inp_title_clean);
+						
+						$language_mysql = quote_smart($link, $get_blog_post_language);
+						$datetime = date("Y-m-d H:i:s");
+						$year = date("Y");
+
+						$inp_user_agent = $_SERVER['HTTP_USER_AGENT'];
+						$inp_user_agent = output_html($inp_user_agent);
+						$inp_user_agent_mysql = quote_smart($link, $inp_user_agent);
+
+						$inp_ip = $_SERVER['REMOTE_ADDR'];
+						$inp_ip = output_html($inp_ip);
+						$inp_ip_mysql = quote_smart($link, $inp_ip);
+
+						$inp_hostname = "$inp_ip";
+						if($configSiteUseGethostbyaddrSav == "1"){
+							$inp_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']); // Some servers in local network cant use getostbyaddr because of nameserver missing
+						}
+						$inp_hostname = output_html($inp_hostname);
+						$inp_hostname_mysql = quote_smart($link, $inp_hostname);
+
+
+						$query = "SELECT stats_cat_id, stats_cat_language, stats_cat_title, stats_cat_posts, stats_cat_last_used_datetime, stats_cat_last_used_year FROM $t_blog_stats_most_used_categories WHERE stats_cat_language=$language_mysql AND stats_cat_title=$inp_category_title_mysql";
+						$result = mysqli_query($link, $query);
+						$row = mysqli_fetch_row($result);
+						list($get_stats_cat_id, $get_stats_cat_language, $get_stats_cat_title, $get_stats_cat_posts, $get_stats_cat_last_used_datetime, $get_stats_cat_last_used_year) = $row;
+						if($get_stats_cat_id == ""){
+							// First time post for this category!
+							mysqli_query($link, "INSERT INTO $t_blog_stats_most_used_categories
+							(stats_cat_id, stats_cat_language, stats_cat_title, stats_cat_title_clean, stats_cat_posts, stats_cat_last_used_datetime, stats_cat_last_used_year, stats_cat_last_used_user_id, stats_cat_last_used_user_ip, stats_cat_last_used_user_host, stats_cat_last_used_user_user_agent) 
+							VALUES 
+							(NULL, $language_mysql, $inp_category_title_mysql, $inp_title_clean_mysql, 1, '$datetime', '$year', $get_blog_post_user_id, $inp_ip_mysql, $inp_hostname_mysql, $inp_user_agent_mysql)")
+							or die(mysqli_error($link));
+						}
+						else{
+							$inp_counter = $get_stats_cat_posts+1;
+							$result = mysqli_query($link, "UPDATE $t_blog_stats_most_used_categories SET 
+										stats_cat_posts=$inp_counter, 
+										stats_cat_last_used_datetime='$datetime', 
+										stats_cat_last_used_year=$year, 
+										stats_cat_last_used_user_id=$get_blog_post_user_id, 
+										stats_cat_last_used_user_ip=$inp_ip_mysql, 
+										stats_cat_last_used_user_host=$inp_hostname_mysql, 
+										stats_cat_last_used_user_user_agent=$inp_user_agent_mysql
+										 WHERE stats_cat_id=$get_stats_cat_id");
+						}
+						
 
 						// Image
 						// Delete cache
@@ -563,10 +669,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 									$inp_image_file = $new_name;
 									$inp_image_file_mysql = quote_smart($link, $inp_image_file);
 
+									// ext
+									$inp_imag_ext_mysql = quote_smart($link, $file_type);
+
 									// Dette bildet er OK
 									// Resize it
-									$inp_new_x = 950;
-									$inp_new_y = 640;
+									$inp_new_x = $blogPostsImageSizeXSav;
+									$inp_new_y = $blogPostsImageSizeYSav;
 									if($width > $inp_new_x OR $height > $inp_new_y) {
 										resize_crop_image($inp_new_x, $inp_new_y, "$root/$inp_image_path/$inp_image_file", "$root/$inp_image_path/$inp_image_file");
 									}
@@ -593,9 +702,22 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 									blog_post_image_thumb_small=$inp_thumb_small_mysql,
 									blog_post_image_thumb_medium=$inp_thumb_medium_mysql,
 									blog_post_image_thumb_large=$inp_thumb_large_mysql,
-									blog_post_image_file=$inp_image_file_mysql WHERE blog_post_id=$get_blog_post_id");
+									blog_post_image_file=$inp_image_file_mysql, 
+									blog_post_image_ext=$inp_imag_ext_mysql
+										WHERE blog_post_id=$get_blog_post_id");
 
 
+									// Update feed
+									$inp_feed_image_thumb = $get_blog_post_id . "_thumb_540x364." . $file_type;
+									$inp_feed_image_thumb_mysql = quote_smart($link, $inp_feed_image_thumb);
+									$result = mysqli_query($link, "UPDATE $t_users_feeds_index SET 
+													feed_image_path=$inp_image_path_mysql, 
+													feed_image_file=$inp_image_file_mysql,
+													feed_image_thumb_540=$inp_feed_image_thumb_mysql
+													 WHERE feed_user_id=$get_my_user_id AND feed_local_id=$get_blog_post_id AND feed_main_category_name='blog' AND feed_sub_category_name='new_post'");
+									
+
+					
 									// Header
 									$url = "view_post.php?post_id=$get_blog_post_id&l=$l&ft=success&fm=image_uploaded";
 									header("Location: $url");
@@ -639,19 +761,20 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					
 					}
 					echo"
-					<h1>$l_my_blog</h1>
-	
-					<!-- My blog menu -->
-					<div class=\"tabs\">
-						<ul>
-							<li><a href=\"my_blog.php?l=$l\">$l_posts</a></li>
-							<li><a href=\"my_blog_new_post.php?l=$l\" class=\"selected\">$l_new_post</a></li>
-							<li><a href=\"my_blog_info.php?l=$l\">$l_info</a></li>
-							<li><a href=\"my_blog_categories.php?l=$l\">$l_categories</a></li>
-						</ul>
-					</div>
-					<div class=\"clear\" style=\"height: 20px;\"></div>
-					<!-- //My blog menu -->
+					<h1>$l_new_post - $get_blog_post_title</h1>
+
+					<!-- Where am I? -->
+						<p><b>$l_you_are_here:</b><br />
+						<a href=\"index.php?l=$l\">$l_blog</a>
+						&gt;
+						<a href=\"view_blog.php?info_id=$get_blog_info_id&amp;l=$l\">$get_blog_title</a>
+						&gt;
+						<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
+						&gt;
+						<a href=\"my_blog_edit_post.php?post_id=$blog_post_id&amp;l=$l\">$l_new_post</a>
+						</p>
+					<!-- //Where am I? -->
+		
 		
 				
 					<!-- Feedback -->
@@ -669,8 +792,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					<!-- //Feedback -->
 
 					<!-- Meta form -->
-					<h2>$l_new_post - $get_blog_post_title</h2>
-
 					<script>
 					\$(document).ready(function(){
 						\$('[name=\"inp_introduction\"]').focus();
@@ -694,7 +815,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					</p>
 		
 					
-					<p><b>$l_image (950x640):</b><br />
+					<p><b>$l_image ($blogPostsImageSizeXSav x $blogPostsImageSizeYSav):</b><br />
 					<!-- Existing image? -->
 						";
 

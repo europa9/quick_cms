@@ -80,15 +80,27 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		echo"
 		<h1>$l_my_blog</h1>
 	
+		<!-- Where am I ? -->
+			<p><b>$l_you_are_here:</b><br />
+			<a href=\"index.php?l=$l\">$l_blog</a>
+			&gt;
+			<a href=\"view_blog.php?info_id=$get_blog_info_id&amp;l=$l\">$get_blog_title</a>
+			&gt;
+			<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
+			&gt;
+			<a href=\"my_blog_entries.php?l=$l\">$l_entries</a>
+			</p>
+		<!-- Where am I ? -->
+
 		<!-- My posts -->
 
 			";
 
 
-			$query = "SELECT blog_post_id, blog_post_title, blog_post_category_id, blog_post_introduction, blog_post_image_path, blog_post_image_thumb_small, blog_post_image_thumb_medium, blog_post_image_thumb_large, blog_post_image_file, blog_post_updated, blog_post_comments, blog_post_views FROM $t_blog_posts WHERE blog_post_user_id=$my_user_id_mysql AND blog_post_language=$l_mysql ORDER BY blog_post_id DESC";
+			$query = "SELECT blog_post_id, blog_post_title, blog_post_category_id, blog_post_introduction, blog_post_image_path, blog_post_image_thumb_small, blog_post_image_thumb_medium, blog_post_image_thumb_large, blog_post_image_file, blog_post_image_ext, blog_post_updated, blog_post_comments, blog_post_views FROM $t_blog_posts WHERE blog_post_user_id=$my_user_id_mysql AND blog_post_language=$l_mysql ORDER BY blog_post_id DESC";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
-				list($get_blog_post_id, $get_blog_post_title, $get_blog_post_category_id, $get_blog_post_introduction, $get_blog_post_image_path, $get_blog_post_image_thumb_small, $get_blog_post_image_thumb_medium, $get_blog_post_image_thumb_large, $get_blog_post_image_file, $get_blog_post_updated, $get_blog_post_comments, $get_blog_post_views) = $row;
+				list($get_blog_post_id, $get_blog_post_title, $get_blog_post_category_id, $get_blog_post_introduction, $get_blog_post_image_path, $get_blog_post_image_thumb_small, $get_blog_post_image_thumb_medium, $get_blog_post_image_thumb_large, $get_blog_post_image_file, $get_blog_post_image_ext, $get_blog_post_updated, $get_blog_post_comments, $get_blog_post_views) = $row;
 
 
 				if(isset($style) && $style == "bodycell"){
@@ -193,9 +205,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 				// Intro
+				$get_blog_post_introduction = str_replace("&lt;p&gt;", "", $get_blog_post_introduction);
+				$get_blog_post_introduction = str_replace("&lt;/p&gt;", "", $get_blog_post_introduction);
 				$get_blog_post_introduction_len = strlen($get_blog_post_introduction);
-				if($get_blog_post_introduction_len > 40){
-					$get_blog_post_introduction = substr($get_blog_post_introduction, 0, 35);
+				if($get_blog_post_introduction_len > 240){
+					$get_blog_post_introduction = substr($get_blog_post_introduction, 0, 235);
 					$get_blog_post_introduction = $get_blog_post_introduction . "...";
 				}
 
@@ -203,14 +217,26 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				<div class=\"my_blog_entries_$style\">
 					<table style=\"width: 100%;\">
 					 <tr>
-					  <td class=\"my_blog_entries_img\" style=\"width: $blogPostsThumbSmallSizeXSav"; echo"px\">
+					  <td class=\"my_blog_entries_img\" style=\"width: 100px\">
 						
 						<p>";
 						if($get_blog_post_image_file != "" && file_exists("$root/$get_blog_post_image_path/$get_blog_post_image_file")){
+
+							// Create thumb
+							$width = 100;
+							$height = 67;
+							$thumb = $get_blog_post_id . "_thumb_" . $width . "x" . $height . "." . $get_blog_post_image_ext;
+							if(!(file_exists("$root/$get_blog_post_image_path/$thumb"))){
+								resize_crop_image($width, $height, "$root/$get_blog_post_image_path/$get_blog_post_image_file", "$root/$get_blog_post_image_path/$thumb");
+							}	
+
+
+
+
 							// 950 x 640
 							// 
 							echo"
-							<a href=\"view_post.php?post_id=$get_blog_post_id&amp;l=$l\"><img src=\"$root/$get_blog_post_image_path/$get_blog_post_image_thumb_small\" alt=\"$get_blog_post_image_file\" /></a>
+							<a href=\"view_post.php?post_id=$get_blog_post_id&amp;l=$l\"><img src=\"$root/$get_blog_post_image_path/$thumb\" alt=\"$get_blog_post_image_file\" /></a>
 							";
 						}
 						echo"

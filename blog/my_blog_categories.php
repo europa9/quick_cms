@@ -87,19 +87,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			echo"
 			<h1>$l_my_blog</h1>
 		
-			<!-- My blog menu -->
-				<div class=\"tabs\">
-					<ul>
-						<li><a href=\"my_blog.php?l=$l\">$l_posts</a></li>
-						<li><a href=\"my_blog_new_post.php?l=$l\">$l_new_post</a></li>
-						<li><a href=\"my_blog_images.php?l=$l\">$l_images</a></li>
-						<li><a href=\"my_blog_info.php?l=$l\">$l_info</a></li>
-						<li><a href=\"my_blog_categories.php?l=$l\" class=\"selected\">$l_categories</a></li>
-					</ul>
+	
+			<!-- Where am I ? -->
+				<p><b>$l_you_are_here:</b><br />
+				<a href=\"index.php?l=$l\">$l_blog</a>
+				&gt;
+				<a href=\"view_blog.php?info_id=$get_blog_info_id&amp;l=$l\">$get_blog_title</a>
+				&gt;
+				<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
+				&gt;
+				<a href=\"my_blog_categories.php?l=$l\">$l_categories</a>
+				</p>
+			<!-- Where am I ? -->
 				
-				</div>
-				<div class=\"clear\" style=\"height: 20px;\"></div>
-			<!-- //My blog menu -->
 		
 				
 			<!-- Feedback -->
@@ -217,18 +217,20 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			echo"
 			<h1>$l_my_blog</h1>
 		
-			<!-- My blog menu -->
-				<div class=\"tabs\">
-					<ul>
-						<li><a href=\"my_blog.php?l=$l\">$l_posts</a></li>
-						<li><a href=\"my_blog_new_post.php?l=$l\">$l_new_post</a></li>
-						<li><a href=\"my_blog_info.php?l=$l\">$l_info</a></li>
-						<li><a href=\"my_blog_categories.php?l=$l\" class=\"selected\">$l_categories</a></li>
-					</ul>
+			<!-- Where am I ? -->
+				<p><b>$l_you_are_here:</b><br />
+				<a href=\"index.php?l=$l\">$l_blog</a>
+				&gt;
+				<a href=\"view_blog.php?info_id=$get_blog_info_id&amp;l=$l\">$get_blog_title</a>
+				&gt;
+				<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
+				&gt;
+				<a href=\"my_blog_categories.php?l=$l\">$l_categories</a>
+				&gt;
+				<a href=\"my_blog_categories.php?action=$action&amp;l=$l\">$l_new_category</a>
+				</p>
+			<!-- Where am I ? -->
 				
-				</div>
-				<div class=\"clear\" style=\"height: 20px;\"></div>
-			<!-- //My blog menu -->
 		
 				
 			<!-- Feedback -->
@@ -303,20 +305,22 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				
 				}
 				echo"
-				<h1>$l_my_blog</h1>
+				<h1>$l_edit_category $get_blog_category_title</h1>
 		
-				<!-- My blog menu -->
-				<div class=\"tabs\">
-					<ul>
-						<li><a href=\"my_blog.php?l=$l\">$l_posts</a></li>
-						<li><a href=\"my_blog_new_post.php?l=$l\">$l_new_post</a></li>
-						<li><a href=\"my_blog_info.php?l=$l\">$l_info</a></li>
-						<li><a href=\"my_blog_categories.php?l=$l\" class=\"selected\">$l_categories</a></li>
-					</ul>
+				<!-- Where am I ? -->
+					<p><b>$l_you_are_here:</b><br />
+					<a href=\"index.php?l=$l\">$l_blog</a>
+					&gt;
+					<a href=\"view_blog.php?info_id=$get_blog_info_id&amp;l=$l\">$get_blog_title</a>
+					&gt;
+					<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
+					&gt;
+					<a href=\"my_blog_categories.php?l=$l\">$l_categories</a>
+					&gt;
+					<a href=\"my_blog_categories.php?action=$action&amp;category_id=$get_category_id&amp;l=$l\">$l_edit_category</a>
+					</p>
+				<!-- Where am I ? -->
 				
-				</div>
-				<div class=\"clear\" style=\"height: 20px;\"></div>
-				<!-- //My blog menu -->
 		
 				
 				<!-- Feedback -->
@@ -335,8 +339,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 				<!-- Edit category Form -->
-
-				<h2>$l_new_category</h2>
 
 				<script>
 				\$(document).ready(function(){
@@ -382,20 +384,23 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				
 				}
 				echo"
-				<h1>$l_my_blog</h1>
-		
-				<!-- My blog menu -->
-				<div class=\"tabs\">
-					<ul>
-						<li><a href=\"my_blog.php?l=$l\">$l_posts</a></li>
-						<li><a href=\"my_blog_new_post.php?l=$l\">$l_new_post</a></li>
-						<li><a href=\"my_blog_info.php?l=$l\">$l_info</a></li>
-						<li><a href=\"my_blog_categories.php?l=$l\" class=\"selected\">$l_categories</a></li>
-					</ul>
+				<h1>$l_delete_category $get_blog_category_title</h1>
+
+				<!-- Where am I ? -->
+					<p><b>$l_you_are_here:</b><br />
+					<a href=\"index.php?l=$l\">$l_blog</a>
+					&gt;
+					<a href=\"view_blog.php?info_id=$get_blog_info_id&amp;l=$l\">$get_blog_title</a>
+					&gt;
+					<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
+					&gt;
+					<a href=\"my_blog_categories.php?l=$l\">$l_categories</a>
+					&gt;
+					<a href=\"my_blog_categories.php?action=$action&amp;category_id=$get_category_id&amp;l=$l\">$l_delete_category</a>
+					</p>
+				<!-- Where am I ? -->
 				
-				</div>
-				<div class=\"clear\" style=\"height: 20px;\"></div>
-				<!-- //My blog menu -->
+		
 		
 				
 				<!-- Feedback -->
@@ -414,8 +419,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 				<!-- Delete category Form -->
-
-				<h2>$l_delete_category $get_blog_category_title</h2>
 
 				<p>$l_are_you_sure</p>
 

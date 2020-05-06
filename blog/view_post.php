@@ -304,20 +304,7 @@ else{
 
 			echo"
 
-			<h1>$get_current_blog_post_title</h1>
-
 		
-
-			<!-- Where am I ? -->
-				<p><b>$l_you_are_here</b><br />
-				<a href=\"view_blog.php?info_id=$get_current_blog_info_id&amp;l=$l\">$get_current_blog_title</a>
-				&gt;
-				<a href=\"view_category.php?category_id=$get_current_blog_post_category_id&amp;l=$l\">$get_current_blog_category_title</a>
-				&gt;
-				<a href=\"view_post.php?post_id=$get_current_blog_post_id&amp;l=$l\">$get_current_blog_post_title</a>
-				</p>
-			<!-- //Where am I ? -->
-
 			<!-- Existing image? -->
 			";
 			if($get_current_blog_post_image_file != "" && file_exists("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_file")){
@@ -332,6 +319,8 @@ else{
 			echo"
 			<!-- //Existing image? -->
 			
+			<h1 style=\"margin-top:8px;padding-top:0;\">$get_current_blog_post_title</h1>
+
 
 			<!-- Author and metadata -->
 				<div class=\"view_post_metadata_left\">
@@ -387,9 +376,7 @@ else{
 
 			<!-- Ad -->
 				";
-				if(file_exists("$root/ad/_includes/ad_main_below_headline.php")){
-					include("$root/ad/_includes/ad_main_below_headline.php");
-				}
+				include("$root/ad/_includes/ad_main_below_headline.php");
 				echo"
 			<!-- //Ad -->
 
