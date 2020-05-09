@@ -18,13 +18,14 @@ if($page == "menu"){
 	<h1>Muscles</h1>
 	<div class=\"vertical\">
 		<ul>
-			<li><a href=\"index.php?open=$open&amp;editor_language=$editor_language\">Muscles</a></li>
+			<li><a href=\"index.php?open=$open&amp;editor_language=$editor_language\">Muscles default</a></li>
 
 	";
 }
 
 
 echo"
+			<li><a href=\"index.php?open=$open&amp;page=muscles&amp;editor_language=$editor_language\">Muscles</a></li>
 			<li><a href=\"index.php?open=$open&amp;page=sqlite_muscles&amp;editor_language=$editor_language\""; if($page == "sqlite_muscles"){ echo" class=\"selected\""; } echo">SQLite Muscles</a></li>
 			<li><a href=\"index.php?open=$open&amp;page=muscle_groups&amp;editor_language=$editor_language\""; if($page == "muscle_groups"){ echo" class=\"selected\""; } echo">Muscle groups</a></li>
 			<li><a href=\"index.php?open=$open&amp;page=muscle_part_of&amp;editor_language=$editor_language\""; if($page == "muscle_part_of"){ echo" class=\"selected\""; } echo">Muscle part of</a></li>

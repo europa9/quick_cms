@@ -77,7 +77,7 @@ if($action == ""){
 						$row_translation = mysqli_fetch_row($result_translation);
 						list($get_muscle_group_translation_id, $get_muscle_group_translation_name) = $row_translation;
 						echo"					";
-						echo"<a href=\"index.php?open=$open&amp;page=$page&amp;action=open_main&amp;main_group_id=$get_muscle_group_id&amp;editor_language=$editor_language\">$get_muscle_group_translation_name</a><br />\n";
+						echo"<a href=\"index.php?open=$open&amp;page=open_main_muscle_group&amp;main_muscle_group_id=$get_muscle_group_id&amp;editor_language=$editor_language\">$get_muscle_group_translation_name</a><br />\n";
 					}
 				echo"
 				  </td>
@@ -95,8 +95,8 @@ if($action == ""){
 }
 elseif($action == "open_main"){
 	// Select main
-	$main_id_mysql = quote_smart($link, $main_id);
-	$query = "SELECT muscle_group_id, muscle_group_name, muscle_group_name_clean, muscle_group_parent_id, muscle_group_image_path, muscle_group_image_file FROM $t_muscle_groups WHERE muscle_group_id=$main_id_mysql";
+	$main_group_id_mysql = quote_smart($link, $main_group_id);
+	$query = "SELECT muscle_group_id, muscle_group_name, muscle_group_name_clean, muscle_group_parent_id, muscle_group_image_path, muscle_group_image_file FROM $t_muscle_groups WHERE muscle_group_id=$main_group_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
 	list($get_current_muscle_group_id, $get_current_muscle_group_name, $get_current_muscle_group_name_clean, $get_current_muscle_group_parent_id, $get_current_muscle_group_image_path, $get_current_muscle_group_image_file) = $row;
@@ -119,7 +119,7 @@ elseif($action == "open_main"){
 			<b>You are here:</b><br />
 			<a href=\"index.php?open=$open&amp;page=$page&amp;editor_language=$editor_language\">Main</a>
 			&gt;
-			<a href=\"index.php?open=$open&amp;page=$page&amp;action=open_main&amp;main_id=$main_id&amp;editor_language=$editor_language\">$get_current_muscle_group_name</a>
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=open_main&amp;main_id=$main_group_id&amp;editor_language=$editor_language\">$get_current_muscle_group_name</a>
 			</p>
 		<!-- //Where am I? -->
 
@@ -176,7 +176,7 @@ elseif($action == "open_main"){
 				if($get_main_muscle_group_id == $get_current_muscle_group_id){
 
 					// Get all sub
-					$query_sub = "SELECT muscle_group_id, muscle_group_name, muscle_group_name_clean, muscle_group_parent_id, muscle_group_image_path, muscle_group_image_file FROM $t_muscle_groups WHERE muscle_group_parent_id=$main_id_mysql";
+					$query_sub = "SELECT muscle_group_id, muscle_group_name, muscle_group_name_clean, muscle_group_parent_id, muscle_group_image_path, muscle_group_image_file FROM $t_muscle_groups WHERE muscle_group_parent_id=$main_group_id_mysql";
 					$result_sub = mysqli_query($link, $query_sub);
 					while($row_sub = mysqli_fetch_row($result_sub)) {
 						list($get_sub_muscle_group_id, $get_sub_muscle_group_name, $get_sub_muscle_group_name_clean, $get_sub_muscle_group_parent_id, $get_sub_muscle_group_image_path, $get_sub_muscle_group_image_file) = $row_sub;

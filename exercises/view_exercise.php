@@ -469,7 +469,7 @@ else {
 				$headers[] = 'MIME-Version: 1.0';
 				$headers[] = 'Content-type: text/html; charset=utf-8';
 				$headers[] = "From: $configFromNameSav <" . $configFromEmailSav . ">";
-				mail($get_moderator_user_email, $subject, $message, implode("\r\n", $headers));
+				// mail($get_moderator_user_email, $subject, $message, implode("\r\n", $headers));
 
 
 				$fh = fopen($missing_file, "w") or die("can not open file");
@@ -593,7 +593,7 @@ else {
 				$headers[] = 'MIME-Version: 1.0';
 				$headers[] = 'Content-type: text/html; charset=utf-8';
 				$headers[] = "From: $configFromNameSav <" . $configFromEmailSav . ">";
-				mail($get_moderator_user_email, $subject, $message, implode("\r\n", $headers));
+				// mail($get_moderator_user_email, $subject, $message, implode("\r\n", $headers));
 
 
 

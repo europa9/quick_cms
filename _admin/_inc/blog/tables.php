@@ -26,6 +26,8 @@ function fix_local($value){
         return $value;
 }
 /*- Tables ---------------------------------------------------------------------------- */
+$t_blog_liquidbase	= $mysqlPrefixSav . "blog_liquidbase";
+
 $t_blog_info 		= $mysqlPrefixSav . "blog_info";
 $t_blog_categories	= $mysqlPrefixSav . "blog_categories";
 $t_blog_posts 		= $mysqlPrefixSav . "blog_posts";
@@ -38,319 +40,201 @@ $t_blog_links_categories	= $mysqlPrefixSav . "blog_links_categories";
 
 $t_blog_ping_list_per_blog	= $mysqlPrefixSav . "blog_ping_list_per_blog";
 
-echo"
-<h1>Tables</h1>
 
 
-	<!-- blog_info -->
+if($action == ""){
+	echo"
+	<h1>Tables</h1>
+
+
+
+	<!-- Where am I? -->
+		<p><b>You are here:</b><br />
+		<a href=\"index.php?open=blog&amp;page=menu&amp;editor_language=$editor_language&amp;l=$l\">Hash DB</a>
+		&gt;
+		<a href=\"index.php?open=blog&amp;page=tables&amp;editor_language=$editor_language&amp;l=$l\">Tables</a>
+		</p>
+	<!-- //Where am I? -->
+
+
+
+	<!-- liquidbase-->
 	";
-
-	
-	$query = "SELECT * FROM $t_blog_info";
+	$query = "SELECT * FROM $t_blog_liquidbase LIMIT 1";
 	$result = mysqli_query($link, $query);
 	if($result !== FALSE){
 		// Count rows
 		$row_cnt = mysqli_num_rows($result);
 		echo"
-		<p>$t_blog_info: $row_cnt</p>
+		<p>$t_blog_liquidbase: $row_cnt</p>
 		";
 	}
 	else{
+		mysqli_query($link, "CREATE TABLE $t_blog_liquidbase(
+		  liquidbase_id INT NOT NULL AUTO_INCREMENT,
+		  PRIMARY KEY(liquidbase_id), 
+		   liquidbase_dir VARCHAR(200), 
+		   liquidbase_file VARCHAR(200), 
+		   liquidbase_run_datetime DATETIME, 
+		   liquidbase_run_saying VARCHAR(200))")
+	  	 or die(mysqli_error());	
+	}
+	echo"
+	<!-- liquidbase-->
+
+
+	<!-- Feedback -->
+		";
+		if($ft != "" && $fm != ""){
+			if($fm == "changes_saved"){
+				$fm = "$l_changes_saved";
+			}
+			else{
+				$fm = ucfirst($fm);
+			}
+			echo"<div class=\"$ft\"><p>$fm</p></div>";
+		}
 		echo"
-		<table>
-		 <tr> 
-		  <td style=\"padding-right: 6px;\">
-			<p>
-			<img src=\"_design/gfx/loading_22.gif\" alt=\"Loading\" />
-			</p>
+	<!-- //Feedback -->
+
+	<!-- Run -->
+		";
+
+		// Open that year folder
+		$path = "_inc/blog/_liquidbase_db_scripts";
+		if ($handle = opendir($path)) {
+			while (false !== ($liquidbase_name = readdir($handle))) {
+				if ($liquidbase_name === '.') continue;
+				if ($liquidbase_name === '..') continue;
+				
+				if(!(is_dir("_inc/blog/_liquidbase_db_scripts/$liquidbase_name"))){
+
+					// Has it been executed?
+					$inp_liquidbase_module_mysql = quote_smart($link, "");
+					$inp_liquidbase_name_mysql = quote_smart($link, $liquidbase_name);
+					
+					$query = "SELECT liquidbase_id FROM $t_blog_liquidbase WHERE liquidbase_dir=$inp_liquidbase_module_mysql AND liquidbase_file=$inp_liquidbase_name_mysql";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_liquidbase_id) = $row;
+					if($get_liquidbase_id == ""){
+						// Date
+						$datetime = date("Y-m-d H:i:s");
+						$run_saying = date("j M Y H:i");
+
+
+						// Insert
+						mysqli_query($link, "INSERT INTO $t_blog_liquidbase
+						(liquidbase_id, liquidbase_dir, liquidbase_file, liquidbase_run_datetime, liquidbase_run_saying) 
+						VALUES 
+						(NULL, $inp_liquidbase_module_mysql, $inp_liquidbase_name_mysql, '$datetime', '$run_saying')")
+						or die(mysqli_error($link));
+
+						// Run code
+						include("_inc/blog/_liquidbase_db_scripts/$liquidbase_name");
+					} // not runned before
+				} // is dir
+			} // whule open files
+		} // handle modules
+		echo"
+	<!-- //Run -->
+
+	<!-- liquidbase scripts -->
+		<table class=\"hor-zebra\">
+		 <thead>
+		  <tr>
+		   <th scope=\"col\">
+			<span>Directory</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>File</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Run date</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Actions</span>
+		   </th>
+		  </tr>
+		</thead>
+		<tbody>
+	";
+
+	$query = "SELECT liquidbase_id, liquidbase_dir, liquidbase_file, liquidbase_run_datetime, liquidbase_run_saying FROM $t_blog_liquidbase ORDER BY liquidbase_id DESC";
+	$result = mysqli_query($link, $query);
+	while($row = mysqli_fetch_row($result)) {
+		list($get_liquidbase_id, $get_liquidbase_dir, $get_liquidbase_file, $get_liquidbase_run_datetime, $get_liquidbase_run_saying) = $row;
+
+		// Style
+		if(isset($style) && $style == ""){
+			$style = "odd";
+		}
+		else{
+			$style = "";
+		}
+	
+		echo"
+		 <tr>
+		  <td class=\"$style\">
+			<span>$get_liquidbase_dir</span>
 		  </td>
-		  <td>
-			<h1>Loading...</h1>
+		  <td class=\"$style\">
+			<span>$get_liquidbase_file</span>
+		  </td>
+		  <td class=\"$style\">
+			<span>$get_liquidbase_run_saying</span>
+		  </td>
+		  <td class=\"$style\">
+			<span>
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=delete&amp;liquidbase_id=$get_liquidbase_id&amp;editor_language=$editor_language\">$l_delete</a></span>
 		  </td>
 		 </tr>
+		";
+
+	}
+	echo"
+		 </tbody>
 		</table>
 
-		
-		<meta http-equiv=\"refresh\" content=\"2;url=index.php?open=$open&amp;page=tables\">
-		";
-
-
-		mysqli_query($link, "CREATE TABLE $t_blog_info(
-	  	 blog_info_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(blog_info_id), 
-	  	   blog_user_id INT,
-	  	   blog_language VARCHAR(50),
-	  	   blog_title VARCHAR(250),
-	  	   blog_description TEXT,
-	  	   blog_created DATETIME,
-	  	   blog_updated DATETIME,
-	  	   blog_updated_rss VARCHAR(250),
-	  	   blog_posts INT,
-	  	   blog_comments INT,
-	  	   blog_views INT,
-	  	   blog_views_ipblock VARCHAR(250),
-	  	   blog_user_ip VARCHAR(250))")
-		   or die(mysqli_error());
-
-	}
-	echo"
-	<!-- //blog_info -->
-
-	
-	<!-- blog_categories -->
+	<!-- //liquidbase scripts -->
 	";
-
-	
-	$query = "SELECT * FROM $t_blog_categories";
-	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
-		echo"
-		<p>$t_blog_categories: $row_cnt</p>
-		";
+}
+elseif($action == "delete"){
+	if(isset($_GET['liquidbase_id'])) {
+		$liquidbase_id = $_GET['liquidbase_id'];
+		$liquidbase_id  = strip_tags(stripslashes($liquidbase_id));
 	}
 	else{
-		mysqli_query($link, "CREATE TABLE $t_blog_categories(
-	  	 blog_category_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(blog_category_id), 
-	  	   blog_category_user_id INT,
-	  	   blog_category_language VARCHAR(50),
-	  	   blog_category_title VARCHAR(250), 
-	  	   blog_category_posts INT)")
-		   or die(mysqli_error());
-
+		$liquidbase_id = "";
 	}
-	echo"
-	<!-- //blog_categories -->
-
-	<!-- blog_posts -->
-	";
-	$query = "SELECT * FROM $t_blog_posts";
+	$liquidbase_id_mysql = quote_smart($link, $liquidbase_id);
+	$query = "SELECT liquidbase_id, liquidbase_file, liquidbase_run_datetime FROM $t_blog_liquidbase WHERE liquidbase_id=$liquidbase_id_mysql";
 	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
+	$row = mysqli_fetch_row($result);
+	list($get_liquidbase_id, $get_liquidbase_file, $get_liquidbase_run_datetime) = $row;
+
+	if($get_liquidbase_id != ""){
+		if($process == "1"){
+
+			mysqli_query($link, "DELETE FROM $t_blog_liquidbase WHERE liquidbase_id=$get_liquidbase_id") or die(mysqli_error($link));
+
+			$url = "index.php?open=$open&page=$page&ft=success&fm=deleted";
+			header("Location: $url");
+			exit;
+		}
+
 		echo"
-		<p>$t_blog_posts: $row_cnt</p>
+		<h1>Delete_liquidbase $get_liquidbase_file</h1>
+
+
+		<p>
+		Are you sure you want to dlete the liquidbase script run? 
+		This will cause the script to run again after deletion. 
+		</p>
+
+		<p>
+		<a href=\"index.php?open=$open&amp;page=$page&amp;action=delete&amp;liquidbase_id=$get_liquidbase_id&amp;editor_language=$editor_language&amp;process=1\" class=\"btn_warning\">Confirm delete</a>
+		</p>
 		";
 	}
-	else{
-		mysqli_query($link, "CREATE TABLE $t_blog_posts(
-	  	 blog_post_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(blog_post_id), 
-	  	   blog_post_user_id INT,
-	  	   blog_post_title VARCHAR(250), 
-	  	   blog_post_language VARCHAR(50),
-	  	   blog_post_category_id INT,
-	  	   blog_post_introduction TEXT, 
-	  	   blog_post_privacy_level VARCHAR(25),
-	  	   blog_post_text TEXT,  
-	  	   blog_post_image_path VARCHAR(250),
-	  	   blog_post_image_thumb_small VARCHAR(250),
-	  	   blog_post_image_thumb_medium VARCHAR(250),
-	  	   blog_post_image_thumb_large VARCHAR(250),
-	  	   blog_post_image_file VARCHAR(250),
-	  	   blog_post_image_text TEXT,
-	  	   blog_post_ad INT,
-	  	   blog_post_created DATETIME,
-	  	   blog_post_created_rss VARCHAR(200),
-	  	   blog_post_updated DATETIME,
-	  	   blog_post_updated_rss VARCHAR(200),
-	  	   blog_post_allow_comments INT,
-	  	   blog_post_comments INT, 
-	  	   blog_post_views INT, 
-	  	   blog_post_views_ipblock VARCHAR(250),
-	  	   blog_post_user_ip VARCHAR(250))")
-		   or die(mysqli_error());
-
-	}
-	echo"
-	<!-- //blog_posts -->
-
-	<!-- blog_posts_tags -->
-	";
-	$query = "SELECT * FROM $t_blog_posts_tags";
-	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
-		echo"
-		<p>$t_blog_posts_tags: $row_cnt</p>
-		";
-	}
-	else{
-		mysqli_query($link, "CREATE TABLE $t_blog_posts_tags(
-	  	 blog_post_tag_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(blog_post_tag_id), 
-	  	   blog_post_id INT,
-	  	   blog_post_tag_language VARCHAR(50),
-	  	   blog_post_tag_title VARCHAR(250))")
-		   or die(mysqli_error());
-
-	}
-	echo"
-	<!-- //blog_posts_tags -->
-
-	<!-- blog_images -->
-	";
-	$query = "SELECT * FROM $t_blog_images";
-	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
-		echo"
-		<p>$t_blog_images: $row_cnt</p>
-		";
-	}
-	else{
-		mysqli_query($link, "CREATE TABLE $t_blog_images(
-	  	 image_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(image_id), 
-	  	   image_user_id INT,
-	  	   image_title VARCHAR(200),
-	  	   image_path VARCHAR(200),
-	  	   image_thumb VARCHAR(200),
-	  	   image_file VARCHAR(200),
-	  	   image_uploaded_datetime DATETIME,
-	  	   image_uploaded_ip VARCHAR(200),
-	  	   image_unique_views INT,
-	  	   image_ip_block TEXT,
-	  	   image_reported INT,
-	  	   image_reported_checked VARCHAR(200),
-	  	   image_likes INT,
-	  	   image_dislikes INT,
-	  	   image_likes_dislikes_ipblock TEXT,
-	  	   image_comments INT)")
-		   or die(mysqli_error());
-
-	}
-	echo"
-	<!-- //blog_images -->
-
-
-
-	<!-- blog_logos -->
-	";
-	$query = "SELECT * FROM $t_blog_logos";
-	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
-		echo"
-		<p>$t_blog_logos: $row_cnt</p>
-		";
-	}
-	else{
-		mysqli_query($link, "CREATE TABLE $t_blog_logos(
-	  	 logo_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(logo_id), 
-	  	   logo_blog_info_id INT,
-	  	   logo_user_id INT,
-	  	   logo_path VARCHAR(200),
-	  	   logo_thumb VARCHAR(200),
-	  	   logo_file VARCHAR(200),
-	  	   logo_uploaded_datetime DATETIME,
-	  	   logo_uploaded_ip VARCHAR(200),
-	  	   logo_reported INT,
-	  	   logo_reported_checked VARCHAR(200))")
-		   or die(mysqli_error());
-
-	}
-	echo"
-	<!-- //blog_logos -->
-
-
-
-	<!-- blog_links_categories -->
-	";
-	$query = "SELECT * FROM $t_blog_links_categories";
-	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
-		echo"
-		<p>$t_blog_links_categories: $row_cnt</p>
-		";
-	}
-	else{
-		mysqli_query($link, "CREATE TABLE $t_blog_links_categories(
-	  	 category_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(category_id), 
-	  	   category_blog_info_id INT,
-	  	   category_user_id INT,
-	  	   category_title VARCHAR(200))")
-		   or die(mysqli_error());
-
-	}
-	echo"
-	<!-- //blog_links_categories -->
-
-
-	<!-- blog_links_index -->
-	";
-	$query = "SELECT * FROM $t_blog_links_index";
-	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
-		echo"
-		<p>$t_blog_links_index: $row_cnt</p>
-		";
-	}
-	else{
-		mysqli_query($link, "CREATE TABLE $t_blog_links_index(
-	  	 link_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(link_id), 
-	  	   link_blog_info_id INT,
-	  	   link_user_id INT,
-	  	   link_category_id INT,
-	  	   link_title VARCHAR(200),
-	  	   link_url_real VARCHAR(200),
-	  	   link_url_display VARCHAR(200),
-	  	   link_description VARCHAR(200),
-	  	   link_is_ad INT,
-	  	   link_img_path VARCHAR(200),
-	  	   link_img_file VARCHAR(200),
-	  	   link_clicks_unique INT,
-	  	   link_clicks_unique_ipblock TEXT,
-	  	   link_added DATETIME,
-	  	   link_edited DATETIME)")
-		   or die(mysqli_error());
-	}
-	echo"
-	<!-- //blog_links_index -->
-
-	<!-- blog_ping_list_per_bog -->
-	";
-	$query = "SELECT * FROM $t_blog_ping_list_per_blog";
-	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
-		echo"
-		<p>$t_blog_ping_list_per_blog: $row_cnt</p>
-		";
-	}
-	else{
-		mysqli_query($link, "CREATE TABLE $t_blog_ping_list_per_blog(
-	  	 ping_list_per_blog_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(ping_list_per_blog_id), 
-	  	   ping_list_per_blog_blog_info_id INT,
-	  	   ping_list_per_blog_user_id INT,
-	  	   ping_list_per_blog_title VARCHAR(200),
-	  	   ping_list_per_blog_url VARCHAR(200),
-	  	   ping_list_per_blog_last_pinged_year INT,
-	  	   ping_list_per_blog_last_pinged_month INT,
-	  	   ping_list_per_blog_last_pinged_day INT,
-	  	   ping_list_per_blog_last_pinged_datetime_print VARCHAR(200),
-	  	   ping_list_per_blog_added DATETIME,
-	  	   ping_list_per_blog_edited DATETIME)")
-		   or die(mysqli_error());
-	}
-	echo"
-	<!-- //blog_ping_list_per_bog -->
-
-	 
-	";
-?>
+}
