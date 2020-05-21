@@ -84,99 +84,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	}
 	else{
 		if($action == ""){
-			echo"
-			<h1>$l_my_blog $l_images</h1>
-		
-			<!-- Where am I ? -->
-				<p><b>$l_you_are_here:</b><br />
-				<a href=\"index.php?l=$l\">$l_blog</a>
-				&gt;
-				<a href=\"view_blog.php?info_id=$get_blog_info_id&amp;l=$l\">$get_blog_title</a>
-				&gt;
-				<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
-				&gt;
-				<a href=\"my_blog_images.php?l=$l\">$l_images</a>
-				</p>
-			<!-- Where am I ? -->
-				
-			<!-- Feedback -->
-				";
-				if($ft != ""){
-					if($fm == "changes_saved"){
-						$fm = "$l_changes_saved";
-					}
-					else{
-						$fm = ucfirst($fm);
-					}
-					echo"<div class=\"$ft\"><span>$fm</span></div>";
-				}
-				echo"	
-			<!-- //Feedback -->
-
-
-			<p>
-			<a href=\"my_blog_images.php?action=upload_image&amp;l=$l\" class=\"btn btn_default\">$l_upload_image</a>
-			</p>
-			
-			<!-- Images -->
-				";
-				
-				$query = "SELECT image_id, image_user_id, image_title, image_path, image_thumb, image_file, image_uploaded_datetime, image_uploaded_ip, image_unique_views, image_ip_block, image_reported, image_reported_checked, image_likes, image_dislikes, image_likes_dislikes_ipblock, image_comments FROM $t_blog_images WHERE image_user_id=$my_user_id_mysql ORDER BY image_id DESC";
-				$result = mysqli_query($link, $query);
-				while($row = mysqli_fetch_row($result)) {
-					list($get_image_id, $get_image_user_id, $get_image_title, $get_image_path, $get_image_thumb, $get_image_file, $get_image_uploaded_datetime, $get_image_uploaded_ip, $get_image_unique_views, $get_image_ip_block, $get_image_reported, $get_image_reported_checked, $get_image_likes, $get_image_dislikes, $get_image_likes_dislikes_ipblock, $get_image_comments) = $row;
-			
-					// Clean up
-					if(!(file_exists("$root/$get_image_path/$get_image_file"))){
-						echo"<div class=\"info\"><p>Img not found on server.</p></div>\n";
-						mysqli_query($link, "DELETE FROM $t_blog_images WHERE image_id='$get_image_id'") or die(mysqli_error($link));
-					}
-
-					// Thumb
-					if(!(file_exists("$root/$get_image_path/$get_image_thumb")) && $get_image_file != ""){
-						$img_size = getimagesize("$root/$get_image_path/$get_image_file");
-
-						$inp_new_x = 200; 
-						$inp_new_y = $newheight=round(($img_size[1]/$img_size[0])*$inp_new_x, 0);
-						
-						resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_image_path/$get_image_file", "$root/$get_image_path/$get_image_thumb");
-						
-					}
-
-
-					echo"
-					<table style=\"width: 100%;\">
-					 <tr>
-					  <td style=\"vertical-align: top;padding: 0px 10px 0px 0px;width: 200px;\">
-						<p>
-						<a href=\"$root/$get_image_path/$get_image_file\"><img src=\"$root/$get_image_path/$get_image_thumb\" alt=\"$get_image_thumb\" /></a>
-						</p>
-					  </td>
-					  <td style=\"vertical-align: top;\">
-						
-						<p><b>$get_image_title</b></p>
-
-						<p>$l_url_to_copy:<br />
-						<input type=\"text\" name=\"img_$get_image_id\" size=\"25\" value=\"$configSiteURLSav/$get_image_path/$get_image_file\" style=\"width: 50%;\" />
-						</p>
-						
-						<p>
-						<a href=\"my_blog_images.php?action=edit_image&amp;image_id=$get_image_id&amp;l=$l\">$l_edit</a>
-						&middot;
-						<a href=\"my_blog_images.php?action=rotate_image&amp;image_id=$get_image_id&amp;l=$l&amp;process=1\">$l_rotate</a>
-						&middot;
-						<a href=\"my_blog_images.php?action=delete_image&amp;image_id=$get_image_id&amp;l=$l\">$l_delete</a>
-						</p>
-					  </td>
-					 </tr>
-					</table>
-					";
-				}
-				echo"
-			<!-- //Images -->
-			";
-		} // action == ""
-		elseif($action == "upload_image"){
 			if($process == "1"){
 				$inp_title = $_POST['inp_title'];
 				$inp_title = output_html($inp_title);
@@ -325,9 +232,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				
 			}
 			echo"
-			<h1>$l_my_blog</h1>
+			<h1>$l_my_blog $l_images</h1>
 		
-			<!-- My blog menu -->
+			<!-- Where am I ? -->
 				<p><b>$l_you_are_here:</b><br />
 				<a href=\"index.php?l=$l\">$l_blog</a>
 				&gt;
@@ -336,11 +243,24 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
 				&gt;
 				<a href=\"my_blog_images.php?l=$l\">$l_images</a>
-				&gt;
-				<a href=\"my_blog_images.php?action=upload_image&amp;l=$l\">$l_upload</a>
 				</p>
-			<!-- //My blog menu -->
-		
+			<!-- Where am I ? -->
+				
+			<!-- Feedback -->
+				";
+				if($ft != ""){
+					if($fm == "changes_saved"){
+						$fm = "$l_changes_saved";
+					}
+					else{
+						$fm = ucfirst($fm);
+					}
+					echo"<div class=\"$ft\"><span>$fm</span></div>";
+				}
+				echo"	
+			<!-- //Feedback -->
+
+
 				
 			
 			<!-- Feedback -->
@@ -381,37 +301,91 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			<!-- Upload iamge Form -->
 
-				<h2>$l_upload_image</h2>
-
 				<script>
 				\$(document).ready(function(){
 					\$('[name=\"inp_title\"]').focus();
 				});
 				</script>
 		
-				<form method=\"post\" action=\"my_blog_images.php?action=$action&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+				<form method=\"post\" action=\"my_blog_images.php?l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 				
+				<div class=\"bodycell\">
+					<h2>$l_upload_image</h2>
 
-				<p><b>$l_title:</b><br />
-				<input type=\"text\" name=\"inp_title\" value=\"\" size=\"25\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
-				</p>
+					<p><b>$l_title:</b><br />
+					<input type=\"text\" name=\"inp_title\" value=\"\" size=\"25\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
+					</p>
 
-				<p>$l_select_image:<br />
-				<input name=\"inp_image\" type=\"file\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
-				</p>
+					<p>$l_select_image:<br />
+					<input name=\"inp_image\" type=\"file\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
+					</p>
 
-				<p><input type=\"submit\" value=\"$l_upload\" class=\"btn btn_default\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" /></p>
+					<p><input type=\"submit\" value=\"$l_upload\" class=\"btn btn_default\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" /></p>
+			
+				</div>
 				</form>
 
 			<!-- //Upload iamge Form -->
 
-			<p>
-			<a href=\"my_blog_images.php?l=$l\"><img src=\"_gfx/icons/go-previous.png\" alt=\"go-previous.png\" /></a>
-			<a href=\"my_blog_images.php?l=$l\">$l_previous</a>
+
+			<!-- Last x Images -->
+				";
+				
+				$query = "SELECT image_id, image_user_id, image_title, image_path, image_thumb, image_file, image_uploaded_datetime, image_uploaded_ip, image_unique_views, image_ip_block, image_reported, image_reported_checked, image_likes, image_dislikes, image_likes_dislikes_ipblock, image_comments FROM $t_blog_images WHERE image_user_id=$my_user_id_mysql ORDER BY image_id DESC";
+				$result = mysqli_query($link, $query);
+				while($row = mysqli_fetch_row($result)) {
+					list($get_image_id, $get_image_user_id, $get_image_title, $get_image_path, $get_image_thumb, $get_image_file, $get_image_uploaded_datetime, $get_image_uploaded_ip, $get_image_unique_views, $get_image_ip_block, $get_image_reported, $get_image_reported_checked, $get_image_likes, $get_image_dislikes, $get_image_likes_dislikes_ipblock, $get_image_comments) = $row;
 			
-			</p>
+					// Clean up
+					if(!(file_exists("$root/$get_image_path/$get_image_file"))){
+						echo"<div class=\"info\"><p>Img not found on server.</p></div>\n";
+						mysqli_query($link, "DELETE FROM $t_blog_images WHERE image_id='$get_image_id'") or die(mysqli_error($link));
+					}
+
+					// Thumb
+					if(!(file_exists("$root/$get_image_path/$get_image_thumb")) && $get_image_file != ""){
+						$img_size = getimagesize("$root/$get_image_path/$get_image_file");
+
+						$inp_new_x = 200; 
+						$inp_new_y = $newheight=round(($img_size[1]/$img_size[0])*$inp_new_x, 0);
+						
+						resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_image_path/$get_image_file", "$root/$get_image_path/$get_image_thumb");
+						
+					}
+
+
+					echo"
+					<table style=\"width: 100%;\">
+					 <tr>
+					  <td style=\"vertical-align: top;padding: 0px 10px 0px 0px;width: 200px;\">
+						<p>
+						<a href=\"$root/$get_image_path/$get_image_file\"><img src=\"$root/$get_image_path/$get_image_thumb\" alt=\"$get_image_thumb\" /></a>
+						</p>
+					  </td>
+					  <td style=\"vertical-align: top;\">
+						
+						<p><b>$get_image_title</b></p>
+
+						<p>$l_url_to_copy:<br />
+						<input type=\"text\" name=\"img_$get_image_id\" size=\"25\" value=\"$configSiteURLSav/$get_image_path/$get_image_file\" style=\"width: 50%;\" />
+						</p>
+						
+						<p>
+						<a href=\"my_blog_images.php?action=edit_image&amp;image_id=$get_image_id&amp;l=$l\">$l_edit</a>
+						&middot;
+						<a href=\"my_blog_images.php?action=rotate_image&amp;image_id=$get_image_id&amp;l=$l&amp;process=1\">$l_rotate</a>
+						&middot;
+						<a href=\"my_blog_images.php?action=delete_image&amp;image_id=$get_image_id&amp;l=$l\">$l_delete</a>
+						</p>
+					  </td>
+					 </tr>
+					</table>
+					";
+				}
+				echo"
+			<!-- //Last x Images -->
 			";
-		} // upload
+		} // action == ""
 		elseif($action == "edit_image"){
 			// Find image
 			$image_id_mysql = quote_smart($link, $image_id);

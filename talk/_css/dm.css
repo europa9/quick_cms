@@ -30,6 +30,31 @@ span.talk_messages_date_and_time{
 	clear: both;
 }
 
+
+/* New day */
+div.talk_new_day {
+	display: flex;
+	align-items: center;
+	text-align: center;
+	margin: 10px 0px 0px 0px; 
+}
+div.talk_new_day::before, div.talk_new_day::after {
+	content: '';
+	flex: 1;
+	border-bottom: 1px solid #252525;
+}
+div.talk_new_day::before {
+	margin-right: .25em;
+}
+div.talk_new_day::after {
+	margin-left: .25em;
+}
+
+div.talk_new_day > p{
+	padding: 0px 0px 0px 0px; 
+	margin: 0px 0px 0px 0px; 
+	color: #252525;
+}
 /* New message */
 #new_message_form{
 

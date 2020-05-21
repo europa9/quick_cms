@@ -291,16 +291,28 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 						{ title: 'My page 1', value: 'http://www.tinymce.com' },
 						{ title: 'My page 2', value: 'http://www.moxiecode.com' }
 					],
-					image_list: [
-						{ title: 'My page 1', value: 'http://www.tinymce.com' },
-						{ title: 'My page 2', value: 'http://www.moxiecode.com' }
+					image_list: [";
+						$x=0;
+						$query = "SELECT image_id, image_user_id, image_title, image_path, image_thumb, image_file, image_uploaded_datetime, image_uploaded_ip, image_unique_views, image_ip_block, image_reported, image_reported_checked, image_likes, image_dislikes, image_likes_dislikes_ipblock, image_comments FROM $t_blog_images WHERE image_user_id=$my_user_id_mysql ORDER BY image_id DESC";
+						$result = mysqli_query($link, $query);
+						while($row = mysqli_fetch_row($result)) {
+							list($get_image_id, $get_image_user_id, $get_image_title, $get_image_path, $get_image_thumb, $get_image_file, $get_image_uploaded_datetime, $get_image_uploaded_ip, $get_image_unique_views, $get_image_ip_block, $get_image_reported, $get_image_reported_checked, $get_image_likes, $get_image_dislikes, $get_image_likes_dislikes_ipblock, $get_image_comments) = $row;
+							if($x > 0){
+								echo",";
+							}
+							echo"\n						";
+							echo"{ title: '$get_image_title', value: '$get_image_path' }";
+							
+							$x++;
+						}
+						echo"
 					],
-						image_class_list: [
+					image_class_list: [
 						{ title: 'None', value: '' },
 						{ title: 'Some class', value: 'class-name' }
 					],
 					importcss_append: true,
-					height: 400,
+					height: 600,
 					file_picker_callback: function (callback, value, meta) {
 						/* Provide file and text for the link dialog */
 						if (meta.filetype === 'file') {
@@ -328,7 +340,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 				<input type=\"text\" name=\"inp_title\" value=\"$get_blog_post_title\" size=\"55\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 				</p>
 				<p style=\"padding-bottom:0;margin-bottom:0;\"><b>$l_text:</b>
-				</p>";
+				</p>
+
+				<span><a href=\"my_blog_images.php?l=$l\" target=\"_blank\"><img src=\"_gfx/icons/image-x-generic.png\" alt=\"image-x-generic.png\" /> $l_upload_image</a></span>
+				";
 				if($blogEditModeSav == "bbcode"){
 					echo"
 					<p class=\"insert\">
@@ -347,7 +362,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 				else{
 					echo"
 					<p style=\"padding-top:0;margin-top:0;\">
-					<textarea name=\"inp_text\" class=\"editor\" rows=\"25\" cols=\"50\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" style=\"width: 100%;\">$get_blog_post_text</textarea>
+					<textarea name=\"inp_text\" class=\"editor\" rows=\"45\" cols=\"50\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" style=\"width: 100%;\">$get_blog_post_text</textarea>
 					</p>
 					";
 				}

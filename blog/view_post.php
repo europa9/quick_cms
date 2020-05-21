@@ -303,23 +303,48 @@ else{
 
 
 			echo"
+			<!-- Headline left + headline right -->
+				<div class=\"headline_left\">
+					<h1>$get_current_blog_post_title</h1>
+				</div>
+				<div class=\"headline_right\">
+					<p>
+					<a href=\"$root/blog/my_blog.php?l=$l\" class=\"btn_default\">$l_my_blog</a>
+					<a href=\"$root/blog/my_blog_new_post.php?l=$l\" class=\"btn_default\">$l_new_post</a>\n";
+					if(isset($_SESSION['user_id']) && $_SESSION['user_id'] == "$get_current_blog_user_id"){
+						echo"					<a href=\"$root/blog/my_blog_edit_post.php?post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_edit</a>\n";
+						echo"					<a href=\"$root/blog/my_blog_delete_post.php?post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_delete</a>\n";
+					}
+					echo"
+					</p>
+				</div>
+			<!-- //Headline left + headline right -->
 
-		
+			<!-- Where am I? -->
+				<div class=\"clear\"></div>
+				<p><b>$l_you_are_here:</b><br />
+				<a href=\"index.php?l=$l\">$l_blog</a>
+				&gt;
+				<a href=\"view_blog.php?info_id=$get_current_blog_info_id&amp;l=$l\">$get_current_blog_title</a>
+				&gt;
+				<a href=\"view_post.php?post_id=$get_current_blog_post_id&amp;l=$l\">$get_current_blog_post_title</a>
+				</p>
+			<!-- //Where am I? -->
+
+
 			<!-- Existing image? -->
 			";
 			if($get_current_blog_post_image_file != "" && file_exists("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_file")){
 				// 950 x 640
 				echo"
-				<p class=\"view_post_image\">
-				<img src=\"$root/$get_current_blog_post_image_path/$get_current_blog_post_image_file\" alt=\"$get_current_blog_post_image_file\" /><br />
-				$get_current_blog_post_image_text
-				</p>
+				<figure class=\"view_post_image\">
+					<img src=\"$root/$get_current_blog_post_image_path/$get_current_blog_post_image_file\" alt=\"$get_current_blog_post_image_file\" /><br />
+					<figcaption>$get_current_blog_post_image_text</figcaption>
+				</figure>
 				";
 			}
 			echo"
 			<!-- //Existing image? -->
-			
-			<h1 style=\"margin-top:8px;padding-top:0;\">$get_current_blog_post_title</h1>
 
 
 			<!-- Author and metadata -->

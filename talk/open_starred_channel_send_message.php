@@ -79,6 +79,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	$datetime = date("Y-m-d H:i:s");
 	$time = time();
 	$year = date("Y");
+	$month = date("m");
+	$day = date("d");
 	$date_saying = date("j M Y");
 	$datetime_saying = date("j M Y H:i");
 	$time_saying = date("H:i");
@@ -192,8 +194,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			if($inp_text != ""){
 				// Encrypter
-				$year = date("Y");
-				$month = date("m");
 				if($year != "$get_current_channel_encryption_key_year"){
 					// make a new encryption string for this year month
 					if($talkEncryptionMethodChannelsSav == "none"){
@@ -301,9 +301,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				// Insert
 				mysqli_query($link, "INSERT INTO $t_talk_channels_messages
-				(message_id, message_channel_id, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_from_user_id, message_from_user_nickname, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent) 
+				(message_id, message_channel_id, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_day, message_from_user_id, message_from_user_nickname, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent) 
 				VALUES 
-				(NULL, $get_current_channel_id, 'chat', $inp_text_mysql, '$datetime', '$date_saying', '$time_saying', '$time', $year, $get_my_user_id, $inp_my_user_nickname_mysql, $inp_my_user_name_mysql, $inp_my_user_alias_mysql, $inp_my_user_image_path_mysql, $inp_my_user_image_file_mysql, $inp_my_user_image_thumb_a_mysql, $inp_my_user_image_thumb_b_mysql, $inp_my_ip_mysql, $inp_my_hostname_mysql, $inp_my_user_agent_mysql)")
+				(NULL, $get_current_channel_id, 'chat', $inp_text_mysql, '$datetime', '$date_saying', '$time_saying', '$time', $year, $day, $get_my_user_id, $inp_my_user_nickname_mysql, $inp_my_user_name_mysql, $inp_my_user_alias_mysql, $inp_my_user_image_path_mysql, $inp_my_user_image_file_mysql, $inp_my_user_image_thumb_a_mysql, $inp_my_user_image_thumb_b_mysql, $inp_my_ip_mysql, $inp_my_hostname_mysql, $inp_my_user_agent_mysql)")
 				or die(mysqli_error($link));
 
 

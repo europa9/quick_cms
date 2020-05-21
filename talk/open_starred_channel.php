@@ -213,6 +213,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			if($action == ""){
 				$time = time();
+				$day = date("d");
+				$date_saying = date("j M Y");
+
+
 				echo"
 				<!-- Messages and users online -->
 					<table style=\"width: 100%;\">
@@ -239,14 +243,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								$result = mysqli_query($link, "UPDATE $t_talk_users_starred_channels SET new_messages=0 WHERE starred_channel_id=$get_current_starred_channel_id") or die(mysqli_error($link));
 
 								// Get messages
+								$start_day = "";
 								$variable_last_message_id = "1";
-								$date_saying = date("j M Y");
-								$time = time();
-								$query = "SELECT message_id, message_channel_id, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_from_user_id, message_from_user_nickname, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent, message_attachment_type, message_attachment_path, message_attachment_file FROM $t_talk_channels_messages WHERE message_channel_id=$get_current_channel_id ORDER BY message_id ASC";
+								$query = "SELECT message_id, message_channel_id, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_day, message_from_user_id, message_from_user_nickname, message_from_user_name, message_from_user_alias, message_from_user_image_path, message_from_user_image_file, message_from_user_image_thumb_40, message_from_user_image_thumb_50, message_from_ip, message_from_hostname, message_from_user_agent, message_attachment_type, message_attachment_path, message_attachment_file FROM $t_talk_channels_messages WHERE message_channel_id=$get_current_channel_id ORDER BY message_id ASC";
 								//echo"$query ";
 								$result = mysqli_query($link, $query);
 								while($row = mysqli_fetch_row($result)) {
-									list($get_message_id, $get_message_channel_id, $get_message_type, $get_message_text, $get_message_datetime, $get_message_date_saying, $get_message_time_saying, $get_message_time, $get_message_year, $get_message_from_user_id, $get_message_from_user_nickname, $get_message_from_user_name, $get_message_from_user_alias, $get_message_from_user_image_path, $get_message_from_user_image_file, $get_message_from_user_image_thumb_40, $get_message_from_user_image_thumb_50, $get_message_from_ip, $get_message_from_hostname, $get_message_from_user_agent, $get_message_attachment_type, $get_message_attachment_path, $get_message_attachment_file) = $row;
+									list($get_message_id, $get_message_channel_id, $get_message_type, $get_message_text, $get_message_datetime, $get_message_date_saying, $get_message_time_saying, $get_message_time, $get_message_year, $get_message_day, $get_message_from_user_id, $get_message_from_user_nickname, $get_message_from_user_name, $get_message_from_user_alias, $get_message_from_user_image_path, $get_message_from_user_image_file, $get_message_from_user_image_thumb_40, $get_message_from_user_image_thumb_50, $get_message_from_ip, $get_message_from_hostname, $get_message_from_user_agent, $get_message_attachment_type, $get_message_attachment_path, $get_message_attachment_file) = $row;
 	
 									// Is the message X days old?
 									$time_since_written = $time-$get_message_time;
@@ -254,6 +257,16 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 									if($days_since_written > 100){
 										$result_del = mysqli_query($link, "DELETE FROM $t_talk_channels_messages WHERE message_id=$get_message_id");
+									}
+
+									// New day?
+									if($get_message_day != "$start_day"){
+										echo"
+										<div class=\"talk_new_day\">
+											<p>$get_message_date_saying</p>
+										</div>
+										";
+										$start_day = "$get_message_day";
 									}
 
 									if($get_message_type == "info"){

@@ -77,6 +77,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	$datetime = date("Y-m-d H:i:s");
 	$time = time();
 	$year = date("Y");
+	$day = date("d");
 	$date_saying = date("j M Y");
 	$datetime_saying = date("j M Y H:i");
 	$time_saying = date("H:i");
@@ -298,9 +299,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			// Insert
 			mysqli_query($link, "INSERT INTO $t_talk_dm_messages 
-			(message_id, message_conversation_key, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_seen, message_from_user_id, message_from_ip, message_from_hostname, message_from_user_agent) 
+			(message_id, message_conversation_key, message_type, message_text, message_datetime, message_date_saying, message_time_saying, message_time, message_year, message_day, message_seen, message_from_user_id, message_from_ip, message_from_hostname, message_from_user_agent) 
 			VALUES 
-			(NULL, $inp_key_mysql, 'chat', $inp_text_mysql, '$datetime', '$date_saying', '$time_saying', '$time', $year, '0', $get_my_user_id, $inp_my_ip_mysql, $inp_my_hostname_mysql, $inp_my_user_agent_mysql)")
+			(NULL, $inp_key_mysql, 'chat', $inp_text_mysql, '$datetime', '$date_saying', '$time_saying', '$time', $year, $day, '0', $get_my_user_id, $inp_my_ip_mysql, $inp_my_hostname_mysql, $inp_my_user_agent_mysql)")
 			or die(mysqli_error($link));
 
 			// Attachment?
