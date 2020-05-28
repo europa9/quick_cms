@@ -759,7 +759,7 @@ echo"<!DOCTYPE html>
 					list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
 
 
-					$flag_path 	= "_design/gfx/flags/16x16/$get_language_active_flag" . "_16x16.png";
+					$flag_path 	= "_design/gfx/flags/16x16/$get_language_active_flag.png";
 
 				
 					echo"				";
