@@ -120,7 +120,7 @@ if($get_my_user_rank != "moderator" && $get_my_user_rank != "admin"){
 			
 		$inp_user_name = $_POST['inp_user_name'];
 		$inp_user_name = output_html($inp_user_name);
-		// $inp_user_name = ucfirst($inp_user_name);
+		$inp_user_name = strtolower($inp_user_name);
 		$inp_user_name_mysql = quote_smart($link, $inp_user_name);
 		if($inp_user_name != "$get_user_name"){
 			// Check if new email is taken
@@ -147,7 +147,7 @@ if($get_my_user_rank != "moderator" && $get_my_user_rank != "admin"){
 
 		$inp_user_alias = $_POST['inp_user_alias'];
 		$inp_user_alias = output_html($inp_user_alias);
-		// $inp_user_alias = ucfirst($inp_user_alias);
+		$inp_user_alias = strtolower($inp_user_alias);
 		$inp_user_alias_mysql = quote_smart($link, $inp_user_alias);
 		if($inp_user_alias != "$get_user_alias"){
 			// Check if new email is taken

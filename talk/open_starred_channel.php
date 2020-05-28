@@ -260,7 +260,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 									}
 
 									// New day?
-									if($get_message_day != "$start_day"){
+									if($get_message_day != "" && $get_message_day != "$start_day"){
 										echo"
 										<div class=\"talk_new_day\">
 											<p>$get_message_date_saying</p>
