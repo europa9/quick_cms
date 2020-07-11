@@ -45,7 +45,7 @@ if(isset($_SESSION['admin_user_id'])){
 	// File exists?
 	if(file_exists("./db_scripts/stats/country_to_ip_blocks/ipv6/ipv6_insert_script_$file_counter.php")){
 		// Delete from MySQL
-		$result = mysqli_query($link, "DELETE FROM $t_admin_liquidbase WHERE liquidbase_module='stats' AND liquidbase_name='0005_ip_to_countries_ipv6.php'") or die(mysqli_error($link));
+		$result = mysqli_query($link, "DELETE FROM $t_admin_liquidbase WHERE liquidbase_module='stats' AND liquidbase_name='stats_ip_to_country_ipv6_insert.php'") or die(mysqli_error($link));
 
 
 		include("./db_scripts/stats/country_to_ip_blocks/ipv6/ipv6_insert_script_$file_counter.php");
