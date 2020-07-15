@@ -105,8 +105,6 @@ echo"
 	echo"
 <!-- //1: 1 big on left, 2 small on right -->
 
-	<div class=\"clear\"></div>
-	<hr />
 
 <!-- 2: 2 small on left, 1 big on right -->
 	";
@@ -115,8 +113,7 @@ echo"
 	echo"
 <!-- //2: 2 small on left, 1 big on right -->
 
-	<div class=\"clear\"></div>
-	<hr />
+
 <!-- 3: 3 small -->
 	";
 	$limit = "6,3";
@@ -124,8 +121,7 @@ echo"
 	echo"
 <!-- //3: 3 small -->
 
-	<div class=\"clear\"></div>
-	<hr />
+
 
 <!-- 4: 1 special on left, 2 small on right -->
 	";
@@ -134,8 +130,6 @@ echo"
 	echo"
 <!-- //4: 1 special on left, 2 small on right -->
 
-	<div class=\"clear\"></div>
-	<hr />
 
 <!-- 5: 2 small -->
 	";
@@ -144,8 +138,7 @@ echo"
 	echo"
 <!-- //5: 2 small -->
 
-	<div class=\"clear\"></div>
-	<hr />
+
 <!-- 6: 2 small -->
 	";
 	$limit = "14,2";
@@ -153,8 +146,7 @@ echo"
 	echo"
 <!--// 6: 2 small -->
 
-	<div class=\"clear\"></div>
-	<hr style=\"padding-top:20px;\" />
+	<div style=\"height:20px;\"></div>
 
 <!-- 7: 1 big on left, 2 small on right -->
 	";

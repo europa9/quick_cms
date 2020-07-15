@@ -219,28 +219,7 @@ echo"
 					include("$root/_admin/_translations/site/$l/office_calendar/ts_header.php");
 					include("$root/_admin/_translations/site/$l/talk/ts_header.php");
 					echo"
-					<li><a href=\"$root/discuss/index.php?l=$l\">Forum</a></li>";
-
-					// Total unread messages
-					$t_talk_total_unread = $mysqlPrefixSav . "talk_total_unread";
-					$get_total_unread_count = "";
-					if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
-						$my_user_id = $_SESSION['user_id'];
-						$my_user_id = output_html($my_user_id);
-						$my_user_id_mysql = quote_smart($link, $my_user_id);
-						$query = "SELECT total_unread_id, total_unread_user_id, total_unread_count, total_unread_message FROM $t_talk_total_unread WHERE total_unread_user_id=$my_user_id_mysql";
-						$result = mysqli_query($link, $query);
-						$row = mysqli_fetch_row($result);
-						list($get_total_unread_id, $get_total_unread_user_id, $get_total_unread_count, $get_total_unread_message) = $row;
-						if($get_total_unread_count == "" OR $get_total_unread_count == "0"){
-							$get_total_unread_count = "";
-						}
-						else{
-							$get_total_unread_count = " ($get_total_unread_count)";
-						}
-					}
-					echo"
-					<li><a href=\"$root/talk/index.php?l=$l\">$l_talk<b id=\"talk_total_unread_count\">$get_total_unread_count</b></a></li>
+					<li><a href=\"$root/discuss/index.php?l=$l\">Forum</a></li>
 				</ul>
 				<!-- Talk total unread messages count script -->
 						<script language=\"javascript\" type=\"text/javascript\">

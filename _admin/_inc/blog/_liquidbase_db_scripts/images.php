@@ -17,7 +17,7 @@ if(!(isset($define_access_to_control_panel))){
 /*- Tables ---------------------------------------------------------------------------- */
 
 
-
+	mysqli_query($link, "DROP TABLE IF EXISTS $t_blog_images") or die(mysqli_error());
 echo"
 
 	<!-- blog_images -->
@@ -36,10 +36,16 @@ echo"
 	  	 image_id INT NOT NULL AUTO_INCREMENT,
 	 	  PRIMARY KEY(image_id), 
 	  	   image_user_id INT,
+	  	   image_blog_post_id INT,
 	  	   image_title VARCHAR(200),
+	  	   image_text VARCHAR(200),
 	  	   image_path VARCHAR(200),
-	  	   image_thumb VARCHAR(200),
+	  	   image_thumb_a VARCHAR(200),
+	  	   image_thumb_b VARCHAR(200),
+	  	   image_thumb_c VARCHAR(200),
 	  	   image_file VARCHAR(200),
+	  	   image_photo_by_name VARCHAR(200),
+	  	   image_photo_by_website VARCHAR(200),
 	  	   image_uploaded_datetime DATETIME,
 	  	   image_uploaded_ip VARCHAR(200),
 	  	   image_unique_views INT,

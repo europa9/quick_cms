@@ -1,10 +1,10 @@
 <?php
 /**
 *
-* File: _admin/_inc/blog/_liquibase/info.php
-* Version 1.0.0
-* Date 21:19 28.08.2019
-* Copyright (c) 2019 Sindre Andre Ditlefsen
+* File: _admin\_inc\blog\_liquidbase_db_scripts/posts.php
+* Version 2.0.0
+* Date 12:13 12.07.2020
+* Copyright (c) 2019-2020 Sindre Andre Ditlefsen
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -17,6 +17,7 @@ if(!(isset($define_access_to_control_panel))){
 /*- Tables ---------------------------------------------------------------------------- */
 
 
+mysqli_query($link, "DROP TABLE IF EXISTS $t_blog_posts") or die(mysqli_error($link));
 
 echo"
 
@@ -39,6 +40,7 @@ echo"
 		   blog_post_title_pre VARCHAR(250), 
 	  	   blog_post_title VARCHAR(250), 
 	  	   blog_post_language VARCHAR(50),
+	  	   blog_post_status VARCHAR(50),
 	  	   blog_post_category_id INT,
 	  	   blog_post_category_title VARCHAR(250),
 	  	   blog_post_introduction TEXT, 

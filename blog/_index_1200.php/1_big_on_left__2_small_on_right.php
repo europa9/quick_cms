@@ -85,5 +85,11 @@ while($row = mysqli_fetch_row($result)) {
 		$x++;
 	} // has image
 } // while
+if($x > 0){
+	echo"
+	<div class=\"clear\"></div>
+	<hr />
+	";
+}
 
 ?>
