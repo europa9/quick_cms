@@ -772,6 +772,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 						imagedestroy($source);
 
 
+						// Update post text (if we have this image in text)
+						$inp_blog_post_image_text = str_replace("$get_image_path/$get_image_file", "$get_image_path/$new_image_file", $get_current_blog_post_text);
+
+
+						$sql = "UPDATE $t_blog_posts SET blog_post_text=? WHERE blog_post_id=$get_current_blog_post_id";
+						$stmt = $link->prepare($sql);
+						$stmt->bind_param("s", $inp_blog_post_image_text);
+						$stmt->execute();
+						if ($stmt->errno) {
+							echo "FAILURE!!! " . $stmt->error; die;
+						}
+
+
 
 
 						// Move
