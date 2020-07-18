@@ -1,3 +1,3 @@
 <?php
-$l_upload_logo = "Upload logo";
+$l_upload_logo = "Last opp logo";
 ?>

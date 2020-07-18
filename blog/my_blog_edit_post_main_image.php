@@ -1,9 +1,9 @@
 <?php 
 /**
 *
-* File: blog/my_blog_new_post_main_image.php
+* File: blog/my_blog_edit_post_main_image.php
 * Version 1.0.0
-* Date 16:20 12.07.2020
+* Date 09:37 18.07.2020
 * Copyright (c) 2011-2020 S. A. Ditlefsen
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -36,22 +36,13 @@ include("$root/_admin/_translations/site/$l/blog/ts_my_blog.php");
 /*- Blog config -------------------------------------------------------------------- */
 include("$root/_admin/_data/blog.php");
 
-/*- Tables -------------------------------------------------------------------- */
-$t_blog_stats_most_used_categories	= $mysqlPrefixSav . "blog_stats_most_used_categories";
-
 
 /*- Variables ------------------------------------------------------------------------- */
-
-
 $tabindex = 0;
 $l_mysql = quote_smart($link, $l);
 
 
-
-
 /*- Functions -------------------------------------------------------------------------------- */
-// include("$root/_admin/_functions/get_extension.php");
-
 function delete_cache($dirname) {
 	if (is_dir($dirname))
 		$dir_handle = opendir($dirname);
@@ -70,6 +61,14 @@ function delete_cache($dirname) {
 	return true;
 }
 
+/*- Get extention ---------------------------------------------------------------------- */
+function getExtension($str) {
+		$i = strrpos($str,".");
+		if (!$i) { return ""; } 
+		$l = strlen($str) - $i;
+		$ext = substr($str,$i+1,$l);
+		return $ext;
+}
 
 
 /*- Headers ---------------------------------------------------------------------------------- */
@@ -82,91 +81,46 @@ include("$root/_webdesign/header.php");
 
 /*- Content ---------------------------------------------------------------------------------- */
 // Logged in?
-if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
+if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['post_id'])){
 	
 	// Get my user
 	$my_user_id = $_SESSION['user_id'];
 	$my_user_id = output_html($my_user_id);
 	$my_user_id_mysql = quote_smart($link, $my_user_id);
-	$query = "SELECT user_id, user_email, user_email, user_name, user_alias, user_rank FROM $t_users WHERE user_id=$my_user_id_mysql";
+	$query = "SELECT user_id, user_email, user_name, user_alias, user_rank FROM $t_users WHERE user_id=$my_user_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_my_user_id, $get_my_user_email, $get_my_user_email, $get_my_user_name, $get_my_user_alias, $get_my_user_rank) = $row;
+	list($get_user_id, $get_user_email, $get_user_name, $get_user_alias, $get_user_rank) = $row;
 
 	// Get blog info
 	$query = "SELECT blog_info_id, blog_user_id, blog_language, blog_title, blog_description, blog_created, blog_updated, blog_posts, blog_comments, blog_views, blog_user_ip FROM $t_blog_info WHERE blog_user_id=$my_user_id_mysql AND blog_language=$l_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_blog_info_id, $get_blog_user_id, $get_blog_language, $get_blog_title, $get_blog_description, $get_blog_created, $get_blog_updated, $get_blog_posts, $get_blog_comments, $get_blog_views, $get_blog_user_ip) = $row;
+	list($get_current_blog_info_id, $get_current_blog_user_id, $get_current_blog_language, $get_current_blog_title, $get_current_blog_description, $get_current_blog_created, $get_current_blog_updated, $get_current_blog_posts, $get_current_blog_comments, $get_current_blog_views, $get_current_blog_user_ip) = $row;
 
-
-	// Can I have a blog?
-	$can_post = "true";
-	if($blogWhoCanHaveBlogSav == "admin"){
-		if($get_my_user_rank != "admin"){
-			$can_post = "false";
-			echo"<p>Sorry, you can not post. Only admin can post.</p>";
-		}
+	if($get_current_blog_info_id == ""){
+		echo"
+		<h1><img src=\"$root/_webdesign/images/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />Loading...</h1>
+		<meta http-equiv=\"refresh\" content=\"1;url=$root/blog/my_blog_setup.php?l=$l\">
+		<p>$l_creating_your_blog</p>
+		";
 	}
-	elseif($blogWhoCanHaveBlogSav == "admin_and_moderator"){
-		if($get_my_user_rank == "admin" OR $get_my_user_rank == "moderator"){
-		}
-		else{
-			$can_post = "false";
-			echo"<p>Sorry, you can not post. Only admin and moderator can post.</p>";
-		}
-	}
-	elseif($blogWhoCanHaveBlogSav == "admin_moderator_and_editor"){
-		if($get_my_user_rank == "admin" OR $get_my_user_rank == "moderator" OR $get_my_user_rank == "editor"){
-		}
-		else{
-			$can_post = "false";
-			echo"<p>Sorry, you can not post. Only admin, moderator and editor can post.</p>";
-		}
-	}
-	elseif($blogWhoCanHaveBlogSav == "admin_moderator_editor_and_trusted"){
-		if($get_my_user_rank == "admin" OR $get_my_user_rank == "moderator" OR $get_my_user_rank == "editor" OR $get_my_user_rank == "trusted"){
-		}
-		else{
-			$can_post = "false";
-			echo"<p>Sorry, you can not post. Only admin, moderator, editor and trusted can post.</p>";
-		}
-	}
-
-	if($can_post == "true"){
-		if($get_blog_info_id == ""){
-			echo"
-			<h1><img src=\"$root/_webdesign/images/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />Loading...</h1>
-			<meta http-equiv=\"refresh\" content=\"1;url=$root/blog/my_blog_setup.php?reference=new_post&amp;l=$l\">
-			<p>$l_creating_your_blog</p>
-			";
-		}
-		else{
-			// Fetch blog post
-			if(isset($_GET['blog_post_id'])){
-				$blog_post_id = $_GET['blog_post_id'];
-				$blog_post_id = strip_tags(stripslashes($blog_post_id));
-				if(!(is_numeric($blog_post_id))){
-					echo"Blog post id not numeric";
-					die;
-				}
-			}
-			else{
-				$blog_post_id =  "";
-			}
-			$blog_post_id_mysql = quote_smart($link, $blog_post_id);
-
-			$query = "SELECT blog_post_id, blog_post_user_id, blog_post_title_pre, blog_post_title, blog_post_language, blog_post_status, blog_post_category_id, blog_post_category_title, blog_post_introduction, blog_post_privacy_level, blog_post_text, blog_post_image_path, blog_post_image_thumb_small, blog_post_image_thumb_medium, blog_post_image_thumb_large, blog_post_image_file, blog_post_image_ext, blog_post_image_text, blog_post_ad, blog_post_created, blog_post_created_rss, blog_post_updated, blog_post_updated_rss, blog_post_allow_comments, blog_post_comments, blog_post_views, blog_post_views_ipblock, blog_post_user_ip FROM $t_blog_posts WHERE blog_post_id=$blog_post_id_mysql AND blog_post_user_id=$my_user_id_mysql";
-			$result = mysqli_query($link, $query);
-			$row = mysqli_fetch_row($result);
-			list($get_current_blog_post_id, $get_current_blog_post_user_id, $get_current_blog_post_title_pre, $get_current_blog_post_title, $get_current_blog_post_language, $get_current_blog_post_status, $get_current_blog_post_category_id, $get_current_blog_post_category_title, $get_current_blog_post_introduction, $get_current_blog_post_privacy_level, $get_current_blog_post_text, $get_current_blog_post_image_path, $get_current_blog_post_image_thumb_small, $get_current_blog_post_image_thumb_medium, $get_current_blog_post_image_thumb_large, $get_current_blog_post_image_file, $get_current_blog_post_image_ext, $get_current_blog_post_image_text, $get_current_blog_post_ad, $get_current_blog_post_created, $get_current_blog_post_created_rss, $get_current_blog_post_updated, $get_current_blog_post_updated_rss, $get_current_blog_post_allow_comments, $get_current_blog_post_comments, $get_current_blog_post_views, $get_current_blog_post_views_ipblock, $get_current_blog_post_user_ip) = $row;
-			if($get_current_blog_post_id == ""){
-				echo"<h1><img src=\"_gfx/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" /> Loading...</h1>
-				<meta http-equiv=\"refresh\" content=\"0;url=my_blog_new_post.php?l=$l\">
-				";
-				die;
-			} // blog post not found, create one
+	else{
+		// Get post
+		$post_id = $_GET['post_id'];
+		$post_id = strip_tags(stripslashes($post_id));
+		$post_id_mysql = quote_smart($link, $post_id);
 			
+		$query = "SELECT blog_post_id, blog_post_user_id, blog_post_title_pre, blog_post_title, blog_post_language, blog_post_status, blog_post_category_id, blog_post_category_title, blog_post_introduction, blog_post_privacy_level, blog_post_text, blog_post_image_path, blog_post_image_thumb_small, blog_post_image_thumb_medium, blog_post_image_thumb_large, blog_post_image_file, blog_post_image_ext, blog_post_image_text, blog_post_ad, blog_post_created, blog_post_created_rss, blog_post_updated, blog_post_updated_rss, blog_post_allow_comments, blog_post_comments, blog_post_views, blog_post_views_ipblock, blog_post_user_ip FROM $t_blog_posts WHERE blog_post_id=$post_id_mysql AND blog_post_user_id=$my_user_id_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_current_blog_post_id, $get_current_blog_post_user_id, $get_current_blog_post_title_pre, $get_current_blog_post_title, $get_current_blog_post_language, $get_current_blog_post_status, $get_current_blog_post_category_id, $get_current_blog_post_category_title, $get_current_blog_post_introduction, $get_current_blog_post_privacy_level, $get_current_blog_post_text, $get_current_blog_post_image_path, $get_current_blog_post_image_thumb_small, $get_current_blog_post_image_thumb_medium, $get_current_blog_post_image_thumb_large, $get_current_blog_post_image_file, $get_current_blog_post_image_ext, $get_current_blog_post_image_text, $get_current_blog_post_ad, $get_current_blog_post_created, $get_current_blog_post_created_rss, $get_current_blog_post_updated, $get_current_blog_post_updated_rss, $get_current_blog_post_allow_comments, $get_current_blog_post_comments, $get_current_blog_post_views, $get_current_blog_post_views_ipblock, $get_current_blog_post_user_ip) = $row;
+			
+		if($get_current_blog_post_id == ""){
+			echo"<p>Post not found.</p>";
+		}
+		else{
+		
 			if($action == ""){
 				// Upload
 				if($process == "1"){
@@ -176,7 +130,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$datetime = date("ymdhis");
 				
 					// Finnes mappen?
-					$upload_path = "$root/_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id";
+					$upload_path = "$root/_uploads/blog/$l/$get_current_blog_info_id/$get_current_blog_post_id";
 	
 					if(!(is_dir("$root/_uploads"))){
 						mkdir("$root/_uploads");
@@ -187,11 +141,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					if(!(is_dir("$root/_uploads/blog/$l"))){
 						mkdir("$root/_uploads/blog/$l");
 					}
-					if(!(is_dir("$root/_uploads/blog/$l/$get_blog_info_id"))){
-						mkdir("$root/_uploads/blog/$l/$get_blog_info_id");
+					if(!(is_dir("$root/_uploads/blog/$l/$get_current_blog_info_id"))){
+						mkdir("$root/_uploads/blog/$l/$get_current_blog_info_id");
 					}
-					if(!(is_dir("$root/_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id"))){
-						mkdir("$root/_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id");
+					if(!(is_dir("$root/_uploads/blog/$l/$get_current_blog_info_id/$get_current_blog_post_id"))){
+						mkdir("$root/_uploads/blog/$l/$get_current_blog_info_id/$get_current_blog_post_id");
 					}
 
 					$inp_image_text = $_POST['inp_image_text'];
@@ -216,7 +170,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						$inp_image_title_clean = clean($inp_image_title);
 						$inp_file = $inp_image_title_clean . ".$extension";
 						$inp_file_mysql = quote_smart($link, $inp_file);
-						$filename = "$root/_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id/". $inp_file;
+						$filename = "$root/_uploads/blog/$l/$get_current_blog_info_id/$get_current_blog_post_id/". $inp_file;
 
 
 						if($image){
@@ -224,7 +178,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							if (($extension != "jpg") && ($extension != "jpeg") && ($extension != "png") && ($extension != "gif") && ($extension != "heic") && ($extension != "webp")) {
 								$ft = "warning";
 								$fm = "unknown_file_format";
-								$url = "my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&l=$l&ft=$ft&fm=$fm"; 
+								$url = "my_blog_edit_post_main_image.php?post_id=$get_current_blog_post_id&l=$l&ft=$ft&fm=$fm"; 
 								header("Location: $url");
 								exit;
 							}
@@ -239,14 +193,14 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 										$ft = "warning";
 										$fm = "image_could_not_be_uploaded_please_check_file_size";
 						
-										$url = "my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&l=$l&ft=$ft&fm=$fm"; 
+										$url = "my_blog_edit_post_main_image.php?post_id=$get_current_blog_post_id&l=$l&ft=$ft&fm=$fm"; 
 										header("Location: $url");
 										exit;
 									}
 							
 
 									// Path
-									$inp_path = "_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id";
+									$inp_path = "_uploads/blog/$l/$get_current_blog_info_id/$get_current_blog_post_id";
 									$inp_path_mysql = quote_smart($link, $inp_path);
 
 
@@ -286,7 +240,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 									// Send feedback
 									$ft = "success";
 									$fm = "image_uploaded";
-									$url = "my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&l=$l&ft=$ft&fm=$fm"; 
+									$url = "my_blog_edit_post_main_image.php?post_id=$get_current_blog_post_id&l=$l&ft=$ft&fm=$fm"; 
 									header("Location: $url");
 									exit;
 
@@ -316,7 +270,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							}
 						
 							// Send feedback
-							$url = "my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&l=$l&ft=$ft&fm=$fm"; 
+							$url = "my_blog_edit_post_main_image.php?post_id=$get_current_blog_post_id&l=$l&ft=$ft&fm=$fm"; 
 							header("Location: $url");
 							exit;
 				
@@ -327,20 +281,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				}
 
 				echo"
-			
-				<h1>$l_new_post</h1>
+				<h1>$l_edit $get_current_blog_post_title</h1>
 
 				<!-- Where am I? -->
 					<p><b>$l_you_are_here:</b><br />
 					<a href=\"index.php?l=$l\">$l_blog</a>
 					&gt;
-					<a href=\"view_blog.php?info_id=$get_blog_info_id&amp;l=$l\">$get_blog_title</a>
+					<a href=\"view_blog.php?info_id=$get_current_blog_info_id&amp;l=$l\">$get_current_blog_title</a>
 					&gt;
 					<a href=\"my_blog.php?l=$l\">$l_my_blog</a>
 					&gt;
-					<a href=\"my_blog_new_post.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\">$l_new_post</a>
+					<a href=\"view_post.php?post_id=$get_current_blog_post_id&amp;l=$l\">$get_current_blog_post_title</a>
 					&gt;
-					<a href=\"my_blog_new_post_images.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\">$l_images</a>
+					<a href=\"my_blog_edit_post_main_image.php?post_id=$get_current_blog_post_id&amp;l=$l\">$l_main_image</a>
 					</p>
 				<!-- //Where am I? -->
 
@@ -361,10 +314,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				<!-- Form Buttons (Navigation) -->
 					<p>
-					<a href=\"my_blog_new_post.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_text</a>
-					<a href=\"my_blog_new_post_meta.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_meta</a>
-					<a href=\"my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\" style=\"font-weight: bold;\">$l_main_image</a>
-					<a href=\"my_blog_new_post_images.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_images</a>
+					<a href=\"my_blog_edit_post.php?post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_text</a>
+					<a href=\"my_blog_edit_post_meta.php?post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_meta</a>
+					<a href=\"my_blog_edit_post_main_image.php?post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\" style=\"font-weight: bold;\">$l_main_image</a>
+					<a href=\"my_blog_edit_post_images.php?post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_images</a>
 					<a href=\"view_post.php?post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_view_post</a>
 					</p>
 				<!-- //Form Buttons (Navigation) -->
@@ -372,7 +325,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				<!-- Upload image form -->
 		
-					<form method=\"post\" action=\"my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+					<form method=\"post\" action=\"my_blog_edit_post_main_image.php?post_id=$get_current_blog_post_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
 
 
@@ -399,7 +352,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							echo"
 							<a href=\"$root/$get_current_blog_post_image_path/$get_current_blog_post_image_file\"><img src=\"$root/$get_current_blog_post_image_path/$get_current_blog_post_image_thumb_medium\" alt=\"$get_current_blog_post_image_thumb_medium\" /></a>
 							<br />
-							<a href=\"my_blog_new_post_main_image.php?action=rotate_image&amp;blog_post_id=$get_current_blog_post_id&amp;l=$l&amp;process=1\">$l_rotate</a>
+							<a href=\"my_blog_edit_post_main_image.php?action=rotate_image&amp;post_id=$get_current_blog_post_id&amp;l=$l&amp;process=1\">$l_rotate</a>
 
 							</p>
 
@@ -514,20 +467,22 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 					// Move
-					$url = "my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&l=$l&ft=success&fm=image_rotated#image_id$get_image_id"; 
+					$url = "my_blog_edit_post_main_image.php?post_id=$get_current_blog_post_id&l=$l&ft=success&fm=image_rotated#image_id$get_image_id"; 
 					header("Location: $url");
 					exit;
 				} // process
 			} // rotate_image
-		} // blog info found
-	} // can post (access)
+				
+		} //  post found
+
+	} // found
 }
 else{
 	echo"
 	<h1>
-	<img src=\"_gfx/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
+	<img src=\"$root/_webdesign/images/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
 	Loading...</h1>
-	<meta http-equiv=\"refresh\" content=\"1;url=$root/users/login.php?l=$l&amp;referer=$root/blog/my_blog.php\">
+	<meta http-equiv=\"refresh\" content=\"1;url=$root/users/index.php?page=login&amp;l=$l&amp;refer=$root/blog/my_blog.php\">
 	";
 }
 

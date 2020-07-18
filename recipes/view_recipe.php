@@ -27,7 +27,14 @@ include("$root/_admin/website_config.php");
 
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/recipes/ts_recipes.php");
+include("$root/_admin/_translations/site/$l/recipes/ts_view_recipe.php");
 
+/*- Tables ----------------------------------------------------------------------------- */
+$t_recipes_similar_recipes	= $mysqlPrefixSav . "recipes_similar_recipes";
+$t_recipes_similar_loaded	= $mysqlPrefixSav . "recipes_similar_loaded";
+
+$t_recipes_pairing_recipes	= $mysqlPrefixSav . "recipes_pairing_recipes";
+$t_recipes_pairing_loaded	= $mysqlPrefixSav . "recipes_pairing_loaded";
 
 /*- Variables ------------------------------------------------------------------------- */
 if(isset($_GET['recipe_id'])) {
@@ -144,32 +151,40 @@ else{
 
 	if($can_view_recipe == 1){
 
-	// Unique hits
-	$inp_ip = $_SERVER['REMOTE_ADDR'];
-	$inp_ip = output_html($inp_ip);
+		// Unique hits
+		$inp_ip = $_SERVER['REMOTE_ADDR'];
+		$inp_ip = output_html($inp_ip);
 
-	$recipe_unique_hits_ip_block_array = explode("\n", $get_recipe_unique_hits_ip_block);
-	$recipe_unique_hits_ip_block_array_size = sizeof($recipe_unique_hits_ip_block_array);
-
-	if($recipe_unique_hits_ip_block_array_size > 30){
-		$recipe_unique_hits_ip_block_array_size = 20;
-	}
-	
-	$has_seen_this_recipe_before = 0;
-
-	for($x=0;$x<$recipe_unique_hits_ip_block_array_size;$x++){
-		if($recipe_unique_hits_ip_block_array[$x] == "$inp_ip"){
-			$has_seen_this_recipe_before = 1;
-			break;
+		$recipe_unique_hits_ip_block_array = explode("\n", $get_recipe_unique_hits_ip_block);
+		$recipe_unique_hits_ip_block_array_size = sizeof($recipe_unique_hits_ip_block_array);
+		
+		if($recipe_unique_hits_ip_block_array_size > 10){
+			$recipe_unique_hits_ip_block_array_size = 5;
 		}
-	}
 	
-	if($has_seen_this_recipe_before == 0){
-		$inp_recipe_unique_hits_ip_block = $inp_ip . "\n" . $get_recipe_unique_hits_ip_block;
-		$inp_recipe_unique_hits_ip_block_mysql = quote_smart($link, $inp_recipe_unique_hits_ip_block);
-		$inp_recipe_unique_hits = $get_recipe_unique_hits + 1;
-		$result = mysqli_query($link, "UPDATE $t_recipes SET recipe_unique_hits=$inp_recipe_unique_hits, recipe_unique_hits_ip_block=$inp_recipe_unique_hits_ip_block_mysql WHERE recipe_id=$recipe_id_mysql") or die(mysqli_error($link));
-	}
+		$has_seen_this_recipe_before = 0;
+
+
+		$inp_unique_hits_ip_block = "";
+		for($x=0;$x<$recipe_unique_hits_ip_block_array_size;$x++){
+			if($recipe_unique_hits_ip_block_array[$x] == "$inp_ip"){
+				$has_seen_this_recipe_before = 1;
+				break;
+			}
+			if($inp_unique_hits_ip_block == ""){
+				$inp_unique_hits_ip_block = $recipe_unique_hits_ip_block_array[$x];
+			}
+			else{
+				$inp_unique_hits_ip_block = $inp_unique_hits_ip_block . "\n" . $recipe_unique_hits_ip_block_array[$x];
+			}
+		}
+	
+		if($has_seen_this_recipe_before == 0){
+			$inp_unique_hits_ip_block = $inp_ip . "\n" . $inp_unique_hits_ip_block;
+			$inp_unique_hits_ip_block_mysql = quote_smart($link, $inp_unique_hits_ip_block);
+			$inp_recipe_unique_hits = $get_recipe_unique_hits + 1;
+			$result = mysqli_query($link, "UPDATE $t_recipes SET recipe_unique_hits=$inp_recipe_unique_hits, recipe_unique_hits_ip_block=$inp_unique_hits_ip_block_mysql WHERE recipe_id=$recipe_id_mysql") or die(mysqli_error($link));
+		}
 
 	// Select Nutrients
 	$query = "SELECT number_id, number_recipe_id, number_hundred_calories, number_hundred_proteins, number_hundred_fat, number_hundred_fat_of_which_saturated_fatty_acids, number_hundred_carbs, number_hundred_carbs_of_which_dietary_fiber, number_hundred_carbs_of_which_sugars, number_hundred_salt, number_hundred_sodium, number_serving_calories, number_serving_proteins, number_serving_fat, number_serving_fat_of_which_saturated_fatty_acids, number_serving_carbs, number_serving_carbs_of_which_dietary_fiber, number_serving_carbs_of_which_sugars, number_serving_salt, number_serving_sodium, number_total_weight, number_total_calories, number_total_proteins, number_total_fat, number_total_fat_of_which_saturated_fatty_acids, number_total_carbs, number_total_carbs_of_which_dietary_fiber, number_total_carbs_of_which_sugars, number_total_salt, number_total_sodium, number_servings FROM $t_recipes_numbers WHERE number_recipe_id=$recipe_id_mysql";
@@ -395,6 +410,20 @@ else{
 		<div class=\"clear\"></div>
 	<!-- //Headline and actions -->
 
+	<!-- You are here -->
+		<p><b>$l_you_are_here:</b><br />
+		<a href=\"index.php?l=$l\">$l_recipes</a>
+		&gt;
+		<a href=\"categories.php?l=$l\">$l_categories</a>
+		&gt;
+		<a href=\"categories_browse_1200.php?category_id=$get_recipe_category_id&amp;l=$l\">$get_category_translation_value</a>
+		&gt;
+		<a href=\"view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\">$get_recipe_title</a>
+		</p>
+	<!-- //You are here -->
+
+
+
 	<!-- Ad -->
 		";
 		include("$root/ad/_includes/ad_main_below_headline.php");
@@ -418,8 +447,9 @@ else{
 	<!-- //Feedback -->
 
 	<!-- Image -->
-		";
-		if($get_recipe_video != ""){
+		<div class=\"recipe_image_left\">
+			";
+			if($get_recipe_video != ""){
 			
 			// <div>
 			//	<a href=\"#video\" class=\"toggle\" data-divid=\"view_recipe_video\"><img src=\"../image.php/$get_recipe_image.png?width=847&height=437&image=/$get_recipe_image_path/$get_recipe_image\" /></a>
@@ -431,13 +461,44 @@ else{
 			echo"
 			<iframe width=\"847\" height=\"476\" src=\"$get_recipe_video\" frameborder=\"0\" allowfullscreen></iframe>
 			";
-		}
-		else{
-			if($get_recipe_image != ""){
-				echo"<p style=\"padding-bottom:0;margin-bottom:0;\"><img src=\"$root/$get_recipe_image_path/$get_recipe_image\" alt=\"$get_recipe_image\" /></p>";
 			}
-		}
-		echo"	
+			else{
+				if($get_recipe_image != ""){
+					echo"<p style=\"padding-bottom:0;margin-bottom:0;\"><img src=\"$root/$get_recipe_image_path/$get_recipe_image\" alt=\"$get_recipe_image\" /></p>";
+				}
+			}
+			echo"	
+		</div>
+		<div class=\"recipe_image_right\">
+			<!-- Paring -->";
+				$query = "SELECT pairing_id, pairing_this_recipe_id, pairing_this_category_id, pairing_other_recipe_id, pairing_other_category_id, pairing_other_title, pairing_other_image_path, pairing_other_image_image, pairing_other_image_thumb, pairing_counter FROM $t_recipes_pairing_recipes WHERE pairing_this_recipe_id=$get_recipe_id ORDER BY pairing_counter LIMIT 0,4";
+				$result = mysqli_query($link, $query);
+				while($row = mysqli_fetch_row($result)) {
+					list($get_pairing_id, $get_pairing_this_recipe_id, $get_pairing_this_category_id, $get_pairing_other_recipe_id, $get_pairing_other_category_id, $get_pairing_other_title, $get_pairing_other_image_path, $get_pairing_other_image_image, $get_pairing_other_image_thumb, $get_pairing_counter) = $row;
+
+					if($get_pairing_other_image_image != ""){
+
+
+						$inp_new_x = 280; // 278 px × 154
+						$inp_new_y = 120;
+						$thumb = "recipe_" . $get_pairing_other_recipe_id . "-" . $inp_new_x . "x" . $inp_new_y . ".png";
+		
+						if(!(file_exists("$root/_cache/$thumb"))){
+							resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_pairing_other_image_path/$get_pairing_other_image_image", "$root/_cache/$thumb");
+						}
+
+						// Title
+						echo"
+						<p><a href=\"view_recipe.php?recipe_id=$get_pairing_other_recipe_id&amp;l=$l\"><img src=\"$root/_cache/$thumb\" alt=\"$get_pairing_other_image_image\" /></a><br />
+						<a href=\"view_recipe.php?recipe_id=$get_pairing_other_recipe_id&amp;l=$l\">$get_pairing_other_title</a>
+						</p>
+						";
+					}
+				}
+				
+				echo"
+			<!-- //Paring -->
+		</div>
 	<!-- //Image -->
 
 
@@ -1317,8 +1378,155 @@ else{
 
 	<!-- //Comments -->
 
+	<!-- You might also like -->
+		<h2>$l_you_may_also_like</h2>";
+		$x = 0;
+		$query = "SELECT similar_id, similar_this_recipe_id, similar_other_recipe_id, similar_other_title, similar_other_image_path, similar_other_image_image, similar_other_image_thumb, similar_counter FROM $t_recipes_similar_recipes WHERE similar_this_recipe_id=$get_recipe_id ORDER BY similar_counter LIMIT 0,4";
+		$result = mysqli_query($link, $query);
+		while($row = mysqli_fetch_row($result)) {
+			list($get_similar_id, $get_similar_this_recipe_id, $get_similar_other_recipe_id, $get_similar_other_title, $get_similar_other_image_path, $get_similar_other_image_image, $get_similar_other_image_thumb, $get_similar_counter) = $row;
 
+			if($get_similar_other_image_image != ""){
+				$inp_new_x = 278; // 278 px × 154
+				$inp_new_y = 184;
+				$thumb = "recipe_" . $get_similar_other_recipe_id . "-" . $inp_new_x . "x" . $inp_new_y . ".png";
+		
+				if(!(file_exists("$root/_cache/$thumb"))){
+					resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_similar_other_image_path/$get_similar_other_image_image", "$root/_cache/$thumb");
+				}
+
+				if($x == "0"){
+					echo"
+					<div class=\"left_center_center_right_left\">
+					";
+				}
+				elseif($x == "1"){
+					echo"
+					<div class=\"left_center_center_left_right_center\">
+					";
+				}
+				elseif($x == "2"){
+					echo"
+					<div class=\"left_center_center_right_right_center\">
+					";
+				}
+				elseif($x == "3"){
+					echo"
+					<div class=\"left_center_center_right_right\">
+					";
+				}
+				echo"
+				
+						<p class=\"frontpage_post_image\">
+							<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\"><img src=\"$root/_cache/$thumb\" alt=\"$get_recipe_image\" /></a><br />
+						</p>
+
+						<p class=\"frontpage_post_category_p\">
+							<a href=\"$root/recipes/categories_browse.php?category_id=$get_recipe_category_id&amp;l=$l\" class=\"frontpage_post_category_a\">$get_category_translation_value</a><br />
+						</p>
+						<p class=\"frontpage_post_title\">
+							<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\" class=\"h2\">$get_recipe_title</a>
+						</p>
+					
+					
+					</div>
+				";
+			
+				// Increment
+				$x = $x+1;
+			}
+		}
+		echo"
+	<!-- //You might also like -->
 	";
+
+		// Similar
+		$inp_ip_mysql = quote_smart($link, $inp_ip);
+		$inp_recipe_language_mysql = quote_smart($link, $get_recipe_language);
+		$query = "SELECT loaded_id, loaded_this_recipe_id, loaded_language, loaded_ip FROM $t_recipes_similar_loaded WHERE loaded_ip=$inp_ip_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_loaded_id, $get_loaded_this_recipe_id, $get_loaded_language, $get_loaded_ip) = $row;
+		if($get_loaded_id == ""){
+			mysqli_query($link, "INSERT INTO $t_recipes_similar_loaded 
+			(loaded_id, loaded_this_recipe_id, loaded_language, loaded_ip) 
+			VALUES 
+			(NULL, $get_recipe_id, $inp_recipe_language_mysql, $inp_ip_mysql)")
+			or die(mysqli_error($link)); 
+		}
+		else{
+			// Delete loaded
+			$result = mysqli_query($link, "DELETE FROM $t_recipes_similar_loaded WHERE loaded_id=$get_loaded_id"); 
+
+			if($get_recipe_id != "$get_loaded_this_recipe_id"){
+				// Check if connection exists
+				$query = "SELECT similar_id, similar_this_recipe_id, similar_other_recipe_id, similar_other_title, similar_other_image_path, similar_other_image_image, similar_other_image_thumb, similar_counter FROM $t_recipes_similar_recipes WHERE similar_this_recipe_id=$get_loaded_this_recipe_id AND similar_other_recipe_id=$get_recipe_id";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_similar_id, $get_similar_this_recipe_id, $get_similar_other_recipe_id, $get_similar_other_title, $get_similar_other_image_path, $get_similar_other_image_image, $get_similar_other_image_thumb, $get_similar_counter) = $row;
+				if($get_similar_id == ""){
+					// make connection
+					$inp_title_mysql = quote_smart($link, $get_recipe_title);
+					$inp_image_path_mysql = quote_smart($link, $get_recipe_image_path);
+					$inp_image_mysql = quote_smart($link, $get_recipe_image);
+					$inp_image_thumb_mysql = quote_smart($link, $get_recipe_thumb);
+					mysqli_query($link, "INSERT INTO $t_recipes_similar_recipes 
+					(similar_id, similar_this_recipe_id, similar_other_recipe_id, similar_other_title, similar_other_image_path, similar_other_image_image, similar_other_image_thumb, similar_other_recipe_age_restriction, similar_counter) 
+					VALUES 
+					(NULL, $get_loaded_this_recipe_id, $get_recipe_id, $inp_title_mysql, $inp_image_path_mysql, $inp_image_mysql, $inp_image_thumb_mysql, $get_recipe_age_restriction, 1)")
+					or die(mysqli_error($link)); 
+
+				}
+				else{
+					$inp_counter = $get_similar_counter+1;
+					$result = mysqli_query($link, "UPDATE $t_recipes_similar_recipes SET similar_counter=$inp_counter WHERE similar_id=$get_similar_id"); 
+				}
+			}
+		} // simular
+
+
+		
+		// Pairing
+		$query = "SELECT loaded_id, loaded_this_recipe_id, loaded_this_category_id, loaded_language, loaded_ip FROM $t_recipes_pairing_loaded WHERE loaded_ip=$inp_ip_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_loaded_id, $get_loaded_this_recipe_id, $get_loaded_this_category_id, $get_loaded_language, $get_loaded_ip) = $row;
+		if($get_loaded_id == ""){
+			mysqli_query($link, "INSERT INTO $t_recipes_pairing_loaded
+			(loaded_id, loaded_this_recipe_id, loaded_this_category_id, loaded_language, loaded_ip) 
+			VALUES 
+			(NULL, $get_recipe_id, $get_recipe_category_id, $inp_recipe_language_mysql, $inp_ip_mysql)")
+			or die(mysqli_error($link)); 
+		}
+		else{
+			// Delete loaded
+			$result = mysqli_query($link, "DELETE FROM $t_recipes_pairing_loaded WHERE loaded_id=$get_loaded_id"); 
+
+			if($get_recipe_id != "$get_loaded_this_recipe_id" && $get_recipe_category_id != "$get_loaded_this_category_id"){
+				// Check if connection exists
+				$query = "SELECT pairing_id, pairing_this_recipe_id, pairing_this_category_id, pairing_other_recipe_id, pairing_other_category_id, pairing_other_title, pairing_other_image_path, pairing_other_image_image, pairing_other_image_thumb, pairing_counter FROM $t_recipes_pairing_recipes WHERE pairing_this_recipe_id=$get_loaded_this_recipe_id AND pairing_other_recipe_id=$get_recipe_id";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_pairing_id, $get_pairing_this_recipe_id, $get_pairing_this_category_id, $get_pairing_other_recipe_id, $get_pairing_other_category_id, $get_pairing_other_title, $get_pairing_other_image_path, $get_pairing_other_image_image, $get_pairing_other_image_thumb, $get_pairing_counter) = $row;
+				if($get_pairing_id == ""){
+					// make connection
+					$inp_title_mysql = quote_smart($link, $get_recipe_title);
+					$inp_image_path_mysql = quote_smart($link, $get_recipe_image_path);
+					$inp_image_mysql = quote_smart($link, $get_recipe_image);
+					$inp_image_thumb_mysql = quote_smart($link, $get_recipe_thumb);
+					mysqli_query($link, "INSERT INTO $t_recipes_pairing_recipes
+					(pairing_id, pairing_this_recipe_id, pairing_this_category_id, pairing_other_recipe_id, pairing_other_category_id, pairing_other_title, pairing_other_image_path, pairing_other_image_image, pairing_other_image_thumb, pairing_other_recipe_age_restriction, pairing_counter) 
+					VALUES 
+					(NULL, $get_loaded_this_recipe_id, $get_loaded_this_category_id, $get_recipe_id, $get_recipe_category_id, $inp_title_mysql, $inp_image_path_mysql, $inp_image_mysql, $inp_image_thumb_mysql, $get_recipe_age_restriction, 1)")
+					or die(mysqli_error($link)); 
+
+				}
+				else{
+					$inp_counter = $get_similar_counter+1;
+					$result = mysqli_query($link, "UPDATE $t_recipes_pairing_recipes SET pairing_counter=$inp_counter WHERE pairing_id=$get_pairing_id"); 
+				}
+			}
+		} // pairing
 	} // can view recipe
 } // recipe found
 

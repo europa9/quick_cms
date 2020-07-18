@@ -137,6 +137,17 @@ if($action == ""){
         		</form>
 		<!-- //Order -->
 	</div>
+	<div class=\"clear\"></div>
+
+	<!-- You are here -->
+		<p><b>$l_you_are_here:</b><br />
+		<a href=\"index.php?l=$l\">$l_recipes</a>
+		&gt;
+		<a href=\"cuisines.php?l=$l\">$l_cuisines</a>
+		&gt;
+		<a href=\"cuisines_browse.php?cuisine_id=$cuisine_id&amp;l=$l\">$get_cuisine_translation_value</a>
+		</p>
+	<!-- //You are here -->
 	";
 
 	$date = date("Y-m-d");
@@ -217,19 +228,6 @@ if($action == ""){
 					<p class=\"recipe_open_category_p\">
 					<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id\" class=\"recipe_open_category_a\">$get_recipe_title</a>
 					</p>
-
-					<div class=\"recipe_open_category_unique_hits\">
-						<img src=\"$root/_webdesign/images/recipes/ic_eye_grey_18px.png\" alt=\"eye.png\" style=\"float:left;padding-right: 5px;\" /> 
-						<span class=\"recipe_open_category_unique_hits_span\">
-						$get_recipe_unique_hits 
-						</span>
-					</div>
-					<div class=\"recipe_open_category_popularity\">
-						<span class=\"recipe_open_category_popularity_span\">
-						$get_rating_popularity %
-						</span>
-						<img src=\"$root/_webdesign/images/recipes/ic_thumb_up_grey_18px.png\" alt=\"ic_thumb_up_grey_18px.png\" style=\"float:right;padding-left: 5px;\" /> 
-					</div>
 
 
 

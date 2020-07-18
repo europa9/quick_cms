@@ -60,6 +60,16 @@ h1.recipe_headline{
 	}
 
 
+/*- Recipe image + You might also like ----------------------------------------------------- */
+div.recipe_image_left{
+	float: left;
+}
+div.recipe_image_right{
+	float: right;
+	max-width: 280px;
+}
+
+
 /*- Ingredients ----------------------------------------------------- */
 div.ingredients{
 	
@@ -172,3 +182,54 @@ div.view_recipe_select_country_col{
 		flex: 0;
 	}
 }
+
+
+
+/*- Front page Posts ------------------------------------------------------------ */
+p.frontpage_category_headline_leftside_p{
+	padding: 50px 0px 0px 0px;
+	margin: 0px 0px 0px 0px;
+	float: left;
+}
+a.frontpage_category_headline_leftside_a{
+	font: bold 24px 'Open Sans',sans-serif;
+	color: #000;
+}
+
+p.frontpage_category_headline_rightside_p{
+	padding: 58px 0px 0px 0px;
+	margin: 0px 0px 0px 0px;
+	float: right;
+}
+a.frontpage_category_headline_rightside_a{
+	font: bold 12px 'Open Sans',sans-serif;
+	color: #175da1;
+	text-transform: uppercase;
+}
+a.frontpage_category_headline_rightside_a:hover{
+	color: #3e8dda;
+}
+
+
+
+p.frontpage_post_image{
+	padding: 8px 0px 0px 0px;
+	margin: 0px 0px 0px 0px;
+}
+p.frontpage_post_category_p{
+	padding: 4px 0px 4px 0px;
+	margin: 0px 0px 0px 0px;
+}
+a.frontpage_post_category_a{
+	text-transform: uppercase;
+	font: bold 13px 'Open Sans',sans-serif;
+	color: #175da1;
+}
+a.frontpage_post_category_a:hover{
+	color: #3e8dda;
+}
+p.frontpage_post_title{
+	padding: 0px 0px 0px 0px;
+	margin: 0px 0px 0px 0px;
+}
+

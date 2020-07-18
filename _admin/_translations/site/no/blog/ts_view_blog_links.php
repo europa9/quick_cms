@@ -1,3 +1,3 @@
 <?php
-$l_links = "Links";
+$l_links = "Linker";
 ?>

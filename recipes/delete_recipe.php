@@ -3,8 +3,8 @@
 *
 * File: recipes/delete_recipe.php
 * Version 1.0.0
-* Date 15:21 19.01.2020
-* Copyright (c) 2011-2020 Localhost
+* Date 13:43 18.11.2017
+* Copyright (c) 2011-2017 Localhost
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -24,10 +24,6 @@ else{ $root = "../../.."; }
 
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
-
-/*- Tables ---------------------------------------------------------------------------- */
-$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
-$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
 
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/recipes/ts_recipes.php");
@@ -105,15 +101,6 @@ else{
 			unlink("../$get_recipe_image_path/$get_recipe_thumb");
 		}
 			
-
-		// Search engine
-		$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='recipes' AND index_reference_name='recipe_id' AND index_reference_id=$get_recipe_id";
-		$result_exists = mysqli_query($link, $query_exists);
-		$row_exists = mysqli_fetch_row($result_exists);
-		list($get_index_id) = $row_exists;
-		if($get_index_id != ""){
-			$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_id=$get_index_id") or die(mysqli_error($link));
-		}
 
 
 

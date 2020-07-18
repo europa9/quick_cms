@@ -25,6 +25,11 @@ else{ $root = "../../.."; }
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
+
+/*- Blog config -------------------------------------------------------------------- */
+include("$root/_admin/_data/blog.php");
+
+
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/blog/ts_blog.php");
 include("$root/_admin/_translations/site/$l/blog/ts_my_blog.php");
@@ -85,11 +90,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	else{
 		if($action == ""){
 			if($process == "1"){
-				$inp_title = $_POST['inp_title'];
-				$inp_title = output_html($inp_title);
-				$inp_title_mysql = quote_smart($link, $inp_title);
-				
-
 				
 				// Finnes mappen?
 				$upload_path = "$root/_uploads/blog/$l/$get_blog_info_id";
@@ -107,32 +107,59 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					mkdir("$root/_uploads/blog/$l/$get_blog_info_id");
 				}
 
-				// Get extention
-				function getExtension($str) {
-					$i = strrpos($str,".");
-					if (!$i) { return ""; } 
-					$l = strlen($str) - $i;
-					$ext = substr($str,$i+1,$l);
-					return $ext;
-				}
-
-
 
 				// Upload
 				if($_SERVER["REQUEST_METHOD"] == "POST") {
        					$tmp_name = $_FILES['inp_image']["tmp_name"];
 					$image = $_FILES['inp_image']['name'];
-					$extension = getExtension($image);
+					$extension = get_extension($image);
 					$extension = strtolower($extension);
 				
 
 					$datetime = date("ymdhis");
-					$filename = "$root/_uploads/blog/$l/$get_blog_info_id/". $my_user_id . "_" . $datetime . "." . $extension;
+					
+					$inp_title = str_replace(".$extension", "", $image);
+					$inp_title = output_html($inp_title);
+					$inp_title_mysql = quote_smart($link, $inp_title);
 
+					$inp_title_clean = clean($inp_title);
+
+					$inp_extension_clean = clean($extension);
+					
+					$inp_text = $_POST['inp_text'];
+					$inp_text = output_html($inp_text);
+					$inp_text_mysql = quote_smart($link, $inp_text);
+
+					$inp_photo_by_name = $_POST['inp_photo_by_name'];
+					$inp_photo_by_name = output_html($inp_photo_by_name);
+					$inp_photo_by_name_mysql = quote_smart($link, $inp_photo_by_name);
+
+					$inp_photo_by_website = $_POST['inp_photo_by_website'];
+					$inp_photo_by_website = output_html($inp_photo_by_website);
+					$inp_photo_by_website_mysql = quote_smart($link, $inp_photo_by_website);
+
+					$inp_path = "_uploads/blog/$l/$get_blog_info_id";
+					$inp_path_mysql = quote_smart($link, $inp_path);
+
+					$inp_file = "$inp_title_clean.$inp_extension_clean";
+					$inp_file_mysql = quote_smart($link, $inp_file);
+
+					$inp_thumb_a = $inp_title_clean . "_thumb_a." . $inp_extension_clean;
+					$inp_thumb_a_mysql = quote_smart($link, $inp_thumb_a);
+
+					$inp_thumb_b = $inp_title_clean . "_thumb_b." . $inp_extension_clean;
+					$inp_thumb_b_mysql = quote_smart($link, $inp_thumb_b);
+
+					$inp_thumb_c = $inp_title_clean . "_thumb_c." . $inp_extension_clean;
+					$inp_thumb_c_mysql = quote_smart($link, $inp_thumb_c);
+
+					$my_ip = $_SERVER['REMOTE_ADDR'];
+					$my_ip = output_html($my_ip);
+					$my_ip_mysql = quote_smart($link, $my_ip);
 
 					if($image){
 
-						if (($extension != "jpg") && ($extension != "jpeg") && ($extension != "png") && ($extension != "gif")) {
+						if (($extension != "heic") && ($extension != "jpg") && ($extension != "jpeg") && ($extension != "png") && ($extension != "gif")) {
 							$ft = "warning";
 							$fm = "unknown_file_format";
 							$url = "my_blog_images.php?action=upload_image&l=$l&ft=$ft&fm=$fm"; 
@@ -140,57 +167,36 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							exit;
 						}
 						else{
-							if(move_uploaded_file($tmp_name, "$filename")){
+							if(move_uploaded_file($tmp_name, "$root/$inp_path/$inp_file")){
 							
 								// Check width and height
-								list($width,$height) = getimagesize($filename);
+								list($width,$height) = getimagesize("$root/$inp_path/$inp_file");
 								if($width == "" OR $height == ""){
 									unlink("$filename");
 
 									$ft = "warning";
 									$fm = "image_could_not_be_uploaded_please_check_file_size";
 						
-									$url = "my_blog_images.php?action=upload_image&l=$l&ft=$ft&fm=$fm"; 
+									$url = "my_blog_images.php?l=$l&ft=$ft&fm=$fm"; 
 									header("Location: $url");
 									exit;
 								}
 							
 
-								// Path
-								$inp_path = "_uploads/blog/$l/$get_blog_info_id";
-								$inp_path_mysql = quote_smart($link, $inp_path);
-
-
-								// File
-								$inp_file = $my_user_id . "_" . $datetime . "." . $extension;
-								$inp_file_mysql = quote_smart($link, $inp_file);
-
-								// Thumb
-								$inp_thumb = $my_user_id . "_" . $datetime . "_thumb." . $extension;
-								$inp_thumb_mysql = quote_smart($link, $inp_thumb);
-
-								// Datetime
-								$datetime = date("Y-m-d H:i:s");
-
-								// IP
-								$my_ip = $_SERVER['REMOTE_ADDR'];
-								$my_ip = output_html($my_ip);
-								$my_ip_mysql = quote_smart($link, $my_ip);
 
 
 								// Insert into MySQL
 								mysqli_query($link, "INSERT INTO $t_blog_images
-								(image_id, image_user_id, image_title, image_path, image_thumb, image_file, image_uploaded_datetime, image_uploaded_ip, image_unique_views, image_ip_block, image_reported, image_reported_checked, image_likes, image_dislikes, image_likes_dislikes_ipblock, image_comments) 
+								(image_id, image_user_id, image_title, image_text, image_path, image_thumb_a, image_thumb_b, image_thumb_c, image_file, image_photo_by_name, image_photo_by_website, image_uploaded_datetime, image_uploaded_ip, image_unique_views, image_ip_block, image_reported, image_reported_checked, image_likes, image_dislikes, image_likes_dislikes_ipblock, image_comments) 
 								VALUES 
-								(NULL, $my_user_id_mysql, $inp_title_mysql, $inp_path_mysql, $inp_thumb_mysql, $inp_file_mysql, '$datetime', $my_ip_mysql, '0', '', 0, '', 0, 0, '', '0')")
+								(NULL, $my_user_id_mysql, $inp_title_mysql, $inp_text_mysql , $inp_path_mysql, $inp_thumb_a_mysql, $inp_thumb_b_mysql, $inp_thumb_c_mysql, $inp_file_mysql, $inp_photo_by_name_mysql, $inp_photo_by_website_mysql, '$datetime', $my_ip_mysql, '0', '', 0, '', 0, 0, '', '0')")
 								or die(mysqli_error($link));
-
 
 
 								// Send feedback
 								$ft = "success";
 								$fm = "image_uploaded";
-								$url = "my_blog_images.php?action=upload_image&l=$l&ft=$ft&fm=$fm"; 
+								$url = "my_blog_images.php?l=$l&ft=$ft&fm=$fm"; 
 								header("Location: $url");
 								exit;
 
@@ -221,7 +227,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						}
 						
 						// Send feedback
-						$url = "my_blog_images.php?action=upload_image&l=$l&ft=$ft&fm=$fm"; 
+						$url = "my_blog_images.php?l=$l&ft=$ft&fm=$fm"; 
 						header("Location: $url");
 						exit;
 				
@@ -312,12 +318,20 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				<div class=\"bodycell\">
 					<h2>$l_upload_image</h2>
 
-					<p><b>$l_title:</b><br />
-					<input type=\"text\" name=\"inp_title\" value=\"\" size=\"25\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
+					<p>$l_select_image (<span>$l_will_be_resized_to $blogPostsImageSizeXSav x $blogPostsImageSizeYSav px</span>):<br />
+					<input name=\"inp_image\" type=\"file\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
 					</p>
 
-					<p>$l_select_image:<br />
-					<input name=\"inp_image\" type=\"file\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
+					<p><b>$l_image_text:</b><br />
+					<input type=\"text\" name=\"inp_text\" value=\"\" size=\"25\" style=\"width: 90%;\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
+					</p>
+
+					<p><b>$l_photo_by_name:</b><br />
+					<input type=\"text\" name=\"inp_photo_by_name\" value=\"\" size=\"25\" style=\"width: 90%;\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
+					</p>
+
+					<p><b>$l_photo_by_website:</b><br />
+					<input type=\"text\" name=\"inp_photo_by_website\" value=\"\" size=\"25\" style=\"width: 90%;\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
 					</p>
 
 					<p><input type=\"submit\" value=\"$l_upload\" class=\"btn btn_default\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" /></p>
@@ -331,26 +345,24 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<!-- Last x Images -->
 				";
 				
-				$query = "SELECT image_id, image_user_id, image_title, image_path, image_thumb, image_file, image_uploaded_datetime, image_uploaded_ip, image_unique_views, image_ip_block, image_reported, image_reported_checked, image_likes, image_dislikes, image_likes_dislikes_ipblock, image_comments FROM $t_blog_images WHERE image_user_id=$my_user_id_mysql ORDER BY image_id DESC";
+				$query = "SELECT image_id, image_user_id, image_blog_post_id, image_title, image_text, image_path, image_thumb_a, image_thumb_b, image_thumb_c, image_file, image_photo_by_name, image_photo_by_website, image_uploaded_datetime, image_uploaded_ip, image_unique_views, image_ip_block, image_reported, image_reported_checked, image_likes, image_dislikes, image_likes_dislikes_ipblock, image_comments FROM $t_blog_images WHERE image_user_id=$my_user_id_mysql ORDER BY image_id DESC";
 				$result = mysqli_query($link, $query);
 				while($row = mysqli_fetch_row($result)) {
-					list($get_image_id, $get_image_user_id, $get_image_title, $get_image_path, $get_image_thumb, $get_image_file, $get_image_uploaded_datetime, $get_image_uploaded_ip, $get_image_unique_views, $get_image_ip_block, $get_image_reported, $get_image_reported_checked, $get_image_likes, $get_image_dislikes, $get_image_likes_dislikes_ipblock, $get_image_comments) = $row;
+					list($get_image_id, $get_image_user_id, $get_image_blog_post_id, $get_image_title, $get_image_text, $get_image_path, $get_image_thumb_a, $get_image_thumb_b, $get_image_thumb_c, $get_image_file, $get_image_photo_by_name, $get_image_photo_by_website, $get_image_uploaded_datetime, $get_image_uploaded_ip, $get_image_unique_views, $get_image_ip_block, $get_image_reported, $get_image_reported_checked, $get_image_likes, $get_image_dislikes, $get_image_likes_dislikes_ipblock, $get_image_comments) = $row;
 			
 					// Clean up
-					if(!(file_exists("$root/$get_image_path/$get_image_file"))){
-						echo"<div class=\"info\"><p>Img not found on server.</p></div>\n";
+					if(!(file_exists("../$get_image_path/$get_image_file"))){
+						echo"<div class=\"info\"><p><a href=\"../$get_image_path/$get_image_file\">$root/$get_image_path/$get_image_file</a> image not found on server.</p></div>\n";
 						mysqli_query($link, "DELETE FROM $t_blog_images WHERE image_id='$get_image_id'") or die(mysqli_error($link));
 					}
 
-					// Thumb
-					if(!(file_exists("$root/$get_image_path/$get_image_thumb")) && $get_image_file != ""){
-						$img_size = getimagesize("$root/$get_image_path/$get_image_file");
-
-						$inp_new_x = 200; 
-						$inp_new_y = $newheight=round(($img_size[1]/$img_size[0])*$inp_new_x, 0);
-						
-						resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_image_path/$get_image_file", "$root/$get_image_path/$get_image_thumb");
-						
+					// Thumb A
+					if(!(file_exists("$root/$get_image_path/$get_image_thumb_a")) && $get_image_file != ""){
+						resize_crop_image($blogPostsThumbSmallSizeXSav, $blogPostsThumbSmallSizeYSav, "$root/$get_image_path/$get_image_file", "$root/$get_image_path/$get_image_thumb_a");
+					}
+					// Thumb B
+					if(!(file_exists("$root/$get_image_path/$get_image_thumb_b")) && $get_image_file != ""){
+						resize_crop_image($blogPostsThumbMediumSizeXSav, $blogPostsThumbMediumSizeYSav, "$root/$get_image_path/$get_image_file", "$root/$get_image_path/$get_image_thumb_b");
 					}
 
 
@@ -359,7 +371,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					 <tr>
 					  <td style=\"vertical-align: top;padding: 0px 10px 0px 0px;width: 200px;\">
 						<p>
-						<a href=\"$root/$get_image_path/$get_image_file\"><img src=\"$root/$get_image_path/$get_image_thumb\" alt=\"$get_image_thumb\" /></a>
+						<a href=\"$root/$get_image_path/$get_image_file\"><img src=\"$root/$get_image_path/$get_image_thumb_b\" alt=\"$get_image_thumb_b\" /></a>
 						</p>
 					  </td>
 					  <td style=\"vertical-align: top;\">
@@ -389,10 +401,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		elseif($action == "edit_image"){
 			// Find image
 			$image_id_mysql = quote_smart($link, $image_id);
-			$query = "SELECT image_id, image_user_id, image_title, image_path, image_thumb, image_file, image_uploaded_datetime, image_uploaded_ip, image_unique_views, image_ip_block, image_reported, image_reported_checked, image_likes, image_dislikes, image_likes_dislikes_ipblock, image_comments FROM $t_blog_images WHERE image_id=$image_id_mysql AND image_user_id=$my_user_id_mysql";
+			$query = "SELECT image_id, image_user_id, image_blog_post_id, image_title, image_text, image_path, image_thumb_a, image_thumb_b, image_thumb_c, image_file, image_photo_by_name, image_photo_by_website, image_uploaded_datetime, image_uploaded_ip, image_unique_views, image_ip_block, image_reported, image_reported_checked, image_likes, image_dislikes, image_likes_dislikes_ipblock, image_comments FROM $t_blog_images WHERE image_id=$image_id_mysql AND image_user_id=$my_user_id_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
-			list($get_image_id, $get_image_user_id, $get_image_title, $get_image_path, $get_image_thumb, $get_image_file, $get_image_uploaded_datetime, $get_image_uploaded_ip, $get_image_unique_views, $get_image_ip_block, $get_image_reported, $get_image_reported_checked, $get_image_likes, $get_image_dislikes, $get_image_likes_dislikes_ipblock, $get_image_comments) = $row;
+			list($get_image_id, $get_image_user_id, $get_image_blog_post_id, $get_image_title, $get_image_text, $get_image_path, $get_image_thumb_a, $get_image_thumb_b, $get_image_thumb_c, $get_image_file, $get_image_photo_by_name, $get_image_photo_by_website, $get_image_uploaded_datetime, $get_image_uploaded_ip, $get_image_unique_views, $get_image_ip_block, $get_image_reported, $get_image_reported_checked, $get_image_likes, $get_image_dislikes, $get_image_likes_dislikes_ipblock, $get_image_comments) = $row;
 
 
 			if($get_image_id == ""){
@@ -403,8 +415,26 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$inp_title = $_POST['inp_title'];
 					$inp_title = output_html($inp_title);
 					$inp_title_mysql = quote_smart($link, $inp_title);
+					
+					$inp_text = $_POST['inp_text'];
+					$inp_text = output_html($inp_text);
+					$inp_text_mysql = quote_smart($link, $inp_text);
 
-					mysqli_query($link, "UPDATE $t_blog_images SET image_title=$inp_title_mysql WHERE image_id=$image_id_mysql AND image_user_id=$my_user_id_mysql") or die(mysqli_error($link));
+					$inp_photo_by_name = $_POST['inp_photo_by_name'];
+					$inp_photo_by_name = output_html($inp_photo_by_name);
+					$inp_photo_by_name_mysql = quote_smart($link, $inp_photo_by_name);
+
+					$inp_photo_by_website = $_POST['inp_photo_by_website'];
+					$inp_photo_by_website = output_html($inp_photo_by_website);
+					$inp_photo_by_website_mysql = quote_smart($link, $inp_photo_by_website);
+
+
+					mysqli_query($link, "UPDATE $t_blog_images SET 
+								image_title=$inp_title_mysql, 
+								image_text=$inp_text_mysql, 
+								image_photo_by_name=$inp_photo_by_name_mysql, 
+								image_photo_by_website=$inp_photo_by_website_mysql 
+							WHERE image_id=$image_id_mysql AND image_user_id=$my_user_id_mysql") or die(mysqli_error($link));
 
 					$url = "my_blog_images.php?action=$action&image_id=$image_id&l=$l&ft=success&fm=changes_saved"; 
 					header("Location: $url");
@@ -430,7 +460,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				<!-- //Feedback -->
 				
 				<p>
-				<a href=\"$root/$get_image_path/$get_image_file\"><img src=\"$root/$get_image_path/$get_image_thumb\" alt=\"$get_image_thumb\" /></a>
+				<a href=\"$root/$get_image_path/$get_image_file\"><img src=\"$root/$get_image_path/$get_image_thumb_b\" alt=\"$get_image_thumb_b\" /></a>
 				</p>
 
 				<script>
@@ -444,6 +474,18 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				<p><b>$l_title:</b><br />
 				<input type=\"text\" name=\"inp_title\" value=\"$get_image_title\" size=\"25\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
+				</p>
+
+				<p><b>$l_image_text:</b><br />
+				<input type=\"text\" name=\"inp_text\" value=\"$get_image_text\" size=\"25\" style=\"width: 90%;\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
+				</p>
+
+				<p><b>$l_photo_by_name:</b><br />
+				<input type=\"text\" name=\"inp_photo_by_name\" value=\"$get_image_photo_by_name\" size=\"25\" style=\"width: 90%;\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
+				</p>
+
+				<p><b>$l_photo_by_website:</b><br />
+				<input type=\"text\" name=\"inp_photo_by_website\" value=\"$get_image_photo_by_website\" size=\"25\" style=\"width: 90%;\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
 				</p>
 
 				<p><input type=\"submit\" value=\"$l_save_changes\" class=\"btn btn_default\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" /></p>
@@ -462,10 +504,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		elseif($action == "delete_image"){
 			// Find image
 			$image_id_mysql = quote_smart($link, $image_id);
-			$query = "SELECT image_id, image_user_id, image_title, image_path, image_thumb, image_file, image_uploaded_datetime, image_uploaded_ip, image_unique_views, image_ip_block, image_reported, image_reported_checked, image_likes, image_dislikes, image_likes_dislikes_ipblock, image_comments FROM $t_blog_images WHERE image_id=$image_id_mysql AND image_user_id=$my_user_id_mysql";
+			$query = "SELECT image_id, image_user_id, image_blog_post_id, image_title, image_text, image_path, image_thumb_a, image_thumb_b, image_thumb_c, image_file, image_photo_by_name, image_photo_by_website, image_uploaded_datetime, image_uploaded_ip, image_unique_views, image_ip_block, image_reported, image_reported_checked, image_likes, image_dislikes, image_likes_dislikes_ipblock, image_comments FROM $t_blog_images WHERE image_id=$image_id_mysql AND image_user_id=$my_user_id_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
-			list($get_image_id, $get_image_user_id, $get_image_title, $get_image_path, $get_image_thumb, $get_image_file, $get_image_uploaded_datetime, $get_image_uploaded_ip, $get_image_unique_views, $get_image_ip_block, $get_image_reported, $get_image_reported_checked, $get_image_likes, $get_image_dislikes, $get_image_likes_dislikes_ipblock, $get_image_comments) = $row;
+			list($get_image_id, $get_image_user_id, $get_image_blog_post_id, $get_image_title, $get_image_text, $get_image_path, $get_image_thumb_a, $get_image_thumb_b, $get_image_thumb_c, $get_image_file, $get_image_photo_by_name, $get_image_photo_by_website, $get_image_uploaded_datetime, $get_image_uploaded_ip, $get_image_unique_views, $get_image_ip_block, $get_image_reported, $get_image_reported_checked, $get_image_likes, $get_image_dislikes, $get_image_likes_dislikes_ipblock, $get_image_comments) = $row;
 
 
 			if($get_image_id == ""){
@@ -473,8 +515,18 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			} // image not found
 			else{
 				if($process == "1"){
-					unlink("$root/$get_image_path/$get_image_thumb");
-					unlink("$root/$get_image_path/$get_image_file");
+					if(file_exists("$root/$get_image_path/$get_image_thumb_a") && $get_image_thumb_a != ""){
+						unlink("$root/$get_image_path/$get_image_thumb_a");
+					}
+					if(file_exists("$root/$get_image_path/$get_image_thumb_b") && $get_image_thumb_b != ""){
+						unlink("$root/$get_image_path/$get_image_thumb_b");
+					}
+					if(file_exists("$root/$get_image_path/$get_image_thumb_c") && $get_image_thumb_c != ""){
+						unlink("$root/$get_image_path/$get_image_thumb_c");
+					}
+					if(file_exists("$root/$get_image_path/$get_image_file") && $get_image_file != ""){
+						unlink("$root/$get_image_path/$get_image_file");
+					}
 
 					mysqli_query($link, "DELETE FROM $t_blog_images WHERE image_id=$image_id_mysql AND image_user_id=$my_user_id_mysql") or die(mysqli_error($link));
 
@@ -502,7 +554,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				<!-- //Feedback -->
 				
 				<p>
-				<a href=\"$root/$get_image_path/$get_image_file\"><img src=\"$root/$get_image_path/$get_image_thumb\" alt=\"$get_image_thumb\" /></a>
+				<a href=\"$root/$get_image_path/$get_image_file\"><img src=\"$root/$get_image_path/$get_image_thumb_b\" alt=\"$get_image_thumb_b\" /></a>
 				</p>
 					
 				<p>
@@ -524,10 +576,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		elseif($action == "rotate_image"){
 			// Find image
 			$image_id_mysql = quote_smart($link, $image_id);
-			$query = "SELECT image_id, image_user_id, image_title, image_path, image_thumb, image_file, image_uploaded_datetime, image_uploaded_ip, image_unique_views, image_ip_block, image_reported, image_reported_checked, image_likes, image_dislikes, image_likes_dislikes_ipblock, image_comments FROM $t_blog_images WHERE image_id=$image_id_mysql AND image_user_id=$my_user_id_mysql";
+			$query = "SELECT image_id, image_user_id, image_blog_post_id, image_title, image_text, image_path, image_thumb_a, image_thumb_b, image_thumb_c, image_file, image_photo_by_name, image_photo_by_website, image_uploaded_datetime, image_uploaded_ip, image_unique_views, image_ip_block, image_reported, image_reported_checked, image_likes, image_dislikes, image_likes_dislikes_ipblock, image_comments FROM $t_blog_images WHERE image_id=$image_id_mysql AND image_user_id=$my_user_id_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
-			list($get_image_id, $get_image_user_id, $get_image_title, $get_image_path, $get_image_thumb, $get_image_file, $get_image_uploaded_datetime, $get_image_uploaded_ip, $get_image_unique_views, $get_image_ip_block, $get_image_reported, $get_image_reported_checked, $get_image_likes, $get_image_dislikes, $get_image_likes_dislikes_ipblock, $get_image_comments) = $row;
+			list($get_image_id, $get_image_user_id, $get_image_blog_post_id, $get_image_title, $get_image_text, $get_image_path, $get_image_thumb_a, $get_image_thumb_b, $get_image_thumb_c, $get_image_file, $get_image_photo_by_name, $get_image_photo_by_website, $get_image_uploaded_datetime, $get_image_uploaded_ip, $get_image_unique_views, $get_image_ip_block, $get_image_reported, $get_image_reported_checked, $get_image_likes, $get_image_dislikes, $get_image_likes_dislikes_ipblock, $get_image_comments) = $row;
 
 
 			if($get_image_id == ""){
@@ -536,34 +588,44 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			else{
 				if($process == "1"){
 					// Delete thumb
-					if(file_exists("$root/$get_image_path/$get_image_thumb")){
-						unlink("$root/$get_image_path/$get_image_thumb");
+					if(file_exists("$root/$get_image_path/$get_image_thumb_a") && $get_image_thumb_a != ""){
+						unlink("$root/$get_image_path/$get_image_thumb_a");
 					}
+					if(file_exists("$root/$get_image_path/$get_image_thumb_b") && $get_image_thumb_b != ""){
+						unlink("$root/$get_image_path/$get_image_thumb_b");
+					}
+					if(file_exists("$root/$get_image_path/$get_image_thumb_c") && $get_image_thumb_c != ""){
+						unlink("$root/$get_image_path/$get_image_thumb_c");
+					}
+				
+					// Dates
+					$datetime = date("ymdhis"); 
 					
 					// Get extention
-					function getExtension($str) {
-						$i = strrpos($str,".");
-						if (!$i) { return ""; } 
-						$l = strlen($str) - $i;
-						$ext = substr($str,$i+1,$l);
-						return $ext;
-					}
-					$extension = getExtension($get_image_file);
+					$extension = get_extension($get_image_file);
 					$extension = strtolower($extension);	
 
 					// Get a new name
-					$datetime = date("ymdhis");
 					$new_image_file = $my_user_id . "_" . $datetime . "." . $extension;
 					$new_image_file_mysql = quote_smart($link, $new_image_file);
 
 					// Get a new thumb name
-					$datetime = date("ymdhis");
-					$new_image_thumb = $my_user_id . "_" . $datetime . "_thumb." . $extension;
-					$new_image_thumb_mysql = quote_smart($link, $new_image_thumb);
+					$new_image_thumb_a = $my_user_id . "_" . $datetime . "_thumb_a." . $extension;
+					$new_image_thumb_a_mysql = quote_smart($link, $new_image_thumb_a);
+
+					$new_image_thumb_b = $my_user_id . "_" . $datetime . "_thumb_b." . $extension;
+					$new_image_thumb_b_mysql = quote_smart($link, $new_image_thumb_b);
+
+					$new_image_thumb_c = $my_user_id . "_" . $datetime . "_thumb_c." . $extension;
+					$new_image_thumb_c_mysql = quote_smart($link, $new_image_thumb_c);
+
 
 			
 					// Update name
-					mysqli_query($link, "UPDATE $t_blog_images SET image_thumb=$new_image_thumb_mysql, image_file=$new_image_file_mysql WHERE image_id=$image_id_mysql AND image_user_id=$my_user_id_mysql") or die(mysqli_error($link));
+					mysqli_query($link, "UPDATE $t_blog_images SET image_thumb_a=$new_image_thumb_a_mysql, 
+								image_thumb_b=$new_image_thumb_b_mysql, 
+								image_thumb_c=$new_image_thumb_c_mysql, 
+								image_file=$new_image_file_mysql WHERE image_id=$image_id_mysql AND image_user_id=$my_user_id_mysql") or die(mysqli_error($link));
 
 
 					// Rename

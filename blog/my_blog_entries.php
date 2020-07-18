@@ -92,6 +92,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			</p>
 		<!-- Where am I ? -->
 
+		<!-- Actions -->
+			<p>
+			<a href=\"my_blog_new_post.php?l=$l&amp;process=1\" class=\"btn_default\">$l_new_post</a>
+			</p>
+			<div style=\"height: 10px;\"></div>
+		<!-- //Actions -->
+
 		<!-- My posts -->
 
 			";
@@ -159,15 +166,16 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			
 				if($get_blog_post_image_file != "" && file_exists("$root/$get_blog_post_image_path/$get_blog_post_image_file")){
-					
+
 					// Thumb small
-					if(!(file_exists("../$get_blog_post_image_path/$get_blog_post_image_thumb_small")) OR $get_blog_post_image_thumb_small == ""){
+					if(!(file_exists("$root/$get_blog_post_image_path/$get_blog_post_image_thumb_small")) OR $get_blog_post_image_thumb_small == ""){
 						// Thumb name
 						$extension = get_extension($get_blog_post_image_file);
 						$extension = strtolower($extension);
 
 						$thumb_name = $get_blog_post_id . "_thumb_" . $blogPostsThumbSmallSizeXSav . "x" . $blogPostsThumbSmallSizeYSav . "." . $extension;
 						$thumb_name_mysql = quote_smart($link, $thumb_name);
+						// echo"$blogPostsThumbSmallSizeXSav, $blogPostsThumbSmallSizeYSav, $root/$get_blog_post_image_path/$get_blog_post_image_file, $root/$get_blog_post_image_path/$thumb_name<br />";
 						resize_crop_image($blogPostsThumbSmallSizeXSav, $blogPostsThumbSmallSizeYSav, "$root/$get_blog_post_image_path/$get_blog_post_image_file", "$root/$get_blog_post_image_path/$thumb_name");
 
 						$result_update = mysqli_query($link, "UPDATE $t_blog_posts SET blog_post_image_thumb_small=$thumb_name_mysql WHERE blog_post_id=$get_blog_post_id") or die(mysqli_error($link));
@@ -175,13 +183,14 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					}
 
 					// Thumb medium
-					if(!(file_exists("../$get_blog_post_image_path/$get_blog_post_image_thumb_medium")) OR $get_blog_post_image_thumb_medium == ""){
+					if(!(file_exists("$root/$get_blog_post_image_path/$get_blog_post_image_thumb_medium")) OR $get_blog_post_image_thumb_medium == ""){
 						// Thumb name
 						$extension = get_extension($get_blog_post_image_file);
 						$extension = strtolower($extension);
 				
 						$thumb_name = $get_blog_post_id . "_thumb_" . $blogPostsThumbMediumSizeXSav . "x" . $blogPostsThumbMediumSizeYSav . "." . $extension;
 						$thumb_name_mysql = quote_smart($link, $thumb_name);
+						// echo"resize_crop_image($blogPostsThumbMediumSizeXSav, $blogPostsThumbMediumSizeYSav, $root/$get_blog_post_image_path/$get_blog_post_image_file, $root/$get_blog_post_image_path/$thumb_name);<br />";
 						resize_crop_image($blogPostsThumbMediumSizeXSav, $blogPostsThumbMediumSizeYSav, "$root/$get_blog_post_image_path/$get_blog_post_image_file", "$root/$get_blog_post_image_path/$thumb_name");
 
 						$result_update = mysqli_query($link, "UPDATE $t_blog_posts SET blog_post_image_thumb_medium=$thumb_name_mysql WHERE blog_post_id=$get_blog_post_id") or die(mysqli_error($link));
@@ -189,13 +198,14 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					}
 
 					// Thumb large
-					if(!(file_exists("../$get_blog_post_image_path/$get_blog_post_image_thumb_large")) OR $get_blog_post_image_thumb_large == ""){
+					if(!(file_exists("$root/$get_blog_post_image_path/$get_blog_post_image_thumb_large")) OR $get_blog_post_image_thumb_large == ""){
 						// Thumb name
 						$extension = get_extension($get_blog_post_image_file);
 						$extension = strtolower($extension);
 				
 						$thumb_name = $get_blog_post_id . "_thumb_" . $blogPostsThumbLargeSizeXSav . "x" . $blogPostsThumbLargeSizeYSav . "." . $extension;
 						$thumb_name_mysql = quote_smart($link, $thumb_name);
+						// echo"resize_crop_image($blogPostsThumbLargeSizeXSav, $blogPostsThumbLargeSizeYSav, $root/$get_blog_post_image_path/$get_blog_post_image_file, $root/$get_blog_post_image_path/$thumb_name);<br />";
 						resize_crop_image($blogPostsThumbLargeSizeXSav, $blogPostsThumbLargeSizeYSav, "$root/$get_blog_post_image_path/$get_blog_post_image_file", "$root/$get_blog_post_image_path/$thumb_name");
 
 						$result_update = mysqli_query($link, "UPDATE $t_blog_posts SET blog_post_image_thumb_large=$thumb_name_mysql WHERE blog_post_id=$get_blog_post_id") or die(mysqli_error($link));
@@ -222,21 +232,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						<p>";
 						if($get_blog_post_image_file != "" && file_exists("$root/$get_blog_post_image_path/$get_blog_post_image_file")){
 
-							// Create thumb
-							$width = 100;
-							$height = 67;
-							$thumb = $get_blog_post_id . "_thumb_" . $width . "x" . $height . "." . $get_blog_post_image_ext;
-							if(!(file_exists("$root/$get_blog_post_image_path/$thumb"))){
-								resize_crop_image($width, $height, "$root/$get_blog_post_image_path/$get_blog_post_image_file", "$root/$get_blog_post_image_path/$thumb");
-							}	
-
-
-
-
 							// 950 x 640
 							// 
 							echo"
-							<a href=\"view_post.php?post_id=$get_blog_post_id&amp;l=$l\"><img src=\"$root/$get_blog_post_image_path/$thumb\" alt=\"$get_blog_post_image_file\" /></a>
+							<a href=\"view_post.php?post_id=$get_blog_post_id&amp;l=$l\"><img src=\"$root/$get_blog_post_image_path/$get_blog_post_image_thumb_medium\" alt=\"$get_blog_post_image_file\" /></a>
 							";
 						}
 						echo"

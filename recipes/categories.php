@@ -53,6 +53,15 @@ if($action == ""){
 	<h1>$l_categories</h1>
 
 	
+	<div class=\"clear\"></div>
+
+	<!-- You are here -->
+		<p><b>$l_you_are_here:</b><br />
+		<a href=\"index.php?l=$l\">$l_recipes</a>
+		&gt;
+		<a href=\"categories.php?l=$l\">$l_categories</a>
+		</p>
+	<!-- //You are here -->
 	";
 
 	// Select categories

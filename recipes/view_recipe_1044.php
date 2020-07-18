@@ -1,10 +1,10 @@
 <?php 
 /**
 *
-* File: recipes/view_tag.php
-* Version 1.0.0
-* Date 13:43 18.11.2017
-* Copyright (c) 2011-2017 Localhost
+* File: recipes/view_recipe.php
+* Version 2.0.0
+* Date 22:33 05.02.2019
+* Copyright (c) 2011-2019 Localhost
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -25,32 +25,22 @@ else{ $root = "../../.."; }
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
-
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/recipes/ts_recipes.php");
 
+
 /*- Variables ------------------------------------------------------------------------- */
-if(isset($_GET['tag'])) {
-	$tag = $_GET['tag'];
-	$tag = strip_tags(stripslashes($tag));
+if(isset($_GET['recipe_id'])) {
+	$recipe_id = $_GET['recipe_id'];
+	$recipe_id = strip_tags(stripslashes($recipe_id));
 }
 else{
-	$tag = "";
+	$recipe_id = "";
 }
-$tag_mysql = quote_smart($link, $tag);
 
-
-$l_mysql = quote_smart($link, $l);
-
-
-
-// Language
-include("$root/_admin/_translations/site/$l/recipes/ts_search.php");
-
-$url = "view_tag_1200.php?tag=$tag&l=$l";
+$url = "view_recipe_1200.php?recipe_id=$recipe_id&amp;l=$l";
 header("Location: $url");
-exit;
 
-
-
+/*- Footer ----------------------------------------------------------------------------------- */
+include("$root/_webdesign/footer.php");
 ?>

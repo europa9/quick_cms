@@ -202,8 +202,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$inp_ad = output_html($inp_ad);
 					$inp_ad_mysql = quote_smart($link, $inp_ad);
 
+					$inp_status = $_POST['inp_status'];
+					$inp_status = output_html($inp_status);
+					$inp_status_mysql = quote_smart($link, $inp_status);
 					
 					$result = mysqli_query($link, "UPDATE $t_blog_posts SET 
+						blog_post_status=$inp_status_mysql,
 						blog_post_category_id=$inp_category_mysql,
 						blog_post_category_title=$inp_category_title_mysql,
 						blog_post_introduction=$inp_introduction_mysql,
@@ -212,28 +216,26 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					 WHERE blog_post_id=$get_current_blog_post_id");
 
 
-					// Text, Images, Meta
+					// Text, Main Images, Images, Meta, View post
 					$inp_submit = $_POST['inp_submit'];
 					$inp_submit = output_html($inp_submit);
 					if($inp_submit == "$l_text"){
-						$inp_submit = "text";
 						$url = "my_blog_new_post.php?blog_post_id=$get_current_blog_post_id&l=$l&ft=success&fm=changes_saved";
 					}
 					elseif($inp_submit == "$l_main_image"){
-						$inp_submit = "main_image";
 						$url = "my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&l=$l&ft=success&fm=changes_saved";
 					}
 					elseif($inp_submit == "$l_images"){
-						$inp_submit = "images";
 						$url = "my_blog_new_post_images.php?blog_post_id=$get_current_blog_post_id&l=$l&ft=success&fm=changes_saved";
 					}
 					elseif($inp_submit == "$l_meta"){
-						$inp_submit = "meta";
 						$url = "my_blog_new_post_meta.php?blog_post_id=$get_current_blog_post_id&l=$l&ft=success&fm=changes_saved";
 					}
 					elseif($inp_submit == "$l_view_post"){
-						$inp_submit = "view_post";
 						$url = "view_post.php?post_id=$get_current_blog_post_id&l=$l";
+					}
+					else{
+						$url = "my_blog_new_post_meta.php?blog_post_id=$get_current_blog_post_id&l=$l&ft=success&fm=changes_saved";
 					}
 					header("Location: $url");
 					exit;
@@ -329,6 +331,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$l_yes
 					</p>
 
+					<p><b>$l_status:</b><br />
+					<input type=\"radio\" name=\"inp_status\" value=\"published\" "; if($get_current_blog_post_status == "published"){ echo" checked=\"checked\""; } echo" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+					$l_published
+					&nbsp;
+					<input type=\"radio\" name=\"inp_status\" value=\"draft\" "; if($get_current_blog_post_status == "draft"){ echo" checked=\"checked\""; } echo" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+					$l_draft
+					</p>
 
 
 					<p><input type=\"submit\" value=\"$l_save\" class=\"btn btn_default\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>

@@ -266,7 +266,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					if($get_current_blog_post_introduction == ""){
 						$blog_post_introduction = $_POST['inp_text'];
 						$blog_post_introduction = substr($blog_post_introduction, 0, 200);
-						$blog_post_introduction = output_html($blog_post_introduction);
 						$blog_post_introduction = str_replace("<br />", "\n", $blog_post_introduction);
 						$blog_post_introduction = str_replace("<p>", "", $blog_post_introduction);
 						$blog_post_introduction = str_replace("</p>", "", $blog_post_introduction);
@@ -274,7 +273,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						$blog_post_introduction = str_replace("</ul>", "", $blog_post_introduction);
 						$blog_post_introduction = str_replace("<li>", "", $blog_post_introduction);
 						$blog_post_introduction = str_replace("</li>", "", $blog_post_introduction);
+						$blog_post_introduction = output_html($blog_post_introduction);
 						$blog_post_introduction = str_replace("&amp;quot;", "&quot;", $blog_post_introduction);
+						$blog_post_introduction = str_replace("&lt;p&gt;", "", $blog_post_introduction);
+						$blog_post_introduction = str_replace("&lt;/p&gt;", "", $blog_post_introduction);
+
 					}
 					else{
 						$blog_post_introduction = "$get_current_blog_post_introduction";

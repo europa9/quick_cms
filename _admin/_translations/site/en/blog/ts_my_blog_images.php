@@ -13,4 +13,7 @@ $l_image_uploaded = "Image uploaded";
 $l_previous = "Previous";
 $l_save_changes = "Save changes";
 $l_confirm_delete = "Confirm delete";
+$l_will_be_resized_to = "Will be resized to";
+$l_photo_by_name = "Photo by name";
+$l_photo_by_website = "Photo by website";
 ?>
