@@ -310,8 +310,13 @@ if($action == ""){
 			echo"
 		  </td>
 		  <td class=\"$style\">
-			<span><a href=\"?open=$open&amp;page=users_edit_user&amp;user_id=$get_user_id&amp;l=$l&amp;editor_language=$editor_language\">$l_edit</a>
-			| <a href=\"?open=$open&amp;page=users_delete_user&amp;user_id=$get_user_id&amp;l=$l&amp;process=1&amp;editor_language=$editor_language\" class=\"confirm\">$l_delete</a></span>
+			<span>
+			<a href=\"?open=$open&amp;page=users_edit_user&amp;user_id=$get_user_id&amp;l=$l&amp;editor_language=$editor_language\">$l_edit</a>
+			| 
+			<a href=\"?open=$open&amp;page=users_delete_user&amp;user_id=$get_user_id&amp;l=$l&amp;process=1&amp;editor_language=$editor_language\" class=\"confirm\">$l_delete</a>
+			| 
+			<a href=\"?open=$open&amp;page=users_identify_as_user&amp;user_id=$get_user_id&amp;l=$l&amp;process=1&amp;editor_language=$editor_language\" class=\"confirm\">Identify as</a>
+			</span>
 		  </td>
 		 </tr>
 		";
