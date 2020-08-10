@@ -93,14 +93,68 @@ if($get_my_user_rank != "moderator" && $get_my_user_rank != "admin"){
 	die;
 }
 
+// Unset all of the session variables.
+$_SESSION = array();
+session_destroy();
+
+// Destroy all cookies
+if (isset($_SERVER['HTTP_COOKIE'])){
+	$cookies = explode(';', $_SERVER['HTTP_COOKIE']);
+   	foreach($cookies as $cookie) {
+        	$parts = explode('=', $cookie);
+        	$name = trim($parts[0]);
+        	setcookie($name, '', time()-1000);
+        	setcookie($name, '', time()-1000, '/');
+    	}
+}
+
+
+
 
 // Identify 
-echo"Ok";
+echo"Ok login as<br >
+User id: $get_user_id<br />
+Username: $get_user_name<br />
+Name: $get_profile_first_name $get_profile_middle_name $get_profile_last_name";
+
+// Set session
+session_start();
 $_SESSION['user_id'] = "$get_user_id";
 $_SESSION['security'] = "$get_user_security";
 $_SESSION['l'] = "$get_user_language";
 
+// Random ID
+
+
+// Create file
+$uniq_id = uniqid();
+$input ="<?php
+session_start();
+\$_SESSION['user_id'] = \"$get_user_id\";
+\$_SESSION['security'] = \"$get_user_security\";
+\$_SESSION['l'] = \"$get_user_language\";
+
+// Unlink file
+unlink(\"$uniq_id.php\");
+
+// Header
+header(\"Location: ..//index.php?l=$get_user_language\");
+exit;
+?>";
+
+
+
+$fh = fopen("../_cache/$uniq_id.php", "w+") or die("can not open file");
+fwrite($fh, $input);
+fclose($fh);
+
+
+
 echo"
-<meta http-equiv=\"refresh\" content=\"1;url=../index.php?l=$get_user_language\">";
+<p>
+Continue: 
+<a href=\"../_cache/$uniq_id.php\">../_cache/$uniq_id.php</a>
+</p>
+<meta http-equiv=\"refresh\" content=\"10;url=../_cache/$uniq_id.php\">";
 
 ?>
