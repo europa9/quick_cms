@@ -39,6 +39,7 @@ function clean($value){
 	$value = str_replace("’", "", "$value");
 	$value = str_replace("'", "", "$value");
 	$value = str_replace("%", "", "$value");
+	$value = str_replace('$', "", "$value");
 	
 	// Special
 	$value = str_replace("&#39;", "", "$value"); // Apostrof
