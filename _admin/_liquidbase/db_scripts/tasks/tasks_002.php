@@ -42,6 +42,8 @@ else{
 	   task_project_incremented_number INT,
 	   task_title VARCHAR(200),
 	   task_text TEXT,
+	   task_solution TEXT,
+	   task_qa TEXT,
 	   task_status_code_id INT,
 	   task_status_code_title VARCHAR(200),
 	   task_priority_id INT,
@@ -51,6 +53,8 @@ else{
 	   task_created_by_user_name VARCHAR(200),
 	   task_created_by_user_alias VARCHAR(200),
 	   task_created_by_user_image VARCHAR(200),
+	   task_created_by_user_thumb_40 VARCHAR(200),
+	   task_created_by_user_thumb_50 VARCHAR(200),
 	   task_created_by_user_email VARCHAR(200),
 	   task_system_id INT,
 	   task_system_title VARCHAR(200),
@@ -70,6 +74,8 @@ else{
 	   task_assigned_to_user_name VARCHAR(200),
 	   task_assigned_to_user_alias VARCHAR(200),
 	   task_assigned_to_user_image VARCHAR(200),
+	   task_assigned_to_user_thumb_40 VARCHAR(200),
+	   task_assigned_to_user_thumb_50 VARCHAR(200),
 	   task_assigned_to_user_email VARCHAR(200),
 	   task_hours_planned VARCHAR(20),
 	   task_hours_used VARCHAR(20),
@@ -80,12 +86,21 @@ else{
 	   task_qa_by_user_name VARCHAR(200),
 	   task_qa_by_user_alias VARCHAR(200),
 	   task_qa_by_user_image VARCHAR(200),
+	   task_qa_by_user_thumb_40 VARCHAR(200),
+	   task_qa_by_user_thumb_50 VARCHAR(200),
 	   task_qa_by_user_email VARCHAR(200),
+	   task_finished_is_finished INT,
 	   task_finished_datetime DATETIME,
+	   task_finished_year INT,
+	   task_finished_month INT,
+	   task_finished_month_saying VARCHAR(20),
+	   task_finished_week INT,
 	   task_finished_by_user_id INT,
 	   task_finished_by_user_name VARCHAR(200),
 	   task_finished_by_user_alias VARCHAR(200),
 	   task_finished_by_user_image VARCHAR(200),
+	   task_finished_by_user_thumb_40 VARCHAR(200),
+	   task_finished_by_user_thumb_50 VARCHAR(200),
 	   task_finished_by_user_email VARCHAR(200),
 	   task_is_archived INT,
 	   task_comments INT
@@ -103,8 +118,12 @@ else{
 	   status_code_id INT NOT NULL AUTO_INCREMENT,
 	   PRIMARY KEY(status_code_id), 
 	   status_code_title VARCHAR(200),
-	   status_code_color VARCHAR(200),
+	   status_code_text_color VARCHAR(200),
+	   status_code_bg_color VARCHAR(200),
+	   status_code_border_color VARCHAR(200),
 	   status_code_weight INT,
+	   status_code_show_on_board INT,
+	   status_code_on_status_close_task INT,
 	   status_code_count_tasks INT)")
 	or die(mysqli_error($link));
 
@@ -114,13 +133,13 @@ else{
 	// Quality assurance: Pink #efb3e6
 	// Finished: Green #15c377
 	mysqli_query($link, "INSERT INTO $t_tasks_status_codes
-	(status_code_id, status_code_title, status_code_color, status_code_weight, status_code_count_tasks) 
+	(status_code_id, status_code_title, status_code_text_color, status_code_weight, status_code_show_on_board, status_code_on_status_close_task, status_code_count_tasks) 
 	VALUES 
-	(NULL, 'Tasks', '#b2def7', '1', '0'),
-	(NULL, 'Ongoing', '#faa64b', '2', '0'),
-	(NULL, 'Blocked', '#f96868', '3', '0'),
-	(NULL, 'Quality assurance', '#efb3e6', '4', '0'),
-	(NULL, 'Finished', '#15c377', '5', '0')")
+	(NULL, 'Tasks', '#b2def7', '1', 1, 0, '0'),
+	(NULL, 'Ongoing', '#faa64b', '2',  1, 0, '0'),
+	(NULL, 'Blocked', '#f96868', '3',  1, 0, '0'),
+	(NULL, 'Quality assurance', '#efb3e6', '4',  1, 0, '0'),
+	(NULL, 'Finished', '#15c377', '5',  0, 1, '0')")
 	or die(mysqli_error($link));
 }
 
