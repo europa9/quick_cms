@@ -120,10 +120,10 @@ if($action == ""){
 
 		// Select
 		$editor_language_mysql = quote_smart($link, $editor_language);
-		$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_weight FROM $t_navigation WHERE navigation_parent_id='0' AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
+		$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url, navigation_weight FROM $t_navigation WHERE navigation_parent_id='0' AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
-			list($get_navigation_id, $get_navigation_parent_id, $get_navigation_title, $get_navigation_url_path, $get_navigation_url_query, $get_navigation_weight) = $row;
+			list($get_navigation_id, $get_navigation_parent_id, $get_navigation_title, $get_navigation_url, $get_navigation_weight) = $row;
 
 			// Style
 			if(isset($odd) && $odd == false){
@@ -139,7 +139,7 @@ if($action == ""){
           			<span>$get_navigation_title</span>
 			  </td>
        			  <td"; if($odd == true){ echo" class=\"odd\""; } echo">
-				<span><a href=\"../$get_navigation_url_path$get_navigation_url_query\">$get_navigation_url_path$get_navigation_url_query</a></span>
+				<span><a href=\"../$get_navigation_url\">$get_navigation_url</a></span>
 			  </td>
        			  <td"; if($odd == true){ echo" class=\"odd\""; } echo">
 				<script type=\"text/javascript\">
@@ -170,10 +170,10 @@ if($action == ""){
      		 </tr>";
 
 		// Children lvel 1
-		$query_b = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_weight FROM $t_navigation WHERE navigation_parent_id=$get_navigation_id AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
+		$query_b = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url, navigation_weight FROM $t_navigation WHERE navigation_parent_id=$get_navigation_id AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
 		$result_b = mysqli_query($link, $query_b);
 		while($row_b = mysqli_fetch_row($result_b)) {
-			list($get_b_navigation_id, $get_b_navigation_parent_id, $get_b_navigation_title, $get_b_navigation_url_path, $get_b_navigation_url_query, $get_b_navigation_weight) = $row_b;
+			list($get_b_navigation_id, $get_b_navigation_parent_id, $get_b_navigation_title, $get_b_navigation_url, $get_b_navigation_weight) = $row_b;
 
 			// Style
 			if(isset($odd) && $odd == false){
@@ -192,7 +192,7 @@ if($action == ""){
           			<span>$get_b_navigation_title</span>
 			  </td>
        			  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 10px;\">
-				<span><a href=\"../$get_b_navigation_url_path$get_b_navigation_url_query\">$get_b_navigation_url_path$get_b_navigation_url_query</a></span>
+				<span><a href=\"../$get_b_navigation_url\">$get_b_navigation_url</a></span>
 			  </td>
        			  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 10px;\">
 				<script type=\"text/javascript\">
@@ -222,10 +222,10 @@ if($action == ""){
      			 </tr>";
 
 			// Children level 2
-			$query_c = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_weight FROM $t_navigation WHERE navigation_parent_id=$get_b_navigation_id AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
+			$query_c = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url, navigation_weight FROM $t_navigation WHERE navigation_parent_id=$get_b_navigation_id AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
 			$result_c = mysqli_query($link, $query_c);
 			while($row_c = mysqli_fetch_row($result_c)) {
-				list($get_c_navigation_id, $get_c_navigation_parent_id, $get_c_navigation_title, $get_c_navigation_url_path, $get_c_navigation_url_query, $get_c_navigation_weight) = $row_c;
+				list($get_c_navigation_id, $get_c_navigation_parent_id, $get_c_navigation_title, $get_c_navigation_url, $get_c_navigation_weight) = $row_c;
 
 				// Style
 				if(isset($odd) && $odd == false){
@@ -244,7 +244,7 @@ if($action == ""){
           				<span>$get_c_navigation_title</span>
 				  </td>
        				  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 20px;\">
-					<span><a href=\"../$get_c_navigation_url_path$get_c_navigation_url_query\">$get_c_navigation_url_path$get_c_navigation_url_query</a></span>
+					<span><a href=\"../$get_c_navigation_url\">$get_c_navigation_url</a></span>
 			   	 </td>
        				  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 20px;\">
 					<script type=\"text/javascript\">
@@ -308,17 +308,35 @@ elseif($action == "new"){
 		$inp_slug_mysql = quote_smart($link, $inp_slug);
 
 
+		$inp_url = $_POST['inp_url'];
+		$inp_url = output_html($inp_url);
+		$inp_url_mysql = quote_smart($link, $inp_url);
 
-		$inp_url_path = $_POST['inp_url_path'];
+		$inp_url_parsed = parse_url($inp_url);
+		$inp_url_scheme = "";
+		$inp_url_host = "";
+		if(isset($inp_url_parsed['scheme']) && isset($inp_url_parsed['host'])){
+			$inp_url_scheme = $inp_url_parsed['scheme'];
+			$inp_url_host = $inp_url_parsed['host'];
+		}
+		$inp_url_path = $inp_url_parsed['path'];
+		$inp_url_query = $inp_url_parsed['query'];
+		
+		if($inp_url_query != ""){
+			$inp_url_query = "?" . $inp_url_query;
+		}
+		
+		if($inp_url_scheme == "http" OR $inp_url_scheme == "https"){
+			$inp_url_path = "$inp_url_scheme://$inp_url_host$inp_url_path";
+			$inp_url_query = "$inp_url_query";
+			$inp_internal_or_external = "external";
+		}
+		else{
+			$inp_internal_or_external = "internal";
+		}
 		$inp_url_path = output_html($inp_url_path);
 		$inp_url_path_mysql = quote_smart($link, $inp_url_path);
 
-		if($inp_url_path == ""){
-			header("Location: index.php?open=$open&page=navigation&action=new&focus=inp_name&ft=warning&fm=please_enter_url&editor_language=$editor_language");
-			exit;
-		}
-
-		$inp_url_query = $_POST['inp_url_query'];
 		$inp_url_query = output_html($inp_url_query);
 		$inp_url_query_mysql = quote_smart($link, $inp_url_query);
 
@@ -341,16 +359,12 @@ elseif($action == "new"){
 		list($get_count_rows) = $row;
 
 		// Insert
-		//echo"<pre>INSERT INTO $t_navigation 
-		//(navigation_id, navigation_parent_id, navigation_title, navigation_url, navigation_language, navigation_weight, navigation_slug, navigation_created, navigation_created_by_user_id) 
-		//VALUES 
-		//(NULL, $inp_parent_mysql, $inp_title_mysql, $inp_url_mysql, $inp_language_mysql, '0', $inp_slug_mysql, $inp_created_mysql, $inp_created_by_user_id_mysql)</pre>";
-		
 		mysqli_query($link, "INSERT INTO $t_navigation 
-		(navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_language, navigation_weight, navigation_slug, navigation_created, navigation_created_by_user_id) 
+		(navigation_id, navigation_parent_id, navigation_title, navigation_title_clean, navigation_url, navigation_url_path, navigation_url_query, navigation_language, navigation_internal_or_external,  navigation_weight, navigation_created, navigation_created_by_user_id) 
 		VALUES 
-		(NULL, $inp_parent_mysql, $inp_title_mysql, $inp_url_path_mysql, $inp_url_query_mysql, $inp_language_mysql, '$get_count_rows', $inp_slug_mysql, $inp_created_mysql, $inp_created_by_user_id_mysql)")
+		(NULL, $inp_parent_mysql, $inp_title_mysql, $inp_slug_mysql, $inp_url_mysql, $inp_url_path_mysql, $inp_url_query_mysql, $inp_language_mysql, '$inp_internal_or_external', '$get_count_rows', $inp_created_mysql, $inp_created_by_user_id_mysql)")
 		or die(mysqli_error($link));
+
 
 		header("Location: index.php?open=$open&page=navigation&action=new&focus=inp_name&ft=success&fm=menu_item_created&editor_language=$editor_language");
 		exit;
@@ -413,11 +427,8 @@ elseif($action == "new"){
 	<input type=\"text\" name=\"inp_title\" value=\"\" size=\"60\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 	</p>
 	
-	<p><b>$l_url_path</b>*:<br />
-	<input type=\"text\" name=\"inp_url_path\" value=\"\" size=\"60\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
-	</p>
-	<p><b>$l_url_query</b>:<br />
-	<input type=\"text\" name=\"inp_url_query\" value=\"\" size=\"60\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+	<p><b>$l_url</b>*:<br />
+	<input type=\"text\" name=\"inp_url\" value=\"\" size=\"60\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 	</p>
 
 	<p><b>$l_parent</b>*<br />
@@ -472,10 +483,10 @@ elseif($action == "new"){
 elseif($action == "edit"){
 	$id_mysql = quote_smart($link, $id);
 
-	$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_language FROM $t_navigation WHERE navigation_id=$id_mysql";
+	$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url, navigation_url_path, navigation_url_query, navigation_language FROM $t_navigation WHERE navigation_id=$id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_navigation_id, $get_navigation_parent_id, $get_navigation_title, $get_navigation_url_path, $get_navigation_url_query, $get_navigation_language) = $row;
+	list($get_navigation_id, $get_navigation_parent_id, $get_navigation_title, $get_navigation_url, $get_navigation_url_path, $get_navigation_url_query, $get_navigation_language) = $row;
 
 	if($get_navigation_id == ""){
 		echo"
@@ -511,21 +522,40 @@ elseif($action == "edit"){
 				exit;
 			}
 
-			$inp_slug = clean($inp_title);
-			$inp_slug = output_html($inp_slug);
-			$inp_slug_mysql = quote_smart($link, $inp_slug);
+			$inp_title_clean = clean($inp_title);
+			$inp_title_clean = output_html($inp_title_clean);
+			$inp_title_clean_mysql = quote_smart($link, $inp_title_clean);
 
 
-			$inp_url_path = $_POST['inp_url_path'];
+			$inp_url = $_POST['inp_url'];
+			$inp_url = output_html($inp_url);
+			$inp_url_mysql = quote_smart($link, $inp_url);
+
+			$inp_url_parsed = parse_url($inp_url);
+			$inp_url_scheme = "";
+			$inp_url_host = "";
+			if(isset($inp_url_parsed['scheme']) && isset($inp_url_parsed['host'])){
+				$inp_url_scheme = $inp_url_parsed['scheme'];
+				$inp_url_host = $inp_url_parsed['host'];
+			}
+			$inp_url_path = $inp_url_parsed['path'];
+			$inp_url_query = $inp_url_parsed['query'];
+		
+			if($inp_url_query != ""){
+				$inp_url_query = "?" . $inp_url_query;
+			}
+		
+			if($inp_url_scheme == "http" OR $inp_url_scheme == "https"){
+				$inp_url_path = "$inp_url_scheme://$inp_url_host$inp_url_path";
+				$inp_url_query = "$inp_url_query";
+				$inp_internal_or_external = "external";
+			}
+			else{
+				$inp_internal_or_external = "internal";
+			}
 			$inp_url_path = output_html($inp_url_path);
 			$inp_url_path_mysql = quote_smart($link, $inp_url_path);
 
-			if($inp_url_path == ""){
-				header("Location: index.php?open=$open&page=navigation&action=edit&id=$id&ft=warning&fm=please_enter_url&editor_language=$editor_language");
-				exit;
-			}
-
-			$inp_url_query = $_POST['inp_url_query'];
 			$inp_url_query = output_html($inp_url_query);
 			$inp_url_query_mysql = quote_smart($link, $inp_url_query);
 
@@ -541,9 +571,19 @@ elseif($action == "edit"){
 			$inp_updated_by_user_id_mysql = quote_smart($link, $inp_updated_by_user_id);
 			
 			// Update
-			$result = mysqli_query($link, "UPDATE $t_navigation SET navigation_parent_id=$inp_parent_mysql, navigation_title=$inp_title_mysql, 
-			navigation_url_path=$inp_url_path_mysql, navigation_url_query=$inp_url_query_mysql, navigation_language=$inp_language_mysql, navigation_slug=$inp_slug_mysql, navigation_updated=$inp_navigation_updated_mysql, navigation_updated_by_user_id=$inp_updated_by_user_id_mysql WHERE navigation_id=$id_mysql");
-			// echo"UPDATE $t_navigation SET navigation_parent_id=$inp_parent_mysql, navigation_title=$inp_title_mysql, navigation_url=$inp_url_mysql, navigation_language=$inp_language_mysql, navigation_slug=$inp_slug_mysql, navigation_updated=$inp_navigation_updated_mysql, navigation_updated_by_user_id=$inp_updated_by_user_id_mysql WHERE navigation_id=$id_mysql";
+			$result = mysqli_query($link, "UPDATE $t_navigation SET 
+							navigation_parent_id=$inp_parent_mysql, 
+							navigation_title=$inp_title_mysql, 
+							navigation_title_clean=$inp_title_clean_mysql, 
+							navigation_url=$inp_url_mysql, 
+							navigation_url_path=$inp_url_path_mysql, 
+							navigation_url_query=$inp_url_query_mysql, 
+							navigation_language=$inp_language_mysql,
+							navigation_internal_or_external='$inp_internal_or_external', 
+							navigation_updated=$inp_navigation_updated_mysql, 	
+							navigation_updated_by_user_id=$inp_updated_by_user_id_mysql 
+							WHERE navigation_id=$id_mysql") or die(mysqli_error($link));
+			
 			
 			// Move to index
 			header("Location: index.php?open=$open&page=navigation&editor_language=$editor_language&ft=success&fm=changes_saved");
@@ -602,12 +642,8 @@ elseif($action == "edit"){
 		<input type=\"text\" name=\"inp_title\" value=\"$get_navigation_title\" size=\"60\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 		</p>
 	
-		<p><b>$l_url_path</b>*:<br />
-		<input type=\"text\" name=\"inp_url_path\" value=\"$get_navigation_url_path\" size=\"60\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
-		</p>
-
-		<p><b>$l_url_query</b>:<br />
-		<input type=\"text\" name=\"inp_url_query\" value=\"$get_navigation_url_query\" size=\"60\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+		<p><b>$l_url</b>*:<br />
+		<input type=\"text\" name=\"inp_url\" value=\"$get_navigation_url\" size=\"60\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 		</p>
 
 		<p><b>$l_parent</b>*<br />

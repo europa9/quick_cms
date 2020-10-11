@@ -29,6 +29,7 @@ if($page == "menu"){
 echo"
 			<li";if($page == "new_page"){echo" class=\"down\"";}echo"><a href=\"./?open=pages&amp;page=new_page&amp;editor_language=$editor_language\"";if($page == "new_page"){echo" class=\"selected\"";}echo">$l_new_page</a></li>
 			<li";if($page == "navigation"){echo" class=\"down\"";}echo"><a href=\"./?open=pages&amp;page=navigation&amp;editor_language=$editor_language\"";if($page == "navigation"){echo" class=\"selected\"";}echo">$l_navigation</a></li>
+			<li";if($page == "footer"){echo" class=\"down\"";}echo"><a href=\"./?open=pages&amp;page=footer&amp;editor_language=$editor_language\"";if($page == "footer"){echo" class=\"selected\"";}echo">Footer</a></li>
 			
 ";
 

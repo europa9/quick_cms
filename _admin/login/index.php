@@ -262,7 +262,7 @@ if($process != "1"){
 	<!-- Footer -->
 	<footer>
 		<p>
-		<a href=\"https://codingfora.com\">&copy; 2019 $cmsNameSav $cmsVersionSav</a>
+		<a href=\"$cmsWebsiteSav\">&copy; 2019-2020 $cmsNameSav $cmsVersionSav</a>
 		</p>
 	</footer>
 	<!-- //Footer -->
