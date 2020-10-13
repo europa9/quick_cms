@@ -320,7 +320,12 @@ elseif($action == "new"){
 			$inp_url_host = $inp_url_parsed['host'];
 		}
 		$inp_url_path = $inp_url_parsed['path'];
-		$inp_url_query = $inp_url_parsed['query'];
+		if(isset($inp_url_parsed['query'])){
+			$inp_url_query = $inp_url_parsed['query'];
+		}
+		else{
+			$inp_url_query = "";
+		}
 		
 		if($inp_url_query != ""){
 			$inp_url_query = "?" . $inp_url_query;
@@ -539,7 +544,12 @@ elseif($action == "edit"){
 				$inp_url_host = $inp_url_parsed['host'];
 			}
 			$inp_url_path = $inp_url_parsed['path'];
-			$inp_url_query = $inp_url_parsed['query'];
+			if(isset($inp_url_parsed['query'])){
+				$inp_url_query = $inp_url_parsed['query'];
+			}
+			else{
+				$inp_url_query = "";
+			}
 		
 			if($inp_url_query != ""){
 				$inp_url_query = "?" . $inp_url_query;
