@@ -22,45 +22,26 @@ include("_functions/resize_crop_image.php");
 /*- Make sure we are on the correct web site ----------------------------------------- */
 if(file_exists("_data/config/meta.php")){
 	include("_data/config/meta.php");
-		
-	// SSL
-	$server_name = $_SERVER['HTTP_HOST'];
-	$server_name_saying = ucfirst($server_name);
-	$server_name = clean($server_name);
-	$ssl_config_file = "ssl_" . $server_name . ".php";
-	include("_data/config/$ssl_config_file");
 
-	// URL
-	if ($_SERVER["SERVER_PORT"] != "80" && $_SERVER["SERVER_PORT"] != "443") {
-		$page = $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-	} 
-	else {
-		$page = $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-	}
-	if(isset($configSLLActiveSav) && $configSLLActiveSav == 1){
-		$page_url = 'https://' . $page;
-	}
-	else{
-		$page_url = 'http://' . $page;
-	}
-	if(isset($configControlPanelURLSav)){
-		
-		$page_url_substr = substr($page_url, 0, strlen($configControlPanelURLSav));
+	// Page URL
+	$page_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+	$page_url = htmlspecialchars($page_url, ENT_QUOTES, 'UTF-8');
 
-		if($configControlPanelURLSav != "$page_url_substr"){
-			// Check for localhost
-			$check_localhost = substr($page_url, 0, 16);
-			if($check_localhost != "http://localhost"){
+	$page_url_substr = substr($page_url, 0, strlen($configControlPanelURLSav));
+
+	if($configControlPanelURLSav != "$page_url_substr"){
+		// Check for localhost
+		$check_localhost = substr($page_url, 0, 16);
+		if($check_localhost != "http://localhost"){
 	
-				echo"<p>Security error. Page url is not the same as configured. Please fix meta.php.
-				</p>
+			echo"<p>Security error. Page url is not the same as configured. Please fix meta.php.
+			</p>
 
-				<p>
-				<a href=\"$configControlPanelURLSav\">$configControlPanelURLSav</a> != $page_url_substr
-				</p>
-				";
-				die;
-			}
+			<p>
+			<a href=\"$configControlPanelURLSav\">$configControlPanelURLSav</a> != $page_url_substr
+			</p>
+			";
+			die;
 		}
 	}
 }

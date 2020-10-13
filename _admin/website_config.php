@@ -12,30 +12,12 @@ ini_set('arg_separator.output', '&amp;');
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
-/*- Configs ------------------------------------------------------------------------ */
-if(file_exists("$root/_admin/_data/config/meta.php")){
-	include("$root/_admin/_data/config/meta.php");
-	include("$root/_admin/_data/config/user_system.php");
-	include("$root/_admin/_data/webdesign.php");
-}
-
 
 
 /*- Important functions ---------------------------------------------------------------- */
 include("$root/_admin/_functions/output_html.php");
 include("$root/_admin/_functions/clean.php");
 
-
-/*- SSL? ------------------------------------------------------------------------------- */
-$server_name = $_SERVER['HTTP_HOST'];
-$server_name = clean($server_name);
-$ssl_config_file = "ssl_" . $server_name . ".php";
-if(file_exists("$root/_admin/_data/config/$ssl_config_file")){
-	include("$root/_admin/_data/config/$ssl_config_file");
-	if($configSLLActiveSav == "1"){
-		include("$root/_admin/_functions/use_ssl.php");
-	}
-}
 
 
 
@@ -45,6 +27,37 @@ include("$root/_admin/_functions/resize_crop_image.php");
 include("$root/_admin/_functions/quote_smart.php");
 include("$root/_admin/_functions/page_url.php");
 include("$root/_admin/_functions/get_extension.php");
+
+
+/*- Configs ------------------------------------------------------------------------ */
+if(file_exists("$root/_admin/_data/config/meta.php")){
+	include("$root/_admin/_data/config/meta.php");
+	include("$root/_admin/_data/config/user_system.php");
+	include("$root/_admin/_data/webdesign.php");
+
+	// Page URL
+	$page_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+	$page_url = htmlspecialchars($page_url, ENT_QUOTES, 'UTF-8');
+
+	$page_url_substr = substr($page_url, 0, strlen($configSiteURLSav));
+
+	if($configSiteURLSav != "$page_url_substr"){
+		// Check for localhost
+		$check_localhost = substr($page_url, 0, 16);
+		if($check_localhost != "http://localhost"){
+	
+			echo"<p>Security error. Page url is not the same as configured. Please fix meta.php.
+			</p>
+
+			<p>
+			<a href=\"$configSiteURLSav\">$configSiteURLSav</a> != $page_url_substr
+			</p>
+			";
+			die;
+		}
+	}
+}
+
 
 /*- Common variables ----------------------------------------------------------------- */
 $server_name = $_SERVER['HTTP_HOST'];
@@ -695,7 +708,6 @@ else{
 
 
 /*- Stats ---------------------------------------------------------------------------- */
-include("$root/_admin/_functions/page_url.php");
 include("$root/_admin/_functions/registrer_stats.php");
 
 /*- Cookie? -------------------------------------------------------------------------- */

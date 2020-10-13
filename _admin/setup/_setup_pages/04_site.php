@@ -49,21 +49,46 @@ if($process == "1"){
 
 
 	// Page URL
-	if ($_SERVER["SERVER_PORT"] != "80" && $_SERVER["SERVER_PORT"] != "443") {
-		$server_name = "http://" . $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"];
-	} 
-	else {
-		$server_name = "http://" . $_SERVER["SERVER_NAME"];
-	}
-	$request_uri = $_SERVER["REQUEST_URI"];
+	$page_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+	$page_url = htmlspecialchars($page_url, ENT_QUOTES, 'UTF-8');
 
-	$pageURL = $server_name.$request_uri;
-	$inp_control_panel_url = str_replace("/setup/index.php?page=04_site&language=$language&process=1", "", $pageURL);
-	$inp_site_url = str_replace("/_admin", "", $inp_control_panel_url);
+	// Control panel URL
+	$inp_control_panel_url = str_replace("/setup/index.php?page=04_site&amp;language=$language&amp;process=1", "", $page_url);
+	$inp_control_panel_url_len = strlen($inp_control_panel_url);
+
+	$control_panel_url_parsed = parse_url($inp_control_panel_url);
+	$inp_control_panel_url_scheme = $control_panel_url_parsed['scheme'];
+	$inp_control_panel_url_host = $control_panel_url_parsed['host'];
+	if(isset($control_panel_url_parsed['port'])){
+		$inp_control_panel_url_port = $control_panel_url_parsed['port'];
+	}
+	else{
+		$inp_control_panel_url_port = "";
+	}
+	$inp_control_panel_url_path = $control_panel_url_parsed['path'];
+
+
+
+	// Site URL
+	$inp_site_url = str_replace("/_admin/setup/index.php?page=04_site&amp;language=$language&amp;process=1", "", $page_url);
 	$inp_site_url_len = strlen($inp_site_url);
 
-	$inp_site_url_request_uri = str_replace("/setup/index.php?page=04_site&language=$language&process=1", "$request_uri", $inp_site_url);
-	$inp_site_url_request_uri = str_replace("$server_name", "", $inp_site_url_request_uri);
+
+	$site_url_parsed = parse_url($inp_site_url);
+	$inp_site_url_scheme = $site_url_parsed['scheme'];
+	$inp_site_url_host = $site_url_parsed['host'];
+	if(isset($site_url_parsed['port'])){
+		$inp_site_url_port = $site_url_parsed['port'];
+	}
+	else{
+		$inp_site_url_port = "";
+	}
+	if(isset($site_url_parsed['path'])){
+		$inp_site_url_path = $site_url_parsed['path'];
+	}
+	else{
+		$inp_site_url_path = "";
+	}
 
 	$input_meta="<?php
 	// General
@@ -81,20 +106,19 @@ if($process == "1"){
 	\$configWebsiteWebmasterEmailSav = \"\";
 
 	// URLs
-
 	\$configSiteURLSav 		= \"$inp_site_url\";
 	\$configSiteURLLenSav 		= \"$inp_site_url_len\";
+	\$configSiteURLSchemeSav	= \"$inp_site_url_scheme\";
+	\$configSiteURLHostSav		= \"$inp_site_url_host\";
+	\$configSiteURLPortSav		= \"$inp_site_url_port\";
+	\$configSiteURLPathSav		= \"$inp_site_url_path\";
 
-	\$configSiteURLAlternativeASav			= \"\";
-	\$configSiteURLAlternativeALenSav		= \"\";
-
-	\$configSiteURLAlternativeBSav			= \"\";
-	\$configSiteURLAlternativeBLenSav		= \"\";
-
-	\$configSiteURLAlternativeCSav			= \"\";
-	\$configSiteURLAlternativeCLenSav		= \"\";
-
-	\$configControlPanelURLSav 	= \"$inp_control_panel_url\";
+	\$configControlPanelURLSav 		= \"$inp_control_panel_url\";
+	\$configControlPanelURLLenSav 		= \"$inp_control_panel_url_len\";
+	\$configControlPanelURLSchemeSav	= \"$inp_control_panel_url_scheme\";
+	\$configControlPanelURLHostSav		= \"$inp_control_panel_url_host\";
+	\$configControlPanelURLPortSav		= \"$inp_control_panel_url_port\";
+	\$configControlPanelURLPathSav		= \"$inp_control_panel_url_path\";
 
 	// Statisics
 	\$configSiteUseGethostbyaddrSav = \"1\";
@@ -161,22 +185,6 @@ if($process == "1"){
 	fwrite($fh, $update_file);
 	fclose($fh);
 
-	
-
-	// SSL
-	$inp_ssl_active = $_POST['inp_ssl_active'];
-	$inp_ssl_active = output_html($inp_ssl_active);
-
-	$update_file="<?php
-// General
-\$configSLLActiveSav   	= \"$inp_ssl_active\";
-?>";
-
-	$fh = fopen("../_data/config/$ssl_config_file", "w+") or die("can not open file");
-	fwrite($fh, $update_file);
-	fclose($fh);
-
-
 
 	// Move to administrator setup
 	header("Location: index.php?page=05_administrator&language=$language");
@@ -217,16 +225,6 @@ echo"
 		echo"$server_name"; 
 	} 
 	echo"\" size=\"35\" tabindex=\"1\" /></p>
-
-
-
-	<p><b>$l_ssl_active:</b><br />
-	<input type=\"radio\" name=\"inp_ssl_active\" value=\"1\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\"";if(isset($configSLLActiveSav) && $configSLLActiveSav == "1"){ echo" checked=\"checked\"";}echo" />
-	$l_active 
-	&nbsp;
-	<input type=\"radio\" name=\"inp_ssl_active\" value=\"0\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\"";if(isset($configSLLActiveSav) && $configSLLActiveSav == "0"){ echo" checked=\"checked\"";}echo" />
-	$l_inactive
-	</p>
 
 	<p>
 	<input type=\"submit\" value=\"$l_next\" class=\"submit\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />

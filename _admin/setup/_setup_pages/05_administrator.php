@@ -84,9 +84,9 @@ if($process == "1"){
 
 	// Insert user
 	mysqli_query($link, "INSERT INTO $t_users
-	(user_id, user_email, user_name, user_alias, user_password, user_salt, user_security, user_language, user_measurement, user_date_format, user_registered, user_registered_time, user_last_online, user_last_online_time, user_rank, user_points, user_points_rank, user_likes, user_dislikes, user_verified_by_moderator) 
+	(user_id, user_email, user_name, user_alias, user_password, user_salt, user_security, user_language, user_measurement, user_date_format, user_registered, user_registered_time, user_last_online, user_last_online_time, user_rank, user_points, user_points_rank, user_likes, user_dislikes, user_verified_by_moderator, user_marked_as_spammer) 
 	VALUES 
-	(NULL, $inp_user_email_mysql, $inp_user_name_mysql, $inp_user_name_mysql, $inp_user_password_mysql, $inp_user_salt_mysql, '$inp_user_security', $inp_user_language_mysql, '$inp_profile_mesurment', $inp_user_date_format_mysql, '$datetime', '$time', '$datetime', '$time', 'admin', '0', 'Newbie', '0', '0', '1')")
+	(NULL, $inp_user_email_mysql, $inp_user_name_mysql, $inp_user_name_mysql, $inp_user_password_mysql, $inp_user_salt_mysql, '$inp_user_security', $inp_user_language_mysql, '$inp_profile_mesurment', $inp_user_date_format_mysql, '$datetime', '$time', '$datetime', '$time', 'admin', '0', 'Newbie', '0', '0', '1', 0)")
 	or die(mysqli_error($link));
 
 

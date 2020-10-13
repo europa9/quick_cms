@@ -35,7 +35,6 @@ echo"
 			<li";if($page == "cp_translation"){echo" class=\"down\"";}echo"><a href=\"./?open=settings&amp;page=cp_translation&amp;editor_language=$editor_language\"";if($page == "cp_translation"){echo" class=\"selected\"";}echo">$l_cp_translation</a></li>
 			<li";if($page == "site_translation"){echo" class=\"down\"";}echo"><a href=\"./?open=settings&amp;page=site_translation&amp;editor_language=$editor_language\"";if($page == "site_translation"){echo" class=\"selected\"";}echo">$l_site_translation</a></li>
 			<li";if($page == "mysql"){echo" class=\"down\"";}echo"><a href=\"./?open=settings&amp;page=mysql&amp;editor_language=$editor_language\"";if($page == "mysql"){echo" class=\"selected\"";}echo">$l_mysql</a></li>
-			<li";if($page == "ssl"){echo" class=\"down\"";}echo"><a href=\"./?open=$open&amp;page=ssl&amp;editor_language=$editor_language\"";if($page == "ssl"){echo" class=\"selected\"";}echo">$l_ssl</a></li>
 			<li";if($page == "emojies_index"){echo" class=\"down\"";}echo"><a href=\"./?open=$open&amp;page=emojies_index&amp;editor_language=$editor_language\"";if($page == "emojies_index"){echo" class=\"selected\"";}echo">Emojies index</a></li>
 			<li><a href=\"index.php?open=settings&amp;page=search_engine_index&amp;editor_language=$editor_language\"";if($page == "search_engine_index"){echo" class=\"selected\"";}echo">Search engine index</a></li>
 

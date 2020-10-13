@@ -745,20 +745,25 @@ else{
 
 
 // Analytics
-mysqli_query($link, "CREATE TABLE $t_analytics(
- analytics_id INT NOT NULL AUTO_INCREMENT,
- PRIMARY KEY(analytics_id), 
- analytics_language VARCHAR(256),
- analytics_title VARCHAR(256),
- analytics_notes TEXT,
- analytics_code VARCHAR(256),
- analytics_created DATETIME,
- analytics_created_by VARCHAR(256),
- analytics_updated DATETIME,
- analytics_updated_by VARCHAR(256),
- analytics_active INT)")
- or print(mysqli_error());
-
+$query = "SELECT * FROM $t_analytics";
+$result = mysqli_query($link, $query);
+if($result !== FALSE){
+}
+else{
+	mysqli_query($link, "CREATE TABLE $t_analytics(
+	 analytics_id INT NOT NULL AUTO_INCREMENT,
+	 PRIMARY KEY(analytics_id), 
+	 analytics_language VARCHAR(256),
+	 analytics_title VARCHAR(256),
+	 analytics_notes TEXT,
+	 analytics_code VARCHAR(256),
+	 analytics_created DATETIME,
+	 analytics_created_by VARCHAR(256),
+	 analytics_updated DATETIME,
+	 analytics_updated_by VARCHAR(256),
+	 analytics_active INT)")
+	 or print(mysqli_error());
+}
 
 
 

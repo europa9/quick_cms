@@ -55,28 +55,45 @@ if($mode == "save"){
 
 
 
-	// CP URL
+	// Control panel URL
 	$inp_control_panel_url = $_POST['inp_control_panel_url'];
 	$inp_control_panel_url = output_html($inp_control_panel_url);
+	$inp_control_panel_url_len = strlen($inp_control_panel_url);
+
+	$control_panel_url_parsed = parse_url($inp_control_panel_url);
+	$inp_control_panel_url_scheme = $control_panel_url_parsed['scheme'];
+	$inp_control_panel_url_host = $control_panel_url_parsed['host'];
+	if(isset($control_panel_url_parsed['port'])){
+		$inp_control_panel_url_port = $control_panel_url_parsed['port'];
+	}
+	else{
+		$inp_control_panel_url_port = "";
+	}
+	$inp_control_panel_url_path = $control_panel_url_parsed['path'];
+
+
 
 	// Website URL
 	$inp_site_url = $_POST['inp_site_url'];
 	$inp_site_url = output_html($inp_site_url);
 
 	$inp_site_url_len = strlen($inp_site_url);
+	$site_url_parsed = parse_url($inp_site_url);
+	$inp_site_url_scheme = $site_url_parsed['scheme'];
+	$inp_site_url_host = $site_url_parsed['host'];
+	if(isset($site_url_parsed['port'])){
+		$inp_site_url_port = $site_url_parsed['port'];
+	}
+	else{
+		$inp_site_url_port = "";
+	}
+	if(isset($site_url_parsed['path'])){
+		$inp_site_url_path = $site_url_parsed['path'];
+	}
+	else{
+		$inp_site_url_path = "";
+	}
 
-	// Website URL  Alernative 
-	$inp_site_url_alternative_a = $_POST['inp_site_url_alternative_a'];
-	$inp_site_url_alternative_a = output_html($inp_site_url_alternative_a);
-	$inp_site_url_alternative_a_len = strlen($inp_site_url_alternative_a);
-
-	$inp_site_url_alternative_b = $_POST['inp_site_url_alternative_b'];
-	$inp_site_url_alternative_b = output_html($inp_site_url_alternative_b);
-	$inp_site_url_alternative_b_len = strlen($inp_site_url_alternative_b);
-
-	$inp_site_url_alternative_c = $_POST['inp_site_url_alternative_c'];
-	$inp_site_url_alternative_c = output_html($inp_site_url_alternative_c);
-	$inp_site_url_alternative_c_len = strlen($inp_site_url_alternative_c);
 
 	// Statisics
 	$inp_site_use_gethostbyaddr = $_POST['inp_site_use_gethostbyaddr'];
@@ -102,19 +119,19 @@ if($mode == "save"){
 \$configWebsiteWebmasterEmailSav = \"$inp_website_webmaster_email\";
 
 // URLS
-\$configSiteURLSav 			= \"$inp_site_url\";
-\$configSiteURLLenSav 		 	= \"$inp_site_url_len\";
+\$configSiteURLSav 		= \"$inp_site_url\";
+\$configSiteURLLenSav 		 = \"$inp_site_url_len\";
+\$configSiteURLSchemeSav	= \"$inp_site_url_scheme\";
+\$configSiteURLHostSav		= \"$inp_site_url_host\";
+\$configSiteURLPortSav		= \"$inp_site_url_port\";
+\$configSiteURLPathSav		= \"$inp_site_url_path\";
 
-\$configSiteURLAlternativeASav		= \"$inp_site_url_alternative_a\";
-\$configSiteURLAlternativeALenSav	= \"$inp_site_url_alternative_a_len\";
-
-\$configSiteURLAlternativeBSav		= \"$inp_site_url_alternative_b\";
-\$configSiteURLAlternativeBLenSav	= \"$inp_site_url_alternative_b_len\";
-
-\$configSiteURLAlternativeCSav		= \"$inp_site_url_alternative_c\";
-\$configSiteURLAlternativeCLenSav	= \"$inp_site_url_alternative_c_len\";
-
-\$configControlPanelURLSav 	 = \"$inp_control_panel_url\";
+\$configControlPanelURLSav 		= \"$inp_control_panel_url\";
+\$configControlPanelURLLenSav 		= \"$inp_control_panel_url_len\";
+\$configControlPanelURLSchemeSav	= \"$inp_control_panel_url_scheme\";
+\$configControlPanelURLHostSav		= \"$inp_control_panel_url_host\";
+\$configControlPanelURLPortSav		= \"$inp_control_panel_url_port\";
+\$configControlPanelURLPathSav		= \"$inp_control_panel_url_path\";
 
 // Statisics
 \$configSiteUseGethostbyaddrSav = \"$inp_site_use_gethostbyaddr\";
@@ -204,11 +221,6 @@ if($mode == ""){
 	<p>$l_site_url:<br />
 	<input type=\"text\" name=\"inp_site_url\" value=\"$configSiteURLSav\" size=\"30\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
 
-	<p>Website alternative URL:<br />
-	<input type=\"text\" name=\"inp_site_url_alternative_a\" value=\"$configSiteURLAlternativeASav\" size=\"30\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /><br />
-	<input type=\"text\" name=\"inp_site_url_alternative_b\" value=\"$configSiteURLAlternativeBSav\" size=\"30\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /><br />
-	<input type=\"text\" name=\"inp_site_url_alternative_c\" value=\"$configSiteURLAlternativeCSav\" size=\"30\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /><br />
-	</p>
 
 	<p>$l_control_panel_url:<br />
 	<input type=\"text\" name=\"inp_control_panel_url\" value=\"$configControlPanelURLSav\" size=\"50\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
