@@ -433,19 +433,6 @@ else{
 
 
 
-	<!-- View comments -->";
-		$object         	= "workout_weekly";
-		$object_id      	= "$get_current_workout_weekly_id";
-		$object_user_id 	= "$get_current_workout_weekly_user_id";
-		$refererer_from_root 	= "workout_plans/weekly_workout_plan_view.php?weekly_id=$get_current_workout_weekly_id";
-		include("../comments/_includes/view_comments.php");
-
-		// Number of comments correct?
-		if($get_current_workout_weekly_comments != "$number_of_comments"){
-			$result = mysqli_query($link, "UPDATE $t_workout_plans_weekly SET workout_weekly_comments=$number_of_comments WHERE workout_weekly_id=$get_current_workout_weekly_id") or die(mysqli_error($link));
-		}
-		echo" 
-	<!-- //View comments -->
 	";
 }
 

@@ -85,17 +85,17 @@ if($include_as_navigation_main_mode == 0){
 				list($get_sub_category_translation_value) = $row_t;
 
 				$get_sub_category_translation_value_len = strlen($get_sub_category_translation_value);
-				if($get_sub_category_translation_value_len > 20){
+				if($get_sub_category_translation_value_len > 19){
 					$get_sub_category_translation_value = substr($get_sub_category_translation_value, 0,18);
 					$check_for_tag = substr($get_sub_category_translation_value, 0,17);
 					if($check_for_tag == "&"){
-						$get_sub_category_translation_value = substr($get_sub_category_translation_value, 0,17);
+						$get_sub_category_translation_value = substr($get_sub_category_translation_value, 0,19);
 					}
 					$get_sub_category_translation_value = $get_sub_category_translation_value . "...";
 				}
 
 				echo"						";
-				echo"<li><a href=\"$root/food/open_sub_category.php?main_category_id=$main_category_id&amp;sub_category_id=$get_sub_category_id&amp;l=$l\""; if($sub_category_id == "$get_sub_category_id"){ echo" class=\"navigation_active\"";}echo">&nbsp; &nbsp; $get_sub_category_translation_value</a></li>\n";
+				echo"<li><a href=\"$root/food/open_sub_category.php?main_category_id=$main_category_id&amp;sub_category_id=$get_sub_category_id&amp;l=$l\""; if($sub_category_id == "$get_sub_category_id"){ echo" class=\"navigation_active\"";}echo" style=\"margin-left: 20px;\">$get_sub_category_translation_value</a></li>\n";
 
 
 			}

@@ -46,6 +46,7 @@ if(file_exists("$root/_admin/_data/config/meta.php")){
 		$check_localhost = substr($page_url, 0, 16);
 		if($check_localhost != "http://localhost"){
 	
+			echo"<p style=\"color:#fff;background:#000;font-size:100px;\"><a href=\"$configSiteURLSav\" style=\"color:#fff;background:#000;font-size:100px;\">$configSiteURLSav</a></p><meta http-equiv=refresh content=\"5; URL=$configSiteURLSav\">";
 			echo"<p>Security error. Page url is not the same as configured. Please fix meta.php.
 			</p>
 

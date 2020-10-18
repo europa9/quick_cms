@@ -46,7 +46,9 @@ if($action == ""){
 	|
 	<a href=\"index.php?open=$open&amp;page=categories&amp;action=translations&amp;editor_language=$editor_language\">Translations</a>
 	|
-	<a href=\"index.php?open=$open&amp;page=categories&amp;action=sqlite_code&amp;editor_language=$editor_language\">SQLite code</a>
+	<a href=\"index.php?open=$open&amp;page=categories&amp;action=sqlite_code_a&amp;editor_language=$editor_language\">SQLite code 1</a>
+	|
+	<a href=\"index.php?open=$open&amp;page=categories&amp;action=sqlite_code_b&amp;editor_language=$editor_language\">SQLite code 2</a>
 	|
 	<a href=\"index.php?open=$open&amp;page=categories&amp;action=strings&amp;editor_language=$editor_language\">Strings</a></p>
 	
@@ -514,9 +516,9 @@ elseif($action == "new_category"){
 		
 	";
 } // new_category
-elseif($action == "sqlite_code"){
+elseif($action == "sqlite_code_a"){
 	echo"
-	<h1>SQLite code</h1>
+	<h1>SQLite code 1</h1>
 
 	<p>
 	String categoryName = &quot;&quot;;<br /><br />
@@ -571,7 +573,92 @@ elseif($action == "sqlite_code"){
 	}
 
 }
+elseif($action == "sqlite_code_b"){
+	echo"
+	<h1>SQLite code 2</h1>
 
+	";
+
+
+	// Get all categories
+	$category_count = 0;
+	$insert_count = 0;
+	$transfer_main_category_id = 0;
+	$query = "SELECT category_id, category_name, category_parent_id FROM $t_food_categories WHERE category_user_id='0' AND category_parent_id='0'";
+	$result = mysqli_query($link, $query);
+	while($row = mysqli_fetch_row($result)) {
+		list($get_main_category_id, $get_main_category_name, $get_main_category_parent_id) = $row;
+
+		// Inp
+		$inp_main_category_name_mysql = quote_smart($link, $get_main_category_name);
+
+		if($insert_count == "0"){
+			echo"db.execSQL(&quot;INSERT INTO food_categories(category_id, category_user_id, category_name, category_parent_id) \n&quot; +<br />
+			&quot;VALUES &quot; +<br />
+               		";
+		}
+		else{
+			echo",&quot; + <br />\n";
+		}
+
+		// Insert main category
+		echo"
+		&quot;(NULL, '0', $inp_main_category_name_mysql, '0')";
+		
+		// Main count
+		$insert_count++;
+		$category_count++;
+		$transfer_main_category_id = $category_count;
+
+		// Get sub
+		$queryb = "SELECT category_id, category_name, category_parent_id FROM $t_food_categories WHERE category_user_id='0' AND category_parent_id='$get_main_category_id'";
+		$resultb = mysqli_query($link, $queryb);
+		while($rowb = mysqli_fetch_row($resultb)) {
+			list($get_sub_category_id, $get_sub_category_name, $get_sub_category_parent_id) = $rowb;
+
+			// Inp
+			$inp_sub_category_name_mysql = quote_smart($link, $get_sub_category_name);
+
+			if($insert_count == "0"){
+				echo"db.execSQL(&quot;INSERT INTO food_categories(category_id, category_user_id, category_name, category_parent_id) \n&quot; +<br />
+				&quot;VALUES &quot; +<br />
+               			";
+			}
+			else{
+				echo",&quot; + <br />\n";
+			}
+
+			// Insert sub category
+			echo"
+			&quot;(NULL, '0', $inp_sub_category_name_mysql, '$transfer_main_category_id')";
+
+			// Sub count
+			$insert_count++;
+			$category_count++;
+
+
+
+			// End insert count
+			if($insert_count > 10){
+				echo"
+				&quot;)<br /><br />
+				";
+				$insert_count = 0;
+			}
+		}
+
+		// End insert count
+		if($insert_count > 10){
+			echo"
+			&quot;)<br /><br />
+			";
+			$insert_count = 0;
+		}
+
+
+	}
+
+}
 elseif($action == "strings"){
 	echo"
 	<h1>Strings</h1>

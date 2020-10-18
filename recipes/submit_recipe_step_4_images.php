@@ -318,7 +318,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<!-- Image -->
 			";
 			if($get_recipe_image != ""){
-				echo"<img src=\"$root/image.php/$get_recipe_image.png?width=847&height=437&image=/$get_recipe_image_path/$get_recipe_image\" />";
+				echo"<img src=\"$root/$get_recipe_image_path/$get_recipe_image\" alt=\"$get_recipe_image_path/$get_recipe_image\" />";
 			}
 			echo"		
 			<!-- //Image -->

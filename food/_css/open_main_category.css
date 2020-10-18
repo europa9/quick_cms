@@ -42,7 +42,7 @@ div.food_sub_categories_with_food {
 div.food_sub_categories_with_food > a{
 	display:block; /* make it fill entire li */
 	color: #333333;
-	font: normal 16px 'Open Sans',sans-serif;
+	font: bold 16px 'Open Sans',sans-serif;
 	padding: 10px 10px 10px 10px;
 	overflow: hidden;
 }

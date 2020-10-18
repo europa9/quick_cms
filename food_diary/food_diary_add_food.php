@@ -212,10 +212,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$x = 0;
 
 			// Get all food
-			$query = "SELECT food_id, food_user_id, food_name, food_manufacturer_name, food_description, food_serving_size_gram, food_serving_size_gram_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy, food_proteins, food_carbohydrates, food_fat, food_energy_calculated, food_proteins_calculated, food_carbohydrates_calculated, food_fat_calculated, food_barcode, food_category_id, food_image_path, food_thumb, food_image_a, food_unique_hits, food_likes, food_dislikes FROM $t_food_index WHERE food_language=$l_mysql";
+			$query = "SELECT food_id, food_user_id, food_name, food_manufacturer_name, food_description, food_serving_size_gram, food_serving_size_gram_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy, food_proteins, food_carbohydrates, food_fat, food_energy_calculated, food_proteins_calculated, food_carbohydrates_calculated, food_fat_calculated, food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_image_a, food_thumb_a_small, food_unique_hits, food_likes, food_dislikes FROM $t_food_index WHERE food_language=$l_mysql";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
-				list($get_food_id, $get_food_user_id, $get_food_name, $get_food_manufacturer_name, $get_food_description, $get_food_serving_size_gram, $get_food_serving_size_gram_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy, $get_food_proteins, $get_food_carbohydrates, $get_food_fat, $get_food_energy_calculated, $get_food_proteins_calculated, $get_food_carbohydrates_calculated, $get_food_fat_calculated, $get_food_barcode, $get_food_category_id,  $get_food_image_path, $get_food_thumb, $get_food_image_a, $get_food_unique_hits, $get_food_likes, $get_food_dislikes) = $row;
+				list($get_food_id, $get_food_user_id, $get_food_name, $get_food_manufacturer_name, $get_food_description, $get_food_serving_size_gram, $get_food_serving_size_gram_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy, $get_food_proteins, $get_food_carbohydrates, $get_food_fat, $get_food_energy_calculated, $get_food_proteins_calculated, $get_food_carbohydrates_calculated, $get_food_fat_calculated, $get_food_barcode, $get_food_main_category_id, $get_food_sub_category_id,  $get_food_image_path, $get_food_image_a, $get_food_thumb_a_small, $get_food_unique_hits, $get_food_likes, $get_food_dislikes) = $row;
 			
 				// Name saying
 				$title = "$get_food_manufacturer_name $get_food_name";
@@ -251,7 +251,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				// Thumb
 				if($get_food_image_a != "" && file_exists("../$get_food_image_path/$get_food_image_a")){
-					$thumb = "../$get_food_image_path/$get_food_thumb";
+					$thumb = "../$get_food_image_path/$get_food_thumb_a_small";
 				}
 				else{
 					$thumb = "_gfx/no_thumb.png";
@@ -260,8 +260,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				echo"
 				<p style=\"padding-bottom:5px;\">
-				<a href=\"$root/food/view_food.php?food_id=$get_food_id&amp;l=$l\"><img src=\"$thumb\" alt=\"$get_food_thumb\" style=\"margin-bottom: 5px;\" /></a><br />
-				<a href=\"$root/food/view_food.php?food_id=$get_food_id&amp;l=$l\" style=\"font-weight: bold;color: #444444;\">$title</a><br />
+				<a href=\"$root/food/view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\"><img src=\"$thumb\" alt=\"$get_food_image_a\" style=\"margin-bottom: 5px;\" /></a><br />
+				<a href=\"$root/food/view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\" style=\"font-weight: bold;color: #444444;\">$title</a><br />
 				</p>
 				<table style=\"margin: 0px auto;\">
 				 <tr>
@@ -420,12 +420,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$x = 0;
 
 			// Get all food
-			$query = "SELECT food_id, food_user_id, food_name, food_manufacturer_name, food_description, food_serving_size_gram, food_serving_size_gram_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy, food_proteins, food_carbohydrates, food_fat, food_energy_calculated, food_proteins_calculated, food_carbohydrates_calculated, food_fat_calculated, food_barcode, food_category_id, food_image_path, food_thumb, food_image_a, food_unique_hits, food_likes, food_dislikes FROM $t_food_index WHERE food_language=$l_mysql";
+			$query = "SELECT food_id, food_user_id, food_name, food_manufacturer_name, food_description, food_serving_size_gram, food_serving_size_gram_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy, food_proteins, food_carbohydrates, food_fat, food_energy_calculated, food_proteins_calculated, food_carbohydrates_calculated, food_fat_calculated, food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_image_a, food_thumb_a_small, food_unique_hits, food_likes, food_dislikes FROM $t_food_index WHERE food_language=$l_mysql";
 			$query = $query . " ORDER BY food_manufacturer_name, food_name ASC";
 
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
-				list($get_food_id, $get_food_user_id, $get_food_name, $get_food_manufacturer_name, $get_food_description, $get_food_serving_size_gram, $get_food_serving_size_gram_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy, $get_food_proteins, $get_food_carbohydrates, $get_food_fat, $get_food_energy_calculated, $get_food_proteins_calculated, $get_food_carbohydrates_calculated, $get_food_fat_calculated, $get_food_barcode, $get_food_category_id,  $get_food_image_path, $get_food_thumb, $get_food_image_a, $get_food_unique_hits, $get_food_likes, $get_food_dislikes) = $row;
+				list($get_food_id, $get_food_user_id, $get_food_name, $get_food_manufacturer_name, $get_food_description, $get_food_serving_size_gram, $get_food_serving_size_gram_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy, $get_food_proteins, $get_food_carbohydrates, $get_food_fat, $get_food_energy_calculated, $get_food_proteins_calculated, $get_food_carbohydrates_calculated, $get_food_fat_calculated, $get_food_barcode, $get_food_main_category_id, $get_food_sub_category_id,$get_food_image_path, $get_food_image_a, $get_food_thumb_a_small, $get_food_unique_hits, $get_food_likes, $get_food_dislikes) = $row;
 			
 				// Name saying
 				$title = "$get_food_manufacturer_name $get_food_name";
@@ -458,7 +458,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				// Thumb
 				if($get_food_image_a != "" && file_exists("../$get_food_image_path/$get_food_image_a")){
-					$thumb = "../$get_food_image_path/$get_food_thumb";
+					$thumb = "../$get_food_image_path/$get_food_thumb_a_small";
 				}
 				else{
 					$thumb = "_gfx/no_thumb.png";
@@ -683,7 +683,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$x = 0;
 
 					// Get all food
-					$query = "SELECT food_id, food_user_id, food_name, food_manufacturer_name, food_description, food_serving_size_gram, food_serving_size_gram_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy, food_proteins, food_carbohydrates, food_fat, food_energy_calculated, food_proteins_calculated, food_carbohydrates_calculated, food_fat_calculated, food_barcode, food_category_id, food_image_path, food_thumb, food_image_a, food_unique_hits, food_likes, food_dislikes FROM $t_food_index WHERE food_language=$l_mysql";
+					$query = "SELECT food_id, food_user_id, food_name, food_manufacturer_name, food_description, food_serving_size_gram, food_serving_size_gram_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy, food_proteins, food_carbohydrates, food_fat, food_energy_calculated, food_proteins_calculated, food_carbohydrates_calculated, food_fat_calculated, food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_image_a, food_thumb_a_small, food_unique_hits, food_likes, food_dislikes FROM $t_food_index WHERE food_language=$l_mysql";
 					if(isset($_GET['inp_entry_food_query'])){
 						$inp_entry_food_query = $_GET['inp_entry_food_query'];
 						$inp_entry_food_query = strip_tags(stripslashes($inp_entry_food_query));
@@ -696,14 +696,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					}
 					
 					
-					$query = $query . " AND food_category_id IN ($in_category)";
+					$query = $query . " AND food_main_category_id=$get_current_main_category_id";
 
 					$query = $query . " ORDER BY food_manufacturer_name, food_name ASC";
-					
 
 					$result = mysqli_query($link, $query);
 					while($row = mysqli_fetch_row($result)) {
-						list($get_food_id, $get_food_user_id, $get_food_name, $get_food_manufacturer_name, $get_food_description, $get_food_serving_size_gram, $get_food_serving_size_gram_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy, $get_food_proteins, $get_food_carbohydrates, $get_food_fat, $get_food_energy_calculated, $get_food_proteins_calculated, $get_food_carbohydrates_calculated, $get_food_fat_calculated, $get_food_barcode, $get_food_category_id,  $get_food_image_path, $get_food_thumb, $get_food_image_a, $get_food_unique_hits, $get_food_likes, $get_food_dislikes) = $row;
+						list($get_food_id, $get_food_user_id, $get_food_name, $get_food_manufacturer_name, $get_food_description, $get_food_serving_size_gram, $get_food_serving_size_gram_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy, $get_food_proteins, $get_food_carbohydrates, $get_food_fat, $get_food_energy_calculated, $get_food_proteins_calculated, $get_food_carbohydrates_calculated, $get_food_fat_calculated, $get_food_barcode, $get_food_main_category_id, $get_food_sub_category_id,  $get_food_image_path, $get_food_image_a, $get_food_thumb_a_small, $get_food_unique_hits, $get_food_likes, $get_food_dislikes) = $row;
 			
 						// Name saying
 						$title = "$get_food_manufacturer_name $get_food_name";
@@ -736,7 +735,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						}
 						// Thumb
 						if($get_food_image_a != "" && file_exists("../$get_food_image_path/$get_food_image_a")){
-							$thumb = "../$get_food_image_path/$get_food_thumb";
+							$thumb = "../$get_food_image_path/$get_food_thumb_a_small";
 						}
 						else{
 							$thumb = "_gfx/no_thumb.png";
@@ -946,7 +945,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$x = 0;
 
 					// Get all food
-					$query = "SELECT food_id, food_user_id, food_name, food_manufacturer_name, food_description, food_serving_size_gram, food_serving_size_gram_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy, food_proteins, food_carbohydrates, food_fat, food_energy_calculated, food_proteins_calculated, food_carbohydrates_calculated, food_fat_calculated, food_barcode, food_category_id, food_image_path, food_thumb, food_image_a, food_unique_hits, food_likes, food_dislikes FROM $t_food_index WHERE food_language=$l_mysql";
+					$query = "SELECT food_id, food_user_id, food_name, food_manufacturer_name, food_description, food_serving_size_gram, food_serving_size_gram_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy, food_proteins, food_carbohydrates, food_fat, food_energy_calculated, food_proteins_calculated, food_carbohydrates_calculated, food_fat_calculated, food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_image_a, food_thumb_a_small, food_unique_hits, food_likes, food_dislikes FROM $t_food_index WHERE food_language=$l_mysql";
 					if(isset($_GET['inp_entry_food_query'])){
 						$inp_entry_food_query = $_GET['inp_entry_food_query'];
 						$inp_entry_food_query = strip_tags(stripslashes($inp_entry_food_query));
@@ -959,14 +958,14 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					}
 					if($sub_category_id != ""){
 						$sub_category_id_mysql = quote_smart($link, $sub_category_id);
-						$query = $query . " AND food_category_id=$sub_category_id_mysql";
+						$query = $query . " AND food_sub_category_id=$sub_category_id_mysql";
 					}
 
 					$query = $query . " ORDER BY food_manufacturer_name, food_name ASC";
 
 					$result = mysqli_query($link, $query);
 					while($row = mysqli_fetch_row($result)) {
-						list($get_food_id, $get_food_user_id, $get_food_name, $get_food_manufacturer_name, $get_food_description, $get_food_serving_size_gram, $get_food_serving_size_gram_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy, $get_food_proteins, $get_food_carbohydrates, $get_food_fat, $get_food_energy_calculated, $get_food_proteins_calculated, $get_food_carbohydrates_calculated, $get_food_fat_calculated, $get_food_barcode, $get_food_category_id,  $get_food_image_path, $get_food_thumb, $get_food_image_a, $get_food_unique_hits, $get_food_likes, $get_food_dislikes) = $row;
+						list($get_food_id, $get_food_user_id, $get_food_name, $get_food_manufacturer_name, $get_food_description, $get_food_serving_size_gram, $get_food_serving_size_gram_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy, $get_food_proteins, $get_food_carbohydrates, $get_food_fat, $get_food_energy_calculated, $get_food_proteins_calculated, $get_food_carbohydrates_calculated, $get_food_fat_calculated, $get_food_barcode, $get_food_main_category_id, $get_food_sub_category_id,  $get_food_image_path, $get_food_image_a, $get_food_thumb_a_small, $get_food_unique_hits, $get_food_likes, $get_food_dislikes) = $row;
 			
 						// Name saying
 						$title = "$get_food_manufacturer_name $get_food_name";
@@ -998,13 +997,15 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						";
 						}
 
+
 						// Thumb
 						if($get_food_image_a != "" && file_exists("../$get_food_image_path/$get_food_image_a")){
-							$thumb = "../$get_food_image_path/$get_food_thumb";
+							$thumb = "../$get_food_image_path/$get_food_thumb_a_small";
 						}
 						else{
 							$thumb = "_gfx/no_thumb.png";
 						}
+
 
 
 						echo"
@@ -1113,10 +1114,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 			// get food
-			$query = "SELECT food_id, food_user_id, food_name, food_clean_name, food_manufacturer_name, food_description, food_serving_size_gram, food_serving_size_gram_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy, food_proteins, food_carbohydrates, food_fat, food_energy_calculated, food_proteins_calculated, food_carbohydrates_calculated, food_fat_calculated, food_barcode, food_category_id, food_image_path, food_thumb, food_image_a, food_image_b, food_image_c, food_image_d, food_image_e, food_last_used, food_language, food_synchronized, food_accepted_as_master, food_notes, food_unique_hits, food_unique_hits_ip_block, food_comments, food_likes, food_dislikes, food_likes_ip_block FROM $t_food_index WHERE food_id=$inp_entry_food_id_mysql";
+			$query = "SELECT food_id, food_user_id, food_name, food_clean_name, food_manufacturer_name, food_manufacturer_name_and_food_name, food_description, food_country, food_net_content, food_net_content_measurement, food_serving_size_gram, food_serving_size_gram_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy, food_fat, food_fat_of_which_saturated_fatty_acids, food_carbohydrates, food_carbohydrates_of_which_dietary_fiber, food_carbohydrates_of_which_sugars, food_proteins, food_salt, food_sodium, food_score, food_energy_calculated, food_fat_calculated, food_fat_of_which_saturated_fatty_acids_calculated, food_carbohydrates_calculated, food_carbohydrates_of_which_dietary_fiber_calculated, food_carbohydrates_of_which_sugars_calculated, food_proteins_calculated, food_salt_calculated, food_sodium_calculated, food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_image_a, food_thumb_a_small, food_thumb_a_medium, food_thumb_a_large, food_image_b, food_thumb_b_small, food_thumb_b_medium, food_thumb_b_large, food_image_c, food_thumb_c_small, food_thumb_c_medium, food_thumb_c_large, food_image_d, food_thumb_d_small, food_thumb_d_medium, food_thumb_d_large, food_image_e, food_thumb_e_small, food_thumb_e_medium, food_thumb_e_large, food_last_used, food_language, food_synchronized, food_accepted_as_master, food_notes, food_unique_hits, food_unique_hits_ip_block, food_comments, food_likes, food_dislikes, food_likes_ip_block, food_user_ip, food_created_date, food_last_viewed, food_age_restriction FROM $t_food_index WHERE food_id=$inp_entry_food_id_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
-			list($get_food_id, $get_food_user_id, $get_food_name, $get_food_clean_name, $get_food_manufacturer_name, $get_food_description, $get_food_serving_size_gram, $get_food_serving_size_gram_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy, $get_food_proteins, $get_food_carbohydrates, $get_food_fat, $get_food_energy_calculated, $get_food_proteins_calculated, $get_food_carbohydrates_calculated, $get_food_fat_calculated, $get_food_barcode, $get_food_category_id, $get_food_image_path, $get_food_thumb, $get_food_image_a, $get_food_image_b, $get_food_image_c, $get_food_image_d, $get_food_image_e, $get_food_last_used, $get_food_language, $get_food_synchronized, $get_food_accepted_as_master, $get_food_notes, $get_food_unique_hits, $get_food_unique_hits_ip_block, $get_food_comments, $get_food_likes, $get_food_dislikes, $get_food_likes_ip_block) = $row;
+			list($get_food_id, $get_food_user_id, $get_food_name, $get_food_clean_name, $get_food_manufacturer_name, $get_food_manufacturer_name_and_food_name, $get_food_description, $get_food_country, $get_food_net_content, $get_food_net_content_measurement, $get_food_serving_size_gram, $get_food_serving_size_gram_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy, $get_food_fat, $get_food_fat_of_which_saturated_fatty_acids, $get_food_carbohydrates, $get_food_carbohydrates_of_which_dietary_fiber, $get_food_carbohydrates_of_which_sugars, $get_food_proteins, $get_food_salt, $get_food_sodium, $get_food_score, $get_food_energy_calculated, $get_food_fat_calculated, $get_food_fat_of_which_saturated_fatty_acids_calculated, $get_food_carbohydrates_calculated, $get_food_carbohydrates_of_which_dietary_fiber_calculated, $get_food_carbohydrates_of_which_sugars_calculated, $get_food_proteins_calculated, $get_food_salt_calculated, $get_food_sodium_calculated, $get_food_barcode, $get_food_main_category_id, $get_food_sub_category_id, $get_food_image_path, $get_food_image_a, $get_food_thumb_a_small, $get_food_thumb_a_medium, $get_food_thumb_a_large, $get_food_image_b, $get_food_thumb_b_small, $get_food_thumb_b_medium, $get_food_thumb_b_large, $get_food_image_c, $get_food_thumb_c_small, $get_food_thumb_c_medium, $get_food_thumb_c_large, $get_food_image_d, $get_food_thumb_d_small, $get_food_thumb_d_medium, $get_food_thumb_d_large, $get_food_image_e, $get_food_thumb_e_small, $get_food_thumb_e_medium, $get_food_thumb_e_large, $get_food_last_used, $get_food_language, $get_food_synchronized, $get_food_accepted_as_master, $get_food_notes, $get_food_unique_hits, $get_food_unique_hits_ip_block, $get_food_comments, $get_food_likes, $get_food_dislikes, $get_food_likes_ip_block, $get_food_user_ip, $get_food_created_date, $get_food_last_viewed, $get_food_age_restriction) = $row;
 
 			if($get_food_id == ""){
 				$url = "food_diary_add_food.php?date=$date&meal_id=$meal_id&l=$l";
@@ -1279,7 +1280,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			if($get_last_used_id == ""){
 				// First time used this food
 				mysqli_query($link, "INSERT INTO $t_food_diary_last_used
-				(last_used_id, last_used_user_id, last_used_day_of_week, last_used_meal_id, last_used_food_id, last_used_recipe_id, last_serving_size, last_used_times, last_used_date,
+				(last_used_id, last_used_user_id, last_used_day_of_week, last_used_meal_id, last_used_food_id, last_used_recipe_id, last_used_serving_size, last_used_times, last_used_date,
 				last_used_updated, last_used_synchronized) 
 				VALUES 
 				(NULL, '$get_my_user_id', '$day_of_the_week', $inp_entry_meal_id_mysql, $inp_entry_food_id_mysql, '0', $inp_entry_food_serving_size_mysql, '1', $inp_entry_date_mysql,

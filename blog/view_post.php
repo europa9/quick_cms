@@ -546,25 +546,6 @@ else{
 				echo"
 			<!-- //Other posts from same category -->
 
-			<!-- View comments -->
-				<div class=\"clear\"></div>
-				<hr />
-				";
-				$object              = "blog_post";
-				$object_id           = "$get_current_blog_post_id";
-				$object_user_id      = "$get_current_blog_post_user_id";
-				$refererer_from_root = "blog/view_post.php?post_id=$post_id";
-
-				include("../comments/_includes/view_comments.php");
-
-
-				// Number of comments correct?
-				if($get_current_blog_post_comments != "$number_of_comments"){
-					$result = mysqli_query($link, "UPDATE $t_blog_posts SET blog_post_comments=$number_of_comments WHERE blog_post_id=$post_id_mysql") or die(mysqli_error($link));
-
-				}
-				echo" 
-			<!-- //View comments -->
 			";
 		} // show post == true
 

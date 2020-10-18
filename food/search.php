@@ -27,21 +27,16 @@ include("$root/_admin/website_config.php");
 
 
 /*- Variables ------------------------------------------------------------------------- */
-if(isset($_GET['q']) OR isset($_POST['q'])) {
-	if(isset($_GET['q'])) {
-		$q = $_GET['q'];
-	}
-	else{
-		$q = $_POST['q'];
-	}
-	$q = strip_tags(stripslashes($q));
+if(isset($_GET['search_query'])) {
+	$search_query = $_GET['search_query'];
+	$search_query = strip_tags(stripslashes($search_query));
 
-	if($q == "$l_search..."){
-		$q = "";
+	if($search_query == "$l_search..."){
+		$search_query = "";
 	}
 }
 else{
-	$q = "";
+	$search_query = "";
 }
 if(isset($_GET['order_by'])) {
 	$order_by = $_GET['order_by'];
@@ -84,8 +79,8 @@ else{
 
 /*- Headers ---------------------------------------------------------------------------------- */
 $website_title = "$l_food - $l_search"; 
-if($q != ""){
-	$website_title = $website_title .  " - $q"; 
+if($search_query != ""){
+	$website_title = $website_title .  " - $search_query"; 
 }
 if($manufacturer_name != ""){
 	$website_title = $website_title .  " - $manufacturer_name"; 
@@ -109,7 +104,7 @@ echo"
 	<div style=\"float: right;padding-top: 12px;\">
 		<form method=\"get\" action=\"search.php\" enctype=\"multipart/form-data\">
 		<p>
-		<input type=\"text\" name=\"q\" value=\"$q\" size=\"10\" id=\"nettport_inp_search_query\" />
+		<input type=\"text\" name=\"search_query\" value=\"$search_query\" size=\"10\" id=\"nettport_inp_search_query\" />
 		<input type=\"hidden\" name=\"l\" value=\"$l\" />
 		<input type=\"submit\" value=\"$l_search\" id=\"nettport_search_submit_button\" class=\"btn_default\" />
 		<a href=\"#\" class=\"content_left_hide_view_a btn_default\">$l_advanced</a>
@@ -159,7 +154,13 @@ echo"
 		 <tr>
 		  <td style=\"padding-right: 20px;vertical-align:top;\">
 			<p>$l_query<br />
-			<input type=\"text\" name=\"q\" value=\""; if($q == ""){ echo"$l_search..."; } else{ echo"$q"; } echo"\" size=\"15\" id=\"food_search_q\" />
+			<input type=\"text\" name=\"q\" value=\""; 
+				if($search_query != ""){
+					echo"$search_query"; 
+				}
+				else{
+					echo"$l_search..."; $q = "";
+				} echo"\" size=\"15\" id=\"food_search_q\" />
 			<input type=\"submit\" value=\"$l_search\" class=\"btn btn_default\" />
 			</p>
 
@@ -222,22 +223,22 @@ echo"
 
 ";
 
-if($q != "" OR $manufacturer_name != "" OR $store_id != "" OR $barcode != ""){
+if($search_query != "" OR $manufacturer_name != "" OR $store_id != "" OR $barcode != ""){
 	
 	$search_results_count = 0;
 
 	
 	// Set layout
 	$x = 0;
-		$show_food = "true";
+	$show_food = "true";
 
-	$query = "SELECT food_id, food_user_id, food_name, food_manufacturer_name, food_description, food_serving_size_gram, food_serving_size_gram_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy, food_proteins, food_carbohydrates, food_fat, food_energy_calculated, food_proteins_calculated, food_carbohydrates_calculated, food_fat_calculated, food_barcode, food_category_id, food_image_path, food_thumb_small, food_thumb_medium, food_thumb_large, food_image_a, food_image_b, food_image_c, food_last_used, food_language, food_synchronized, food_notes FROM $t_food_index";
+	$query = "SELECT food_id, food_user_id, food_name, food_manufacturer_name, food_description, food_serving_size_gram, food_serving_size_gram_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy, food_proteins, food_carbohydrates, food_fat, food_energy_calculated, food_proteins_calculated, food_carbohydrates_calculated, food_fat_calculated, food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_image_a, food_thumb_a_small FROM $t_food_index";
 	$query = $query . "  WHERE food_language=$l_mysql";
 
-	if($q != ""){
-		$q = "%" . $q . "%";
-		$q_mysql = quote_smart($link, $q);
-		$query = $query . " AND ($t_food_index.food_name LIKE $q_mysql OR $t_food_index.food_manufacturer_name LIKE $q_mysql)";
+	if($search_query != ""){
+		$search_query = "%" . $search_query . "%";
+		$search_query_mysql = quote_smart($link, $search_query);
+		$query = $query . " AND ($t_food_index.food_name LIKE $search_query_mysql OR $t_food_index.food_manufacturer_name LIKE $search_query_mysql)";
 	}
 
 	if($manufacturer_name != ""){
@@ -272,9 +273,9 @@ if($q != "" OR $manufacturer_name != "" OR $store_id != "" OR $barcode != ""){
 	}
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
-		list($get_food_id, $get_food_user_id, $get_food_name, $get_food_manufacturer_name, $get_food_description, $get_food_serving_size_gram, $get_food_serving_size_gram_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy, $get_food_proteins, $get_food_carbohydrates, $get_food_fat, $get_food_energy_calculated, $get_food_proteins_calculated, $get_food_carbohydrates_calculated, $get_food_fat_calculated, $get_food_barcode, $get_food_category_id,  $get_food_image_path, $get_food_thumb_small, $get_food_thumb_medium, $get_food_thumb_large, $get_food_image_a, $get_food_image_b, $get_food_image_c, $get_food_last_used, $get_food_language, $get_food_synchronized, $get_food_notes) = $row;
+		list($get_food_id, $get_food_user_id, $get_food_name, $get_food_manufacturer_name, $get_food_description, $get_food_serving_size_gram, $get_food_serving_size_gram_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy, $get_food_proteins, $get_food_carbohydrates, $get_food_fat, $get_food_energy_calculated, $get_food_proteins_calculated, $get_food_carbohydrates_calculated, $get_food_fat_calculated, $get_food_barcode, $get_food_main_category_id, $get_food_sub_category_id, $get_food_image_path, $get_food_thumb_medium, $get_food_thumb_a_small) = $row;
 
-		if(file_exists("$root/$get_food_image_path/$get_food_image_a")){
+		if(file_exists("$root/$get_food_image_path/$get_food_thumb_a_small") && $get_food_thumb_a_small != ""){
 			// Store?
 			if($store_id != ""){
 				$query_store = "SELECT food_store_id FROM $t_food_index_stores WHERE food_store_food_id=$get_food_id AND food_store_store_id=$store_id_mysql";
@@ -291,56 +292,6 @@ if($q != "" OR $manufacturer_name != "" OR $store_id != "" OR $barcode != ""){
 
 
 			if($show_food == "true"){
-		
-
-
-				// Thumb small
-				if($get_food_image_a != "" && file_exists("../$get_food_image_path/$get_food_image_a") && !(file_exists("../$get_food_image_path/$get_food_thumb_small")) && $get_food_thumb_small == ""){
-					// Thumb name
-					$extension = get_extension($get_food_image_a);
-					$extension = strtolower($extension);
-					$inp_new_x = 132;
-					$inp_new_y = 132;
-				
-					$thumb_name = $get_food_id . "_thumb_" . $inp_new_x . "x" . $inp_new_y . "." . $extension;
-					$thumb_name_mysql = quote_smart($link, $thumb_name);
-					resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_food_image_path/$get_food_image_a", "$root/$get_food_image_path/$thumb_name");
-
-					$result_update = mysqli_query($link, "UPDATE $t_food_index SET food_thumb_small=$thumb_name_mysql WHERE food_id=$get_food_id") or die(mysqli_error($link));
-				
-				}
-
-				// Thumb medium
-				if($get_food_image_a != "" && file_exists("../$get_food_image_path/$get_food_image_a") && !(file_exists("../$get_food_image_path/$get_food_thumb_medium")) OR $get_food_thumb_medium == ""){
-					// Thumb name
-					$extension = get_extension($get_food_image_a);
-					$extension = strtolower($extension);
-					$inp_new_x = 150;
-					$inp_new_y = 150;
-				
-					$thumb_name = $get_food_id . "_thumb_" . $inp_new_x . "x" . $inp_new_y . "." . $extension;
-					$thumb_name_mysql = quote_smart($link, $thumb_name);
-					resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_food_image_path/$get_food_image_a", "$root/$get_food_image_path/$thumb_name");
-
-					$result_update = mysqli_query($link, "UPDATE $t_food_index SET food_thumb_medium=$thumb_name_mysql WHERE food_id=$get_food_id") or die(mysqli_error($link));
-				}
-	
-				// Thumb large
-				if($get_food_image_a != "" && file_exists("../$get_food_image_path/$get_food_image_a") && !(file_exists("../$get_food_image_path/$get_food_thumb_large")) OR $get_food_thumb_large == ""){
-					// Thumb name
-					$extension = get_extension($get_food_image_a);
-					$extension = strtolower($extension);
-					$inp_new_x = 420;
-					$inp_new_y = 283;
-				
-					$thumb_name = $get_food_id . "_thumb_" . $inp_new_x . "x" . $inp_new_y . "." . $extension;
-					$thumb_name_mysql = quote_smart($link, $thumb_name);
-					resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_food_image_path/$get_food_image_a", "$root/$get_food_image_path/$thumb_name");
-
-					$result_update = mysqli_query($link, "UPDATE $t_food_index SET food_thumb_large=$thumb_name_mysql WHERE food_id=$get_food_id") or die(mysqli_error($link));
-				}
-
-
 			
 				// 3 divs
 
@@ -375,11 +326,11 @@ if($q != "" OR $manufacturer_name != "" OR $store_id != "" OR $barcode != ""){
 				echo"
 						<div style=\"text-align: center;\">
 							<p class=\"recipe_open_category_img_p\">
-							<a href=\"view_food.php?food_id=$get_food_id&amp;l=$l\"><img src=\"$root/$get_food_image_path/$get_food_thumb_small\" alt=\"$get_food_image_a\" /></a><br />
+							<a href=\"view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\"><img src=\"$root/$get_food_image_path/$get_food_thumb_a_small\" alt=\"$get_food_thumb_a_small\" /></a><br />
 							</p>
 		
 							<p class=\"recipe_open_category_p\">
-							<a href=\"view_food.php?food_id=$get_food_id&amp;l=$l\" class=\"recipe_open_category_a\">$get_food_name</a>
+							<a href=\"view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\" class=\"recipe_open_category_a\">$get_food_name</a>
 							</p>
 
 						</div>

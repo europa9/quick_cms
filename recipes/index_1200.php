@@ -3,8 +3,8 @@
 *
 * File: recipes/index.php
 * Version 1.0.0
-* Date 13:43 18.11.2017
-* Copyright (c) 2011-2017 Localhost
+* Date 20:21 15.10.2020
+* Copyright (c) 2011-2018 Localhost
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -78,45 +78,8 @@ echo"
 		</p>
 	</div>
 	<div class=\"recipes_headline_right\">
-		<!-- Order -->
-			<script>
-			\$(function(){
-				\$('#inp_order_by_select').on('change', function () {
-					var url = \$(this).val();
-					if (url) { // require a URL
- 						window.location = url;
-					}
-					return false;
-				});
-				\$('#inp_order_method_select').on('change', function () {
-					var url = \$(this).val();
-					if (url) { // require a URL
- 						window.location = url;
-					}
-					return false;
-				});
-			});
-			</script>
-
-			<form method=\"get\" action=\"search.php\" enctype=\"multipart/form-data\">
-				<p>
-				<select name=\"inp_order_by\" id=\"inp_order_by_select\">
-					<option value=\"index.php\">- $l_order_by -</option>
-					<option value=\"index.php?order_by=recipe_id&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "recipe_id" OR $order_by == ""){ echo" selected=\"selected\""; } echo">$l_date</option>
-					<option value=\"index.php?order_by=recipe_title&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "recipe_title"){ echo" selected=\"selected\""; } echo">$l_title</option>
-					<option value=\"index.php?order_by=recipe_comments&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "recipe_comments"){ echo" selected=\"selected\""; } echo">$l_comments</option>
-					<option value=\"index.php?order_by=recipe_unique_hits&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "recipe_unique_hits"){ echo" selected=\"selected\""; } echo">$l_unique_hits</option>
-					<option value=\"index.php?order_by=number_serving_calories&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "number_serving_calories"){ echo" selected=\"selected\""; } echo">$l_calories</option>
-					<option value=\"index.php?order_by=number_serving_fat&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "number_serving_fat"){ echo" selected=\"selected\""; } echo">$l_fat</option>
-					<option value=\"index.php?order_by=number_serving_carbs&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "number_serving_carbs"){ echo" selected=\"selected\""; } echo">$l_carbs</option>
-					<option value=\"index.php?order_by=number_serving_proteins&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "number_serving_proteins"){ echo" selected=\"selected\""; } echo">$l_proteins</option>
-				</select>
-				<select name=\"inp_order_method\" id=\"inp_order_method_select\">
-					<option value=\"index.php?order_by=$order_by&amp;order_method=asc&amp;l=$l\""; if($order_method == "asc" OR $order_method == ""){ echo" selected=\"selected\""; } echo">$l_asc</option>
-					<option value=\"index.php?order_by=$order_by&amp;order_method=desc&amp;l=$l\""; if($order_method == "desc"){ echo" selected=\"selected\""; } echo">$l_desc</option>
-				</select>
-		<!-- //Order -->
 		<!-- Search -->
+			<p>
 			<input type=\"text\" name=\"q\" value=\"\" size=\"10\" id=\"nettport_inp_search_query\" />
 			<input type=\"submit\" value=\"$l_search\" id=\"nettport_search_submit_button\" class=\"btn_default\" />
 			</p>
@@ -127,6 +90,108 @@ echo"
 <!-- //Headline, buttons, search -->
 
 
+<!-- Categories -->
+	<p><a href=\"$root/recipes/categories.php?l=$l\" class=\"frontpage_category_headline_leftside_a\">$l_categories</a></p>
+	
+	";
+	// Select categories
+	$x = 0;
+	$query = "SELECT category_id, category_name FROM $t_recipes_categories ORDER BY category_name ASC";
+	$result = mysqli_query($link, $query);
+	while($row = mysqli_fetch_row($result)) {
+		list($get_category_id, $get_category_name) = $row;
+
+		// Translations
+		$query_t = "SELECT category_translation_id, category_translation_value, category_translation_image_path, category_translation_image FROM $t_recipes_categories_translations WHERE category_id=$get_category_id AND category_translation_language=$l_mysql";
+		$result_t = mysqli_query($link, $query_t);
+		$row_t = mysqli_fetch_row($result_t);
+		list($get_category_translation_id, $get_category_translation_value, $get_category_translation_image_path, $get_category_translation_image) = $row_t;
+		if($get_category_translation_id == ""){
+
+			mysqli_query($link, "INSERT INTO $t_recipes_categories_translations
+			(category_translation_id, category_id, category_translation_language, category_translation_value) 
+			VALUES 
+			(NULL, '$get_category_id', $l_mysql, '$get_category_name')")
+			or die(mysqli_error($link));
+
+			echo"<div class=\"info\">Missing translation! Please refresh!</div>";
+		}
+
+
+
+		if(file_exists("$root/$get_category_translation_image_path/$get_category_translation_image") && $get_category_translation_image != ""){
+			if($x == 0){
+				echo"
+				<div class=\"clear\"></div>
+				<div class=\"left_center_center_right_left\">
+				";
+			}
+			elseif($x == 1){
+				echo"
+				<div class=\"left_center_center_left_right_center\">
+				";
+			}
+			elseif($x == 2){
+				echo"
+				<div class=\"left_center_center_right_right_center\">
+				";
+			}
+			elseif($x == 3){
+				echo"
+				<div class=\"left_center_center_right_right\">
+				";
+			}
+		
+			echo"
+					<p class=\"recipe_open_category_img_p\">
+					<a href=\"$root/recipes/categories_browse.php?category_id=$get_category_id&amp;l=$l\"><img src=\"$root/$get_category_translation_image_path/$get_category_translation_image\" alt=\"$get_category_translation_image\" /></a><br />
+					</p>
+					<p class=\"recipe_open_category_p\">
+					<a href=\"$root/recipes/categories_browse.php?category_id=$get_category_id&amp;l=$l\" class=\"recipe_open_category_a\">$get_category_translation_value</a>
+					</p>
+				</div>
+			";
+
+			// Increment
+			$x++;
+		
+			// Reset
+			if($x == 4){
+				$x = 0;
+			}
+		}
+
+	}
+
+	if($x == 1){
+		echo"
+			<div class=\"left_center_center_right_center\">
+			</div>
+			<div class=\"left_center_center_right_center\">
+			</div>
+			<div class=\"left_center_center_right_right\">
+			</div>
+		";
+	
+	}
+	elseif($x == 2){
+		echo"
+			<div class=\"left_center_center_right_center\">
+			</div>
+			<div class=\"left_center_center_right_right\">
+			</div>
+		";
+
+	}
+	elseif($x == 3){
+		echo"
+			<div class=\"left_center_center_right_right\">
+			</div>
+		";
+
+	}
+	echo"
+<!-- //Categories -->
 
 <!-- Newest recipes -->";
 	echo"
@@ -301,30 +366,21 @@ echo"
 
 
 
-
-<!-- 10 popular tags -->";
-	// Tags unique
-	$query_tags = "SELECT tag_id, tag_language, tag_title, tag_title_clean, tag_number_of_recipes, tag_last_clicked_week FROM $t_recipes_tags_unique WHERE tag_language=$l_mysql ORDER BY tag_last_clicked_week, tag_unique_views_counter DESC LIMIT 0,20";
-	$result_tags = mysqli_query($link, $query_tags);
-	while($row_tags = mysqli_fetch_row($result_tags)) {
-		list($get_tag_id, $get_tag_language, $get_tag_title, $get_tag_title_clean, $get_tag_number_of_recipes, $get_tag_last_clicked_week) = $row_tags;
-
-	
-		echo"
-		<div class=\"clear\"></div>
-		<p class=\"frontpage_category_headline_leftside_p\"><a href=\"$root/recipes/view_tag_1200.php?tag=$get_tag_title_clean&amp;l=$l\" class=\"frontpage_category_headline_leftside_a\">#$get_tag_title_clean</a></p>
-		<p class=\"frontpage_category_headline_rightside_p\"><a href=\"$root/recipes/view_tag_1200.php?tag=$get_tag_title_clean&amp;l=$l\" class=\"frontpage_category_headline_rightside_a\">$l_more #$get_tag_title_clean</a></p>
-		<div class=\"clear\"></div>
-		";
+<!-- Popular recipes -->";
+	echo"
+	<div class=\"clear\"></div>
+	<p class=\"frontpage_category_headline_leftside_p\"><a href=\"$root/recipes/browse_recipes.php?order_by=recipe_unique_hits&amp;order_method=desc&amp;l=$l\" class=\"frontpage_category_headline_leftside_a\">$l_popular_recipes</a></p>
+	<p class=\"frontpage_category_headline_rightside_p\"><a href=\"$root/recipes/browse_recipes.php?order_by=recipe_unique_hits&amp;order_method=desc&amp;l=$l\" class=\"frontpage_category_headline_rightside_a\">$l_more_new_recipes</a></p>
+	<div class=\"clear\"></div>
+	";
 	
 
-		// Get four recipes
-		$x = 0;
-		$tag_title_clean_mysql = quote_smart($link, $get_tag_title_clean);
-		$query = "SELECT $t_recipes_tags.tag_id, $t_recipes.recipe_id, $t_recipes.recipe_title, $t_recipes.recipe_introduction, $t_recipes.recipe_image_path, $t_recipes.recipe_image, $t_recipes.recipe_unique_hits FROM $t_recipes_tags INNER JOIN $t_recipes ON $t_recipes_tags.tag_recipe_id=$t_recipes.recipe_id WHERE $t_recipes_tags.tag_language=$l_mysql AND $t_recipes_tags.tag_title_clean=$tag_title_clean_mysql ORDER BY $t_recipes.recipe_id DESC LIMIT 4,4";
-		$result = mysqli_query($link, $query);
-		while($row = mysqli_fetch_row($result)) {
-			list($get_tag_id, $get_recipe_id, $get_recipe_title, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image, $get_recipe_unique_hits) = $row;
+	// Get eight recipes
+	$x = 0;
+	$query = "SELECT recipe_id, recipe_title, recipe_category_id, recipe_introduction, recipe_image_path, recipe_image FROM $t_recipes WHERE recipe_language=$l_mysql ORDER BY recipe_unique_hits DESC LIMIT 0,8";
+	$result = mysqli_query($link, $query);
+	while($row = mysqli_fetch_row($result)) {
+		list($get_recipe_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image) = $row;
 
 			if($get_recipe_image != ""){
 				// Category
@@ -378,17 +434,15 @@ echo"
 				";
 			
 				// Increment
+				if($x == "3"){ $x = -1; } 
 				$x = $x+1;
 
 			} // image
 		}
-		echo"
-		<div class=\"clear\"></div>
-		";
- 	} // tags
 	echo"
-	<div class=\"clear\"></div>
-<!-- //10 popular tags -->
+		<div class=\"clear\"></div>
+<!-- //Popular recipes -->
+
 ";
 
 

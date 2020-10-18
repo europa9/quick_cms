@@ -27,6 +27,18 @@ function fix_local($value){
 }
 /*- Tables ---------------------------------------------------------------------------- */
 $t_calorie_counter		  = $mysqlPrefixSav . "calorie_counter";
+$t_diet_goal			  = $mysqlPrefixSav . "diet_goal";
+$t_diet_food_diary_cal_eaten	  = $mysqlPrefixSav . "diet_food_diary_cal_eaten";
+$t_diet_food_diary_sum		  = $mysqlPrefixSav . "diet_food_diary_sum";
+$t_diet_food_diary		  = $mysqlPrefixSav . "diet_food_diary";
+$t_diet_categories		  = $mysqlPrefixSav . "diet_categories";
+$t_diet_categories_translations	  = $mysqlPrefixSav . "diet_categories_translations";
+$t_diet_food			  = $mysqlPrefixSav . "diet_food";
+$t_diet_measurements		  = $mysqlPrefixSav . "diet_measurements";
+$t_diet_measurements_translations = $mysqlPrefixSav . "diet_measurements_translations";
+$t_diet_food_favorites		  = $mysqlPrefixSav . "diet_food_favorites";
+
+
 
 echo"
 <h1>Tables</h1>

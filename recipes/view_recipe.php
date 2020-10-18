@@ -499,6 +499,7 @@ else{
 				echo"
 			<!-- //Paring -->
 		</div>
+		<div class=\"clear\"></div>
 	<!-- //Image -->
 
 
@@ -1378,6 +1379,7 @@ else{
 
 	<!-- //Comments -->
 
+
 	<!-- You might also like -->
 		<h2>$l_you_may_also_like</h2>";
 		$x = 0;
@@ -1418,14 +1420,10 @@ else{
 				echo"
 				
 						<p class=\"frontpage_post_image\">
-							<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\"><img src=\"$root/_cache/$thumb\" alt=\"$get_recipe_image\" /></a><br />
-						</p>
-
-						<p class=\"frontpage_post_category_p\">
-							<a href=\"$root/recipes/categories_browse.php?category_id=$get_recipe_category_id&amp;l=$l\" class=\"frontpage_post_category_a\">$get_category_translation_value</a><br />
+							<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_similar_other_recipe_id&amp;l=$l\"><img src=\"$root/_cache/$thumb\" alt=\"$get_recipe_image\" /></a><br />
 						</p>
 						<p class=\"frontpage_post_title\">
-							<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\" class=\"h2\">$get_recipe_title</a>
+							<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_similar_other_recipe_id&amp;l=$l\" class=\"h2\">$get_similar_other_title</a>
 						</p>
 					
 					
@@ -1458,7 +1456,7 @@ else{
 			// Delete loaded
 			$result = mysqli_query($link, "DELETE FROM $t_recipes_similar_loaded WHERE loaded_id=$get_loaded_id"); 
 
-			if($get_recipe_id != "$get_loaded_this_recipe_id"){
+			if($get_recipe_id != "$get_loaded_this_recipe_id" && $get_loaded_language == "$get_recipe_language"){
 				// Check if connection exists
 				$query = "SELECT similar_id, similar_this_recipe_id, similar_other_recipe_id, similar_other_title, similar_other_image_path, similar_other_image_image, similar_other_image_thumb, similar_counter FROM $t_recipes_similar_recipes WHERE similar_this_recipe_id=$get_loaded_this_recipe_id AND similar_other_recipe_id=$get_recipe_id";
 				$result = mysqli_query($link, $query);
@@ -1502,7 +1500,7 @@ else{
 			// Delete loaded
 			$result = mysqli_query($link, "DELETE FROM $t_recipes_pairing_loaded WHERE loaded_id=$get_loaded_id"); 
 
-			if($get_recipe_id != "$get_loaded_this_recipe_id" && $get_recipe_category_id != "$get_loaded_this_category_id"){
+			if($get_recipe_id != "$get_loaded_this_recipe_id" && $get_recipe_category_id != "$get_loaded_this_category_id" && $get_loaded_language == "$get_recipe_language"){
 				// Check if connection exists
 				$query = "SELECT pairing_id, pairing_this_recipe_id, pairing_this_category_id, pairing_other_recipe_id, pairing_other_category_id, pairing_other_title, pairing_other_image_path, pairing_other_image_image, pairing_other_image_thumb, pairing_counter FROM $t_recipes_pairing_recipes WHERE pairing_this_recipe_id=$get_loaded_this_recipe_id AND pairing_other_recipe_id=$get_recipe_id";
 				$result = mysqli_query($link, $query);

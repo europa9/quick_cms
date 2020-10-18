@@ -123,10 +123,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			
 
 
-			$query_f = "SELECT food_id, food_user_id, food_name, food_manufacturer_name, food_description, food_serving_size_gram, food_serving_size_gram_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy, food_proteins, food_carbohydrates, food_fat, food_energy_calculated, food_proteins_calculated, food_carbohydrates_calculated, food_fat_calculated, food_barcode, food_category_id, food_image_path, food_thumb, food_image_a, food_language, food_unique_hits, food_likes, food_dislikes FROM $t_food_index WHERE food_id=$get_food_favorite_food_id";
+			$query_f = "SELECT food_id, food_user_id, food_name, food_manufacturer_name, food_description, food_serving_size_gram, food_serving_size_gram_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy, food_proteins, food_carbohydrates, food_fat, food_energy_calculated, food_proteins_calculated, food_carbohydrates_calculated, food_fat_calculated, food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_image_a, food_thumb_a_small, food_thumb_a_medium, food_thumb_a_large, food_language, food_unique_hits, food_likes, food_dislikes FROM $t_food_index WHERE food_id=$get_food_favorite_food_id";
 			$result_f = mysqli_query($link, $query_f);
 			$row_f = mysqli_fetch_row($result_f);
-			list($get_food_id, $get_food_user_id, $get_food_name, $get_food_manufacturer_name, $get_food_description, $get_food_serving_size_gram, $get_food_serving_size_gram_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy, $get_food_proteins, $get_food_carbohydrates, $get_food_fat, $get_food_energy_calculated, $get_food_proteins_calculated, $get_food_carbohydrates_calculated, $get_food_fat_calculated, $get_food_barcode, $get_food_category_id, $get_food_image_path, $get_food_thumb, $get_food_image_a, $get_food_language, $get_food_unique_hits, $get_food_likes, $get_food_dislikes) = $row_f;
+			list($get_food_id, $get_food_user_id, $get_food_name, $get_food_manufacturer_name, $get_food_description, $get_food_serving_size_gram, $get_food_serving_size_gram_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy, $get_food_proteins, $get_food_carbohydrates, $get_food_fat, $get_food_energy_calculated, $get_food_proteins_calculated, $get_food_carbohydrates_calculated, $get_food_fat_calculated, $get_food_barcode, $get_food_main_category_id, $get_food_sub_category_id, $get_food_image_path, $get_food_image_a, $get_food_thumb_a_small, $get_food_thumb_a_medium, $get_food_thumb_a_large, $get_food_language, $get_food_unique_hits, $get_food_likes, $get_food_dislikes) = $row_f;
 	
 
 			
@@ -150,12 +150,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				   <td style=\"padding-right: 10px;\">
 					";
 					if($get_food_image_a != ""){
-						echo"<a href=\"$root/food/view_food.php?food_id=$get_food_id&amp;sub_category_id=$get_food_category_id&amp;l=$get_food_language\"><img src=\"$root/image.php?width=100&amp;height=71&amp;image=/$get_food_image_path/$get_food_image_a\" alt=\"$get_food_image_a\" /></a>";
+						echo"<a href=\"$root/food/view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$get_food_language\"><img src=\"$root/$get_food_image_path/$get_food_thumb_a_small\" alt=\"$get_food_thumb_a_small\" /></a>";
 					}
 					echo"
 				   </td>
 				   <td>
-					<a href=\"$root/food/view_food.php?food_id=$get_food_id&amp;sub_category_id=$get_food_category_id&amp;l=$get_food_language\" class=\"recipe_open_category_a\">$get_food_manufacturer_name $get_food_name</a><br />
+					<a href=\"$root/food/view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$get_food_language\" class=\"recipe_open_category_a\">$get_food_manufacturer_name $get_food_name</a><br />
 					$get_food_description
 					</p>
 				   </td>

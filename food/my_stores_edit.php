@@ -215,8 +215,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<!-- //Edit store form -->
 
 			<p>
-			<a href=\"my_stores_edit.php?l=$l\"><img src=\"_gfx/icons/go-previous.png\" alt=\"go-previous.png\" /></a>
-			<a href=\"my_stores_edit.php?l=$l\">$l_go_back</a>
+			<a href=\"my_stores.php?l=$l\"><img src=\"_gfx/icons/go-previous.png\" alt=\"go-previous.png\" /></a>
+			<a href=\"my_stores.php?l=$l\">$l_go_back</a>
 			&nbsp;
 			<a href=\"my_stores_delete.php?store_id=$get_current_store_id&amp;l=$l\"><img src=\"_gfx/icons/delete.png\" alt=\"delete.png\" /></a>
 			<a href=\"my_stores_delete.php?store_id=$get_current_store_id&amp;l=$l\">$l_delete_store</a>

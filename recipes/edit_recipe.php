@@ -48,10 +48,8 @@ $l_mysql = quote_smart($link, $l);
 
 /*- Get recipe ------------------------------------------------------------------------- */
 // Select
-$user_id = $_SESSION['user_id'];
-$recipe_user_id_mysql = quote_smart($link, $user_id);
 $recipe_id_mysql = quote_smart($link, $recipe_id);
-$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_user_ip, recipe_notes, recipe_password FROM $t_recipes WHERE recipe_id=$recipe_id_mysql AND recipe_user_id=$recipe_user_id_mysql";
+$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_user_ip, recipe_notes, recipe_password FROM $t_recipes WHERE recipe_id=$recipe_id_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
 list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb, $get_recipe_video, $get_recipe_date, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password) = $row;
@@ -88,23 +86,28 @@ if($get_recipe_id == ""){
 	";
 }
 else{
-	// Get my user
-	$my_user_id = $_SESSION['user_id'];
-	$my_user_id = output_html($my_user_id);
-	$my_user_id_mysql = quote_smart($link, $my_user_id);
-	$query = "SELECT user_id, user_email, user_name, user_alias, user_rank FROM $t_users WHERE user_id=$my_user_id_mysql";
-	$result = mysqli_query($link, $query);
-	$row = mysqli_fetch_row($result);
-	list($get_user_id, $get_user_email, $get_user_name, $get_user_alias, $get_user_rank) = $row;
+	if(isset($_SESSION['user_id'])){
+		// Get my user
+		$my_user_id = $_SESSION['user_id'];
+		$my_user_id = output_html($my_user_id);
+		$my_user_id_mysql = quote_smart($link, $my_user_id);
+		$query = "SELECT user_id, user_email, user_name, user_alias, user_rank FROM $t_users WHERE user_id=$my_user_id_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_user_id, $get_user_email, $get_user_name, $get_user_alias, $get_user_rank) = $row;
 
-	// Get number of servings
-	$query = "SELECT number_servings, number_total_calories, number_total_proteins, number_total_fat, number_total_carbs FROM $t_recipes_numbers WHERE number_recipe_id=$recipe_id_mysql";
-	$result = mysqli_query($link, $query);
-	$row = mysqli_fetch_row($result);
-	list($get_number_servings, $get_number_total_calories, $get_number_total_proteins, $get_number_total_fat, $get_number_total_carbs) = $row;
+		// Access to recipe edit
+		if($get_recipe_user_id == "$my_user_id" OR $get_user_rank == "admin"){
 
-	if($process == 1){
-		$inp_recipe_title = $_POST['inp_recipe_title'];
+
+			// Get number of servings
+			$query = "SELECT number_servings, number_total_calories, number_total_proteins, number_total_fat, number_total_carbs FROM $t_recipes_numbers WHERE number_recipe_id=$recipe_id_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_number_servings, $get_number_total_calories, $get_number_total_proteins, $get_number_total_fat, $get_number_total_carbs) = $row;
+
+			if($process == 1){
+				$inp_recipe_title = $_POST['inp_recipe_title'];
 		$inp_recipe_title = output_html($inp_recipe_title);
 		$inp_recipe_title_len = strlen($inp_recipe_title);
 		if($inp_recipe_title_len > 205){
@@ -289,6 +292,20 @@ else{
 		</p>
 	<!-- //Buttons -->
 	";
+		} // is owner or admin
+		else{
+			echo"<p>Server error 403</p>
+			<p>Only the owner and admin can edit the recipe</p>
+			";
+		}
+	} // Isset user id
+	else{
+		echo"
+		<h1>Log in</h1>
+		<p><a href=\"$root/users/login.php?l=$l\">Please log in</a>
+		</p>
+		";
+	}
 } // recipe found
 
 /*- Footer ----------------------------------------------------------------------------------- */

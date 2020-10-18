@@ -26,7 +26,7 @@ $l_supper = "supper";
 $l_mondays_lowercase = "mondays";
 $l_tuesdays_lowercase = "tuesdays";
 $l_wednesdays_lowercase = "wednesdays";
-$l_thursdays_lowercase  "thursdays";
+$l_thursdays_lowercase = "thursdays";
 $l_fridays_lowercase = "fridays";
 $l_saturdays_lowercase = "saturdays";
 $l_sundays_lowercase = "sundays";

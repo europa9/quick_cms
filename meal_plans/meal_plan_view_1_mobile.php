@@ -338,20 +338,6 @@ else{
 
 	<!-- //Meal plan -->
 
-
-	<!-- View comments -->";
-		$object         	= "meal_plan";
-		$object_id      	= "$get_current_meal_plan_id";
-		$object_user_id 	= "$get_current_meal_plan_user_id";
-		$refererer_from_root 	= "meal_plans/meal_plan_view_1.php?meal_plan_id=$get_current_meal_plan_id";
-		include("../comments/_includes/view_comments.php");
-
-		// Number of comments correct?
-		if($get_current_meal_plan_comments != "$number_of_comments"){
-			$result = mysqli_query($link, "UPDATE $t_meal_plans SET meal_plan_comments=$number_of_comments WHERE meal_plan_id=$get_current_meal_plan_id") or die(mysqli_error($link));
-		}
-		echo" 
-	<!-- //View comments -->
 	";
 }
 

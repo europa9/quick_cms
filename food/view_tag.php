@@ -160,32 +160,28 @@ echo"
 
 // Get food with that tag
 $x = 0;
-$query = "SELECT $t_food_index_tags.tag_id, $t_food_index.food_id, $t_food_index.food_name, $t_food_index.food_manufacturer_name, $t_food_index.food_energy, $t_food_index.food_proteins, $t_food_index.food_carbohydrates, $t_food_index.food_fat, $t_food_index.food_image_path, $t_food_index.food_thumb, $t_food_index.food_image_a, $t_food_index.food_score, $t_food_index.food_category_id FROM $t_food_index_tags INNER JOIN $t_food_index ON $t_food_index_tags.tag_food_id=$t_food_index.food_id WHERE $t_food_index_tags.tag_title_clean=$tag_mysql AND $t_food_index_tags.tag_language=$l_mysql";
+$query = "SELECT $t_food_index_tags.tag_id, $t_food_index.food_id, $t_food_index.food_name, $t_food_index.food_manufacturer_name, $t_food_index.food_energy, $t_food_index.food_proteins, $t_food_index.food_carbohydrates, $t_food_index.food_fat, $t_food_index.food_image_path, $t_food_index.food_image_a, $t_food_index.food_thumb_a_small, $t_food_index.food_score, $t_food_index.food_main_category_id, $t_food_index.food_sub_category_id FROM $t_food_index_tags INNER JOIN $t_food_index ON $t_food_index_tags.tag_food_id=$t_food_index.food_id WHERE $t_food_index_tags.tag_title_clean=$tag_mysql AND $t_food_index_tags.tag_language=$l_mysql";
+// Order
+if($order_by != ""){
+	if($order_method == "desc"){
+		$order_method_mysql = "DESC";
+	}
+	else{
+		$order_method_mysql = "ASC";
+	}
 
-
-		// Order
-		if($order_by != ""){
-			if($order_method == "desc"){
-				$order_method_mysql = "DESC";
-			}
-			else{
-				$order_method_mysql = "ASC";
-			}
-
-			if($order_by == "food_score" OR $order_by == "food_id" OR $order_by == "food_manufacturer_name_and_food_name" OR $order_by == "food_name" OR $order_by == "food_unique_hits" 
-			OR $order_by == "food_energy" OR $order_by == "food_proteins" OR $order_by == "food_carbohydrates" OR $order_by == "food_fat"){
-				$order_by_mysql = "$t_food_index.$order_by";
-			}
-			else{
-				$order_by_mysql = "$t_food_index.food_id";
-			}
-			$query = $query . " ORDER BY $order_by_mysql $order_method_mysql";
-		}
-
-
+	if($order_by == "food_score" OR $order_by == "food_id" OR $order_by == "food_manufacturer_name_and_food_name" OR $order_by == "food_name" OR $order_by == "food_unique_hits" 
+	OR $order_by == "food_energy" OR $order_by == "food_proteins" OR $order_by == "food_carbohydrates" OR $order_by == "food_fat"){
+		$order_by_mysql = "$t_food_index.$order_by";
+	}
+	else{
+		$order_by_mysql = "$t_food_index.food_id";
+	}
+	$query = $query . " ORDER BY $order_by_mysql $order_method_mysql";
+}
 $result = mysqli_query($link, $query);
 while($row = mysqli_fetch_row($result)) {
-	list($get_tag_id, $get_food_id, $get_food_name, $get_food_manufacturer_name, $get_food_energy, $get_food_proteins, $get_food_carbohydrates, $get_food_fat, $get_food_image_path, $get_food_thumb, $get_food_image_a, $get_food_score, $get_food_category_id) = $row;
+	list($get_tag_id, $get_food_id, $get_food_name, $get_food_manufacturer_name, $get_food_energy, $get_food_proteins, $get_food_carbohydrates, $get_food_fat, $get_food_image_path, $get_food_image_a, $get_food_thumb_a_small, $get_food_score, $get_food_main_category_id, $get_food_sub_category_id) = $row;
 		
 	if(file_exists("$root/$get_food_image_path/$get_food_image_a")){
 	
@@ -239,39 +235,9 @@ while($row = mysqli_fetch_row($result)) {
 		";
 
 	
-		if($get_food_image_a != "" && file_exists("../$get_food_image_path/$get_food_image_a")){
-			if($get_food_thumb == ""){
-				echo"<div class=\"info\"><span>Updated thumb name</span></div>
-				<meta http-equiv=\"refresh\" content=\"1;url=view_tag.php?tag=$tag&amp;l=$l\" />.";
-				$get_food_thumb = "TEMP";
-			}
-			if(!(file_exists("../$get_food_image_path/$get_food_thumb"))){
-
-				$extension = getExtension($get_food_image_a);
-				$extension = strtolower($extension);
-
-				$new_food_thumb = substr($get_food_image_a, 0, -5);
-				$new_food_thumb = $new_food_thumb . "thumb." . $extension;
-				$new_food_thumb_mysql = quote_smart($link, $new_food_thumb);
-
-				// Thumb
-				$inp_new_x = 132;
-				$inp_new_y = 132;
-				resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_food_image_path/$get_food_image_a", "$root/$get_food_image_path/$new_food_thumb");
-
-				$result_update = mysqli_query($link, "UPDATE $t_food_index SET food_thumb=$new_food_thumb_mysql WHERE food_id=$get_food_id") or die(mysqli_error($link));
-
-				echo"<div class=\"info\"><span>Created thumb</span></div>";
-			}
-			echo"<a href=\"view_food.php?main_category_id=&amp;sub_category_id=$get_food_category_id&amp;food_id=$get_food_id&amp;l=$l\"><img src=\"../$get_food_image_path/$get_food_thumb\" alt=\"$get_food_thumb\" style=\"margin-bottom: 5px;\" /></a><br />";
-		}
-		else{
-			echo"<a href=\"view_food.php?main_category_id=&amp;sub_category_id=$get_food_category_id&amp;food_id=$get_food_id&amp;l=$l\"><img src=\"_gfx/no_thumb.png\" alt=\"$get_food_image_a\" style=\"margin-bottom: 5px;\" /></a><br />";
-		}
-
-
-		echo"
-		<a href=\"view_food.php?main_category_id=&amp;sub_category_id=$get_food_category_id&amp;food_id=$get_food_id&amp;l=$l\" style=\"font-weight: bold;color: #444444;\">$title</a><br />
+		
+		echo"<a href=\"view_food.php?main_category_id=&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\"><img src=\"../$get_food_image_path/$get_food_thumb_a_small\" alt=\"$get_food_thumb_a_small\" style=\"margin-bottom: 5px;\" /></a><br />
+		<a href=\"view_food.php?main_category_id=&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\" style=\"font-weight: bold;color: #444444;\">$title</a><br />
 		";
 		echo"
 		</p>

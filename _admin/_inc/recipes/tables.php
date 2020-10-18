@@ -40,6 +40,13 @@ $t_recipes_searches			= $mysqlPrefixSav . "recipes_searches";
 $t_recipes_age_restrictions 	 	= $mysqlPrefixSav . "recipes_age_restrictions";
 $t_recipes_age_restrictions_accepted	= $mysqlPrefixSav . "recipes_age_restrictions_accepted";
 
+$t_recipes_pairing_loaded 		= $mysqlPrefixSav . "recipes_pairing_loaded";
+$t_recipes_pairing_recipes		= $mysqlPrefixSav . "recipes_pairing_recipes";
+
+
+$t_recipes_similar_loaded = $mysqlPrefixSav . "recipes_similar_loaded";
+$t_recipes_similar_recipes = $mysqlPrefixSav . "recipes_similar_recipes";
+
 echo"
 <h1>Tables</h1>
 
@@ -1069,6 +1076,118 @@ INSERT INTO $t_recipes_rating (`rating_id`, `rating_recipe_id`, `rating_1`, `rat
 	echo"
 	<!-- //recipes_age_restrictions_accepted -->
 
+
+	<!-- $t_recipes_pairing_loaded -- >
+	";
+	$query = "SELECT * FROM $t_recipes_pairing_loaded";
+	$result = mysqli_query($link, $query);
+	if($result !== FALSE){
+		// Count rows
+		$row_cnt = mysqli_num_rows($result);
+		echo"
+		<p>$t_recipes_pairing_loaded: $row_cnt</p>
+		";
+	}
+	else{
+		mysqli_query($link, "CREATE TABLE $t_recipes_pairing_loaded(
+	  	 loaded_id INT NOT NULL AUTO_INCREMENT,
+	 	  PRIMARY KEY(loaded_id), 
+	  	 loaded_this_recipe_id INT,
+	  	 loaded_this_category_id INT,
+	  	 loaded_language VARCHAR(250),
+	  	 loaded_ip VARCHAR(250)
+	  	 )")
+		 or die(mysqli_error());
+
+	}
+	echo"
+	<!-- //$t_recipes_pairing_loaded -->
+
+	<!-- recipes_pairing_recipes -->
+	";
+	$query = "SELECT * FROM $t_recipes_pairing_recipes";
+	$result = mysqli_query($link, $query);
+	if($result !== FALSE){
+		// Count rows
+		$row_cnt = mysqli_num_rows($result);
+		echo"
+		<p>$t_recipes_pairing_recipes: $row_cnt</p>
+		";
+	}
+	else{
+		mysqli_query($link, "CREATE TABLE $t_recipes_pairing_recipes(
+	  	 pairing_id INT NOT NULL AUTO_INCREMENT,
+	 	  PRIMARY KEY(pairing_id), 
+	  	 pairing_this_recipe_id INT,
+	  	 pairing_this_category_id INT,
+	  	 pairing_other_recipe_id INT,
+	  	 pairing_other_category_id INT,
+	  	 pairing_other_title VARCHAR(250),
+	  	 pairing_other_image_path VARCHAR(250),
+	  	 pairing_other_image_image VARCHAR(250),
+	  	 pairing_other_image_thumb VARCHAR(250),
+	  	 pairing_counter INT
+	  	   )")
+		   or die(mysqli_error());
+
+	}
+	echo"
+	<!-- //recipes_pairing_recipes -->
+
+
+	<!-- recipes_similar_loaded  -->
+	";
+	$query = "SELECT * FROM $t_recipes_similar_loaded";
+	$result = mysqli_query($link, $query);
+	if($result !== FALSE){
+		// Count rows
+		$row_cnt = mysqli_num_rows($result);
+		echo"
+		<p>$t_recipes_similar_loaded: $row_cnt</p>
+		";
+	}
+	else{
+		mysqli_query($link, "CREATE TABLE $t_recipes_similar_loaded(
+	  	 			loaded_id INT NOT NULL AUTO_INCREMENT,
+	 				 PRIMARY KEY(loaded_id), 
+	  				loaded_this_recipe_id INT,
+	  				loaded_language VARCHAR(250),
+					loaded_ip VARCHAR(250)
+					)") or die(mysqli_error());
+
+	}
+	echo"
+	<!-- //recipes_similar_loaded -->
+
+	<!-- $t_recipes_similar_recipes  -->
+	";
+	$query = "SELECT * FROM $t_recipes_similar_recipes";
+	$result = mysqli_query($link, $query);
+	if($result !== FALSE){
+		// Count rows
+		$row_cnt = mysqli_num_rows($result);
+		echo"
+		<p>$t_recipes_similar_recipes: $row_cnt</p>
+		";
+	}
+	else{
+		mysqli_query($link, "CREATE TABLE $t_recipes_similar_recipes(
+	  	 similar_id INT NOT NULL AUTO_INCREMENT,
+	 	  PRIMARY KEY(similar_id), 
+	  		similar_this_recipe_id INT,
+ similar_other_recipe_id INT, 
+similar_other_title VARCHAR(250),
+ similar_other_image_path VARCHAR(250),
+ similar_other_image_image VARCHAR(250),
+ similar_other_image_thumb VARCHAR(250),
+ similar_other_recipe_age_restriction INT,
+ similar_counter INT
+	  	   )")
+		   or die(mysqli_error());
+
+	}
+	echo"
+	<!-- //$t_recipes_similar_recipes -->
 	";
 
 

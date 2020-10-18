@@ -112,8 +112,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				<p><a href=\"my_stores_delete.php?store_id=$store_id&amp;l=$l&amp;process=1\" class=\"btn_warning\">$l_delete</a></p>
 			<!-- //Delete store form -->
 			<p>
-			<a href=\"my_stores_edit.php?l=$l\"><img src=\"_gfx/icons/go-previous.png\" alt=\"go-previous.png\" /></a>
-			<a href=\"my_stores_edit.php?l=$l\">$l_go_back</a>
+			<a href=\"my_stores.php?l=$l\"><img src=\"_gfx/icons/go-previous.png\" alt=\"go-previous.png\" /></a>
+			<a href=\"my_stores.php?l=$l\">$l_go_back</a>
 			</p>
 			";
 		}

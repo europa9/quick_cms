@@ -112,43 +112,12 @@ else{
 	}
 
 
-
-	// Are we friends?
-	if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
-		// Get my user alias, date format, profile image
-		$my_user_id = $_SESSION['user_id'];
-		$my_user_id_mysql = quote_smart($link, $my_user_id);
-		$query = "SELECT user_id, user_alias, user_date_format FROM $t_users WHERE user_id=$my_user_id_mysql";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_my_user_id, $get_my_user_alias, $get_my_user_date_format) = $row;
-
-		// Are we friends?
-		// user_A = Lowest ID
-		// user_B = Higher ID
-
-		if($get_current_user_id > $my_user_id){
-			$inp_friend_user_id_a_mysql = quote_smart($link, $my_user_id);
-			$inp_friend_user_id_b_mysql = quote_smart($link, $get_current_user_id);
-		}
-		else{
-			$inp_friend_user_id_a_mysql = quote_smart($link, $get_current_user_id);
-			$inp_friend_user_id_b_mysql = quote_smart($link, $my_user_id);
-		}
-		$query = "SELECT friend_id FROM $t_users_friends WHERE friend_user_id_a=$inp_friend_user_id_a_mysql AND friend_user_id_b=$inp_friend_user_id_b_mysql";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_current_friend_id) = $row;
-	}
-	
-
-	// Show profile
+	$get_current_profile_privacy = trim($get_current_profile_privacy);
 	if($get_current_profile_privacy == "public"){
 		$can_view_profile = "1";
 	}
 	else{
 		if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
-		
 			if($get_current_user_id == "$my_user_id"){
 				$can_view_profile = "1";
 			}
@@ -157,7 +126,31 @@ else{
 					$can_view_profile = "1";
 				}
 				elseif($get_current_profile_privacy == "friends"){
+					// Are we friends?
+					// Get my user alias, date format, profile image
+					$my_user_id = $_SESSION['user_id'];
+					$my_user_id_mysql = quote_smart($link, $my_user_id);
+					$query = "SELECT user_id, user_alias, user_date_format FROM $t_users WHERE user_id=$my_user_id_mysql";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_my_user_id, $get_my_user_alias, $get_my_user_date_format) = $row;
+		
+					// Are we friends?
+					// user_A = Lowest ID
+					// user_B = Higher ID
 
+					if($get_current_user_id > $my_user_id){
+						$inp_friend_user_id_a_mysql = quote_smart($link, $my_user_id);
+						$inp_friend_user_id_b_mysql = quote_smart($link, $get_current_user_id);
+					}
+					else{
+						$inp_friend_user_id_a_mysql = quote_smart($link, $get_current_user_id);
+						$inp_friend_user_id_b_mysql = quote_smart($link, $my_user_id);
+					}
+					$query = "SELECT friend_id FROM $t_users_friends WHERE friend_user_id_a=$inp_friend_user_id_a_mysql AND friend_user_id_b=$inp_friend_user_id_b_mysql";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_current_friend_id) = $row;
 					if($get_current_friend_id != ""){
 						$can_view_profile = "1";
 					}
@@ -168,12 +161,6 @@ else{
 						$can_view_profile = "0";
 					}
 				} // friends
-				else{
-					if($get_current_profile_privacy == ""){
-						echo"<div class=\"info\"><p>profile_privacy is blank. Setting profile privacy = registered_users</p></div>";
-						$result = mysqli_query($link, "UPDATE $t_users_profile SET profile_privacy='registered_users' WHERE profile_user_id=$get_current_user_id") or die(mysqli_error($link));
-					}
-				}
 			} // not my self
 		} // session
 		else{

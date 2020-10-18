@@ -60,10 +60,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 	// Get food
 	$food_id_mysql = quote_smart($link, $food_id);
-	$query = "SELECT food_id, food_user_id, food_name FROM $t_food_index WHERE food_id=$food_id_mysql";
+	$query = "SELECT food_id, food_user_id, food_name, food_main_category_id, food_sub_category_id FROM $t_food_index WHERE food_id=$food_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_food_id, $get_food_user_id, $get_food_name) = $row;
+	list($get_food_id, $get_food_user_id, $get_food_name, $get_food_main_category_id, $get_food_sub_category_id) = $row;
 
 	if($get_food_id == ""){
 		echo"
@@ -76,7 +76,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	}
 	else{
 		// Check if I alreaddy have it
-		$q = "SELECT food_favorite_id FROM $t_food_index_favorites WHERE food_favorite_food_id=$get_food_id AND food_favorite_user_id=$my_user_id_mysql";
+		$q = "SELECT food_favorite_id FROM $t_food_favorites WHERE food_favorite_food_id=$get_food_id AND food_favorite_user_id=$my_user_id_mysql";
 		$r = mysqli_query($link, $q);
 		$rowb = mysqli_fetch_row($r);
 		list($get_food_favorite_id) = $rowb;
@@ -85,18 +85,18 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			// Header
 			$ft = "info";
 			$fm = "food_favorite_not_found";
-			$url = "view_food.php?food_id=$get_food_id&l=$l&ft=success&fm=$fm#info_and_rating";
+			$url = "view_food.php?main_category_id=$get_food_main_category_id&sub_category_id=$get_food_sub_category_id&food_id=$get_food_id&l=$l&ft=success&fm=$fm#info_and_rating";
 			header("Location: $url");
 			exit;
 
 			
 		}
 		else{
-			$result = mysqli_query($link, "DELETE FROM $t_food_index_favorites WHERE food_favorite_id=$get_food_favorite_id");
+			$result = mysqli_query($link, "DELETE FROM $t_food_favorites WHERE food_favorite_id=$get_food_favorite_id");
 			
 			$ft = "success";
 			$fm = "food_favorite_removed";
-			$url = "view_food.php?food_id=$get_food_id&l=$l&ft=success&fm=$fm#info_and_rating";
+			$url = "view_food.php?main_category_id=$get_food_main_category_id&sub_category_id=$get_food_sub_category_id&food_id=$get_food_id&l=$l&ft=success&fm=$fm#info_and_rating";
 			header("Location: $url");
 			exit;
 		}

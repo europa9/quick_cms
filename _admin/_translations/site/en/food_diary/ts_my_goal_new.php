@@ -83,5 +83,4 @@ $l_save_changes = "Save changes";
 $l_edit_numbers = "Edit numbers";
 $l_changes_saved = "Changes saved";
 $l_without_activity_lowercase = "without activity";
-
 ?>

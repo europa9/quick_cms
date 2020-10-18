@@ -1,10 +1,10 @@
 <?php 
 /**
 *
-* File: food/new_food.php
+* File: food/new_food_3_general_information.php
 * Version 1.0.0
-* Date 23:59 27.11.2017
-* Copyright (c) 2011-2017 Localhost
+* Date 10:20 17.10.2020
+* Copyright (c) 2011-2020 Localhost
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -145,7 +145,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$inp_food_manufacturer_name_and_food_name = "$inp_food_manufacturer_name $inp_food_name";
 			$inp_food_manufacturer_name_and_food_name_mysql = quote_smart($link, $inp_food_manufacturer_name_and_food_name);
 		
-			$inp_food_description = $_POST['inp_food_description'];
+			// $inp_food_description = $_POST['inp_food_description'];
+			$inp_food_description = "";
 			$inp_food_description = output_html($inp_food_description);
 			$inp_food_description_mysql = quote_smart($link, $inp_food_description);
 
@@ -207,16 +208,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				food_sodium_calculated, food_carbohydrates_calculated, food_carbohydrates_of_which_dietary_fiber_calculated, 
 
 				food_carbohydrates_of_which_sugars_calculated, food_fat_calculated, food_fat_of_which_saturated_fatty_acids_calculated, 
-				food_barcode, food_category_id, food_image_path, 
-				food_thumb_small, food_thumb_medium, food_thumb_large, 
-				food_image_a, food_image_b, food_image_c, 
-				food_image_d, food_image_e, food_last_used, 
+				food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_last_used, 
 
 				food_language, food_synchronized, food_accepted_as_master, 
 				food_notes, food_unique_hits, food_unique_hits_ip_block, 
 				food_comments, food_likes, food_dislikes, 
-				food_likes_ip_block, food_user_ip, food_date, 
-				food_time, food_last_viewed, food_age_restriction) 
+				food_likes_ip_block, food_user_ip, food_created_date, food_last_viewed, food_age_restriction) 
 				VALUES 
 				(NULL, $inp_food_user_id_mysql, $inp_food_name_mysql, 
 				$inp_food_clean_name_mysql, $inp_food_manufacturer_name_mysql, $inp_food_manufacturer_name_and_food_name_mysql, 
@@ -231,15 +228,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				'0', '0', '0', 
 
 				'0', '0', '0', 
-				$inp_food_barcode_mysql, '$get_current_sub_category_id', $inp_food_image_path_mysql,
-				'', '', '', 
-				'', '', '', 
-				'', '', '$datetime', 
+				$inp_food_barcode_mysql, '$get_current_main_category_id', '$get_current_sub_category_id', $inp_food_image_path_mysql, '$datetime', 
 				$l_mysql, '$datetime', $inp_accepted_as_master_mysql,
 				$inp_notes_mysql, '0', '',
 				'0', '0', '0', 
 				'', $inp_user_ip_mysql, '$datetime',
-				'$inp_food_time', '$datetime', $inp_age_restriction_mysql)")
+				'$datetime', $inp_age_restriction_mysql)")
 				or die(mysqli_error($link));
 
 				// Get _id
@@ -297,18 +291,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				or die(mysqli_error($link));
 				
 
-die;
 				// Header
-				if($inp_food_country == "United States"){
-					$url = "new_food_4_serving_size_united_states.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&food_id=$get_food_id&el=$l";
-					header("Location: $url");
-					exit;
-				}
-				else{
-					$url = "new_food_4_serving_size_other.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&food_id=$get_food_id&el=$l";
-					header("Location: $url");
-					exit;
-				}
+				$url = "new_food_4_images.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&food_id=$get_food_id&image=a&l=$l";
+				header("Location: $url");
+				exit;
 
 			}
 			else{
@@ -384,15 +370,6 @@ die;
 					$inp_food_manufacturer_name= $_GET['inp_food_manufacturer_name'];
 					$inp_food_manufacturer_name = output_html($inp_food_manufacturer_name);
 					echo"$inp_food_manufacturer_name";
-				}
-				echo"\" size=\"40\" /></p>
-
-			<p><b>$l_description:</b><br />
-			<input type=\"text\" name=\"inp_food_description\" value=\"";
-				if(isset($_GET['inp_food_description'])){
-					$inp_food_description = $_GET['inp_food_description'];
-					$inp_food_description = output_html($inp_food_description);
-					echo"$inp_food_description";
 				}
 				echo"\" size=\"40\" /></p>
 			

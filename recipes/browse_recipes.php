@@ -165,8 +165,6 @@ echo"
 		$order_by_mysql = "$t_recipes.recipe_id";
 	}
 	$query = $query . " ORDER BY $order_by_mysql $order_method_mysql";
-	
-
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
 		list($get_recipe_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image, $get_recipe_unique_hits) = $row;

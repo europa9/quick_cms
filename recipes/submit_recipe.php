@@ -146,6 +146,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		if(isset($_POST['inp_recipe_language'])){
 			$inp_recipe_language = $_POST['inp_recipe_language'];
 			$inp_recipe_language = output_html($inp_recipe_language);
+			$l = "$inp_recipe_language";
 		}
 		else{
 			$inp_recipe_language = "$l";
@@ -235,15 +236,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			
 
 
-
-
 			echo"
 			<h1><img src=\"_gfx/loading_22.gif\" alt=\"loading_22.gif\" style=\"float: left;padding: 2px 4px 0px 0px\" /> $l_submit_recipe</h1>
 			
 			<meta http-equiv=\"refresh\" content=\"1;url=submit_recipe_step_2_group_and_elements.php?recipe_id=$get_recipe_id&amp;action=add_items&amp;group_id=$get_group_id&amp;l=$l\">
 
 			<p>
-			<a href=\"submit_recipe_step_2_group_and_elements.php?recipe_id=$get_recipe_id&amp;l=$l\" class=\"btn\">$l_continue</a>
+			<a href=\"submit_recipe_step_2_group_and_elements.php?recipe_id=$get_recipe_id&amp;action=add_items&amp;group_id=$get_group_id&amp;l=$l\" class=\"btn\">$l_continue</a>
 			</p>
 
 			";

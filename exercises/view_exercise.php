@@ -718,23 +718,6 @@ else {
 	<!-- //Meta -->
 
 
-	<!-- View comments -->
-		<div class=\"clear\"></div>
-		";
-		$object        		= "exercise";
-		$object_id      	= "$get_current_exercise_id";
-		$object_user_id 	= "$get_current_exercise_user_id";
-		$refererer_from_root 	= "exercises/view_exercise.php?exercise_id=$get_current_exercise_id";
-
-		include("../comments/_includes/view_comments.php");
-
-		// Number of comments correct?
-		if($get_current_exercise_number_of_comments != "$number_of_comments"){
-			$result = mysqli_query($link, "UPDATE $t_exercise_index SET exercise_number_of_comments=$number_of_comments WHERE exercise_id=$get_current_exercise_id") or die(mysqli_error($link));
-		}
-		echo" 
-	<!-- //View comments -->
-
 
 	<!-- Translate -->";
 

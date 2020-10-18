@@ -326,7 +326,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$l_month_array[4] = "$l_april";
 					$l_month_array[5] = "$l_may";
 					$l_month_array[6] = "$l_june";
-					$l_month_array[7] = "$l_juli";
+					$l_month_array[7] = "$l_july";
 					$l_month_array[8] = "$l_august";
 					$l_month_array[9] = "$l_september";
 					$l_month_array[10] = "$l_october";

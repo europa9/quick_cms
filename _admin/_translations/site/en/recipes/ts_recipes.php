@@ -12,4 +12,6 @@ $l_weekly_special = "Weekly special";
 $l_fresh_recipes_headline = "Fresh recipes";
 $l_more = "More";
 $l_more_new_recipes = "More new recipes";
+$l_popular_recipes  = "Popular recipes";
+
 ?>

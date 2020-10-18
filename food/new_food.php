@@ -106,7 +106,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			  <td>
 				<script>
 				\$(function(){
-					\$('#inp_l').on('change', function () {
+					\$('.on_select_go_to_url').on('change', function () {
 						var url = \$(this).val(); // get selected value
 						if (url) { // require a URL
  							window.location = url; // redirect
@@ -116,7 +116,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				});
 				</script>
 				<p>
-				<select name=\"l\">
+				<select name=\"l\" class=\"on_select_go_to_url\">
 				<option value=\"$l\">- $l_please_select -</option>
 				<option value=\"$l\"></option>\n";
 
@@ -134,7 +134,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					}
 				
 				
-					echo"	<option value=\"$get_language_active_iso_two\" style=\"background: url('$flag_path') no-repeat;padding-left: 20px;\"";if($l == "$get_language_active_iso_two"){ echo" selected=\"selected\"";}echo">$get_language_active_name</option>\n";
+					echo"	<option value=\"new_food.php?l=$get_language_active_iso_two\" style=\"background: url('$flag_path') no-repeat;padding-left: 20px;\"";if($l == "$get_language_active_iso_two"){ echo" selected=\"selected\"";}echo">$get_language_active_name</option>\n";
 				}
 				echo"
 				</select>
@@ -147,7 +147,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			  </td>
 			  <td>
 				<p>
-				<select name=\"main_category_id\">
+				<select name=\"main_category_id\" class=\"on_select_go_to_url\">
 				<option value=\"new_food.php?l=$l\">- $l_please_select -</option>
 				<option value=\"new_food.php?l=$l\"> </option>
 				";
@@ -166,7 +166,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				list($get_category_translation_value) = $row_t;
 
 				echo"
-				<option value=\"$get_main_category_id\">$get_category_translation_value</option>\n";
+				<option value=\"new_food_2_select_sub_category.php?l=$l&amp;main_category_id=$get_main_category_id\">$get_category_translation_value</option>\n";
 				
 			}
 			echo"
