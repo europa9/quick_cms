@@ -15,7 +15,7 @@ if($process == 1){
 	$inp_language = output_html($inp_language);
 	
 	// Header
-	header("Location: index.php?page=02_chmod&language=$inp_language");
+	header("Location: index.php?page=02_licence&language=$inp_language");
 	exit;
 }
 

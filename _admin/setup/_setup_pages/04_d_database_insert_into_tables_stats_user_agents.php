@@ -21,7 +21,7 @@ if(!(file_exists("$mysql_config_file"))){
 
 
 // Header
-header("Location: index.php?page=04_site&language=$language");
+header("Location: index.php?page=05_site&language=$language");
 exit;
 
 

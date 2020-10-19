@@ -64,8 +64,8 @@ if($action == ""){
 					echo"
 							<div class=\"flex_col\">
 								<p>
-								<a href=\"index.php?page=06_webdesign&amp;action=view_webdesign&amp;webdesign_name=$webdesign_name&amp;language=$language\">$webdesign_name</a><br />
-								<a href=\"index.php?page=06_webdesign&amp;action=view_webdesign&amp;webdesign_name=$webdesign_name&amp;language=$language\"><img src=\"$path/$webdesign_name/webdesign_preview_$webdesign_name.jpg\" alt=\"webdesign_preview_$webdesign_name.jpg\" style=\"border: ";
+								<a href=\"index.php?page=07_webdesign&amp;action=view_webdesign&amp;webdesign_name=$webdesign_name&amp;language=$language\">$webdesign_name</a><br />
+								<a href=\"index.php?page=07_webdesign&amp;action=view_webdesign&amp;webdesign_name=$webdesign_name&amp;language=$language\"><img src=\"$path/$webdesign_name/webdesign_preview_$webdesign_name.jpg\" alt=\"webdesign_preview_$webdesign_name.jpg\" style=\"border: ";
 								if($webdesignSav == "$webdesign_name"){ echo"#009b33 2px solid"; } else{ echo"#000 1px solid"; } echo";\" /></a>
 								</p>
 							</div>
@@ -107,9 +107,9 @@ elseif($action == "view_webdesign"){
 
 		<!-- Where am I? -->
 			<p><b>$l_you_are_here:</b><br />
-			<a href=\"index.php?page=06_webdesign&amp;language=$language\">$l_webdesign</a>
+			<a href=\"index.php?page=07_webdesign&amp;language=$language\">$l_webdesign</a>
 			&gt;
-			<a href=\"index.php?page=06_webdesign&amp;action=view_webdesign&amp;webdesign_name=$webdesign_name&amp;language=$language\">$webdesign_name</a>
+			<a href=\"index.php?page=07_webdesign&amp;action=view_webdesign&amp;webdesign_name=$webdesign_name&amp;language=$language\">$webdesign_name</a>
 			</p>
 		<!-- //Where am I? -->
 
@@ -120,7 +120,7 @@ elseif($action == "view_webdesign"){
 			<div>
 				<p><b>$l_name:</b> $webdesign_name</p>
 
-				<p><a href=\"index.php?page=06_webdesign&amp;action=switch_to_webdesign&amp;webdesign_name=$webdesign_name&amp;language=$language&amp;process=1\" class=\"btn_default\">$l_use_design</a></p>
+				<p><a href=\"index.php?page=07_webdesign&amp;action=switch_to_webdesign&amp;webdesign_name=$webdesign_name&amp;language=$language&amp;process=1\" class=\"btn_default\">$l_use_design</a></p>
 			</div>
 
 			<div class=\"clear\"></div>

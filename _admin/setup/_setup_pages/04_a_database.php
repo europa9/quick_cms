@@ -36,7 +36,7 @@ if($action == "test_connection"){
 		$error = mysqli_connect_error();
 		$error_no = mysqli_connect_error() . PHP_EOL;
 		$error_or = mysqli_connect_error() . PHP_EOL;
-		$url = "index.php?page=03_a_database&language=$language&inp_mysql_host=$inp_mysql_host&inp_mysql_user_name=$inp_mysql_user_name&inp_mysql_database_name=$inp_mysql_database_name&inp_mysql_prefix=$inp_mysql_prefix&ft=error&fm=$error&error_no=$error_no&error_or=$error_or";
+		$url = "index.php?page=04_a_database&language=$language&inp_mysql_host=$inp_mysql_host&inp_mysql_user_name=$inp_mysql_user_name&inp_mysql_database_name=$inp_mysql_database_name&inp_mysql_prefix=$inp_mysql_prefix&ft=error&fm=$error&error_no=$error_no&error_or=$error_or";
 		echo"
 		<h1>MySQL Connection failed</h1>
 		<meta http-equiv=refresh content=\"1; url=$url\">";
@@ -55,7 +55,7 @@ if($action == "test_connection"){
 		fwrite($fh, $update_file);
 		fclose($fh);
 	
-		$url = "index.php?page=03_b_database_setup_tables&language=$language&process=1";
+		$url = "index.php?page=04_b_database_setup_tables&language=$language&process=1";
 		header("Location: $url");
 		exit;
 	}
@@ -100,7 +100,7 @@ if($action == ""){
 	}
 	
 	echo"
-	<form method=\"post\" action=\"index.php?page=03_a_database&amp;language=$language&amp;action=test_connection&amp;process=1\" enctype=\"multipart/form-data\">
+	<form method=\"post\" action=\"index.php?page=04_a_database&amp;language=$language&amp;action=test_connection&amp;process=1\" enctype=\"multipart/form-data\">
 
 	<!-- Error -->
 		";

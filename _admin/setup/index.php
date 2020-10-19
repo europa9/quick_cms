@@ -239,7 +239,7 @@ echo"<!DOCTYPE html>
 	<meta name=\"viewport\" content=\"width=device-width; initial-scale=1.0;\"/>
 
 	<link rel=\"stylesheet\" href=\"_setup_design/reset.css\" type=\"text/css\" />
-	<link rel=\"stylesheet\" href=\"_setup_design/setup.css\" type=\"text/css\" />
+	<link rel=\"stylesheet\" href=\"_setup_design/setup.css?date="; echo date("ymdhis"); echo"\" type=\"text/css\" />
 	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UFT-8\" />
 
 
@@ -274,11 +274,12 @@ echo"<!DOCTYPE html>
 				<div id=\"navigation\">
 					<ul>
 						<li><span"; if($page == "" OR $page == "01_select_language"){ echo" class=\"active\" "; } echo">1. Language</span></li>
-						<li><span"; if($page == "02_chmod"){ echo" class=\"active\" "; } echo">2. Chmod</span></li>
-						<li><span"; if($page == "03_a_database"){ echo" class=\"active\" "; } echo">3. Database</span></li>
-						<li><span"; if($page == "04_site"){ echo" class=\"active\" "; } echo">4. Site</span></li>
-						<li><span"; if($page == "05_administrator"){ echo" class=\"active\" "; } echo">5. Administrator</span></li>
-						<li><span"; if($page == "06_web_design"){ echo" class=\"active\" "; } echo">6. Web design</span></li>
+						<li><span"; if($page == "02_licence"){ echo" class=\"active\" "; } echo">2. Licence</span></li>
+						<li><span"; if($page == "03_chmod"){ echo" class=\"active\" "; } echo">3. Chmod</span></li>
+						<li><span"; if($page == "04_a_database"){ echo" class=\"active\" "; } echo">4. Database</span></li>
+						<li><span"; if($page == "05_site"){ echo" class=\"active\" "; } echo">5. Site</span></li>
+						<li><span"; if($page == "06_administrator"){ echo" class=\"active\" "; } echo">6. Administrator</span></li>
+						<li><span"; if($page == "07_web_design"){ echo" class=\"active\" "; } echo">7. Web design</span></li>
 					</ul>
 				</div>
 			<!-- //Navigation -->

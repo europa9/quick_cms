@@ -26,14 +26,14 @@ if($process == "1"){
 	if(empty($inp_user_email)){
 		$ft = "warning";
 		$fm = "please_enter_your_email_address";
-		$url = "index.php?page=05_administrator&language=$language&ft=$ft&fm=$fm";
+		$url = "index.php?page=06_administrator&language=$language&ft=$ft&fm=$fm";
 		header("Location: $url");
 		exit;
 	}
 	if(empty($inp_user_password)){
 		$ft = "warning";
 		$fm = "please_enter_your_password";
-		$url = "index.php?page=05_administrator&language=$language&ft=$ft&fm=$fm";
+		$url = "index.php?page=06_administrator&language=$language&ft=$ft&fm=$fm";
 		header("Location: $url");
 		exit;
 	}
@@ -53,7 +53,9 @@ if($process == "1"){
 	$inp_user_password_mysql = quote_smart($link, $inp_user_password_encrypted);
 
 	// Security
-	$inp_user_security = rand(0,9999);
+	$year = date("Y");
+	$pin = rand(0,9999);
+	$inp_user_security = $year . $pin;
 
 	// Language
 	$inp_user_language = output_html($language);
@@ -123,7 +125,7 @@ if($process == "1"){
 
 
 	// Move to admin-panel
-	header("Location: index.php?page=06_webdesign&language=$language");
+	header("Location: index.php?page=07_webdesign&language=$language");
 	exit;
 
 }
@@ -145,7 +147,7 @@ echo"
 
 <!-- Administrator form -->
 
-	<form method=\"post\" action=\"index.php?page=05_administrator&amp;language=$language&amp;process=1\" enctype=\"multipart/form-data\">
+	<form method=\"post\" action=\"index.php?page=06_administrator&amp;language=$language&amp;process=1\" enctype=\"multipart/form-data\">
 
 	<!-- Error -->
 		";

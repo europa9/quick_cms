@@ -93,7 +93,12 @@ if($process == "1"){
 	$input_registered_date 	= date("Y-m-d H:i:s");
 	$input_registered_time 	= time();
 	$inp_ip			= $_SERVER['REMOTE_ADDR'];
-	$inp_host_by_addr 	= gethostbyaddr($_SERVER['REMOTE_ADDR']);
+	if($configSiteUseGethostbyaddrSav == "1"){
+		$inp_host_by_addr = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+	}
+	else{
+		$inp_host_by_addr = "";
+	}
 
 	// Add session
 	$_SESSION['admin_user_id']  = "$get_user_id";

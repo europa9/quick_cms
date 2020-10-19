@@ -258,7 +258,7 @@ VALUES
 
 
 // Header
-header("Location: index.php?page=03_d_database_insert_into_tables_stats_user_agents&language=$language&process=1");
+header("Location: index.php?page=04_d_database_insert_into_tables_stats_user_agents&language=$language&process=1");
 exit;
 
 

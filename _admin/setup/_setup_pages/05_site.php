@@ -187,7 +187,7 @@ if($process == "1"){
 
 
 	// Move to administrator setup
-	header("Location: index.php?page=05_administrator&language=$language");
+	header("Location: index.php?page=06_administrator&language=$language");
 	exit;
 
 }
@@ -206,7 +206,7 @@ echo"
 
 
 <!-- Site form -->
-	<form method=\"post\" action=\"index.php?page=04_site&amp;language=$language&amp;process=1\" enctype=\"multipart/form-data\">
+	<form method=\"post\" action=\"index.php?page=05_site&amp;language=$language&amp;process=1\" enctype=\"multipart/form-data\">
 
 	<!-- Error -->
 		";

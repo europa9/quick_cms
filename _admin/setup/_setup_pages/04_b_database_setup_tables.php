@@ -768,7 +768,7 @@ else{
 
 
 // Header
-header("Location: index.php?page=03_c_database_insert_into_tables_languages&process=1&language=$language");
+header("Location: index.php?page=04_c_database_insert_into_tables_languages&process=1&language=$language");
 exit;
 
 

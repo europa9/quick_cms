@@ -275,7 +275,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 						// Thumb
 						if($get_food_image_a != "" && file_exists("../$get_food_image_path/$get_food_image_a")){
-							$thumb = "../$get_food_image_path/$get_food_thumb";
+							$thumb = "../$get_food_image_path/$get_food_thumb_a_small";
 						}
 						else{
 							$thumb = "_gfx/no_thumb.png";
@@ -284,9 +284,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 						echo"
 						<p style=\"padding-bottom:5px;\">
-						<a href=\"$root/food/view_food.php?food_id=$get_food_id&amp;l=$l\"><img src=\"$thumb\" alt=\"$get_food_image_a\" style=\"margin-bottom: 5px;\" /></a><br />
+						<a href=\"$root/food/view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\"><img src=\"$thumb\" alt=\"$get_food_image_a\" style=\"margin-bottom: 5px;\" /></a><br />
 		
-						<a href=\"$root/food/view_food.php?food_id=$get_food_id&amp;l=$l\" style=\"font-weight: bold;color: #444444;\">$title</a><br />
+						<a href=\"$root/food/view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\" style=\"font-weight: bold;color: #444444;\">$title</a><br />
 						";
 						echo"
 						</p>

@@ -104,7 +104,7 @@ echo"
 	</table>
 
 <p>
-<a href=\"index.php?page=03_a_database&amp;language=$language\" class=\"btn_default\">$l_continue</a>
+<a href=\"index.php?page=04_a_database&amp;language=$language\" class=\"btn_default\">$l_continue</a>
 </p>
 ";
 

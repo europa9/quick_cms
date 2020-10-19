@@ -67,6 +67,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	}
 
 	if($action == ""){
+		// Count notifications, delete older than X
+		$delete_date = date('Y-m-d H:i:s', strtotime('-12 months'));
+		$result_delete = mysqli_query($link, "DELETE FROM $t_users_notifications WHERE notification_datetime < '$delete_date'") or die(mysqli_error($link));
+		
+
 		echo"
 		<h1>$l_notifications</h1>
 
@@ -144,7 +149,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			$x++;
 			if($x > 200){
-				$result_delete = mysqli_query($link, "DELETE FROM $t_edb_agent_log WHERE agent_log_id=$get_agent_log_id");
+				$result_delete = mysqli_query($link, "DELETE FROM $t_users_notifications WHERE notification_id=$get_notification_id") or die(mysqli_error($link));
 			}
 		}
 		echo"

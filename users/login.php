@@ -2,8 +2,8 @@
 /**
 *
 * File: users/index.php
-* Version 17.46 18.02.2017
-* Copyright (c) 2009-2017 Sindre Andre Ditlefsen
+* Version 14:05 19.10.2020
+* Copyright (c) 2009-2020 Sindre Andre Ditlefsen
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -115,10 +115,10 @@ if($action == "check"){
 	if($action == "check"){
 		// Find
 		
-		$query = "SELECT user_id, user_password, user_salt, user_language, user_verified_by_moderator FROM $t_users WHERE user_email=$inp_email_mysql OR user_name=$inp_email_mysql";
+		$query = "SELECT user_id, user_password, user_salt, user_security, user_language, user_verified_by_moderator FROM $t_users WHERE user_email=$inp_email_mysql OR user_name=$inp_email_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
-		list($get_user_id, $get_user_password, $get_user_salt, $get_user_language, $get_user_verified_by_moderator) = $row;
+		list($get_user_id, $get_user_password, $get_user_salt, $get_user_security, $get_user_language, $get_user_verified_by_moderator) = $row;
 
 		if($get_user_id == ""){
 			// Email not found
@@ -164,11 +164,35 @@ if($action == "check"){
 					}
 
 					// Set security pin
-					$security = rand(0,9999);
+					if($get_user_security == ""){
+						$year = date("Y");
+						$pin = rand(0,9999);
+						$get_user_security = $year . $pin;
+						$result = mysqli_query($link, "UPDATE $t_users SET user_security='$get_user_security' WHERE user_id='$get_user_id'") or die(mysqli_error($link));
+					}
+					else{
+						// Check if pin is from this year, if not then generate a new one
+						$year = date("Y");
+						$len = strlen($get_user_security);
+						if($len > 4){
+							$check = substr($get_user_security, 0, 4);
+						}
+						else{
+							$check = "1970";
+						}
+						if($year != "$check"){
+							// Genereate new pin
+							$year = date("Y");
+							$pin = rand(0,9999);
+							$get_user_security = $year . $pin;
+							$result = mysqli_query($link, "UPDATE $t_users SET user_security='$get_user_security' WHERE user_id='$get_user_id'") or die(mysqli_error($link));
+						}
+					}
+
 
 					// -> Logg brukeren inn
 					$_SESSION['user_id'] = "$get_user_id";
-					$_SESSION['security'] = "$security";
+					$_SESSION['security'] = "$get_user_security";
 					$_SESSION['l'] = "$get_user_language";
 					$user_last_ip = $_SERVER['REMOTE_ADDR'];
 					$user_last_ip = output_html($user_last_ip);
@@ -178,7 +202,6 @@ if($action == "check"){
 					$inp_user_last_online = date("Y-m-d H:i:s");
 					$inp_user_last_online_time = time();
 					$result = mysqli_query($link, "UPDATE $t_users SET 
-									user_security='$security', 
 									user_last_online='$inp_user_last_online', 
 									user_last_online_time='$inp_user_last_online_time', 
 									user_last_ip=$user_last_ip_mysql WHERE user_id='$get_user_id'");
