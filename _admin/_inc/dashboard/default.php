@@ -451,7 +451,7 @@ if($action == ""){
 					echo"
 					</div>
 					<div class=\"flex_col_white_bg_headline_right\">
-						<p><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=open_month&amp;year=$year&amp;month=$month&amp;l=$l&amp;editor_language=$editor_language\">View stats</a></p>
+						<p><a href=\"index.php?open=dashboard&amp;page=statistics_month&amp;stats_year=$year&amp;stats_month=$month&amp;l=$l&amp;editor_language=$editor_language\">View stats</a></p>
 					</div>
 					<div class=\"clear\"></div>
 					<script>
