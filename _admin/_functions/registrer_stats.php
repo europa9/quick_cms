@@ -139,13 +139,16 @@ else{
 	
 	// Date
 	$inp_day = date("d");
+	$inp_day_full = date("l ");
+	$inp_day_short = date("D");
+	$inp_day_single = substr($inp_day_short, 0, 1);
 	$inp_date = date("Y-m-d");
 	$inp_time = date("H:i:s");
 	$inp_month = date("m");
-	$inp_month_saying = date("M");
+	$inp_month_full = date("F");
+	$inp_month_short = date("M");
 	$inp_year = date("Y");
 	$inp_unix_time = time();
-	$inp_weekday = date("D");
 
 
 	// Visits per year
