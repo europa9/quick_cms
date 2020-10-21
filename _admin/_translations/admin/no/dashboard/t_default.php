@@ -67,6 +67,7 @@ $l_unique_hits = "Unike treff";
 $l_unique_mobile = "Unike mobil";
 $l_unique_visitors_from_bots = "Unike bes&oslash;kende fra boter";
 $l_unique_visitors_from_humans = "Unike bes&oslash;kende fra mennesker";
+$l_unique_vistis_per_month_for = "Unike bes&oslash;k per m&aring;ned for";
 $l_unknown_agents = "Unike agenter";
 $l_unknown_agents_has = "Ukjente agenter har";
 $l_unknown_browsers = "unkjente nettlesere";

@@ -27,6 +27,12 @@ $t_tasks_systems_parts  	= $mysqlPrefixSav . "tasks_systems_parts";
 $t_tasks_read			= $mysqlPrefixSav . "tasks_read";
 
 
+$t_stats_visists_per_year 	   	= $mysqlPrefixSav . "stats_visists_per_year";
+$t_stats_visists_per_month 	   	= $mysqlPrefixSav . "stats_visists_per_month";
+$t_stats_visists_per_day 	   	= $mysqlPrefixSav . "stats_visists_per_day";
+$t_stats_users_registered_per_year 	= $mysqlPrefixSav . "stats_users_registered_per_year";
+$t_stats_comments_per_year 		= $mysqlPrefixSav . "stats_comments_per_year";
+
 /*- Notebook -------------------------------------------------------------------------- */
 if(!(file_exists("_data/notepad_common.php"))){
 
@@ -78,20 +84,15 @@ $year_mysql = quote_smart($link, $year);
 
 if($action == ""){
 	echo"
-	<!-- Sparkline javascript -->
-		<script src=\"_javascripts/sparkline/jquery.sparkline.js\"></script>
-	<!-- //Sparkline javascript -->
-
 
 	<!-- Charts javascript -->
-		<script src=\"_javascripts/amcharts/amcharts/amcharts.js\"></script>
-		<script src=\"_javascripts/amcharts/amcharts/serial.js\"></script>
-		<script src=\"_javascripts/amcharts/amcharts/pie.js\" type=\"text/javascript\"></script>
+		<script src=\"_javascripts/amcharts4/core.js\"></script>
+		<script src=\"_javascripts/amcharts4/charts.js\"></script>
+		<script src=\"_javascripts/amcharts4/themes/animated.js\"></script>
+		<script src=\"_javascripts/amcharts4/plugins/venn.js\"></script>
+
 	<!-- //Charts javascript -->
 
-
-
-	</div>
 	<!-- Feedback -->
 		";
 		if($ft != ""){
@@ -106,277 +107,305 @@ if($action == ""){
 		echo"	
 	<!-- //Feedback -->
 
+			</div> <!-- //main_right_content -->
+			<div class=\"clear_main_right_content\">
 
-	<div>
+
+	<!-- Check if setup folder exists -->
+		";
+		if(file_exists("setup/index.php")){
+			echo"
+			<!-- <div class=\"error\"><span>Security issue: </span></div> -->
+			";
+		}
+		echo"
+	<!-- //Check if setup folder exists -->
+
+
 
 	<!-- Row 1 -->
-		<div class=\"first_row_flex_row\">
+		<div class=\"flex_row\">
 
-			<!-- This years numbers -->";
-
-				$query = "SELECT count(user_id) FROM $t_users";
-				$result = mysqli_query($link, $query);
-				$row = mysqli_fetch_row($result);
-				list($get_count_users) = $row;
-
-				echo"
+			<!-- Visits per year -->
 				<div class=\"flex_col_white_bg\">
-					<p class=\"flex_col_white_bg_text_left_content\"><span class=\"barsparks_this_year\">";
+					<div class=\"flex_col_white_bg_div_left_content\">
+						<script>
+						am4core.ready(function() {
+							var chart = am4core.create(\"chartdiv_visits_per_year\", am4charts.XYChart);
+							chart.data = [";
+
+							$x = 0;
+
+							$visit_per_year_year 					= 0;
+							$visit_per_year_human_unique				= 0;
+							$visit_per_year_human_unique_diff_from_last_year	= 0;
+
+							$query = "SELECT stats_visit_per_year_id, stats_visit_per_year_year, stats_visit_per_year_human_unique, stats_visit_per_year_human_unique_diff_from_last_year, stats_visit_per_year_human_average_duration, stats_visit_per_year_human_new_visitor_unique, stats_visit_per_year_human_returning_visitor_unique, stats_visit_per_year_unique_desktop, stats_visit_per_year_unique_mobile, stats_visit_per_year_unique_bots, stats_visit_per_year_hits_total, stats_visit_per_year_hits_human, stats_visit_per_year_hits_desktop, stats_visit_per_year_hits_mobile, stats_visit_per_year_hits_bots FROM $t_stats_visists_per_year ORDER BY stats_visit_per_year_id ASC LIMIT 0,12";
+							$result = mysqli_query($link, $query);
+							while($row = mysqli_fetch_row($result)) {
+								list($get_stats_visit_per_year_id, $get_stats_visit_per_year_year, $get_stats_visit_per_year_human_unique, $get_stats_visit_per_year_human_unique_diff_from_last_year, $get_stats_visit_per_year_human_average_duration, $get_stats_visit_per_year_human_new_visitor_unique, $get_stats_visit_per_year_human_returning_visitor_unique, $get_stats_visit_per_year_unique_desktop, $get_stats_visit_per_year_unique_mobile, $get_stats_visit_per_year_unique_bots, $get_stats_visit_per_year_hits_total, $get_stats_visit_per_year_hits_human, $get_stats_visit_per_year_hits_desktop, $get_stats_visit_per_year_hits_mobile, $get_stats_visit_per_year_hits_bots) = $row;
 	
-					$x = 0;
-					$get_stats_monthly_unique = 0;
-					$get_stats_monthly_unique_diff_from_last_month = 0;
-					$query = "SELECT stats_monthly_id, stats_monthly_month, stats_monthly_human_unique, stats_monthly_human_unique_diff_from_last_month FROM $t_stats_monthly WHERE stats_monthly_year=$year_mysql ORDER BY stats_monthly_id ASC LIMIT 0,12";
-					$result = mysqli_query($link, $query);
-					while($row = mysqli_fetch_row($result)) {
-						list($get_stats_monthly_id, $get_stats_monthly_month, $get_stats_monthly_human_unique, $get_stats_monthly_human_unique_diff_from_last_month) = $row;
-	
-						if($x > 0){
-							echo",";
-						}
-						echo"$get_stats_monthly_human_unique";
+
+								if($x > 0){
+									echo",";
+								}
+								echo"
+								{
+									\"x\": \"$get_stats_visit_per_year_year\",
+									\"value\": $get_stats_visit_per_year_human_unique
+								}";
+								
+								// Check that diff is ok
+								$diff = $get_stats_visit_per_year_human_unique-$visit_per_year_human_unique;
+								if($diff != "$get_stats_visit_per_year_human_unique_diff_from_last_year"){
+									$res_update = mysqli_query($link, "UPDATE $t_stats_visists_per_year SET stats_visit_per_year_human_unique_diff_from_last_year=$diff WHERE stats_visit_per_year_id=$get_stats_visit_per_year_id") or die(mysqli_error($link));
+								
+								}
+
+								// Transfer last year for print
+								$visit_per_year_year				 = $get_stats_visit_per_year_year;
+								$visit_per_year_human_unique			 = $get_stats_visit_per_year_human_unique;
+								$visit_per_year_human_unique_diff_from_last_year = $get_stats_visit_per_year_human_unique_diff_from_last_year;
 
 
-						// xx
-						$x++;
-						
-						// Calculate diff
-						if(isset($unique_last_month)){
-							$diff = $get_stats_monthly_human_unique-$unique_last_month;
-							if($diff != $get_stats_monthly_human_unique_diff_from_last_month){
-								$res_update = mysqli_query($link, "UPDATE $t_stats_monthly SET stats_monthly_human_unique_diff_from_last_month=$diff WHERE stats_monthly_id=$get_stats_monthly_id") or die(mysqli_error($link));
-								$get_stats_monthly_human_unique_diff_from_last_month = $diff;
-							}
 
-						}
-
-						// Holder variables for next iteration
-						$unique_last_month = $get_stats_monthly_human_unique;
-
-
-					}
-					echo"</span></p>";
-					if($x == 1){
-						echo"<img src=\"_inc/dashboard/_img/sparkline_no_data.png\" alt=\"sparkline_no_data.png\" />";
-					}
+								// xx
+								$x++;
+							} // while
+							echo"
+							];
+							// Create axes
+							var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+							categoryAxis.dataFields.category = \"x\";
+							var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+							
+							// Create series
+							var series1 = chart.series.push(new am4charts.ColumnSeries());
+							series1.dataFields.valueY = \"value\";
+							series1.dataFields.categoryX = \"x\";
+							series1.name = \"Unique human visits\";
+							series1.tooltipText = \"Unique human visits: {valueY}\";
+							series1.fill = am4core.color(\"#f2a654\");
+							series1.stroke = am4core.color(\"#f2a654\");
 					
-					echo"
-					<script>
-						$('.barsparks_this_year').sparkline('html', { 
-							type: 'bar',
-							barColor: '#f2a654', 
-							barWidth: 7,
-							barSpacing: 4, 
-							height:'40px' });
-					</script>
+							// Tooltips
+							chart.cursor = new am4charts.XYCursor();
+							chart.cursor.snapToSeries = series;
+							chart.cursor.xAxis = valueAxis;
+
+						}); // end am4core.ready()
+						</script>
+							
+  						<div id=\"chartdiv_visits_per_year\" style=\"height: 100px;\"></div>
+					</div>
 
                 			<div class=\"flex_col_white_bg_text_right\">
-                  				<p class=\"flex_col_white_bg_text_right_headline\">";
-
-						if($month == "01"){
-							echo"$l_january";
-						}
-						elseif($month == "02"){
-							echo"$l_february";
-						}
-						elseif($month == "03"){
-							echo"$l_march";
-						}
-						elseif($month == "04"){
-							echo"$l_april";
-						}
-						elseif($month == "05"){
-							echo"$l_may";
-						}
-						elseif($month == "06"){
-							echo"$l_june";
-						}
-						elseif($month == "07"){
-							echo"$l_july";
-						}
-						elseif($month == "08"){
-							echo"$l_august";
-						}
-						elseif($month == "09"){
-							echo"$l_september";
-						}
-						elseif($month == "10"){
-							echo"$l_october";
-						}
-						elseif($month == "11"){
-							echo"$l_november";
-						}
-						elseif($month == "12"){
-							echo"$l_december";
-						}
-						echo" unique visits</p>
+                  				<p class=\"flex_col_white_bg_text_right_headline\">$visit_per_year_year unique visits</p>
                   				<p class=\"flex_col_white_bg_text_right_content\">";
-						if($get_stats_monthly_unique_diff_from_last_month == 0){
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_flat_no_change.png\" alt=\"ti_angle_up_no_change.png\" />";
+						if($visit_per_year_human_unique_diff_from_last_year == 0){
+							echo"<img src=\"_inc/dashboard/_img/ti_angle_flat_no_change.png\" alt=\"ti_angle_up_no_change.png\" title=\"$visit_per_year_human_unique_diff_from_last_year unique human visits diff\" />";
 						}
-						elseif($get_stats_monthly_unique_diff_from_last_month < 0){
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_down_warning.png\" alt=\"ti_angle_up_warning.png\" />";
+						elseif($visit_per_year_human_unique_diff_from_last_year < 0){
+							echo"<img src=\"_inc/dashboard/_img/ti_angle_down_warning.png\" alt=\"ti_angle_up_warning.png\" title=\"$visit_per_year_human_unique_diff_from_last_year unique human visits diff\" />";
 						}
 						else{
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_up_success.png\" alt=\"ti_angle_up_success.png\" />";
+							echo"<img src=\"_inc/dashboard/_img/ti_angle_up_success.png\" alt=\"ti_angle_up_success.png\" title=\"$visit_per_year_human_unique_diff_from_last_year unique human visits diff\" />";
 						}
                     				echo"
-						<span>$get_stats_monthly_unique</span>
+						<span>$visit_per_year_human_unique</span>
             					</p>
 			                </div>
-				</div>
-			<!-- //This years numbers -->
+				</div> <!-- //flex_col_white_bg -->
+			<!-- //Visits per year -->
 
-			<!-- Users -->";
-				$query = "SELECT count(user_id) FROM $t_users";
-				$result = mysqli_query($link, $query);
-				$row = mysqli_fetch_row($result);
-				list($get_count_users) = $row;
 
-				echo"
-
+			<!-- Users per year -->
 				<div class=\"flex_col_white_bg\">
-					<p class=\"flex_col_white_bg_text_left_content\"><span class=\"barsparks_user_registered\">";
+					<div class=\"flex_col_white_bg_div_left_content\">
+						<script>
+						am4core.ready(function() {
+							var chart = am4core.create(\"chartdiv_users_per_year\", am4charts.XYChart);
+							chart.data = [";
+
+							$x = 0;
+
+							$registered_year 				= 0;
+							$registered_users_registed			= 0;
+							$registered_users_registed_diff_from_last_year = 0;
+
+							$query = "SELECT stats_registered_id, stats_registered_year, stats_registered_users_registed, stats_registered_users_registed_diff_from_last_year, stats_registered_last_updated, stats_registered_last_updated_day, stats_registered_last_updated_month, stats_registered_last_updated_year FROM $t_stats_users_registered_per_year ORDER BY stats_registered_year ASC LIMIT 0,12";
+							$result = mysqli_query($link, $query);
+							while($row = mysqli_fetch_row($result)) {
+								list($get_stats_registered_id, $get_stats_registered_year, $get_stats_registered_users_registed, $get_stats_registered_users_registed_diff_from_last_year, $get_stats_registered_last_updated, $get_stats_registered_last_updated_day, $get_stats_registered_last_updated_month, $get_stats_registered_last_updated_year) = $row;
 	
-					$x = 0;
-					$query = "SELECT weekly_id, weekly_users_registed, weekly_users_registed_diff_from_last_week FROM $t_stats_users_registered_weekly ORDER BY weekly_id DESC LIMIT 0,20";
-					$result = mysqli_query($link, $query);
-					while($row = mysqli_fetch_row($result)) {
-						list($get_weekly_id, $get_weekly_users_registed, $get_weekly_users_registed_diff_from_last_week) = $row;
 
-						if($x > 0){
-							echo",";
-						}
-						echo"$get_weekly_users_registed";
-						$x++;
+								if($x > 0){
+									echo",";
+								}
+								echo"
+								{
+									\"x\": \"$get_stats_registered_year\",
+									\"value\": $get_stats_registered_users_registed
+								}";
+								
+								// Check that diff is ok
+								$diff = $get_stats_registered_users_registed-$registered_users_registed;
+								if($diff  != "$get_stats_registered_users_registed_diff_from_last_year"){
+									$res_update = mysqli_query($link, "UPDATE $t_stats_users_registered_per_year SET stats_registered_users_registed_diff_from_last_year=$diff WHERE stats_registered_id=$get_stats_registered_id") or die(mysqli_error($link));
+								
+								}
 
-						
-						// Calculate diff
-						if(isset($weekly_user_registered_last_week)){
-							$diff = $weekly_user_registered_last_week-$get_weekly_users_registed;
-							if($diff != $get_weekly_users_registed_diff_from_last_week){
-								$res_update = mysqli_query($link, "UPDATE $t_stats_users_registered_weekly SET weekly_users_registed_diff_from_last_week=$diff WHERE weekly_id=$get_weekly_id") or die(mysqli_error($link));
-								$get_weekly_users_registed_diff_from_last_week = $diff;
-							}
+								// Transfer last year for print
+								$registered_year 		= $get_stats_registered_year;
+								$registered_users_registed	= $get_stats_registered_users_registed;
+								$registered_users_registed_diff_from_last_year = $get_stats_registered_users_registed_diff_from_last_year;
 
-						}
-
-						// Holder variables for next iteration
-						$weekly_user_registered_last_week = $get_weekly_users_registed;
-
-
-					}
-					echo"</span></p>";
-					if($x == 1){
-						echo"<img src=\"_inc/dashboard/_img/sparkline_no_data.png\" alt=\"sparkline_no_data.png\" />";
-					}
+								// xx
+								$x++;
+							} // while
+							echo"
+							];
+							// Create axes
+							var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+							categoryAxis.dataFields.category = \"x\";
+							var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+							
+							// Create series
+							var series1 = chart.series.push(new am4charts.LineSeries());
+							series1.dataFields.valueY = \"value\";
+							series1.dataFields.categoryX = \"x\";
+							series1.name = \"Users registered\";
+							series1.tooltipText = \"Users registered: {valueY}\";
+							series1.fill = am4core.color(\"#33cabb\");
+							series1.stroke = am4core.color(\"#33cabb\");
 					
-					echo"
-					<script>
-						$('.barsparks_user_registered').sparkline('html', { 
-							lineColor: '#99e4dc', 
-							spotColor: '#33cabb', 
-							minSpotColor: '#33cabb', 
-							maxSpotColor: '#33cabb', 
-							fillColor: false, height:'40px', barWidth:60
-							});
-					</script>
+							// Tooltips
+							chart.cursor = new am4charts.XYCursor();
+							chart.cursor.snapToSeries = series;
+							chart.cursor.xAxis = valueAxis;
+
+						}); // end am4core.ready()
+						</script>
+							
+  						<div id=\"chartdiv_users_per_year\" style=\"height: 100px;\"></div>
+					</div>
 
                 			<div class=\"flex_col_white_bg_text_right\">
-                  				<p class=\"flex_col_white_bg_text_right_headline\">New users</p>
+                  				<p class=\"flex_col_white_bg_text_right_headline\">Users registered in $registered_year</p>
                   				<p class=\"flex_col_white_bg_text_right_content\">";
-						if(!(isset($get_weekly_users_registed_diff_from_last_week))){
-							$get_weekly_users_registed_diff_from_last_week = 0;
+						if($registered_users_registed_diff_from_last_year == 0){
+							echo"<img src=\"_inc/dashboard/_img/ti_angle_flat_no_change.png\" alt=\"ti_angle_up_no_change.png\" title=\"$registered_users_registed_diff_from_last_year new users\" />";
 						}
-						if($get_weekly_users_registed_diff_from_last_week == 0){
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_flat_no_change.png\" alt=\"ti_angle_up_no_change.png\" />";
-						}
-						elseif($get_weekly_users_registed_diff_from_last_week < 0){
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_down_warning.png\" alt=\"ti_angle_up_warning.png\" />";
+						elseif($registered_users_registed_diff_from_last_year < 0){
+							echo"<img src=\"_inc/dashboard/_img/ti_angle_down_warning.png\" alt=\"ti_angle_up_warning.png\" title=\"$registered_users_registed_diff_from_last_year new users\" />";
 						}
 						else{
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_up_success.png\" alt=\"ti_angle_up_success.png\" />";
+							echo"<img src=\"_inc/dashboard/_img/ti_angle_up_success.png\" alt=\"ti_angle_up_success.png\" title=\"$registered_users_registed_diff_from_last_year new users\" />";
 						}
-						echo"
-                    				<span>$get_weekly_users_registed_diff_from_last_week</span>
+                    				echo"
+						<span>$registered_users_registed</span>
             					</p>
 			                </div>
-				</div>
-			<!-- //Users -->
+				</div> <!-- //flex_col_white_bg -->
+			<!-- //Users per year -->
 
 
 
-			<!-- Comments -->";
 
-				echo"
-
+			<!-- Comments per year -->
 				<div class=\"flex_col_white_bg\">
-					<p class=\"flex_col_white_bg_text_left_content\"><span class=\"barsparks_new_comments\">";
+					<div class=\"flex_col_white_bg_div_left_content\">
+						<script>
+						am4core.ready(function() {
+							var chart = am4core.create(\"chartdiv_comments_per_year\", am4charts.XYChart);
+							chart.data = [";
+
+							$x = 0;
+
+							$comments_year 					= 0;
+							$comments_comments_written			= 0;
+							$comments_comments_written_diff_from_last_year = 0;
+
+							$query = "SELECT stats_comments_id, stats_comments_year, stats_comments_comments_written, stats_comments_comments_written_diff_from_last_year, stats_comments_last_updated, stats_comments_last_updated_day, stats_comments_last_updated_month, stats_comments_last_updated_year FROM $t_stats_comments_per_year ORDER BY stats_comments_id ASC LIMIT 0,12";
+							$result = mysqli_query($link, $query);
+							while($row = mysqli_fetch_row($result)) {
+								list($get_stats_comments_id, $get_stats_comments_year, $get_stats_comments_comments_written, $get_stats_comments_comments_written_diff_from_last_year, $get_stats_comments_last_updated, $get_stats_comments_last_updated_day, $get_stats_comments_last_updated_month, $get_stats_comments_last_updated_year) = $row;
 	
-					$x = 0;
-					
-					$query = "SELECT weekly_id, weekly_comments_written, weekly_comments_written_diff_from_last_week FROM $t_stats_comments_weekly ORDER BY weekly_id DESC LIMIT 0,20";
-					$result = mysqli_query($link, $query);
-					while($row = mysqli_fetch_row($result)) {
-						list($get_weekly_id, $get_weekly_comments_written, $get_weekly_comments_written_diff_from_last_week) = $row;
-						if($x > 0){
-							echo",";
-						}
-						echo"$get_weekly_comments_written,$get_weekly_comments_written";
-						$x++;
-						
-						// Calculate diff
-						if(isset($weekly_comments_written_last_week)){
-							$diff = $weekly_comments_written_last_week-$get_weekly_comments_written;
-							if($diff != $get_weekly_comments_written_diff_from_last_week){
-								$res_update = mysqli_query($link, "UPDATE $t_stats_comments_weekly SET weekly_comments_written_diff_from_last_week=$diff WHERE weekly_id=$get_weekly_id");
-								$get_weekly_comments_written_diff_from_last_week = $diff;
-							}
 
-						}
+								if($x > 0){
+									echo",";
+								}
+								echo"
+								{
+									\"x\": \"$get_stats_comments_year\",
+									\"value\": $get_stats_comments_comments_written
+								}";
+								
+								// Check that diff is ok
+								$diff = $get_stats_comments_comments_written-$comments_comments_written;
+								if($diff  != "$get_stats_comments_comments_written_diff_from_last_year"){
+									$res_update = mysqli_query($link, "UPDATE $t_stats_comments_per_year SET stats_comments_comments_written_diff_from_last_year=$diff WHERE stats_comments_id=$get_stats_comments_id") or die(mysqli_error($link));
+								
+								}
 
-						// Holder variables for next iteration
-						$weekly_comments_written_last_week = $get_weekly_comments_written;
-					}
-					echo"</span></p>";
-					if($x == 1){
-						echo"<img src=\"_inc/dashboard/_img/sparkline_no_data.png\" alt=\"sparkline_no_data.png\" />";
-					}
+								// Transfer last year for print
+								$comments_year 					= $get_stats_comments_year;
+								$comments_comments_written			= $get_stats_comments_comments_written;
+								$comments_comments_written_diff_from_last_year = $get_stats_comments_comments_written_diff_from_last_year;
+
+								// xx
+								$x++;
+							} // while
+							echo"
+							];
+							// Create axes
+							var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+							categoryAxis.dataFields.category = \"x\";
+							var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+							
+							// Create series
+							var series1 = chart.series.push(new am4charts.LineSeries());
+							series1.dataFields.valueY = \"value\";
+							series1.dataFields.categoryX = \"x\";
+							series1.name = \"Comments\";
+							series1.tooltipText = \"Comments: {valueY}\";
+							series1.fill = am4core.color(\"#926dde\");
+							series1.stroke = am4core.color(\"#926dde\");
 					
-					echo"
-					<script>
-						$('.barsparks_new_comments').sparkline('html', { 
-							type: 'discrete',
-							lineColor: '#926dde', 
-							thresholdColor: '#926dde', 
-							height:'40px' });
-					</script>
+							// Tooltips
+							chart.cursor = new am4charts.XYCursor();
+							chart.cursor.snapToSeries = series;
+							chart.cursor.xAxis = valueAxis;
+
+						}); // end am4core.ready()
+						</script>
+							
+  						<div id=\"chartdiv_comments_per_year\" style=\"height: 100px;\"></div>
+					</div>
 
                 			<div class=\"flex_col_white_bg_text_right\">
-                  				<p class=\"flex_col_white_bg_text_right_headline\">New comments</p>
-                  				<p class=\"flex_col_white_bg_text_right_content\">
- 						";
-						if(!(isset($get_weekly_comments_written_diff_from_last_week))){
-							$get_weekly_comments_written_diff_from_last_week = 0;
+                  				<p class=\"flex_col_white_bg_text_right_headline\">Comments in $comments_year</p>
+                  				<p class=\"flex_col_white_bg_text_right_content\">";
+						if($comments_comments_written_diff_from_last_year == 0){
+							echo"<img src=\"_inc/dashboard/_img/ti_angle_flat_no_change.png\" alt=\"ti_angle_up_no_change.png\" title=\"$comments_comments_written_diff_from_last_year comments this year diff\" />";
 						}
-						if($get_weekly_comments_written_diff_from_last_week == 0){
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_flat_no_change.png\" alt=\"ti_angle_up_no_change.png\" />";
-						}
-						elseif($get_weekly_comments_written_diff_from_last_week < 0){
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_down_warning.png\" alt=\"ti_angle_up_warning.png\" />";
+						elseif($comments_comments_written_diff_from_last_year < 0){
+							echo"<img src=\"_inc/dashboard/_img/ti_angle_down_warning.png\" alt=\"ti_angle_up_warning.png\" title=\"$comments_comments_written_diff_from_last_year comments this year diff\" />";
 						}
 						else{
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_up_success.png\" alt=\"ti_angle_up_success.png\" />";
+							echo"<img src=\"_inc/dashboard/_img/ti_angle_up_success.png\" alt=\"ti_angle_up_success.png\" title=\"$comments_comments_written_diff_from_last_year comments this year diff\" />";
 						}
-						echo"
-                    				<span>$get_weekly_comments_written_diff_from_last_week</span>
+                    				echo"
+						<span>$comments_comments_written</span>
             					</p>
 			                </div>
-				</div>
-			<!-- //Comments -->
+				</div> <!-- //flex_col_white_bg -->
+			<!-- //Comments per year -->
+
 
 		</div>
 	<!-- //Row 1 -->
+
 
 
 	<!-- Row 2 -->
@@ -387,80 +416,56 @@ if($action == ""){
 						<h2>$year $l_numbers</h2>
 					</div>
 					<div class=\"flex_col_white_bg_headline_right\">
-						<p><a href=\"index.php?open=dashboard&amp;page=statistics&amp;l=$l&amp;editor_language=$editor_language\">Statistics</a></p>
-					</div>";
+						<p><a href=\"index.php?open=dashboard&amp;page=statistics&amp;l=$l&amp;editor_language=$editor_language\">$year statistics</a></p>
+					</div>
+					<div class=\"clear\"></div>
 
-						$chart_data = "";
-						$query = "SELECT stats_monthly_id, stats_monthly_month, stats_monthly_month_saying, stats_monthly_year, stats_monthly_human_unique, stats_monthly_unique_desktop, stats_monthly_unique_mobile, stats_monthly_unique_bots, stats_monthly_hits, stats_monthly_hits_desktop, stats_monthly_hits_mobile, stats_monthly_hits_bots, stats_monthly_sum_unique_browsers, stats_monthly_sum_unique_os FROM $t_stats_monthly ORDER BY stats_monthly_id DESC LIMIT 0,12";
+					<script>
+					am4core.ready(function() {
+						var chart = am4core.create(\"chartdiv_visits_per_month\", am4charts.XYChart);
+						chart.data = [";
+
+						$x = 0;
+						$query = "SELECT stats_visit_per_month_id, stats_visit_per_month_month, stats_visit_per_month_month_saying, stats_visit_per_month_year, stats_visit_per_month_human_unique, stats_visit_per_month_human_unique_diff_from_last_month, stats_visit_per_month_human_average_duration, stats_visit_per_month_human_new_visitor_unique, stats_visit_per_month_human_returning_visitor_unique, stats_visit_per_month_unique_desktop, stats_visit_per_month_unique_mobile, stats_visit_per_month_unique_bots, stats_visit_per_month_hits_total, stats_visit_per_month_hits_human, stats_visit_per_month_hits_desktop, stats_visit_per_month_hits_mobile, stats_visit_per_month_hits_bots FROM $t_stats_visists_per_month ORDER BY stats_visit_per_month_id DESC LIMIT 0,12";
 						$result = mysqli_query($link, $query);
 						while($row = mysqli_fetch_row($result)) {
-							list($get_stats_monthly_id, $get_stats_monthly_month, $get_stats_monthly_month_saying, $get_stats_monthly_year, $get_stats_monthly_human_unique, $get_stats_monthly_unique_desktop, $get_stats_monthly_unique_mobile, $get_stats_monthly_unique_bots, $get_stats_monthly_hits, $get_stats_monthly_hits_desktop, $get_stats_monthly_hits_mobile, $get_stats_monthly_hits_bots, $get_stats_monthly_sum_unique_browsers, $get_stats_monthly_sum_unique_os) = $row;
+							list($get_stats_visit_per_month_id, $get_stats_visit_per_month_month, $get_stats_visit_per_month_month_saying, $get_stats_visit_per_month_year, $get_stats_visit_per_month_human_unique, $get_stats_visit_per_month_human_unique_diff_from_last_month, $get_stats_visit_per_month_human_average_duration, $get_stats_visit_per_month_human_new_visitor_unique, $get_stats_visit_per_month_human_returning_visitor_unique, $get_stats_visit_per_month_unique_desktop, $get_stats_visit_per_month_unique_mobile, $get_stats_visit_per_month_unique_bots, $get_stats_visit_per_month_hits_total, $get_stats_visit_per_month_hits_human, $get_stats_visit_per_month_hits_desktop, $get_stats_visit_per_month_hits_mobile, $get_stats_visit_per_month_hits_bots) = $row;
+						
+							if($x > 0){
+								echo",";
+							}
+							echo"
+							{
+								\"x\": \"$get_stats_visit_per_month_month_saying\",
+								\"value\": $get_stats_visit_per_month_human_unique
+							}";
+							$x++;
+						} // while
+
+						echo"
+						];
+						// Create axes
+						var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+						categoryAxis.dataFields.category = \"x\";
+						var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 							
-							$year_saying = substr($get_stats_monthly_year, 2, 2);
+						// Create series
+						var series1 = chart.series.push(new am4charts.ColumnSeries);
+						series1.dataFields.valueY = \"value\";
+						series1.dataFields.categoryX = \"x\";
+						series1.name = \"Comments\";
+						series1.tooltipText = \"Comments: {valueY}\";
+						series1.fill = am4core.color(\"#99e4dc\");
+						series1.stroke = am4core.color(\"#66d5c9\");
+						series1.strokeWidth = 1;
 
-							if($chart_data == ""){
-								$chart_data = "{
-									\"month\": \"$get_stats_monthly_month_saying $year_saying\",
-									\"value\": $get_stats_monthly_human_unique
-								}";	
-							}
-							else{
-								$chart_data =  " {
-									\"month\": \"$get_stats_monthly_month_saying $year_saying\",
-									\"value\": $get_stats_monthly_human_unique
-								}," . $chart_data;	
-							}
-
-						}
-					echo"
-        				<script>
-						var chart;
-						var graph;
-
-						var chartDataVisitsYear = [$chart_data];
-
-
-						AmCharts.ready(function() {
-
-						  // SERIAL CHART
-						  chart = new AmCharts.AmSerialChart();
-						  chart.dataProvider = chartDataVisitsYear;
-						  chart.categoryField = \"month\";
-						  chart.hideCredits = \"true\";
-
-						  // AXES
-						  // Category
-						  var categoryAxis = chart.categoryAxis;
-						  categoryAxis.gridPosition = \"start\";
-						  categoryAxis.fillAlpha = 1;
-						  categoryAxis.labelFunction = function(labelText, serialDataItem) {
-						    return labelText + \"\\n\" + serialDataItem.dataContext.value;
-						  }
-						  categoryAxis.gridAlpha = 0;
-
-						  // value
-						  var valueAxis = new AmCharts.ValueAxis();
-						  valueAxis.axisColor = \"#DADADA\";
-						  valueAxis.gridAlpha = 0.1;
-						  chart.addValueAxis(valueAxis);
-
-						  // GRAPH
-						  var graph = new AmCharts.AmGraph();
-						  graph.title = \"Income\";
-						  graph.valueField = \"value\";
-						  graph.type = \"column\";
-						  graph.lineAlpha = 1;
-						  graph.lineColor = \"#66d5c9\";
-						  graph.fillColors = \"#99e4dc\";
-						  graph.fillAlphas = 1;
-						  chart.addGraph(graph);
-
-						  // WRITE
-						  chart.write(\"chartdiv_year\");
-						});
-
+						// Tooltips
+						chart.cursor = new am4charts.XYCursor();
+						chart.cursor.snapToSeries = series;
+						chart.cursor.xAxis = valueAxis;
+					}); // end am4core.ready()
 					</script>
-        				<div id=\"chartdiv_year\" style=\"width:100%; height:400px;\"></div>
+					<div id=\"chartdiv_visits_per_month\" style=\"height: 400px;\"></div>
 				</div>
 			<!-- //Visits per month -->
 			<!-- Visits per day -->
@@ -509,105 +514,55 @@ if($action == ""){
 					echo"
 					</div>
 					<div class=\"flex_col_white_bg_headline_right\">
-						<p><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=open_month&amp;year=$year&amp;month=$month&amp;l=$l&amp;editor_language=$editor_language\">View</a></p>
+						<p><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=open_month&amp;year=$year&amp;month=$month&amp;l=$l&amp;editor_language=$editor_language\">View stats</a></p>
 					</div>
-        				<script>
-						var chart;
-						var graph;
-
-						var chartData = [";
-
+					<div class=\"clear\"></div>
+					<script>
+					am4core.ready(function() {
+						var chart = am4core.create(\"chartdiv_visits_per_day\", am4charts.XYChart);
+						chart.data = [";
 
 						$x = 0;
-						
-						$stats_dayli_unique_desktop_this_month = 0;
-						$stats_dayli_unique_mobile_this_month  = 0;
-						$query = "SELECT stats_dayli_id, stats_dayli_day, stats_dayli_weekday, stats_dayli_human_unique, stats_dayli_unique_desktop, stats_dayli_unique_mobile, stats_dayli_unique_bots, stats_dayli_hits, stats_dayli_hits_desktop, stats_dayli_hits_mobile, stats_dayli_hits_bots FROM $t_stats_dayli WHERE stats_dayli_month=$month_mysql AND stats_dayli_year=$year_mysql";
+						$query = "SELECT stats_visit_per_day_id, stats_visit_per_day_day, stats_visit_per_day_weekday, stats_visit_per_day_month, stats_visit_per_day_month_saying, stats_visit_per_day_year, stats_visit_per_day_human_unique, stats_visit_per_day_human_unique_diff_from_yesterday, stats_visit_per_day_human_average_duration, stats_visit_per_day_human_new_visitor_unique, stats_visit_per_day_human_returning_visitor_unique, stats_visit_per_day_unique_desktop, stats_visit_per_day_unique_mobile, stats_visit_per_day_unique_bots, stats_visit_per_day_hits_total, stats_visit_per_day_hits_human, stats_visit_per_day_hits_desktop, stats_visit_per_day_hits_mobile, stats_visit_per_day_hits_bots FROM $t_stats_visists_per_day WHERE stats_visit_per_day_month=$month AND stats_visit_per_day_year=$year ORDER BY stats_visit_per_day_id DESC";
 						$result = mysqli_query($link, $query);
 						while($row = mysqli_fetch_row($result)) {
-							list($get_stats_dayli_id, $get_stats_dayli_day, $get_stats_dayli_weekday, $get_stats_dayli_human_unique, $get_stats_dayli_unique_desktop, $get_stats_dayli_unique_mobile, $get_stats_dayli_unique_bots, $get_stats_dayli_hits, $get_stats_dayli_hits_desktop, $get_stats_dayli_hits_mobile, $get_stats_dayli_hits_bots) = $row;
-					
-							// Transfer
-							if($get_stats_dayli_weekday == "Mon"){
-								$get_stats_dayli_weekday = "$l_mon";
-							}
-							elseif($get_stats_dayli_weekday == "Tue"){
-								$get_stats_dayli_weekday = "$l_tue";
-							}
-							elseif($get_stats_dayli_weekday == "Wed"){
-								$get_stats_dayli_weekday = "$l_wed";
-							}
-							elseif($get_stats_dayli_weekday == "Thu"){
-								$get_stats_dayli_weekday = "$l_thu";
-							}
-							elseif($get_stats_dayli_weekday == "Fri"){
-								$get_stats_dayli_weekday = "$l_fri";
-							}
-							elseif($get_stats_dayli_weekday == "Sat"){
-								$get_stats_dayli_weekday = "$l_sat";
-							}
-							elseif($get_stats_dayli_weekday == "Sun"){
-								$get_stats_dayli_weekday = "$l_sun";
-							}
-							$get_stats_dayli_weekday = substr($get_stats_dayli_weekday, 0, 1);
-
+							list($get_stats_visit_per_day_id, $get_stats_visit_per_day_day, $get_stats_visit_per_day_weekday, $get_stats_visit_per_day_month, $get_stats_visit_per_day_month_saying, $get_stats_visit_per_day_year, $get_stats_visit_per_day_human_unique, $get_stats_visit_per_day_human_unique_diff_from_yesterday, $get_stats_visit_per_day_human_average_duration, $get_stats_visit_per_day_human_new_visitor_unique, $get_stats_visit_per_day_human_returning_visitor_unique, $get_stats_visit_per_day_unique_desktop, $get_stats_visit_per_day_unique_mobile, $get_stats_visit_per_day_unique_bots, $get_stats_visit_per_day_hits_total, $get_stats_visit_per_day_hits_human, $get_stats_visit_per_day_hits_desktop, $get_stats_visit_per_day_hits_mobile, $get_stats_visit_per_day_hits_bots) = $row;
+						
 							if($x > 0){
 								echo",";
 							}
 							echo"
 							{
-								\"day\": \"$get_stats_dayli_weekday $get_stats_dayli_day\",
-								\"value\": $get_stats_dayli_human_unique
+								\"x\": \"$get_stats_visit_per_day_weekday $get_stats_visit_per_day_day\",
+								\"value\": $get_stats_visit_per_day_human_unique
 							}";
+							$x++;
+						} // while
 
-
-						// For desktop/mobile comparision
-						$stats_dayli_unique_desktop_this_month = $stats_dayli_unique_desktop_this_month+$get_stats_dayli_unique_desktop;
-						$stats_dayli_unique_mobile_this_month  = $stats_dayli_unique_mobile_this_month+$get_stats_dayli_unique_mobile;
-
-						// xx
-						$x++;
-					}
-					echo"
+						echo"
 						];
-
-
-		
-
-						AmCharts.ready(function () {
-							// SERIAL CHART
-							chart = new AmCharts.AmSerialChart();
-
-							chart.dataProvider = chartData;
-							chart.categoryField = \"day\";
-							chart.dataDateFormat = \"dd\";
-							chart.hideCredits = \"true\";
-
-                					// Y value
-                					var valueAxis = new AmCharts.ValueAxis();
-               					 	valueAxis.axisAlpha = 0;
-                					valueAxis.inside = true;
-                					valueAxis.dashLength = 3;
-                					chart.addValueAxis(valueAxis);
-
-                					// X GRAPH
-                					graph = new AmCharts.AmGraph();
-                					graph.lineColor = \"#66d5c9\";
-                					graph.negativeLineColor = \"#66d5c9\"; // this line makes the graph to change color when it drops below 0
-						
-                					graph.lineThickness = 2;
-                					graph.valueField = \"value\";
-                					graph.balloonText = \"[[category]]<br><b><span style='font-size:14px;'>[[value]]</span></b>\";
-                					chart.addGraph(graph);
-
-                
-
-                					// WRITE
-                					chart.write(\"chartdiv_day\");
-           					});
-
+						// Create axes
+						var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+						categoryAxis.dataFields.category = \"x\";
+						var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+							
+						// Create series
+						var series1 = chart.series.push(new am4charts.LineSeries());
+						series1.dataFields.valueY = \"value\";
+						series1.dataFields.categoryX = \"x\";
+						series1.name = \"Human unique visits\";
+						series1.tooltipText = \"Human unique visits: {valueY}\";
+						series1.fill = am4core.color(\"#926dde\");
+						series1.stroke = am4core.color(\"#926dde\");
+					
+						// Tooltips
+						chart.cursor = new am4charts.XYCursor();
+						chart.cursor.snapToSeries = series;
+						chart.cursor.xAxis = valueAxis;
+					}); // end am4core.ready()
 					</script>
-        				<div id=\"chartdiv_day\" style=\"width:100%; height:400px;\"></div>
+					<div id=\"chartdiv_visits_per_day\" style=\"height: 400px;\"></div>
+
 				</div>
 			<!-- //Visits per day -->
 

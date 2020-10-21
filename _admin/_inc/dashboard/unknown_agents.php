@@ -2,9 +2,9 @@
 /**
 *
 * File: _admin/_inc/dashboard/unknown_agents.php
-* Version 1.0
-* Date 18:40 02.11.2017
-* Copyright (c) 2008-2017 Sindre Andre Ditlefsen
+* Version 2.0
+* Date 10:37 21.10.2020
+* Copyright (c) 2008-2020 Sindre Andre Ditlefsen
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -13,6 +13,10 @@ if(!(isset($define_access_to_control_panel))){
 	echo"<h1>Server error 403</h1>";
 	die;
 }
+
+/*- Tables ------------------------------------------------------------------------ */
+$t_stats_user_agents_index = $mysqlPrefixSav . "stats_user_agents_index";
+
 
 /*- Variables ------------------------------------------------------------------------ */
 if(isset($_GET['stats_user_agent_id'])) {
@@ -94,7 +98,7 @@ elseif($action == "fix_agents"){
 		
 		
 		$stats_user_agent_id_mysql = quote_smart($link, $stats_user_agent_id);
-		$result = mysqli_query($link, "UPDATE $t_stats_user_agents SET stats_user_agent_browser=$inp_browser_mysql, stats_user_agent_browser_version=$inp_browser_version_mysql, 
+		$result = mysqli_query($link, "UPDATE $t_stats_user_agents_index SET stats_user_agent_browser=$inp_browser_mysql, stats_user_agent_browser_version=$inp_browser_version_mysql, 
 				stats_user_agent_os=$inp_os_mysql, stats_user_agent_os_version=$inp_os_version_mysql, stats_user_agent_bot=$inp_bot_mysql, 
 				stats_user_agent_url=$inp_url_mysql, stats_user_agent_browser_icon=$inp_browser_icon_mysql, stats_user_agent_os_icon=$inp_os_icon_mysql, 
 				stats_user_agent_bot_icon=$inp_bot_icon_mysql, stats_user_agent_type=$inp_type_mysql, stats_user_agent_banned=$inp_banned_mysql WHERE stats_user_agent_id=$stats_user_agent_id_mysql");
@@ -133,10 +137,10 @@ elseif($action == "fix_agents"){
 	$found_problem = 0;
 	
 	// 1: Unknown type
-	$query = "SELECT stats_user_agent_id, stats_user_agent_string, stats_user_agent_browser, stats_user_agent_browser_version, stats_user_agent_os, stats_user_agent_os_version,stats_user_agent_bot, stats_user_agent_url, stats_user_agent_browser_icon, stats_user_agent_os_icon, stats_user_agent_bot_icon, stats_user_agent_type, stats_user_agent_banned FROM $t_stats_user_agents WHERE stats_user_agent_type='' LIMIT 0,1";
+	$query = "SELECT stats_user_agent_id, stats_user_agent_string, stats_user_agent_type, stats_user_agent_browser, stats_user_agent_browser_version, stats_user_agent_browser_icon, stats_user_agent_os, stats_user_agent_os_version, stats_user_agent_os_icon, stats_user_agent_bot, stats_user_agent_bot_icon, stats_user_agent_bot_website, stats_user_agent_banned FROM $t_stats_user_agents_index WHERE stats_user_agent_type='' LIMIT 0,1";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_stats_user_agent_id, $get_stats_user_agent_string, $get_stats_user_agent_browser, $get_stats_user_agent_browser_version, $get_stats_user_agent_os, $get_stats_user_agent_os_version, $get_stats_user_agent_bot, $get_stats_user_agent_url, $get_stats_user_agent_browser_icon, $get_stats_user_agent_os_icon, $get_stats_user_agent_bot_icon, $get_stats_user_agent_type, $get_stats_user_agent_banned) = $row;
+	list($get_stats_user_agent_id, $get_stats_user_agent_string, $get_stats_user_agent_type, $get_stats_user_agent_browser, $get_stats_user_agent_browser_version, $get_stats_user_agent_browser_icon, $get_stats_user_agent_os, $get_stats_user_agent_os_version, $get_stats_user_agent_os_icon, $get_stats_user_agent_bot, $get_stats_user_agent_bot_icon, $get_stats_user_agent_bot_website, $get_stats_user_agent_banned) = $row;
 
 	
 	if($get_stats_user_agent_id != ""){
@@ -144,20 +148,20 @@ elseif($action == "fix_agents"){
 	}
 	else{
 		// 2: Unknown browsers
-		$query = "SELECT stats_user_agent_id, stats_user_agent_string, stats_user_agent_browser, stats_user_agent_browser_version, stats_user_agent_os, stats_user_agent_os_version, stats_user_agent_bot, stats_user_agent_url, stats_user_agent_browser_icon, stats_user_agent_os_icon, stats_user_agent_bot_icon, stats_user_agent_type, stats_user_agent_banned FROM $t_stats_user_agents WHERE stats_user_agent_browser='' AND stats_user_agent_bot='' LIMIT 0,1";
+		$query = "SELECT stats_user_agent_id, stats_user_agent_string, stats_user_agent_type, stats_user_agent_browser, stats_user_agent_browser_version, stats_user_agent_browser_icon, stats_user_agent_os, stats_user_agent_os_version, stats_user_agent_os_icon, stats_user_agent_bot, stats_user_agent_bot_icon, stats_user_agent_bot_website, stats_user_agent_banned FROM $t_stats_user_agents_index WHERE stats_user_agent_browser='' AND stats_user_agent_bot='' LIMIT 0,1";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
-		list($get_stats_user_agent_id, $get_stats_user_agent_string, $get_stats_user_agent_browser, $get_stats_user_agent_browser_version, $get_stats_user_agent_os, $get_stats_user_agent_os_version, $get_stats_user_agent_bot, $get_stats_user_agent_url, $get_stats_user_agent_browser_icon, $get_stats_user_agent_os_icon, $get_stats_user_agent_bot_icon, $get_stats_user_agent_type, $get_stats_user_agent_banned) = $row;
+		list($get_stats_user_agent_id, $get_stats_user_agent_string, $get_stats_user_agent_type, $get_stats_user_agent_browser, $get_stats_user_agent_browser_version, $get_stats_user_agent_browser_icon, $get_stats_user_agent_os, $get_stats_user_agent_os_version, $get_stats_user_agent_os_icon, $get_stats_user_agent_bot, $get_stats_user_agent_bot_icon, $get_stats_user_agent_bot_website, $get_stats_user_agent_banned) = $row;
 
 		if($get_stats_user_agent_id != ""){
 			$found_problem = 1;
 		}
 		else{
 			// 3: Unknown os
-			$query = "SELECT stats_user_agent_id, stats_user_agent_string, stats_user_agent_browser, stats_user_agent_browser_version, stats_user_agent_os, stats_user_agent_os_version, stats_user_agent_bot, stats_user_agent_url, stats_user_agent_browser_icon, stats_user_agent_os_icon, stats_user_agent_bot_icon, stats_user_agent_type, stats_user_agent_banned FROM $t_stats_user_agents WHERE stats_user_agent_os='' AND stats_user_agent_bot='' LIMIT 0,1";
+			$query = "SELECT stats_user_agent_id, stats_user_agent_string, stats_user_agent_type, stats_user_agent_browser, stats_user_agent_browser_version, stats_user_agent_browser_icon, stats_user_agent_os, stats_user_agent_os_version, stats_user_agent_os_icon, stats_user_agent_bot, stats_user_agent_bot_icon, stats_user_agent_bot_website, stats_user_agent_banned FROM $t_stats_user_agents_index WHERE stats_user_agent_os='' AND stats_user_agent_bot='' LIMIT 0,1";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
-			list($get_stats_user_agent_id, $get_stats_user_agent_string, $get_stats_user_agent_browser, $get_stats_user_agent_browser_version, $get_stats_user_agent_os, $get_stats_user_agent_os_version, $get_stats_user_agent_bot, $get_stats_user_agent_url, $get_stats_user_agent_browser_icon, $get_stats_user_agent_os_icon, $get_stats_user_agent_bot_icon, $get_stats_user_agent_type, $get_stats_user_agent_banned) = $row;
+			list($get_stats_user_agent_id, $get_stats_user_agent_string, $get_stats_user_agent_type, $get_stats_user_agent_browser, $get_stats_user_agent_browser_version, $get_stats_user_agent_browser_icon, $get_stats_user_agent_os, $get_stats_user_agent_os_version, $get_stats_user_agent_os_icon, $get_stats_user_agent_bot, $get_stats_user_agent_bot_icon, $get_stats_user_agent_bot_website, $get_stats_user_agent_banned) = $row;
 
 			
 			if($get_stats_user_agent_id != ""){
@@ -165,10 +169,10 @@ elseif($action == "fix_agents"){
 			}
 			else{
 				// 4: Unknown flag
-				$query = "SELECT stats_user_agent_id, stats_user_agent_string, stats_user_agent_browser, stats_user_agent_browser_version, stats_user_agent_os, stats_user_agent_os_version, stats_user_agent_bot, stats_user_agent_url, stats_user_agent_browser_icon, stats_user_agent_os_icon, stats_user_agent_bot_icon, stats_user_agent_type, stats_user_agent_banned FROM $t_stats_user_agents WHERE stats_user_agent_type='unknown' LIMIT 0,1";
+				$query = "SELECT stats_user_agent_id, stats_user_agent_string, stats_user_agent_type, stats_user_agent_browser, stats_user_agent_browser_version, stats_user_agent_browser_icon, stats_user_agent_os, stats_user_agent_os_version, stats_user_agent_os_icon, stats_user_agent_bot, stats_user_agent_bot_icon, stats_user_agent_bot_website, stats_user_agent_banned FROM $t_stats_user_agents_index WHERE stats_user_agent_type='unknown' LIMIT 0,1";
 				$result = mysqli_query($link, $query);
 				$row = mysqli_fetch_row($result);
-				list($get_stats_user_agent_id, $get_stats_user_agent_string, $get_stats_user_agent_browser, $get_stats_user_agent_browser_version, $get_stats_user_agent_os, $get_stats_user_agent_os_version, $get_stats_user_agent_bot, $get_stats_user_agent_url, $get_stats_user_agent_browser_icon, $get_stats_user_agent_os_icon, $get_stats_user_agent_bot_icon, $get_stats_user_agent_type, $get_stats_user_agent_banned) = $row;
+				list($get_stats_user_agent_id, $get_stats_user_agent_string, $get_stats_user_agent_type, $get_stats_user_agent_browser, $get_stats_user_agent_browser_version, $get_stats_user_agent_browser_icon, $get_stats_user_agent_os, $get_stats_user_agent_os_version, $get_stats_user_agent_os_icon, $get_stats_user_agent_bot, $get_stats_user_agent_bot_icon, $get_stats_user_agent_bot_website, $get_stats_user_agent_banned) = $row;
 
 				if($get_stats_user_agent_id != ""){
 					$found_problem = 1;
@@ -286,7 +290,7 @@ elseif($action == "list"){
 	</thead>
 	 <tbody>\n";
 
-	$query = "SELECT stats_user_agent_id, stats_user_agent_string, stats_user_agent_browser, stats_user_agent_os, stats_user_agent_bot, stats_user_agent_url, stats_user_agent_browser_icon, stats_user_agent_os_icon, stats_user_agent_bot_icon, stats_user_agent_type, stats_user_agent_banned FROM $t_stats_user_agents WHERE stats_user_agent_browser=''";
+	$query = "SELECT stats_user_agent_id, stats_user_agent_string, stats_user_agent_browser, stats_user_agent_os, stats_user_agent_bot, stats_user_agent_url, stats_user_agent_browser_icon, stats_user_agent_os_icon, stats_user_agent_bot_icon, stats_user_agent_type, stats_user_agent_banned FROM $t_stats_user_agents_index WHERE stats_user_agent_browser=''";
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
 		list($get_stats_user_agent_id, $get_stats_user_agent_string, $get_stats_user_agent_browser, $get_stats_user_agent_os, $get_stats_user_agent_bot, $get_stats_user_agent_url, $get_stats_user_agent_browser_icon, $get_stats_user_agent_os_icon, $get_stats_user_agent_bot_icon, $get_stats_user_agent_type, $get_stats_user_agent_banned) = $row;
@@ -353,7 +357,7 @@ elseif($action == "export_agents"){
 	";
 	// Agents
 	$x = 0;
-	$query = "SELECT stats_user_agent_id, stats_user_agent_string, stats_user_agent_browser, stats_user_agent_os, stats_user_agent_bot, stats_user_agent_url, stats_user_agent_browser_icon, stats_user_agent_os_icon, stats_user_agent_bot_icon, stats_user_agent_type, stats_user_agent_banned FROM $t_stats_user_agents ORDER BY stats_user_agent_string";
+	$query = "SELECT stats_user_agent_id, stats_user_agent_string, stats_user_agent_browser, stats_user_agent_os, stats_user_agent_bot, stats_user_agent_url, stats_user_agent_browser_icon, stats_user_agent_os_icon, stats_user_agent_bot_icon, stats_user_agent_type, stats_user_agent_banned FROM $t_stats_user_agents_index ORDER BY stats_user_agent_string";
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
 		list($get_stats_user_agent_id, $get_stats_user_agent_string, $get_stats_user_agent_browser, $get_stats_user_agent_os, $get_stats_user_agent_bot, $get_stats_user_agent_url, $get_stats_user_agent_browser_icon, $get_stats_user_agent_os_icon, $get_stats_user_agent_bot_icon, $get_stats_user_agent_type, $get_stats_user_agent_banned) = $row;

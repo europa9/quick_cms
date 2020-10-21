@@ -460,10 +460,11 @@ echo"<!DOCTYPE html>
 			$special_css = "_inc/$open/_stylesheets/default.css";
 		}
 		if(file_exists("$special_css")){
-			echo"<link rel=\"stylesheet\" type=\"text/css\" href=\"$special_css\" />";
+			$random = rand(0,999);
+			echo"<link rel=\"stylesheet\" type=\"text/css\" href=\"$special_css?random=$random\" />";
 		}
 		else{
-			echo"<!-- <link rel=\"stylesheet\" type=\"text/css\" href=\"$special_css\" /> -->";
+			echo"<!-- $special_css doesnt exists -->";
 		}
 		echo"
 	<!-- //Special CSS -->

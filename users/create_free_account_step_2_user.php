@@ -31,6 +31,9 @@ include("$root/_admin/_data/config/user_system.php");
 $t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
 $t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
 
+$t_stats_users_registered_per_month = $mysqlPrefixSav . "stats_users_registered_per_month";
+$t_stats_users_registered_per_year = $mysqlPrefixSav . "stats_users_registered_per_year";
+
 /*- Translation ------------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/users/ts_users.php");
 include("$root/_admin/_translations/site/$l/users/ts_create_free_account.php");
@@ -304,68 +307,48 @@ if(!(isset($_SESSION['user_id']))){
 				// --> weekly
 				$day = date("d");
 				$month = date("m");
+				$month_saying = date("M");
 				$week = date("W");
 				$year = date("Y");
 
-				$query = "SELECT weekly_id, weekly_users_registed FROM $t_stats_users_registered_weekly WHERE weekly_week=$week AND weekly_year=$year";
+				// User registered :: Year
+				$query = "SELECT stats_registered_id, stats_registered_users_registed FROM $t_stats_users_registered_per_year WHERE stats_registered_year=$year";
 				$result = mysqli_query($link, $query);
 				$row = mysqli_fetch_row($result);
-				list($get_weekly_id,  $get_weekly_users_registed) = $row;
-				if($get_weekly_id == ""){
-					mysqli_query($link, "INSERT INTO $t_stats_users_registered_weekly 
-					(weekly_id, weekly_week, weekly_year, weekly_users_registed, weekly_last_updated, weekly_last_updated_day, weekly_last_updated_month, weekly_last_updated_year) 
+				list($get_stats_registered_id, $get_stats_registered_users_registed) = $row;
+				if($get_stats_registered_id == ""){
+					mysqli_query($link, "INSERT INTO $t_stats_users_registered_per_year 
+					(stats_registered_id, stats_registered_year, stats_registered_users_registed) 
 					VALUES 
-					(NULL, $week, $year, 1, '$datetime', $day, $month, $year)")
+					(NULL, $year, 1)")
 					or die(mysqli_error($link));
 				}
 				else{
-					$inp_counter = $get_weekly_users_registed+1;
+					$inp_counter = $get_stats_registered_users_registed+1;
 
-					$result = mysqli_query($link, "UPDATE $t_stats_users_registered_weekly SET weekly_users_registed=$inp_counter, 
-								weekly_last_updated='$datetime', weekly_last_updated_day=$day, weekly_last_updated_month=$month, weekly_last_updated_year=$year WHERE weekly_id=$get_weekly_id") or die(mysqli_error($link));
+					$result = mysqli_query($link, "UPDATE $t_stats_users_registered_per_year SET stats_registered_users_registed=$inp_counter WHERE stats_registered_id=$get_stats_registered_id") or die(mysqli_error($link));
 				}
 
-				// --> monthly
-				$query = "SELECT monthly_id, monthly_users_registed FROM $t_stats_users_registered_monthly WHERE monthly_month=$month AND monthly_year=$year";
+				// User registered :: Month
+				$query = "SELECT stats_registered_id, stats_registered_users_registed FROM $t_stats_users_registered_per_month WHERE stats_registered_month=$month AND stats_registered_year=$year";
 				$result = mysqli_query($link, $query);
 				$row = mysqli_fetch_row($result);
-				list($get_monthly_id,  $get_monthly_users_registed) = $row;
-				if($get_monthly_id == ""){
-					mysqli_query($link, "INSERT INTO $t_stats_users_registered_monthly 
-					(monthly_id, monthly_month, monthly_year, monthly_users_registed, monthly_last_updated, monthly_last_updated_day, monthly_last_updated_month, monthly_last_updated_year ) 
+				list($get_stats_registered_id, $get_stats_registered_users_registed) = $row;
+				if($get_stats_registered_id == ""){
+					mysqli_query($link, "INSERT INTO $t_stats_users_registered_per_month 
+					(stats_registered_id, stats_registered_month, stats_registered_month_saying, stats_registered_year, stats_registered_users_registed) 
 					VALUES 
-					(NULL, $month, $year, 1, '$datetime', $day, $month, $year)")
+					(NULL, $month, '$month_saying', $year, 1)")
 					or die(mysqli_error($link));
 				}
 				else{
-					$inp_counter = $get_monthly_users_registed+1;
+					$inp_counter = $get_stats_registered_users_registed+1;
 
-					$result = mysqli_query($link, "UPDATE $t_stats_users_registered_monthly SET monthly_users_registed=$inp_counter, 
-								monthly_last_updated='$datetime', monthly_last_updated_day=$day, monthly_last_updated_month=$month, monthly_last_updated_year=$year WHERE monthly_id=$get_monthly_id") or die(mysqli_error($link));
-				}
-
-				// --> yearly
-				$query = "SELECT yearly_id, yearly_users_registed FROM $t_stats_users_registered_yearly WHERE yearly_year=$year";
-				$result = mysqli_query($link, $query);
-				$row = mysqli_fetch_row($result);
-				list($get_yearly_id, $get_yearly_users_registed) = $row;
-				if($get_yearly_id == ""){
-					mysqli_query($link, "INSERT INTO $t_stats_users_registered_yearly 
-					(yearly_id, yearly_year, yearly_users_registed, yearly_last_updated, yearly_last_updated_day, yearly_last_updated_month, yearly_last_updated_year) 
-					VALUES 
-					(NULL, $year, 1, '$datetime', $day, $month, $year)")
-					or die(mysqli_error($link));
-				}
-				else{
-					$inp_counter = $get_yearly_users_registed+1;
-
-					$result = mysqli_query($link, "UPDATE $t_stats_users_registered_yearly SET yearly_users_registed=$inp_counter, 
-								yearly_last_updated='$datetime', yearly_last_updated_day=$day, yearly_last_updated_month=$month, yearly_last_updated_year=$year WHERE yearly_id=$get_yearly_id") or die(mysqli_error($link));
+					$result = mysqli_query($link, "UPDATE $t_stats_users_registered_per_month SET stats_registered_users_registed=$inp_counter WHERE stats_registered_id=$get_stats_registered_id") or die(mysqli_error($link));
 				}
 
 
 				// Who is moderator of the week?
-
 				$query = "SELECT moderator_user_id, moderator_user_email, moderator_user_name FROM $t_users_moderator_of_the_week WHERE moderator_week=$week AND moderator_year=$year";
 				$result = mysqli_query($link, $query);
 				$row = mysqli_fetch_row($result);

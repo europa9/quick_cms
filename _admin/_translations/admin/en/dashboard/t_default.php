@@ -92,4 +92,6 @@ $l_thu = "Thu";
 $l_fri = "Fri";
 $l_sat = "Sat";
 $l_sun = "Sun";
+
+$l_unique_vistis_per_month_for = "Unique visits per month for";
 ?>

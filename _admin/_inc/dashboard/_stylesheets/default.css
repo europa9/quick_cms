@@ -1,9 +1,13 @@
-/*- First row text boxes  ----------------------------------------------- */
-div.first_row_flex_row{
-	display: flex;
-	margin-top: -42px;
+/*- Clear float right -------------------------------------------------- */
+div.clear_main_right_content{
+	position: relative;
+	top: -42px;
 	background: #f6f6f7;
 }
+
+
+/*- First row text boxes  ----------------------------------------------- */
+
 div.flex_col_white_bg{
 	flex: 1;
 	background: #fff;
@@ -43,6 +47,11 @@ p.flex_col_white_bg_text_left_content{
 	margin: 0px 0px 0px 0px;
 	float: left;
 }
+div.flex_col_white_bg_div_left_content{
+	padding: 5px 0px 0px 0px;
+	margin: 0px 0px 0px 0px;
+	float: left;
+}
 
 div.flex_col_white_bg_text_right{
 	float: right;
@@ -60,5 +69,6 @@ p.flex_col_white_bg_text_right_content{
 	padding: 0px 0px 0px 0px;
 	margin: 0;
 }
+div.
 
 /*- Second row text boxes ----------------------------------------------- */

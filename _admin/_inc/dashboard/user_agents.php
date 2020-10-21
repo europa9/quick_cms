@@ -17,6 +17,10 @@ if(!(isset($define_access_to_control_panel))){
 /*- Language -------------------------------------------------------------------------- */
 include("_translations/admin/$l/dashboard/t_unknown_agents.php");
 
+
+/*- Tables ------------------------------------------------------------------------ */
+$t_stats_user_agents_index = $mysqlPrefixSav . "stats_user_agents_index";
+
 /*- Variables -------------------------------------------------------------------------- */
 if(isset($_GET['user_agent_id'])) {
 	$user_agent_id = $_GET['user_agent_id'];
@@ -68,10 +72,10 @@ if($action == ""){
 		   </td>
 		  </tr>
 		 </thead>";
-		$query = "SELECT stats_user_agent_id, stats_user_agent_string, stats_user_agent_browser, stats_user_agent_browser_version, stats_user_agent_browser_icon, stats_user_agent_os, stats_user_agent_os_version, stats_user_agent_os_icon, stats_user_agent_bot, stats_user_agent_bot_icon, stats_user_agent_url, stats_user_agent_type, stats_user_agent_banned FROM $t_stats_user_agents ORDER BY stats_user_agent_string ASC";
+		$query = "SELECT stats_user_agent_id, stats_user_agent_string, stats_user_agent_type, stats_user_agent_browser, stats_user_agent_browser_version, stats_user_agent_browser_icon, stats_user_agent_os, stats_user_agent_os_version, stats_user_agent_os_icon, stats_user_agent_bot, stats_user_agent_bot_icon, stats_user_agent_bot_website, stats_user_agent_banned FROM $t_stats_user_agents_index ORDER BY stats_user_agent_string ASC";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
-			list($get_stats_user_agent_id, $get_stats_user_agent_string, $get_stats_user_agent_browser, $get_stats_user_agent_browser_version, $get_stats_user_agent_browser_icon, $get_stats_user_agent_os, $get_stats_user_agent_os_version, $get_stats_user_agent_os_icon, $get_stats_user_agent_bot, $get_stats_user_agent_bot_icon, $get_stats_user_agent_url, $get_stats_user_agent_type, $get_stats_user_agent_banned) = $row;
+			list($get_stats_user_agent_id, $get_stats_user_agent_string, $get_stats_user_agent_type, $get_stats_user_agent_browser, $get_stats_user_agent_browser_version, $get_stats_user_agent_browser_icon, $get_stats_user_agent_os, $get_stats_user_agent_os_version, $get_stats_user_agent_os_icon, $get_stats_user_agent_bot, $get_stats_user_agent_bot_icon, $get_stats_user_agent_bot_website, $get_stats_user_agent_banned) = $row;
 
 			// Style
 			if(isset($style) && $style == ""){
@@ -124,10 +128,10 @@ if($action == ""){
 elseif($action == "edit_user_agent"){
 	// Find user agent
 	$user_agent_id_mysql = quote_smart($link, $user_agent_id);
-	$query = "SELECT stats_user_agent_id, stats_user_agent_string, stats_user_agent_browser, stats_user_agent_browser_version, stats_user_agent_browser_icon, stats_user_agent_os, stats_user_agent_os_version, stats_user_agent_os_icon, stats_user_agent_bot, stats_user_agent_bot_icon, stats_user_agent_url, stats_user_agent_type, stats_user_agent_banned FROM $t_stats_user_agents WHERE stats_user_agent_id=$user_agent_id_mysql";
+	$query = "SELECT stats_user_agent_id, stats_user_agent_string, stats_user_agent_type, stats_user_agent_browser, stats_user_agent_browser_version, stats_user_agent_browser_icon, stats_user_agent_os, stats_user_agent_os_version, stats_user_agent_os_icon, stats_user_agent_bot, stats_user_agent_bot_icon, stats_user_agent_bot_website, stats_user_agent_banned FROM $t_stats_user_agents_index WHERE stats_user_agent_id=$user_agent_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_stats_user_agent_id, $get_current_stats_user_agent_string, $get_current_stats_user_agent_browser, $get_current_stats_user_agent_browser_version, $get_current_stats_user_agent_browser_icon, $get_current_stats_user_agent_os, $get_current_stats_user_agent_os_version, $get_current_stats_user_agent_os_icon, $get_current_stats_user_agent_bot, $get_current_stats_user_agent_bot_icon, $get_current_stats_user_agent_url, $get_current_stats_user_agent_type, $get_current_stats_user_agent_banned) = $row;
+	list($get_current_stats_user_agent_id, $get_current_stats_user_agent_string, $get_current_stats_user_agent_type, $get_current_stats_user_agent_browser, $get_current_stats_user_agent_browser_version, $get_current_stats_user_agent_browser_icon, $get_current_stats_user_agent_os, $get_current_stats_user_agent_os_version, $get_current_stats_user_agent_os_icon, $get_current_stats_user_agent_bot, $get_current_stats_user_agent_bot_icon, $get_current_stats_user_agent_bot_website, $get_current_stats_user_agent_banned) = $row;
 
 	if($get_current_stats_user_agent_id == ""){
 		echo"
@@ -181,10 +185,6 @@ elseif($action == "edit_user_agent"){
 		}
 		$inp_bot_icon_mysql = quote_smart($link, $inp_bot_icon);
 		
-		$inp_url = $_POST['inp_url'];
-		$inp_url = output_html($inp_url);
-		$inp_url_mysql = quote_smart($link, $inp_url);
-		
 		$inp_type = $_POST['inp_type'];
 		$inp_type = output_html($inp_type);
 		$inp_type_mysql = quote_smart($link, $inp_type);
@@ -200,11 +200,11 @@ elseif($action == "edit_user_agent"){
 		$inp_banned_mysql = quote_smart($link, $inp_banned);
 		
 		
-		$result = mysqli_query($link, "UPDATE $t_stats_user_agents SET stats_user_agent_browser=$inp_browser_mysql, stats_user_agent_browser_version=$inp_browser_version_mysql, 
+		$result = mysqli_query($link, "UPDATE $t_stats_user_agents_index SET stats_user_agent_browser=$inp_browser_mysql, stats_user_agent_browser_version=$inp_browser_version_mysql, 
 				stats_user_agent_os=$inp_os_mysql, stats_user_agent_os_version=$inp_os_version_mysql, stats_user_agent_bot=$inp_bot_mysql, 
-				stats_user_agent_url=$inp_url_mysql, stats_user_agent_browser_icon=$inp_browser_icon_mysql, stats_user_agent_os_icon=$inp_os_icon_mysql, 
+				stats_user_agent_browser_icon=$inp_browser_icon_mysql, stats_user_agent_os_icon=$inp_os_icon_mysql, 
 				stats_user_agent_bot_icon=$inp_bot_icon_mysql, stats_user_agent_type=$inp_type_mysql, stats_user_agent_banned=$inp_banned_mysql 
-				WHERE stats_user_agent_id=$get_current_stats_user_agent_id");
+				WHERE stats_user_agent_id=$get_current_stats_user_agent_id") or die(mysqli_error($link));
 
 		// echo"UPDATE $t_stats_user_agents SET stats_user_agent_browser=$inp_browser_mysql, stats_user_agent_os=$inp_os_mysql, stats_user_agent_bot=$inp_bot_mysql, 
 		// stats_user_agent_url=$inp_url_mysql, stats_user_agent_browser_icon=$inp_browser_icon_mysql, stats_user_agent_os_icon=$inp_os_icon_mysql, 
@@ -248,9 +248,6 @@ elseif($action == "edit_user_agent"){
 		<input type=\"text\" name=\"inp_os_version\" size=\"20\" value=\"$get_current_stats_user_agent_os_version\" /></p>
 		<p><b>$l_bot</b><br />
 		<input type=\"text\" name=\"inp_bot\" size=\"20\" value=\"$get_current_stats_user_agent_bot\" /></p>
-		
-		<p><b>$l_url</b><br />
-		<input type=\"text\" name=\"inp_url\" size=\"20\" value=\"$get_current_stats_user_agent_url\" /></p>
 		
 		<p><b>$l_type</b><br />
 		<select name=\"inp_type\">
