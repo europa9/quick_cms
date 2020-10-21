@@ -260,7 +260,7 @@ food_sodium_calculated='$inp_food_sodium_calculated' WHERE food_id='$get_food_id
 
 
 				// Header
-				if($inp_food_country == "United States"){
+				if($get_food_country == "United States"){
 					$url = "new_food_6_serving_size_united_states.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&food_id=$get_food_id&el=$l";
 					header("Location: $url");
 					exit;

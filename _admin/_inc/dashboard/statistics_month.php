@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* File: _admin/_inc/media/statistics_year.php
+* File: _admin/_inc/media/statistics_month.php
 * Version 3.0
 * Date 13:25 21.10.2020
 * Copyright (c) 2008-2020 Sindre Andre Ditlefsen
@@ -68,26 +68,38 @@ else{
 }
 $stats_year_mysql = quote_smart($link, $stats_year);
 
-// Find year
-$query = "SELECT stats_visit_per_year_id, stats_visit_per_year_year, stats_visit_per_year_human_unique, stats_visit_per_year_human_unique_diff_from_last_year, stats_visit_per_year_human_average_duration, stats_visit_per_year_human_new_visitor_unique, stats_visit_per_year_human_returning_visitor_unique, stats_visit_per_year_unique_desktop, stats_visit_per_year_unique_mobile, stats_visit_per_year_unique_bots, stats_visit_per_year_hits_total, stats_visit_per_year_hits_human, stats_visit_per_year_hits_desktop, stats_visit_per_year_hits_mobile, stats_visit_per_year_hits_bots FROM $t_stats_visists_per_year WHERE stats_visit_per_year_year=$stats_year_mysql";
+if(isset($_GET['stats_month'])) {
+	$stats_month = $_GET['stats_month'];
+	$stats_month = strip_tags(stripslashes($stats_month));
+}
+else{
+	$stats_month = date("m");
+}
+$stats_month_mysql = quote_smart($link, $stats_month);
+
+
+// Find month
+$query = "SELECT stats_visit_per_month_id, stats_visit_per_month_month, stats_visit_per_month_month_full, stats_visit_per_month_month_short, stats_visit_per_month_year, stats_visit_per_month_human_unique, stats_visit_per_month_human_unique_diff_from_last_month, stats_visit_per_month_human_average_duration, stats_visit_per_month_human_new_visitor_unique, stats_visit_per_month_human_returning_visitor_unique, stats_visit_per_month_unique_desktop, stats_visit_per_month_unique_mobile, stats_visit_per_month_unique_bots, stats_visit_per_month_hits_total, stats_visit_per_month_hits_human, stats_visit_per_month_hits_desktop, stats_visit_per_month_hits_mobile, stats_visit_per_month_hits_bots FROM $t_stats_visists_per_month WHERE stats_visit_per_month_month=$stats_month_mysql AND stats_visit_per_month_year=$stats_year_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
-list($get_current_stats_visit_per_year_id, $get_current_stats_visit_per_year_year, $get_current_stats_visit_per_year_human_unique, $get_current_stats_visit_per_year_human_unique_diff_from_last_year, $get_current_stats_visit_per_year_human_average_duration, $get_current_stats_visit_per_year_human_new_visitor_unique, $get_current_stats_visit_per_year_human_returning_visitor_unique, $get_current_stats_visit_per_year_unique_desktop, $get_current_stats_visit_per_year_unique_mobile, $get_current_stats_visit_per_year_unique_bots, $get_current_stats_visit_per_year_hits_total, $get_current_stats_visit_per_year_hits_human, $get_current_stats_visit_per_year_hits_desktop, $get_current_stats_visit_per_year_hits_mobile, $get_current_stats_visit_per_year_hits_bots) = $row;
+list($get_current_stats_visit_per_month_id, $get_current_stats_visit_per_month_month, $get_current_stats_visit_per_month_month_full, $get_current_stats_visit_per_month_month_short, $get_current_stats_visit_per_month_year, $get_current_stats_visit_per_month_human_unique, $get_current_stats_visit_per_month_human_unique_diff_from_last_month, $get_current_stats_visit_per_month_human_average_duration, $get_current_stats_visit_per_month_human_new_visitor_unique, $get_current_stats_visit_per_month_human_returning_visitor_unique, $get_current_stats_visit_per_month_unique_desktop, $get_current_stats_visit_per_month_unique_mobile, $get_current_stats_visit_per_month_unique_bots, $get_current_stats_visit_per_month_hits_total, $get_current_stats_visit_per_month_hits_human, $get_current_stats_visit_per_month_hits_desktop, $get_current_stats_visit_per_month_hits_mobile, $get_current_stats_visit_per_month_hits_bots) = $row;
 
-if($get_current_stats_visit_per_year_id == ""){
+if($get_current_stats_visit_per_month_id == ""){
 	echo"<p>Server error 404</p>";
 }
 else{	
 	echo"
 	<!-- Headline -->
-		<h1>Statistics $get_current_stats_visit_per_year_year</h1>
+		<h1>Statistics $get_current_stats_visit_per_month_month_full $get_current_stats_visit_per_month_year</h1>
 	<!-- //Headline -->
 	
 	<!-- Where am I? -->
 		<p><b>You are here:</b><br />
 		<a href=\"index.php?open=$open&amp;page=statistics&amp;l=$l\">Statistics</a>
 		&gt;
-		<a href=\"index.php?open=$open&amp;page=$page&amp;stats_year=$get_current_stats_visit_per_year_year&amp;l=$l\">$get_current_stats_visit_per_year_year</a>
+		<a href=\"index.php?open=$open&amp;page=statistics_year&amp;stats_year=$get_current_stats_visit_per_month_year&amp;l=$l\">$get_current_stats_visit_per_month_year</a>
+		&gt;
+		<a href=\"index.php?open=$open&amp;page=$page&amp;stats_year=$get_current_stats_visit_per_month_year&amp;stats_month=$get_current_stats_visit_per_month_month&amp;l=$l\">$get_current_stats_visit_per_month_month_full $get_current_stats_visit_per_month_year</a>
 		</p>
 	<!-- //Where am I? -->
 
@@ -101,8 +113,8 @@ else{
 	<!-- //Charts javascript -->
 
 
-	<!-- Visits per month -->
-		<h2 style=\"padding-bottom:0;margin-bottom:0;\">Visits per month</h2>
+	<!-- Visits per day -->
+		<h2 style=\"padding-bottom:0;margin-bottom:0;\">Visits per day</h2>
 
 		<script>
 		am4core.ready(function() {
@@ -110,18 +122,18 @@ else{
 			chart.data = [";
 
 			$x = 0;
-			$query = "SELECT stats_visit_per_month_id, stats_visit_per_month_month, stats_visit_per_month_month_short, stats_visit_per_month_year, stats_visit_per_month_human_unique, stats_visit_per_month_human_unique_diff_from_last_month, stats_visit_per_month_human_average_duration, stats_visit_per_month_human_new_visitor_unique, stats_visit_per_month_human_returning_visitor_unique, stats_visit_per_month_unique_desktop, stats_visit_per_month_unique_mobile, stats_visit_per_month_unique_bots, stats_visit_per_month_hits_total, stats_visit_per_month_hits_human, stats_visit_per_month_hits_desktop, stats_visit_per_month_hits_mobile, stats_visit_per_month_hits_bots FROM $t_stats_visists_per_month WHERE stats_visit_per_month_year=$get_current_stats_visit_per_year_year ORDER BY stats_visit_per_month_id DESC LIMIT 0,12";
+			$query = "SELECT stats_visit_per_day_id, stats_visit_per_day_day, stats_visit_per_day_day_full, stats_visit_per_day_day_three, stats_visit_per_day_day_single, stats_visit_per_day_month, stats_visit_per_day_month_full, stats_visit_per_day_month_short, stats_visit_per_day_year, stats_visit_per_day_human_unique, stats_visit_per_day_human_unique_diff_from_yesterday, stats_visit_per_day_human_average_duration, stats_visit_per_day_human_new_visitor_unique, stats_visit_per_day_human_returning_visitor_unique, stats_visit_per_day_unique_desktop, stats_visit_per_day_unique_mobile, stats_visit_per_day_unique_bots, stats_visit_per_day_hits_total, stats_visit_per_day_hits_human, stats_visit_per_day_hits_desktop, stats_visit_per_day_hits_mobile, stats_visit_per_day_hits_bots FROM $t_stats_visists_per_day WHERE stats_visit_per_day_month=$get_current_stats_visit_per_month_month AND stats_visit_per_day_year=$get_current_stats_visit_per_month_year ORDER BY stats_visit_per_day_id";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
-				list($get_stats_visit_per_month_id, $get_stats_visit_per_month_month, $get_stats_visit_per_month_month_short, $get_stats_visit_per_month_year, $get_stats_visit_per_month_human_unique, $get_stats_visit_per_month_human_unique_diff_from_last_month, $get_stats_visit_per_month_human_average_duration, $get_stats_visit_per_month_human_new_visitor_unique, $get_stats_visit_per_month_human_returning_visitor_unique, $get_stats_visit_per_month_unique_desktop, $get_stats_visit_per_month_unique_mobile, $get_stats_visit_per_month_unique_bots, $get_stats_visit_per_month_hits_total, $get_stats_visit_per_month_hits_human, $get_stats_visit_per_month_hits_desktop, $get_stats_visit_per_month_hits_mobile, $get_stats_visit_per_month_hits_bots) = $row;
+				list($get_stats_visit_per_day_id, $get_stats_visit_per_day_day, $get_stats_visit_per_day_day_full, $get_stats_visit_per_day_day_three, $get_stats_visit_per_day_day_single, $get_stats_visit_per_day_month, $get_stats_visit_per_day_month_full, $get_stats_visit_per_day_month_short, $get_stats_visit_per_day_year, $get_stats_visit_per_day_human_unique, $get_stats_visit_per_day_human_unique_diff_from_yesterday, $get_stats_visit_per_day_human_average_duration, $get_stats_visit_per_day_human_new_visitor_unique, $get_stats_visit_per_day_human_returning_visitor_unique, $get_stats_visit_per_day_unique_desktop, $get_stats_visit_per_day_unique_mobile, $get_stats_visit_per_day_unique_bots, $get_stats_visit_per_day_hits_total, $get_stats_visit_per_day_hits_human, $get_stats_visit_per_day_hits_desktop, $get_stats_visit_per_day_hits_mobile, $get_stats_visit_per_day_hits_bots) = $row;
 						
 				if($x > 0){
 					echo",";
 				}
 				echo"
 				{
-					\"x\": \"$get_stats_visit_per_month_month_short\",
-					\"value\": $get_stats_visit_per_month_human_unique
+					\"x\": \"$get_stats_visit_per_day_day_three $get_stats_visit_per_day_day\",
+					\"value\": $get_stats_visit_per_day_human_unique
 				}";
 				$x++;
 			} // while
@@ -150,7 +162,7 @@ else{
 		}); // end am4core.ready()
 		</script>
 		<div id=\"chartdiv_visits_per_month\" style=\"height: 400px;\"></div>
-	<!-- //Visits per month -->
+	<!-- //Visits per day -->
 
 
 	<!-- Accepted languages -->
@@ -162,7 +174,7 @@ else{
 				var chart = am4core.create(\"chartdiv_countries_year\", am4charts.PieChart);
 				chart.data = [";
 				$x = 0;
-				$query = "SELECT stats_country_id, stats_country_name, stats_country_unique, stats_country_hits FROM $t_stats_countries_per_year WHERE stats_country_year=$get_current_stats_visit_per_year_year";
+				$query = "SELECT stats_country_id, stats_country_name, stats_country_unique, stats_country_hits FROM $t_stats_countries_per_month WHERE stats_country_month=$get_current_stats_visit_per_month_month AND stats_country_year=$get_current_stats_visit_per_month_year";
 				$result = mysqli_query($link, $query);
 				while($row = mysqli_fetch_row($result)) {
 					list($get_stats_country_id, $get_stats_country_name, $get_stats_country_unique, $get_stats_country_hits) = $row;
@@ -200,7 +212,7 @@ else{
 				var chart = am4core.create(\"chartdiv_accepted_language_year\", am4charts.PieChart);
 				chart.data = [";
 				$x = 0;
-				$query = "SELECT stats_accepted_language_id, stats_accepted_language_year, stats_accepted_language_name, stats_accepted_language_unique, stats_accepted_language_hits FROM $t_stats_accepted_languages_per_year WHERE stats_accepted_language_year=$get_current_stats_visit_per_year_year";
+				$query = "SELECT stats_accepted_language_id, stats_accepted_language_year, stats_accepted_language_name, stats_accepted_language_unique, stats_accepted_language_hits FROM $t_stats_accepted_languages_per_month WHERE stats_accepted_language_month=$get_current_stats_visit_per_month_month AND stats_accepted_language_year=$get_current_stats_visit_per_month_year";
 				$result = mysqli_query($link, $query);
 				while($row = mysqli_fetch_row($result)) {
 					list($get_stats_accepted_language_id, $get_stats_accepted_language_year, $get_stats_accepted_language_name, $get_stats_accepted_language_unique, $get_stats_accepted_language_hits) = $row;
@@ -239,7 +251,7 @@ else{
 				var chart = am4core.create(\"chartdiv_os_year\", am4charts.PieChart);
 				chart.data = [";
 				$x = 0;
-				$query = "SELECT stats_os_id, stats_os_year, stats_os_name, stats_os_type, stats_os_unique, stats_os_hits FROM $t_stats_os_per_year WHERE stats_os_year=$get_current_stats_visit_per_year_year";
+				$query = "SELECT stats_os_id, stats_os_year, stats_os_name, stats_os_type, stats_os_unique, stats_os_hits FROM $t_stats_os_per_month WHERE stats_os_month=$get_current_stats_visit_per_month_month AND stats_os_year=$get_current_stats_visit_per_month_year";
 				$result = mysqli_query($link, $query);
 				while($row = mysqli_fetch_row($result)) {
 					list($get_stats_os_id, $get_stats_os_year, $get_stats_os_name, $get_stats_os_type, $get_stats_os_unique, $get_stats_os_hits) = $row;
@@ -279,7 +291,7 @@ else{
 				var chart = am4core.create(\"chartdiv_browsers_year\", am4charts.PieChart);
 				chart.data = [";
 				$x = 0;
-				$query = "SELECT stats_browser_id, stats_browser_year, stats_browser_name, stats_browser_unique, stats_browser_hits FROM $t_stats_browsers_per_year WHERE stats_browser_year=$get_current_stats_visit_per_year_year";
+				$query = "SELECT stats_browser_id, stats_browser_year, stats_browser_name, stats_browser_unique, stats_browser_hits FROM $t_stats_browsers_per_month WHERE stats_browser_month=$get_current_stats_visit_per_month_month AND stats_browser_year=$get_current_stats_visit_per_month_year";
 				$result = mysqli_query($link, $query);
 				while($row = mysqli_fetch_row($result)) {
 					list($get_stats_browser_id, $get_stats_browser_year, $get_stats_browser_name, $get_stats_browser_unique, $get_stats_browser_hits) = $row;
@@ -331,7 +343,7 @@ else{
 		 <tbody>
 		";
 
-		$query = "SELECT stats_bot_id, stats_bot_year, stats_bot_name, stats_bot_unique, stats_bot_hits FROM $t_stats_bots_per_year WHERE stats_bot_year=$get_current_stats_visit_per_year_year ORDER BY stats_bot_unique DESC LIMIT 0,5";
+		$query = "SELECT stats_bot_id, stats_bot_year, stats_bot_name, stats_bot_unique, stats_bot_hits FROM $t_stats_bots_per_month WHERE stats_bot_month=$get_current_stats_visit_per_month_month AND stats_bot_year=$get_current_stats_visit_per_month_year  ORDER BY stats_bot_unique DESC LIMIT 0,5";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
 			list($get_stats_bot_id, $get_stats_bot_year, $get_stats_bot_name, $get_stats_bot_unique, $get_stats_bot_hits) = $row;
@@ -393,7 +405,7 @@ else{
 		 <tbody>
 		";
 
-		$query = "SELECT stats_referer_id, stats_referer_year, stats_referer_from_url, stats_referer_to_url, stats_referer_unique, stats_referer_hits FROM $t_stats_referers_per_year WHERE stats_referer_year=$get_current_stats_visit_per_year_year ORDER BY stats_referer_unique DESC LIMIT 0,30";
+		$query = "SELECT stats_referer_id, stats_referer_year, stats_referer_from_url, stats_referer_to_url, stats_referer_unique, stats_referer_hits FROM $t_stats_referers_per_month WHERE stats_referer_month=$get_current_stats_visit_per_month_month AND stats_referer_year=$get_current_stats_visit_per_month_year ORDER BY stats_referer_unique DESC LIMIT 0,30";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
 			list($get_stats_referer_id, $get_stats_referer_year, $get_stats_referer_from_url, $get_stats_referer_to_url, $get_stats_referer_unique, $get_stats_referer_hits) = $row;

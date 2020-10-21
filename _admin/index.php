@@ -6,8 +6,8 @@ ini_set('arg_separator.output', '&amp;');
 *
 * File: _admin/index.php
 * Version 2.0.0
-* Date 21:16 26.04.2019
-* Copyright (c) 2008-2019 Sindre Andre Ditlefsen
+* Date 19:20 21.10.2020
+* Copyright (c) 2008-2020 Sindre Andre Ditlefsen
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -159,31 +159,6 @@ if(file_exists($mysql_config_file)){
 	$t_users_antispam_questions	= $mysqlPrefixSav . "users_antispam_questions";
 	$t_users_antispam_answers	= $mysqlPrefixSav . "users_antispam_answers";
 	
-	$t_stats_bot_ipblock		= $mysqlPrefixSav . "stats_bot_ipblock";
-	$t_stats_human_ipblock 		= $mysqlPrefixSav . "stats_human_ipblock";
-	$t_stats_human_online_records	= $mysqlPrefixSav . "stats_human_online_records";
-	$t_stats_user_agents 		= $mysqlPrefixSav . "stats_user_agents";
-	$t_stats_dayli 			= $mysqlPrefixSav . "stats_dayli";
-	$t_stats_monthly		= $mysqlPrefixSav . "stats_monthly";
-	$t_stats_browsers 		= $mysqlPrefixSav . "stats_browsers";
-	$t_stats_os	 		= $mysqlPrefixSav . "stats_os";
-	$t_stats_bots			= $mysqlPrefixSav . "stats_bots";
-	$t_stats_accepted_languages	= $mysqlPrefixSav . "stats_accepted_languages";
-	$t_stats_referers		= $mysqlPrefixSav . "stats_referers";
-	$t_stats_countries		= $mysqlPrefixSav . "stats_countries";
-
-	$t_stats_users_registered_weekly  = $mysqlPrefixSav . "stats_users_registered_weekly";
-	$t_stats_users_registered_monthly = $mysqlPrefixSav . "stats_users_registered_monthly";
-	$t_stats_users_registered_yearly  = $mysqlPrefixSav . "stats_users_registered_yearly";
-
-	$t_stats_comments_weekly  = $mysqlPrefixSav . "stats_comments_weekly";
-	$t_stats_comments_monthly = $mysqlPrefixSav . "stats_comments_monthly";
-	$t_stats_comments_yearly  = $mysqlPrefixSav . "stats_comments_yearly";
-
-	$t_stats_ip_to_country_ipv4 		= $mysqlPrefixSav . "stats_ip_to_country_ipv4";
-	$t_stats_ip_to_country_ipv6 		= $mysqlPrefixSav . "stats_ip_to_country_ipv6";
-	$t_stats_ip_to_country_geonames 	= $mysqlPrefixSav . "stats_ip_to_country_geonames";
-
 	$t_pages 			= $mysqlPrefixSav . "pages";
 	$t_pages_comments		= $mysqlPrefixSav . "pages_comments";
 	$t_navigation 			= $mysqlPrefixSav . "navigation";
@@ -460,8 +435,7 @@ echo"<!DOCTYPE html>
 			$special_css = "_inc/$open/_stylesheets/default.css";
 		}
 		if(file_exists("$special_css")){
-			$random = rand(0,999);
-			echo"<link rel=\"stylesheet\" type=\"text/css\" href=\"$special_css?random=$random\" />";
+			echo"<link rel=\"stylesheet\" type=\"text/css\" href=\"$special_css\" />";
 		}
 		else{
 			echo"<!-- $special_css doesnt exists -->";
@@ -472,7 +446,7 @@ echo"<!DOCTYPE html>
 
 
 	<!-- jQuery -->
-	<script type=\"text/javascript\" src=\"_javascripts/jquery/jquery-3.4.0.min.js\"></script>
+	<script type=\"text/javascript\" src=\"_javascripts/jquery/jquery-3.5.1.min.js\"></script>
 	<!-- //jQuery -->
 
 

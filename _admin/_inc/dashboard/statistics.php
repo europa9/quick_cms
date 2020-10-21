@@ -183,48 +183,73 @@ if($action == ""){
 		while($row = mysqli_fetch_row($result)) {
 			list($get_stats_visit_per_year_id, $get_stats_visit_per_year_year, $get_stats_visit_per_year_human_unique, $get_stats_visit_per_year_human_unique_diff_from_last_year, $get_stats_visit_per_year_human_average_duration, $get_stats_visit_per_year_human_new_visitor_unique, $get_stats_visit_per_year_human_returning_visitor_unique, $get_stats_visit_per_year_unique_desktop, $get_stats_visit_per_year_unique_mobile, $get_stats_visit_per_year_unique_bots, $get_stats_visit_per_year_hits_total, $get_stats_visit_per_year_hits_human, $get_stats_visit_per_year_hits_desktop, $get_stats_visit_per_year_hits_mobile, $get_stats_visit_per_year_hits_bots) = $row;
 			
-
-			// Style
-			if(isset($style) && $style == ""){
-				$style = "odd";
-			}
-			else{
-				$style = "";
-			}
-
-		
 			echo"
 			 <tr>
-			  <td class=\"$style\">
+			  <td>
 				<a id=\"#year$get_stats_visit_per_year_year\"></a>
 				<span>
 				<a href=\"index.php?open=$open&amp;page=statistics_year&amp;stats_year=$get_stats_visit_per_year_year&amp;&amp;l=$l&amp;editor_language=$editor_language\">$get_stats_visit_per_year_year</a>
 				</span>
 			  </td>
-			  <td class=\"$style\">
+			  <td>
 				<span>
 				$get_stats_visit_per_year_human_unique
 				</span>
 			  </td>
-			  <td class=\"$style\">
+			  <td>
 				<span>
 				$get_stats_visit_per_year_unique_desktop
 				</span>
 			  </td>
-			  <td class=\"$style\">
+			  <td>
 				<span>
 				$get_stats_visit_per_year_unique_mobile
 				</span>
 			  </td>
-			  <td class=\"$style\">
+			  <td>
 				<span>
 				$get_stats_visit_per_year_unique_bots
 				</span>
 			  </td>
 			 </tr>";
 
-
-		}
+			// Months
+			$query_m = "SELECT stats_visit_per_month_id, stats_visit_per_month_month, stats_visit_per_month_month_full, stats_visit_per_month_month_short, stats_visit_per_month_year, stats_visit_per_month_human_unique, stats_visit_per_month_human_unique_diff_from_last_month, stats_visit_per_month_human_average_duration, stats_visit_per_month_human_new_visitor_unique, stats_visit_per_month_human_returning_visitor_unique, stats_visit_per_month_unique_desktop, stats_visit_per_month_unique_mobile, stats_visit_per_month_unique_bots, stats_visit_per_month_hits_total, stats_visit_per_month_hits_human, stats_visit_per_month_hits_desktop, stats_visit_per_month_hits_mobile, stats_visit_per_month_hits_bots FROM $t_stats_visists_per_month WHERE stats_visit_per_month_year=$get_stats_visit_per_year_year";
+			$result_m = mysqli_query($link, $query_m);
+			while($row_m = mysqli_fetch_row($result_m)) {
+				list($get_stats_visit_per_month_id, $get_stats_visit_per_month_month, $get_stats_visit_per_month_month_full, $get_stats_visit_per_month_month_short, $get_stats_visit_per_month_year, $get_stats_visit_per_month_human_unique, $get_stats_visit_per_month_human_unique_diff_from_last_month, $get_stats_visit_per_month_human_average_duration, $get_stats_visit_per_month_human_new_visitor_unique, $get_stats_visit_per_month_human_returning_visitor_unique, $get_stats_visit_per_month_unique_desktop, $get_stats_visit_per_month_unique_mobile, $get_stats_visit_per_month_unique_bots, $get_stats_visit_per_month_hits_total, $get_stats_visit_per_month_hits_human, $get_stats_visit_per_month_hits_desktop, $get_stats_visit_per_month_hits_mobile, $get_stats_visit_per_month_hits_bots) = $row_m;
+			
+				echo"
+				 <tr>
+				  <td style=\"padding-left: 10px;\">
+					<a id=\"#month$get_stats_visit_per_year_year$get_stats_visit_per_month_month\"></a>
+					<span>
+					<a href=\"index.php?open=$open&amp;page=statistics_month&amp;stats_year=$get_stats_visit_per_year_year&amp;stats_month=$get_stats_visit_per_month_month&amp;l=$l&amp;editor_language=$editor_language\">$get_stats_visit_per_month_month_full $get_stats_visit_per_year_year</a>
+					</span>
+				  </td>
+				  <td>
+					<span>
+					$get_stats_visit_per_month_human_unique
+					</span>
+				  </td>
+				  <td>
+					<span>
+					$get_stats_visit_per_month_unique_desktop
+					</span>
+				  </td>
+				  <td>
+					<span>
+					$get_stats_visit_per_month_unique_mobile
+					</span>
+				  </td>
+				  <td>
+					<span>
+					$get_stats_visit_per_month_unique_bots
+					</span>
+				  </td>
+				 </tr>";
+			} // while months
+		} // while years
 		echo"
 			</table>
 		  </td>
@@ -369,7 +394,6 @@ elseif($action == "ipv4_to_country"){
 		<div class=\"tabs\">
 			<ul>
 				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;l=$l\">Statistics</a></li>
-				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=online_now&amp;l=$l\">Online now</a></li>
 				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=ipv4_to_country&amp;l=$l\" class=\"active\">IPv4 to country</a></li>
 				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=ipv6_to_country&amp;l=$l\">IPv6 to country</a></li>
 			</ul>
@@ -521,7 +545,6 @@ elseif($action == "ipv6_to_country"){
 		<div class=\"tabs\">
 			<ul>
 				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;l=$l\">Statistics</a></li>
-				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=online_now&amp;l=$l\">Online now</a></li>
 				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=ipv4_to_country&amp;l=$l\">IPv4 to country</a></li>
 				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=ipv6_to_country&amp;l=$l\" class=\"active\">IPv6 to country</a></li>
 			</ul>

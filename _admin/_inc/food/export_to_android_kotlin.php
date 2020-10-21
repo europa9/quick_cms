@@ -27,176 +27,56 @@ $t_food_favorites 		  = $mysqlPrefixSav . "food_favorites";
 $t_food_measurements	 	  = $mysqlPrefixSav . "food_measurements";
 $t_food_measurements_translations = $mysqlPrefixSav . "food_measurements_translations";
 
-/*- Categories -------------------------------------------------------------------------- */
+/*- Variables ------------------------------------------------------------------------ */
+if(isset($_GET['inc'])) {
+	$inc = $_GET['inc'];
+	$inc = strip_tags(stripslashes($inc));
+}
+else{
+	$inc = "";
+}
+
+/*- Content---------------------------------------------------------------------------- */
 echo"
-<p>
-import android.content.Context<br /><br />
+<h1>Export to Android Kotlin</h1>
 
-class SetupFoodCategories {<br />
-&nbsp; &nbsp; /*- Categories -------------------------------------------------------------------------- */<br />
-&nbsp; &nbsp; fun insertFoodCategories(context: Context){<br />
-&nbsp; &nbsp; &nbsp; &nbsp; var db: DatabaseHelper? = DatabaseHelper(context)<br /><br />
-";
-
-// Get all categories
-$q_count = 0;
-$category_count = 0;
-$insert_count = 0;
-$transfer_main_category_id = 0;
-$query = "SELECT category_id, category_name, category_parent_id FROM $t_food_categories WHERE category_user_id='0' AND category_parent_id='0'";
-$result = mysqli_query($link, $query);
-while($row = mysqli_fetch_row($result)) {
-	list($get_main_category_id, $get_main_category_name, $get_main_category_parent_id) = $row;
-
-	// Inp
-	$inp_main_category_name_mysql = quote_smart($link, $get_main_category_name);
-
-	if($insert_count == "0"){
-		echo"&nbsp; &nbsp; &nbsp; &nbsp; val q$q_count = &quot;INSERT INTO food_categories(category_id, category_user_id, category_name, category_parent_id) \n&quot; +<br />
-		&nbsp; &nbsp; &nbsp; &nbsp; &quot;VALUES &quot; +<br />
-        	";
-	}
-	else{
-		// Next insertion before
-		echo",&quot; + <br />\n";
-	}
-
-	// Insert main category
-	echo"
-	&nbsp; &nbsp; &nbsp; &nbsp; &quot;(NULL, '0', $inp_main_category_name_mysql, '0')";
-		
-	// Main count
-	$insert_count++;
-	$category_count++;
-	$transfer_main_category_id = $category_count;
-
-	// Get sub
-	$queryb = "SELECT category_id, category_name, category_parent_id FROM $t_food_categories WHERE category_user_id='0' AND category_parent_id='$get_main_category_id'";
-	$resultb = mysqli_query($link, $queryb);
-	while($rowb = mysqli_fetch_row($resultb)) {
-		list($get_sub_category_id, $get_sub_category_name, $get_sub_category_parent_id) = $rowb;
-
-		// Inp
-		$inp_sub_category_name_mysql = quote_smart($link, $get_sub_category_name);
-
-		if($insert_count == "0"){
-			echo"&nbsp; &nbsp; &nbsp; &nbsp; val q$q_count =&quot;INSERT INTO food_categories(category_id, category_user_id, category_name, category_parent_id) \n&quot; +<br />
-			&nbsp; &nbsp; &nbsp; &nbsp; &quot;VALUES &quot; +<br />
-      			";
+<!-- Tabs -->
+	<div class=\"tabs\">
+		<ul>\n";
+		$path = "_inc/food/_export_to_android_kotlin";
+		if(!(is_dir("$path"))){
+			echo"$path doesnt exists";
+			die;
 		}
-		else{
-			// Next insertion before
-			echo",&quot; + <br />\n";
-		}
+		if ($handle = opendir($path)) {
+			while (false !== ($file = readdir($handle))) {
+				if ($file === '.') continue;
+				if ($file === '..') continue;
+				$file = str_replace(".php", "", $file);
+				$file_saying = str_replace("_", " ", $file);
+				$file_saying = ucfirst($file_saying);
+				if($inc == ""){ $inc = "$file"; }
 
-		// Insert sub category
+				echo"			";
+				echo"<li><a href=\"index.php?open=food&amp;page=export_to_android_kotlin&amp;inc=$file&amp;editor_language=$editor_language&amp;l=$l\""; if($file == "$inc"){ echo" class=\"active\""; } echo">$file_saying</a></li>\n";
+			}
+		}
 		echo"
-		&nbsp; &nbsp; &nbsp; &nbsp; &quot;(NULL, '0', $inp_sub_category_name_mysql, '$transfer_main_category_id')";
+		</ul>
+	</div>
+	<div class=\"clear\" style=\"height: 10px;\"></div>
+<!-- //Tabs -->
 
-		// Sub count
-		$insert_count++;
-		$category_count++;
-
-
-
-		// End insert count
-		if($insert_count > 10){
-			// Insertion block finished
-			echo"&quot;<br />
-			&nbsp; &nbsp; &nbsp; &nbsp; db!!.query(q$q_count)<br /><br />
-			";
-			$insert_count = 0;
-			$q_count++;
-		}
-	}
-
-	// End insert count
-	if($insert_count > 10){
-		// Insertion block finished
-		echo"&quot;<br />
-		&nbsp; &nbsp; &nbsp; &nbsp; db!!.query(q$q_count)<br /><br />
-		";
-		$insert_count = 0;
-		$q_count++;
-	}
-} // while categories
-
-// End insert count
-if($insert_count != 0){
-	// Insertion block finished
-	echo"&quot;<br />
-	&nbsp; &nbsp; &nbsp; &nbsp; db!!.query(q$q_count)<br /><br />
-	";
-}
-
-echo"&nbsp; &nbsp; } // insertFoodCategories<br />
-</p>
-";
-
-
-
-/*- Categories Translations -------------------------------------------------------------------------- */
-echo"
-<p>
-&nbsp; &nbsp; /*- Categories Translations ------------------------------------------------------------- */<br />
-&nbsp; &nbsp; fun insertFoodCategoriesTranslations(context: Context){<br />
-&nbsp; &nbsp; &nbsp; &nbsp; var db: DatabaseHelper? = DatabaseHelper(context)<br /><br />
-";
-
-// Get all translations
-$q_count = 0;
-$insert_count = 0;
-$query = "SELECT category_translation_id, category_id, category_translation_language, category_translation_value FROM $t_food_categories_translations";
-$result = mysqli_query($link, $query);
-while($row = mysqli_fetch_row($result)) {
-	list($get_category_translation_id, $get_category_id, $get_category_translation_language, $get_category_translation_value) = $row;
-
-	// Inp
-	$inp_translation_value_mysql = quote_smart($link, $get_category_translation_value);
-
-	if($insert_count == "0"){
-		echo"&nbsp; &nbsp; &nbsp; &nbsp; val q$q_count = &quot;INSERT INTO food_categories_translations(category_translation_id, category_id, category_translation_language, category_translation_value) \n&quot; +<br />
-		&nbsp; &nbsp; &nbsp; &nbsp; &quot;VALUES &quot; +<br />
-        	";
+<!-- Inc -->";
+	if(file_exists("_inc/food/_export_to_android_kotlin/$inc.php")){
+		include("_inc/food/_export_to_android_kotlin/$inc.php");
 	}
 	else{
-		// Next insertion before
-		echo",&quot; + <br />\n";
+		echo"<p>Server error 404</p>
+		<p>_inc/food/_export_to_android_kotlin/$inc.php not found.</p>";
 	}
-
-	// Insert 
-	echo"
-	&nbsp; &nbsp; &nbsp; &nbsp; &quot;(NULL, $get_category_id, '$get_category_translation_language', $inp_translation_value_mysql)";
-	$insert_count++;
-
-
-	// End insert count
-	if($insert_count > 10){
-		// Insertion block finished
-		echo"&quot;<br />
-		&nbsp; &nbsp; &nbsp; &nbsp; db!!.query(q$q_count)<br /><br />
-		";
-		$insert_count = 0;
-		$q_count++;
-	}
-
-} // translations
-// End insert count
-if($insert_count != 0){
-	// Insertion block finished
-	echo"&quot;<br />
-	&nbsp; &nbsp; &nbsp; &nbsp; db!!.query(q$q_count)<br /><br />
-	";
-}
-
-echo"&nbsp; &nbsp; } // insertFoodCategoriesTranslations<br />
-</p>
-";
-
-/*- End class -------------------------------------------------------------------------- */
 echo"
-<p>
-} // class
-</p>
+<!-- //Inc -->
 ";
+
 ?>

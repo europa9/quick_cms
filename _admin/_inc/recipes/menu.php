@@ -29,12 +29,12 @@ if($page == "menu"){
 
 echo"
 
-			<li><a href=\"./?open=$open&amp;page=categories&amp;editor_language=$editor_language\""; if($page == "categories"){ echo" class=\"selected\""; } echo">$l_categories</a></li>
-			<li><a href=\"./?open=$open&amp;page=cuisines&amp;editor_language=$editor_language\""; if($page == "cuisines"){ echo" class=\"selected\""; } echo">$l_cuisines</a></li>
-			<li><a href=\"./?open=$open&amp;page=seasons&amp;editor_language=$editor_language\""; if($page == "seasons"){ echo" class=\"selected\""; } echo">$l_seasons</a></li>
-			<li><a href=\"./?open=$open&amp;page=occasions&amp;editor_language=$editor_language\""; if($page == "occasions"){ echo" class=\"selected\""; } echo">$l_occasions</a></li>
+			<li><a href=\"./?open=$open&amp;page=categories&amp;editor_language=$editor_language\""; if($page == "categories"){ echo" class=\"selected\""; } echo">Categories</a></li>
+			<li><a href=\"./?open=$open&amp;page=cuisines&amp;editor_language=$editor_language\""; if($page == "cuisines"){ echo" class=\"selected\""; } echo">Cuisines</a></li>
+			<li><a href=\"./?open=$open&amp;page=seasons&amp;editor_language=$editor_language\""; if($page == "seasons"){ echo" class=\"selected\""; } echo">Seasons</a></li>
+			<li><a href=\"./?open=$open&amp;page=occasions&amp;editor_language=$editor_language\""; if($page == "occasions"){ echo" class=\"selected\""; } echo">Occasions</a></li>
 			<li><a href=\"./?open=$open&amp;page=searches&amp;editor_language=$editor_language\""; if($page == "searches"){ echo" class=\"selected\""; } echo">Searches</a></li>
-			<li><a href=\"./?open=$open&amp;page=tables&amp;editor_language=$editor_language\""; if($page == "tables"){ echo" class=\"selected\""; } echo">$l_tables</a></li>
+			<li><a href=\"./?open=$open&amp;page=tables&amp;editor_language=$editor_language\""; if($page == "tables"){ echo" class=\"selected\""; } echo">Tables</a></li>
 	
 ";
 

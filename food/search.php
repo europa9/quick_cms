@@ -393,14 +393,14 @@ if($search_query != "" OR $manufacturer_name != "" OR $store_id != "" OR $barcod
 		";
 
 		// Send email to moderator
-		$q = str_replace("%", "", $q);
-		$q_encrypted = md5("$q");
-		$q_antispam_file = "$root/_cache/recipe_search_no_results_" . $q_encrypted . ".txt";
+		$search_query = str_replace("%", "", $search_query);
+		$search_query_encrypted = md5("$search_query");
+		$search_query_antispam_file = "$root/_cache/recipe_search_no_results_" . $search_query_encrypted . ".txt";
 		
-		if(!(file_exists("$q_antispam_file"))){
+		if(!(file_exists("$search_query_antispam_file"))){
 			
-			$fh = fopen($q_antispam_file, "w") or die("can not open file");
-			fwrite($fh, "$q");
+			$fh = fopen($search_query_antispam_file, "w") or die("can not open file");
+			fwrite($fh, "$search_query");
 			fclose($fh);
 			
 		
@@ -431,7 +431,7 @@ if($search_query != "" OR $manufacturer_name != "" OR $store_id != "" OR $barcod
 			$reply = "post@" . $_SERVER['HTTP_HOST'];
 			
 			$search_link = $configSiteURLSav . "/food/search.php?q=$q&amp;l=$l";
-			$subject = "No search result for $q at $host";
+			$subject = "No search result for $search_query at $host";
 
 			$message = "<html>\n";
 			$message = $message. "<head>\n";
@@ -440,7 +440,7 @@ if($search_query != "" OR $manufacturer_name != "" OR $store_id != "" OR $barcod
 			$message = $message. "<body>\n";
 
 			$message = $message . "<p>Hi $get_moderator_user_name,</p>\n\n";
-			$message = $message . "<p><b>Summary:</b><br />A user has searched for <em>$q</em> and got no search results at $host for lanugage $l.\n";
+			$message = $message . "<p><b>Summary:</b><br />A user has searched for <em>$search_query</em> and got no search results at $host for lanugage $l.\n";
 			$message = $message . "Please consider to add a recipe for that query.</p>\n\n";
 
 			$message = $message . "<p style='padding-bottom:0;margin-bottom:0'><b>Search information:</b></p>\n";

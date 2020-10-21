@@ -192,18 +192,39 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$inp_food_description_mysql = quote_smart($link, $inp_food_description);
 
 			if($ft == ""){
+
+				// Calculate per pcs
+				$inp_food_energy_calculated = round($get_food_energy*$inp_food_serving_size_gram/100, 0);
+				$inp_food_fat_calculated = round($get_food_fat*$inp_food_serving_size_gram/100, 0);
+				$inp_food_fat_of_which_saturated_fatty_acids_calculated = round($get_food_fat_of_which_saturated_fatty_acids*$inp_food_serving_size_gram/100, 0);
+				$inp_food_carbohydrates_calculated = round($get_food_carbohydrates*$inp_food_serving_size_gram/100, 0);
+				$inp_food_carbohydrates_of_which_dietary_fiber_calculated = round($get_food_carbohydrates_of_which_dietary_fiber*$inp_food_serving_size_gram/100, 0);
+				$inp_food_carbohydrates_of_which_sugars_calculated = round($get_food_carbohydrates_of_which_sugars*$inp_food_serving_size_gram/100, 0);
+				$inp_food_proteins_calculated = round($get_food_proteins*$inp_food_serving_size_gram/100, 0);
+				$inp_food_salt_calculated = round($get_food_salt*$inp_food_serving_size_gram/100, 0);
+				$inp_food_sodium_calculated = round($get_food_sodium*$inp_food_serving_size_gram/100, 0);
+				
 				
 	
 				// Update food_id
 				$result = mysqli_query($link, "UPDATE $t_food_index SET 
-							food_description=$inp_food_description_mysql, 
-food_net_content=$inp_food_net_content_mysql, 
-food_net_content_measurement=$inp_food_net_content_measurement_mysql, 
- food_serving_size_gram=$inp_food_serving_size_gram_mysql, 
- food_serving_size_gram_measurement=$inp_food_serving_size_gram_measurement_mysql, 
- food_serving_size_pcs=$inp_food_serving_size_pcs_mysql, 
- food_serving_size_pcs_measurement=$inp_food_serving_size_pcs_measurement_mysql
-WHERE food_id='$get_food_id'") or die(mysqli_error($link));
+								food_description=$inp_food_description_mysql, 
+								food_net_content=$inp_food_net_content_mysql, 
+								food_net_content_measurement=$inp_food_net_content_measurement_mysql, 
+								food_serving_size_gram=$inp_food_serving_size_gram_mysql, 
+								food_serving_size_gram_measurement=$inp_food_serving_size_gram_measurement_mysql, 
+								food_serving_size_pcs=$inp_food_serving_size_pcs_mysql, 
+								food_serving_size_pcs_measurement=$inp_food_serving_size_pcs_measurement_mysql,
+								food_energy_calculated='$inp_food_energy_calculated', 
+								food_fat_calculated='$inp_food_fat_calculated',
+								food_fat_of_which_saturated_fatty_acids_calculated='$inp_food_fat_of_which_saturated_fatty_acids_calculated',
+								food_carbohydrates_calculated='$inp_food_carbohydrates_calculated',
+								food_carbohydrates_of_which_dietary_fiber_calculated=$inp_food_carbohydrates_of_which_dietary_fiber_calculated, 
+								food_carbohydrates_of_which_sugars_calculated='$inp_food_carbohydrates_of_which_sugars_calculated',
+								food_proteins_calculated='$inp_food_proteins_calculated',
+								food_salt_calculated='$inp_food_salt_calculated',
+								food_sodium_calculated='$inp_food_sodium_calculated' 
+								WHERE food_id='$get_food_id'") or die(mysqli_error($link));
 
 
 				$url = "new_food_7_tags.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&food_id=$get_food_id&el=$l";

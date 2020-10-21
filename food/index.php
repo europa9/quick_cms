@@ -69,7 +69,7 @@ echo"
 	<div style=\"float: right;padding-top: 12px;\">
 		<form method=\"get\" action=\"search.php\" enctype=\"multipart/form-data\">
 		<p>
-		<input type=\"text\" name=\"q\" value=\"\" size=\"10\" id=\"nettport_inp_search_query\" />
+		<input type=\"text\" name=\"search_query\" value=\"\" size=\"10\" id=\"nettport_inp_search_query\" />
 		<input type=\"hidden\" name=\"l\" value=\"$l\" />
 		<input type=\"submit\" value=\"$l_search\" id=\"nettport_search_submit_button\" class=\"btn_default\" />
 		</p>
@@ -144,13 +144,13 @@ echo"
        			// getting the value that user typed
        			var searchString    = $(\"#nettport_inp_search_query\").val();
  			// forming the queryString
-      			var data            = 'order_by=$order_by&order_method=$order_method&l=$l&q='+ searchString;
+      			var data            = 'order_by=$order_by&order_method=$order_method&l=$l&search_query='+ searchString;
          
         		// if searchString is not empty
         		if(searchString) {
            			// ajax call
             			\$.ajax({
-                			type: \"POST\",
+                			type: \"GET\",
                				url: \"search_jquery.php\",
                 			data: data,
 					beforeSend: function(html) { // this happens before actual call
