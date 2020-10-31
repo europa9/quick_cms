@@ -197,6 +197,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$inp_image_text = $_POST['inp_image_text'];
 					$inp_image_text = output_html($inp_image_text);
 					$inp_image_text_mysql = quote_smart($link, $inp_image_text);
+									
+					$result = mysqli_query($link, "UPDATE $t_blog_posts SET blog_post_image_text=$inp_image_text_mysql WHERE blog_post_id=$get_current_blog_post_id") or die(mysqli_error($link));
+
 
 					// Upload
 					if($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -286,7 +289,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 									// Send feedback
 									$ft = "success";
 									$fm = "image_uploaded";
-									$url = "my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&l=$l&ft=$ft&fm=$fm"; 
+									// $url = "my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&l=$l&ft=$ft&fm=$fm"; 
+									$url = "my_blog_new_post_text.php?blog_post_id=$get_current_blog_post_id&l=$l&ft=$ft&fm=$fm"; 
 									header("Location: $url");
 									exit;
 
@@ -340,9 +344,22 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					&gt;
 					<a href=\"my_blog_new_post.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\">$l_new_post</a>
 					&gt;
-					<a href=\"my_blog_new_post_images.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\">$l_images</a>
+					<a href=\"my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\">$l_images</a>
 					</p>
 				<!-- //Where am I? -->
+
+				<!-- Process -->
+					<p><b>$l_process:</b><br />
+					<a href=\"my_blog_new_post_meta.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\">$l_meta</a>
+					-&gt; 
+					<a href=\"my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\" style=\"font-weight: bold;\">$l_main_image</a>
+					-&gt; 
+					<a href=\"my_blog_new_post.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\">$l_text</a>
+					-&gt; 
+					<a href=\"view_post.php?post_id=$get_current_blog_post_id&amp;l=$l\">$l_view_post</a>
+					</p>
+				<!-- //Process -->
+			
 
 				<!-- Feedback -->
 				";
@@ -359,16 +376,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				echo"	
 				<!-- //Feedback -->
 
-				<!-- Form Buttons (Navigation) -->
-					<p>
-					<a href=\"my_blog_new_post.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_text</a>
-					<a href=\"my_blog_new_post_meta.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_meta</a>
-					<a href=\"my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\" style=\"font-weight: bold;\">$l_main_image</a>
-					<a href=\"my_blog_new_post_images.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_images</a>
-					<a href=\"view_post.php?post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_view_post</a>
-					</p>
-				<!-- //Form Buttons (Navigation) -->
-			
+
+				<h2>$l_main_image</h2>
 
 				<!-- Upload image form -->
 		
@@ -417,7 +426,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					</p>
 
 
-					<p><input type=\"submit\" value=\"$l_save\" class=\"btn btn_default\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p>
+					<input type=\"submit\" value=\"$l_save\" class=\"btn btn_default\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+					<a href=\"my_blog_new_post_text.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_next</a>
+					</p>
 
 					</form>
 				<!-- //Upload image form -->

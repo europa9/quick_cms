@@ -13,4 +13,6 @@ $l_previous = "Previous";
 $l_confirm_delete = "Confirm delete";
 $l_main_image = "Main image";
 $l_view_post = "View post";
+$l_process = "Process";
+$l_next = "Next";
 ?>

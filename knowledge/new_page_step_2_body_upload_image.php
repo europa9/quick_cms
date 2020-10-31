@@ -279,6 +279,14 @@ else{
 					(NULL, $get_current_space_id, $get_current_page_id, $inp_type_mysql, $inp_ext_mysql, '1', $inp_title_mysql, $inp_file_path_mysql, $inp_file_name_mysql, $inp_file_thumb_a_mysql, $inp_file_thumb_b_mysql, 0, '$datetime', '$date_saying', $my_user_id_mysql, $inp_my_alias_mysql, $inp_my_email_mysql, $inp_my_image_mysql, $my_ip_mysql, $my_hostname_mysql, $my_user_agent_mysql, '$datetime', '$date_saying', $my_user_id_mysql, $inp_my_alias_mysql, $inp_my_email_mysql, $inp_my_image_mysql, $my_ip_mysql, $my_hostname_mysql, $my_user_agent_mysql)")
 					or die(mysqli_error($link));
 
+					// Resize image if it is over 1024 in witdth
+					if($width > 1024){
+						$newwidth=1024;
+						$newheight=($height/$width)*$newwidth; // 667
+						resize_crop_image($newwidth, $newheight, $filetowrite, $filetowrite);
+					}
+
+
 					// Respond to the successful upload with JSON.
 					// Use a location key to specify the path to the saved image resource.
 					// { location : '/your/uploaded/image/file'}
@@ -287,7 +295,24 @@ else{
 				} 
 				else {
 					// Notify editor that the upload failed
-					header("HTTP/1.1 500 Server Error");
+					switch ($_FILES['inp_image']['error']) {
+						case UPLOAD_ERR_OK:
+							$fm = "photo_unknown_error";
+							break;
+						case UPLOAD_ERR_NO_FILE:
+       							$fm = "no_file_selected";
+							break;
+						case UPLOAD_ERR_INI_SIZE:
+           						$fm = "photo_exceeds_filesize";
+							break;
+						case UPLOAD_ERR_FORM_SIZE:
+           						$fm = "photo_exceeds_filesize_form";
+							break;
+						default:
+           						$fm = "unknown_upload_error";
+							break;
+					}
+					header("HTTP/1.1 500 Server Error $fm");
 				}
 			} // page found
 		} // member of space
