@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* File: food/new_food_4_images.php
+* File: food/new_food_5_images.php
 * Version 1.0.0
 * Date 19:40 18.10.2020
 * Copyright (c) 2020 Sindre Andre Ditlefsen
@@ -158,7 +158,6 @@ else{
 					// Clean name
 					$food_name_clean = clean($get_food_name);
 					$food_manufacturer_name_clean = clean($get_food_manufacturer_name);
-					$store_dir = $food_manufacturer_name_clean . "_" . $get_food_clean_name;
 
 					// Directory for storing
 					if(!(is_dir("../_uploads"))){
@@ -173,8 +172,8 @@ else{
 					if(!(is_dir("../_uploads/food/_img/$l"))){
 						mkdir("../_uploads/food/_img/$l");
 					}
-					if(!(is_dir("../_uploads/food/_img/$l/$store_dir"))){
-						mkdir("../_uploads/food/_img/$l/$store_dir");
+					if(!(is_dir("../_uploads/food/_img/$l/$get_food_id"))){
+						mkdir("../_uploads/food/_img/$l/$get_food_id");
 					}
 				
 					/*- Image upload ------------------------------------------------------------------------------------------ */
@@ -196,7 +195,7 @@ else{
 							
 							$new_name = $food_manufacturer_name_clean . "_" . $food_name_clean . "_" . $image . "." . $extension;
 						
-							$new_path = "../_uploads/food/_img/$l/$store_dir/";
+							$new_path = "../_uploads/food/_img/$l/$get_food_id/";
 							$uploaded_file = $new_path . $new_name;
 							// Upload file
 							if (move_uploaded_file($_FILES['inp_image']['tmp_name'], $uploaded_file)) {
@@ -219,7 +218,7 @@ else{
 										resize_crop_image($settings_image_width, $settings_image_height, $uploaded_file, $uploaded_file_new, $quality = 80);
 									}
 
-									$inp_food_image_path = "_uploads/food/_img/$l/$store_dir";
+									$inp_food_image_path = "_uploads/food/_img/$l/$get_food_id";
 									$inp_food_image_path = output_html($inp_food_image_path);
 									$inp_food_image_path_mysql = quote_smart($link, $inp_food_image_path);
 									$inp_food_image_mysql = quote_smart($link, $new_name);
@@ -274,7 +273,7 @@ else{
 					}
 
 					// Feedback
-					$url = "new_food_4_images.php?main_category_id=$get_food_main_category_id&sub_category_id=$get_food_sub_category_id&food_id=$get_food_id&image=$image&ft=$ft&fm=$fm&l=$l";
+					$url = "new_food_5_images.php?main_category_id=$get_food_main_category_id&sub_category_id=$get_food_sub_category_id&food_id=$get_food_id&image=$image&ft=$ft&fm=$fm&l=$l";
 					header("Location: $url");
 					exit;
 
@@ -326,7 +325,7 @@ else{
 							</script>
 						<!-- //Focus -->
 
-						<form method=\"post\" action=\"new_food_4_images.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=$image&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+						<form method=\"post\" action=\"new_food_5_images.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=$image&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
 						<p>
 						<b>$l_select_product_image (jpg $settings_image_width x $settings_image_height px)</b><br />
@@ -351,7 +350,7 @@ else{
 							}
 							echo"
 							<a href=\"$root/$get_food_image_path/$get_food_image_a\"><img src=\"$root/$get_food_image_path/$get_food_thumb_a_medium\" alt=\"$get_food_thumb_a_medium\" /></a><br />
-							<a href=\"new_food_4_images.php?action=rotate&amp;main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=$image&amp;l=$l&amp;process=1\" class=\"btn btn_default\">$l_rotate</a>
+							<a href=\"new_food_5_images.php?action=rotate&amp;main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=$image&amp;l=$l&amp;process=1\" class=\"btn btn_default\">$l_rotate</a>
 							";
 						}
 					} // A
@@ -368,7 +367,7 @@ else{
 							}
 							echo"
 							<a href=\"$root/$get_food_image_path/$get_food_image_b\"><img src=\"$root/$get_food_image_path/$get_food_thumb_b_medium\" alt=\"$get_food_thumb_b_medium\" /></a><br />
-							<a href=\"new_food_4_images.php?action=rotate&amp;main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=$image&amp;l=$l&amp;process=1\" class=\"btn_default\">$l_rotate</a>
+							<a href=\"new_food_5_images.php?action=rotate&amp;main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=$image&amp;l=$l&amp;process=1\" class=\"btn_default\">$l_rotate</a>
 							";
 						}
 					} // B
@@ -385,7 +384,7 @@ else{
 							}
 							echo"
 							<a href=\"$root/$get_food_image_path/$get_food_image_c\"><img src=\"$root/$get_food_image_path/$get_food_thumb_c_medium\" alt=\"$get_food_thumb_c_medium\" /></a><br />
-							<a href=\"new_food_4_images.php?action=rotate&amp;main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=$image&amp;l=$l&amp;process=1\" class=\"btn_default\">$l_rotate</a>
+							<a href=\"new_food_5_images.php?action=rotate&amp;main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=$image&amp;l=$l&amp;process=1\" class=\"btn_default\">$l_rotate</a>
 							";
 						}
 					} // C
@@ -402,7 +401,7 @@ else{
 							}
 							echo"
 							<a href=\"$root/$get_food_image_path/$get_food_image_d\"><img src=\"$root/$get_food_image_path/$get_food_thumb_d_medium\" alt=\"$get_food_thumb_d_medium\" /></a><br />
-							<a href=\"new_food_4_images.php?action=rotate&amp;main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=$image&amp;l=$l&amp;process=1\" class=\"btn_default\">$l_rotate</a>
+							<a href=\"new_food_5_images.php?action=rotate&amp;main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=$image&amp;l=$l&amp;process=1\" class=\"btn_default\">$l_rotate</a>
 							";
 						}
 					} // D
@@ -414,33 +413,33 @@ else{
 					<p>";
 					if($image == "a"){
 						echo"
-						<a href=\"new_food_4_images.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=b&amp;l=$l\"><img src=\"_gfx/icons/go-next.png\" alt=\"go-next.png\" /></a>
-						<a href=\"new_food_4_images.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=b&amp;l=$l\">$l_upload_food_table_image</a>
+						<a href=\"new_food_5_images.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=b&amp;l=$l\"><img src=\"_gfx/icons/go-next.png\" alt=\"go-next.png\" /></a>
+						<a href=\"new_food_5_images.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=b&amp;l=$l\">$l_upload_food_table_image</a>
 						";
 					}
 					elseif($image == "b"){
 						echo"
-						<a href=\"new_food_4_images.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=c&amp;l=$l\"><img src=\"_gfx/icons/go-next.png\" alt=\"go-next.png\" /></a>
-						<a href=\"new_food_4_images.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=c&amp;l=$l\">$l_upload_image_of_barcode</a>
+						<a href=\"new_food_5_images.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=c&amp;l=$l\"><img src=\"_gfx/icons/go-next.png\" alt=\"go-next.png\" /></a>
+						<a href=\"new_food_5_images.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=c&amp;l=$l\">$l_upload_image_of_barcode</a>
 						";
 					}
 					elseif($image == "c"){
 						echo"
-						<a href=\"new_food_4_images.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=d&amp;l=$l\"><img src=\"_gfx/icons/go-next.png\" alt=\"go-next.png\" /></a>
-						<a href=\"new_food_4_images.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=d&amp;l=$l\">$l_upload_inspiration_image</a>
+						<a href=\"new_food_5_images.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=d&amp;l=$l\"><img src=\"_gfx/icons/go-next.png\" alt=\"go-next.png\" /></a>
+						<a href=\"new_food_5_images.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;image=d&amp;l=$l\">$l_upload_inspiration_image</a>
 						";
 					}
 					elseif($image == "d"){
 						if($get_food_country == "United States"){
 							echo"
-							<a href=\"new_food_5_numbers_united_states.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\"><img src=\"_gfx/icons/go-next.png\" alt=\"go-next.png\" /></a>
-							<a href=\"new_food_5_numbers_united_states.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\">$l_enter_numbers</a>
+							<a href=\"new_food_6_numbers_united_states.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\"><img src=\"_gfx/icons/go-next.png\" alt=\"go-next.png\" /></a>
+							<a href=\"new_food_6_numbers_united_states.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\">$l_enter_numbers</a>
 							";
 						}
 						else{
 							echo"
-							<a href=\"new_food_5_numbers_other.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\"><img src=\"_gfx/icons/go-next.png\" alt=\"go-next.png\" /></a>
-							<a href=\"new_food_5_numbers_other.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\">$l_enter_numbers</a>
+							<a href=\"new_food_6_numbers_other.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\"><img src=\"_gfx/icons/go-next.png\" alt=\"go-next.png\" /></a>
+							<a href=\"new_food_6_numbers_other.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\">$l_enter_numbers</a>
 							";
 						}
 					}
@@ -596,7 +595,7 @@ else{
 
 				
 
-				$url = "new_food_4_images.php?main_category_id=$get_food_main_category_id&sub_category_id=$get_food_sub_category_id&food_id=$food_id&image=$image&l=$l&ft=success&fm=image_rotated&image=$image";
+				$url = "new_food_5_images.php?main_category_id=$get_food_main_category_id&sub_category_id=$get_food_sub_category_id&food_id=$food_id&image=$image&l=$l&ft=success&fm=image_rotated&image=$image";
 				header("Location: $url");
 				exit;
 			} // action == "rotate"

@@ -470,7 +470,7 @@ else{
 							$inp_file_thumb_a_mysql = quote_smart($link, $inp_file_thumb_a);
 
 							$inp_file_thumb_b = $get_current_media_id . "_thumb_100." . $extension;
-							$inp_file_thumb_b_mysql = quote_smart($link, $inp_file_thumb_a);
+							$inp_file_thumb_b_mysql = quote_smart($link, $inp_file_thumb_b);
 
 							$result = mysqli_query($link, "UPDATE $t_knowledge_pages_media SET
 									media_file_name=$inp_file_name_mysql,

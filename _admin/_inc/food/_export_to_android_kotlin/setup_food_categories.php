@@ -19,7 +19,7 @@ echo"
 <p>
 import android.content.Context<br /><br />
 
-class SetupFoodCategories {<br />
+class Setup3FoodCategories {<br />
 &nbsp; &nbsp; /*- Categories -------------------------------------------------------------------------- */<br />
 &nbsp; &nbsp; fun insertFoodCategories(context: Context){<br />
 &nbsp; &nbsp; &nbsp; &nbsp; var db: DatabaseHelper? = DatabaseHelper(context)<br /><br />
@@ -50,7 +50,7 @@ while($row = mysqli_fetch_row($result)) {
 
 	// Insert main category
 	echo"
-	&nbsp; &nbsp; &nbsp; &nbsp; &quot;(NULL, '0', $inp_main_category_name_mysql, '0')";
+	&nbsp; &nbsp; &nbsp; &nbsp; &quot;($get_main_category_id, '0', $inp_main_category_name_mysql, '0')";
 		
 	// Main count
 	$insert_count++;
@@ -78,7 +78,7 @@ while($row = mysqli_fetch_row($result)) {
 
 		// Insert sub category
 		echo"
-		&nbsp; &nbsp; &nbsp; &nbsp; &quot;(NULL, '0', $inp_sub_category_name_mysql, '$transfer_main_category_id')";
+		&nbsp; &nbsp; &nbsp; &nbsp; &quot;($get_sub_category_id, '0', $inp_sub_category_name_mysql, '$get_main_category_id')";
 
 		// Sub count
 		$insert_count++;

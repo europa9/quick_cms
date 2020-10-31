@@ -142,7 +142,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	if($can_post == "true"){
 		if($get_blog_info_id == ""){
 			echo"
-			<h1><img src=\"$root/_webdesign/images/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />Loading...</h1>
+			<h1><img src=\"_gfx/loading.gif\" alt=\"loading.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />New Post Loading...</h1>
 			<meta http-equiv=\"refresh\" content=\"1;url=$root/blog/my_blog_setup.php?reference=new_post&amp;l=$l\">
 			<p>$l_creating_your_blog</p>
 			";
@@ -655,8 +655,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 else{
 	echo"
 	<h1>
-	<img src=\"_gfx/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
-	Loading...</h1>
+	<img src=\"_gfx/loading.gif\" alt=\"loading.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
+	New Post Loading...</h1>
+
+	<p>
+	Please log in.
+	</p>
+
 	<meta http-equiv=\"refresh\" content=\"1;url=$root/users/login.php?l=$l&amp;referer=$root/blog/my_blog.php\">
 	";
 }

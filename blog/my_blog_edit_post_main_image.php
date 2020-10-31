@@ -329,7 +329,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 
 
 
-					<p><b>$l_image:</b><br />
+					<p><b>$l_image: ($blogPostsImageSizeXSav x $blogPostsImageSizeYSav)</b><br />
 					<!-- Existing image? -->
 						";
 

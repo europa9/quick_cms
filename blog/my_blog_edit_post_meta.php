@@ -165,7 +165,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 
 
 				// Text, Main Images, Images, Meta, View post
-				$inp_submit = $_POST['inp_submit'];
+				if(isset($_POST['inp_submit'])){
+					$inp_submit = $_POST['inp_submit'];
+				}
+				else{
+					$inp_submit = "";
+				}
 				$inp_submit = output_html($inp_submit);
 				if($inp_submit == "$l_text"){
 					$url = "my_blog_edit_post.php?post_id=$get_current_blog_post_id&l=$l&ft=success&fm=changes_saved";

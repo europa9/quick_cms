@@ -130,7 +130,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 					$datetime = date("ymdhis");
 				
 					// Finnes mappen?
-					$upload_path = "$root/_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id";
+					$upload_path = "$root/_uploads/blog/$l/$get_current_blog_info_id/$get_current_blog_post_id";
 	
 					if(!(is_dir("$root/_uploads"))){
 						mkdir("$root/_uploads");
@@ -141,11 +141,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 					if(!(is_dir("$root/_uploads/blog/$l"))){
 						mkdir("$root/_uploads/blog/$l");
 					}
-					if(!(is_dir("$root/_uploads/blog/$l/$get_blog_info_id"))){
-						mkdir("$root/_uploads/blog/$l/$get_blog_info_id");
+					if(!(is_dir("$root/_uploads/blog/$l/$get_current_blog_info_id"))){
+						mkdir("$root/_uploads/blog/$l/$get_current_blog_info_id");
 					}
-					if(!(is_dir("$root/_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id"))){
-						mkdir("$root/_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id");
+					if(!(is_dir("$root/_uploads/blog/$l/$get_current_blog_info_id/$get_current_blog_post_id"))){
+						mkdir("$root/_uploads/blog/$l/$get_current_blog_info_id/$get_current_blog_post_id");
 					}
 
 					$inp_image_text = $_POST['inp_text'];
@@ -178,7 +178,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 						$inp_image_title_clean = clean($inp_image_title);
 						$inp_file = $inp_image_title_clean . ".$extension";
 						$inp_file_mysql = quote_smart($link, $inp_file);
-						$filename = "$root/_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id/". $inp_file;
+						$filename = "$root/_uploads/blog/$l/$get_current_blog_info_id/$get_current_blog_post_id/". $inp_file;
 
 
 						if($image){
@@ -208,7 +208,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 							
 
 									// Path
-									$inp_path = "_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id";
+									$inp_path = "_uploads/blog/$l/$get_current_blog_info_id/$get_current_blog_post_id";
 									$inp_path_mysql = quote_smart($link, $inp_path);
 
 
@@ -243,7 +243,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 
 									// Resize image to $blogPostsImageSizeXSav x $blogPostsImageSizeYSav
 									if($width > "$blogPostsImageSizeXSav" OR $height > "$blogPostsImageSizeYSav"){
-										$source_file = "$root/_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id/$inp_file";
+										$source_file = "$root/_uploads/blog/$l/$get_current_blog_info_id/$get_current_blog_post_id/$inp_file";
 										resize_crop_image($blogPostsImageSizeXSav, $blogPostsImageSizeYSav, $source_file, $source_file);
 									}
 
@@ -256,7 +256,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 [img]../_uploads/blog/"; 
 										$inp_text = $inp_text  . "$l";
 										$inp_text = $inp_text  . "/";
-										$inp_text = $inp_text  . "$get_blog_info_id";
+										$inp_text = $inp_text  . "$get_current_blog_info_id";
 										$inp_text = $inp_text  . "/";
 										$inp_text = $inp_text  . "$get_current_blog_post_id";
 										$inp_text = $inp_text  . "/";
@@ -272,7 +272,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 									elseif($blogEditModeSav == "wuciwug"){
 										$inp_text = "$get_current_blog_post_text
 <figure>
-	<img src=\"../_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id/$inp_file\" alt=\"$inp_file\" />
+	<img src=\"../_uploads/blog/$l/$get_current_blog_info_id/$get_current_blog_post_id/$inp_file\" alt=\"$inp_file\" />
 	<figcaption>$inp_image_text</figcaption>
 </figure>
 ";

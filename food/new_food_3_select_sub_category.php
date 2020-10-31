@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: food/new_food.php
+* File: food/new_food_3_select_sub_category.php
 * Version 1.0.0
 * Date 23:59 27.11.2017
 * Copyright (c) 2011-2017 Localhost
@@ -37,12 +37,16 @@ include("$root/_admin/_translations/site/$l/food/ts_new_food.php");
 
 
 /*- Variables ------------------------------------------------------------------------- */
-if(isset($_GET['mode'])){
-	$mode = $_GET['mode'];
-	$mode = output_html($mode);
+if(isset($_GET['barcode'])){
+	$barcode = $_GET['barcode'];
+	$barcode = output_html($barcode);
+	if($barcode != "" && !(is_numeric($barcode))){
+		echo"barcode_have_to_be_numeric";
+		exit;
+	}
 }
 else{
-	$mode = "";
+	$barcode = "";
 }
 
 if(isset($_GET['main_category_id'])){
@@ -127,19 +131,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 		<!-- Form -->
 
-			<form method=\"get\" action=\"new_food_3_general_information.php\" enctype=\"multipart/form-data\">
-	
 
-
-
-			<h2>$l_categorization</h2>
-			<table>
-			 <tr>
-			  <td style=\"text-align: right;padding: 0px 4px 0px 0px;\">
-				<p><b>$l_language:</b></p>
-			  </td>
-			  <td>
-				<script>
+			<!-- Scripts-->
+			<script>
+				\$(document).ready(function(){
+					\$('[name=\"sub_category_id\"]').focus();
+				});
 				\$(function(){
 					\$('.on_select_go_to_url').on('change', function () {
 						var url = \$(this).val(); // get selected value
@@ -149,33 +146,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						return false;
 					});
 				});
-				</script>
-				<p>
-				<select name=\"l\" class=\"on_select_go_to_url\">
-				<option value=\"$l\">- $l_please_select -</option>
-				<option value=\"$l\"></option>\n";
+			</script>
+			<!-- //Scripts---->
 
-
-				$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
-				$result = mysqli_query($link, $query);
-				while($row = mysqli_fetch_row($result)) {
-					list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
-
-					$flag_path 	= "_design/gfx/flags/16x16/$get_language_active_flag" . "_16x16.png";
-	
-					// No language selected?
-					if($editor_language == ""){
-							$editor_language = "$get_language_active_iso_two";
-					}
-				
-				
-					echo"	<option value=\"new_food_2_select_sub_category.php?main_category_id=$main_category_id&amp;l=$get_language_active_iso_two\" style=\"background: url('$flag_path') no-repeat;padding-left: 20px;\"";if($l == "$get_language_active_iso_two"){ echo" selected=\"selected\"";}echo">$get_language_active_name</option>\n";
-				}
-				echo"
-				</select>
-				</p>
-			  </td>
-			 </tr>
+			<h2>$l_categorization</h2>
+			<table>
 			 <tr>
 			  <td style=\"text-align: right;padding: 0px 4px 0px 0px;\">
 				<p><b>$l_category:</b></p>
@@ -201,7 +176,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				list($get_category_translation_value) = $row_t;
 
 				echo"
-				<option value=\"new_food_2_select_sub_category.php?main_category_id=$get_main_category_id&amp;l=$l\""; if($main_category_id == "$get_main_category_id"){ echo" selected=\"selected\""; } echo">$get_category_translation_value</option>\n";
+				<option value=\"new_food_3_select_sub_category.php?main_category_id=$get_main_category_id&amp;barcode=$barcode&amp;l=$l\""; if($main_category_id == "$get_main_category_id"){ echo" selected=\"selected\""; } echo">$get_category_translation_value</option>\n";
 				
 			}
 			echo"
@@ -211,7 +186,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			 </tr>
 			 <tr>
 			  <td style=\"text-align: right;padding: 0px 4px 0px 0px;\">
-				
+				<p><b>$l_sub_category:</b></p>
 			  </td>
 			  <td>
 				<p>
@@ -234,24 +209,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					list($get_category_translation_value) = $row_t;
 
 					echo"
-					<option value=\"new_food_3_general_information.php?main_category_id=$main_category_id&amp;sub_category_id=$get_sub_category_id&amp;l=$l\">$get_category_translation_value</option>\n";
+					<option value=\"new_food_4_general_information.php?main_category_id=$main_category_id&amp;sub_category_id=$get_sub_category_id&amp;barcode=$barcode&amp;&amp;l=$l\">$get_category_translation_value</option>\n";
 					
 				}
 				echo"
 				</select>
 				</p>
 
-			  </td>
-			 </tr>
-
-			 <tr>
-			  <td style=\"text-align: right;padding: 0px 4px 0px 0px;\">
-				
-			  </td>
-			  <td>
-				<p>
-				<input type=\"submit\" value=\"$l_next\" class=\"btn_default\" />
-				</p>
 			  </td>
 			 </tr>
 			</table>

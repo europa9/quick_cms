@@ -334,13 +334,13 @@ else{
 
 		}
 		else{
-			// Update hits
-			$inp_visit_per_year_hits_total = $get_stats_visit_per_year_hits_total+1;
-			$inp_visit_per_year_hits_bots = $get_stats_visit_per_year_hits_bots+1;
-			$result = mysqli_query($link, "UPDATE $t_stats_visists_per_year SET 
-							stats_visit_per_year_hits_total=$inp_visit_per_year_hits_total,
-							stats_visit_per_year_hits_bots=$inp_visit_per_year_hits_bots
-							WHERE stats_visit_per_year_id=$get_stats_visit_per_year_id") or die(mysqli_error($link));
+			// Update hits for bots
+			$inp_visit_per_month_hits_total = $get_stats_visit_per_month_hits_total+1;
+			$inp_visit_per_month_hits_bots = $get_stats_visit_per_month_hits_bots+1;
+			$result = mysqli_query($link, "UPDATE $t_stats_visists_per_month SET 
+							stats_visit_per_month_hits_total=$inp_visit_per_month_hits_total,
+							stats_visit_per_month_hits_bots=$inp_visit_per_month_hits_bots
+							WHERE stats_visit_per_month_id=$get_stats_visit_per_month_id") or die(mysqli_error($link));
 			
 		} // Visits :: Month
 
@@ -434,6 +434,7 @@ else{
 			$inp_visit_per_year_human_unique = $get_stats_visit_per_year_human_unique+1;
 			if($get_stats_user_agent_type == "desktop"){
 				$inp_visit_per_year_unique_desktop = $get_stats_visit_per_year_unique_desktop+1;
+				if($get_stats_visit_per_year_unique_mobile == ""){ $get_stats_visit_per_year_unique_mobile = "0"; }
 				$inp_visit_per_year_unique_mobile = $get_stats_visit_per_year_unique_mobile;
 			}
 			else{
@@ -443,7 +444,7 @@ else{
 			$inp_visit_per_year_hits_total = $get_stats_visit_per_year_hits_total+1;
 			$inp_visit_per_year_hits_human = $get_stats_visit_per_year_hits_human+1;
 			
-			// Update
+			// Update new human visitor this year
 			$result = mysqli_query($link, "UPDATE $t_stats_visists_per_year SET 
 							stats_visit_per_year_human_unique=$inp_visit_per_year_human_unique,
 							stats_visit_per_year_unique_desktop=$inp_visit_per_year_unique_desktop, 

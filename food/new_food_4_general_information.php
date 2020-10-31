@@ -37,12 +37,16 @@ include("$root/_admin/_translations/site/$l/food/ts_new_food.php");
 
 
 /*- Variables ------------------------------------------------------------------------- */
-if(isset($_GET['mode'])){
-	$mode = $_GET['mode'];
-	$mode = output_html($mode);
+if(isset($_GET['barcode'])){
+	$barcode = $_GET['barcode'];
+	$barcode = output_html($barcode);
+	if($barcode != "" && !(is_numeric($barcode))){
+		echo"barcode_have_to_be_numeric";
+		exit;
+	}
 }
 else{
-	$mode = "";
+	$barcode = "";
 }
 
 if(isset($_GET['main_category_id'])){
@@ -150,9 +154,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$inp_food_description = output_html($inp_food_description);
 			$inp_food_description_mysql = quote_smart($link, $inp_food_description);
 
-			$inp_food_barcode = $_POST['inp_food_barcode'];
-			$inp_food_barcode = output_html($inp_food_barcode);
-			$inp_food_barcode_mysql = quote_smart($link, $inp_food_barcode);
+			$inp_food_barcode_mysql = quote_smart($link, $barcode);
 
 			$inp_food_country = $_POST['inp_food_country'];
 			$inp_food_country = output_html($inp_food_country);
@@ -292,13 +294,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				
 
 				// Header
-				$url = "new_food_4_images.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&food_id=$get_food_id&image=a&l=$l";
+				$url = "new_food_5_images.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&food_id=$get_food_id&image=a&l=$l";
 				header("Location: $url");
 				exit;
 
 			}
 			else{
-				$url = "new_food_3_general_information.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&l=$l";
+				$url = "new_food_4_general_information.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&l=$l";
 				$url = $url . "&ft=$ft&fm=$fm";
 				$url = $url . "&inp_food_name=$inp_food_name";
 				$url = $url . "&inp_food_manufacturer_name=$inp_food_manufacturer_name";
@@ -351,7 +353,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			</script>
 			<!-- //Focus -->
 
-			<form method=\"post\" action=\"new_food_3_general_information.php?main_category_id=$main_category_id&amp;sub_category_id=$sub_category_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+			<form method=\"post\" action=\"new_food_4_general_information.php?main_category_id=$main_category_id&amp;sub_category_id=$sub_category_id&amp;l=$l&amp;barcode=$barcode&amp;process=1\" enctype=\"multipart/form-data\">
 
 			<h2>$l_general_information</h2>
 					
@@ -370,15 +372,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$inp_food_manufacturer_name= $_GET['inp_food_manufacturer_name'];
 					$inp_food_manufacturer_name = output_html($inp_food_manufacturer_name);
 					echo"$inp_food_manufacturer_name";
-				}
-				echo"\" size=\"40\" /></p>
-			
-			<p><b>$l_barcode:</b><br />
-			<input type=\"text\" name=\"inp_food_barcode\" value=\"";
-				if(isset($_GET['inp_food_barcode'])){
-					$inp_food_barcode = $_GET['inp_food_barcode'];
-					$inp_food_barcode = strip_tags(stripslashes($inp_food_barcode));
-					echo"$inp_food_barcode";
 				}
 				echo"\" size=\"40\" /></p>
 			

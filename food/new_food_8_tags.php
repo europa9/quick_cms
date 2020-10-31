@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: food/new_food_7_tags.php
+* File: food/new_food_8_tags.php
 * Version 1.0.0
 * Date 23:59 27.11.2017
 * Copyright (c) 2011-2017 Localhost
@@ -178,7 +178,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				or die(mysqli_error($link));
 			}
 
-			$url = "new_food_8_stores.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&food_id=$get_food_id&l=$l";
+			$url = "new_food_9_stores.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&food_id=$get_food_id&l=$l";
 			header("Location: $url");
 			exit;
 		}
@@ -210,7 +210,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				</script>
 			<!-- //Focus -->
 
-			<form method=\"post\" action=\"new_food_7_tags.php?main_category_id=$main_category_id&amp;sub_category_id=$sub_category_id&amp;food_id=$food_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+			<form method=\"post\" action=\"new_food_8_tags.php?main_category_id=$main_category_id&amp;sub_category_id=$sub_category_id&amp;food_id=$food_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 			<h2>$l_tags</h2>
 
 

@@ -123,7 +123,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 			if($process == "1"){
 				// Status
 				$inp_post_status = "$get_current_blog_post_status";
-				$inp_submit = $_POST['inp_submit'];
+				if(isset($_POST['inp_submit'])){
+					$inp_submit = $_POST['inp_submit'];
+				}
+				else{
+					$inp_submit = "";
+				}
 				$inp_submit = output_html($inp_submit);
 				if($inp_submit == "$l_publish" OR $inp_submit == "$l_save"){
 					$inp_post_status = "published";
@@ -191,7 +196,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 									blog_post_user_ip=$inp_user_ip_mysql
 									 WHERE blog_post_id=$get_current_blog_post_id");
 
-				if($inp_submit == "$l_publish" OR $inp_submit == "$l_save" OR inp_submit == "$l_save_draft" OR $inp_submit == "$l_unpublish_and_save_as_draft" OR $inp_submit == "$l_text"){
+				if($inp_submit == "$l_publish" OR $inp_submit == "$l_save" OR $inp_submit == "$l_save_draft" OR $inp_submit == "$l_unpublish_and_save_as_draft" OR $inp_submit == "$l_text"){
 					$url = "my_blog_edit_post.php?post_id=$get_current_blog_post_id&l=$l&ft=success&fm=changes_saved";
 				}
 				elseif($inp_submit == "$l_main_image"){

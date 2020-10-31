@@ -427,8 +427,8 @@ if($search_query != "" OR $manufacturer_name != "" OR $store_id != "" OR $barcod
 
 			// Mail from
 			$host = $_SERVER['HTTP_HOST'];
-			$from = "post@" . $_SERVER['HTTP_HOST'];
-			$reply = "post@" . $_SERVER['HTTP_HOST'];
+			$from = "$configFromEmailSav";
+			$reply = "$configFromEmailSav";
 			
 			$search_link = $configSiteURLSav . "/food/search.php?q=$q&amp;l=$l";
 			$subject = "No search result for $search_query at $host";
@@ -445,7 +445,7 @@ if($search_query != "" OR $manufacturer_name != "" OR $store_id != "" OR $barcod
 
 			$message = $message . "<p style='padding-bottom:0;margin-bottom:0'><b>Search information:</b></p>\n";
 			$message = $message . "<table>\n";
-			$message = $message . " <tr><td><span>Query:</span></td><td><span>$q</span></td></tr>\n";
+			$message = $message . " <tr><td><span>Query:</span></td><td><span>$search_query</span></td></tr>\n";
 			$message = $message . " <tr><td><span>Link:</span></td><td><span><a href=\"$search_link\">$search_link</a></span></td></tr>\n";
 			$message = $message . "</table>\n";
 

@@ -4,6 +4,7 @@ $l_new_food = "New food";
 $l_categorization = "Categorization";
 $l_name = "Name";
 $l_category = "Category";
+$l_sub_category = "Sub category";
 $l_please_select = "Please select";
 
 $l_general_information = "General information";
@@ -74,4 +75,5 @@ $l_age_restriction = "Age restriction";
 $l_yes = "Yes";
 $l_no = "No";
 $l_example_alcohol = "Example alcohol";
+$l_continue_without_barcode = "Continue without barcode";
 ?>

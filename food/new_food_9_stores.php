@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: food/new_food_7_tags.php
+* File: food/new_food_9_stores.php
 * Version 1.0.0
 * Date 23:59 27.11.2017
 * Copyright (c) 2011-2017 Localhost
@@ -169,7 +169,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				
 
 			
-				$url = "new_food_8_stores.php?food_id=$get_food_id&l=$l&ft=success&fm=changes_saved";
+				$url = "new_food_9_stores.php?food_id=$get_food_id&l=$l&ft=success&fm=changes_saved";
 				header("Location: $url");
 				exit;
 			}
@@ -215,7 +215,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 						if($get_food_store_id == ""){
 							echo"
-							<a href=\"new_food_8_stores.php?food_id=$get_food_id&amp;store_id=$get_store_id&amp;l=$l&amp;process=1\">$get_store_name</a><br />
+							<a href=\"new_food_9_stores.php?food_id=$get_food_id&amp;store_id=$get_store_id&amp;l=$l&amp;process=1\">$get_store_name</a><br />
 							";
 						}
 					}
@@ -233,7 +233,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						list($get_food_store_id, $get_food_store_store_name) = $row;
 
 						echo"
-						<a href=\"new_food_8_stores.php?action=remove_food_store&amp;food_id=$get_food_id&amp;food_store_id=$get_food_store_id&amp;l=$l&amp;process=1\">$get_food_store_store_name</a><br />
+						<a href=\"new_food_9_stores.php?action=remove_food_store&amp;food_id=$get_food_id&amp;food_store_id=$get_food_store_id&amp;l=$l&amp;process=1\">$get_food_store_store_name</a><br />
 						";
 					}
 
@@ -274,7 +274,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						mysqli_query($link, "DELETE FROM $t_food_index_stores WHERE food_store_id=$get_food_store_id") or die(mysqli_error($link));
 
 			
-						$url = "new_food_8_stores.php?food_id=$get_food_id&l=$l&ft=success&fm=changes_saved";
+						$url = "new_food_9_stores.php?food_id=$get_food_id&l=$l&ft=success&fm=changes_saved";
 						header("Location: $url");
 						exit;
 					}

@@ -683,7 +683,6 @@ else{
 					// Clean name
 					$food_name_clean = clean($get_food_name);
 					$food_manufacturer_name_clean = clean($get_food_manufacturer_name);
-					$store_dir = $food_manufacturer_name_clean . "_" . $get_food_clean_name;
 
 
 					// Directory for storing
@@ -699,8 +698,8 @@ else{
 					if(!(is_dir("../_uploads/food/_img/$l"))){
 						mkdir("../_uploads/food/_img/$l");
 					}
-					if(!(is_dir("../_uploads/food/_img/$l/$store_dir"))){
-						mkdir("../_uploads/food/_img/$l/$store_dir");
+					if(!(is_dir("../_uploads/food/_img/$l/$get_food_id"))){
+						mkdir("../_uploads/food/_img/$l/$get_food_id");
 					}
 				
 					/*- Image upload ------------------------------------------------------------------------------------------ */
@@ -737,7 +736,7 @@ else{
 								die;
 							}
 						
-							$new_path = "../_uploads/food/_img/$l/$store_dir/";
+							$new_path = "../_uploads/food/_img/$l/$get_food_id/";
 							$uploaded_file = $new_path . $new_name;
 							// Upload file
 							if (move_uploaded_file($_FILES['inp_food_image']['tmp_name'], $uploaded_file)) {
@@ -761,7 +760,7 @@ else{
 										resize_crop_image($settings_image_width, $settings_image_height, $uploaded_file, $uploaded_file_new, $quality = 80);
 									}
 
-									$inp_food_image_path = "_uploads/food/_img/$l/$store_dir";
+									$inp_food_image_path = "_uploads/food/_img/$l/$get_food_id";
 									$inp_food_image_path = output_html($inp_food_image_path);
 									$inp_food_image_path_mysql = quote_smart($link, $inp_food_image_path);
 									$inp_food_image_mysql = quote_smart($link, $new_name);

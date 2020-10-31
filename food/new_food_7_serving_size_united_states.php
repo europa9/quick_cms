@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: food/new_food_4_serving_size_united_states.php
+* File: food/new_food_7_serving_size_united_states.php
 * Version 1.0.0
 * Date 19:37 01.02.2019
 * Copyright (c) 2011-2019 Localhost
@@ -228,12 +228,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	
 
 
-				$url = "new_food_7_tags.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&food_id=$get_food_id&el=$l";
+				$url = "new_food_8_tags.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&food_id=$get_food_id&el=$l";
 				header("Location: $url");
 				exit;
 			}
 			else{
-				$url = "new_food_6_serving_size_united_states.php?food_id=$food_id&l=$l";
+				$url = "new_food_7_serving_size_united_states.php?food_id=$food_id&l=$l";
 				$url = $url . "&ft=$ft&fm=$fm";
 				$url = $url . "&inp_food_name=$inp_food_name";
 				$url = $url . "&inp_food_manufacturer_name=$inp_food_manufacturer_name";
@@ -286,7 +286,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						});
 					</script>
 					<!-- //Focus -->
-					<form method=\"post\" action=\"new_food_6_serving_size_united_states.php?food_id=$food_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+					<form method=\"post\" action=\"new_food_7_serving_size_united_states.php?food_id=$food_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
 			
 					<table>

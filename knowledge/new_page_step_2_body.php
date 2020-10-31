@@ -366,8 +366,8 @@ else{
 						<script>
 						tinymce.init({
 							selector: 'textarea.editor',
-							plugins: 'print preview searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern help',
-							toolbar: 'formatselect | bold italic strikethrough forecolor backcolor permanentpen formatpainter | link image media pageembed | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat | addcomment',
+							plugins: 'print preview searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern help code',
+							toolbar: 'formatselect | bold italic strikethrough forecolor backcolor permanentpen formatpainter | link image code media pageembed | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat | addcomment',
 							image_advtab: true,
 							content_css: [
 								'$root/_admin/_javascripts/tinymce_includes/fonts/lato/lato_300_300i_400_400i.css',
@@ -433,8 +433,12 @@ else{
 								{ title: 'None', value: '' },
 								{ title: 'Some class', value: 'class-name' }
 							],
+
+							/* without images_upload_url set, Upload tab won't show up*/
+							images_upload_url: 'new_page_step_2_body_upload_image.php?space_id=$space_id&page_id=$page_id&process=1',
+
 							importcss_append: true,
-							height: 400,
+							height: 700,
 							file_picker_callback: function (callback, value, meta) {
 								/* Provide file and text for the link dialog */
 								if (meta.filetype === 'file') {
@@ -471,7 +475,7 @@ else{
 						<p><b>$l_body</b> (<a href=\"media.php?space_id=$get_current_space_id&amp;action=open_folder&amp;page_id=$get_current_page_id&amp;l=$l\" target=\"_blank\" class=\"small\">$l_media</a>
 						&middot;
 						<a href=\"diagrams.php?space_id=$get_current_space_id&amp;page_id=$get_current_page_id&amp;l=$l\" target=\"_blank\" class=\"small\">$l_diagrams</a>)<br />
-						<textarea name=\"inp_text\" id=\"inp_text\" class=\"editor\" cols=\"40\" style=\"width: 100%;min-height:500px\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">$get_current_page_text</textarea>
+						<textarea name=\"inp_text\" id=\"inp_text\" class=\"editor\" cols=\"40\" style=\"width: 100%;min-height:700px\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">$get_current_page_text</textarea>
 						</p>
 
 						<p>

@@ -132,9 +132,18 @@ echo"
 (77, 0, 'Oils and vinegar', 0, 75, '', '2019-11-06 21:36:18', 'Created 2019-05-25 14:50:16\n\r\n'),
 (78, 0, 'Dressing', 0, 75, '', '2019-11-06 21:36:18', 'Created 2019-05-25 14:50:29\n\r\n'),
 (79, 0, 'Spices', 0, 75, '', '2019-11-06 21:36:18', 'Created 2019-05-25 14:50:38\n\r\n'),
-(80, 0, 'Broth and fund', 0, 75, '', '2019-11-06 21:36:18', 'Created 2019-05-25 14:51:05\n\r\n')
+(80, 0, 'Broth and fund', 0, 75, '', '2019-11-06 21:36:18', 'Created 2019-05-25 14:51:05\n\r\n'),
+(81, 0, 'Protein pudding', NULL, 27, NULL, NULL, 'Created 2020-10-19 16:58:32'),
+(82, 0, 'Fresh baked goods', NULL, 1, NULL, NULL, 'Created 2020-10-19 18:15:54'),
+(83, 0, 'Half-baked bread and baguettes', NULL, 1, NULL, NULL, 'Created 2020-10-20 17:37:26')
 			")
 			or die(mysqli_error($link));
+
+
+
+		mysqli_query($link, "ALTER TABLE $t_food_categories MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84")or die(mysqli_error($link));
+
+
 
 
 		/*- Original --------------------------------------------------------------------------- */

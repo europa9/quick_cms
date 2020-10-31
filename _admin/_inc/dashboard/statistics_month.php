@@ -349,7 +349,7 @@ else{
 			list($get_stats_bot_id, $get_stats_bot_year, $get_stats_bot_name, $get_stats_bot_unique, $get_stats_bot_hits) = $row;
 			
 
-			$percent = round(($get_stats_bot_unique/$get_current_stats_visit_per_year_unique_bots)*100);
+			$percent = round(($get_stats_bot_unique/$get_current_stats_visit_per_month_unique_bots)*100);
 			if($percent > 90){
 				$width = 90;
 			}
