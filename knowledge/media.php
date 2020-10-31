@@ -406,16 +406,19 @@ else{
 
 				// IP
 				$my_ip = $_SERVER['REMOTE_ADDR'];
-				$my_ip = output_html($inp_ip);
-				$my_ip_mysql = quote_smart($link, $inp_ip);
+				$my_ip = output_html($my_ip);
+				$my_ip_mysql = quote_smart($link, $my_ip);
 
-				$my_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
-				$my_hostname = output_html($inp_hostname);
-				$my_hostname_mysql = quote_smart($link, $inp_hostname);
+				$my_hostname = "";
+				if($configSiteUseGethostbyaddrSav == "1"){
+					$my_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+				}
+				$my_hostname = output_html($my_hostname);
+				$my_hostname_mysql = quote_smart($link, $my_hostname);
 
 				$my_user_agent = $_SERVER['HTTP_USER_AGENT'];
-				$my_user_agent = output_html($user_agent);
-				$my_user_agent_mysql = quote_smart($link, $user_agent);
+				$my_user_agent = output_html($my_user_agent);
+				$my_user_agent_mysql = quote_smart($link, $my_user_agent);
 
 
 

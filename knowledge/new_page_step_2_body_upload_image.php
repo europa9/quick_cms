@@ -266,7 +266,9 @@ else{
 					$my_hostname_mysql = quote_smart($link, $my_hostname);
 
 					$my_user_agent = "";
-					$my_user_agent = $_SERVER['HTTP_USER_AGENT'];
+					if($configSiteUseGethostbyaddrSav == "1"){
+						$my_user_agent = $_SERVER['HTTP_USER_AGENT'];
+					}
 					$my_user_agent = output_html($my_user_agent);
 					$my_user_agent_mysql = quote_smart($link, $my_user_agent);
 
