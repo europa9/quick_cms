@@ -16,7 +16,7 @@ if(!(isset($define_access_to_control_panel))){
 
 /*- Tables ---------------------------------------------------------------------------- */
 
-
+mysqli_query($link, "DROP TABLE IF EXISTS $t_blog_info");
 
 echo"
 	<!-- blog_info -->
@@ -66,6 +66,8 @@ echo"
 	  	   blog_comments INT,
 	  	   blog_views INT,
 	  	   blog_views_ipblock VARCHAR(250),
+	  	   blog_new_comments_email_warning INT,
+	  	   blog_unsubscribe_password VARCHAR(250),
 	  	   blog_user_ip VARCHAR(250))")
 		   or die(mysqli_error());
 

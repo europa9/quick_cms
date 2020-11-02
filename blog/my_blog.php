@@ -93,7 +93,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<div class=\"vertical\">
 				<ul>
 					<li><a href=\"my_blog_entries.php?l=$l\">$l_posts</a></li>
-					<li><a href=\"my_blog_new_post.php?l=$l&amp;process=1\">$l_new_post</a></li>
+					<li><a href=\"my_blog_new_post.php?l=$l\">$l_new_post</a></li>
 					<li><a href=\"my_blog_images.php?l=$l\">$l_images</a></li>
 					<li><a href=\"my_blog_info.php?l=$l\">$l_info</a></li>
 					<li><a href=\"my_blog_categories.php?l=$l\">$l_categories</a></li>

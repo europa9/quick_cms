@@ -60,10 +60,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	list($get_user_id, $get_user_email, $get_user_name, $get_user_alias, $get_user_rank) = $row;
 
 	// Get blog info
-	$query = "SELECT blog_info_id, blog_user_id, blog_language, blog_title, blog_description, blog_created, blog_updated, blog_posts, blog_comments, blog_views, blog_user_ip FROM $t_blog_info WHERE blog_user_id=$my_user_id_mysql AND blog_language=$l_mysql";
+	$query = "SELECT blog_info_id, blog_user_id, blog_language, blog_title, blog_description, blog_created, blog_updated, blog_posts, blog_comments, blog_views, blog_new_comments_email_warning, blog_user_ip FROM $t_blog_info WHERE blog_user_id=$my_user_id_mysql AND blog_language=$l_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_blog_info_id, $get_blog_user_id, $get_blog_language, $get_blog_title, $get_blog_description, $get_blog_created, $get_blog_updated, $get_blog_posts, $get_blog_comments, $get_blog_views, $get_blog_user_ip) = $row;
+	list($get_blog_info_id, $get_blog_user_id, $get_blog_language, $get_blog_title, $get_blog_description, $get_blog_created, $get_blog_updated, $get_blog_posts, $get_blog_comments, $get_blog_views, $get_blog_new_comments_email_warning, $get_blog_user_ip) = $row;
 
 	if($get_blog_info_id == ""){
 
@@ -85,11 +85,20 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$inp_description = output_html($inp_description);
 			$inp_description_mysql = quote_smart($link, $inp_description);
 
-
+			if(isset($_POST['inp_new_comments_email_warning'])){
+				$inp_new_comments_email_warning = $_POST['inp_new_comments_email_warning'];
+				$inp_new_comments_email_warning = 1;
+			}
+			else{
+				$inp_new_comments_email_warning = 0;
+			}
+			$inp_new_comments_email_warning = output_html($inp_new_comments_email_warning);
+			$inp_new_comments_email_warning_mysql = quote_smart($link, $inp_new_comments_email_warning);
 
 			// Update
 			$result = mysqli_query($link, "UPDATE $t_blog_info SET blog_title=$inp_title_mysql, 
-							blog_description=$inp_description_mysql WHERE blog_info_id='$get_blog_info_id'");
+							blog_description=$inp_description_mysql,
+							blog_new_comments_email_warning=$inp_new_comments_email_warning_mysql WHERE blog_info_id='$get_blog_info_id'");
  
 				
 
@@ -149,6 +158,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<textarea name=\"inp_description\" rows=\"5\" cols=\"50\">";
 			$get_blog_description = str_replace("<br />", "\n", $get_blog_description);
 			echo"$get_blog_description</textarea>
+			</p>
+
+			<p><b>$l_email_warning_on_new_comments:</b><br />
+			<input type=\"checkbox\" name=\"inp_new_comments_email_warning\" "; if($get_blog_new_comments_email_warning == "1"){ echo" checked=\"checked\""; } echo" />
 			</p>
 
 			<p><input type=\"submit\" value=\"$l_save\" class=\"btn btn_default\" /></p>

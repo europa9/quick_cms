@@ -96,11 +96,15 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$inp_user_ip = output_html($inp_user_ip);
 		$inp_user_ip_mysql = quote_smart($link, $inp_user_ip);
 
+		$inp_unsubscribe_password = uniqid();
+		$inp_unsubscribe_password = output_html($inp_unsubscribe_password);
+		$inp_unsubscribe_password_mysql = quote_smart($link, $inp_unsubscribe_password);
+
 
 		mysqli_query($link, "INSERT INTO $t_blog_info
-		(blog_info_id, blog_user_id, blog_language, blog_title, blog_created, blog_updated, blog_updated_rss, blog_posts, blog_comments, blog_views, blog_user_ip) 
+		(blog_info_id, blog_user_id, blog_language, blog_title, blog_created, blog_updated, blog_updated_rss, blog_posts, blog_comments, blog_views, blog_user_ip, blog_new_comments_email_warning, blog_unsubscribe_password) 
 		VALUES 
-		(NULL, $my_user_id_mysql, $l_mysql, $inp_blog_title_mysql, '$datetime', '$datetime', '$datetime_rss', '0', '0', '0', $inp_user_ip_mysql)
+		(NULL, $my_user_id_mysql, $l_mysql, $inp_blog_title_mysql, '$datetime', '$datetime', '$datetime_rss', '0', '0', '0', $inp_user_ip_mysql, 1, $inp_unsubscribe_password_mysql)
 		")
 		or die(mysqli_error($link));
 	}
@@ -161,7 +165,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 	echo"
 	<h1>
-	<img src=\"_gfx/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
+	<img src=\"_gfx/loading.gif\" alt=\"loading.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
 	Loading...</h1>
 	<meta http-equiv=\"refresh\" content=\"1;url=$url\">
 
@@ -172,7 +176,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 else{
 	echo"
 	<h1>
-	<img src=\"$root/_webdesign/images/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
+	<img src=\"_gfx/loading.gif\" alt=\"loading.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
 	Loading...</h1>
 	<meta http-equiv=\"refresh\" content=\"1;url=$root/users/index.php?page=login&amp;l=$l&amp;refer=$root/blog/my_blog.php\">
 	";

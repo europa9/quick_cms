@@ -207,6 +207,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						$image = $_FILES['inp_image']['name'];
 						$extension = get_extension($image);
 						$extension = strtolower($extension);
+						$extension = output_html($extension);
+						$inp_image_ext_mysql = quote_smart($link, $extension);
 
 						// Title
 						$inp_image_title = output_html($image);
@@ -284,7 +286,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 													blog_post_image_thumb_small=$inp_thumb_a_mysql,
 													blog_post_image_thumb_medium=$inp_thumb_b_mysql,
 													blog_post_image_thumb_large=$inp_thumb_c_mysql,
-													blog_post_image_file=$inp_file_mysql WHERE blog_post_id=$get_current_blog_post_id") or die(mysqli_error($link));
+													blog_post_image_file=$inp_file_mysql,
+													blog_post_image_ext=$inp_image_ext_mysql
+													 WHERE blog_post_id=$get_current_blog_post_id") or die(mysqli_error($link));
 
 									// Send feedback
 									$ft = "success";
@@ -385,7 +389,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 
-					<p><b>$l_image:</b><br />
+					<p><b>$l_image: ($blogPostsImageSizeXSav x $blogPostsImageSizeYSav)</b><br />
 					<!-- Existing image? -->
 						";
 
