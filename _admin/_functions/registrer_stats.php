@@ -839,6 +839,9 @@ else{
 
 
 		// Country :: Year
+		if($get_geoname_country_name == ""){
+			$get_geoname_country_name = "N/A";
+		}
 		$inp_geoname_country_name_mysql = quote_smart($link, $get_geoname_country_name);
 		$query = "SELECT stats_country_id, stats_country_unique, stats_country_hits FROM $t_stats_countries_per_year WHERE stats_country_year='$inp_year' AND stats_country_name=$inp_geoname_country_name_mysql";
 		$result = mysqli_query($link, $query);
