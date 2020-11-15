@@ -21,6 +21,8 @@ if(isset($_SESSION['admin_user_id'])){
 		   stats_comments_id INT NOT NULL AUTO_INCREMENT,
 		   PRIMARY KEY(stats_comments_id), 
 		   stats_comments_month INT,
+		   stats_comments_month_full VARCHAR(50),
+		   stats_comments_month_short VARCHAR(50),
 		   stats_comments_year INT,
 		   stats_comments_comments_written INT,
 		   stats_comments_comments_written_diff_from_last_month INT,

@@ -2,8 +2,8 @@
 /**
 *
 * File: downloads/view_download.php
-* Version 11:51 18.11.2018
-* Copyright (c) 2009-2018 Sindre Andre Ditlefsen
+* Version 11:07 15.11.2020
+* Copyright (c) 2009-2020 Sindre Andre Ditlefsen
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -24,6 +24,11 @@ else{ $root = "../../.."; }
 
 /*- Website config --------------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
+
+/*- Tables ------------------------------------------------------------------------------------ */
+$t_stats_comments_per_year	= $mysqlPrefixSav . "stats_comments_per_year";
+$t_stats_comments_per_month	= $mysqlPrefixSav . "stats_comments_per_month";
+$t_downloads_comments 		= $mysqlPrefixSav . "downloads_comments";
 
 /*- Translation ------------------------------------------------------------------------------ */
 
@@ -335,6 +340,34 @@ else{
 					$get_current_download_description
 				</div>
 			<!-- //Description -->
+
+			";
+			// New comment and read comments
+			if($process != "1"){
+				echo"
+				<!-- Comments -->
+					<a id=\"comments\"></a>
+
+					<!-- Feedback -->
+						";
+						if(isset($_GET['ft_comment']) && isset($_GET['fm_comment'])){
+							$ft_comment = $_GET['ft_comment'];
+							$ft_comment = output_html($ft_comment);
+							$fm_comment = $_GET['fm_comment'];
+							$fm_comment = output_html($fm_comment);
+							$fm_comment = str_replace("_", " ", $fm_comment);
+							$fm_comment = ucfirst($fm_comment);
+							echo"<div class=\"$ft_comment\"><span>$fm_comment</span></div>";
+						}
+						echo"	
+					<!-- //Feedback -->
+				";
+			}
+				include("view_download_include_new_comment.php");
+				include("view_download_include_fetch_comments.php");
+				
+				echo"
+			<!-- //Comments -->
 			";
 		} // action == ""
 		elseif($action == "download"){

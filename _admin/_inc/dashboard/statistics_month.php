@@ -146,7 +146,7 @@ else{
 			var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 							
 			// Create series
-			var series1 = chart.series.push(new am4charts.ColumnSeries);
+			var series1 = chart.series.push(new am4charts.LineSeries());
 			series1.dataFields.valueY = \"value\";
 			series1.dataFields.categoryX = \"x\";
 			series1.name = \"Unique visits\";

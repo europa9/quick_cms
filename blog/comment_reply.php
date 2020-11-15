@@ -51,6 +51,10 @@ $t_blog_ping_list_per_blog		= $mysqlPrefixSav . "blog_ping_list_per_blog";
 
 $t_blog_stats_most_used_categories	= $mysqlPrefixSav . "blog_stats_most_used_categories";
 
+$t_stats_comments_per_year 		= $mysqlPrefixSav . "stats_comments_per_year";
+$t_stats_comments_per_month 		= $mysqlPrefixSav . "stats_comments_per_month";
+
+
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/blog/ts_blog.php");
 include("$root/_admin/_translations/site/$l/blog/ts_my_blog.php");
@@ -146,6 +150,10 @@ else{
 
 			$datetime = date("Y-m-d H:i:s");
 			$date_saying = date("j M Y");
+			$year = date("Y");
+			$month = date("m");
+			$month_full = date("F");
+			$month_short = date("M");
 
 
 			$my_ip = $_SERVER['REMOTE_ADDR'];
@@ -180,6 +188,46 @@ else{
 				$row = mysqli_fetch_row($result);
 				list($get_current_reply_id) = $row;
 
+
+				// Stats :: Comments :: Year
+				$query = "SELECT stats_comments_id, stats_comments_comments_written FROM $t_stats_comments_per_year WHERE stats_comments_year='$year'";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_stats_comments_id, $get_stats_comments_comments_written) = $row;
+				if($get_stats_comments_id == ""){
+					mysqli_query($link, "INSERT INTO $t_stats_comments_per_year 
+					(stats_comments_id, stats_comments_year, stats_comments_comments_written) 
+					VALUES 
+					(NULL, $year, 1)")
+					or die(mysqli_error($link));
+				}
+				else{
+					$inp_counter = $get_stats_comments_comments_written+1;
+					mysqli_query($link, "UPDATE $t_stats_comments_per_year 
+								SET stats_comments_comments_written=$inp_counter
+								WHERE stats_comments_id=$get_stats_comments_id")
+								or die(mysqli_error($link));
+				}
+
+				// Stats :: Comments :: Month
+				$query = "SELECT stats_comments_id, stats_comments_comments_written FROM $t_stats_comments_per_month WHERE stats_comments_month='$month' AND stats_comments_year='$year'";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_stats_comments_id, $get_stats_comments_comments_written) = $row;
+				if($get_stats_comments_id == ""){
+					mysqli_query($link, "INSERT INTO $t_stats_comments_per_month 
+					(stats_comments_id, stats_comments_month, stats_comments_month_full, stats_comments_month_short, stats_comments_year, stats_comments_comments_written) 
+					VALUES 
+					(NULL, $month, '$month_full', '$month_short', $year, 1)")
+					or die(mysqli_error($link));
+				}
+				else{
+					$inp_counter = $get_stats_comments_comments_written+1;
+					mysqli_query($link, "UPDATE $t_stats_comments_per_month 
+								SET stats_comments_comments_written=$inp_counter
+								WHERE stats_comments_id=$get_stats_comments_id")
+								or die(mysqli_error($link));
+				}
 
 
 				// Refresh site

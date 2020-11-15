@@ -49,6 +49,10 @@ $t_courses_exams_user_tries		= $mysqlPrefixSav . "courses_exams_user_tries";
 $t_courses_exams_user_tries_qa		= $mysqlPrefixSav . "courses_exams_user_tries_qa";
 
 
+/*- Tables Stats ---------------------------------------------------------------------------- */
+$t_stats_comments_per_year 		= $mysqlPrefixSav . "stats_comments_per_year";
+$t_stats_comments_per_month 		= $mysqlPrefixSav . "stats_comments_per_month";
+
 /*- Translation ------------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/courses/ts_courses.php");
 
@@ -335,7 +339,51 @@ if($lesson_id != ""){
 						}
 					} // while e-mail
 
+					// Stats
+					$year = date("Y");
+					$month = date("m");
+					$month_full = date("F");
+					$month_short = date("M");
 
+					// Stats :: Comments :: Year
+					$query = "SELECT stats_comments_id, stats_comments_comments_written FROM $t_stats_comments_per_year WHERE stats_comments_year='$year'";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_stats_comments_id, $get_stats_comments_comments_written) = $row;
+					if($get_stats_comments_id == ""){
+						mysqli_query($link, "INSERT INTO $t_stats_comments_per_year 
+						(stats_comments_id, stats_comments_year, stats_comments_comments_written) 
+						VALUES 
+						(NULL, $year, 1)")
+						or die(mysqli_error($link));
+					}
+					else{
+						$inp_counter = $get_stats_comments_comments_written+1;
+						mysqli_query($link, "UPDATE $t_stats_comments_per_year 
+								SET stats_comments_comments_written=$inp_counter
+								WHERE stats_comments_id=$get_stats_comments_id")
+								or die(mysqli_error($link));
+					}
+
+					// Stats :: Comments :: Month
+					$query = "SELECT stats_comments_id, stats_comments_comments_written FROM $t_stats_comments_per_month WHERE stats_comments_month='$month' AND stats_comments_year='$year'";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_stats_comments_id, $get_stats_comments_comments_written) = $row;
+					if($get_stats_comments_id == ""){
+						mysqli_query($link, "INSERT INTO $t_stats_comments_per_month 
+						(stats_comments_id, stats_comments_month, stats_comments_month_full, stats_comments_month_short, stats_comments_year, stats_comments_comments_written) 
+						VALUES 
+						(NULL, $month, '$month_full', '$month_short', $year, 1)")
+						or die(mysqli_error($link));
+					}
+					else{
+						$inp_counter = $get_stats_comments_comments_written+1;
+						mysqli_query($link, "UPDATE $t_stats_comments_per_month 
+								SET stats_comments_comments_written=$inp_counter
+								WHERE stats_comments_id=$get_stats_comments_id")
+								or die(mysqli_error($link));
+					}
 
 					// Header
 					$url = "$root/$get_current_course_title_clean/$get_current_module_title_clean/$get_current_lesson_title_clean.php?course_id=$get_current_course_id&module_id=$get_current_module_id&lesson_id=$get_current_lesson_id&l=$l&ft=success&fm=comment_saved#comment$get_comment_id";

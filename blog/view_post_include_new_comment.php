@@ -12,13 +12,21 @@ if(!(isset($get_current_blog_post_id))){
 	echo"error";
 	die;
 }
+
+/*- Tables ---------------------------------------------------------------------------- */
+$t_stats_comments_per_year 		= $mysqlPrefixSav . "stats_comments_per_year";
+$t_stats_comments_per_month 		= $mysqlPrefixSav . "stats_comments_per_month";
+
+
+
 // Logged in?
 if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	// Link
-	echo"
-	<a id=\"new_blog_comment_form\"></a>
-	";
-
+	if($process != "1"){
+		echo"
+		<a id=\"new_comment_form\"></a>
+		";
+	}
 	
 	// Dates
 	$time = time();
@@ -63,6 +71,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			$datetime = date("Y-m-d H:i:s");
 			$date_saying = date("j M Y");
+			$month_full = date("F");
+			$month_short = date("M");
 
 			if($inp_text == ""){
 				$url = "view_post.php?post_id=$get_current_blog_post_id&amp;l=$l&amp;ft_comment=warning&fm_comment=missing_text#new_blog_comment_form";
@@ -157,20 +167,58 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 					// Preferences for Subject field
-					$headers[] = 'MIME-Version: 1.0';
-					$headers[] = 'Content-type: text/html; charset=utf-8';
-					$headers[] = "From: $configFromNameSav <" . $configFromEmailSav . ">";
-					mail($get_blog_owner_user_email, $subject, $message, implode("\r\n", $headers));
+					$headers = 'MIME-Version: 1.0\n';
+					$headers = $headers . 'Content-type: text/html; charset=utf-8\n';
+					$headers = $headers . "From: $configFromNameSav <" . $configFromEmailSav . ">";
+					mail($get_blog_owner_user_email, $subject, $message, $headers);
 				
-
 				} // $get_current_blog_new_comments_email_warning == 1
 
+				// Stats :: Comments :: Year
+				$query = "SELECT stats_comments_id, stats_comments_comments_written FROM $t_stats_comments_per_year WHERE stats_comments_year='$year'";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_stats_comments_id, $get_stats_comments_comments_written) = $row;
+				if($get_stats_comments_id == ""){
+					mysqli_query($link, "INSERT INTO $t_stats_comments_per_year 
+					(stats_comments_id, stats_comments_year, stats_comments_comments_written) 
+					VALUES 
+					(NULL, $year, 1)")
+					or die(mysqli_error($link));
+				}
+				else{
+					$inp_counter = $get_stats_comments_comments_written+1;
+					mysqli_query($link, "UPDATE $t_stats_comments_per_year 
+								SET stats_comments_comments_written=$inp_counter
+								WHERE stats_comments_id=$get_stats_comments_id")
+								or die(mysqli_error($link));
+				}
 
+				// Stats :: Comments :: Month
+				$query = "SELECT stats_comments_id, stats_comments_comments_written FROM $t_stats_comments_per_month WHERE stats_comments_month='$month' AND stats_comments_year='$year'";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_stats_comments_id, $get_stats_comments_comments_written) = $row;
+				if($get_stats_comments_id == ""){
+					mysqli_query($link, "INSERT INTO $t_stats_comments_per_month 
+					(stats_comments_id, stats_comments_month, stats_comments_month_full, stats_comments_month_short, stats_comments_year, stats_comments_comments_written) 
+					VALUES 
+					(NULL, $month, '$month_full', '$month_short', $year, 1)")
+					or die(mysqli_error($link));
+				}
+				else{
+					$inp_counter = $get_stats_comments_comments_written+1;
+					mysqli_query($link, "UPDATE $t_stats_comments_per_month 
+								SET stats_comments_comments_written=$inp_counter
+								WHERE stats_comments_id=$get_stats_comments_id")
+								or die(mysqli_error($link));
+				}
+
+				
 				// Refresh site
 				$url = "view_post.php?post_id=$get_current_blog_post_id&l=$l&ft_comment=success&fm_comment=comment_saved#comment$get_current_comment_id";
 				header("Location: $url");
 				exit;
-
 				/*
 				echo"
 				<h2><img src=\"_gfx/loading.gif\" alt=\"loading.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" /> $l_posting_comment..</h1>
@@ -186,6 +234,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		} // action == post_comment
 		echo"
 		<!-- New blog comment form -->
+			<hr />
 			<h2>$l_write_a_comment</h2>
 			<form method=\"post\" action=\"view_post.php?post_id=$get_current_blog_post_id&amp;action=post_comment&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 		

@@ -311,6 +311,59 @@ else{
 
 
 
+	<!-- Comments per month -->
+		<h2>Comments per month</h2>
+
+
+
+		<script>
+		am4core.ready(function() {
+			var chart = am4core.create(\"chartdiv_comments_per_month\", am4charts.XYChart);
+			chart.data = [";
+
+			$x = 0;
+			$query = "SELECT stats_comments_id, stats_comments_month_short, stats_comments_comments_written FROM $t_stats_comments_per_month WHERE stats_comments_year=$get_current_stats_visit_per_year_year ORDER BY stats_comments_month";
+			$result = mysqli_query($link, $query);
+			while($row = mysqli_fetch_row($result)) {
+				list($get_stats_comments_id, $get_stats_comments_month_short, $get_stats_comments_comments_written) = $row;
+						
+				if($x > 0){
+					echo",";
+				}
+				echo"
+				{
+					\"x\": \"$get_stats_comments_month_short\",
+					\"value\": $get_stats_comments_comments_written
+				}";
+				$x++;
+			} // while
+
+			echo"
+			];
+			// Create axes
+			var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+			categoryAxis.dataFields.category = \"x\";
+			var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+							
+			// Create series
+			var series1 = chart.series.push(new am4charts.LineSeries());
+			series1.dataFields.valueY = \"value\";
+			series1.dataFields.categoryX = \"x\";
+			series1.name = \"Unique visits\";
+			series1.tooltipText = \"Unique visits: {valueY}\";
+			series1.fill = am4core.color(\"#99e4dc\");
+			series1.stroke = am4core.color(\"#66d5c9\");
+			series1.strokeWidth = 1;
+
+			// Tooltips
+			chart.cursor = new am4charts.XYCursor();
+			chart.cursor.snapToSeries = series;
+			chart.cursor.xAxis = valueAxis;
+		}); // end am4core.ready()
+		</script>
+		<div id=\"chartdiv_comments_per_month\" style=\"height: 400px;\"></div>
+	<!-- //Comments per month -->
+
 
 	<!-- Bots -->
 		<h2>$l_bots</h2>

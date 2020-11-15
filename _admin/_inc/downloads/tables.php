@@ -27,11 +27,15 @@ function fix_local($value){
 }
 /*- Tables ---------------------------------------------------------------------------- */
 $t_downloads_index 				= $mysqlPrefixSav . "downloads_index";
+$t_downloads_comments				= $mysqlPrefixSav . "downloads_comments";
+
 $t_downloads_main_categories 			= $mysqlPrefixSav . "downloads_main_categories";
 $t_downloads_main_categories_translations 	= $mysqlPrefixSav . "downloads_main_categories_translations";
 
 $t_downloads_sub_categories 			= $mysqlPrefixSav . "downloads_sub_categories";
 $t_downloads_sub_categories_translations 	= $mysqlPrefixSav . "downloads_sub_categories_translations";
+
+
 
 echo"
 <h1>Tables</h1>
@@ -64,25 +68,7 @@ echo"
 		mysqli_query($link, "INSERT INTO $t_downloads_main_categories
 		(`main_category_id`, `main_category_title`, `main_category_title_clean`, `main_category_icon_path`, `main_category_icon_file`, `main_category_created`)
 		VALUES
-		(NULL, 'Android', 'android', '_uploads/downloads/_icons', '1.png', '$datetime'),
-		(NULL, 'Apache Camel', 'apache_camel', '_uploads/downloads/_icons', '2.png', '$datetime'),
-		(NULL, 'Ask IT Software', 'ask_it_software', '_uploads/downloads/_icons', '3.png', '$datetime'),
-		(NULL, 'c', 'c', '_uploads/downloads/_icons', '4.png', '$datetime'),
-		(NULL, 'Community website from scratch', 'community_website_from_scratch', '_uploads/downloads/_icons', '5.png', '$datetime'),
-		(NULL, 'C++', 'cpp', '_uploads/downloads/_icons', '6.png', '$datetime'),
-		(NULL, 'C#', 'csharp', '_uploads/downloads/_icons', '7.png', '$datetime'),
-		(NULL, 'FTP', 'ftp', '_uploads/downloads/_icons', '8.png', '$datetime'),
-		(NULL, 'HiVe', 'hive', '_uploads/downloads/_icons', '9.png', '$datetime'),
-		(NULL, 'HTML5', 'html5', '_uploads/downloads/_icons', '10.png', '$datetime'),
-		(NULL, 'Java', 'java', '_uploads/downloads/_icons', '11.png', '$datetime'),
-		(NULL, 'jQuery', 'jquery', '_uploads/downloads/_icons', '12.png', '$datetime'),
-		(NULL, 'Kibana', 'kibana', '_uploads/downloads/_icons', '13.png', '$datetime'),
-		(NULL, 'Mathematics', 'mathematics', '_uploads/downloads/_icons', '14.png', '$datetime'),
-		(NULL, 'MySQLi', 'mysqli', '_uploads/downloads/_icons', '15.png', '$datetime'),
-		(NULL, 'Optimization', 'optimization', '_uploads/downloads/_icons', '16.png', '$datetime'),
-		(NULL, 'PHP', 'php', '_uploads/downloads/_icons', '17.png', '$datetime'),
-		(NULL, 'VHDL', 'vhdl', '_uploads/downloads/_icons', '18.png', '$datetime'),
-		(NULL, 'webdesign', 'webdesign', '_uploads/downloads/_icons', '19.png', '$datetime')");
+		(NULL, 'Downloads', 'downloads', '_uploads/downloads/_icons', '1.png', '$datetime')");
 	}
 	echo"
 	<!-- //downloads_main_categories -->
@@ -219,5 +205,45 @@ echo"
 	<!-- //downloads_index -->
 
 	
+	<!-- downloads_comments -->
+	";
+	$query = "SELECT * FROM $t_downloads_comments";
+	$result = mysqli_query($link, $query);
+	if($result !== FALSE){
+		// Count rows
+		$row_cnt = mysqli_num_rows($result);
+		echo"
+		<p>$t_downloads_comments: $row_cnt</p>
+		";
+	}
+	else{
+		mysqli_query($link, "CREATE TABLE $t_downloads_comments(
+	  	 comment_id INT NOT NULL AUTO_INCREMENT,
+	 	  PRIMARY KEY(comment_id), 
+	  	   comment_download_id INT,
+	  	   comment_text TEXT,
+	  	   comment_by_user_id INT,
+	  	   comment_by_user_name VARCHAR(50),
+	  	   comment_by_user_image_path VARCHAR(250),
+	  	   comment_by_user_image_file VARCHAR(50),
+	  	   comment_by_user_image_thumb_60 VARCHAR(50),
+	  	   comment_by_user_ip VARCHAR(200),
+	  	   comment_created DATETIME,
+	  	   comment_created_saying VARCHAR(50),
+	  	   comment_created_timestamp VARCHAR(50),
+	  	   comment_updated DATETIME,
+	  	   comment_updated_saying VARCHAR(50),
+	  	   comment_likes INT,
+	  	   comment_dislikes INT,
+	  	   comment_number_of_replies INT,
+	  	   comment_read_blog_owner INT,
+	  	   comment_reported INT,
+	  	   comment_reported_by_user_id INT,
+	  	   comment_reported_reason TEXT,
+	  	   comment_reported_checked INT)")
+		   or die(mysqli_error());
+	}
+	echo"
+	<!-- //downloads_comments -->
 	";
 ?>
