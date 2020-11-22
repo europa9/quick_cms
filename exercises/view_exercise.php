@@ -46,6 +46,25 @@ if(isset($_GET['exercise_id'])){
 else{
 	$exercise_id = "";
 }
+/*- Tables ---------------------------------------------------------------------------- */
+$t_exercise_index 				= $mysqlPrefixSav . "exercise_index";
+$t_exercise_index_images			= $mysqlPrefixSav . "exercise_index_images";
+$t_exercise_index_videos			= $mysqlPrefixSav . "exercise_index_videos";
+$t_exercise_index_muscles			= $mysqlPrefixSav . "exercise_index_muscles";
+$t_exercise_index_muscles_images		= $mysqlPrefixSav . "exercise_index_muscles_images";
+$t_exercise_index_tags				= $mysqlPrefixSav . "exercise_index_tags";
+$t_exercise_tags_cloud				= $mysqlPrefixSav . "exercise_tags_cloud";
+$t_exercise_index_comments			= $mysqlPrefixSav . "exercise_index_comments";
+$t_exercise_index_translations_relations	= $mysqlPrefixSav . "exercise_index_translations_relations";
+$t_exercise_equipments 				= $mysqlPrefixSav . "exercise_equipments";
+$t_exercise_types				= $mysqlPrefixSav . "exercise_types";
+$t_exercise_types_translations 			= $mysqlPrefixSav . "exercise_types_translations";
+$t_exercise_levels				= $mysqlPrefixSav . "exercise_levels";
+$t_exercise_levels_translations 		= $mysqlPrefixSav . "exercise_levels_translations";
+
+
+$t_stats_comments_per_year	= $mysqlPrefixSav . "stats_comments_per_year";
+$t_stats_comments_per_month	= $mysqlPrefixSav . "stats_comments_per_month";
 
 /*- Scriptstart ---------------------------------------------------------------------- */
 
@@ -158,44 +177,45 @@ else {
 	elseif(file_exists("../../../favicon.ico")){ $root = "../../.."; }
 	include("$root/_webdesign/header.php");
 
-	echo"
-	<!-- Edit/Delete -->";
-	if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
+	if($process != "1"){
+		echo"
+		<!-- Edit/Delete -->";
+		if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
-		// Get my user
-		$my_user_id = $_SESSION['user_id'];
-		$my_user_id = output_html($my_user_id);
-		$my_user_id_mysql = quote_smart($link, $my_user_id);
+			// Get my user
+			$my_user_id = $_SESSION['user_id'];
+			$my_user_id = output_html($my_user_id);
+			$my_user_id_mysql = quote_smart($link, $my_user_id);
 
-		$my_security = $_SESSION['security'];
-		$my_security = output_html($my_security);
-		$my_security_mysql = quote_smart($link, $my_security);
-
-
-		$query = "SELECT user_id, user_name, user_language, user_rank FROM $t_users WHERE user_id=$my_user_id_mysql AND user_security=$my_security_mysql";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_my_user_id, $get_my_user_name, $get_my_user_language, $get_my_user_rank) = $row;
+			$my_security = $_SESSION['security'];
+			$my_security = output_html($my_security);
+			$my_security_mysql = quote_smart($link, $my_security);
 
 
-		if($get_current_exercise_user_id == "$my_user_id" OR $get_my_user_rank == "admin" OR $get_my_user_rank == "moderator"){
-			echo"
-			<div style=\"float: right;\">
-				<p>
-				<a href=\"edit_exercise.php?exercise_id=$exercise_id&amp;type_id=$get_current_exercise_type_id&amp;main_muscle_group_id=$get_current_exercise_muscle_group_id_main&amp;l=$l\"><img src=\"_gfx/icons/edit.png\" alt=\"edit.png\" /></a>
-				</p>
-			</div>
-			";
+			$query = "SELECT user_id, user_name, user_language, user_rank FROM $t_users WHERE user_id=$my_user_id_mysql AND user_security=$my_security_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_my_user_id, $get_my_user_name, $get_my_user_language, $get_my_user_rank) = $row;
+
+	
+			if($get_current_exercise_user_id == "$my_user_id" OR $get_my_user_rank == "admin" OR $get_my_user_rank == "moderator"){
+				echo"
+				<div style=\"float: right;\">
+					<p>
+					<a href=\"edit_exercise.php?exercise_id=$exercise_id&amp;type_id=$get_current_exercise_type_id&amp;main_muscle_group_id=$get_current_exercise_muscle_group_id_main&amp;l=$l\"><img src=\"_gfx/icons/edit.png\" alt=\"edit.png\" /></a>
+					</p>
+				</div>
+				";
+			}
 		}
-	}
-	echo"
-	<!-- //Edit/Delete -->
-	<!-- Headline -->
-		<h1>$get_current_exercise_title</h1> 
-	<!-- //Headline -->
+		echo"
+		<!-- //Edit/Delete -->
+		<!-- Headline -->
+			<h1>$get_current_exercise_title</h1> 
+		<!-- //Headline -->
 
 
-	<!-- Where am I? -->
+		<!-- Where am I? -->
 		<p>
 		<b>$l_you_are_here:</b><br />
 		<a href=\"$root/exercises/index.php?l=$l\">$l_exercises</a>
@@ -211,16 +231,16 @@ else {
 		&gt;
 		<a href=\"$root/exercises/view_exercise.php?exercise_id=$exercise_id&amp;l=$l\">$get_current_exercise_title</a>
 		</p>
-	<!-- //Where am I? -->
+		<!-- //Where am I? -->
 
 	
-	<!-- Ad -->
+		<!-- Ad -->
 		";
 		include("$root/ad/_includes/ad_main_below_headline.php");
 		echo"
-	<!-- //Ad -->
+		<!-- //Ad -->
 
-	<!-- Muscles beeing trained -->
+		<!-- Muscles beeing trained -->
 		<div style=\"height: 10px;\"></div>
 		<table class=\"hor-zebra\">
 		 <tbody>
@@ -344,9 +364,9 @@ else {
 		  </tr>
 		 </tbody>
 		</table>
-	<!-- //Muscles beeing trained -->
+		<!-- //Muscles beeing trained -->
 
-	<!-- Video -->";
+		<!-- Video -->";
 
 		$query = "SELECT exercise_video_id, exercise_video_service_name, exercise_video_service_id FROM $t_exercise_index_videos WHERE exercise_video_exercise_id=$get_current_exercise_id";
 		$result = mysqli_query($link, $query);
@@ -357,9 +377,9 @@ else {
 				echo"<p></p><iframe width=\"715\" height=\"402\" src=\"https://www.youtube.com/embed/$get_exercise_video_service_id\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>";
 			}
 		}
-	echo"
-	<!-- //Video -->
-	<!-- Display all images -->
+		echo"
+		<!-- //Video -->
+		<!-- Display all images -->
 
 		<table>
 		 <tr>";
@@ -480,9 +500,9 @@ else {
 		echo"
 		 </tr>
 		</table>
-	<!-- //Display all images -->
+		<!-- //Display all images -->
 
-	<!-- Text -->
+		<!-- Text -->
 		<p style=\"padding-bottom:0;margin-bottom:0\"><b>$l_preparation</b></p>
 		$get_current_exercise_preparation
 
@@ -491,9 +511,9 @@ else {
 
 		<p style=\"padding-bottom:0;margin-bottom:0\"><b>$l_important</b></p>
 		$get_current_exercise_important
-	<!-- //Text -->
+		<!-- //Text -->
 
-	<!-- Muscle image -->";
+		<!-- Muscle image -->";
 		if($get_exercise_muscle_image_id == ""){
 			$inp_exercise_muscle_image_file = "main-";
 			sort($muscle_image_main);
@@ -605,10 +625,10 @@ else {
 		} // img doesnt exists
 		echo"
 		<p><img src=\"$root/_uploads/exercises/muscle_image/$get_exercise_muscle_image_file\" alt=\"$get_exercise_muscle_image_file\" /></p>
-	<!-- //Muscle image -->
+		<!-- //Muscle image -->
 		
 
-	<!-- Meta -->
+		<!-- Meta -->
 		<p style=\"padding-bottom:0;margin-bottom:0\"><b>$l_extra_information</b></p>
 		<div class=\"meta_left\">
 			<table>
@@ -715,11 +735,11 @@ else {
 			 </tr>
 			</table>
 		</div>
-	<!-- //Meta -->
+		<!-- //Meta -->
 
 
 
-	<!-- Translate -->";
+		<!-- Translate -->";
 
 		if($get_current_exercise_language == "no" && isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
@@ -778,8 +798,37 @@ else {
 			}
 		}
 		echo"
-	<!-- //Translate -->
+		<!-- //Translate -->
+		";
+	} // process != 1
+
+	// New comment and read comments
+	if($process != "1"){
+		echo"
+		<!-- Comments -->
+			<div class=\"clear\"></div>
+			<a id=\"comments\"></a>
+			<!-- Feedback -->
+				";
+				if(isset($_GET['ft_comment']) && isset($_GET['fm_comment'])){
+					$ft_comment = $_GET['ft_comment'];
+					$ft_comment = output_html($ft_comment);
+					$fm_comment = $_GET['fm_comment'];
+					$fm_comment = output_html($fm_comment);
+					$fm_comment = str_replace("_", " ", $fm_comment);
+					$fm_comment = ucfirst($fm_comment);
+					echo"<div class=\"$ft_comment\"><span>$fm_comment</span></div>";
+				}
+				echo"	
+			<!-- //Feedback -->
+		";
+	}
+	include("view_exercise_include_new_comment.php");
+	include("view_exercise_include_fetch_comments.php");
+	echo"
+		<!-- //Comments -->
 	";
+
 
 	/*- Footer ---------------------------------------------------------------- */
 	include("$root/_webdesign/footer.php");

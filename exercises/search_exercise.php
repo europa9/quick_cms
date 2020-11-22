@@ -3,8 +3,8 @@
 *
 * File: exercises/index.php
 * Version 1.0.0.
-* Date 19:42 08.02.2018
-* Copyright (c) 2008-2018 Sindre Andre Ditlefsen
+* Date 20:42 15.11.2020
+* Copyright (c) 2008-2020 Sindre Andre Ditlefsen
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -44,6 +44,27 @@ if(isset($_GET['order_method'])) {
 else{
 	$order_method = "";
 }
+
+
+/*- Tables ---------------------------------------------------------------------------- */
+$t_exercise_index 				= $mysqlPrefixSav . "exercise_index";
+$t_exercise_index_images			= $mysqlPrefixSav . "exercise_index_images";
+$t_exercise_index_videos			= $mysqlPrefixSav . "exercise_index_videos";
+$t_exercise_index_muscles			= $mysqlPrefixSav . "exercise_index_muscles";
+$t_exercise_index_muscles_images		= $mysqlPrefixSav . "exercise_index_muscles_images";
+$t_exercise_index_tags				= $mysqlPrefixSav . "exercise_index_tags";
+$t_exercise_tags_cloud				= $mysqlPrefixSav . "exercise_tags_cloud";
+$t_exercise_index_comments			= $mysqlPrefixSav . "exercise_index_comments";
+$t_exercise_index_translations_relations	= $mysqlPrefixSav . "exercise_index_translations_relations";
+$t_exercise_equipments 				= $mysqlPrefixSav . "exercise_equipments";
+$t_exercise_types				= $mysqlPrefixSav . "exercise_types";
+$t_exercise_types_translations 			= $mysqlPrefixSav . "exercise_types_translations";
+$t_exercise_levels				= $mysqlPrefixSav . "exercise_levels";
+$t_exercise_levels_translations 		= $mysqlPrefixSav . "exercise_levels_translations";
+
+
+$t_stats_comments_per_year	= $mysqlPrefixSav . "stats_comments_per_year";
+$t_stats_comments_per_month	= $mysqlPrefixSav . "stats_comments_per_month";
 
 
 /*- Language ------------------------------------------------------------------------ */

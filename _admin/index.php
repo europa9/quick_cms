@@ -198,16 +198,6 @@ if(file_exists($mysql_config_file)){
 	/*- Tables ---------------------------------------------------------------------------- */
 	$t_social_media 	= $mysqlPrefixSav . "social_media";
 
-	/*- Discuss ---------------------------------------------------------------------------- */
-	$t_discuss_topics 		= $mysqlPrefixSav . "discuss_topics";
-	$t_discuss_topics_subscribers 	= $mysqlPrefixSav . "discuss_topics_subscribers";
-	$t_discuss_topics_read	 	= $mysqlPrefixSav . "discuss_topics_read";
-	$t_discuss_topics_tags 		= $mysqlPrefixSav . "discuss_topics_tags";
-	$t_discuss_replies		= $mysqlPrefixSav . "discuss_replies";
-
-	$t_discuss_forms		= $mysqlPrefixSav . "discuss_forms";
-	$t_discuss_forms_questions	= $mysqlPrefixSav . "discuss_forms_questions";
-	$t_discuss_titles		= $mysqlPrefixSav . "discuss_titles";
 		
 
 	/*- Tables courses ---------------------------------------------------------------------------- */

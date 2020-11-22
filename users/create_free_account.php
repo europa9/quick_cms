@@ -132,6 +132,7 @@ else{
 			$inp_antispam_answer = $_POST['inp_antispam_answer'];
 			$inp_antispam_answer = output_html($inp_antispam_answer);
 			$inp_antispam_answer = strtolower($inp_antispam_answer);
+			$inp_antispam_answer = trim($inp_antispam_answer);
 
 			// -> check answers
 			$antispam_correct = "false"; // make a guess
@@ -139,6 +140,8 @@ else{
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
 				list($get_antispam_answer_id, $get_antispam_answer) = $row;
+				$get_antispam_answer = trim($get_antispam_answer);
+
 
 
 				if($inp_antispam_answer == "$get_antispam_answer"){
@@ -158,7 +161,7 @@ else{
 				$fm = "users_you_answered_wrong_on_antispam_question";
 
 				// Move user
-				header("Location: create_free_account.php?l=$l&ft=$ft&fm=$fm");
+				header("Location: create_free_account.php?l=$l&ft=$ft&fm=$fm&your_answer=$inp_antispam_answer&question_id=$question_id");
 				
 			}
 		}
@@ -179,6 +182,9 @@ else{
 				}
 				$x++;
 
+			}
+			if($get_antispam_question_id == ""){
+				echo"Error: Could not get anti spam question";
 			}
 
 

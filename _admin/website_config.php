@@ -302,31 +302,6 @@ if(file_exists($mysql_config_file)){
 	$t_blog_links_categories	= $mysqlPrefixSav . "blog_links_categories";
 	$t_blog_ping_list_per_blog	= $mysqlPrefixSav . "blog_ping_list_per_blog";
 
-	/*- Tables discussion ---------------------------------------------------------------------------- */
-	$t_discuss_titles		= $mysqlPrefixSav . "discuss_titles";
-	$t_discuss_subscriptions 	= $mysqlPrefixSav . "discuss_subscriptions";
-
-	$t_discuss_topics 		= $mysqlPrefixSav . "discuss_topics";
-	$t_discuss_topics_subscribers 	= $mysqlPrefixSav . "discuss_topics_subscribers";
-	$t_discuss_topics_read_by_user	= $mysqlPrefixSav . "discuss_topics_read_by_user";
-	$t_discuss_topics_read_by_ip	= $mysqlPrefixSav . "discuss_topics_read_by_ip";
-	$t_discuss_topics_tags 		= $mysqlPrefixSav . "discuss_topics_tags";
-	$t_discuss_replies  		= $mysqlPrefixSav . "discuss_replies";
-	$t_discuss_replies_comments	= $mysqlPrefixSav . "discuss_replies_comments";
-
-	$t_discuss_forms		= $mysqlPrefixSav . "discuss_forms";
-	$t_discuss_forms_questions	= $mysqlPrefixSav . "discuss_forms_questions";
-
-
-	$t_discuss_top_users_monthly	= $mysqlPrefixSav . "discuss_top_users_monthly";
-	$t_discuss_top_users_yearly	= $mysqlPrefixSav . "discuss_top_users_yearly";
-	$t_discuss_top_users_all_time	= $mysqlPrefixSav . "discuss_top_users_all_time";
-
-	$t_discuss_tags_index			= $mysqlPrefixSav . "discuss_tags_index";
-	$t_discuss_tags_index_translation	= $mysqlPrefixSav . "discuss_tags_index_translation";
-	$t_discuss_tags_watch			= $mysqlPrefixSav . "discuss_tags_watch";
-	$t_discuss_tags_ignore			= $mysqlPrefixSav . "discuss_tags_ignore";
-
 
 	/*- Tables downloads ---------------------------------------------------------------------------- */
 	$t_downloads_index 				= $mysqlPrefixSav . "downloads_index";

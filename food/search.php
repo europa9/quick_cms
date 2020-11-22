@@ -159,8 +159,9 @@ echo"
 					echo"$search_query"; 
 				}
 				else{
-					echo"$l_search..."; $q = "";
-				} echo"\" size=\"15\" id=\"food_search_q\" />
+					echo"$l_search..."; 
+				} 
+			echo"\" size=\"15\" id=\"food_search_q\" />
 			<input type=\"submit\" value=\"$l_search\" class=\"btn btn_default\" />
 			</p>
 
@@ -430,7 +431,7 @@ if($search_query != "" OR $manufacturer_name != "" OR $store_id != "" OR $barcod
 			$from = "$configFromEmailSav";
 			$reply = "$configFromEmailSav";
 			
-			$search_link = $configSiteURLSav . "/food/search.php?q=$q&amp;l=$l";
+			$search_link = $configSiteURLSav . "/food/search.php?q=$search_query&amp;l=$l";
 			$subject = "No search result for $search_query at $host";
 
 			$message = "<html>\n";

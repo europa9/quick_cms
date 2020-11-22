@@ -36,6 +36,7 @@ $t_food_index_ads		 	= $mysqlPrefixSav . "food_index_ads";
 $t_food_index_tags		  	= $mysqlPrefixSav . "food_index_tags";
 $t_food_index_prices		  	= $mysqlPrefixSav . "food_index_prices";
 $t_food_index_contents		 	= $mysqlPrefixSav . "food_index_contents";
+$t_food_index_ratings		 	= $mysqlPrefixSav . "food_index_ratings";
 $t_food_stores		  	  	= $mysqlPrefixSav . "food_stores";
 $t_food_prices_currencies	  	= $mysqlPrefixSav . "food_prices_currencies";
 $t_food_favorites 		  	= $mysqlPrefixSav . "food_favorites";
