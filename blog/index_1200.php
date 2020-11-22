@@ -28,6 +28,7 @@ include("$root/_admin/website_config.php");
 
 /*- Blog config -------------------------------------------------------------------- */
 include("$root/_admin/_data/blog.php");
+include("_include_tables.php");
 
 
 /*- Translations -------------------------------------------------------------------- */
@@ -53,9 +54,16 @@ else{
 	$order_method = "";
 }
 
+/*- Title ------------------------------------------------------------------------------------ */
+$query_t = "SELECT title_id, title_value FROM $t_blog_titles WHERE title_language=$l_mysql";
+$result_t = mysqli_query($link, $query_t);
+$row_t = mysqli_fetch_row($result_t);
+list($get_current_title_id, $get_current_title_value) = $row_t;
+
+
 
 /*- Headers ---------------------------------------------------------------------------------- */
-$website_title = "$l_blog";
+$website_title = "$get_current_title_value";
 if(file_exists("./favicon.ico")){ $root = "."; }
 elseif(file_exists("../favicon.ico")){ $root = ".."; }
 elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -81,7 +89,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 echo"
 <!-- Headline, menu, rss -->
 	<div class=\"blog_headline_left\">
-		<h1>$l_blog</h1>
+		<h1>$get_current_title_value</h1>
 	</div>
 	<div class=\"blog_headline_center\">
 		<p>

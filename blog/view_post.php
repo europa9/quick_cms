@@ -26,29 +26,16 @@ else{ $root = "../../.."; }
 include("$root/_admin/website_config.php");
 
 
-/*- Tables ---------------------------------------------------------------------------- */
-$t_blog_liquidbase			= $mysqlPrefixSav . "blog_liquidbase";
+/*- Blog config -------------------------------------------------------------------- */
+include("$root/_admin/_data/blog.php");
+include("_include_tables.php");
 
-$t_blog_info 				= $mysqlPrefixSav . "blog_info";
-$t_blog_default_categories		= $mysqlPrefixSav . "blog_default_categories";
-$t_blog_categories			= $mysqlPrefixSav . "blog_categories";
-$t_blog_posts 				= $mysqlPrefixSav . "blog_posts";
-$t_blog_posts_tags 			= $mysqlPrefixSav . "blog_posts_tags";
-$t_blog_posts_comments			= $mysqlPrefixSav . "blog_posts_comments";
-$t_blog_posts_comments_likes_dislikes	= $mysqlPrefixSav . "blog_posts_comments_likes_dislikes";
+/*- Title ------------------------------------------------------------------------------------ */
+$query_t = "SELECT title_id, title_value FROM $t_blog_titles WHERE title_language=$l_mysql";
+$result_t = mysqli_query($link, $query_t);
+$row_t = mysqli_fetch_row($result_t);
+list($get_current_title_id, $get_current_title_value) = $row_t;
 
-$t_blog_posts_comments_replies			= $mysqlPrefixSav . "blog_posts_comments_replies";
-$t_blog_posts_comments_replies_likes_dislikes	= $mysqlPrefixSav . "blog_posts_comments_replies_likes_dislikes";
-
-$t_blog_images 				= $mysqlPrefixSav . "blog_images";
-$t_blog_logos				= $mysqlPrefixSav . "blog_logos";
-
-$t_blog_links_index			= $mysqlPrefixSav . "blog_links_index";
-$t_blog_links_categories		= $mysqlPrefixSav . "blog_links_categories";
-
-$t_blog_ping_list_per_blog		= $mysqlPrefixSav . "blog_ping_list_per_blog";
-
-$t_blog_stats_most_used_categories	= $mysqlPrefixSav . "blog_stats_most_used_categories";
 
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/blog/ts_blog.php");
@@ -63,8 +50,6 @@ $l_mysql = quote_smart($link, $l);
 include("_bbcode/BBCode.php");
 include("_bbcode/Tag.php");
 
-/*- Blog config -------------------------------------------------------------------- */
-include("$root/_admin/_data/blog.php");
 
 
 /*- Variables ------------------------------------------------------------------------- */
@@ -86,7 +71,7 @@ list($get_current_blog_post_id, $get_current_blog_post_user_id, $get_current_blo
 if($get_current_blog_post_id == ""){
 
 	/*- Headers ---------------------------------------------------------------------------------- */
-	$website_title = "$l_blog - 404";
+	$website_title = "$get_current_title_value - 404";
 	if(file_exists("./favicon.ico")){ $root = "."; }
 	elseif(file_exists("../favicon.ico")){ $root = ".."; }
 	elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -105,7 +90,7 @@ else{
 	if($get_current_blog_info_id == ""){
 
 		/*- Headers ---------------------------------------------------------------------------------- */
-		$website_title = "$l_blog - 404";
+		$website_title = "$get_current_title_value - 404";
 		if(file_exists("./favicon.ico")){ $root = "."; }
 		elseif(file_exists("../favicon.ico")){ $root = ".."; }
 		elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -117,7 +102,7 @@ else{
 
 
 		/*- Headers ---------------------------------------------------------------------------------- */
-		$website_title = "$l_blog - $get_current_blog_title - $get_current_blog_post_title";
+		$website_title = "$get_current_title_value - $get_current_blog_title - $get_current_blog_post_title";
 		if(file_exists("./favicon.ico")){ $root = "."; }
 		elseif(file_exists("../favicon.ico")){ $root = ".."; }
 		elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -351,7 +336,7 @@ else{
 				<!-- Where am I? -->
 					<div class=\"clear\"></div>
 					<p><b>$l_you_are_here:</b><br />
-					<a href=\"index.php?l=$l\">$l_blog</a>
+					<a href=\"index.php?l=$l\">$get_current_title_value</a>
 					&gt;
 					<a href=\"view_blog.php?info_id=$get_current_blog_info_id&amp;l=$l\">$get_current_blog_title</a>
 					&gt;

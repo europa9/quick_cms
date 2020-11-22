@@ -28,6 +28,7 @@ function fix_local($value){
 /*- Tables ---------------------------------------------------------------------------- */
 $t_blog_liquidbase			= $mysqlPrefixSav . "blog_liquidbase";
 
+$t_blog_titles 				= $mysqlPrefixSav . "blog_titles";
 $t_blog_info 				= $mysqlPrefixSav . "blog_info";
 $t_blog_default_categories		= $mysqlPrefixSav . "blog_default_categories";
 $t_blog_categories			= $mysqlPrefixSav . "blog_categories";

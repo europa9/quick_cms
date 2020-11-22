@@ -24,6 +24,7 @@ if($page == "menu"){
 }
 
 echo"
+			<li><a href=\"index.php?open=$open&amp;page=titles&amp;editor_language=$editor_language\""; if($page == "titles"){ echo" class=\"selected\""; } echo">Titles</a></li>
 			<li><a href=\"index.php?open=$open&amp;page=default_categories&amp;editor_language=$editor_language\""; if($page == "default_categories"){ echo" class=\"selected\""; } echo">Default categories</a></li>
 			<li><a href=\"index.php?open=$open&amp;page=tables&amp;editor_language=$editor_language\""; if($page == "tables"){ echo" class=\"selected\""; } echo">Tables</a></li>
 		
