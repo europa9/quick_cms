@@ -498,6 +498,11 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 			// Create table footer
 			$create_table = $create_table . ");
 ";
+			// Echo table structure
+			echo"
+			<p style=\"padding:0;margin:0;\"><b>Create table:</b><br />
+			</p>
+			<pre>$create_table</pre>";
 
 
 

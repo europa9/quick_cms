@@ -53,7 +53,7 @@ if($process == "1"){
 	$page_url = htmlspecialchars($page_url, ENT_QUOTES, 'UTF-8');
 
 	// Control panel URL
-	$inp_control_panel_url = str_replace("/setup/index.php?page=04_site&amp;language=$language&amp;process=1", "", $page_url);
+	$inp_control_panel_url = str_replace("/setup/index.php?page=05_site&amp;language=$language&amp;process=1", "", $page_url);
 	$inp_control_panel_url_len = strlen($inp_control_panel_url);
 
 	$control_panel_url_parsed = parse_url($inp_control_panel_url);
@@ -70,7 +70,7 @@ if($process == "1"){
 
 
 	// Site URL
-	$inp_site_url = str_replace("/_admin/setup/index.php?page=04_site&amp;language=$language&amp;process=1", "", $page_url);
+	$inp_site_url = str_replace("/_admin/setup/index.php?page=05_site&amp;language=$language&amp;process=1", "", $page_url);
 	$inp_site_url_len = strlen($inp_site_url);
 
 

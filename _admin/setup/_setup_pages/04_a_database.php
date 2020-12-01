@@ -146,13 +146,13 @@ if($action == ""){
 	<input type=\"text\" name=\"inp_mysql_database_name\" value=\""; if(isset($inp_mysql_database_name)){ echo"$inp_mysql_database_name"; }
 	else{
 		if($server_name == "localhost"){
-			echo"mydb";
+			echo"quick_cms";
 		}
 	}
 	echo"\" size=\"35\" tabindex=\"4\" /></p>
 
 	<p><b>$l_prefix:</b><br />
-	<input type=\"text\" name=\"inp_mysql_prefix\" value=\""; if(isset($inp_mysql_prefix)){ echo"$inp_mysql_prefix"; } else{ echo"cf_"; } echo"\" size=\"35\" tabindex=\"5\" /></p>
+	<input type=\"text\" name=\"inp_mysql_prefix\" value=\""; if(isset($inp_mysql_prefix)){ echo"$inp_mysql_prefix"; } else{ echo"quick_"; } echo"\" size=\"35\" tabindex=\"5\" /></p>
 
 	
 	<p>
