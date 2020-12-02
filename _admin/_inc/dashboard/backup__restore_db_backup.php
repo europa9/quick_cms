@@ -283,7 +283,7 @@ echo"<!DOCTYPE html>
 VALUES";
 
 				// Read data file
-				$content_file = $table[$table_no] . "_content.dat";
+				$content_file = $table[$table_no] . ".txt";
 				if(file_exists("$content_file")){
 					$fh = fopen($content_file, "r");
 					$data = fread($fh, filesize($content_file));

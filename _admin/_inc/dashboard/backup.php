@@ -380,7 +380,7 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 		include("_data/backup/$backup_dir_name/mysql/_tables.php");
 
 
-		$mysql_backup_content_file = "$table[$table_id]" . "_content.dat";
+		$mysql_backup_content_file = "$table[$table_id]" . ".txt";
 
 		if(isset($table[$table_id])){
 			// Get header
@@ -663,7 +663,9 @@ elseif($action == "new_backup_step_3_mysql_table_contents"){
 
 			// File to write to 
 			$mysql_backup_content_path = "_data/backup/$backup_dir_name/mysql";
-			$mysql_backup_content_file = "$table[$table_id]" . "_content.dat";
+			$table[$table_id] = output_html($table[$table_id]);
+			$table[$table_id] = clean($table[$table_id]);
+			$mysql_backup_content_file = $table[$table_id] . ".txt";
 
 
 			$stop = $start+$number_of_rows_for_each_run;
@@ -727,10 +729,15 @@ elseif($action == "new_backup_step_3_mysql_table_contents"){
 			<b>Location:</b> $start-$stop<br />
 			<b>Percentage:</b> $percentage %<br />
 			</p>
+
+			
 			";
 	
 			if($table_number_of_rows > 0){
-				
+				$fh = fopen("$mysql_backup_content_path/$mysql_backup_content_file", "w+") or die("can not open file");
+				fwrite($fh, "");
+				fclose($fh);
+
 				// Fetch data
 				$query = "SELECT * FROM $table[$table_id] LIMIT $start,$number_of_rows_for_each_run";
 				$result = mysqli_query($link, $query);
@@ -771,13 +778,15 @@ elseif($action == "new_backup_step_3_mysql_table_contents"){
 
 					}
 
-					$input = "$input_row
-";
+					
+
+					$input = "$input_row\n";
 					$fh = fopen("$mysql_backup_content_path/$mysql_backup_content_file", "a+") or die("can not open file");
 					fwrite($fh, $input);
 					fclose($fh);
 				}
 			} // Rows > 0 
+
 
 			// Continue
 			$next_start = $start+$number_of_rows_for_each_run;
@@ -785,6 +794,10 @@ elseif($action == "new_backup_step_3_mysql_table_contents"){
 				// Next table
 				$next_table_id = $table_id + 1;
 				echo"
+
+				<p>
+				<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_2_mysql_tables_structure&amp;backup_date=$backup_date&amp;table_id=$next_table_id&amp;backup_secret=$backup_secret\" class=\"btn_default\">Next table</a>
+				</p>
 				<meta http-equiv=refresh content=\"1; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_2_mysql_tables_structure&amp;backup_date=$backup_date&amp;table_id=$next_table_id&amp;backup_secret=$backup_secret\">
 				<!-- Jquery go to URL after x seconds -->
 					<!-- In case meta refresh doesnt work -->
