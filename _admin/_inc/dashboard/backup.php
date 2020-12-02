@@ -438,6 +438,20 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 
 
 
+			<!-- Table -->
+				<div style=\"height: 10px\"></div>
+				<table class=\"hor-zebra\">
+				 <thead>
+				  <tr>
+				   <th scope=\"col\">
+					<span><b>Name</b></span>
+				   </td>
+				   <th scope=\"col\">
+					<span><b>Type</b></span>
+				   </td>
+				  </tr>
+				 </thead>
+				 <tbody>
 			";
 
 
@@ -451,7 +465,7 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 
 
 			$x = 0;
-			$query = "SELECT COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, COLUMN_TYPE, COLUMN_KEY, EXTRA FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '$table[$table_id]'";
+			$query = "SELECT COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, COLUMN_TYPE, COLUMN_KEY, EXTRA FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '$table[$table_id]' ORDER BY COLUMN_KEY DESC";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
 				list($get_column_name, $get_column_default, $get_is_nullable, $get_data_type, $get_character_maximum_lenght, $get_mumeric_precision, $get_column_type, $get_column_key, $get_extra) = $row;
@@ -491,6 +505,18 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 				// Add to columns
 				$table_column_names[$x] = "$get_column_name";
 				$table_column_types[$x] = "$get_data_type";
+
+				// Echo
+				echo"
+				  <tr>
+				   <td>
+					<span>$get_column_name</span>
+				   </td>
+				   <td>
+					<span>$get_data_type</span>
+				   </td>
+				  </tr>
+				";
 							
 				$x++;
 			}
@@ -500,9 +526,13 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 ";
 			// Echo table structure
 			echo"
-			<p style=\"padding:0;margin:0;\"><b>Create table:</b><br />
-			</p>
-			<pre>$create_table</pre>";
+				 </tbody>
+				</table>
+				
+				<p style=\"padding-bottom:0;margin-bottom:0;\"><b>Create table code:</b></p>
+				<pre>$create_table</pre>
+				  
+			";
 
 
 
@@ -556,6 +586,8 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 
 
 			echo"
+			<!-- //Table -->
+				
 			<div class=\"clear\"></div>
 
 			<meta http-equiv=refresh content=\"1; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_3_mysql_table_contents&amp;backup_date=$backup_date&amp;table_id=$table_id&amp;start=0&amp;backup_secret=$backup_secret\">
