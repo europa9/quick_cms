@@ -392,6 +392,9 @@ elseif($action == "new_task"){
 
 	$month = date("m");
 	$next_month = $month+1;
+	if($next_month == "13"){
+		$next_month = "01";
+	}
 	$inp_due_month = "$next_month";
 	$inp_due_month_lenght = strlen($inp_due_month);
 	if($inp_due_month_lenght == "1"){

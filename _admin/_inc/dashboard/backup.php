@@ -47,6 +47,13 @@ if(isset($_GET['backup_secret'])) {
 else{
 	$backup_secret = "";
 }
+if(isset($_GET['debug'])) {
+	$debug = $_GET['debug'];
+	$debug = strip_tags(stripslashes($debug));
+}
+else{
+	$debug = "";
+}
 
 
 /*- Functions -------------------------------------------------------------------------- */
@@ -107,6 +114,7 @@ if($action == ""){
 
 		<p>
 		<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup&amp;l=$l&amp;editor_language=$editor_language\" class=\"btn\">New backup</a>
+		<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup&amp;l=$l&amp;editor_language=$editor_language&amp;debug=1\" class=\"btn\">New backup with debug</a>
 		</p>
 
 	<!-- //Backups -->
@@ -353,7 +361,7 @@ $input_body ="
 
 	echo"
 	
-	<meta http-equiv=refresh content=\"1; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_2_mysql_tables_structure&amp;backup_date=$datetime&amp;table_id=0&amp;backup_secret=$backup_secret\">
+	<meta http-equiv=refresh content=\"1; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_2_mysql_tables_structure&amp;backup_date=$datetime&amp;table_id=0&amp;backup_secret=$backup_secret&amp;debug=$debug\">
 	
 				<!-- Jquery go to URL after x seconds -->
 					<!-- In case meta refresh doesnt work -->
@@ -361,7 +369,7 @@ $input_body ="
 					\$(document).ready(function(){
 						window.setTimeout(function(){
         						// Move to a new location or you can do something else
-							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_2_mysql_tables_structure&backup_date=$datetime&table_id=0&backup_secret=$backup_secret\";
+							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_2_mysql_tables_structure&backup_date=$datetime&table_id=0&backup_secret=$backup_secret&debug=$debug\";
 						}, 10000);
 					});
    					</script>
@@ -380,7 +388,8 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 		include("_data/backup/$backup_dir_name/mysql/_tables.php");
 
 
-		$mysql_backup_content_file = "$table[$table_id]" . ".txt";
+		$mysql_backup_tables_file = "$table[$table_id]" . "1.php";
+		$mysql_backup_content_file = "$table[$table_id]" . "2.txt";
 
 		if(isset($table[$table_id])){
 			// Get header
@@ -400,6 +409,14 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 					  </td>
 					  <td>
 						<span>$table[$table_id]</span>
+					  </td>
+					 </tr>
+					 <tr>
+					  <td style=\"padding-right: 5px;\">
+						<span><b>Tables file:</b></span>
+					  </td>
+					  <td>
+						<span>$mysql_backup_tables_file</span>
 					  </td>
 					 </tr>
 					 <tr>
@@ -464,11 +481,24 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 ";
 
 
+			// We need to find all fields to get the correct order of them, since INFORMATION_SCHEMA.COLUMNS  is alpabetical
+		
+			// Fetch titles
 			$x = 0;
-			$query = "SELECT COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, COLUMN_TYPE, COLUMN_KEY, EXTRA FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '$table[$table_id]' ORDER BY COLUMN_KEY DESC";
+			$query = "SHOW COLUMNS FROM $table[$table_id]";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
-				list($get_column_name, $get_column_default, $get_is_nullable, $get_data_type, $get_character_maximum_lenght, $get_mumeric_precision, $get_column_type, $get_column_key, $get_extra) = $row;
+				list($get_column_name) = $row;
+
+				// echo"$get_column_name<br />";
+
+
+				// Get information about that column
+				$query_column = "SELECT COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, COLUMN_TYPE, COLUMN_KEY, EXTRA FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '$table[$table_id]' AND COLUMN_NAME='$get_column_name'";
+				$result_column = mysqli_query($link, $query_column);
+				$row_column = mysqli_fetch_row($result_column);
+				list($get_column_name, $get_column_default, $get_is_nullable, $get_data_type, $get_character_maximum_lenght, $get_mumeric_precision, $get_column_type, $get_column_key, $get_extra) = $row_column;
+
 
 				$get_data_type = strtoupper($get_data_type);
 				$get_extra = strtoupper($get_extra);
@@ -541,7 +571,7 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 			$input_columns_header = "<?php
 
 // Columns";
-			$fh = fopen("_data/backup/$backup_dir_name/mysql/$table[$table_id].php", "w+") or die("can not open file");
+			$fh = fopen("_data/backup/$backup_dir_name/mysql/$mysql_backup_tables_file", "w+") or die("can not open file");
 			fwrite($fh, $input_columns_header);
 			fclose($fh);
 
@@ -550,7 +580,7 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 				$input_columns = "
 \$table_column_names[$i] = \"$table_column_names[$i]\";
 \$table_column_types[$i] = \"$table_column_types[$i]\";";
-				$fh = fopen("_data/backup/$backup_dir_name/mysql/$table[$table_id].php", "a+") or die("can not open file");
+				$fh = fopen("_data/backup/$backup_dir_name/mysql/$mysql_backup_tables_file", "a+") or die("can not open file");
 				fwrite($fh, $input_columns);
 				fclose($fh);
 			}
@@ -562,7 +592,7 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 // Create table statement
 \$create_table_query = '$create_table';";
 
-			$fh = fopen("_data/backup/$backup_dir_name/mysql/$table[$table_id].php", "a+") or die("can not open file");
+			$fh = fopen("_data/backup/$backup_dir_name/mysql/$mysql_backup_tables_file", "a+") or die("can not open file");
 			fwrite($fh, $input_create_table);
 			fclose($fh);
 
@@ -571,7 +601,7 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
 			list($row_cnt) = $row;
-
+			echo"<p><b>Rows:</b> $row_cnt</p>";
 
 			$input_number_of_rows ="
 
@@ -580,17 +610,16 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 ?>
 ";
 
-			$fh = fopen("_data/backup/$backup_dir_name/mysql/$table[$table_id].php", "a+") or die("can not open file");
+			$fh = fopen("_data/backup/$backup_dir_name/mysql/$mysql_backup_tables_file", "a+") or die("can not open file");
 			fwrite($fh, $input_number_of_rows);
 			fclose($fh);
-
 
 			echo"
 			<!-- //Table -->
 				
 			<div class=\"clear\"></div>
 
-			<meta http-equiv=refresh content=\"1; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_3_mysql_table_contents&amp;backup_date=$backup_date&amp;table_id=$table_id&amp;start=0&amp;backup_secret=$backup_secret\">
+			<meta http-equiv=refresh content=\""; if($debug == "1"){ echo"180"; } else{ echo"1"; } echo"; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_3_mysql_table_contents&amp;backup_date=$backup_date&amp;table_id=$table_id&amp;start=0&amp;backup_secret=$backup_secret&amp;debug=$debug\">
 
 				<!-- Jquery go to URL after x seconds -->
 					<!-- In case meta refresh doesnt work -->
@@ -598,8 +627,8 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 					\$(document).ready(function(){
 						window.setTimeout(function(){
         						// Move to a new location or you can do something else
-							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_3_mysql_table_contents&backup_date=$backup_date&table_id=$table_id&start=0&backup_secret=$backup_secret\";
-						}, 10000);
+							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_3_mysql_table_contents&backup_date=$backup_date&table_id=$table_id&start=0&backup_secret=$backup_secret&debug=$debug\";
+						}, 1000000);
 					});
    					</script>
 				<!-- //Jquery go to URL after x seconds -->
@@ -609,21 +638,21 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 		}
 		else{
 			echo"
-			<meta http-equiv=refresh content=\"1; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_4_mysql_table_zip&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret\">
+			<meta http-equiv=refresh content=\""; if($debug == "1"){ echo"180"; } else{ echo"1"; } echo"; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_4_mysql_table_zip&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;debug=$debug\">
 				<!-- Jquery go to URL after x seconds -->
 					<!-- In case meta refresh doesnt work -->
    					<script>
 					\$(document).ready(function(){
 						window.setTimeout(function(){
         						// Move to a new location or you can do something else
-							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_4_mysql_table_zip&backup_date=$backup_date&backup_secret=$backup_secret\";
-						}, 10000);
+							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_4_mysql_table_zip&backup_date=$backup_date&backup_secret=$backup_secret&debug=$debug\";
+						}, 1000000);
 					});
    					</script>
 				<!-- //Jquery go to URL after x seconds -->
 
 			<p>
-			<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_4_mysql_table_zip&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret\" class=\"btn\">Start zip</a>
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_4_mysql_table_zip&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;debug=$debug\" class=\"btn\">Start zip</a>
 			</p>
 			
 			";
@@ -635,7 +664,7 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 	echo"
 
 	<p>
-	<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_5_make_website_list_of_dir_and_files&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret\" class=\"btn\">Skip database and go to web</a>
+	<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_5_make_website_list_of_dir_and_files&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;debug=$debug\" class=\"btn\">Skip database and go to web</a>
 	</p>
 
 	";
@@ -658,14 +687,18 @@ elseif($action == "new_backup_step_3_mysql_table_contents"){
 		$number_of_rows_for_each_run = 1000;
 
 		if(isset($table[$table_id])){
-			// Include file
-			include("_data/backup/$backup_dir_name/mysql/$table[$table_id].php");
 
 			// File to write to 
 			$mysql_backup_content_path = "_data/backup/$backup_dir_name/mysql";
 			$table[$table_id] = output_html($table[$table_id]);
 			$table[$table_id] = clean($table[$table_id]);
-			$mysql_backup_content_file = $table[$table_id] . ".txt";
+			$mysql_backup_tables_file  = "$table[$table_id]" . "1.php";
+			$mysql_backup_content_file = "$table[$table_id]" . "2.txt";
+
+
+			// Include file
+			include("_data/backup/$backup_dir_name/mysql/$mysql_backup_tables_file");
+
 
 
 			$stop = $start+$number_of_rows_for_each_run;
@@ -683,6 +716,14 @@ elseif($action == "new_backup_step_3_mysql_table_contents"){
 					  </td>
 					  <td>
 						<span>$table[$table_id]</span>
+					  </td>
+					 </tr>
+					 <tr>
+					  <td style=\"padding-right: 5px;\">
+						<span><b>Tables file:</b></span>
+					  </td>
+					  <td>
+						<span>$mysql_backup_tables_file</span>
 					  </td>
 					 </tr>
 					 <tr>
@@ -734,9 +775,6 @@ elseif($action == "new_backup_step_3_mysql_table_contents"){
 			";
 	
 			if($table_number_of_rows > 0){
-				$fh = fopen("$mysql_backup_content_path/$mysql_backup_content_file", "w+") or die("can not open file");
-				fwrite($fh, "");
-				fclose($fh);
 
 				// Fetch data
 				$query = "SELECT * FROM $table[$table_id] LIMIT $start,$number_of_rows_for_each_run";
@@ -788,6 +826,7 @@ elseif($action == "new_backup_step_3_mysql_table_contents"){
 			} // Rows > 0 
 
 
+
 			// Continue
 			$next_start = $start+$number_of_rows_for_each_run;
 			if($next_start > $table_number_of_rows){
@@ -796,17 +835,17 @@ elseif($action == "new_backup_step_3_mysql_table_contents"){
 				echo"
 
 				<p>
-				<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_2_mysql_tables_structure&amp;backup_date=$backup_date&amp;table_id=$next_table_id&amp;backup_secret=$backup_secret\" class=\"btn_default\">Next table</a>
+				<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_2_mysql_tables_structure&amp;backup_date=$backup_date&amp;table_id=$next_table_id&amp;backup_secret=$backup_secret&amp;debug=$debug\" class=\"btn_default\">Next table</a>
 				</p>
-				<meta http-equiv=refresh content=\"1; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_2_mysql_tables_structure&amp;backup_date=$backup_date&amp;table_id=$next_table_id&amp;backup_secret=$backup_secret\">
+				<meta http-equiv=refresh content=\""; if($debug == "1"){ echo"180"; } else{ echo"1"; } echo"; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_2_mysql_tables_structure&amp;backup_date=$backup_date&amp;table_id=$next_table_id&amp;backup_secret=$backup_secret&amp;debug=$debug\">
 				<!-- Jquery go to URL after x seconds -->
 					<!-- In case meta refresh doesnt work -->
    					<script>
 					\$(document).ready(function(){
 						window.setTimeout(function(){
         						// Move to a new location or you can do something else
-							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_2_mysql_tables_structure&backup_date=$backup_date&table_id=$next_table_id&backup_secret=$backup_secret\";
-						}, 10000);
+							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_2_mysql_tables_structure&backup_date=$backup_date&table_id=$next_table_id&backup_secret=$backup_secret&debug=$debug\";
+						}, 1000000);
 					});
    					</script>
 				<!-- //Jquery go to URL after x seconds -->
@@ -816,22 +855,25 @@ elseif($action == "new_backup_step_3_mysql_table_contents"){
 			else{
 				$skip_next_table_id = $table_id + 1;
 				echo"
-				<meta http-equiv=refresh content=\"1; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_3_mysql_table_contents&amp;backup_date=$backup_date&amp;table_id=$table_id&amp;start=$next_start&amp;backup_secret=$backup_secret\">
+
+				<p>
+				<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_3_mysql_table_contents&amp;backup_date=$backup_date&amp;table_id=$table_id&amp;start=$next_start&amp;backup_secret=$backup_secret&amp;debug=$debug\" class=\"btn_default\">Next rows (from $next_start)</a>
+			
+				<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_2_mysql_tables_structure&amp;backup_date=$backup_date&amp;table_id=$skip_next_table_id&amp;backup_secret=$backup_secret&amp;debug=$debug\" class=\"btn\">Skip this table</a>
+				</p>
+
+				<meta http-equiv=refresh content=\""; if($debug == "1"){ echo"180"; } else{ echo"1"; } echo"; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_3_mysql_table_contents&amp;backup_date=$backup_date&amp;table_id=$table_id&amp;start=$next_start&amp;backup_secret=$backup_secret&amp;debug=$debug\">
 				<!-- Jquery go to URL after x seconds -->
 					<!-- In case meta refresh doesnt work -->
    					<script>
 					\$(document).ready(function(){
 						window.setTimeout(function(){
         						// Move to a new location or you can do something else
-							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_3_mysql_table_contents&backup_date=$backup_date&table_id=$table_id&start=$next_start&backup_secret=$backup_secret\";
-						}, 10000);
+							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_3_mysql_table_contents&backup_date=$backup_date&table_id=$table_id&start=$next_start&backup_secret=$backup_secret&debug=$debug\";
+						}, 1000000);
 					});
    					</script>
 				<!-- //Jquery go to URL after x seconds -->
-				<p>
-				<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_3_mysql_table_contents&amp;backup_date=$backup_date&amp;table_id=$table_id&amp;start=$next_start&amp;backup_secret=$backup_secret\" class=\"btn\">Continue from $next_start</a>
-				<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_2_mysql_tables_structure&amp;backup_date=$backup_date&amp;table_id=$skip_next_table_id&amp;backup_secret=$backup_secret\" class=\"btn\">Skip this table</a>
-				</p>
 				";
 			}
 			

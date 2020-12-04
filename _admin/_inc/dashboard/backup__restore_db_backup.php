@@ -196,7 +196,8 @@ echo"<!DOCTYPE html>
 				";
 				
 				// Include table setup file
-				include("$table[$table_no].php");
+				$mysql_backup_tables_file  = "$table[$table_no]" . "1.php";
+				include("$mysql_backup_tables_file");
 				
 				// Create table
 				mysqli_query($link, "DROP TABLE IF EXISTS $table[$table_no]") or die(mysqli_error($link)); 
@@ -229,7 +230,8 @@ echo"<!DOCTYPE html>
 			
 			if($table_no < $tables_size){
 				// Include table setup file
-				include("$table[$table_no].php");
+				$mysql_backup_tables_file  = "$table[$table_no]" . "1.php";
+				include("$mysql_backup_tables_file");
 				
 
 				echo"
@@ -283,7 +285,7 @@ echo"<!DOCTYPE html>
 VALUES";
 
 				// Read data file
-				$content_file = $table[$table_no] . ".txt";
+				$content_file = "$table[$table_no]" . "2.txt";
 				if(file_exists("$content_file")){
 					$fh = fopen($content_file, "r");
 					$data = fread($fh, filesize($content_file));
