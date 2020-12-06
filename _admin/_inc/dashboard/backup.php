@@ -158,7 +158,12 @@ if($action == ""){
 			// Date and secret
 			$name_array = explode("_", $file);
 			$date = $name_array[0];
-			$secret = $name_array[1];
+			if(isset($name_array[1])){
+				$secret = $name_array[1];
+			}
+			else{
+				$secret = "";
+			}
 
 			// Dir?
 			if(is_dir("$dir$file")){
