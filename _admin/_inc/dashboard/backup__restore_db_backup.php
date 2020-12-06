@@ -312,6 +312,10 @@ VALUES";
 (";
 								for($y=1;$y<$columns_size+1;$y++){
 									if(isset($temp[$y])){
+
+										// Remove \n from end of string
+										$temp[$y] = rtrim($temp[$y]);
+
 										$inp_column_mysql = quote_smart($link, $temp[$y]);
 										if($y != 1){
 											$insert_query = $insert_query . ", ";	
