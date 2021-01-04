@@ -2,9 +2,9 @@
 /**
 *
 * File: recipes/seasons_browse.php
-* Version 1.0.0
-* Date 13:43 18.11.2017
-* Copyright (c) 2011-2017 Localhost
+* Version 2.0.0
+* Date 19:50 04.01.2021
+* Copyright (c) 2021 Localhost
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -93,10 +93,18 @@ include("$root/_webdesign/header.php");
 
 if($action == ""){
 	echo"
-	<div class=\"left\">
+	<div class=\"recipes_headline\">
 		<h1>$get_season_translation_value</h1>
+
+		<!-- Where am I? -->
+			<p><b>$l_you_are_here:</b><br />
+			<a href=\"index.php?l=$l\">$l_recipes</a>
+			&gt;
+			<a href=\"seasons_browse.php?season_id=$get_season_id&amp;l=$l\">$get_season_translation_value</a>
+			</p>
+		<!-- //Where am I? -->
 	</div>
-	<div style=\"float: right;text-align: right;padding-top:12px;\">
+	<div class=\"recipes_menu\">
 		<!-- Order -->
 			<script>
 			\$(function(){
@@ -144,7 +152,7 @@ if($action == ""){
 
 	// Select recipes
 	$x = 0;
-	$query = "SELECT $t_recipes.recipe_id, $t_recipes.recipe_title, $t_recipes.recipe_introduction, $t_recipes.recipe_image_path, $t_recipes.recipe_image, $t_recipes.recipe_unique_hits FROM $t_recipes JOIN $t_recipes_numbers ON $t_recipes.recipe_id=$t_recipes_numbers.number_recipe_id WHERE $t_recipes.recipe_season_id='$get_season_id' AND $t_recipes.recipe_language=$l_mysql";
+	$query = "SELECT $t_recipes.recipe_id, $t_recipes.recipe_title, $t_recipes.recipe_introduction, $t_recipes.recipe_image_path, $t_recipes.recipe_image, $t_recipes.recipe_thumb_278x156, $t_recipes.recipe_unique_hits FROM $t_recipes JOIN $t_recipes_numbers ON $t_recipes.recipe_id=$t_recipes_numbers.number_recipe_id WHERE $t_recipes.recipe_season_id='$get_season_id' AND $t_recipes.recipe_language=$l_mysql";
 	// Order
 	if($order_method == "desc"){
 		$order_method_mysql = "DESC";
@@ -164,7 +172,7 @@ if($action == ""){
 	}
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
-		list($get_recipe_id, $get_recipe_title, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image, $get_recipe_unique_hits) = $row;
+		list($get_recipe_id, $get_recipe_title, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156, $get_recipe_unique_hits) = $row;
 
 		if($get_recipe_image != ""){
 		
@@ -175,19 +183,30 @@ if($action == ""){
 			$row_rating = mysqli_fetch_row($result_rating);
 			list($get_rating_id, $get_rating_average, $get_rating_popularity) = $row_rating;
 
+			// Select Nutrients
+			$query_n = "SELECT number_id, number_recipe_id, number_hundred_calories, number_hundred_proteins, number_hundred_fat, number_hundred_fat_of_which_saturated_fatty_acids, number_hundred_carbs, number_hundred_carbs_of_which_dietary_fiber, number_hundred_carbs_of_which_sugars, number_hundred_salt, number_hundred_sodium, number_serving_calories, number_serving_proteins, number_serving_fat, number_serving_fat_of_which_saturated_fatty_acids, number_serving_carbs, number_serving_carbs_of_which_dietary_fiber, number_serving_carbs_of_which_sugars, number_serving_salt, number_serving_sodium, number_total_weight, number_total_calories, number_total_proteins, number_total_fat, number_total_fat_of_which_saturated_fatty_acids, number_total_carbs, number_total_carbs_of_which_dietary_fiber, number_total_carbs_of_which_sugars, number_total_salt, number_total_sodium, number_servings FROM $t_recipes_numbers WHERE number_recipe_id=$get_recipe_id";
+			$result_n = mysqli_query($link, $query_n);
+			$row_n = mysqli_fetch_row($result_n);
+			list($get_number_id, $get_number_recipe_id, $get_number_hundred_calories, $get_number_hundred_proteins, $get_number_hundred_fat, $get_number_hundred_fat_of_which_saturated_fatty_acids, $get_number_hundred_carbs, $get_number_hundred_carbs_of_which_dietary_fiber, $get_number_hundred_carbs_of_which_sugars, $get_number_hundred_salt, $get_number_hundred_sodium, $get_number_serving_calories, $get_number_serving_proteins, $get_number_serving_fat, $get_number_serving_fat_of_which_saturated_fatty_acids, $get_number_serving_carbs, $get_number_serving_carbs_of_which_dietary_fiber, $get_number_serving_carbs_of_which_sugars, $get_number_serving_salt, $get_number_serving_sodium, $get_number_total_weight, $get_number_total_calories, $get_number_total_proteins, $get_number_total_fat, $get_number_total_fat_of_which_saturated_fatty_acids, $get_number_total_carbs, $get_number_total_carbs_of_which_dietary_fiber, $get_number_total_carbs_of_which_sugars, $get_number_total_salt, $get_number_total_sodium, $get_number_servings) = $row_n;
 			
 			// 4 divs
 
 			// 847 / 4 = 211
 			// 847 / 3 = 282
 
-			// Thumb
-			$inp_new_x = 190;
-			$inp_new_y = 98;
-			$thumb = "recipe_" . $get_recipe_id . "-" . $inp_new_x . "x" . $inp_new_y . ".png";
+			// Recipe thumb
+			if($get_recipe_thumb_278x156 == "" OR !(file_exists("$root/$get_recipe_image_path/$get_recipe_thumb_278x156"))){
+				$inp_new_x = 278; // from HD 1920x1080
+				$inp_new_y = 156;
 
-			if(!(file_exists("$root/_cache/$thumb"))){
-				resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_recipe_image_path/$get_recipe_image", "$root/_cache/$thumb");
+				$ext = get_extension($get_recipe_image);
+
+				echo"<div class=\"info\"><p>Creating recipe thumb $inp_new_x x $inp_new_y  px</p></div>";
+
+				$thumb = $get_recipe_id . "_thumb_" . $inp_new_x . "x" . $inp_new_y . ".png";
+				$thumb_mysql = quote_smart($link, $thumb);
+				resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_recipe_image_path/$get_recipe_image", "$root/$get_recipe_image_path/$thumb");
+				mysqli_query($link, "UPDATE $t_recipes SET recipe_thumb_278x156=$thumb_mysql WHERE recipe_id=$get_recipe_id") or die(mysqli_error($link));
 			}
 
 
@@ -216,25 +235,44 @@ if($action == ""){
 			}
 		
 			echo"
-					<p class=\"recipe_open_category_img_p\">
-					<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id\"><img src=\"$root/_cache/$thumb\" alt=\"$get_recipe_image\" width=\"$inp_new_x\" height=\"$inp_new_y\" /></a><br />
-					</p>
-					<p class=\"recipe_open_category_p\">
-					<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id\" class=\"recipe_open_category_a\">$get_recipe_title</a>
+					<!-- skriver ut bilder per oppskrift -->
+					<p>
+					<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\"><img src=\"$root/$get_recipe_image_path/$get_recipe_thumb_278x156\" alt=\"$get_recipe_image\" /></a><br />
+					<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\" class=\"h2\">$get_recipe_title</a>
 					</p>
 
-					<div class=\"recipe_open_category_unique_hits\">
-						<img src=\"$root/_webdesign/images/recipes/ic_eye_grey_18px.png\" alt=\"eye.png\" style=\"float:left;padding-right: 5px;\" /> 
-						<span class=\"recipe_open_category_unique_hits_span\">
-						$get_recipe_unique_hits 
-						</span>
-					</div>
-					<div class=\"recipe_open_category_popularity\">
-						<span class=\"recipe_open_category_popularity_span\">
-						$get_rating_popularity %
-						</span>
-						<img src=\"$root/_webdesign/images/recipes/ic_thumb_up_grey_18px.png\" alt=\"ic_thumb_up_grey_18px.png\" style=\"float:right;padding-left: 5px;\" /> 
-					</div>
+					<!-- Numbers -->
+
+					<table style=\"margin: 0px auto;\">
+					 <tr>
+					  <td style=\"padding-right: 10px;text-align: center;\">
+						<span class=\"grey_small\">$get_number_hundred_calories</span>
+					  </td>
+					  <td style=\"padding-right: 10px;text-align: center;\">
+						<span class=\"grey_small\">$get_number_hundred_fat</span>
+					  </td>
+					  <td style=\"padding-right: 10px;text-align: center;\">
+						<span class=\"grey_small\">$get_number_hundred_carbs</span>
+					  </td>
+					  <td style=\"text-align: center;\">
+						<span class=\"grey_small\">$get_number_hundred_proteins</span>
+					  </td>
+					 </tr>
+					 <tr>
+					  <td style=\"padding-right: 10px;text-align: center;\">
+						<span class=\"grey_small\">$l_cal_lowercase</span>
+					  </td>
+					  <td style=\"padding-right: 10px;text-align: center;\">
+						<span class=\"grey_small\">$l_fat_lowercase</span>
+					  </td>
+					  <td style=\"padding-right: 10px;text-align: center;\">
+						<span class=\"grey_small\">$l_carb_lowercase</span>
+					  </td>
+					  <td style=\"text-align: center;\">
+						<span class=\"grey_small\">$l_proteins_abbr_lowercase</span>
+					  </td>
+					 </tr>
+					</table>
 
 
 

@@ -193,8 +193,10 @@ echo"
 				// Make new category image
 				$inp_new_x = 220;
 				$inp_new_y = 220;
+
+				$ext = get_extension($get_recipe_image);
 				
-				$inp_category_image_file = $get_category_id . "_image_" . $inp_new_x . "x" . $inp_new_y . ".png";
+				$inp_category_image_file = $get_category_id . "_image_" . $inp_new_x . "x" . $inp_new_y . ".$ext";
 				$inp_category_image_file_mysql = quote_smart($link, $inp_category_image_file);
 
 				$inp_category_image_path = "_uploads/recipes/categories";
@@ -205,7 +207,7 @@ echo"
 
 
 				echo"
-				<div class=\"info\"><p>New month - new image! This months recipe is $get_recipe_title</p></div>
+				<div class=\"info\"><p>New month - new image! This months recipe is $get_recipe_title. Recipe image is $get_recipe_image.</p></div>
 				";
 			}
 		} // new image for category
@@ -260,9 +262,12 @@ echo"
 				if($get_recipe_thumb_278x156 == "" OR !(file_exists("$root/$get_recipe_image_path/$get_recipe_thumb_278x156"))){
 					$inp_new_x = 278; // 278x156
 					$inp_new_y = 156;
+
+					$ext = get_extension($get_recipe_image);
+
 					echo"<div class=\"info\"><p>Creating recipe thumb $inp_new_x x $inp_new_y  px</p></div>";
 
-					$thumb = $get_recipe_id . "_thumb_" . $inp_new_x . "x" . $inp_new_y . ".png";
+					$thumb = $get_recipe_id . "_thumb_" . $inp_new_x . "x" . $inp_new_y . ".$ext";
 					$thumb_mysql = quote_smart($link, $thumb);
 					resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_recipe_image_path/$get_recipe_image", "$root/$get_recipe_image_path/$thumb");
 					mysqli_query($link, "UPDATE $t_recipes SET recipe_thumb_278x156=$thumb_mysql WHERE recipe_id=$get_recipe_id") or die(mysqli_error($link));
@@ -358,9 +363,12 @@ echo"
 				if($get_recipe_thumb_278x156 == "" OR !(file_exists("$root/$get_recipe_image_path/$get_recipe_thumb_278x184"))){
 					$inp_new_x = 278; // 278x156
 					$inp_new_y = 156;
+
+					$ext = get_extension($get_recipe_image);
+
 					echo"<div class=\"info\"><p>Creating recipe thumb $inp_new_x x $inp_new_y  px</p></div>";
 
-					$thumb = $get_recipe_id . "_thumb_" . $inp_new_x . "x" . $inp_new_y . ".png";
+					$thumb = $get_recipe_id . "_thumb_" . $inp_new_x . "x" . $inp_new_y . ".$ext";
 					$thumb_mysql = quote_smart($link, $thumb);
 					resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_recipe_image_path/$get_recipe_image", "$root/$get_recipe_image_path/$thumb");
 					mysqli_query($link, "UPDATE $t_recipes SET recipe_thumb_278x156=$thumb_mysql WHERE recipe_id=$get_recipe_id") or die(mysqli_error($link));
@@ -441,9 +449,12 @@ echo"
 				if($get_recipe_thumb_278x156 == "" OR !(file_exists("$root/$get_recipe_image_path/$get_recipe_thumb_278x156"))){
 					$inp_new_x = 278; // 278x156
 					$inp_new_y = 156;
+
+					$ext = get_extension($get_recipe_image);
+
 					echo"<div class=\"info\"><p>Creating recipe thumb $inp_new_x x $inp_new_y  px</p></div>";
 
-					$thumb = $get_recipe_id . "_thumb_" . $inp_new_x . "x" . $inp_new_y . ".png";
+					$thumb = $get_recipe_id . "_thumb_" . $inp_new_x . "x" . $inp_new_y . ".$ext";
 					$thumb_mysql = quote_smart($link, $thumb);
 					resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_recipe_image_path/$get_recipe_image", "$root/$get_recipe_image_path/$thumb");
 					mysqli_query($link, "UPDATE $t_recipes SET recipe_thumb_278x156=$thumb_mysql WHERE recipe_id=$get_recipe_id") or die(mysqli_error($link));

@@ -223,6 +223,9 @@ else{
 			if($get_recipe_thumb_278x156 == "" OR !(file_exists("$root/$get_recipe_image_path/$get_recipe_thumb_278x156"))){
 				$inp_new_x = 278; // from HD 1920x1080
 				$inp_new_y = 156;
+
+				$ext = get_extension($get_recipe_image);
+
 				echo"<div class=\"info\"><p>Creating recipe thumb $inp_new_x x $inp_new_y  px</p></div>";
 
 				$thumb = $get_recipe_id . "_thumb_" . $inp_new_x . "x" . $inp_new_y . ".png";
