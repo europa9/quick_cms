@@ -3,8 +3,8 @@
 *
 * File: recipes/categories.php
 * Version 1.0.0
-* Date 13:43 18.11.2017
-* Copyright (c) 2011-2017 Localhost
+* Date 19:00 04.01.2021
+* Copyright (c) 2020 Localhost
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -62,14 +62,17 @@ if($action == ""){
 		<a href=\"categories.php?l=$l\">$l_categories</a>
 		</p>
 	<!-- //You are here -->
-	";
 
+
+	<div class=\"recipes_categories_row\">
+	";
 	// Select categories
 	$x = 0;
-	$query = "SELECT category_id, category_name FROM $t_recipes_categories ORDER BY category_name ASC";
+	$month = date("m");
+	$query = "SELECT category_id, category_name, category_image_path, category_image_file, category_image_updated_month, category_icon_file FROM $t_recipes_categories ORDER BY category_name ASC";
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
-		list($get_category_id, $get_category_name) = $row;
+		list($get_category_id, $get_category_name, $get_category_image_path, $get_category_image_file, $get_category_image_updated_month, $get_category_icon_file) = $row;
 
 		// Translations
 		$query_t = "SELECT category_translation_id, category_translation_value, category_translation_image_path, category_translation_image FROM $t_recipes_categories_translations WHERE category_id=$get_category_id AND category_translation_language=$l_mysql";
@@ -88,78 +91,60 @@ if($action == ""){
 		}
 
 
+		// Check category image
+		if($month != "$get_category_image_updated_month" OR $get_category_image_file == "" OR !(file_exists("$root/$get_category_image_path/$get_category_image_file"))){
+			// Find random recipe
+			$query_r = "SELECT recipe_id, recipe_title, recipe_image_path, recipe_image FROM $t_recipes WHERE recipe_category_id=$get_category_id ORDER BY RAND() LIMIT 1;";
+			$result_r = mysqli_query($link, $query_r);
+			$row_r = mysqli_fetch_row($result_r);
+			list($get_recipe_id, $get_recipe_title, $get_recipe_image_path, $get_recipe_image) = $row_r;
 
-		if(file_exists("$root/$get_category_translation_image_path/$get_category_translation_image") && $get_category_translation_image != ""){
-			if($x == 0){
-				echo"
-				<div class=\"clear\"></div>
-				<div class=\"left_center_center_right_left\">
-				";
-			}
-			elseif($x == 1){
-				echo"
-				<div class=\"left_center_center_left_right_center\">
-				";
-			}
-			elseif($x == 2){
-				echo"
-				<div class=\"left_center_center_right_right_center\">
-				";
-			}
-			elseif($x == 3){
-				echo"
-				<div class=\"left_center_center_right_right\">
-				";
-			}
-		
-			echo"
-					<p class=\"recipe_open_category_img_p\">
-					<a href=\"$root/recipes/categories_browse.php?category_id=$get_category_id&amp;l=$l\"><img src=\"$root/$get_category_translation_image_path/$get_category_translation_image\" alt=\"$get_category_translation_image\" /></a><br />
-					</p>
-					<p class=\"recipe_open_category_p\">
-					<a href=\"$root/recipes/categories_browse.php?category_id=$get_category_id&amp;l=$l\" class=\"recipe_open_category_a\">$get_category_translation_value</a>
-					</p>
-				</div>
-			";
+			if(file_exists("$root/$get_recipe_image_path/$get_recipe_image") && $get_recipe_image != ""){
+				if(file_exists("$root/$get_category_image_path/$get_category_image_file") && $get_category_image_file != ""){
+					unlink("$root/$get_category_image_path/$get_category_image_file");
+				}
 
-			// Increment
-			$x++;
-		
-			// Reset
-			if($x == 4){
-				$x = 0;
+				// Make new category image
+				$inp_new_x = 220;
+				$inp_new_y = 220;
+				
+				$inp_category_image_file = $get_category_id . "_image_" . $inp_new_x . "x" . $inp_new_y . ".png";
+				$inp_category_image_file_mysql = quote_smart($link, $inp_category_image_file);
+
+				$inp_category_image_path = "_uploads/recipes/categories";
+
+
+				resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_recipe_image_path/$get_recipe_image", "$root/$inp_category_image_path/$inp_category_image_file");
+				mysqli_query($link, "UPDATE $t_recipes_categories SET category_image_path='$inp_category_image_path', category_image_file=$inp_category_image_file_mysql, category_image_updated_month=$month WHERE category_id=$get_category_id") or die(mysqli_error($link));
+
+
+				echo"
+				<div class=\"info\"><p>New month - new image! This months recipe is $get_recipe_title</p></div>
+				";
 			}
+		} // new image for category
+		
+		if($x == 2){
+			// echo"		<div class=\"recipes_categories_break\"></div>\n";
+			$x = 0;
 		}
-
-	}
-
-	if($x == 1){
+		
 		echo"
-			<div class=\"left_center_center_right_center\">
-			</div>
-			<div class=\"left_center_center_right_center\">
-			</div>
-			<div class=\"left_center_center_right_right\">
-			</div>
-		";
-	
-	}
-	elseif($x == 2){
-		echo"
-			<div class=\"left_center_center_right_center\">
-			</div>
-			<div class=\"left_center_center_right_right\">
-			</div>
+		<div class=\"recipes_categories_column\">
+			<p>
+			<a href=\"$root/recipes/categories_browse.php?category_id=$get_category_id&amp;l=$l\"><img src=\"$root/$get_category_image_path/$get_category_image_file\" alt=\"$get_category_translation_image\" /></a><br />
+			<a href=\"$root/recipes/categories_browse.php?category_id=$get_category_id&amp;l=$l\" class=\"h2\">$get_category_translation_value</a>
+			</p>
+		</div>
 		";
 
-	}
-	elseif($x == 3){
-		echo"
-			<div class=\"left_center_center_right_right\">
-			</div>
-		";
+		// Increment
+		$x++;
 
 	}
+	echo"
+	</div> <!-- //recipes_categories_wrapper -->
+	";
 
 }
 

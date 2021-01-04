@@ -48,10 +48,10 @@ $l_mysql = quote_smart($link, $l);
 /*- Get recipe ------------------------------------------------------------------------- */
 // Select
 $recipe_id_mysql = quote_smart($link, $recipe_id);
-$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_comments, recipe_user_ip, recipe_notes, recipe_password FROM $t_recipes WHERE recipe_id=$recipe_id_mysql";
+$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_country, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb_278x156, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_comments, recipe_user_ip, recipe_notes, recipe_password, recipe_last_viewed, recipe_age_restriction FROM $t_recipes WHERE recipe_id=$recipe_id_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
-list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb, $get_recipe_video, $get_recipe_date, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_comments, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password) = $row;
+list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_country, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156, $get_recipe_video, $get_recipe_date, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_comments, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password, $get_recipe_last_viewed, $get_recipe_age_restriction) = $row;
 
 /*- Headers ---------------------------------------------------------------------------------- */
 if($get_recipe_id == ""){
@@ -542,7 +542,7 @@ $l_web: $configWebsiteTitleSav
 
 
 				<p><b>$l_title:</b><br />
-				<input type=\"text\" name=\"inp_title\" ";if(isset($_GET['inp_title'])) { $inp_title = $_GET['inp_title']; $inp_title = strip_tags(stripslashes($inp_title)); echo"value=\"$inp_title\""; } echo" size=\"25\" />
+				<input type=\"text\" name=\"inp_title\" ";if(isset($_GET['inp_title'])) { $inp_title = $_GET['inp_title']; $inp_title = strip_tags(stripslashes($inp_title)); echo"value=\"$inp_title\""; } echo" size=\"25\" style=\"width: 98%;\" />
 				</p>
 
 				<p><b>$l_set_rating:</b><br />
@@ -572,7 +572,7 @@ $l_web: $configWebsiteTitleSav
 				</p>
 
 				<p><b>$l_comment:</b><br />
-				<textarea name=\"inp_text\" rows=\"8\" cols=\"30\">";
+				<textarea name=\"inp_text\" rows=\"8\" cols=\"30\" style=\"width: 98%;\">";
 				if(isset($_GET['inp_text'])) { $inp_text = $_GET['inp_text']; $inp_text = strip_tags(stripslashes($inp_text)); echo"$inp_text"; } echo"</textarea>
 				</p>
 

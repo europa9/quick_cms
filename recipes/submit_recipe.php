@@ -168,7 +168,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			
 			// recipes
 			mysqli_query($link, "INSERT INTO $t_recipes
-			(recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_country, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_comments, recipe_user_ip, recipe_notes, recipe_password, recipe_last_viewed, recipe_age_restriction) 
+			(recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_country, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb_278x156, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_comments, recipe_user_ip, recipe_notes, recipe_password, recipe_last_viewed, recipe_age_restriction) 
 			VALUES 
 			(NULL, $inp_recipe_user_id_mysql, $inp_recipe_title_mysql, $inp_recipe_category_id_mysql, $inp_recipe_language_mysql, $inp_recipe_country_mysql, $inp_recipe_introduction_mysql, '', '', '', '', '',  '$inp_recipe_date', '$inp_recipe_time', $inp_recipe_cusine_id_mysql, $inp_recipe_season_id_mysql, $inp_recipe_occasion_id_mysql, '', '0', '', 0, $inp_recipe_user_ip_mysql, 'E-mail not sent to administrators', $inp_recipe_password_mysql, '$inp_recipe_last_viewed', $inp_age_restriction_mysql)")
 			or die(mysqli_error($link));

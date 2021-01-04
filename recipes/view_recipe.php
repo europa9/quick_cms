@@ -2,9 +2,9 @@
 /**
 *
 * File: recipes/view_recipe.php
-* Version 2.0.0
-* Date 22:33 05.02.2019
-* Copyright (c) 2011-2019 Localhost
+* Version 3.0.0
+* Date 17:36 01.01.2021
+* Copyright (c) 2021 Localhost
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -66,7 +66,7 @@ if(isset($_GET['servings'])) {
 	}
 }
 else{
-	$servings = "";
+	$servings = "1";
 }
 
 
@@ -76,10 +76,10 @@ $l_mysql = quote_smart($link, $l);
 /*- Get recipe ------------------------------------------------------------------------- */
 // Select
 $recipe_id_mysql = quote_smart($link, $recipe_id);
-$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_country, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_comments, recipe_user_ip, recipe_notes, recipe_password, recipe_last_viewed, recipe_age_restriction FROM $t_recipes WHERE recipe_id=$recipe_id_mysql";
+$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_country, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb_278x156, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_comments, recipe_user_ip, recipe_notes, recipe_password, recipe_last_viewed, recipe_age_restriction FROM $t_recipes WHERE recipe_id=$recipe_id_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
-list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_country, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb, $get_recipe_video, $get_recipe_date, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_comments, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password, $get_recipe_last_viewed, $get_recipe_age_restriction) = $row;
+list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_country, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156, $get_recipe_video, $get_recipe_date, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_comments, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password, $get_recipe_last_viewed, $get_recipe_age_restriction) = $row;
 
 /*- Headers ---------------------------------------------------------------------------------- */
 if($get_recipe_id == ""){
@@ -361,74 +361,206 @@ else{
 		$get_rating_average = 0;
 	}
 
+	// My data
+	$get_my_user_id = 0;
+	$get_my_user_rank = "";
+	$get_recipe_favorite_id = 0;
+	if(isset($_SESSION['user_id'])){
+		// My user
+		$my_user_id = $_SESSION['user_id'];
+		$my_user_id_mysql = quote_smart($link, $my_user_id);
+		$q = "SELECT user_id, user_rank FROM $t_users WHERE user_id=$my_user_id_mysql";
+		$r = mysqli_query($link, $q);
+		$rowb = mysqli_fetch_row($r);
+		list($get_my_user_id, $get_my_user_rank) = $rowb;
 
-	echo"	
-	<!-- Headline and actions -->
-		<h1 class=\"recipe_headline\" style=\"\">$get_recipe_title
-					";
-				if(isset($_SESSION['user_id'])){
+		// Favorite
+		$q = "SELECT recipe_favorite_id FROM $t_recipes_favorites WHERE recipe_favorite_recipe_id=$get_recipe_id AND recipe_favorite_user_id=$my_user_id_mysql";
+		$r = mysqli_query($link, $q);
+		$rowb = mysqli_fetch_row($r);
+		list($get_recipe_favorite_id) = $rowb;
+	}
 
-					// My user
-					$my_user_id = $_SESSION['user_id'];
-					$my_user_id_mysql = quote_smart($link, $my_user_id);
-					$q = "SELECT user_id, user_rank FROM $t_users WHERE user_id=$my_user_id_mysql";
-					$r = mysqli_query($link, $q);
-					$rowb = mysqli_fetch_row($r);
-					list($get_my_user_id, $get_my_user_rank) = $rowb;
+	echo"
+	<!-- Headline -->
+		<div class=\"recipe_headline\">
+			<!-- Recipe image/video -->
+			";
+			if($get_recipe_video != ""){
+				echo"
+				<iframe width=\"847\" height=\"476\" src=\"$get_recipe_video\" frameborder=\"0\" allowfullscreen></iframe>
+				";
+			}
+			else{
+				if($get_recipe_image != ""){
+					echo"<p><img src=\"$root/$get_recipe_image_path/$get_recipe_image\" alt=\"$get_recipe_image\" /></p>";
+				}
+			}
+			echo"	
+			<!-- //Recipe image/video -->
 
-					// Favorite
-					$q = "SELECT recipe_favorite_id FROM $t_recipes_favorites WHERE recipe_favorite_recipe_id=$get_recipe_id AND recipe_favorite_user_id=$my_user_id_mysql";
-					$r = mysqli_query($link, $q);
-					$rowb = mysqli_fetch_row($r);
-					list($get_recipe_favorite_id) = $rowb;
-					if($get_recipe_favorite_id == ""){
-						echo"
-						<a href=\"favorite_recipe_add.php?recipe_id=$get_recipe_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/heart_grey.png\" alt=\"heart_grey.png\" /></a>
+
+			<h1>$get_recipe_title</h1>
+
+
+			<!-- Edit/Delete -->
+				";
+				if($get_my_user_id == "$get_recipe_user_id" OR $get_my_user_rank == "admin" OR $get_my_user_rank == "moderator"){
+					echo"
+					<ul>
+						<li><a href=\"edit_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\"><img src=\"_gfx/icons/outline_create_black_18dp.png\" alt=\"outline_create_black_18dp.png\" /> $l_edit</a></li>
+						<li><a href=\"delete_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\"><img src=\"_gfx/icons/outline_clear_black_18dp.png\" alt=\"outline_clear_black_18dp.png\" /> $l_delete</a></li>
+					</ul>";
+				}
+				echo"
+			<!-- //Edit/Delete -->
+
+
+			<!-- Categorization, favorite -->
+					<a id=\"favorite\"></a>
+					<ul>
+						<li>
+						<a href=\"categories_browse.php?category_id=$get_recipe_category_id\"><img src=\"_gfx/icons/outline_folder_black_18dp.png\" alt=\"outline_folder_black_18dp.png\" />
+						$get_category_translation_value</a>
+						</li>
 						";
+
+						// Cusine
+						if($get_recipe_cusine_id != 0){
+							echo"
+							<li>
+							<a href=\"cuisines_browse.php?cuisine_id=$get_recipe_cusine_id\" title=\"$l_cuisine\"><img src=\"_gfx/icons/outline_public_black_18dp.png\" alt=\"outline_public_black_18dp.png\" />
+							$get_cusine_translation_value</a>
+							</li>
+							";
+						}
+
+						// Season
+						if($get_recipe_season_id != 0){
+							echo"
+							<li>
+							<a href=\"seasons_browse.php?season_id=$get_recipe_season_id\" title=\"$l_season\"><img src=\"_gfx/icons/outline_brightness_4_black_18dp.png\" alt=\"outline_brightness_4_black_18dp.png\" />
+							$get_season_translation_value</a>
+							</li>
+							";
+						}
+
+						// Occasion
+						if($get_recipe_occasion_id != 0){
+							echo"
+							<li>
+							<a href=\"occasions_browse.php?occasion_id=$get_recipe_occasion_id\" title=\"$l_occasion\"><img src=\"_gfx/icons/outline_cake_black_18dp.png\" alt=\"outline_cake_black_18dp.png\" />
+							$get_occasion_translation_value</a>
+							</li>
+							";
+						}
+
+						if($get_recipe_favorite_id == ""){
+							echo"
+							<li>
+							<a href=\"favorite_recipe_add.php?recipe_id=$get_recipe_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/outline_favorite_border_black_18dp.png\" alt=\"outline_favorite_border_black_18dp.png\" />
+							$l_favorite</a>
+							</li>
+							";
+						}
+						else{
+							echo"
+							<li>
+							<a href=\"favorite_recipe_remove.php?recipe_id=$get_recipe_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/outline_favorite_black_18dp.png\" alt=\"outline_favorite_black_18dp.png\" />
+							$l_remove_favorite</a>
+							</li>";
+						}
+
+
+						echo"
+					</ul>
+				
+			<!-- //Categorization, favorite -->
+			<!-- Tags -->
+				<ul>
+			";
+
+					$x = 0;
+					$query = "SELECT tag_id, tag_title, tag_title_clean FROM $t_recipes_tags WHERE tag_recipe_id=$get_recipe_id ORDER BY tag_id ASC";
+					$result = mysqli_query($link, $query);
+					while($row = mysqli_fetch_row($result)) {
+						list($get_tag_id, $get_tag_title, $get_tag_title_clean) = $row;
+						echo"
+						<li><a href=\"view_tag.php?tag=$get_tag_title_clean&amp;l=$l\">#$get_tag_title</a></li>
+						";
+						$x++;
+					}
+					if($x == "0"){
+						echo"<li>[<a href=\"suggest_tags.php?recipe_id=$recipe_id&amp;l=$l\">$l_suggest_tags</a>]</li>";
+					}
+			echo"
+				</ul>
+			<!-- //Tags -->
+
+
+			<!-- Rating -->
+				<div class=\"headline_hr\"></div>
+				<ul>
+					<li>";
+					if($get_rating_total_votes == "0"){
+						echo"
+						<a href=\"view_recipe_write_comment.php?recipe_id=$recipe_id&amp;l=$l#comments\" class=\"rating_stars_onclick\">";
 					}
 					else{
 						echo"
-						<a href=\"favorite_recipe_remove.php?recipe_id=$get_recipe_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/heart_fill.png\" alt=\"heart_fill.png\" /></a>
-						";
+						<a href=\"view_recipe.php?recipe_id=$recipe_id&amp;l=$l#comments\" class=\"rating_stars_onclick\">";
 					}
+						// Rating stars
+						$rating_count = 1;
+						for($x=0;$x<$get_rating_average;$x++){
+							echo"			";
+							echo"<img src=\"_gfx/icons/star_on.png\" alt=\"star_on.png\" />\n ";
+							$rating_count++;
+						}
 
-					// edit, delte
-					if($get_my_user_id == "$get_recipe_user_id" OR $get_my_user_rank == "admin" OR $get_my_user_rank == "moderator"){
-						echo"
-						<a href=\"edit_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\"><img src=\"_gfx/icons/edit.png\" alt=\"ic_mode_edit_black_18dp_1x.png\" /></a>
-						<a href=\"delete_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\"><img src=\"_gfx/icons/delete.png\" alt=\"ic_delete_black_18dp_1x.png\" /></a>
-						";
-					}
-				}
-				else{
+						$rest = 5-$get_rating_average;
+						$rating_count = $get_rating_average+1;
+						for($x=0;$x<$rest;$x++){
+							echo"			";
+							echo"<img src=\"_gfx/icons/outline_star_outline_black_18dp.png\" alt=\"outline_star_outline_black_18dp.png\" /> ";
+
+							$rating_count++;
+						}
+						echo"($get_rating_total_votes)</a>
+						</li>
+					</li>
+				</ul>
+				<script>
+				\$(document).ready(function(){
+					\$(\".rating_stars_onclick\").click(function(){
+						\$(\"#recipes_write_a_comment_btn\").removeClass(\"btn_default\").addClass(\"btn\");
+					});
+				});
+				</script>
+			<!-- //Rating -->
+
+			<!-- Author -->
+				<p>
+				$l_published_by <a href=\"$root/users/view_profile.php?user_id=$get_recipe_user_id&amp;l=$l\">$get_user_alias</a><br />
+				";
+				if($get_profile_city != ""){
 					echo"
-					<a href=\"$root/users/login.php?l=$l&amp;referer=../recipes/favorite_recipe_add.php?recipe_id=$get_recipe_id&amp;l=$l\"><img src=\"_gfx/icons/heart_grey.png\" alt=\"heart_grey.png\" /></a>
+					<span class=\"grey\">$get_profile_city";  if($get_profile_country != ""){ echo", $get_profile_country"; } echo"</span>
 					";
 				}
 				echo"
-					</h1>
-		<div class=\"clear\"></div>
-	<!-- //Headline and actions -->
+				</p>
+			<!-- //Author -->
 
-	<!-- You are here -->
-		<p><b>$l_you_are_here:</b><br />
-		<a href=\"index.php?l=$l\">$l_recipes</a>
-		&gt;
-		<a href=\"categories.php?l=$l\">$l_categories</a>
-		&gt;
-		<a href=\"categories_browse_1200.php?category_id=$get_recipe_category_id&amp;l=$l\">$get_category_translation_value</a>
-		&gt;
-		<a href=\"view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\">$get_recipe_title</a>
-		</p>
-	<!-- //You are here -->
+			<!-- Intro -->
+				<div class=\"headline_hr\"></div>
+				<p class=\"recipe_intro\">
+				$get_recipe_introduction
+				</p>
+			<!-- //Intro -->
 
-
-
-	<!-- Ad -->
-		";
-		include("$root/ad/_includes/ad_main_below_headline.php");
-		echo"
-	<!-- //Ad -->
+		</div>
+	<!-- //Headline -->
 
 
 	<!-- Feedback -->
@@ -446,307 +578,24 @@ else{
 		echo"	
 	<!-- //Feedback -->
 
-	<!-- Image -->
-		<div class=\"recipe_image_left\">
-			";
-			if($get_recipe_video != ""){
-			
-			// <div>
-			//	<a href=\"#video\" class=\"toggle\" data-divid=\"view_recipe_video\"><img src=\"../image.php/$get_recipe_image.png?width=847&height=437&image=/$get_recipe_image_path/$get_recipe_image\" /></a>
-			//	<br />
-			//	<a href=\"#video\" class=\"toggle\" data-divid=\"view_recipe_video\"><img src=\"_inc/recipes/gfx/play.png\" alt=\"play.png\" style=\"position:relative;margin-top: -200px;\" /></a>
-			// </div>
-			// <div class=\"view_recipe_video\" style=\"display:none;\">
-
-			echo"
-			<iframe width=\"847\" height=\"476\" src=\"$get_recipe_video\" frameborder=\"0\" allowfullscreen></iframe>
-			";
-			}
-			else{
-				if($get_recipe_image != ""){
-					echo"<p style=\"padding-bottom:0;margin-bottom:0;\"><img src=\"$root/$get_recipe_image_path/$get_recipe_image\" alt=\"$get_recipe_image\" /></p>";
-				}
-			}
-			echo"	
-		</div>
-		<div class=\"recipe_image_right\">
-			<!-- Paring -->";
-				$query = "SELECT pairing_id, pairing_this_recipe_id, pairing_this_category_id, pairing_other_recipe_id, pairing_other_category_id, pairing_other_title, pairing_other_image_path, pairing_other_image_image, pairing_other_image_thumb, pairing_counter FROM $t_recipes_pairing_recipes WHERE pairing_this_recipe_id=$get_recipe_id ORDER BY pairing_counter LIMIT 0,4";
-				$result = mysqli_query($link, $query);
-				while($row = mysqli_fetch_row($result)) {
-					list($get_pairing_id, $get_pairing_this_recipe_id, $get_pairing_this_category_id, $get_pairing_other_recipe_id, $get_pairing_other_category_id, $get_pairing_other_title, $get_pairing_other_image_path, $get_pairing_other_image_image, $get_pairing_other_image_thumb, $get_pairing_counter) = $row;
-
-					if($get_pairing_other_image_image != ""){
-
-
-						$inp_new_x = 280; // 278 px × 154
-						$inp_new_y = 120;
-						$thumb = "recipe_" . $get_pairing_other_recipe_id . "-" . $inp_new_x . "x" . $inp_new_y . ".png";
-		
-						if(!(file_exists("$root/_cache/$thumb"))){
-							resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_pairing_other_image_path/$get_pairing_other_image_image", "$root/_cache/$thumb");
-						}
-
-						// Title
-						echo"
-						<p><a href=\"view_recipe.php?recipe_id=$get_pairing_other_recipe_id&amp;l=$l\"><img src=\"$root/_cache/$thumb\" alt=\"$get_pairing_other_image_image\" /></a><br />
-						<a href=\"view_recipe.php?recipe_id=$get_pairing_other_recipe_id&amp;l=$l\">$get_pairing_other_title</a>
-						</p>
-						";
-					}
-				}
-				
-				echo"
-			<!-- //Paring -->
-		</div>
-		<div class=\"clear\"></div>
-	<!-- //Image -->
 
 
 
-	<!-- Recipe Header left and right -->
-		<a id=\"recipe_header\"></a>
-		<!-- Recipe Header left -->
-			<div class=\"view_recipe_header_left\">
+	<!-- Ad -->
+		";
+		include("$root/ad/_includes/ad_main_below_headline.php");
+		echo"
+	<!-- //Ad -->
 
 
-				<!-- Category, tags, links -->
-
-					<table>
-					 <tr>
-					  <td style=\"vertical-align: top;\">
-						<p style=\"margin: 2px 6px 0px 0px;padding:0;\"><img src=\"_gfx/icons/document_open.png\" alt=\"document_open.png\" /></p>
-					  </td>
-					  <td style=\"vertical-align: top;\">
-						<p style=\"margin: 0px 0px 0px 0px;padding:0;\">$l_category: <a href=\"categories_browse.php?category_id=$get_recipe_category_id\">$get_category_translation_value</a>
-						";
-						// Cusine
-						if($get_recipe_cusine_id != 0){
-							echo"
-							&middot;
-							<a href=\"cuisines_browse.php?cuisine_id=$get_recipe_cusine_id\" title=\"$l_cuisine\">$get_cusine_translation_value</a>
-							";
-						}
-
-						// Season
-						if($get_recipe_season_id != 0){
-							echo"
-							&middot;
-							<a href=\"seasons_browse.php?season_id=$get_recipe_season_id\" title=\"$l_season\">$get_season_translation_value</a>
-							";
-						}
-
-						// Occasion
-						if($get_recipe_occasion_id != 0){
-							echo"
-							&middot;
-							<a href=\"occasions_browse.php?occasion_id=$get_recipe_occasion_id\" title=\"$l_occasion\">$get_occasion_translation_value</a>
-							";
-						}
-						echo"
-						</p>
-					  </td>
-					 </tr>
-					 <tr>
-					  <td style=\"vertical-align: top;\">
-						<p style=\"margin: 2px 6px 0px 0px;padding:0;\"><img src=\"_gfx/icons/tag_green.png\" alt=\"tag_green.png\" /></p>
-					  </td>
-					  <td style=\"vertical-align: top;\">
-						<p style=\"margin: 0px 0px 0px 0px;padding:0;\">$l_tags: 
-					";
-					$x = 0;
-					$query = "SELECT tag_id, tag_title, tag_title_clean FROM $t_recipes_tags WHERE tag_recipe_id=$get_recipe_id ORDER BY tag_id ASC";
-					$result = mysqli_query($link, $query);
-					while($row = mysqli_fetch_row($result)) {
-						list($get_tag_id, $get_tag_title, $get_tag_title_clean) = $row;
-						echo"
-						<a href=\"view_tag.php?tag=$get_tag_title_clean&amp;l=$l\">#$get_tag_title</a>
-						";
-						$x++;
-					}
-					if($x == "0"){
-						echo"[<a href=\"suggest_tags.php?recipe_id=$recipe_id&amp;l=$l\">$l_suggest_tags</a>]";
-					}
-					echo"</p>
-					  </td>
-					 </tr>
-					 <tr>
-					  <td style=\"vertical-align: top;\">
-						<p style=\"margin: 2px 6px 0px 0px;padding:0;\"><img src=\"_gfx/icons/link.png\" alt=\"link.png\" /></p>
-					  </td>
-					  <td style=\"vertical-align: top;\">
-						<p style=\"margin: 0px 0px 0px 0px;padding:0;\">$l_links: 
-
-						";
-						$x = 0;
-						$query = "SELECT link_id, link_title, link_url, link_unique_click FROM $t_recipes_links WHERE link_recipe_id=$get_recipe_id ORDER BY link_id ASC";
-						$result = mysqli_query($link, $query);
-						while($row = mysqli_fetch_row($result)) {
-							list($get_link_id, $get_link_title, $get_link_url, $get_link_unique_click) = $row;
-							if($x != 0){
-								echo"&middot; ";
-							}
-							echo"
-							<a href=\"view_link.php?link_id=$get_link_id\" title=\"$get_link_unique_click $l_unique_hits_lowercase\">$get_link_title</a>
-							";
-							$x++;
-						}
-						echo"
-						</p>
-					  </td>
-					 </tr>
-					 <tr>
-					  <td style=\"vertical-align: top;\">
-						<p style=\"margin: 2px 6px 0px 0px;padding:0;\"><img src=\"_gfx/icons/eye_dark_grey.png\" alt=\"eye.png\" /></p>
-					  </td>
-					  <td style=\"vertical-align: top;\">
-						<p style=\"margin: 0px 0px 0px 0px;padding:0;\">$get_recipe_unique_hits $l_unique_views_lovercase</p>
-					  </td>
-					 </tr>
-					";
-
-					// Servings
-					if($servings == ""){
-						$servings = $get_number_servings;
-					}
-					if($servings == 1){
-						$servings_minus = 1;
-					}
-					else{
-						$servings_minus = $servings - 1;
-					}
-					if($servings == 999){
-						$servings_plus = 999;
-					}
-					else{
-						$servings_plus = $servings + 1;
-					}
-
-					// Query
-					$query_string = $_SERVER['QUERY_STRING'];
-					$query_string = str_replace("recipe_id=$get_recipe_id", "", $query_string);
-					$query_string = str_replace("l=$l", "", $query_string);
-					$query_string = str_replace("servings=$servings", "", $query_string);
-					$query_string = str_replace("&&", "", $query_string);
-					echo"
-					 <tr>
-					  <td style=\"vertical-align: top;\">
-						<a id=\"servings\"></a><p style=\"margin: 2px 6px 0px 0px;padding:0;\"><img src=\"_gfx/icons/members_edit.png\" alt=\"baseline_keyboard_arrow_down_black_18dp.png\" /></p>
-					  </td>
-					  <td style=\"vertical-align: top;\">
-							<table>
-							 <tr>
-							  <td>
-								<a href=\"view_recipe.php?recipe_id=$get_recipe_id&amp;servings=$servings_minus&amp;l=$l&amp;$query_string#recipe_header\"><img src=\"_gfx/icons/baseline_keyboard_arrow_down_black_18dp.png\" alt=\"baseline_keyboard_arrow_down_black_18dp.png\" /></a>
-
-					 		  </td>
-							  <td style=\"text-align:center;padding: 0px 6px 0px 6px;\">
-								<p style=\"margin: 0px 0px 0px 0px;padding:0;\">$servings $l_servings_lowercase</p>
-							  </td>
-							  <td>
-								<a href=\"view_recipe.php?recipe_id=$get_recipe_id&amp;servings=$servings_plus&amp;l=$l&amp;$query_string#recipe_header\"><img src=\"_gfx/icons/baseline_keyboard_arrow_up_black_18dp.png\" alt=\"baseline_keyboard_arrow_up_black_18dp.png\" /></a>
-							  </td>
-							 </tr>
-							</table>
-					  </td>
-					 </tr>
-					</table>
-				<!-- //Created and Visits  -->
-
-
-
-			</div> <!-- //view_recipe_left -->
-		<!-- //Recipe Header left -->
-
-
-		<!-- Recipe Header right -->
-			<div class=\"view_recipe_header_right\">
-
-				<!-- Rating -->
-					<div class=\"recipe_rating\">
-						<table>
-					 <tr>
-					  <td style=\"vertical-align: top;\">
-						<p style=\"margin: 0px 0px 0px 0px;padding:0;\"><a href=\"view_recipe.php?recipe_id=$recipe_id&amp;l=$l#comments\" class=\"rating_stars_onclick\">";
-						// Rating stars
-						$rating_count = 1;
-						for($x=0;$x<$get_rating_average;$x++){
-							echo"			";
-							echo"<img src=\"_gfx/icons/star_on.png\" alt=\"star_on.png\" />\n ";
-							$rating_count++;
-						}
-
-						$rest = 5-$get_rating_average;
-						$rating_count = $get_rating_average+1;
-						for($x=0;$x<$rest;$x++){
-							echo"			";
-							echo"<img src=\"_gfx/icons/star_off.png\" alt=\"star_off.png\" /> ";
-
-							$rating_count++;
-						}
-						echo"</a>
-
-						<a href=\"view_recipe.php?recipe_id=$recipe_id&amp;l=$l#comments\" class=\"rating_stars_onclick\">($get_rating_total_votes)</a></p>
-						<script>
-						\$(document).ready(function(){
-							\$(\".rating_stars_onclick\").click(function(){
-								\$(\"#recipes_write_a_comment_btn\").removeClass(\"btn_default\").addClass(\"btn\");
-							});
-						});
-						</script>
-
-					  </td>
-					 </tr>
-					</table>
-					</div>
-				<!-- //Rating -->
-
-
-				<div class=\"view_recipe_info_box\">
-					";
-					if($get_photo_id != "" && file_exists("$root/_uploads/users/images/$get_recipe_user_id/$get_photo_destination")){	
-						echo"
-						<a href=\"$root/users/view_profile.php?user_id=$get_recipe_user_id&amp;l=$l\"><img src=\"$root/_uploads/users/images/$get_recipe_user_id/$get_photo_thumb_60\" alt=\"$get_photo_destination\" class=\"recipe_author_image\" /></a>
-						";
-					}
-					else{
-						echo"
-						<a href=\"$root/users/view_profile.php?user_id=$get_recipe_user_id&amp;l=$l\"><img src=\"$root/users/_gfx/avatar_blank_50.png\" style=\"position: relative; top: 0; left: 0;\" alt=\"Avatar\" class=\"recipe_author_image\" /></a>
-						";
-					}
-
-					echo"
-					<div class=\"recipe_author_text\">
-						<p>
-						$l_published_by <a href=\"$root/users/view_profile.php?user_id=$get_recipe_user_id&amp;l=$l\">$get_user_alias</a><br />
-						";
-						if($get_profile_city != ""){
-							echo"
-							<span class=\"grey\">$get_profile_city";  if($get_profile_country != ""){ echo", $get_profile_country"; } echo"</span>
-							";
-						}
-						echo"
-						</p>
-					</div>
-				</div>
-
-			</div> <!-- //view_recipe_right -->
-		<!-- //Recipe Header right -->
-	<!-- //Recipe Header left and right -->
-
-
-	<!-- Intro -->
-		<div class=\"recipe_intro_wrapper\">
-			<div class=\"recipe_intro\">
-				<p>
-				$get_recipe_introduction
-				</p>
-			</div>
-		</div>
-	<!-- //Intro -->
 
 	<!-- Ingredients -->
 		<div class=\"ingredients\">
+			";
+
+
+			echo"
+			<a id=\"ingredients\"></a>
 
         		<form method=\"get\" action=\"view_recipe.php#ingredients\" enctype=\"multipart/form-data\">
 			<input type=\"hidden\" name=\"recipe_id\" value=\"$get_recipe_id\" />
@@ -792,6 +641,48 @@ else{
 				  </td>
 				 </tr>
 				";
+				if($x == 0){
+					// Servings
+					if($servings == ""){
+						$servings = $get_number_servings;
+					}
+					if($servings == 1){
+						$servings_minus = 1;
+					}
+					else{
+						$servings_minus = $servings - 1;
+					}
+					if($servings == 999){
+						$servings_plus = 999;
+					}
+					else{
+						$servings_plus = $servings + 1;
+					}
+					$query_string = $_SERVER['QUERY_STRING'];
+					$query_string = str_replace("recipe_id=$get_recipe_id", "", $query_string);
+					$query_string = str_replace("l=$l", "", $query_string);
+					$query_string = str_replace("servings=$servings", "", $query_string);
+					$query_string = str_replace("&&", "", $query_string);
+					echo"
+					 <tr>
+					  <td class=\"ingredients_headcell\" cellspan=\"6\">
+						<table>
+						 <tr>
+						  <td>
+							<a href=\"view_recipe.php?recipe_id=$get_recipe_id&amp;servings=$servings_minus&amp;l=$l&amp;$query_string#ingredients\"><img src=\"_gfx/icons/baseline_keyboard_arrow_down_black_18dp.png\" alt=\"baseline_keyboard_arrow_down_black_18dp.png\" /></a>
+	 					  </td>
+						  <td style=\"text-align:center;padding: 0px 6px 0px 6px;\">
+							<p style=\"margin: 0px 0px 0px 0px;padding:0;\">$servings $l_servings_lowercase</p>
+						  </td>
+						  <td>
+							<a href=\"view_recipe.php?recipe_id=$get_recipe_id&amp;servings=$servings_plus&amp;l=$l&amp;$query_string#ingredients\"><img src=\"_gfx/icons/baseline_keyboard_arrow_up_black_18dp.png\" alt=\"baseline_keyboard_arrow_up_black_18dp.png\" /></a>
+						  </td>
+						 </tr>
+						</table>
+					  </td>
+					 </tr>
+					";
+				} // servings
 
 				$items_calories_total 	= 0;
 				$items_fat_total 	= 0;
@@ -1247,6 +1138,9 @@ else{
 
 			$get_recipe_directions
 		</div>
+
+		<div style=\"height:10px;\"></div>
+		<hr />
 	<!-- //Directions -->
 
 
@@ -1377,8 +1271,70 @@ else{
 			echo"
 		<!-- //View comments -->
 
+		<div class=\"clear\" style=\"height:10px;\"></div>
+		<hr />
 	<!-- //Comments -->
 
+	<!-- Paring -->
+		<h2>$l_parings</h2>";
+		$x = 0;
+		$query = "SELECT pairing_id, pairing_this_recipe_id, pairing_this_category_id, pairing_other_recipe_id, pairing_other_category_id, pairing_other_title, pairing_other_image_path, pairing_other_image_image, pairing_other_image_thumb, pairing_counter FROM $t_recipes_pairing_recipes WHERE pairing_this_recipe_id=$get_recipe_id ORDER BY pairing_counter LIMIT 0,4";
+		$result = mysqli_query($link, $query);
+		while($row = mysqli_fetch_row($result)) {
+			list($get_pairing_id, $get_pairing_this_recipe_id, $get_pairing_this_category_id, $get_pairing_other_recipe_id, $get_pairing_other_category_id, $get_pairing_other_title, $get_pairing_other_image_path, $get_pairing_other_image_image, $get_pairing_other_image_thumb, $get_pairing_counter) = $row;
+
+			if($get_pairing_other_image_image != ""){
+
+
+				$inp_new_x = 280; // 278 px × 154
+				$inp_new_y = 120;
+				$thumb = "recipe_" . $get_pairing_other_recipe_id . "-" . $inp_new_x . "x" . $inp_new_y . ".png";
+		
+				if(!(file_exists("$root/_cache/$thumb"))){
+					resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_pairing_other_image_path/$get_pairing_other_image_image", "$root/_cache/$thumb");
+				}
+
+				if($x == "0"){
+					echo"
+					<div class=\"left_center_center_right_left\">
+					";
+				}
+				elseif($x == "1"){
+					echo"
+					<div class=\"left_center_center_left_right_center\">
+					";
+				}
+				elseif($x == "2"){
+					echo"
+					<div class=\"left_center_center_right_right_center\">
+					";
+				}
+				elseif($x == "3"){
+					echo"
+					<div class=\"left_center_center_right_right\">
+					";
+				}
+				echo"
+				
+						<p class=\"frontpage_post_image\">
+							<a href=\"view_recipe.php?recipe_id=$get_pairing_other_recipe_id&amp;l=$l\"><img src=\"$root/_cache/$thumb\" alt=\"$get_pairing_other_image_image\" /></a><br />
+						</p>
+						<p class=\"frontpage_post_title\">
+							<a href=\"view_recipe.php?recipe_id=$get_pairing_other_recipe_id&amp;l=$l\" class=\"h3\">$get_pairing_other_title</a>
+						</p>
+					
+					
+					</div>
+				";
+			}
+			
+				// Increment
+				$x = $x+1;
+		}
+		echo"
+		<div class=\"clear\" style=\"padding-bottom: 10px;\"></div>
+		<hr />
+	<!-- //Paring -->
 
 	<!-- You might also like -->
 		<h2>$l_you_may_also_like</h2>";
@@ -1423,7 +1379,7 @@ else{
 							<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_similar_other_recipe_id&amp;l=$l\"><img src=\"$root/_cache/$thumb\" alt=\"$get_recipe_image\" /></a><br />
 						</p>
 						<p class=\"frontpage_post_title\">
-							<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_similar_other_recipe_id&amp;l=$l\" class=\"h2\">$get_similar_other_title</a>
+							<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_similar_other_recipe_id&amp;l=$l\" class=\"h3\">$get_similar_other_title</a>
 						</p>
 					
 					
@@ -1435,6 +1391,7 @@ else{
 			}
 		}
 		echo"
+		<div class=\"clear\" style=\"padding-bottom: 10px;\"></div>
 	<!-- //You might also like -->
 	";
 
@@ -1467,7 +1424,7 @@ else{
 					$inp_title_mysql = quote_smart($link, $get_recipe_title);
 					$inp_image_path_mysql = quote_smart($link, $get_recipe_image_path);
 					$inp_image_mysql = quote_smart($link, $get_recipe_image);
-					$inp_image_thumb_mysql = quote_smart($link, $get_recipe_thumb);
+					$inp_image_thumb_mysql = quote_smart($link, $get_recipe_thumb_278x156);
 					mysqli_query($link, "INSERT INTO $t_recipes_similar_recipes 
 					(similar_id, similar_this_recipe_id, similar_other_recipe_id, similar_other_title, similar_other_image_path, similar_other_image_image, similar_other_image_thumb, similar_other_recipe_age_restriction, similar_counter) 
 					VALUES 
@@ -1511,7 +1468,7 @@ else{
 					$inp_title_mysql = quote_smart($link, $get_recipe_title);
 					$inp_image_path_mysql = quote_smart($link, $get_recipe_image_path);
 					$inp_image_mysql = quote_smart($link, $get_recipe_image);
-					$inp_image_thumb_mysql = quote_smart($link, $get_recipe_thumb);
+					$inp_image_thumb_mysql = quote_smart($link, $get_recipe_thumb_278x156);
 					mysqli_query($link, "INSERT INTO $t_recipes_pairing_recipes
 					(pairing_id, pairing_this_recipe_id, pairing_this_category_id, pairing_other_recipe_id, pairing_other_category_id, pairing_other_title, pairing_other_image_path, pairing_other_image_image, pairing_other_image_thumb, pairing_other_recipe_age_restriction, pairing_counter) 
 					VALUES 

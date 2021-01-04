@@ -79,6 +79,7 @@ echo"
 		$get_recipe_directions = str_replace("Ã¸", "ø", $get_recipe_directions);
 		$get_recipe_directions = str_replace("&#039;", "&amp;#39;", $get_recipe_directions);
 		$get_recipe_directions = str_replace("'", "&amp;#39;", $get_recipe_directions);
+		$get_recipe_directions = str_replace("'", "&amp;#39;", $get_recipe_directions);
 		$get_recipe_directions = addslashes($get_recipe_directions);
 		$inp_recipe_directions_mysql = quote_smart($link, $get_recipe_directions);
 		

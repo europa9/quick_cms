@@ -573,13 +573,11 @@ if($q != ""){
 
 	}
 
-
 	if($search_results_count == 0){
 		echo"
 		<p>$l_no_recipes_found</p>
 		";
 
-		/*
 		// Send email to moderator
 		$q = str_replace("%", "", $q);
 		$q_encrypted = md5("$q");
@@ -614,12 +612,8 @@ if($q != ""){
 
 
 			// Mail from
-			$host = $_SERVER['HTTP_HOST'];
-			$from = "post@" . $_SERVER['HTTP_HOST'];
-			$reply = "post@" . $_SERVER['HTTP_HOST'];
-			
 			$search_link = $configSiteURLSav . "/recipes/search.php?q=$q&amp;l=$l";
-			$subject = "No search result for $q at $host";
+			$subject = "No search result for $q at $configWebsiteTitleSav";
 
 			$message = "<html>\n";
 			$message = $message. "<head>\n";
@@ -628,7 +622,7 @@ if($q != ""){
 			$message = $message. "<body>\n";
 
 			$message = $message . "<p>Hi $get_moderator_user_name,</p>\n\n";
-			$message = $message . "<p><b>Summary:</b><br />A user has searched for <em>$q</em> and got no search results at $host for lanugage $l.\n";
+			$message = $message . "<p><b>Summary:</b><br />A user has searched for <em>$q</em> and got no search results at $configWebsiteTitleSav for lanugage $l.\n";
 			$message = $message . "Please consider to add a recipe for that query.</p>\n\n";
 
 			$message = $message . "<p style='padding-bottom:0;margin-bottom:0'><b>Search information:</b></p>\n";
@@ -637,7 +631,7 @@ if($q != ""){
 			$message = $message . " <tr><td><span>Link:</span></td><td><span><a href=\"$search_link\">$search_link</a></span></td></tr>\n";
 			$message = $message . "</table>\n";
 
-			$message = $message . "<p>\n\n--<br />\nBest regards<br />\n$host</p>";
+			$message = $message . "<p>\n\n--<br />\nBest regards<br />\n$configWebsiteTitleSav</p>";
 			$message = $message. "</body>\n";
 			$message = $message. "</html>\n";
 
@@ -652,7 +646,7 @@ if($q != ""){
 			       "line-break-chars" => "\r\n"
 			);
 			$header = "Content-type: text/html; charset=".$encoding." \r\n";
-			$header .= "From: ".$configWebsiteTitleSav." <".$configFromEmailSav."> \r\n";
+			$header .= "From: ".$configFromNameSav." <".$configFromEmailSav."> \r\n";
 			$header .= "MIME-Version: 1.0 \r\n";
 			$header .= "Content-Transfer-Encoding: 8bit \r\n";
 			$header .= "Date: ".date("r (T)")." \r\n";
@@ -660,9 +654,8 @@ if($q != ""){
 
 			mail($get_moderator_user_email, $subject, $message, $header);
 
-			// echo"<p>Our moderator $get_moderator_user_name will look at this query and maybe add a recipe for it later.</p>";
+			echo"<p>Our moderator $get_moderator_user_name will look at this query and maybe add a recipe for it later.</p>";
 		}
-		*/
 	}
 }
 else{

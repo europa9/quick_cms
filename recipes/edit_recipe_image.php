@@ -45,10 +45,10 @@ $l_mysql = quote_smart($link, $l);
 /*- Get recipe ------------------------------------------------------------------------- */
 // Select
 $recipe_id_mysql = quote_smart($link, $recipe_id);
-$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_user_ip, recipe_notes, recipe_password FROM $t_recipes WHERE recipe_id=$recipe_id_mysql";
+$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_country, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb_278x156, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_comments, recipe_user_ip, recipe_notes, recipe_password, recipe_last_viewed, recipe_age_restriction FROM $t_recipes WHERE recipe_id=$recipe_id_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
-list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb, $get_recipe_video, $get_recipe_date, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password) = $row;
+list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_country, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156, $get_recipe_video, $get_recipe_date, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_comments, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password, $get_recipe_last_viewed, $get_recipe_age_restriction) = $row;
 
 // Translations
 include("$root/_admin/_translations/site/$l/recipes/ts_submit_recipe_step_4_images.php");
@@ -163,12 +163,12 @@ else{
 				if(is_numeric($width) && is_numeric($height)){
 
 					// Check that file is big enough
-					if($width < 846){
+					if($width < 1919){
 						$url = "edit_recipe_image.php?recipe_id=$recipe_id&l=$l&ft=error&fm=width_have_to_be_bigger";
 						header("Location: $url");
 						exit;
 					}
-					if($height < 599){
+					if($height < 1079){
 						$url = "edit_recipe_image.php?recipe_id=$recipe_id&l=$l&ft=error&fm=height_have_to_be_bigger";
 						header("Location: $url");
 						exit;
@@ -187,7 +187,7 @@ else{
 					$inp_recipe_image_mysql = quote_smart($link, $inp_recipe_image);
 
 					// recipe_thumb
-					$inp_recipe_thumb = $get_recipe_id . "-thumb.jpg";
+					$inp_recipe_thumb = $get_recipe_id . "_thumb_278x156.jpg";
 					$inp_recipe_thumb_mysql = quote_smart($link, $inp_recipe_thumb);
 					
 					// IP
@@ -197,11 +197,15 @@ else{
 
 					
 						// Update MySQL
-						$result = mysqli_query($link, "UPDATE $t_recipes SET recipe_image_path=$inp_recipe_image_path_mysql, recipe_image=$inp_recipe_image_mysql, recipe_thumb=$inp_recipe_thumb_mysql, recipe_user_ip=$inp_recipe_user_ip_mysql WHERE recipe_id=$recipe_id_mysql");
+						$result = mysqli_query($link, "UPDATE $t_recipes SET 
+									recipe_image_path=$inp_recipe_image_path_mysql, 
+									recipe_image=$inp_recipe_image_mysql, 
+									recipe_thumb_278x156=$inp_recipe_thumb_mysql, 
+									recipe_user_ip=$inp_recipe_user_ip_mysql WHERE recipe_id=$recipe_id_mysql");
 
-						// Rezie image to 847x437
-						$newwidth=847;
-						$newheight=($height/$width)*$newwidth; // 667
+						// Rezie image to 1920x1080
+						$newwidth=1920;
+						$newheight=($height/$width)*$newwidth; // 600
 						$tmp=imagecreatetruecolor($newwidth,$newheight);
 						
 						if($file_type == "jpg" || $file_type == "jpeg" ){
@@ -220,8 +224,8 @@ else{
 						$height = $newheight;
 
 						$thumb_final_path = "$root/" . $inp_recipe_image_path. "/" . $inp_recipe_thumb;
-						$newwidth=300;
-						$newheight=200; // ($height/$width)*$newwidth
+						$newwidth=278;
+						$newheight=156; // ($height/$width)*$newwidth
 						$tmp=imagecreatetruecolor($newwidth,$newheight);
 						$src = imagecreatefromjpeg($target_path);
 						imagecopyresampled($tmp,$src,0,0,0,0,$newwidth,$newheight, $width,$height);
@@ -357,7 +361,7 @@ else{
 
 			<form method=\"post\" action=\"edit_recipe_image.php?recipe_id=$get_recipe_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 			
-			<p><b>$l_new_image (847x600 jpg):</b><br />
+			<p><b>$l_new_image (1920x1080 jpg):</b><br />
 			<input type=\"file\" name=\"inp_image\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 			</p>
 

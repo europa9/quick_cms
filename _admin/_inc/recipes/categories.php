@@ -2,9 +2,9 @@
 /**
 *
 * File: _admin/_inc/recipes/categories.php
-* Version 1.0
-* Date 13:41 04.11.2017
-* Copyright (c) 2008-2017 Sindre Andre Ditlefsen
+* Version 2.0
+* Date 18:14 31.12.2020
+* Copyright (c) 2008-2020 Sindre Andre Ditlefsen
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -71,17 +71,16 @@ if($action == ""){
 
 
 	<!-- List all categories -->
-		<div class=\"vertical\">
-			<ul>
+		<table>
 		";
 	
 
 
 		$editor_language_mysql = quote_smart($link, $editor_language);
-		$query = "SELECT category_id, category_name, category_age_restriction, category_icon_path, category_icon_file FROM $t_recipes_categories";
+		$query = "SELECT category_id, category_name, category_age_restriction, category_image_path, category_image_file, category_icon_file FROM $t_recipes_categories";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
-			list($get_category_id, $get_category_name, $get_category_age_restriction, $get_category_icon_path, $get_category_icon_file) = $row;
+			list($get_category_id, $get_category_name, $get_category_age_restriction, $get_category_image_path, $get_category_image_file, $get_category_icon_file) = $row;
 
 			if(isset($style) && $style == ""){
 				$style = "odd";
@@ -91,16 +90,24 @@ if($action == ""){
 			}			
 
 			echo"
-			<li><a href=\"index.php?open=$open&amp;page=$page&amp;action=edit&amp;category_id=$get_category_id&amp;editor_language=$editor_language\">
+			 <tr>
+			  <td>
 			";
-			if($get_category_icon_file != "" && file_exists("../$get_category_icon_path/$get_category_icon_file")){
-				echo"<img src=\"../$get_category_icon_path/$get_category_icon_file\" alt=\"$get_category_icon_file\" />";
+			if($get_category_icon_file != "" && file_exists("../$get_category_image_path/$get_category_icon_file")){
+				echo"
+				<a href=\"index.php?open=$open&amp;page=$page&amp;action=edit&amp;category_id=$get_category_id&amp;editor_language=$editor_language\"><img src=\"../$get_category_image_path/$get_category_icon_file\" alt=\"$get_category_icon_file\" /></a>
+				";
 			}
-			echo"$get_category_name</a></li>\n";
+			echo"
+			  </td>
+			  <td>
+				<a href=\"index.php?open=$open&amp;page=$page&amp;action=edit&amp;category_id=$get_category_id&amp;editor_language=$editor_language\">$get_category_name</a>
+			  </td>
+			 </tr>
+			\n";
 		}
 		echo"
-			</ul>
-		</div>
+		</table>
 	<!-- //List all categories -->
  	";
 } // action == "";
@@ -119,30 +126,20 @@ elseif($action == "add"){
 
 
 		mysqli_query($link, "INSERT INTO $t_recipes_categories
-		(category_id, category_name, category_age_restriction, category_last_updated) 
+		(category_id, category_name, category_age_restriction, category_updated) 
 		VALUES 
 		(NULL, $inp_name_mysql, $inp_age_restriction_mysql, '$datetime')")
 		or die(mysqli_error($link));
 
 		// Get ID
 		$category_id_mysql = quote_smart($link, $category_id);
-		$query = "SELECT category_id FROM $t_recipes_categories WHERE category_last_updated='$datetime'";
+		$query = "SELECT category_id FROM $t_recipes_categories WHERE category_updated='$datetime'";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_category_id) = $row;
 	
-
-		// Image
-		
-
-			// Sjekk filen
-			$file_name = basename($_FILES['inp_image']['name']);
-			$file_exp = explode('.', $file_name); 
-			$file_type = $file_exp[count($file_exp) -1]; 
-			$file_type = strtolower("$file_type");
-
-			// Finnes mappen?
-			$upload_path = "../_uploads/recipes/categories_icons";
+			// Image/Icon upload
+			$upload_path = "../_uploads/recipes/categories";
 
 			if(!(is_dir("../_uploads"))){
 				mkdir("../_uploads");
@@ -150,20 +147,27 @@ elseif($action == "add"){
 			if(!(is_dir("../_uploads/recipes"))){
 				mkdir("../_uploads/recipes");
 			}
-			if(!(is_dir("../_uploads/recipes/categories_icons"))){
-				mkdir("../_uploads/recipes/categories_icons");
+			if(!(is_dir("../_uploads/recipes/categories"))){
+				mkdir("../_uploads/recipes/categories");
 			}
 
-			// Sett variabler
-			$new_name = $get_category_id . ".$file_type";
-			$target_path = $upload_path . "/" . $new_name;
 
-			// Sjekk om det er en OK filendelse
-			$img_feedback = "";
+
+			// Image upload
+			$file_name = basename($_FILES['inp_image']['name']);
+			$file_exp = explode('.', $file_name); 
+			$file_type = $file_exp[count($file_exp) -1]; 
+			$file_type = strtolower("$file_type");
+
+			$new_name 	= $get_category_id . "_image.$file_type";
+			$target_path 	= $upload_path . "/" . $new_name;
+
+			$ft_image = "";
+			$fm_image = "";
 			if($file_type == "jpg" OR $file_type == "jpeg" OR $file_type == "png" OR $file_type == "gif"){
 				// Do I already have a image of that type? Then delete the old image..
-				if($get_category_icon_file != "" && file_exists("../$get_category_icon_path/$get_category_icon_file")){
-					unlink("../$get_category_icon_path/$get_category_icon_file");
+				if($get_category_icon_file != "" && file_exists("../$get_category_image_path/$get_category_icon_file")){
+					unlink("../$get_category_image_path/$get_category_icon_file");
 				}
 
 					
@@ -175,8 +179,85 @@ elseif($action == "add"){
 
 
 						// image path							
-						$inp_category_icon_path = "_uploads/recipes/categories_icons";
-						$inp_category_icon_path_mysql = quote_smart($link, $inp_category_icon_path);
+						$inp_category_image_path = "_uploads/recipes/categories";
+						$inp_category_image_path_mysql = quote_smart($link, $inp_category_image_path);
+
+						// image file
+						$inp_category_image_file = $new_name;
+						$inp_category_image_file_mysql = quote_smart($link, $inp_category_image_file);
+
+						// Update MySQL
+
+						$result = mysqli_query($link, "UPDATE $t_recipes_categories SET 
+								category_image_path=$inp_category_image_path_mysql, 
+								category_image_file=$inp_category_image_file_mysql WHERE category_id=$get_category_id") or die(mysqli_error($link));
+
+
+						// Feedback
+						$ft_image = "success";
+						$fm_image = "image_uploaded";
+					}
+					else{
+						// Dette er en fil som har fått byttet filendelse...
+						unlink("$target_path");
+
+						// Feedback
+						$ft_image = "error";
+						$fm_image = "unknown_file_type_for_image";
+					}
+				}
+				else{
+					switch ($_FILES['inp_image'] ['error']){
+					case 1:
+						$ft_image = "error";
+						$fm_image = "to_big_file";
+					case 2:
+						$ft_image = "error";
+						$fm_image = "to_big_file";
+					case 3:
+						$ft_image = "error";
+						$fm_image = "only_parts_uploaded";
+					case 4:
+						$ft_image = "info";
+						$fm_image = "no_image_uploaded";
+					}
+				} // if(move_uploaded_file($_FILES['file']['tmp_name'], $target_path)) {
+			}
+			else{
+				$ft_image = "error";
+				$fm_image = "image_has_invalid_file_type_" . $file_type;
+			} // file type end
+
+
+
+			// Icon upload
+			$file_name = basename($_FILES['inp_icon']['name']);
+			$file_exp = explode('.', $file_name); 
+			$file_type = $file_exp[count($file_exp) -1]; 
+			$file_type = strtolower("$file_type");
+
+			$new_name 	= $get_category_id . "_icon.$file_type";
+			$target_path 	= $upload_path . "/" . $new_name;
+
+			$ft_icon = "";
+			$fm_icon = "";
+			if($file_type == "jpg" OR $file_type == "jpeg" OR $file_type == "png" OR $file_type == "gif"){
+				// Do I already have a image of that type? Then delete the old image..
+				if($get_category_icon_file != "" && file_exists("../$get_category_image_path/$get_category_icon_file")){
+					unlink("../$get_category_image_path/$get_category_icon_file");
+				}
+
+					
+
+				if(move_uploaded_file($_FILES['inp_icon']['tmp_name'], $target_path)) {
+					// Sjekk om det faktisk er et bilde som er lastet opp
+					list($width,$height) = getimagesize($target_path);
+					if(is_numeric($width) && is_numeric($height)){
+
+
+						// image path							
+						$inp_category_image_path = "_uploads/recipes/categories";
+						$inp_category_image_path_mysql = quote_smart($link, $inp_category_image_path);
 
 						// image file
 						$inp_category_icon_file = $new_name;
@@ -184,40 +265,64 @@ elseif($action == "add"){
 
 						// Update MySQL
 
-						$result = mysqli_query($link, "UPDATE $t_recipes_categories SET category_icon_path=$inp_category_icon_path_mysql, 
-								category_icon_file=$inp_category_icon_file_mysql WHERE category_last_updated='$datetime'") or die(mysqli_error($link));
+						$result = mysqli_query($link, "UPDATE $t_recipes_categories SET 
+								category_image_path=$inp_category_image_path_mysql, 
+								category_icon_file=$inp_category_icon_file_mysql WHERE category_id=$get_category_id") or die(mysqli_error($link));
 
+
+						// Feedback
+						$ft_icon = "success";
+						$fm_icon = "icon_uploaded";
 
 					}
 					else{
 						// Dette er en fil som har fått byttet filendelse...
 						unlink("$target_path");
+
+						// Feedback
+						$ft_icon = "error";
+						$fm_icon = "unknown_file_type_for_icon";
 					}
 				}
 				else{
-					switch ($_FILES['inp_image'] ['error']){
+					switch ($_FILES['inp_icon'] ['error']){
 					case 1:
-						$img_feedback = "to_big_file";
+						$ft_icon = "error";
+						$fm_icon = "to_big_file";
 					case 2:
-						$img_feedback = "to_big_file";
+						$ft_icon = "error";
+						$fm_icon = "to_big_file";
 					case 3:
-						$img_feedback = "only_parts_uploaded";
+						$ft_icon = "error";
+						$fm_icon = "only_parts_uploaded";
 					case 4:
-						$img_feedback = "no_file_uploaded";
+						$ft_icon = "info";
+						$fm_icon = "no_file_uploaded";
 					}
 				} // if(move_uploaded_file($_FILES['file']['tmp_name'], $target_path)) {
 			}
 			else{
-				$img_feedback = "invalid_file_type&file_type=$file_type";
+				$ft_icon = "error";
+				$fm_icon = "invalid_file_type_for_icon_" . $file_type;
 			} // file type end
 
-
-		$url = "index.php?open=$open&page=$page&editor_language=$editor_language&l=$l&ft=success&fm=changes_saved";
+		$url = "index.php?open=$open&page=$page&editor_language=$editor_language&l=$l&ft=success&fm=changes_saved&";
+		$url = $url . "ft_image=$ft_image&fm_image=$fm_image&";
+		$url = $url . "ft_icon=$ft_icon&fm_icon=$fm_icon";
 		header("Location: $url");
 		exit;
 	}
 	echo"
 	<h1>$l_add</h1>
+
+	<!-- Where am I? -->
+		<p>
+		<b>You are here:</b><br />
+		<a href=\"index.php?open=recipes&amp;page=categories&amp;editor_language=$editor_language&amp;l=$l\">Categories</a>
+		&gt;
+		<a href=\"index.php?open=recipes&amp;page=categories&amp;action=$action&amp;editor_language=$editor_language&amp;l=$l\">Add</a>
+		</p>
+	<!-- //Where am I? -->
 
 	<!-- Feedback -->
 	";
@@ -258,6 +363,10 @@ elseif($action == "add"){
 		</select>
 		</p>
 
+		<p><b>Image 278x184:</b><br />
+		<input type=\"file\" name=\"inp_image\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+		</p>
+
 		<p><b>Icon 128x128 png:</b><br />
 		<input type=\"file\" name=\"inp_image\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 		</p>
@@ -273,10 +382,10 @@ elseif($action == "add"){
 elseif($action == "edit"){
 	// Find
 	$category_id_mysql = quote_smart($link, $category_id);
-	$query = "SELECT category_id, category_name, category_age_restriction, category_icon_path, category_icon_file FROM $t_recipes_categories WHERE category_id=$category_id_mysql";
+	$query = "SELECT category_id, category_name, category_age_restriction, category_image_path, category_image_file, category_icon_file FROM $t_recipes_categories WHERE category_id=$category_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_category_id, $get_category_name, $get_category_age_restriction, $get_category_icon_path, $get_category_icon_file) = $row;
+	list($get_category_id, $get_category_name, $get_category_age_restriction, $get_category_image_path, $get_category_image_file, $get_category_icon_file) = $row;
 	
 	if($get_category_id == ""){
 		echo"
@@ -300,19 +409,18 @@ elseif($action == "edit"){
 			$inp_age_restriction = output_html($inp_age_restriction);
 			$inp_age_restriction_mysql = quote_smart($link, $inp_age_restriction);
 
-			$result = mysqli_query($link, "UPDATE $t_recipes_categories SET category_name=$inp_name_mysql, category_age_restriction=$inp_age_restriction_mysql WHERE category_id=$category_id_mysql") or die(mysqli_error($link));
+			$datetime = date("Y-m-d H:i:s");
 
-			// Image
+			$result = mysqli_query($link, "UPDATE $t_recipes_categories SET 
+						category_name=$inp_name_mysql, 
+						category_age_restriction=$inp_age_restriction_mysql,
+						category_updated='$datetime'
+						 WHERE category_id=$category_id_mysql") or die(mysqli_error($link));
 
 
-			// Sjekk filen
-			$file_name = basename($_FILES['inp_image']['name']);
-			$file_exp = explode('.', $file_name); 
-			$file_type = $file_exp[count($file_exp) -1]; 
-			$file_type = strtolower("$file_type");
 
-			// Finnes mappen?
-			$upload_path = "../_uploads/recipes/categories_icons";
+			// Image/Icon upload
+			$upload_path = "../_uploads/recipes/categories";
 
 			if(!(is_dir("../_uploads"))){
 				mkdir("../_uploads");
@@ -320,20 +428,27 @@ elseif($action == "edit"){
 			if(!(is_dir("../_uploads/recipes"))){
 				mkdir("../_uploads/recipes");
 			}
-			if(!(is_dir("../_uploads/recipes/categories_icons"))){
-				mkdir("../_uploads/recipes/categories_icons");
+			if(!(is_dir("../_uploads/recipes/categories"))){
+				mkdir("../_uploads/recipes/categories");
 			}
 
-			// Sett variabler
-			$new_name = $get_category_id . ".$file_type";
-			$target_path = $upload_path . "/" . $new_name;
 
-			// Sjekk om det er en OK filendelse
-			$img_feedback = "";
+
+			// Image upload
+			$file_name = basename($_FILES['inp_image']['name']);
+			$file_exp = explode('.', $file_name); 
+			$file_type = $file_exp[count($file_exp) -1]; 
+			$file_type = strtolower("$file_type");
+
+			$new_name 	= $get_category_id . "_image.$file_type";
+			$target_path 	= $upload_path . "/" . $new_name;
+
+			$ft_image = "";
+			$fm_image = "";
 			if($file_type == "jpg" OR $file_type == "jpeg" OR $file_type == "png" OR $file_type == "gif"){
 				// Do I already have a image of that type? Then delete the old image..
-				if($get_category_icon_file != "" && file_exists("../$get_category_icon_path/$get_category_icon_file")){
-					unlink("../$get_category_icon_path/$get_category_icon_file");
+				if($get_category_icon_file != "" && file_exists("../$get_category_image_path/$get_category_icon_file")){
+					unlink("../$get_category_image_path/$get_category_icon_file");
 				}
 
 					
@@ -345,8 +460,85 @@ elseif($action == "edit"){
 
 
 						// image path							
-						$inp_category_icon_path = "_uploads/recipes/categories_icons";
-						$inp_category_icon_path_mysql = quote_smart($link, $inp_category_icon_path);
+						$inp_category_image_path = "_uploads/recipes/categories";
+						$inp_category_image_path_mysql = quote_smart($link, $inp_category_image_path);
+
+						// image file
+						$inp_category_image_file = $new_name;
+						$inp_category_image_file_mysql = quote_smart($link, $inp_category_image_file);
+
+						// Update MySQL
+
+						$result = mysqli_query($link, "UPDATE $t_recipes_categories SET 
+								category_image_path=$inp_category_image_path_mysql, 
+								category_image_file=$inp_category_image_file_mysql WHERE category_id=$category_id_mysql") or die(mysqli_error($link));
+
+
+						// Feedback
+						$ft_image = "success";
+						$fm_image = "image_uploaded";
+					}
+					else{
+						// Dette er en fil som har fått byttet filendelse...
+						unlink("$target_path");
+
+						// Feedback
+						$ft_image = "error";
+						$fm_image = "unknown_file_type_for_image";
+					}
+				}
+				else{
+					switch ($_FILES['inp_image'] ['error']){
+					case 1:
+						$ft_image = "error";
+						$fm_image = "to_big_file";
+					case 2:
+						$ft_image = "error";
+						$fm_image = "to_big_file";
+					case 3:
+						$ft_image = "error";
+						$fm_image = "only_parts_uploaded";
+					case 4:
+						$ft_image = "info";
+						$fm_image = "no_image_uploaded";
+					}
+				} // if(move_uploaded_file($_FILES['file']['tmp_name'], $target_path)) {
+			}
+			else{
+				$ft_image = "error";
+				$fm_image = "image_has_invalid_file_type_" . $file_type;
+			} // file type end
+
+
+
+			// Icon upload
+			$file_name = basename($_FILES['inp_icon']['name']);
+			$file_exp = explode('.', $file_name); 
+			$file_type = $file_exp[count($file_exp) -1]; 
+			$file_type = strtolower("$file_type");
+
+			$new_name 	= $get_category_id . "_icon.$file_type";
+			$target_path 	= $upload_path . "/" . $new_name;
+
+			$ft_icon = "";
+			$fm_icon = "";
+			if($file_type == "jpg" OR $file_type == "jpeg" OR $file_type == "png" OR $file_type == "gif"){
+				// Do I already have a image of that type? Then delete the old image..
+				if($get_category_icon_file != "" && file_exists("../$get_category_image_path/$get_category_icon_file")){
+					unlink("../$get_category_image_path/$get_category_icon_file");
+				}
+
+					
+
+				if(move_uploaded_file($_FILES['inp_icon']['tmp_name'], $target_path)) {
+					// Sjekk om det faktisk er et bilde som er lastet opp
+					list($width,$height) = getimagesize($target_path);
+					if(is_numeric($width) && is_numeric($height)){
+
+
+						// image path							
+						$inp_category_image_path = "_uploads/recipes/categories";
+						$inp_category_image_path_mysql = quote_smart($link, $inp_category_image_path);
 
 						// image file
 						$inp_category_icon_file = $new_name;
@@ -354,34 +546,51 @@ elseif($action == "edit"){
 
 						// Update MySQL
 
-						$result = mysqli_query($link, "UPDATE $t_recipes_categories SET category_icon_path=$inp_category_icon_path_mysql, 
+						$result = mysqli_query($link, "UPDATE $t_recipes_categories SET 
+								category_image_path=$inp_category_image_path_mysql, 
 								category_icon_file=$inp_category_icon_file_mysql WHERE category_id=$category_id_mysql") or die(mysqli_error($link));
 
+
+						// Feedback
+						$ft_icon = "success";
+						$fm_icon = "icon_uploaded";
 
 					}
 					else{
 						// Dette er en fil som har fått byttet filendelse...
 						unlink("$target_path");
+
+						// Feedback
+						$ft_icon = "error";
+						$fm_icon = "unknown_file_type_for_icon";
 					}
 				}
 				else{
-					switch ($_FILES['inp_image'] ['error']){
+					switch ($_FILES['inp_icon'] ['error']){
 					case 1:
-						$img_feedback = "to_big_file";
+						$ft_icon = "error";
+						$fm_icon = "to_big_file";
 					case 2:
-						$img_feedback = "to_big_file";
+						$ft_icon = "error";
+						$fm_icon = "to_big_file";
 					case 3:
-						$img_feedback = "only_parts_uploaded";
+						$ft_icon = "error";
+						$fm_icon = "only_parts_uploaded";
 					case 4:
-						$img_feedback = "no_file_uploaded";
+						$ft_icon = "info";
+						$fm_icon = "no_file_uploaded";
 					}
 				} // if(move_uploaded_file($_FILES['file']['tmp_name'], $target_path)) {
 			}
 			else{
-				$img_feedback = "invalid_file_type&file_type=$file_type";
+				$ft_icon = "error";
+				$fm_icon = "invalid_file_type_for_icon_" . $file_type;
 			} // file type end
 
-			$url = "index.php?open=$open&page=$page&editor_language=$editor_language&l=$l&ft=success&fm=changes_saved&img_feedback=$img_feedback";
+
+			$url = "index.php?open=$open&page=$page&action=edit&category_id=$category_id&editor_language=$editor_language&l=$l&ft=success&fm=changes_saved&";
+			$url = $url . "ft_image=$ft_image&fm_image=$fm_image&";
+			$url = $url . "ft_icon=$ft_icon&fm_icon=$fm_icon";
 			header("Location: $url");
 			exit;
 
@@ -392,18 +601,57 @@ elseif($action == "edit"){
 		<h1>$l_edit</h1>
 
 
+		<!-- Where am I? -->
+			<p>
+			<b>You are here:</b><br />
+			<a href=\"index.php?open=recipes&amp;page=categories&amp;editor_language=$editor_language&amp;l=$l\">Categories</a>
+			&gt;
+			<a href=\"index.php?open=recipes&amp;page=categories&amp;action=$action&amp;category_id=$get_category_id&amp;editor_language=$editor_language&amp;l=$l\">$get_category_name</a>
+			</p>
+		<!-- //Where am I? -->
+
 		<!-- Feedback -->
-		";
-		if($ft != ""){
-			if($fm == "changes_saved"){
-				$fm = "$l_changes_saved";
+			";
+			if($ft != ""){
+				if($fm == "changes_saved"){
+					$fm = "$l_changes_saved";
+				}
+				else{
+					$fm = ucfirst($ft);
+				}
+				echo"<div class=\"$ft\"><span>$fm</span></div>";
 			}
-			else{
-				$fm = ucfirst($ft);
+			if(isset($_GET['ft_image']) && isset($_GET['fm_image'])){
+
+				$ft_image = $_GET['ft_image'];
+				$ft_image = strip_tags(stripslashes($ft_image));
+				if($ft_image != "error" && $ft_image != "warning" && $ft_image != "success" && $ft_image != "info"){
+					echo"Server error 403 feedback error";die;
+				}
+				
+				$fm_image = $_GET['fm_image'];
+				$fm_image = strip_tags(stripslashes($fm_image));
+				$fm_image = str_replace("_", " ", $fm_image);
+				$fm_image = ucfirst($fm_image);
+				
+				echo"<div class=\"$ft_image\"><span>$fm_image</span></div>";
 			}
-			echo"<div class=\"$ft\"><span>$fm</span></div>";
-		}
-		echo"	
+			if(isset($_GET['ft_icon']) && isset($_GET['fm_icon'])){
+
+				$ft_icon = $_GET['ft_icon'];
+				$ft_icon = strip_tags(stripslashes($ft_icon));
+				if($ft_icon != "error" && $ft_icon != "warning" && $ft_icon != "success" && $ft_icon != "info"){
+					echo"Server error 403 feedback error";die;
+				}
+				
+				$fm_icon = $_GET['fm_icon'];
+				$fm_icon = strip_tags(stripslashes($fm_icon));
+				$fm_icon = str_replace("_", " ", $fm_icon);
+				$fm_icon = ucfirst($fm_icon);
+				
+				echo"<div class=\"$ft_icon\"><span>$fm_icon</span></div>";
+			}
+			echo"	
 		<!-- //Feedback -->
 	
 
@@ -432,19 +680,35 @@ elseif($action == "edit"){
 			</p>
 
 
-			<p><b>Icon 128x128 png:</b><br />
+			<p><b>Image 278x184:</b><br />
 			<!-- Existing image? -->
 			";
-			if($get_category_icon_file != "" && file_exists("../$get_category_icon_path/$get_category_icon_file")){
+			if($get_category_icon_file != "" && file_exists("../$get_category_image_path/$get_category_image_file")){
 				echo"
-				<img src=\"../$get_category_icon_path/$get_category_icon_file\" alt=\"$get_category_icon_file\" />
+				<img src=\"../$get_category_image_path/$get_category_image_file\" alt=\"$get_category_image_file\" />
+				</p>
+
+				<p><b>New image 278x184:</b><br />";
+			}
+			echo"
+			<!-- //Existing image? -->
+			<input type=\"file\" name=\"inp_image\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+			</p>
+
+
+			<p><b>Icon 128x128 png:</b><br />
+			<!-- Existing icon? -->
+			";
+			if($get_category_icon_file != "" && file_exists("../$get_category_image_path/$get_category_icon_file")){
+				echo"
+				<img src=\"../$get_category_image_path/$get_category_icon_file\" alt=\"$get_category_icon_file\" />
 				</p>
 
 				<p><b>New icon 128x128 png:</b><br />";
 			}
 			echo"
-			<!-- //Existing image? -->
-			<input type=\"file\" name=\"inp_image\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+			<!-- //Existing icon? -->
+			<input type=\"file\" name=\"inp_icon\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 			</p>
 
 

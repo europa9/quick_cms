@@ -61,4 +61,5 @@ $l_save_rating = "Save rating";
 $l_new_rating_for_food = "New rating for food";
 $l_view_food = "View food";
 $l_ratings = "Ratings";
+$l_view_rating = "View rating";
 ?>

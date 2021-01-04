@@ -76,10 +76,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	$inp_recipe_user_id = $_SESSION['user_id'];
 	$inp_recipe_user_id = output_html($inp_recipe_user_id);
 	$inp_recipe_user_id_mysql = quote_smart($link, $inp_recipe_user_id);
-	$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_image_path, recipe_image, recipe_thumb, recipe_video FROM $t_recipes WHERE recipe_user_id=$inp_recipe_user_id_mysql AND recipe_id=$recipe_id_mysql AND recipe_user_id=$inp_recipe_user_id_mysql";
+	$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_image_path, recipe_image, recipe_thumb_278x156, recipe_video FROM $t_recipes WHERE recipe_user_id=$inp_recipe_user_id_mysql AND recipe_id=$recipe_id_mysql AND recipe_user_id=$inp_recipe_user_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb, $get_recipe_video) = $row;
+	list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156, $get_recipe_video) = $row;
 
 	if($get_recipe_id == ""){
 		echo"
@@ -146,12 +146,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 							// Check that file is big enough
-							if($width < 846){
+							if($width < 1919){
 								$url = "submit_recipe_step_4_images.php?recipe_id=$recipe_id&l=$l&ft=error&fm=width_have_to_be_bigger&width=$width&height=$height";
 								header("Location: $url");
 								exit;
 							}
-							if($height < 599){
+							if($height < 1079){
 								$url = "submit_recipe_step_4_images.php?recipe_id=$recipe_id&l=$l&ft=error&fm=height_have_to_be_bigger&width=$width&height=$height";
 								header("Location: $url");
 								exit;
@@ -171,7 +171,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							$inp_recipe_image_mysql = quote_smart($link, $inp_recipe_image);
 
 							// recipe_thumb
-							$inp_recipe_thumb = $get_recipe_id . "-thumb.jpg";
+							$inp_recipe_thumb = $get_recipe_id . "_thumb_278x156.jpg";
 							$inp_recipe_thumb_mysql = quote_smart($link, $inp_recipe_thumb);
 					
 							// IP
@@ -182,12 +182,16 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					
 
 							// Update MySQL
-							$result = mysqli_query($link, "UPDATE $t_recipes SET recipe_image_path=$inp_recipe_image_path_mysql, recipe_image=$inp_recipe_image_mysql, recipe_thumb=$inp_recipe_thumb_mysql, recipe_user_ip=$inp_recipe_user_ip_mysql WHERE recipe_id=$recipe_id_mysql");
+							$result = mysqli_query($link, "UPDATE $t_recipes SET 
+											recipe_image_path=$inp_recipe_image_path_mysql, 
+											recipe_image=$inp_recipe_image_mysql, 
+											recipe_thumb_278x156=$inp_recipe_thumb_mysql, 
+											recipe_user_ip=$inp_recipe_user_ip_mysql WHERE recipe_id=$recipe_id_mysql");
 
 
-							// Rezie image to 847x437
-							$newwidth=847;
-							$newheight=($height/$width)*$newwidth; // 667
+							// Rezie image to 1920x1080
+							$newwidth=1920;
+							$newheight=($height/$width)*$newwidth; // 1080
 							$tmp=imagecreatetruecolor($newwidth,$newheight);
 						
 							if($file_type == "jpg" || $file_type == "jpeg" ){
@@ -208,8 +212,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							$height = $newheight;
 
 							$thumb_final_path = "$root/" . $inp_recipe_image_path. "/" . $inp_recipe_thumb;
-							$newwidth=300;
-							$newheight=200; // ($height/$width)*$newwidth
+							$newwidth=278;
+							$newheight=156; // ($height/$width)*$newwidth
 							$tmp=imagecreatetruecolor($newwidth,$newheight);
 							$src = imagecreatefromjpeg($target_path);
 							imagecopyresampled($tmp,$src,0,0,0,0,$newwidth,$newheight, $width,$height);
@@ -327,7 +331,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			<form method=\"post\" action=\"submit_recipe_step_4_images.php?recipe_id=$get_recipe_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 			
-			<p><b>$l_new_image (847x600 jpg):</b><br />
+			<p><b>$l_new_image (1920x1080 jpg):</b><br />
 			<input type=\"file\" name=\"inp_image\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 			</p>
 
@@ -389,9 +393,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					}
 
 	
-					// Thumb 300 x 200
-					$thumb_final_path = "$root/" . $get_recipe_image_path . "/" . $get_recipe_id . "-thumb" . ".jpg";
-					resize_crop_image(300, 200, $image_final_path, $thumb_final_path);
+					// Thumb 278 x 156
+					$thumb_final_path = "$root/" . $get_recipe_image_path . "/" . $get_recipe_id . "_thumb_278x156" . ".jpg";
+					resize_crop_image(278, 156, $image_final_path, $thumb_final_path);
 
 					// Update
 					$inp_recipe_thumb = $get_recipe_id . "-thumb" . ".jpg";

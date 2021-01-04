@@ -63,4 +63,8 @@ $l_salt = "Salt";
 $l_please_select_your_country = "Please select your country";
 $l_agree = "Agree";
 $l_you_may_also_like = "You may also like";
+$l_favorite = "Favorite";
+$l_remove_favorite = "Remove favorite";
+$l_parings = "Parings";'
+$l_by = "By";
 ?>
