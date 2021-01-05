@@ -66,7 +66,7 @@ if(isset($_GET['servings'])) {
 	}
 }
 else{
-	$servings = "1";
+	$servings = "";
 }
 
 
@@ -744,6 +744,10 @@ else{
 							$amount = "$get_item_amount";
 						}
 						else{
+							if($get_number_servings == ""){
+								echo"<div class=\"error\"><p>Missing link between recipe and food. Please go to <b>Edit Recipe -&gt; Categorization</b> and  <b>Edit Recipe -&gt; Ingredients</b></p></div>\n";
+								$get_number_servings = 1;
+							}
 							$amount = ($get_item_amount/$get_number_servings)*$servings;
 						}
 					}
@@ -835,7 +839,11 @@ else{
 					$items_protein_total 	= $items_protein_total + $protein;
 					$items_salt_total 	= $items_salt_total + $salt;
 					$items_sodium_total	= $items_sodium_total + $sodium;
-
+					
+					if($get_number_servings == ""){
+						echo"<div class=\"error\"><p>Missing servings! Please fix by going to <b>Edit recipe -&gt; Categorization</b></p></div>\n"; 
+						$get_number_servings = 1;
+					}
 
 					$items_calories_serving	= $items_calories_serving + ($get_item_calories_calculated/$get_number_servings);
 					$items_fat_serving 	= $items_fat_serving + ($get_item_fat_calculated/$get_number_servings);
