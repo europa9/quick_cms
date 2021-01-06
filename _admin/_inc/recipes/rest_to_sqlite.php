@@ -89,21 +89,20 @@ echo"
 	fwrite($fh, $input);
 	fclose($fh);
 
-	$query = "SELECT category_id, category_name, category_age_restriction, category_last_updated FROM $t_recipes_categories";
+	$query = "SELECT category_id, category_name, category_age_restriction FROM $t_recipes_categories";
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
-		list($get_category_id, $get_category_name, $get_category_age_restriction, $get_category_last_updated) = $row;
+		list($get_category_id, $get_category_name, $get_category_age_restriction) = $row;
 		echo"<span>$get_category_name<br /></span>";
 		
 
 		$input = "
-        q = \"INSERT INTO categories(_id, category_id, category_name, category_age_restriction, category_last_updated) \" +
+        q = \"INSERT INTO categories(_id, category_id, category_name, category_age_restriction) \" +
 	    \" VALUES (\" +
 	    \"NULL, \" +
 	    $get_category_id + \", \" +
 	    \"'$get_category_name'\"  + \", \" +
-	    \"'$get_category_age_restriction'\" + \", \" +
-	    \"'$get_category_last_updated'\" +
+	    \"'$get_category_age_restriction'\" +
 	    \")\";
 	    db.rawQuery(q);
 ";

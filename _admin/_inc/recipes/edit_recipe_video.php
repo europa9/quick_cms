@@ -76,33 +76,40 @@ else{
 		exit;
 	}
 	echo"
-	<h1>$l_edit</h1>
+	<!-- Headline -->
+		<div class=\"recipes_headline\">
+			<h1>$get_recipe_title</h1>
+		</div>
+		<div class=\"recipes_buttons\">
+			<p>
+			<a href=\"../recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$get_recipe_language\" class=\"btn_default\">View</a>
+			</p>
+		</div>
+		<div class=\"clear\"></div>
+	<!-- //Headline -->
 
+	<!-- Where am I ? -->
+		<p><b>$l_you_are_here:</b><br />
+		<a href=\"index.php?open=recipes&amp;page=default&amp;editor_language=$editor_language&amp;l=$l#recipe$recipe_id\">Recipes</a>
+		&gt;
+		<a href=\"index.php?open=$open&amp;page=edit_recipe_video&amp;recipe_id=$recipe_id&amp;editor_language=$editor_language\">Video</a>
+		</p>
+	<!-- //Where am I ? -->
 
 	<!-- Menu -->
 		<div class=\"tabs\">
 			<ul>
-				<li><a href=\"index.php?open=$open&amp;editor_language=$editor_language\">$l_recipes</a>
-				<li><a href=\"index.php?open=$open&amp;page=view_recipe&amp;recipe_id=$recipe_id&amp;&amp;editor_language=$editor_language\">$l_view_recipe</a>
-				<li><a href=\"index.php?open=$open&amp;page=edit_recipe&amp;recipe_id=$recipe_id&amp;&amp;editor_language=$editor_language\" class=\"current\">$l_edit</a>
-				<li><a href=\"index.php?open=$open&amp;page=delete_recipe&amp;recipe_id=$recipe_id&amp;editor_language=$editor_language\">$l_delete</a>
+				<li><a href=\"index.php?open=$open&amp;page=edit_recipe_general&amp;recipe_id=$recipe_id&amp;&amp;editor_language=$editor_language\">General</a></li>
+				<li><a href=\"index.php?open=$open&amp;page=edit_recipe_ingredients&amp;recipe_id=$recipe_id&amp;&amp;editor_language=$editor_language\">Ingredients</a></li>
+				<li><a href=\"index.php?open=$open&amp;page=edit_recipe_categorization&amp;recipe_id=$recipe_id&amp;&amp;editor_language=$editor_language\">Categorization</a></li>
+				<li><a href=\"index.php?open=$open&amp;page=edit_recipe_image&amp;recipe_id=$recipe_id&amp;&amp;editor_language=$editor_language\">Image</a></li>
+				<li><a href=\"index.php?open=$open&amp;page=edit_recipe_video&amp;recipe_id=$recipe_id&amp;&amp;editor_language=$editor_language\" class=\"active\">Video</a></li>
+				<li><a href=\"index.php?open=$open&amp;page=edit_recipe_tags&amp;recipe_id=$recipe_id&amp;&amp;editor_language=$editor_language\">Tags</a></li>
+				<li><a href=\"index.php?open=$open&amp;page=edit_recipe_links&amp;recipe_id=$recipe_id&amp;&amp;editor_language=$editor_language\">Links</a></li>
+				<li><a href=\"index.php?open=$open&amp;page=delete_recipe&amp;recipe_id=$recipe_id&amp;editor_language=$editor_language\">Delete</a>
 			</ul>
 		</div><p>&nbsp;</p>
 	<!-- //Menu -->
-
-
-
-	<!-- Where am I ? -->
-		<p><b>$l_you_are_here:</b><br />
-		<a href=\"index.php?open=$open&amp;editor_language=$editor_language\">$l_recipes</a>
-		&gt;
-		<a href=\"index.php?open=$open&amp;page=view_recipe&amp;recipe_id=$recipe_id&amp;editor_language=$editor_language\" class=\"current\">$get_recipe_title</a>
-		&gt;
-		<a href=\"index.php?open=$open&amp;page=edit_recipe&amp;recipe_id=$recipe_id&amp;editor_language=$editor_language\" class=\"current\">$l_edit</a>
-		&gt;
-		<a href=\"index.php?open=$open&amp;page=edit_recipe_video&amp;recipe_id=$recipe_id&amp;editor_language=$editor_language\" class=\"current\">$l_video</a>
-		</p>
-	<!-- //Where am I ? -->
 
 
 	<!-- Feedback -->

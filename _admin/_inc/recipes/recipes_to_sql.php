@@ -60,10 +60,10 @@ echo"
 	";
 
 	$x = 0;	
-	$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_user_ip, recipe_notes, recipe_password, recipe_last_viewed FROM $t_recipes";
+	$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb_278x156, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_user_ip, recipe_notes, recipe_password, recipe_last_viewed FROM $t_recipes";
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
-		list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb, $get_recipe_video, $get_recipe_date, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password, $get_recipe_last_viewed) = $row;
+		list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156, $get_recipe_video, $get_recipe_date, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password, $get_recipe_last_viewed) = $row;
 
 		
 
@@ -92,9 +92,9 @@ echo"
 		echo"
 		<p>
 		mysqli_query(\$link, &quot;INSERT INTO \$t_recipes<br />
-		(recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_user_ip, recipe_notes, recipe_password) <br />
+		(recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb_278x156, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_user_ip, recipe_notes, recipe_password) <br />
 		VALUES<br />
-		(NULL, $get_recipe_user_id, $inp_recipe_title_mysql, $get_recipe_category_id, '$get_recipe_language', $inp_recipe_introduction_mysql, $inp_recipe_directions_mysql, '$get_recipe_image_path', '$get_recipe_image', '$get_recipe_thumb', '$get_recipe_video', '$get_recipe_date', '$get_recipe_time', '$get_recipe_cusine_id', '$get_recipe_season_id', '$get_recipe_occasion_id', '$get_recipe_marked_as_spam', '$get_recipe_unique_hits', '', '', '', '$get_recipe_password')<br />
+		(NULL, $get_recipe_user_id, $inp_recipe_title_mysql, $get_recipe_category_id, '$get_recipe_language', $inp_recipe_introduction_mysql, $inp_recipe_directions_mysql, '$get_recipe_image_path', '$get_recipe_image', '$get_recipe_thumb_278x156', '$get_recipe_video', '$get_recipe_date', '$get_recipe_time', '$get_recipe_cusine_id', '$get_recipe_season_id', '$get_recipe_occasion_id', '$get_recipe_marked_as_spam', '$get_recipe_unique_hits', '', '', '', '$get_recipe_password')<br />
 		&quot;)<br />
 		or die(mysqli_error(\$link));</p>
 		";

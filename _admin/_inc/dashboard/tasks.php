@@ -834,10 +834,18 @@ elseif($action == "open_task"){
 							<option value=\"index.php?open=dashboard&amp;page=tasks&amp;action=edit_task_assigned_to&amp;task_id=$get_current_task_id&amp;assigned_to_user_id=&amp;l=$l&amp;process=1\""; if($get_current_task_assigned_to_user_id == ""){ echo" selected=\"selected\""; } echo">&nbsp;</option>\n";
 
 
-						$query = "SELECT user_id, user_email, user_name, profile_id, profile_user_id, profile_first_name, profile_middle_name, profile_last_name FROM $t_users JOIN $t_users_profile ON user_id=profile_id WHERE user_rank='admin' OR user_rank='moderator' OR user_rank='editor' ORDER BY profile_first_name, user_name ASC";
+						$query = "SELECT user_id, user_email, user_name FROM $t_users WHERE user_rank='admin' OR user_rank='moderator' OR user_rank='editor' ORDER BY user_name ASC";
 						$result = mysqli_query($link, $query);
 						while($row = mysqli_fetch_row($result)) {
-						list($get_user_id, $get_user_email, $get_user_name, $get_profile_id, $get_profile_user_id, $get_profile_first_name, $get_profile_middle_name, $get_profile_last_name) = $row;
+						list($get_user_id, $get_user_email, $get_user_name) = $row;
+
+							$query_p = "SELECT profile_id, profile_user_id, profile_first_name, profile_middle_name, profile_last_name FROM $t_users_profile WHERE profile_user_id=$get_user_id";
+							$result_p = mysqli_query($link, $query_p);
+							$row_p = mysqli_fetch_row($result_p);
+							list($get_profile_id, $get_profile_user_id, $get_profile_first_name, $get_profile_middle_name, $get_profile_last_name) = $row;
+
+
+
 							echo"			<option value=\"index.php?open=dashboard&amp;page=tasks&amp;action=edit_task_assigned_to&amp;task_id=$get_current_task_id&amp;assigned_to_user_id=$get_user_id&amp;l=$l&amp;process=1\""; if($get_current_task_assigned_to_user_id == "$get_user_id"){ echo" selected=\"selected\""; } echo">";
 							if($get_profile_first_name == ""){
 								echo"$get_user_name";
@@ -2264,15 +2272,15 @@ elseif($action == "edit_task_assigned_to"){
 				$message = $message. " </tr>\n";
 				$message = $message. " <tr>\n";
 				$message = $message. "  <td><span>Due:</span></td>\n";
-				$message = $message. "  <td><span>$inp_due_translated</span></td>\n";
+				$message = $message. "  <td><span>$get_current_task_due_translated</span></td>\n";
 				$message = $message. " </tr>\n";
 				$message = $message. " <tr>\n";
 				$message = $message. "  <td><span>Priority:</span></td>\n";
-				$message = $message. "  <td><span>$inp_priority_id</span></td>\n";
+				$message = $message. "  <td><span>$get_current_task_priority_id</span></td>\n";
 				$message = $message. " </tr>\n";
 				$message = $message. " <tr>\n";
 				$message = $message. "  <td><span>Status:</span></td>\n";
-				$message = $message. "  <td><span>$inp_status_code_id</span></td>\n";
+				$message = $message. "  <td><span>$get_current_task_status_code_id</span></td>\n";
 				$message = $message. " </tr>\n";
 				$message = $message. "<table>\n";
 				$message = $message. "$inp_text";
@@ -2523,7 +2531,7 @@ elseif($action == "edit_task_status"){
 							 WHERE task_id=$get_current_task_id") or die(mysqli_error($link));
 			}
 
-			header("Location: index.php?open=dashboard&page=tasks&action=open_task&task_id=$get_current_task_id&ft=success&fm=changes_saved&fm_email=$fm_email");
+			header("Location: index.php?open=dashboard&page=tasks&action=open_task&task_id=$get_current_task_id&ft=success&fm=changes_saved");
 			exit;
 		}
 	}

@@ -93,7 +93,13 @@ if($action == ""){
 
 			if($moderator_of_the_week_id == "$get_moderator_of_the_week_id"){
 				$style = "important";
+			}
 
+			// Delete old
+			if($get_moderator_year < "$current_year"){
+				// Last Year
+				$style = "danger";
+				$result_delete = mysqli_query($link, "DELETE FROM $t_users_moderator_of_the_week WHERE moderator_of_the_week_id=$get_moderator_of_the_week_id") or die(mysqli_error($link));
 			}
 
 			echo"
