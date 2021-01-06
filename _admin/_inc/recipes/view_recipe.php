@@ -37,10 +37,10 @@ else{
 
 // Select
 $recipe_id_mysql = quote_smart($link, $recipe_id);
-$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_user_ip, recipe_notes, recipe_password FROM $t_recipes WHERE recipe_id=$recipe_id_mysql";
+$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb_278x156, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_user_ip, recipe_notes, recipe_password FROM $t_recipes WHERE recipe_id=$recipe_id_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
-list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb, $get_recipe_video, $get_recipe_date, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password) = $row;
+list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156, $get_recipe_video, $get_recipe_date, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password) = $row;
 
 if($get_recipe_id == ""){
 	echo"
@@ -81,37 +81,37 @@ else{
 	$recipe_month = substr($get_recipe_date, 5, 2);
 	$recipe_day = substr($get_recipe_date, 8, 2);
 	
-	if($recipe_month == 01){
+	if($recipe_month == "01"){
 		$recipe_month_saying = $l_january;
 	}
-	elseif($recipe_month == 02){
+	elseif($recipe_month == "02"){
 		$recipe_month_saying = $l_february;
 	}
-	elseif($recipe_month == 03){
+	elseif($recipe_month == "03"){
 		$recipe_month_saying = $l_march;
 	}
-	elseif($recipe_month == 04){
+	elseif($recipe_month == "04"){
 		$recipe_month_saying = $l_april;
 	}
-	elseif($recipe_month == 05){
+	elseif($recipe_month == "05"){
 		$recipe_month_saying = $l_may;
 	}
-	elseif($recipe_month == 06){
+	elseif($recipe_month == "06"){
 		$recipe_month_saying = $l_june;
 	}
-	elseif($recipe_month == 07){
+	elseif($recipe_month == "07"){
 		$recipe_month_saying = $l_july;
 	}
-	elseif($recipe_month == 08){
+	elseif($recipe_month == "08"){
 		$recipe_month_saying = $l_august;
 	}
-	elseif($recipe_month == 09){
+	elseif($recipe_month == "09"){
 		$recipe_month_saying = $l_september;
 	}
-	elseif($recipe_month == 10){
+	elseif($recipe_month == "10"){
 		$recipe_month_saying = $l_october;
 	}
-	elseif($recipe_month == 11){
+	elseif($recipe_month == "11"){
 		$recipe_month_saying = $l_november;
 	}
 	else{
@@ -122,203 +122,43 @@ else{
 	$get_recipe_time = substr($get_recipe_time, 0, 5);
 
 	echo"
-	<h1>$l_view_recipe</h1>
+	<!-- Headline -->
+		<div class=\"recipes_headline\">
+			<h1>$get_recipe_title</h1>
+		</div>
+		<div class=\"recipes_buttons\">
+			<p>
+			<a href=\"../recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$get_recipe_language\" class=\"btn_default\">View</a>
+			</p>
+		</div>
+		<div class=\"clear\"></div>
+	<!-- //Headline -->
 
+	<!-- Where am I ? -->
+		<p><b>$l_you_are_here:</b><br />
+		<a href=\"index.php?open=recipes&amp;page=default&amp;editor_language=$editor_language&amp;l=$l#recipe$recipe_id\">Recipes</a>
+		&gt;
+		<a href=\"index.php?open=$open&amp;page=view_recipe&amp;recipe_id=$get_recipe_id&amp;editor_language=$editor_language\">$get_recipe_title</a>
+		</p>
+	<!-- //Where am I ? -->
 
 	<!-- Menu -->
 		<div class=\"tabs\">
 			<ul>
-				<li><a href=\"index.php?open=$open&amp;editor_language=$editor_language\">$l_recipes</a>
-				<li><a href=\"index.php?open=$open&amp;page=view_recipe&amp;recipe_id=$recipe_id&amp;&amp;editor_language=$editor_language\" class=\"current\">$l_view_recipe</a>
-				<li><a href=\"index.php?open=$open&amp;page=edit_recipe&amp;recipe_id=$recipe_id&amp;&amp;editor_language=$editor_language\">$l_edit</a>
-				<li><a href=\"index.php?open=$open&amp;page=delete_recipe&amp;recipe_id=$recipe_id&amp;editor_language=$editor_language\">$l_delete</a>
+				<li><a href=\"index.php?open=$open&amp;page=edit_recipe_general&amp;recipe_id=$recipe_id&amp;&amp;editor_language=$editor_language\">General</a></li>
+				<li><a href=\"index.php?open=$open&amp;page=edit_recipe_ingredients&amp;recipe_id=$recipe_id&amp;&amp;editor_language=$editor_language\">Ingredients</a></li>
+				<li><a href=\"index.php?open=$open&amp;page=edit_recipe_categorization&amp;recipe_id=$recipe_id&amp;&amp;editor_language=$editor_language\">Categorization</a></li>
+				<li><a href=\"index.php?open=$open&amp;page=edit_recipe_image&amp;recipe_id=$recipe_id&amp;&amp;editor_language=$editor_language\">Image</a></li>
+				<li><a href=\"index.php?open=$open&amp;page=edit_recipe_video&amp;recipe_id=$recipe_id&amp;&amp;editor_language=$editor_language\">Video</a></li>
+				<li><a href=\"index.php?open=$open&amp;page=edit_recipe_tags&amp;recipe_id=$recipe_id&amp;&amp;editor_language=$editor_language\">Tags</a></li>
+				<li><a href=\"index.php?open=$open&amp;page=edit_recipe_links&amp;recipe_id=$recipe_id&amp;&amp;editor_language=$editor_language\">Links</a></li>
+				<li><a href=\"index.php?open=$open&amp;page=delete_recipe&amp;recipe_id=$recipe_id&amp;editor_language=$editor_language\">Delete</a>
 			</ul>
 		</div><p>&nbsp;</p>
 	<!-- //Menu -->
 
-	<!-- Where am I ? -->
-		<p><b>$l_you_are_here:</b><br />
-		<a href=\"index.php?open=$open&amp;editor_language=$editor_language\">$l_recipes</a>
-		&gt;
-		<a href=\"index.php?open=$open&amp;page=view_recipe&amp;recipe_id=$recipe_id&amp;editor_language=$editor_language\" class=\"current\">$get_recipe_title</a>
-		</p>
-	<!-- //Where am I ? -->
 
-
-	<!-- Headline -->
-		<h2>$get_recipe_title</h2>
-	<!-- //Headline -->
-
-	<!-- Image -->
-		";
-		if($get_recipe_video != ""){
-			
-			// <div>
-			//	<a href=\"#video\" class=\"toggle\" data-divid=\"view_recipe_video\"><img src=\"../image.php/$get_recipe_image.png?width=847&height=437&image=/$get_recipe_image_path/$get_recipe_image\" /></a>
-			//	<br />
-			//	<a href=\"#video\" class=\"toggle\" data-divid=\"view_recipe_video\"><img src=\"_inc/recipes/gfx/play.png\" alt=\"play.png\" style=\"position:relative;margin-top: -200px;\" /></a>
-			// </div>
-			// <div class=\"view_recipe_video\" style=\"display:none;\">
-
-			echo"
-			<iframe width=\"847\" height=\"476\" src=\"$get_recipe_video\" frameborder=\"0\" allowfullscreen></iframe>
-			";
-		}
-		else{
-			if($get_recipe_image != ""){
-				echo"<img src=\"../image.php/$get_recipe_image.png?width=847&height=437&image=/$get_recipe_image_path/$get_recipe_image\" />";
-			}
-		}
-		echo"	
-	<!-- //Image -->
-
-	<!-- Info -->
-		<div style=\"width: 847px;\">
-			<p><b>$l_category</b> $get_recipe_category_id</p>
-		</div>
-	<!-- //Info -->
-
-	<!-- Author -->
-		<p>
-		<a href=\"index.php?open=users&amp;page=users_edit_user&amp;user_id=$get_recipe_user_id&amp;l=$l&amp;editor_language=$editor_language\">$get_user_alias</a>
-		<span class=\"grey\">&nbsp; $recipe_day $recipe_month_saying $recipe_year &nbsp; $get_recipe_time</span>
-		</p>
-	<!-- //Author -->
-
-	<!-- Introduction -->
-		<p>$get_recipe_introduction
-
-		$l_this_recipe_serves $get_number_servings. </p>
-	<!-- //Introduction -->
-
-	<!-- Ingredients and Nutrients -->
-		<div class=\"row\">
-
-			<!-- Ingredients -->
-				<div class=\"col\" style=\"border: #c9c9c9 1px solid;padding: 0px 10px 0px 10px;\">
-					";
-					$query_groups = "SELECT group_id, group_title FROM $t_recipes_groups WHERE group_recipe_id=$get_recipe_id";
-					$result_groups = mysqli_query($link, $query_groups);
-					while($row_groups = mysqli_fetch_row($result_groups)) {
-						list($get_group_id, $get_group_title) = $row_groups;
-						echo"
-						<p style=\"padding-bottom:0;margin-bottom:0;\"><b>$get_group_title</b></p>
-							
-						<ul style=\"padding:0px 0px 0px 20px;margin:10px 0px 20px 0px;list-style-type: circle;\">\n";
-	
-						$x = 1;
-						$query_items = "SELECT item_id, item_amount, item_measurement, item_grocery FROM $t_recipes_items WHERE item_group_id=$get_group_id";
-						$result_items = mysqli_query($link, $query_items);
-						$row_cnt = mysqli_num_rows($result_items);
-						while($row_items = mysqli_fetch_row($result_items)) {
-								list($get_item_id, $get_item_amount, $get_item_measurement, $get_item_grocery) = $row_items;
-								echo"							";
-								
-								 echo"<li style=\"padding: 4px 0px 4px 4px\"><span>$get_item_amount  $get_item_measurement $get_item_grocery</span></li>\n";
-
-								$x++;
-						}
-						echo"
-						</ul>";
-
-
-					}
-				echo"
-				</div>
-			<!-- //Ingredients -->
-
-
-
-			<!-- Nutrients-->
-				<div class=\"col\" style=\"border: #c9c9c9 1px solid;border-left: #000 0px solid;padding: 0px 10px 0px 10px;background: #faf4f2;\">
-
-				
-					<div class=\"row\">
-						<div class=\"col\">
-							<p style=\"padding-bottom:0;margin-bottom:0;\"><b>$l_nutrients_total ($get_number_servings $l_servings_lowercase)</b></p>
-							<ul style=\"padding:0;margin:10px 0px 10px 0px;list-style-type: none;\">\n";
-								
-							if($get_number_total_calories != ""){
-								echo"								";
-								echo"<li style=\"padding: 6px 0px 6px 4px;border-bottom: #ccc7c6 1px solid;\"><span>$l_calories<br /><b>$get_number_total_calories</b></span></li>\n";
-							}
-							if($get_number_total_fat != ""){
-								echo"								";
-								echo"<li style=\"padding: 6px 0px 6px 4px;border-bottom: #ccc7c6 1px solid;\"><span>$l_fat<br /><b>$get_number_total_fat</b></span></li>\n";
-							}
-							if($get_number_total_carbs != ""){
-								echo"								";
-								echo"<li style=\"padding: 6px 0px 6px 4px;\"><span>$l_carbs<br /><b>$get_number_total_carbs</b></span></li>\n";
-							}
-							if($get_number_total_proteins != ""){
-								echo"								";
-								echo"<li style=\"padding: 6px 0px 6px 4px;border-bottom: #ccc7c6 1px solid;\"><span>$l_proteins<br /><b>$get_number_total_proteins</b></span></li>\n";
-							}
-							echo"
-							</ul>
-						</div>
-						<div class=\"col\">
-							<p style=\"padding-bottom:0;margin-bottom:0;\"><b>$l_nutrients_per_serving</b></p>
-							<ul style=\"padding:0;margin:10px 0px 10px 0px;list-style-type: none;\">\n";
-								
-							if($get_number_serving_calories != ""){
-								echo"								";
-								echo"<li style=\"padding: 6px 0px 6px 4px;border-bottom: #ccc7c6 1px solid;\"><span>$l_calories<br /><b>$get_number_serving_calories</b></span></li>\n";
-							}
-							if($get_number_serving_fat != ""){
-								echo"								";
-								echo"<li style=\"padding: 6px 0px 6px 4px;border-bottom: #ccc7c6 1px solid;\"><span>$l_fat<br /><b>$get_number_serving_fat</b></span></li>\n";
-							}
-							if($get_number_serving_carbs != ""){
-								echo"								";
-								echo"<li style=\"padding: 6px 0px 6px 4px;\"><span>$l_carbs<br /><b>$get_number_serving_carbs</b></span></li>\n";
-							}
-							if($get_number_serving_proteins != ""){
-								echo"								";
-								echo"<li style=\"padding: 6px 0px 6px 4px;border-bottom: #ccc7c6 1px solid;\"><span>$l_proteins<br /><b>$get_number_serving_proteins</b></span></li>\n";
-							}
-							echo"
-							</ul>
-
-					
-
-
-						</div>
-					</div>
-				</div>
-			<!-- //Nutrients -->
-
-
-
-		</div>
-	<!-- //Ingredients and Nutrients -->
-	
-
-
-	<!-- Directions -->
-		<div class=\"clear\"></div>
-		<h2>$l_step_by_step_directions</h2>
-
-		<ul>
-		";
-		$get_recipe_directions = str_replace("\n", "<br />", $get_recipe_directions);
-		
-		$array = preg_split('/\d+\./i', $get_recipe_directions);
-
-		for($x=0;$x<sizeof($array);$x++){
-			if($array[$x] != ""){
-	    			echo"<li style=\"padding: 0px 0px 20px 0px;\"><p><b>$l_step $x</b></p>
-				<p>$array[$x]</p>
-				</li>\n";
-			}
-		}
-
-
-		echo"
-		</ul>
-
-	<!-- //Directions -->
-
+	<iframe src=\"../recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$get_recipe_language\" width=\"1200\" height=\"800\" onload=\"this.width=screen.width;this.height=screen.height;\"></iframe>
 
 
 
