@@ -70,12 +70,12 @@ else{
 		$result = mysqli_query($link, "DELETE FROM $t_recipes_rating WHERE rating_recipe_id=$recipe_id_mysql");
 		
 		// Image
-		if($get_recipe_image != ""){
-			unlink("../$get_recipe_image");
+		if($get_recipe_image != "" && file_exists("../$get_recipe_image_path/$get_recipe_image")){
+			unlink("../$get_recipe_image_path/$get_recipe_image");
 		}
 		// Thumb
-		if($get_recipe_thumb != ""){
-			unlink("../$get_recipe_thumb");
+		if($get_recipe_thumb_278x156 != "" && file_exists("../$get_recipe_image_path/$get_recipe_thumb_278x156")){
+			unlink("../$get_recipe_image_path/$get_recipe_thumb_278x156");
 		}
 			
 

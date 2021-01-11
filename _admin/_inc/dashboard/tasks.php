@@ -2283,7 +2283,7 @@ elseif($action == "edit_task_assigned_to"){
 				$message = $message. "  <td><span>$get_current_task_status_code_id</span></td>\n";
 				$message = $message. " </tr>\n";
 				$message = $message. "<table>\n";
-				$message = $message. "$inp_text";
+				$message = $message. "$get_current_task_text";
 
 				$message = $message. "</body>\n";
 				$message = $message. "</html>\n";
