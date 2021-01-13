@@ -67,4 +67,5 @@ $l_favorite = "Favorite";
 $l_remove_favorite = "Remove favorite";
 $l_parings = "Parings";
 $l_by = "By";
+$l_this_months_most_popular_recipes = "This months most popular recipes";
 ?>

@@ -50,6 +50,32 @@ p.recipe_intro{
 	font: 20px italic serif;
 }
 
+/*- Info line ------------------------------------------------------- */
+div.recipe_info_line{
+	margin: 20px 0px 20px 0px;
+	border-top: #dddddd 1px solid;
+	border-bottom: #dddddd 1px solid;
+	padding: 4px 0px 4px 0px;
+}
+
+
+div.recipe_info_line > ul{
+	list-style:none;
+	margin: 15px 0px 15px 0px;
+	padding:0;
+	text-align:center;
+}
+div.recipe_info_line > ul > li{
+	display:inline;
+}
+div.recipe_info_line > ul > li > a{
+	display:inline-block;
+	padding: 0px 5px 0px 5px;
+}
+div.recipe_info_line > ul > li > a > img{
+	float: left;
+	padding: 0px 4px 0px 0px;
+}
 
 
 /*- Ingredients ----------------------------------------------------- */

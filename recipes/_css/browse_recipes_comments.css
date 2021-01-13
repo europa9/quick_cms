@@ -1,21 +1,26 @@
 /*- Headline ------------------------------------------------------------------------------ */
-div.recipes_headline_left{
-	float: left;
-	padding: 0px 30px 0px 0px;
-}
-div.recipes_headline_center{
+div.recipes_headline{
 	float: left;
 }
-div.recipes_headline_center > p{
-	padding: 22px 0px 0px 0px;
-	margin: 0;
-}
-div.recipes_headline_right{
+div.recipes_menu{
 	float: right;
+	padding: 10px 0px 0px 0px;
 }
-div.recipes_headline_right > p{
-	padding: 22px 0px 0px 0px;
-	margin: 0;
+@media screen and (max-width: 52.375em) {
+	div.recipes_headline{
+		float: none;
+	}
+	div.recipes_menu{
+		float: none;
+		padding: 0px 0px 0px 0px;
+		overflow: auto;
+		white-space: nowrap;
+	}
+}
+
+/*- Search box on home page ---------------------------------------------------------------------- */
+div.recipes_search{
+	display: none;
 }
 
 

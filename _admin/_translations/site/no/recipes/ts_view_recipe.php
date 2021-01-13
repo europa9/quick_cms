@@ -54,6 +54,7 @@ $l_suggest_tags = "Foresl&aring; tags";
 $l_tags = "Tags";
 $l_thank_you = "Takk";
 $l_the_stars_to_rate_this_recipe_lowercase = "stjernene for &aring; rangere oppskriften";
+$l_this_months_most_popular_recipes = "Denne m&aring;nedens mest popul&aelig;re oppskrifter";
 $l_this_recipe_serves = "Denne oppskriften serverer";
 $l_title = "Tittel";
 $l_title_for_comment = "Tittel for kommentar";

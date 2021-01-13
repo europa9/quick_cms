@@ -167,10 +167,10 @@ echo"
 		
 
 			// Get rating
-			$query_rating = "SELECT rating_id, rating_average, rating_popularity FROM $t_recipes_rating WHERE rating_recipe_id='$get_recipe_id'";
+			$query_rating = "SELECT rating_id, rating_average FROM $t_recipes_rating WHERE rating_recipe_id='$get_recipe_id'";
 			$result_rating = mysqli_query($link, $query_rating);
 			$row_rating = mysqli_fetch_row($result_rating);
-			list($get_rating_id, $get_rating_average, $get_rating_popularity) = $row_rating;
+			list($get_rating_id, $get_rating_average) = $row_rating;
 
 			// Select Nutrients
 			$query_n = "SELECT number_id, number_recipe_id, number_hundred_calories, number_hundred_proteins, number_hundred_fat, number_hundred_fat_of_which_saturated_fatty_acids, number_hundred_carbs, number_hundred_carbs_of_which_dietary_fiber, number_hundred_carbs_of_which_sugars, number_hundred_salt, number_hundred_sodium, number_serving_calories, number_serving_proteins, number_serving_fat, number_serving_fat_of_which_saturated_fatty_acids, number_serving_carbs, number_serving_carbs_of_which_dietary_fiber, number_serving_carbs_of_which_sugars, number_serving_salt, number_serving_sodium, number_total_weight, number_total_calories, number_total_proteins, number_total_fat, number_total_fat_of_which_saturated_fatty_acids, number_total_carbs, number_total_carbs_of_which_dietary_fiber, number_total_carbs_of_which_sugars, number_total_salt, number_total_sodium, number_servings FROM $t_recipes_numbers WHERE number_recipe_id=$get_recipe_id";
@@ -222,43 +222,47 @@ echo"
 		
 			echo"
 					<!-- skriver ut bilder per oppskrift -->
-					<p>
+					<p><a id=\"recipe$get_recipe_id\"></a>
 					<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\"><img src=\"$root/$get_recipe_image_path/$get_recipe_thumb_278x156\" alt=\"$get_recipe_image\" /></a><br />
 					<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\" class=\"h2\">$get_recipe_title</a>
 					</p>
 
-					<!-- Numbers -->
-
-					<table style=\"margin: 0px auto;\">
-					 <tr>
-					  <td style=\"padding-right: 10px;text-align: center;\">
-						<span class=\"grey_small\">$get_number_hundred_calories</span>
-					  </td>
-					  <td style=\"padding-right: 10px;text-align: center;\">
-						<span class=\"grey_small\">$get_number_hundred_fat</span>
-					  </td>
-					  <td style=\"padding-right: 10px;text-align: center;\">
-						<span class=\"grey_small\">$get_number_hundred_carbs</span>
-					  </td>
-					  <td style=\"text-align: center;\">
-						<span class=\"grey_small\">$get_number_hundred_proteins</span>
-					  </td>
-					 </tr>
-					 <tr>
-					  <td style=\"padding-right: 10px;text-align: center;\">
-						<span class=\"grey_small\">$l_cal_lowercase</span>
-					  </td>
-					  <td style=\"padding-right: 10px;text-align: center;\">
-						<span class=\"grey_small\">$l_fat_lowercase</span>
-					  </td>
-					  <td style=\"padding-right: 10px;text-align: center;\">
-						<span class=\"grey_small\">$l_carb_lowercase</span>
-					  </td>
-					  <td style=\"text-align: center;\">
-						<span class=\"grey_small\">$l_proteins_abbr_lowercase</span>
-					  </td>
-					 </tr>
-					</table>
+					<!-- Numbers -->";
+						if($get_number_hundred_calories != "0"){
+						echo"
+						<table style=\"margin: 0px auto;\">
+						 <tr>
+						  <td style=\"padding-right: 10px;text-align: center;\">
+							<span class=\"grey_small\">$get_number_hundred_calories</span>
+						  </td>
+						  <td style=\"padding-right: 10px;text-align: center;\">
+							<span class=\"grey_small\">$get_number_hundred_fat</span>
+						  </td>
+						  <td style=\"padding-right: 10px;text-align: center;\">
+							<span class=\"grey_small\">$get_number_hundred_carbs</span>
+						  </td>
+						  <td style=\"text-align: center;\">
+							<span class=\"grey_small\">$get_number_hundred_proteins</span>
+						  </td>
+						 </tr>
+						 <tr>
+						  <td style=\"padding-right: 10px;text-align: center;\">
+							<span class=\"grey_small\">$l_cal_lowercase</span>
+						  </td>
+						  <td style=\"padding-right: 10px;text-align: center;\">
+							<span class=\"grey_small\">$l_fat_lowercase</span>
+						  </td>
+						  <td style=\"padding-right: 10px;text-align: center;\">
+							<span class=\"grey_small\">$l_carb_lowercase</span>
+						  </td>
+						  <td style=\"text-align: center;\">
+							<span class=\"grey_small\">$l_proteins_abbr_lowercase</span>
+						  </td>
+						 </tr>
+						</table>
+						";
+					}
+					echo"
 
 				</div>
 			";

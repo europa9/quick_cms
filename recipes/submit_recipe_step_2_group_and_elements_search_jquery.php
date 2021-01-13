@@ -17,6 +17,7 @@ include("../_admin/_functions/clean.php");
 include("../_admin/_functions/quote_smart.php");
 include("../_admin/_functions/resize_crop_image.php");
 include("../_admin/_functions/get_extension.php");
+include("../_admin/_functions/decode_national_letters.php");
 
 
 
@@ -401,16 +402,14 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 				}
 				else{
 					echo"
-
 					<script>
 					\$(document).ready(function(){
 						\$(\"#food_click_action_gram_$get_food_id\").click(function () {
 							var inpAmount = \$('#inp_item_amount').val().replace(',', '.');
 
-						
 							\$(\".inp_item_grocery\").val(\"$get_food_name\");
 							\$(\"#inp_item_food_id\").val($get_food_id);
-				
+
 							\$(\"#inp_item_calories_per_hundred\").val($get_food_energy);
 							\$(\"#inp_item_fat_per_hundred\").val($get_food_fat);
 							\$(\"#inp_item_fat_of_which_saturated_fatty_acids_per_hundred\").val($get_food_fat_of_which_saturated_fatty_acids);
@@ -428,7 +427,7 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 							\$(\"#inp_item_carbs_of_which_sugars_calculated\").val(($get_food_carbohydrates_of_which_sugars * inpAmount)/100);
 							\$(\"#inp_item_proteins_calculated\").val(($get_food_proteins * inpAmount)/100);
 							\$(\"#inp_item_salt_calculated\").val(($get_food_salt * inpAmount)/100);
-				
+
 							$(\"#nettport_search_results\").hide();
 
 						});

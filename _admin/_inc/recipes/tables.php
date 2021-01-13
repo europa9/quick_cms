@@ -16,6 +16,7 @@ if(!(isset($define_access_to_control_panel))){
 $t_recipes_liquidbase	 			= $mysqlPrefixSav . "recipes_liquidbase";
 
 $t_recipes 	 			= $mysqlPrefixSav . "recipes";
+$t_recipes_images			= $mysqlPrefixSav . "recipes_images";
 $t_recipes_ingredients			= $mysqlPrefixSav . "recipes_ingredients";
 $t_recipes_groups			= $mysqlPrefixSav . "recipes_groups";
 $t_recipes_items			= $mysqlPrefixSav . "recipes_items";
@@ -50,6 +51,20 @@ $t_recipes_similar_loaded = $mysqlPrefixSav . "recipes_similar_loaded";
 $t_recipes_similar_recipes = $mysqlPrefixSav . "recipes_similar_recipes";
 
 
+$t_recipes_stats_views_per_month 	= $mysqlPrefixSav . "recipes_stats_views_per_month";
+$t_recipes_stats_views_per_month_ips 	= $mysqlPrefixSav . "recipes_stats_views_per_month_ips";
+
+$t_recipes_stats_views_per_year 	= $mysqlPrefixSav . "recipes_stats_views_per_year";
+$t_recipes_stats_views_per_year_ips	= $mysqlPrefixSav . "recipes_stats_views_per_year_ips";
+
+$t_recipes_stats_comments_per_month 	= $mysqlPrefixSav . "recipes_stats_comments_per_month";
+$t_recipes_stats_comments_per_year 	= $mysqlPrefixSav . "recipes_stats_comments_per_year";
+
+$t_recipes_stats_favorited_per_month 	= $mysqlPrefixSav . "recipes_stats_favorited_per_month";
+$t_recipes_stats_favorited_per_year 	= $mysqlPrefixSav . "recipes_stats_favorited_per_year";
+
+$t_recipes_stats_chef_of_the_month 	= $mysqlPrefixSav . "recipes_stats_chef_of_the_month";
+$t_recipes_stats_chef_of_the_year 	= $mysqlPrefixSav . "recipes_stats_chef_of_the_year";
 
 if($action == ""){
 	echo"

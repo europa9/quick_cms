@@ -32,6 +32,11 @@ include("$root/_admin/_functions/decode_national_letters.php");
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/recipes/ts_recipes.php");
 
+
+/*- Tables ------------------------------------------------------------------------ */
+$t_recipes_images			= $mysqlPrefixSav . "recipes_images";
+
+
 /*- Variables ------------------------------------------------------------------------- */
 if(isset($_GET['mode'])){
 	$mode = $_GET['mode'];
@@ -137,17 +142,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 		// No data? Setup a template!
 		include("$root/_admin/_translations/site/$l/recipes/ts_view_recipe.php");
-		if($get_recipe_directions == ""){
-			$get_recipe_directions = "<ul>
-<li><p><b>$l_step 1</b></p><p>$l_instructions...</p></li>
-<li><p><b>$l_step 2</b></p><p>$l_instructions...</p></li>
-<li><p><b>$l_step 3</b></p><p>$l_instructions...</p></li>
-<li><p><b>$l_step 4</b></p><p>$l_instructions...</p></li>
-<li><p><b>$l_step 5</b></p><p>$l_instructions...</p></li>
-</ul>
-<p>$l_serve_with</p>
-			";
-		}
 
 		echo"
 		<h1>$l_submit_recipe</h1>
@@ -178,10 +172,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			echo"	
 		<!-- //Feedback -->
 
-		<p>
-		<a href=\"submit_recipe_step_3_directions_image_uploader.php?recipe_id=$recipe_id&amp;l=$l\" target=\"_blank\"><img src=\"_gfx/icons/image-x-generic.png\" alt=\"image-x-generic.png\" /></a>
-		<a href=\"submit_recipe_step_3_directions_image_uploader.php?recipe_id=$recipe_id&amp;l=$l\" target=\"_blank\">$l_upload_image</a>
-		</p>
 
 		<!-- TinyMCE -->
 		
@@ -200,30 +190,30 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						{ title: 'My page 1', value: 'http://www.tinymce.com' },
 						{ title: 'My page 2', value: 'http://www.moxiecode.com' }
 					],
-					image_list: [
-						{ title: 'My page 1', value: 'http://www.tinymce.com' },
-						{ title: 'My page 2', value: 'http://www.moxiecode.com' }
+					image_list: [\n";
+					$x = 0;
+					$query = "SELECT image_id, image_user_id, image_recipe_id, image_title, image_text, image_path, image_thumb_a, image_thumb_b, image_thumb_c, image_file, image_photo_by_name, image_photo_by_website, image_uploaded_datetime, image_uploaded_ip, image_unique_views, image_ip_block, image_reported, image_reported_checked, image_likes, image_dislikes, image_likes_dislikes_ipblock, image_comments FROM $t_recipes_images WHERE image_recipe_id=$get_recipe_id ORDER BY image_id ASC";
+					$result = mysqli_query($link, $query);
+					while($row = mysqli_fetch_row($result)) {
+						list($get_image_id, $get_image_user_id, $get_image_recipe_id, $get_image_title, $get_image_text, $get_image_path, $get_image_thumb_a, $get_image_thumb_b, $get_image_thumb_c, $get_image_file, $get_image_photo_by_name, $get_image_photo_by_website, $get_image_uploaded_datetime, $get_image_uploaded_ip, $get_image_unique_views, $get_image_ip_block, $get_image_reported, $get_image_reported_checked, $get_image_likes, $get_image_dislikes, $get_image_likes_dislikes_ipblock, $get_image_comments) = $row;
+						if($x != 0){
+							echo",";
+						}
+
+						echo"\n						";
+						echo"{ title: '$get_image_title', value: '$root/$get_image_path/$get_image_file' }";
+						$x++;
+					}
+					echo"
 					],
-						image_class_list: [
+					image_class_list: [
 						{ title: 'None', value: '' },
 						{ title: 'Some class', value: 'class-name' }
 					],
 					importcss_append: true,
-					height: 500,
-					file_picker_callback: function (callback, value, meta) {
-						/* Provide file and text for the link dialog */
-						if (meta.filetype === 'file') {
-							callback('https://www.google.com/logos/google.jpg', { text: 'My text' });
-						}
-						/* Provide image and alt text for the image dialog */
-						if (meta.filetype === 'image') {
-							callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });
-						}
-						/* Provide alternative source and posted for the media dialog */
-						if (meta.filetype === 'media') {
-							callback('movie.mp4', { source2: 'alt.ogg', poster: 'https://www.google.com/logos/google.jpg' });
-						}
-					}
+					height: 600,
+					/* without images_upload_url set, Upload tab won't show up*/
+					images_upload_url: 'submit_recipe_step_3_directions_upload_image.php?recipe_id=$get_recipe_id&process=1',
 				});
 				</script>
 		<!-- //TinyMCE -->

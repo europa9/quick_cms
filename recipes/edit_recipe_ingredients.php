@@ -1481,6 +1481,7 @@ else{
                     								\$(\"#nettport_search_results\").append(html);
               								}
             							});
+
        							}
         						return false;
             					});

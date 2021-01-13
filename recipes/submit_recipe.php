@@ -29,6 +29,9 @@ include("$root/_admin/website_config.php");
 include("$root/_admin/_translations/site/$l/recipes/ts_recipes.php");
 
 
+/*- Tables ---------------------------------------------------------------------------------- */
+include("_tables.php");
+
 /*- Variables ------------------------------------------------------------------------- */
 if(isset($_GET['mode'])){
 	$mode = $_GET['mode'];
@@ -222,9 +225,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			// recipes_rating
 			mysqli_query($link, "INSERT INTO $t_recipes_rating
-			(rating_id, rating_recipe_id, rating_1, rating_2, rating_3, rating_4, rating_5, rating_total_votes, rating_average, rating_popularity, rating_ip_block) 
+			(rating_id, rating_recipe_id, rating_recipe_lang, rating_1, rating_2, rating_3, rating_4, rating_5, rating_total_votes, rating_average, rating_votes_plus_average, rating_ip_block) 
 			VALUES 
-			(NULL, '$get_recipe_id', '0', '0', '0', '0', '0', '0', '0', '0', '')")
+			(NULL, '$get_recipe_id', $inp_recipe_language_mysql, '0', '0', '0', '0', '0', '0', '0', '0', '')")
 			or die(mysqli_error($link));
 
 
@@ -234,6 +237,55 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$row = mysqli_fetch_row($result);
 			list($get_group_id, $get_group_recipe_id, $get_group_title) = $row;
 			
+
+			// Author
+			$query = "SELECT user_name, user_alias FROM $t_users WHERE user_id=$inp_recipe_user_id_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_user_name, $get_user_alias) = $row;
+
+			// Author Photo
+			$q = "SELECT photo_id, photo_user_id, photo_destination, photo_thumb_50, photo_thumb_60, photo_thumb_200 FROM $t_users_profile_photo WHERE photo_user_id=$inp_recipe_user_id_mysql AND photo_profile_image='1'";
+			$r = mysqli_query($link, $q);
+			$rowb = mysqli_fetch_row($r);
+			list($get_photo_id, $get_photo_user_id, $get_photo_destination, $get_photo_thumb_50, $get_photo_thumb_60, $get_photo_thumb_200) = $rowb;
+	
+
+			// Chef of the month
+			$year = date("Y");
+			$month = date("m");
+			$month_full = date("F");
+			$month_short = date("M");
+
+			$query = "SELECT stats_chef_of_the_month_id, stats_chef_of_the_month_recipes_posted_count, stats_chef_of_the_month_recipes_posted_points, stats_chef_of_the_month_got_visits_count, stats_chef_of_the_month_got_visits_points, stats_chef_of_the_month_got_favorites_count, stats_chef_of_the_month_got_favorites_points, stats_chef_of_the_month_got_comments_count, stats_chef_of_the_month_got_comments_points, stats_chef_of_the_month_total_points FROM $t_recipes_stats_chef_of_the_month WHERE stats_chef_of_the_month_month=$month AND stats_chef_of_the_month_year=$year AND stats_chef_of_the_month_user_id=$inp_recipe_user_id_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_stats_chef_of_the_month_id, $get_stats_chef_of_the_month_recipes_posted_count, $get_stats_chef_of_the_month_recipes_posted_points, $get_stats_chef_of_the_month_got_visits_count, $get_stats_chef_of_the_month_got_visits_points, $get_stats_chef_of_the_month_got_favorites_count, $get_stats_chef_of_the_month_got_favorites_points, $get_stats_chef_of_the_month_got_comments_count, $get_stats_chef_of_the_month_got_comments_points, $get_stats_chef_of_the_month_total_points) = $row;
+			if($get_stats_chef_of_the_month_id == ""){
+				// Insert chef of the month
+				$inp_user_name_mysql = quote_smart($link, $get_user_name);
+				$inp_user_photo_path_mysql = quote_smart($link, "_uploads/users/images/$inp_recipe_user_id");
+				$inp_user_photo_thumb_mysql = quote_smart($link, $get_photo_thumb_200);
+
+				mysqli_query($link, "INSERT INTO $t_recipes_stats_chef_of_the_month 
+				(stats_chef_of_the_month_id, stats_chef_of_the_month_month, stats_chef_of_the_month_month_full, stats_chef_of_the_month_month_short, stats_chef_of_the_month_year, 
+				stats_chef_of_the_month_user_id, stats_chef_of_the_month_user_name, stats_chef_of_the_month_user_photo_path, stats_chef_of_the_month_user_photo_thumb, stats_chef_of_the_month_recipes_posted_count, 
+				stats_chef_of_the_month_recipes_posted_points, stats_chef_of_the_month_got_visits_count, stats_chef_of_the_month_got_visits_points, stats_chef_of_the_month_got_favorites_count, stats_chef_of_the_month_got_favorites_points, 
+				stats_chef_of_the_month_got_comments_count, stats_chef_of_the_month_got_comments_points, stats_chef_of_the_month_total_points) 
+				VALUES 
+				(NULL, $month, '$month_full', '$month_short', $year,
+				$inp_recipe_user_id_mysql, $inp_user_name_mysql, $inp_user_photo_path_mysql, $inp_user_photo_thumb_mysql, 1,
+				7, 0, 0, 0, 0, 
+				0, 0, 0)")
+				or die(mysqli_error($link));
+			}
+			else{
+				// Update visit
+				$inp_count = $get_stats_chef_of_the_month_recipes_posted_count+1;
+				$inp_points = $inp_count*7;
+				$inp_total_points = $inp_points+$get_stats_chef_of_the_month_got_visits_points+$get_stats_chef_of_the_month_got_favorites_points+$get_stats_chef_of_the_month_got_comments_points;
+				mysqli_query($link, "UPDATE $t_recipes_stats_chef_of_the_month SET stats_chef_of_the_month_recipes_posted_count=$inp_count, stats_chef_of_the_month_recipes_posted_points=$inp_points, stats_chef_of_the_month_total_points=$inp_total_points WHERE stats_chef_of_the_month_id=$get_stats_chef_of_the_month_id") or die(mysqli_error($link)); 
+			}
 
 
 			echo"
