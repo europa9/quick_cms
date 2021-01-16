@@ -101,8 +101,8 @@ input.ingredients_amount{
 	border: #fff 1px solid;
 	border-bottom: #bbbbbb 1px dashed;
    	text-align: center;
-	width: 28px;
 	min-width: 28px;
+	width: auto;
 }
 
 div.mobile_only{

@@ -283,7 +283,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 else{
 	echo"
 	<p>
-	<a href=\"$root/users/login.php?l=$l&amp;referer=../downloads/view_exercise.php?exercise_id=$get_current_exercise_id&type_id=$get_current_type_id&main_muscle_group_id=$get_current_main_musc\" class=\"btn_default\">$l_login_to_post_comment</a>
+	<a href=\"$root/users/login.php?l=$l&amp;referer=../food/view_food.php?main_category_id=$main_category_id&amp;sub_category_id=$sub_category_id&amp;food_id=$food_id\" class=\"btn_default\">$l_login_to_post_comment</a>
 	<a href=\"$root/users/create_free_account.php?l=$l\" class=\"btn_default\">$l_create_new_account</a>
 	";
 }

@@ -9,4 +9,5 @@ $l_rating = "Rating";
 $l_edit = "Edit";
 $l_delete = "Delete";
 $l_recipe_deleted = "Recipe deleted.";
+$l_language = "Language";
 ?>

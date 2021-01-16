@@ -1635,6 +1635,19 @@ $inp_history_new_hours_planned_mysql , $inp_history_new_hours_used_mysql )")
 				or die(mysqli_error($link));
 			}
 
+			// Make sure that I am a task subscriber
+			$query = "SELECT subscription_id FROM $t_tasks_subscriptions WHERE subscription_task_id=$get_current_task_id AND subscription_user_id=$inp_updated_by_user_id_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_notification_id) = $row;
+			if($get_notification_id == ""){
+				mysqli_query($link, "INSERT INTO $t_tasks_subscriptions
+				(subscription_id, subscription_task_id, subscription_user_id, subscription_user_email) 
+				VALUES 
+				(NULL, $get_current_task_id, $inp_updated_by_user_id_mysql, $inp_updated_by_user_email_mysql)")
+				or die(mysqli_error($link));
+			}
+
 			// Email to all task subscribers
 			$query = "SELECT subscription_id, subscription_task_id, subscription_user_id, subscription_user_email FROM $t_tasks_subscriptions WHERE subscription_task_id=$get_current_task_id";
 			$result = mysqli_query($link, $query);
@@ -2022,9 +2035,16 @@ $inp_history_new_hours_planned_mysql , $inp_history_new_hours_used_mysql )")
 
 
 
-		<p>System: <a href=\"index.php?open=$open&amp;page=tasks_systems&amp;action=new_system&amp;l=$l\" target=\"_blank\">New</a><br />
+		<p>System: <a href=\"index.php?open=$open&amp;page=tasks_systems&amp;action=new_system&amp;l=$l\" target=\"_blank\">New</a><br />";
+		if($get_current_task_system_id == "0"){
+			echo"<span style=\"color: red;font-weight:bold;\">Warning!</span> <span style=\"color: red;\">No system is selected!<br /> Please select a system in order 
+			to make it easier to differentiate between systems.</span><br />\n";
+		}
+
+		echo"
 		<select name=\"inp_system_id\">
 			<option value=\"0\">None</option>\n";
+		$x = 0;
 		$query = "SELECT system_id, system_title FROM $t_tasks_systems WHERE system_is_active=1 ORDER BY system_title ASC";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
@@ -2511,6 +2531,109 @@ elseif($action == "edit_task_status"){
 			$inp_history_new_status_code_id_mysql, $inp_history_new_status_code_title_mysql)")
 			or die(mysqli_error($link));
 
+
+			// Make sure that I am a task subscriber
+			$query = "SELECT subscription_id FROM $t_tasks_subscriptions WHERE subscription_task_id=$get_current_task_id AND subscription_user_id=$inp_updated_by_user_id_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_notification_id) = $row;
+			if($get_notification_id == ""){
+				mysqli_query($link, "INSERT INTO $t_tasks_subscriptions
+				(subscription_id, subscription_task_id, subscription_user_id, subscription_user_email) 
+				VALUES 
+				(NULL, $get_current_task_id, $inp_updated_by_user_id_mysql, $inp_updated_by_user_email_mysql)")
+				or die(mysqli_error($link));
+			}
+
+
+			// Email to all task subscribers
+			$query = "SELECT subscription_id, subscription_task_id, subscription_user_id, subscription_user_email FROM $t_tasks_subscriptions WHERE subscription_task_id=$get_current_task_id";
+			$result = mysqli_query($link, $query);
+			while($row = mysqli_fetch_row($result)) {
+				list($get_subscription_id, $get_subscription_task_id, $get_subscription_user_id, $get_subscription_user_email) = $row;
+
+				if($get_subscription_user_email != "$get_my_user_email"){
+					$subject = "Task $inp_title changed status to $inp_history_new_status_code_title at $configWebsiteTitleSav";
+
+					$message = "<html>\n";
+					$message = $message. "<head>\n";
+					$message = $message. "  <title>$subject</title>\n";
+
+					$message = $message. "  <style type=\"text/css\"></style>\n";
+					$message = $message. " </head>\n";
+					$message = $message. "<body>\n";
+					$message = $message. "<p>The user <a href=\"$configSiteURLSav/users/view_profile.php?user_id=$get_my_user_id&amp;l=$l\">$get_my_user_alias</a> has made changes to the task.</p>\n";
+					$message = $message. "<table>\n";
+					$message = $message. " <tr>\n";
+					$message = $message. "  <td><span>ID:</span></td>\n";
+					$message = $message. "  <td><span>$get_current_task_id</span></td>\n";
+					$message = $message. " </tr>\n";
+					$message = $message. " <tr>\n";
+					$message = $message. "  <td><span>Title:</span></td>\n";
+					$message = $message. "  <td><span><a href=\"$configControlPanelURLSav/index.php?open=dashboard&amp;page=tasks&amp;action=open_task&amp;task_id=$get_current_task_id&amp;editor_language=$editor_language&amp;l=$l\">$inp_title</a></span></td>\n";
+					$message = $message. " </tr>\n";
+					$message = $message. " <tr>\n";
+					$message = $message. "  <td><span>Due:</span></td>\n";
+					$message = $message. "  <td><span>$inp_due_translated</span></td>\n";
+					$message = $message. " </tr>\n";
+					$message = $message. " <tr>\n";
+					$message = $message. "  <td><span>Priority:</span></td>\n";
+					$message = $message. "  <td><span>$inp_priority_id</span></td>\n";
+					$message = $message. " </tr>\n";
+					$message = $message. " <tr>\n";
+					$message = $message. "  <td><span>Status:</span></td>\n";
+					$message = $message. "  <td><span>$inp_history_new_status_code_id $inp_history_new_status_code_title</span></td>\n";
+					$message = $message. " </tr>\n";
+					$message = $message. "<table>\n";
+					$message = $message. "$inp_text";
+
+					$message = $message. "</body>\n";
+					$message = $message. "</html>\n";
+
+
+					$headers = "MIME-Version: 1.0" . "\r\n" .
+		  			  "Content-type: text/html; charset=iso-8859-1" . "\r\n" .
+					    "To: $get_subscription_user_email " . "\r\n" .
+					    "From: $configFromEmailSav" . "\r\n" .
+					    "Reply-To: $configFromEmailSav" . "\r\n" .
+					    'X-Mailer: PHP/' . phpversion();
+
+					if($configMailSendActiveSav == "1"){
+						mail($get_subscription_user_email, $subject, $message, $headers);
+					}
+
+
+					// Notification to users
+					$inp_notification_reference_id_text = "task_" . $get_current_task_id;
+					$inp_notification_reference_id_text_mysql = quote_smart($link, $inp_notification_reference_id_text);
+
+					$inp_notification_url = "$configControlPanelURLSav/index.php?open=dashboard&page=tasks&action=open_task&task_id=$get_current_task_id&editor_language=$editor_language&l=$l";
+					$inp_notification_url_mysql = quote_smart($link, $inp_notification_url);
+	
+					$inp_notification_text = "Task &quot;$inp_title&quot; has been edited by $get_my_user_alias";
+					$inp_notification_text_mysql = quote_smart($link, $inp_notification_text);
+
+					$week = date("W");
+					$datetime_saying = date("j M Y H:i");
+
+					// Check if notification already exists, if it does, then delete, then insert
+					$query = "SELECT notification_id FROM $t_users_notifications WHERE notification_user_id=$get_subscription_user_id AND notification_reference_id_text=$inp_notification_reference_id_text_mysql";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_notification_id) = $row;
+					if($get_notification_id != ""){
+						$result = mysqli_query($link, "DELETE FROM $t_users_notifications WHERE notification_id=$get_notification_id") or die(mysqli_error($link));
+					}
+					
+					mysqli_query($link, "INSERT INTO $t_users_notifications
+					(notification_id, notification_user_id, notification_reference_id_text, notification_seen, notification_url, notification_text, notification_datetime, notification_datetime_saying, notification_emailed, notification_week) 
+					VALUES 
+					(NULL, $get_subscription_user_id, $inp_notification_reference_id_text_mysql, 0, $inp_notification_url_mysql, $inp_notification_text_mysql, '$datetime', '$datetime_saying', 0, $week)")
+					or die(mysqli_error($link));
+
+				} // not extra emails
+
+			} // while
 			
 			// Is the new status "finished"?
 			if($get_status_code_on_status_close_task == "1"){

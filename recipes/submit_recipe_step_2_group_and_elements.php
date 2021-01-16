@@ -1099,21 +1099,11 @@ else{
 
 
 				<h2 style=\"padding-bottom:0;margin-bottom:0;\">$l_food</h2>
-				<table>
-				 <tbody>
-				  <tr>
-				   <td style=\"padding: 0px 20px 0px 0px;\">
-					<p>$l_amount<br />
-					<input type=\"text\" name=\"inp_item_amount\" id=\"inp_item_amount\" size=\"3\" value=\"$inp_item_amount\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
-					</p>
-				   </td>
-				   <td>
-					<p>$l_measurement<br />
-					<input type=\"text\" name=\"inp_item_measurement\" size=\"3\" value=\"$inp_item_measurement\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
-					</p>
-				   </td>
-				  </tr>
-				</table>
+				<p>$l_amount<br />
+				<input type=\"text\" name=\"inp_item_amount\" id=\"inp_item_amount\" size=\"3\" value=\"$inp_item_amount\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+				<input type=\"text\" name=\"inp_item_measurement\" class=\"inp_item_measurement\" size=\"3\" value=\"$inp_item_measurement\" style=\"width:auto;border: #fff 1px solid;border-bottom: #ddd 1px dashed\" />
+				</p>
+
 				<p>$l_grocery &middot; <a href=\"$root/food/new_food.php?l=$l\" target=\"_blank\">$l_new_food</a><br />
 				<input type=\"text\" name=\"inp_item_grocery\" class=\"inp_item_grocery\" size=\"25\" value=\"$inp_item_grocery\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" id=\"nettport_inp_search_query\" />
 				<input type=\"hidden\" name=\"inp_item_food_id\" id=\"inp_item_food_id\" /></p>

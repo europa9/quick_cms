@@ -67,6 +67,7 @@ echo"
 	  	   recipe_thumb_278x156 VARCHAR(250),
 	  	   recipe_video VARCHAR(250),
 	  	   recipe_date DATE,
+	  	   recipe_date_saying VARCHAR(250),
 	  	   recipe_time TIME,
 	  	   recipe_cusine_id INT,
 	  	   recipe_season_id INT,
@@ -75,11 +76,13 @@ echo"
 	  	   recipe_unique_hits INT,
 	  	   recipe_unique_hits_ip_block TEXT,
 	  	   recipe_comments INT,
+	  	   recipe_times_favorited INT,
 	  	   recipe_user_ip VARCHAR(250),
 	  	   recipe_notes VARCHAR(50),
 	  	   recipe_password VARCHAR(120),
 	  	   recipe_last_viewed DATETIME,
-		   recipe_age_restriction INT)")
+		   recipe_age_restriction INT,
+		   recipe_published INT)")
 		   or die(mysqli_error());
 
 		

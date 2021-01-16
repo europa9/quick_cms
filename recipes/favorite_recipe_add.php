@@ -67,10 +67,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 	// Get recipe
 	$recipe_id_mysql = quote_smart($link, $recipe_id);
-	$query = "SELECT recipe_id, recipe_user_id, recipe_title FROM $t_recipes WHERE recipe_id=$recipe_id_mysql";
+	$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_country, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb_278x156, recipe_video, recipe_date, recipe_date_saying, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_comments, recipe_times_favorited, recipe_user_ip, recipe_notes, recipe_password, recipe_last_viewed, recipe_age_restriction, recipe_published FROM $t_recipes WHERE recipe_id=$recipe_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_recipe_id, $get_recipe_user_id, $get_recipe_title) = $row;
+	list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_country, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156, $get_recipe_video, $get_recipe_date, $get_recipe_date_saying, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_comments, $get_recipe_times_favorited, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password, $get_recipe_last_viewed, $get_recipe_age_restriction, $get_recipe_published) = $row;
 
 	if($get_recipe_id == ""){
 		echo"
@@ -82,6 +82,15 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		";
 	}
 	else{
+		// Category
+		$inp_recipe_language_mysql = quote_smart($link, $get_recipe_language);
+		$query = "SELECT category_translation_value FROM $t_recipes_categories_translations WHERE category_id=$get_recipe_category_id AND category_translation_language=$inp_recipe_language_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_category_translation_value) = $row;
+
+
+
 		// Check if I alreaddy have it
 		$q = "SELECT recipe_favorite_id FROM $t_recipes_favorites WHERE recipe_favorite_recipe_id=$get_recipe_id AND recipe_favorite_user_id=$my_user_id_mysql";
 		$r = mysqli_query($link, $q);
@@ -94,6 +103,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			VALUES 
 			(NULL, '$get_recipe_id', $my_user_id_mysql, '')")
 			or die(mysqli_error($link));
+
+			// Update recipe
+			$inp_count = $get_recipe_times_favorited+1;
+			mysqli_query($link, "UPDATE $t_recipes SET recipe_times_favorited=$inp_count WHERE recipe_id=$get_recipe_id") or die(mysqli_error($link)); 
 
 			// Chef of the month
 			$year = date("Y");
@@ -136,6 +149,62 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$inp_total_points = $get_stats_chef_of_the_month_recipes_posted_points+$get_stats_chef_of_the_month_got_visits_points+$get_stats_chef_of_the_month_got_favorites_points+$inp_points;
 				mysqli_query($link, "UPDATE $t_recipes_stats_chef_of_the_month SET stats_chef_of_the_month_got_favorites_count=$inp_count, stats_chef_of_the_month_got_favorites_points=$inp_points, stats_chef_of_the_month_total_points=$inp_total_points WHERE stats_chef_of_the_month_id=$get_stats_chef_of_the_month_id") or die(mysqli_error($link)); 
 			}
+
+
+			// Stats :: Favorited per month
+			$inp_recipe_title_mysql = quote_smart($link, $get_recipe_title);
+			$inp_recipe_image_path_mysql = quote_smart($link, $get_recipe_image_path);
+			$inp_recipe_image_mysql = quote_smart($link, $get_recipe_image);
+			$inp_recipe_thumb_278x156_mysql = quote_smart($link, $get_recipe_thumb_278x156);
+			$inp_category_translation_value_mysql = quote_smart($link, $get_category_translation_value);
+
+
+			$query = "SELECT stats_favorited_per_month_id, stats_favorited_per_month_count FROM $t_recipes_stats_favorited_per_month WHERE stats_favorited_per_month_month=$month AND stats_favorited_per_month_year=$year AND stats_favorited_per_month_recipe_id=$get_recipe_id";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_stats_favorited_per_month_id, $get_stats_favorited_per_month_count) = $row;
+			if($get_stats_favorited_per_month_id == ""){
+				// Insert IP block
+				mysqli_query($link, "INSERT INTO $t_recipes_stats_favorited_per_month 
+				(stats_favorited_per_month_id, stats_favorited_per_month_month, stats_favorited_per_month_month_full, stats_favorited_per_month_month_short, stats_favorited_per_month_year, 
+				stats_favorited_per_month_recipe_id, stats_favorited_per_month_recipe_title, stats_favorited_per_month_recipe_image_path, stats_favorited_per_month_recipe_thumb_278x156, stats_favorited_per_month_recipe_language, 
+				stats_favorited_per_month_recipe_category_id, stats_favorited_per_month_recipe_category_translated, stats_favorited_per_month_count) 
+				VALUES 
+				(NULL, $month, '$month_full', '$month_short', $year, 
+				$get_recipe_id, $inp_recipe_title_mysql, $inp_recipe_image_path_mysql, $inp_recipe_thumb_278x156_mysql, $inp_recipe_language_mysql, 
+				$get_recipe_category_id, $inp_category_translation_value_mysql, 1
+				)")
+				or die(mysqli_error($link)); 
+			}
+			else{
+				// Update favorited
+				$inp_count = $get_stats_favorited_per_month_count+1;
+				mysqli_query($link, "UPDATE $t_recipes_stats_favorited_per_month SET stats_favorited_per_month_count=$inp_count WHERE stats_favorited_per_month_id=$get_stats_favorited_per_month_id") or die(mysqli_error($link)); 
+			}
+
+
+
+			// Stats :: Favorited per year
+			$query = "SELECT stats_favorited_per_year_id, stats_favorited_per_year_count FROM $t_recipes_stats_favorited_per_year WHERE stats_favorited_per_year_year=$year AND stats_favorited_per_year_recipe_id=$get_recipe_id";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_stats_favorited_per_year_id, $get_stats_favorited_per_year_count) = $row;
+			if($get_stats_favorited_per_year_id == ""){
+				// Insert IP block
+				mysqli_query($link, "INSERT INTO $t_recipes_stats_favorited_per_year
+				(stats_favorited_per_year_id, stats_favorited_per_year_year, stats_favorited_per_year_recipe_id, stats_favorited_per_year_recipe_title, stats_favorited_per_year_recipe_image_path, stats_favorited_per_year_recipe_thumb_278x156, stats_favorited_per_year_recipe_language, stats_favorited_per_year_recipe_category_id, stats_favorited_per_year_recipe_category_translated, stats_favorited_per_year_count) 
+				VALUES 
+				(NULL, $year, $get_recipe_id, $inp_recipe_title_mysql, $inp_recipe_image_path_mysql, $inp_recipe_thumb_278x156_mysql, $inp_recipe_language_mysql, $get_recipe_category_id, $inp_category_translation_value_mysql, 1
+				)")
+				or die(mysqli_error($link)); 
+			}
+			else{
+				// Update favorited
+				$inp_count = $get_stats_favorited_per_year_count+1;
+				mysqli_query($link, "UPDATE $t_recipes_stats_favorited_per_year SET stats_favorited_per_year_count=$inp_count WHERE stats_favorited_per_year_id=$get_stats_favorited_per_year_id") or die(mysqli_error($link)); 
+			}
+
+
 
 			// Header
 			$ft = "success";

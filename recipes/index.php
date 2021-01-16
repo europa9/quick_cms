@@ -268,7 +268,7 @@ echo"
 
 		// Get four recipes
 		$x = 0;
-		$query = "SELECT recipe_id, recipe_title, recipe_category_id, recipe_introduction, recipe_image_path, recipe_image, recipe_thumb_278x156 FROM $t_recipes WHERE recipe_language=$l_mysql AND recipe_occasion_id=$get_occasion_id ORDER BY recipe_unique_hits DESC LIMIT 0,4";
+		$query = "SELECT recipe_id, recipe_title, recipe_category_id, recipe_introduction, recipe_image_path, recipe_image, recipe_thumb_278x156 FROM $t_recipes WHERE recipe_language=$l_mysql AND recipe_occasion_id=$get_occasion_id AND recipe_published=1 ORDER BY recipe_unique_hits DESC LIMIT 0,4";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
 			list($get_recipe_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156) = $row;
@@ -398,12 +398,16 @@ echo"
 			";
 			
 			// Increment
-			if($x == "3"){ $x = -1; } 
+			if($x == "3"){ 
+				$x = -1; 
+				echo"
+				<div class=\"clear\"></div>
+				";
+			} 
 			$x = $x+1;
 		} // image
 	}
 	echo"
-		<div class=\"clear\"></div>
 <!-- //Popular recipes -->
 
 
@@ -461,7 +465,7 @@ echo"
 
 	// Get 40 new recipes :: Paging
 	$no_of_records_per_page = 40;
-	$total_pages_sql = "SELECT COUNT(*) FROM $t_recipes WHERE recipe_language=$l_mysql";
+	$total_pages_sql = "SELECT COUNT(*) FROM $t_recipes WHERE recipe_language=$l_mysql AND recipe_published=1";
 	$result = mysqli_query($link, $total_pages_sql);
 	$total_rows = mysqli_fetch_array($result)[0];
 	$total_pages = ceil($total_rows / $no_of_records_per_page);
@@ -469,7 +473,7 @@ echo"
 
 	// Get 40 new recipes :: While
 	$x = 0;
-	$query = "SELECT recipe_id, recipe_title, recipe_category_id, recipe_introduction, recipe_image_path, recipe_image, recipe_thumb_278x156 FROM $t_recipes WHERE recipe_language=$l_mysql ORDER BY recipe_id DESC";
+	$query = "SELECT recipe_id, recipe_title, recipe_category_id, recipe_introduction, recipe_image_path, recipe_image, recipe_thumb_278x156 FROM $t_recipes WHERE recipe_language=$l_mysql AND recipe_published=1 ORDER BY recipe_id DESC";
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
 		list($get_recipe_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156) = $row;

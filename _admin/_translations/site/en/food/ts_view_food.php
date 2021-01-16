@@ -62,4 +62,6 @@ $l_new_rating_for_food = "New rating for food";
 $l_view_food = "View food";
 $l_ratings = "Ratings";
 $l_view_rating = "View rating";
+$l_login_to_post_comment = "Login to post comment";
+$l_create_new_account  = "Create new account";
 ?>

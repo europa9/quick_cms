@@ -80,10 +80,10 @@ include("_tables.php");
 /*- Get recipe ------------------------------------------------------------------------- */
 // Select
 $recipe_id_mysql = quote_smart($link, $recipe_id);
-$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_country, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb_278x156, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_comments, recipe_user_ip, recipe_notes, recipe_password, recipe_last_viewed, recipe_age_restriction FROM $t_recipes WHERE recipe_id=$recipe_id_mysql";
+$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_country, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb_278x156, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_comments, recipe_user_ip, recipe_notes, recipe_password, recipe_last_viewed, recipe_age_restriction, recipe_published FROM $t_recipes WHERE recipe_id=$recipe_id_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
-list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_country, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156, $get_recipe_video, $get_recipe_date, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_comments, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password, $get_recipe_last_viewed, $get_recipe_age_restriction) = $row;
+list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_country, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156, $get_recipe_video, $get_recipe_date, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_comments, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password, $get_recipe_last_viewed, $get_recipe_age_restriction, $get_recipe_published) = $row;
 
 /*- Headers ---------------------------------------------------------------------------------- */
 if($get_recipe_id == ""){
@@ -276,117 +276,118 @@ else{
 		$inp_recipe_thumb_278x156_mysql = quote_smart($link, $get_recipe_thumb_278x156);
 		$inp_recipe_language_mysql = quote_smart($link, $get_recipe_language);
 
-		$query = "SELECT stats_visit_per_month_ip_id FROM $t_recipes_stats_views_per_month_ips WHERE stats_visit_per_month_month=$month AND stats_visit_per_month_year=$year AND stats_visit_per_month_recipe_id=$get_recipe_id AND stats_visit_per_month_ip=$inp_ip_mysql";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_stats_visit_per_month_ip_id) = $row;
-		if($get_stats_visit_per_month_ip_id == ""){
-			// Insert IP block
-			mysqli_query($link, "INSERT INTO $t_recipes_stats_views_per_month_ips 
-			(stats_visit_per_month_ip_id, stats_visit_per_month_month, stats_visit_per_month_year, stats_visit_per_month_recipe_id, stats_visit_per_month_ip) 
-			VALUES 
-			(NULL, $month, $year, $get_recipe_id, $inp_ip_mysql)")
-			or die(mysqli_error($link)); 
-
-			// Delete old
-			mysqli_query($link, "DELETE FROM $t_recipes_stats_views_per_month_ips WHERE stats_visit_per_month_month != $month") or die(mysqli_error($link)); 
-
-			// +1
-			$query = "SELECT stats_visit_per_month_id, stats_visit_per_month_count FROM $t_recipes_stats_views_per_month WHERE stats_visit_per_month_month=$month AND stats_visit_per_month_year=$year AND stats_visit_per_month_recipe_id=$get_recipe_id";
+		if($get_recipe_published == "1"){
+			$query = "SELECT stats_visit_per_month_ip_id FROM $t_recipes_stats_views_per_month_ips WHERE stats_visit_per_month_month=$month AND stats_visit_per_month_year=$year AND stats_visit_per_month_recipe_id=$get_recipe_id AND stats_visit_per_month_ip=$inp_ip_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
-			list($get_stats_visit_per_month_id, $get_stats_visit_per_month_count) = $row;
-			if($get_stats_visit_per_month_id == ""){
-				// First visit this month
-				$inp_category_translated_mysql = quote_smart($link, $get_category_translation_value);
-				mysqli_query($link, "INSERT INTO $t_recipes_stats_views_per_month 
-				(stats_visit_per_month_id, stats_visit_per_month_month, stats_visit_per_month_month_full, stats_visit_per_month_month_short, stats_visit_per_month_year, 
-				stats_visit_per_month_recipe_id, stats_visit_per_month_recipe_title, stats_visit_per_month_recipe_image_path, stats_visit_per_month_recipe_thumb_278x156, stats_visit_per_month_recipe_language, 
-				stats_visit_per_month_recipe_category_id, stats_visit_per_month_recipe_category_translated, stats_visit_per_month_count) 
+			list($get_stats_visit_per_month_ip_id) = $row;
+			if($get_stats_visit_per_month_ip_id == ""){
+				// Insert IP block
+				mysqli_query($link, "INSERT INTO $t_recipes_stats_views_per_month_ips 
+				(stats_visit_per_month_ip_id, stats_visit_per_month_month, stats_visit_per_month_year, stats_visit_per_month_recipe_id, stats_visit_per_month_ip) 
 				VALUES 
-				(NULL, $month, '$month_full', '$month_short', $year,
-				$get_recipe_id, $inp_recipe_title_mysql, $inp_recipe_image_path_mysql, $inp_recipe_thumb_278x156_mysql, $inp_recipe_language_mysql,
-				$get_recipe_category_id, $inp_category_translated_mysql, 1)")
+				(NULL, $month, $year, $get_recipe_id, $inp_ip_mysql)")
 				or die(mysqli_error($link)); 
-			}
-			else{
-				// Update visit
-				$inp_count = $get_stats_visit_per_month_count+1;
-				mysqli_query($link, "UPDATE $t_recipes_stats_views_per_month SET stats_visit_per_month_count=$inp_count WHERE stats_visit_per_month_id=$get_stats_visit_per_month_id") or die(mysqli_error($link)); 
+
+				// Delete old
+				mysqli_query($link, "DELETE FROM $t_recipes_stats_views_per_month_ips WHERE stats_visit_per_month_month != $month") or die(mysqli_error($link)); 
+
+				// +1
+				$query = "SELECT stats_visit_per_month_id, stats_visit_per_month_count FROM $t_recipes_stats_views_per_month WHERE stats_visit_per_month_month=$month AND stats_visit_per_month_year=$year AND stats_visit_per_month_recipe_id=$get_recipe_id";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_stats_visit_per_month_id, $get_stats_visit_per_month_count) = $row;
+				if($get_stats_visit_per_month_id == ""){
+					// First visit this month
+					$inp_category_translated_mysql = quote_smart($link, $get_category_translation_value);
+					mysqli_query($link, "INSERT INTO $t_recipes_stats_views_per_month 
+					(stats_visit_per_month_id, stats_visit_per_month_month, stats_visit_per_month_month_full, stats_visit_per_month_month_short, stats_visit_per_month_year, 
+					stats_visit_per_month_recipe_id, stats_visit_per_month_recipe_title, stats_visit_per_month_recipe_image_path, stats_visit_per_month_recipe_thumb_278x156, stats_visit_per_month_recipe_language, 
+					stats_visit_per_month_recipe_category_id, stats_visit_per_month_recipe_category_translated, stats_visit_per_month_count) 
+					VALUES 
+					(NULL, $month, '$month_full', '$month_short', $year,
+					$get_recipe_id, $inp_recipe_title_mysql, $inp_recipe_image_path_mysql, $inp_recipe_thumb_278x156_mysql, $inp_recipe_language_mysql,
+					$get_recipe_category_id, $inp_category_translated_mysql, 1)")
+					or die(mysqli_error($link)); 
+				}
+				else{
+					// Update visit
+					$inp_count = $get_stats_visit_per_month_count+1;
+					mysqli_query($link, "UPDATE $t_recipes_stats_views_per_month SET stats_visit_per_month_count=$inp_count WHERE stats_visit_per_month_id=$get_stats_visit_per_month_id") or die(mysqli_error($link)); 
+				}
+
+				// Chef of the month
+				$query = "SELECT stats_chef_of_the_month_id, stats_chef_of_the_month_recipes_posted_count, stats_chef_of_the_month_recipes_posted_points, stats_chef_of_the_month_got_visits_count, stats_chef_of_the_month_got_visits_points, stats_chef_of_the_month_got_favorites_count, stats_chef_of_the_month_got_favorites_points, stats_chef_of_the_month_got_comments_count, stats_chef_of_the_month_got_comments_points, stats_chef_of_the_month_total_points FROM $t_recipes_stats_chef_of_the_month WHERE stats_chef_of_the_month_month=$month AND stats_chef_of_the_month_year=$year AND stats_chef_of_the_month_user_id=$get_recipe_user_id";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_stats_chef_of_the_month_id, $get_stats_chef_of_the_month_recipes_posted_count, $get_stats_chef_of_the_month_recipes_posted_points, $get_stats_chef_of_the_month_got_visits_count, $get_stats_chef_of_the_month_got_visits_points, $get_stats_chef_of_the_month_got_favorites_count, $get_stats_chef_of_the_month_got_favorites_points, $get_stats_chef_of_the_month_got_comments_count, $get_stats_chef_of_the_month_got_comments_points, $get_stats_chef_of_the_month_total_points) = $row;
+				if($get_stats_chef_of_the_month_id == ""){
+					// Insert chef of the month
+					$inp_user_name_mysql = quote_smart($link, $get_user_name);
+					$inp_user_photo_path_mysql = quote_smart($link, "_uploads/users/images/$get_recipe_user_id");
+					$inp_user_photo_thumb_mysql = quote_smart($link, $get_photo_thumb_200);
+
+					mysqli_query($link, "INSERT INTO $t_recipes_stats_chef_of_the_month 
+					(stats_chef_of_the_month_id, stats_chef_of_the_month_month, stats_chef_of_the_month_month_full, stats_chef_of_the_month_month_short, stats_chef_of_the_month_year, 
+					stats_chef_of_the_month_user_id, stats_chef_of_the_month_user_name, stats_chef_of_the_month_user_photo_path, stats_chef_of_the_month_user_photo_thumb, stats_chef_of_the_month_recipes_posted_count, 
+					stats_chef_of_the_month_recipes_posted_points, stats_chef_of_the_month_got_visits_count, stats_chef_of_the_month_got_visits_points, stats_chef_of_the_month_got_favorites_count, stats_chef_of_the_month_got_favorites_points, 
+					stats_chef_of_the_month_got_comments_count, stats_chef_of_the_month_got_comments_points, stats_chef_of_the_month_total_points) 
+					VALUES 
+					(NULL, $month, '$month_full', '$month_short', $year,
+					$get_recipe_user_id, $inp_user_name_mysql, $inp_user_photo_path_mysql, $inp_user_photo_thumb_mysql, 0,
+					0, 1, 0.1, 0, 0, 
+					0, 0, 1)")
+					or die(mysqli_error($link));
+				}
+				else{
+					// Update visit
+					$inp_count = $get_stats_chef_of_the_month_got_visits_count+1;
+					$inp_points = $inp_count*0.1;
+					$inp_total_points = $get_stats_chef_of_the_month_recipes_posted_points+$inp_points+$get_stats_chef_of_the_month_got_favorites_points+$get_stats_chef_of_the_month_got_comments_points;
+					mysqli_query($link, "UPDATE $t_recipes_stats_chef_of_the_month SET stats_chef_of_the_month_got_visits_count=$inp_count, stats_chef_of_the_month_got_visits_points=$inp_points, stats_chef_of_the_month_total_points=$inp_total_points WHERE stats_chef_of_the_month_id=$get_stats_chef_of_the_month_id") or die(mysqli_error($link)); 
+				}
+
 			}
 
-			// Chef of the month
-			$query = "SELECT stats_chef_of_the_month_id, stats_chef_of_the_month_recipes_posted_count, stats_chef_of_the_month_recipes_posted_points, stats_chef_of_the_month_got_visits_count, stats_chef_of_the_month_got_visits_points, stats_chef_of_the_month_got_favorites_count, stats_chef_of_the_month_got_favorites_points, stats_chef_of_the_month_got_comments_count, stats_chef_of_the_month_got_comments_points, stats_chef_of_the_month_total_points FROM $t_recipes_stats_chef_of_the_month WHERE stats_chef_of_the_month_month=$month AND stats_chef_of_the_month_year=$year AND stats_chef_of_the_month_user_id=$get_recipe_user_id";
+			// Statistics :: Views :: Year
+			$query = "SELECT stats_visit_per_year_ip_id FROM $t_recipes_stats_views_per_year_ips WHERE stats_visit_per_year_year=$year AND stats_visit_per_year_recipe_id=$get_recipe_id AND stats_visit_per_year_ip=$inp_ip_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
-			list($get_stats_chef_of_the_month_id, $get_stats_chef_of_the_month_recipes_posted_count, $get_stats_chef_of_the_month_recipes_posted_points, $get_stats_chef_of_the_month_got_visits_count, $get_stats_chef_of_the_month_got_visits_points, $get_stats_chef_of_the_month_got_favorites_count, $get_stats_chef_of_the_month_got_favorites_points, $get_stats_chef_of_the_month_got_comments_count, $get_stats_chef_of_the_month_got_comments_points, $get_stats_chef_of_the_month_total_points) = $row;
-			if($get_stats_chef_of_the_month_id == ""){
-				// Insert chef of the month
-				$inp_user_name_mysql = quote_smart($link, $get_user_name);
-				$inp_user_photo_path_mysql = quote_smart($link, "_uploads/users/images/$get_recipe_user_id");
-				$inp_user_photo_thumb_mysql = quote_smart($link, $get_photo_thumb_200);
-
-				mysqli_query($link, "INSERT INTO $t_recipes_stats_chef_of_the_month 
-				(stats_chef_of_the_month_id, stats_chef_of_the_month_month, stats_chef_of_the_month_month_full, stats_chef_of_the_month_month_short, stats_chef_of_the_month_year, 
-				stats_chef_of_the_month_user_id, stats_chef_of_the_month_user_name, stats_chef_of_the_month_user_photo_path, stats_chef_of_the_month_user_photo_thumb, stats_chef_of_the_month_recipes_posted_count, 
-				stats_chef_of_the_month_recipes_posted_points, stats_chef_of_the_month_got_visits_count, stats_chef_of_the_month_got_visits_points, stats_chef_of_the_month_got_favorites_count, stats_chef_of_the_month_got_favorites_points, 
-				stats_chef_of_the_month_got_comments_count, stats_chef_of_the_month_got_comments_points, stats_chef_of_the_month_total_points) 
+			list($get_stats_visit_per_year_ip_id) = $row;
+			if($get_stats_visit_per_year_ip_id == ""){
+				// Insert IP block
+				mysqli_query($link, "INSERT INTO $t_recipes_stats_views_per_year_ips 
+				(stats_visit_per_year_ip_id, stats_visit_per_year_year, stats_visit_per_year_recipe_id, stats_visit_per_year_ip) 
 				VALUES 
-				(NULL, $month, '$month_full', '$month_short', $year,
-				$get_recipe_user_id, $inp_user_name_mysql, $inp_user_photo_path_mysql, $inp_user_photo_thumb_mysql, 0,
-				0, 1, 1, 0, 0, 
-				0, 0, 1)")
-				or die(mysqli_error($link));
-			}
-			else{
-				// Update visit
-				$inp_count = $get_stats_chef_of_the_month_got_visits_count+1;
-				$inp_points = $inp_count*1;
-				$inp_total_points = $get_stats_chef_of_the_month_recipes_posted_points+$inp_points+$get_stats_chef_of_the_month_got_favorites_points+$get_stats_chef_of_the_month_got_comments_points;
-				mysqli_query($link, "UPDATE $t_recipes_stats_chef_of_the_month SET stats_chef_of_the_month_got_visits_count=$inp_count, stats_chef_of_the_month_got_visits_points=$inp_points, stats_chef_of_the_month_total_points=$inp_total_points WHERE stats_chef_of_the_month_id=$get_stats_chef_of_the_month_id") or die(mysqli_error($link)); 
-			}
-
-		}
-
-		// Statistics :: Views :: Year
-		$query = "SELECT stats_visit_per_year_ip_id FROM $t_recipes_stats_views_per_year_ips WHERE stats_visit_per_year_year=$year AND stats_visit_per_year_recipe_id=$get_recipe_id AND stats_visit_per_year_ip=$inp_ip_mysql";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_stats_visit_per_year_ip_id) = $row;
-		if($get_stats_visit_per_year_ip_id == ""){
-			// Insert IP block
-			mysqli_query($link, "INSERT INTO $t_recipes_stats_views_per_year_ips 
-			(stats_visit_per_year_ip_id, stats_visit_per_year_year, stats_visit_per_year_recipe_id, stats_visit_per_year_ip) 
-			VALUES 
-			(NULL, $year, $get_recipe_id, $inp_ip_mysql)")
-			or die(mysqli_error($link)); 
-
-			// Delete old
-			mysqli_query($link, "DELETE FROM $t_recipes_stats_views_per_year_ips WHERE stats_visit_per_year_year != $year") or die(mysqli_error($link)); 
-
-			// +1
-			$query = "SELECT stats_visit_per_year_id, stats_visit_per_year_count FROM $t_recipes_stats_views_per_year WHERE stats_visit_per_year_year=$year AND stats_visit_per_year_recipe_id=$get_recipe_id";
-			$result = mysqli_query($link, $query);
-			$row = mysqli_fetch_row($result);
-			list($get_stats_visit_per_year_id, $get_stats_visit_per_year_count) = $row;
-			if($get_stats_visit_per_year_id == ""){
-				// First visit this month
-				$inp_category_translated_mysql = quote_smart($link, $get_category_translation_value);
-				mysqli_query($link, "INSERT INTO $t_recipes_stats_views_per_year 
-				(stats_visit_per_year_id, stats_visit_per_year_year, stats_visit_per_year_recipe_id, stats_visit_per_year_recipe_title, stats_visit_per_year_recipe_image_path, 
-				stats_visit_per_year_recipe_thumb_278x156, stats_visit_per_year_recipe_language, stats_visit_per_year_recipe_category_id, stats_visit_per_year_recipe_category_translated, stats_visit_per_year_count) 
-				VALUES 
-				(NULL, $year, $get_recipe_id, $inp_recipe_title_mysql, $inp_recipe_image_path_mysql, 
-				$inp_recipe_thumb_278x156_mysql, $inp_recipe_language_mysql, $get_recipe_category_id, $inp_category_translated_mysql, 1)")
+				(NULL, $year, $get_recipe_id, $inp_ip_mysql)")
 				or die(mysqli_error($link)); 
-			}
-			else{
+
+				// Delete old
+				mysqli_query($link, "DELETE FROM $t_recipes_stats_views_per_year_ips WHERE stats_visit_per_year_year != $year") or die(mysqli_error($link)); 
+
+				// +1
+				$query = "SELECT stats_visit_per_year_id, stats_visit_per_year_count FROM $t_recipes_stats_views_per_year WHERE stats_visit_per_year_year=$year AND stats_visit_per_year_recipe_id=$get_recipe_id";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_stats_visit_per_year_id, $get_stats_visit_per_year_count) = $row;
+				if($get_stats_visit_per_year_id == ""){
+					// First visit this month
+					$inp_category_translated_mysql = quote_smart($link, $get_category_translation_value);
+					mysqli_query($link, "INSERT INTO $t_recipes_stats_views_per_year 
+					(stats_visit_per_year_id, stats_visit_per_year_year, stats_visit_per_year_recipe_id, stats_visit_per_year_recipe_title, stats_visit_per_year_recipe_image_path, 
+					stats_visit_per_year_recipe_thumb_278x156, stats_visit_per_year_recipe_language, stats_visit_per_year_recipe_category_id, stats_visit_per_year_recipe_category_translated, stats_visit_per_year_count) 
+					VALUES 
+					(NULL, $year, $get_recipe_id, $inp_recipe_title_mysql, $inp_recipe_image_path_mysql, 
+					$inp_recipe_thumb_278x156_mysql, $inp_recipe_language_mysql, $get_recipe_category_id, $inp_category_translated_mysql, 1)")
+					or die(mysqli_error($link)); 
+				}
+				else{
 				// Update visit
-				$inp_count = $get_stats_visit_per_year_count+1;
+						$inp_count = $get_stats_visit_per_year_count+1;
 				mysqli_query($link, "UPDATE $t_recipes_stats_views_per_year SET stats_visit_per_year_count=$inp_count WHERE stats_visit_per_year_id=$get_stats_visit_per_year_id") or die(mysqli_error($link)); 
+				}
 			}
-		}
-		
+		} // recipe published for statistics
 
 		// Select Nutrients
 		$query = "SELECT number_id, number_recipe_id, number_hundred_calories, number_hundred_proteins, number_hundred_fat, number_hundred_fat_of_which_saturated_fatty_acids, number_hundred_carbs, number_hundred_carbs_of_which_dietary_fiber, number_hundred_carbs_of_which_sugars, number_hundred_salt, number_hundred_sodium, number_serving_calories, number_serving_proteins, number_serving_fat, number_serving_fat_of_which_saturated_fatty_acids, number_serving_carbs, number_serving_carbs_of_which_dietary_fiber, number_serving_carbs_of_which_sugars, number_serving_salt, number_serving_sodium, number_total_weight, number_total_calories, number_total_proteins, number_total_fat, number_total_fat_of_which_saturated_fatty_acids, number_total_carbs, number_total_carbs_of_which_dietary_fiber, number_total_carbs_of_which_sugars, number_total_salt, number_total_sodium, number_servings FROM $t_recipes_numbers WHERE number_recipe_id=$recipe_id_mysql";
@@ -630,7 +631,6 @@ else{
 							$rating_count++;
 						}
 						echo"($get_rating_total_votes)</a>
-						</li>
 					</li>
 				</ul>
 				<script>
@@ -735,17 +735,14 @@ else{
 
 		<!-- Ingredients -->
 		<div class=\"ingredients\">
-			";
-
-
-			echo"
 			<a id=\"ingredients\"></a>
+			
 
-        		<form method=\"get\" action=\"view_recipe.php#ingredients\" enctype=\"multipart/form-data\">
+        		<form method=\"get\" action=\"view_recipe.php\" enctype=\"multipart/form-data\">
 			<input type=\"hidden\" name=\"recipe_id\" value=\"$get_recipe_id\" />
-			<input type=\"hidden\" name=\"servings\" value=\"$servings\" />
+			<input type=\"hidden\" name=\"servings\" value=\""; if($servings == ""){ $servings = $get_number_servings; } echo"$servings\" />
 			<input type=\"hidden\" name=\"l\" value=\"$l\" />
-			<a id=\"ingredients\"></a>
+			
 
 
 				<table style=\"width: 100%;\">
@@ -787,9 +784,6 @@ else{
 				";
 				if($x == 0){
 					// Servings
-					if($servings == ""){
-						$servings = $get_number_servings;
-					}
 					if($servings == 1){
 						$servings_minus = 1;
 					}
@@ -807,19 +801,24 @@ else{
 					$query_string = str_replace("l=$l", "", $query_string);
 					$query_string = str_replace("servings=$servings", "", $query_string);
 					$query_string = str_replace("&&", "", $query_string);
+					$query_string = str_replace("&", "&amp;", $query_string);
+					$query_string_len = strlen($query_string);
+					if($query_string_len == "0" OR $query_string_len == "1"){
+						$query_string = "";
+					}
 					echo"
 					 <tr>
 					  <td class=\"ingredients_headcell\" cellspan=\"6\">
 						<table>
 						 <tr>
 						  <td>
-							<a href=\"view_recipe.php?recipe_id=$get_recipe_id&amp;servings=$servings_minus&amp;l=$l&amp;$query_string#ingredients\"><img src=\"_gfx/icons/baseline_keyboard_arrow_down_black_18dp.png\" alt=\"baseline_keyboard_arrow_down_black_18dp.png\" /></a>
+							<a href=\"view_recipe.php?recipe_id=$get_recipe_id&amp;servings=$servings_minus&amp;l=$l$query_string#ingredients\"><img src=\"_gfx/icons/baseline_keyboard_arrow_down_black_18dp.png\" alt=\"baseline_keyboard_arrow_down_black_18dp.png\" /></a>
 	 					  </td>
 						  <td style=\"text-align:center;padding: 0px 6px 0px 6px;\">
 							<p style=\"margin: 0px 0px 0px 0px;padding:0;\">$servings $l_servings_lowercase</p>
 						  </td>
 						  <td>
-							<a href=\"view_recipe.php?recipe_id=$get_recipe_id&amp;servings=$servings_plus&amp;l=$l&amp;$query_string#ingredients\"><img src=\"_gfx/icons/baseline_keyboard_arrow_up_black_18dp.png\" alt=\"baseline_keyboard_arrow_up_black_18dp.png\" /></a>
+							<a href=\"view_recipe.php?recipe_id=$get_recipe_id&amp;servings=$servings_plus&amp;l=$l$query_string#ingredients\"><img src=\"_gfx/icons/baseline_keyboard_arrow_up_black_18dp.png\" alt=\"baseline_keyboard_arrow_up_black_18dp.png\" /></a>
 						  </td>
 						 </tr>
 						</table>
@@ -1341,7 +1340,7 @@ else{
 							<p style=\"padding: 10px 0px 10px 0px;margin:0;\">
 							<a href=\"$root/users/view_profile.php?user_id=$get_comment_user_id&amp;l=$l\">";
 							if($get_comment_user_image_file == "" OR !(file_exists("$root/$get_comment_user_image_path/$get_comment_user_image_file"))){ 
-								echo"<img src=\"$root/comments/_gfx/avatar_blank_65.png\" alt=\"avatar_blank_65.png\" class=\"comment_avatar\" />";
+								echo"<img src=\"_gfx/avatar_blank_64.png\" alt=\"avatar_blank_64.png\" class=\"comment_avatar\" />";
 							} 
 							else{ 
 								$inp_new_x = 65; // 950

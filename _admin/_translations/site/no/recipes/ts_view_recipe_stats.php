@@ -1,4 +1,5 @@
 <?php
+$l_favorited = "Favoritt";
 $l_recipes = "Oppskrifter";
 $l_stats = "Statistikker";
 $l_stats_headline = "statistikker";

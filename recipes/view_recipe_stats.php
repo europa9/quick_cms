@@ -109,6 +109,7 @@ else{
 
 
 	<!-- Visits -->
+		<a id=\"visits\"></a>
 		<h2 style=\"padding-bottom:0;margin-bottom:0;\">$l_unique_visits_per_month</h2>
 
 		<script>
@@ -158,6 +159,58 @@ else{
 		</script>
 		<div id=\"chartdiv_visits_per_month\" style=\"height: 400px;\"></div>
 	<!-- //Visits per month -->
+
+	<!-- Favorited -->
+		<a id=\"favorited\"></a>
+		<h2 style=\"padding-bottom:0;margin-bottom:0;\">$l_favorited</h2>
+
+		<script>
+		am4core.ready(function() {
+			var chart = am4core.create(\"chartdiv_favorited_per_month\", am4charts.XYChart);
+			chart.data = [";
+
+			$x = 0;
+			$query = "SELECT stats_favorited_per_month_id, stats_favorited_per_month_month, stats_favorited_per_month_month_full, stats_favorited_per_month_month_short, stats_favorited_per_month_year, stats_favorited_per_month_recipe_id, stats_favorited_per_month_recipe_title, stats_favorited_per_month_recipe_image_path, stats_favorited_per_month_recipe_thumb_278x156, stats_favorited_per_month_recipe_language, stats_favorited_per_month_recipe_category_id, stats_favorited_per_month_recipe_category_translated, stats_favorited_per_month_count FROM $t_recipes_stats_favorited_per_month WHERE stats_favorited_per_month_recipe_id=$get_recipe_id ORDER BY stats_favorited_per_month_id ASC LIMIT 0,24";
+			$result = mysqli_query($link, $query);
+			while($row = mysqli_fetch_row($result)) {
+				list($get_stats_favorited_per_month_id, $get_stats_favorited_per_month_month, $get_stats_favorited_per_month_month_full, $get_stats_favorited_per_month_month_short, $get_stats_favorited_per_month_year, $get_stats_favorited_per_month_recipe_id, $get_stats_favorited_per_month_recipe_title, $get_stats_favorited_per_month_recipe_image_path, $get_stats_favorited_per_month_recipe_thumb_278x156, $get_stats_favorited_per_month_recipe_language, $get_stats_favorited_per_month_recipe_category_id, $get_stats_favorited_per_month_recipe_category_translated, $get_stats_favorited_per_month_count) = $row;
+						
+				if($x > 0){
+					echo",";
+				}
+				echo"
+				{
+					\"x\": \"$get_stats_favorited_per_month_month_short $get_stats_favorited_per_month_year\",
+					\"value\": $get_stats_favorited_per_month_count
+				}";
+				$x++;
+			} // while
+
+			echo"
+			];
+			// Create axes
+			var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+			categoryAxis.dataFields.category = \"x\";
+			var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+							
+			// Create series
+			var series1 = chart.series.push(new am4charts.ColumnSeries);
+			series1.dataFields.valueY = \"value\";
+			series1.dataFields.categoryX = \"x\";
+			series1.name = \"Unique visits\";
+			series1.tooltipText = \"Unique visits: {valueY}\";
+			series1.fill = am4core.color(\"#99e4dc\");
+			series1.stroke = am4core.color(\"#66d5c9\");
+			series1.strokeWidth = 1;
+
+			// Tooltips
+			chart.cursor = new am4charts.XYCursor();
+			chart.cursor.snapToSeries = series;
+			chart.cursor.xAxis = valueAxis;
+		}); // end am4core.ready()
+		</script>
+		<div id=\"chartdiv_favorited_per_month\" style=\"height: 400px;\"></div>
+	<!-- //Favorited -->
 
 
 

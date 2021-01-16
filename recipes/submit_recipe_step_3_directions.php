@@ -101,7 +101,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			if(empty($inp_recipe_directions)){
 				$ft = "error";
 				$fm = "directions_cant_be_empty";
-				$url = "submit_recipe_step_2_directions.php?recipe_id=$get_recipe_id&l=$l&ft=$ft&fm=$fm";
+				$url = "submit_recipe_step_3_directions.php?recipe_id=$get_recipe_id&l=$l&ft=$ft&fm=$fm";
 				header("Location: $url");
 				exit;
 			}

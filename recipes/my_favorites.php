@@ -117,10 +117,10 @@ if($action == ""){
 
 
 		// Get rating
-		$query_rating = "SELECT rating_id, rating_average, rating_popularity FROM $t_recipes_rating WHERE rating_recipe_id='$get_recipe_id'";
+		$query_rating = "SELECT rating_id, rating_average, rating_votes_plus_average FROM $t_recipes_rating WHERE rating_recipe_id='$get_recipe_id'";
 		$result_rating = mysqli_query($link, $query_rating);
 		$row_rating = mysqli_fetch_row($result_rating);
-		list($get_rating_id, $get_rating_average, $get_rating_popularity) = $row_rating;
+		list($get_rating_id, $get_rating_average, $get_rating_votes_plus_average) = $row_rating;
 
 	
 		/*

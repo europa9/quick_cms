@@ -388,8 +388,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 					// Delete old thumb
-					if(file_exists("$root/$get_recipe_image_path/$get_recipe_thumb") && $get_recipe_thumb != ""){
-						unlink("$root/$get_recipe_image_path/$get_recipe_thumb");
+					if(file_exists("$root/$get_recipe_image_path/$get_recipe_thumb_278x156") && $get_recipe_thumb_278x156 != ""){
+						unlink("$root/$get_recipe_image_path/$get_recipe_thumb_278x156");
 					}
 
 	
@@ -400,7 +400,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					// Update
 					$inp_recipe_thumb = $get_recipe_id . "-thumb" . ".jpg";
 					$inp_recipe_thumb_mysql = quote_smart($link, $inp_recipe_thumb);
-					mysqli_query($link, "UPDATE $t_recipes SET recipe_thumb=$inp_recipe_thumb_mysql, recipe_user_ip=$inp_ip_mysql WHERE recipe_id=$get_recipe_id") or die(mysqli_error($link));
+					mysqli_query($link, "UPDATE $t_recipes SET recipe_thumb_278x156=$inp_recipe_thumb_mysql, recipe_user_ip=$inp_ip_mysql WHERE recipe_id=$get_recipe_id") or die(mysqli_error($link));
 
 
 					// Delete cache

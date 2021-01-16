@@ -59,7 +59,72 @@ else{
 if($action == ""){
 
 	echo"
-	<h1>$l_my_recipes</h1>
+	<!-- Headline, buttons, search -->
+	<div class=\"recipes_headline\">
+		<h1>$l_my_recipes</h1>
+
+		<!-- You are here -->
+		<p><b>$l_you_are_here:</b><br />
+		<a href=\"index.php?l=$l\">$l_recipes</a>
+		&gt;
+		<a href=\"my_recipes.php?l=$l\">$l_my_recipes</a>
+		</p>
+		<!-- //You are here -->
+	</div>
+	<div class=\"recipes_menu\">
+		<!-- Recipes menu -->
+			<form method=\"get\" enctype=\"multipart/form-data\">
+			<script>
+			\$(document).ready(function() {
+				\$('#toggle_recipes_search').click(function() {
+					\$(\".recipes_search\").fadeIn();
+					\$(\"#inp_recipe_query\").focus();
+				})
+			});
+			</script>
+			<script>
+			\$(function(){
+			// bind change event to select
+			\$('#inp_l').on('change', function () {
+				var url = \$(this).val(); // get selected value
+				if (url) { // require a URL
+ 					window.location = url; // redirect
+				}
+				return false;
+			});
+			});
+			</script>
+
+
+			<p>
+			<a href=\"$root/food/index.php?l=$l\" class=\"btn_default\">$l_food</a>
+			<a href=\"$root/recipes/my_favorites.php?l=$l\" class=\"btn_default\">$l_my_favorites</a>
+			<a href=\"$root/recipes/submit_recipe.php?l=$l\" class=\"btn_default\">$l_submit_recipe</a>
+	
+			<select id=\"inp_l\">
+				<option value=\"my_recipes.php?l=$l\">$l_language</option>
+				<option value=\"my_recipes.php?l=$l\">-</option>\n";
+
+
+				$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+				$result = mysqli_query($link, $query);
+				while($row = mysqli_fetch_row($result)) {
+					list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
+
+					$flag_path 	= "_design/gfx/flags/16x16/$get_language_active_flag" . "_16x16.png";
+				
+					echo"	<option value=\"my_recipes.php?l=$get_language_active_iso_two\"";if($get_language_active_iso_two == "$l"){ echo" selected=\"selected\"";}echo">$get_language_active_name</option>\n";
+				}
+			echo"
+			</select>
+			</p>
+			</form>
+		<!-- //Recipes menu -->
+
+
+	</div>
+	<div class=\"clear\"></div>
+<!-- //Headline, buttons, search -->
 
 	<!-- Feedback -->
 	";
@@ -78,64 +143,27 @@ if($action == ""){
 	echo"	
 	<!-- //Feedback -->
 
-	<!-- List all recipes -->
-		<table class=\"hor-zebra\">
-		 <thead>
-		  <tr>
-		   <th scope=\"col\">
-			<span>$l_recipe</span>
-		   </th>
-		   <th scope=\"col\">
-			<span>$l_date</span>
-		   </th>
-		   <th scope=\"col\">
-			<span title=\"$l_unique_hits\">$l_unique</span>
-		   </th>
-		   <th scope=\"col\">
-			<span>$l_rating</span>
-		   </th>
-		   <th scope=\"col\">
-			<span>$l_actions</span>
-		   </th>
-		  </tr>
-		</thead>
-		<tbody>
 
+
+
+	<!-- List all recipes -->
 
 	";
 
 	// Select recipes
 	$x = 0;
-	$user_id = $_SESSION['user_id'];
-	$recipe_user_id_mysql = quote_smart($link, $user_id);
-	$query = "SELECT recipe_id, recipe_title, recipe_language, recipe_introduction, recipe_image_path, recipe_image, recipe_date, recipe_unique_hits FROM $t_recipes WHERE recipe_user_id=$recipe_user_id_mysql ORDER BY recipe_id DESC";
+	$my_user_id = $_SESSION['user_id'];
+	$my_user_id = output_html($my_user_id);
+	$my_user_id_mysql = quote_smart($link, $my_user_id);
+	
+	$l = output_html($l);
+	$l_mysql = quote_smart($link, $l);
+
+	$query = "SELECT recipe_id, recipe_title, recipe_language, recipe_introduction, recipe_image_path, recipe_image, recipe_thumb_278x156, recipe_date, recipe_date_saying, recipe_unique_hits, recipe_comments, recipe_times_favorited FROM $t_recipes WHERE recipe_language=$l_mysql AND recipe_user_id=$my_user_id_mysql ORDER BY recipe_id DESC";
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
-		list($get_recipe_id, $get_recipe_title, $get_recipe_language, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image, $get_recipe_date, $get_recipe_unique_hits) = $row;
+		list($get_recipe_id, $get_recipe_title, $get_recipe_language, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156, $get_recipe_date, $get_recipe_date_saying, $get_recipe_unique_hits, $get_recipe_comments, $get_recipe_times_favorited) = $row;
 
-		// Get rating
-		$query_rating = "SELECT rating_id, rating_average, rating_popularity FROM $t_recipes_rating WHERE rating_recipe_id='$get_recipe_id'";
-		$result_rating = mysqli_query($link, $query_rating);
-		$row_rating = mysqli_fetch_row($result_rating);
-		list($get_rating_id, $get_rating_average, $get_rating_popularity) = $row_rating;
-
-	
-		/*
-		$inp_new_x = 110;
-		$inp_new_y = 78;
-		$thumb = $get_recipe_id . "-" . $inp_new_x . "x" . $inp_new_y . "png";
-		if(!(file_exists("$root/_cache/$thumb"))){
-			create_thumb("$root/$get_recipe_image_path/$get_recipe_image", "$root/_cache/$thumb", $inp_new_x, $inp_new_y);
-		}
-		*/
-
-		// Style
-		if(isset($style) && $style == ""){
-			$style = "odd";
-		}
-		else{
-			$style = "";
-		}
 
 		// Title
 		$check = strlen($get_recipe_title);
@@ -151,109 +179,70 @@ if($action == ""){
 			$get_recipe_introduction = $get_recipe_introduction . "...";
 		}
 
-		// Date
-		$recipe_year = substr($get_recipe_date, 0, 4);
-		$recipe_month = substr($get_recipe_date, 5, 2);
-		$recipe_day = substr($get_recipe_date, 8, 2);
-
-		if($recipe_day < 10){
-			$recipe_day = substr($recipe_day, 1, 1);
-		}
-	
-		if($recipe_month == "01"){
-			$recipe_month_saying = $l_january;
-		}
-		elseif($recipe_month == "02"){
-			$recipe_month_saying = $l_february;
-		}
-		elseif($recipe_month == "03"){
-			$recipe_month_saying = $l_march;
-		}
-		elseif($recipe_month == "04"){
-			$recipe_month_saying = $l_april;
-		}
-		elseif($recipe_month == "05"){
-			$recipe_month_saying = $l_may;
-		}
-		elseif($recipe_month == "06"){
-			$recipe_month_saying = $l_june;
-		}
-		elseif($recipe_month == "07"){
-			$recipe_month_saying = $l_july;
-		}
-		elseif($recipe_month == "08"){
-			$recipe_month_saying = $l_august;
-		}
-		elseif($recipe_month == "09"){
-			$recipe_month_saying = $l_september;
-		}
-		elseif($recipe_month == "10"){
-			$recipe_month_saying = $l_october;
-		}
-		elseif($recipe_month == "11"){
-			$recipe_month_saying = $l_november;
-		}
-		else{
-			$recipe_month_saying = $l_december;
-		}
 
 
 		// Rating
-		$query_rating = "SELECT rating_id, rating_recipe_id, rating_1, rating_2, rating_3, rating_4, rating_5, rating_total_votes, rating_average, rating_popularity, rating_ip_block FROM $t_recipes_rating WHERE rating_recipe_id='$get_recipe_id'";
+		$query_rating = "SELECT rating_id, rating_recipe_id, rating_1, rating_2, rating_3, rating_4, rating_5, rating_total_votes, rating_average, rating_votes_plus_average, rating_ip_block FROM $t_recipes_rating WHERE rating_recipe_id='$get_recipe_id'";
 		$result_rating = mysqli_query($link, $query_rating);
 		$row_rating = mysqli_fetch_row($result_rating);
-		list($get_rating_id, $get_rating_recipe_id, $get_rating_1, $get_rating_2, $get_rating_3, $get_rating_4, $get_rating_5, $get_rating_total_votes, $get_rating_average, $get_rating_popularity, $get_rating_ip_block) = $row_rating;
+		list($get_rating_id, $get_rating_recipe_id, $get_rating_1, $get_rating_2, $get_rating_3, $get_rating_4, $get_rating_5, $get_rating_total_votes, $get_rating_average, $get_rating_votes_plus_average, $get_rating_ip_block) = $row_rating;
 		if($get_rating_average == ""){
 			$get_rating_average = 0;
 		}
 
 
 		echo"
-		<tr>
-		  <td class=\"$style\">
-			 <table>
-			  <tr>
-			   <td style=\"padding-right: 10px;\">
+		<div class=\"recipes_item\">
+			<table>
+			 <tr>
+			  <td";
+			if(file_exists("$root/$get_recipe_image_path/$get_recipe_thumb_278x156")){
+				echo" style=\"vertical-align: top;padding-right: 10px;\">
+				<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$get_recipe_language\"><img src=\"$root/$get_recipe_image_path/$get_recipe_thumb_278x156\" alt=\"$get_recipe_image\" class=\"recipes_img\" /></a>
 				";
-				if($get_recipe_image != ""){
-					echo"<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$get_recipe_language\"><img src=\"$root/image.php?width=100&amp;height=71&amp;image=/$get_recipe_image_path/$get_recipe_image\" alt=\"$get_recipe_image\" /></a>";
-				}
-				echo"
-			   </td>
-			   <td>
-				<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$get_recipe_language\" class=\"recipe_open_category_a\">$get_recipe_title</a><br />
-				$get_recipe_introduction
-				</p>
-			   </td>
-			  </tr>
-			 </table>
+			}
+			else{
+				echo">";
+			}
+			echo"
+			  </td>
+			  <td style=\"vertical-align: top;\">
 			
-		  </td>
-		  <td class=\"$style\">
-			<span>$recipe_day $recipe_month_saying $recipe_year</span>
-		  </td>
-		  <td class=\"$style\" style=\"text-align: center;\">
-			<span>$get_recipe_unique_hits</span>
-		  </td>
-		  <td class=\"$style\" style=\"text-align: center;\">
-			<span>$get_rating_average</span>
-		  </td>
-		  <td class=\"$style\">
-			<span>
-			<a href=\"edit_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\">$l_edit</a>
-			&middot;
-			<a href=\"delete_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\">$l_delete</a>
-			</span>
-		 </td>
-		</tr>
+				<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$get_recipe_language\" class=\"h2\">$get_recipe_title</a>
+
+				<ul class=\"recipe_stats\">
+					<li>
+					<a href=\"view_recipe_stats.php?recipe_id=$get_recipe_id&amp;l=$l#visits\"><img src=\"_gfx/icons/eye_dark_grey.png\" alt=\"eye_dark_grey.png\" />
+					$get_recipe_unique_hits</a>
+					</li>
+
+					<li>
+					<a href=\"view_recipe_stats.php?recipe_id=$get_recipe_id&amp;l=$l#favorited\"><img src=\"_gfx/icons/outline_favorite_border_black_18dp.png\" alt=\"outline_favorite_black_18dp.png\" />
+					$get_recipe_times_favorited</a>
+					</li>
+
+					<li>
+					<a href=\"view_recipe_stats.php?recipe_id=$get_recipe_id&amp;l=$l#comments\"><img src=\"_gfx/icons/outline_comment_black_18dp.png\" alt=\"outline_favorite_black_18dp.png\" />
+					$get_recipe_comments</a>
+					</li>
+				</ul>
+
+				<p>
+				<a href=\"edit_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\" class=\"btn_default\">$l_edit</a>
+				<a href=\"delete_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\" class=\"btn_default\">$l_delete</a>
+				</p>
+
+			
+			  </td>
+			 </tr>
+			</table>
+		</div>
 		";
 
 
 	}
 
 		echo"
-		 </tbody>
-		</table>
 	";
 
 }

@@ -37,7 +37,8 @@ echo"<!DOCTYPE html>
 		";
 		if(isset($pageCSSFile)){
 			if(file_exists("$pageCSSFile")){
-				echo"<link rel=\"stylesheet\" type=\"text/css\" href=\"$pageCSSFile\" />";
+				$datetime = date("Y-m-d H:i:s");
+				echo"<link rel=\"stylesheet\" type=\"text/css\" href=\"$pageCSSFile?rand=$datetime\" />";
 			}
 			else{
 				echo"<!-- <link rel=\"stylesheet\" type=\"text/css\" href=\"$pageCSSFile\" /> -->";
@@ -143,13 +144,6 @@ echo"<!DOCTYPE html>
 							<div id=\"header_search_results\"></div>
 						</div>
 
-						<!-- Focus -->
-							<script>
-							$(document).ready(function(){
-								$('[name=\"q\"]').focus();
-							});
-							</script>
-						<!-- //Focus -->
 
 						<!-- Search engines Autocomplete -->
 						<script id=\"source\" language=\"javascript\" type=\"text/javascript\">

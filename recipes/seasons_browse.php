@@ -152,7 +152,7 @@ if($action == ""){
 
 	// Select recipes
 	$x = 0;
-	$query = "SELECT $t_recipes.recipe_id, $t_recipes.recipe_title, $t_recipes.recipe_introduction, $t_recipes.recipe_image_path, $t_recipes.recipe_image, $t_recipes.recipe_thumb_278x156, $t_recipes.recipe_unique_hits FROM $t_recipes JOIN $t_recipes_numbers ON $t_recipes.recipe_id=$t_recipes_numbers.number_recipe_id WHERE $t_recipes.recipe_season_id='$get_season_id' AND $t_recipes.recipe_language=$l_mysql";
+	$query = "SELECT $t_recipes.recipe_id, $t_recipes.recipe_title, $t_recipes.recipe_introduction, $t_recipes.recipe_image_path, $t_recipes.recipe_image, $t_recipes.recipe_thumb_278x156, $t_recipes.recipe_unique_hits FROM $t_recipes JOIN $t_recipes_numbers ON $t_recipes.recipe_id=$t_recipes_numbers.number_recipe_id WHERE $t_recipes.recipe_season_id='$get_season_id' AND $t_recipes.recipe_language=$l_mysql AND $t_recipes.recipe_published=1";
 	// Order
 	if($order_method == "desc"){
 		$order_method_mysql = "DESC";
@@ -343,7 +343,7 @@ echo"
 // Select recipes
 
 $x = 0;
-$query = "SELECT recipe_id, recipe_title, recipe_introduction, recipe_image_path, recipe_image FROM $t_recipes WHERE recipe_category_id='$get_category_id' AND recipe_language=$l_mysql ORDER BY recipe_last_viewed ASC";
+$query = "SELECT recipe_id, recipe_title, recipe_introduction, recipe_image_path, recipe_image FROM $t_recipes WHERE recipe_category_id='$get_category_id' AND recipe_language=$l_mysql AND recipe_published=1 ORDER BY recipe_last_viewed ASC";
 $result = mysqli_query($link, $query);
 while($row = mysqli_fetch_row($result)) {
 	list($get_recipe_id, $get_recipe_title, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image) = $row;

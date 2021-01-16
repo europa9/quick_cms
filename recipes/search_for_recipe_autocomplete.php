@@ -78,10 +78,10 @@ if(isset($_GET['q']) && $_GET['q'] != ''){
 		
 
 			// Get rating
-			$query_rating = "SELECT rating_id, rating_average, rating_popularity FROM $t_recipes_rating WHERE rating_recipe_id='$get_recipe_id'";
+			$query_rating = "SELECT rating_id, rating_average FROM $t_recipes_rating WHERE rating_recipe_id='$get_recipe_id'";
 			$result_rating = mysqli_query($link, $query_rating);
 			$row_rating = mysqli_fetch_row($result_rating);
-			list($get_rating_id, $get_rating_average, $get_rating_popularity) = $row_rating;
+			list($get_rating_id, $get_rating_average) = $row_rating;
 
 			
 			// 3 divs
@@ -139,12 +139,6 @@ if(isset($_GET['q']) && $_GET['q'] != ''){
 						<span class=\"recipe_open_category_unique_hits_span\">
 						$get_recipe_unique_hits 
 						</span>
-					</div>
-					<div class=\"recipe_open_category_popularity\">
-						<span class=\"recipe_open_category_popularity_span\">
-						$get_rating_popularity %
-						</span>
-						<img src=\"_gfx/icons/ic_thumb_up_grey_18px.png\" alt=\"ic_thumb_up_grey_18px.png\" style=\"padding-left: 5px;\" /> 
 					</div>
 
 

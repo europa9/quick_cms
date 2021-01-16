@@ -165,6 +165,19 @@ else{
 
 	echo"
 	<h1>$get_recipe_title</h1>
+	
+	<!-- You are here -->
+			<p>
+			<b>$l_you_are_here:</b><br />
+			<a href=\"index.php?l=$l\">$l_recipes</a>
+			&gt;
+			<a href=\"my_recipes.php?l=$l#recipe_id=$recipe_id\">$l_my_recipes</a>
+			&gt;
+			<a href=\"view_recipe.php?recipe_id=$recipe_id&amp;l=$l\">$get_recipe_title</a>
+			&gt;
+			<a href=\"edit_recipe.php?recipe_id=$recipe_id&amp;l=$l\">$l_general</a>
+			</p>
+	<!-- //You are here -->
 
 
 	<!-- Menu -->
@@ -180,17 +193,6 @@ else{
 			</ul>
 		</div><p>&nbsp;</p>
 	<!-- //Menu -->
-	
-	<!-- You are here -->
-			<p>
-			<b>$l_you_are_here:</b><br />
-			<a href=\"my_recipes.php?l=$l#recipe_id=$recipe_id\">$l_my_recipes</a>
-			&gt;
-			<a href=\"view_recipe.php?recipe_id=$recipe_id&amp;l=$l\">$get_recipe_title</a>
-			&gt;
-			<a href=\"edit_recipe.php?recipe_id=$recipe_id&amp;l=$l\">$l_general</a>
-			</p>
-	<!-- //You are here -->
 
 	<!-- Feedback -->
 	";

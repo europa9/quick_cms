@@ -132,18 +132,24 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$inp_recipe_user_id = output_html($inp_recipe_user_id);
 		$inp_recipe_user_id_mysql = quote_smart($link, $inp_recipe_user_id);
 
-		$inp_recipe_date = date("Y-m-d");
-		$inp_recipe_time = date("H:i:s");
+		// Dates
+		$date = date("Y-m-d");
+		$date_saying = date("j M Y");
+		$time = date("H:i:s");
+		$year = date("Y");
+		$month = date("m");
+		$month_full = date("F");
+		$month_short = date("M");
 
 		$inp_recipe_user_ip = $_SERVER['REMOTE_ADDR'];
 		$inp_recipe_user_ip = output_html($inp_recipe_user_ip);
 		$inp_recipe_user_ip_mysql = quote_smart($link, $inp_recipe_user_ip);
 
-		$inp_recipe_password = $inp_recipe_date . $inp_recipe_time . $inp_recipe_user_ip;
+		$inp_recipe_password = $date . $time . $inp_recipe_user_ip;
 		$inp_recipe_password = sha1($inp_recipe_password);
 		$inp_recipe_password_mysql = quote_smart($link, $inp_recipe_password);
 		
-		$inp_recipe_last_viewed = $inp_recipe_date . " " . $inp_recipe_time;
+		$inp_recipe_last_viewed = $date . " " . $time;
 
 		
 		if(isset($_POST['inp_recipe_language'])){
@@ -165,19 +171,28 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		}
 		$inp_age_restriction_mysql = quote_smart($link, $inp_age_restriction);
 
+		if(isset($_POST['inp_published'])){
+			$inp_published = $_POST['inp_published'];
+			$inp_published = output_html($inp_published);
+		}
+		else{
+			$inp_published = "0";
+		}
+		$inp_published_mysql = quote_smart($link, $inp_published);
+
 
 		if($mode == "process"){
 			// Create shell
 			
 			// recipes
 			mysqli_query($link, "INSERT INTO $t_recipes
-			(recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_country, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb_278x156, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_comments, recipe_user_ip, recipe_notes, recipe_password, recipe_last_viewed, recipe_age_restriction) 
+			(recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_country, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb_278x156, recipe_video, recipe_date, recipe_date_saying, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_comments, recipe_times_favorited, recipe_user_ip, recipe_notes, recipe_password, recipe_last_viewed, recipe_age_restriction, recipe_published) 
 			VALUES 
-			(NULL, $inp_recipe_user_id_mysql, $inp_recipe_title_mysql, $inp_recipe_category_id_mysql, $inp_recipe_language_mysql, $inp_recipe_country_mysql, $inp_recipe_introduction_mysql, '', '', '', '', '',  '$inp_recipe_date', '$inp_recipe_time', $inp_recipe_cusine_id_mysql, $inp_recipe_season_id_mysql, $inp_recipe_occasion_id_mysql, '', '0', '', 0, $inp_recipe_user_ip_mysql, 'E-mail not sent to administrators', $inp_recipe_password_mysql, '$inp_recipe_last_viewed', $inp_age_restriction_mysql)")
+			(NULL, $inp_recipe_user_id_mysql, $inp_recipe_title_mysql, $inp_recipe_category_id_mysql, $inp_recipe_language_mysql, $inp_recipe_country_mysql, $inp_recipe_introduction_mysql, '', '', '', '', '',  '$date', '$date_saying', '$time', $inp_recipe_cusine_id_mysql, $inp_recipe_season_id_mysql, $inp_recipe_occasion_id_mysql, '', '0', '', 0, 0, $inp_recipe_user_ip_mysql, 'E-mail not sent to administrators', $inp_recipe_password_mysql, '$inp_recipe_last_viewed', $inp_age_restriction_mysql, $inp_published_mysql)")
 			or die(mysqli_error($link));
 
 			// Get recipe ID
-			$query = "SELECT recipe_id FROM $t_recipes WHERE recipe_user_id=$inp_recipe_user_id_mysql AND recipe_date='$inp_recipe_date' AND recipe_time='$inp_recipe_time'";
+			$query = "SELECT recipe_id FROM $t_recipes WHERE recipe_user_id=$inp_recipe_user_id_mysql AND recipe_date='$date' AND recipe_time='$time'";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
 			list($get_recipe_id) = $row;
@@ -251,41 +266,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			list($get_photo_id, $get_photo_user_id, $get_photo_destination, $get_photo_thumb_50, $get_photo_thumb_60, $get_photo_thumb_200) = $rowb;
 	
 
-			// Chef of the month
-			$year = date("Y");
-			$month = date("m");
-			$month_full = date("F");
-			$month_short = date("M");
-
-			$query = "SELECT stats_chef_of_the_month_id, stats_chef_of_the_month_recipes_posted_count, stats_chef_of_the_month_recipes_posted_points, stats_chef_of_the_month_got_visits_count, stats_chef_of_the_month_got_visits_points, stats_chef_of_the_month_got_favorites_count, stats_chef_of_the_month_got_favorites_points, stats_chef_of_the_month_got_comments_count, stats_chef_of_the_month_got_comments_points, stats_chef_of_the_month_total_points FROM $t_recipes_stats_chef_of_the_month WHERE stats_chef_of_the_month_month=$month AND stats_chef_of_the_month_year=$year AND stats_chef_of_the_month_user_id=$inp_recipe_user_id_mysql";
-			$result = mysqli_query($link, $query);
-			$row = mysqli_fetch_row($result);
-			list($get_stats_chef_of_the_month_id, $get_stats_chef_of_the_month_recipes_posted_count, $get_stats_chef_of_the_month_recipes_posted_points, $get_stats_chef_of_the_month_got_visits_count, $get_stats_chef_of_the_month_got_visits_points, $get_stats_chef_of_the_month_got_favorites_count, $get_stats_chef_of_the_month_got_favorites_points, $get_stats_chef_of_the_month_got_comments_count, $get_stats_chef_of_the_month_got_comments_points, $get_stats_chef_of_the_month_total_points) = $row;
-			if($get_stats_chef_of_the_month_id == ""){
-				// Insert chef of the month
-				$inp_user_name_mysql = quote_smart($link, $get_user_name);
-				$inp_user_photo_path_mysql = quote_smart($link, "_uploads/users/images/$inp_recipe_user_id");
-				$inp_user_photo_thumb_mysql = quote_smart($link, $get_photo_thumb_200);
-
-				mysqli_query($link, "INSERT INTO $t_recipes_stats_chef_of_the_month 
-				(stats_chef_of_the_month_id, stats_chef_of_the_month_month, stats_chef_of_the_month_month_full, stats_chef_of_the_month_month_short, stats_chef_of_the_month_year, 
-				stats_chef_of_the_month_user_id, stats_chef_of_the_month_user_name, stats_chef_of_the_month_user_photo_path, stats_chef_of_the_month_user_photo_thumb, stats_chef_of_the_month_recipes_posted_count, 
-				stats_chef_of_the_month_recipes_posted_points, stats_chef_of_the_month_got_visits_count, stats_chef_of_the_month_got_visits_points, stats_chef_of_the_month_got_favorites_count, stats_chef_of_the_month_got_favorites_points, 
-				stats_chef_of_the_month_got_comments_count, stats_chef_of_the_month_got_comments_points, stats_chef_of_the_month_total_points) 
-				VALUES 
-				(NULL, $month, '$month_full', '$month_short', $year,
-				$inp_recipe_user_id_mysql, $inp_user_name_mysql, $inp_user_photo_path_mysql, $inp_user_photo_thumb_mysql, 1,
-				7, 0, 0, 0, 0, 
-				0, 0, 0)")
-				or die(mysqli_error($link));
-			}
-			else{
-				// Update visit
-				$inp_count = $get_stats_chef_of_the_month_recipes_posted_count+1;
-				$inp_points = $inp_count*7;
-				$inp_total_points = $inp_points+$get_stats_chef_of_the_month_got_visits_points+$get_stats_chef_of_the_month_got_favorites_points+$get_stats_chef_of_the_month_got_comments_points;
-				mysqli_query($link, "UPDATE $t_recipes_stats_chef_of_the_month SET stats_chef_of_the_month_recipes_posted_count=$inp_count, stats_chef_of_the_month_recipes_posted_points=$inp_points, stats_chef_of_the_month_total_points=$inp_total_points WHERE stats_chef_of_the_month_id=$get_stats_chef_of_the_month_id") or die(mysqli_error($link)); 
-			}
 
 
 			echo"
@@ -365,6 +345,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		}
 		else{
 			$inp_age_restriction = "0";
+		}
+		if(isset($_POST['inp_published'])){
+			$inp_published = $_POST['inp_published'];
+			$inp_published = output_html($inp_published);
+		}
+		else{
+			$inp_published = "0";
 		}
 	
 
@@ -580,6 +567,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			</select>
 			<br />
 			<em>$l_example_alcohol</em></p>
+
+			<p><b>$l_published:</b><br />
+			<select name=\"inp_published\">
+				<option value=\"0\""; if($inp_published == "0" OR $inp_published == ""){ echo" selected=\"selected\""; } echo">$l_draft</option>
+				<option value=\"1\""; if($inp_published == "1"){ echo" selected=\"selected\""; } echo">$l_published</option>
+			</select></p>
 
 			<p>
 			<input type=\"submit\" value=\"$l_continue\" class=\"btn\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />

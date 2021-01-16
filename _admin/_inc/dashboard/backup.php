@@ -54,6 +54,13 @@ if(isset($_GET['debug'])) {
 else{
 	$debug = "";
 }
+if(isset($_GET['backup_type'])) {
+	$backup_type = $_GET['backup_type'];
+	$backup_type = strip_tags(stripslashes($backup_type));
+}
+else{
+	$backup_type = "";
+}
 
 
 /*- Functions -------------------------------------------------------------------------- */
@@ -113,7 +120,9 @@ if($action == ""){
 	<!-- Backups -->
 
 		<p>
-		<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup&amp;l=$l&amp;editor_language=$editor_language\" class=\"btn\">New backup</a>
+		<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup&amp;backup_type=db_and_website&amp;l=$l&amp;editor_language=$editor_language\" class=\"btn\">New backup of db + website</a>
+		<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup&amp;backup_type=db&amp;l=$l&amp;editor_language=$editor_language\" class=\"btn\">New backup of db</a>
+		<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup&amp;backup_type=website&amp;l=$l&amp;editor_language=$editor_language\" class=\"btn\">New backup of website</a>
 		<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup&amp;l=$l&amp;editor_language=$editor_language&amp;debug=1\" class=\"btn\">New backup with debug</a>
 		</p>
 
@@ -203,29 +212,39 @@ if($action == ""){
 
 					echo"
 					 <tr>
-					  <td class=\"$style\">
-						<table>
-						 <tr>
-						  <td style=\"padding-right: 6px;\">
-							<a href=\"_data/backup/$backup_zip_db_file\"><img src=\"_inc/dashboard/_img/icon_db.png\" alt=\"icon_db.png\" /></a>
-						  </td>
-						  <td>
-							<a href=\"_data/backup/$backup_zip_db_file\">$backup_zip_db_file</a>
-						  </td>
-						 </tr>
-						</table>
+					  <td class=\"$style\">";
+						if(file_exists("_data/backup/$backup_zip_db_file")){
+							echo"
+							<table>
+							 <tr>
+							  <td style=\"padding-right: 6px;\">
+								<a href=\"_data/backup/$backup_zip_db_file\"><img src=\"_inc/dashboard/_img/icon_db.png\" alt=\"icon_db.png\" /></a>
+							  </td>
+							  <td>
+								<a href=\"_data/backup/$backup_zip_db_file\">$backup_zip_db_file</a>
+							  </td>
+							 </tr>
+							</table>
+							";
+						}
+						echo"
 					  </td>
-					  <td class=\"$style\">
-						<table>
-						 <tr>
-						  <td style=\"padding-right: 6px;\">
-							<a href=\"_data/backup/$backup_zip_web_file\"><img src=\"_inc/dashboard/_img/icon_website.png\" alt=\"icon_website.png\" /></a>
-						  </td>
-						  <td>
-							<a href=\"_data/backup/$backup_zip_web_file\">$backup_zip_web_file</a>
-						  </td>
-						 </tr>
-						</table>
+					  <td class=\"$style\">";
+						if(file_exists("_data/backup/$backup_zip_web_file")){
+							echo"
+							<table>
+							 <tr>
+							  <td style=\"padding-right: 6px;\">
+								<a href=\"_data/backup/$backup_zip_web_file\"><img src=\"_inc/dashboard/_img/icon_website.png\" alt=\"icon_website.png\" /></a>
+							  </td>
+							  <td>
+								<a href=\"_data/backup/$backup_zip_web_file\">$backup_zip_web_file</a>
+							  </td>
+							 </tr>
+							</table>
+							";
+						}
+						echo"
 					  </td>
 					  <td class=\"$style\">
 						<span><a href=\"index.php?open=$open&amp;page=$page&amp;action=delete_backup&amp;backup_date=$date&amp;backup_secret=$secret\">Delete</a></span>
@@ -272,26 +291,30 @@ elseif($action == "new_backup"){
 	if(!(is_dir("_data/backup/$backup_dir_name"))){
 		mkdir("_data/backup/$backup_dir_name");
 	}
-	if(!(is_dir("_data/backup/$backup_dir_name/mysql"))){
-		mkdir("_data/backup/$backup_dir_name/mysql");
-	}
 
+	if($backup_type == "db_and_website" OR $backup_type == "db"){
 
-	echo"
 	
-	<h2><img src=\"_design/gfx/loading_22.gif\" alt=\"loading_22.gif\" style=\"float: left;padding-right: 6px;\" /> New Backup - Listing tables</h2>
+		if(!(is_dir("_data/backup/$backup_dir_name/mysql"))){
+			mkdir("_data/backup/$backup_dir_name/mysql");
+		}
 
-	<div class=\"clear\"></div>
+	
+		echo"
+	
+		<h2><img src=\"_design/gfx/loading_22.gif\" alt=\"loading_22.gif\" style=\"float: left;padding-right: 6px;\" /> New Backup - Listing tables</h2>
 
-	";
+		<div class=\"clear\"></div>
 
-	$my_prefix_lenght = strlen($mysqlPrefixSav);
+		";
+
+		$my_prefix_lenght = strlen($mysqlPrefixSav);
 
 
 
-	echo"
-	<p>Prefix: $mysqlPrefixSav<br />
-	Lenght: $my_prefix_lenght</p>
+		echo"
+		<p>Prefix: $mysqlPrefixSav<br />
+		Lenght: $my_prefix_lenght</p>
 		<table class=\"hor-zebra\">
 		 <thead>
 		  <tr>
@@ -303,70 +326,70 @@ elseif($action == "new_backup"){
 		   </td>
 		  </tr>
 		 </thead>
-	";
+		";
 
-	$fh = fopen("_data/backup/$backup_dir_name/mysql/_tables.php", "w+") or die("can not open file");
-	fwrite($fh, "<?php");
-	fclose($fh);
+		$fh = fopen("_data/backup/$backup_dir_name/mysql/_tables.php", "w+") or die("can not open file");
+		fwrite($fh, "<?php");
+		fclose($fh);
 
-	$x = 0;
-	$query = "SHOW TABLES";
-	$result = mysqli_query($link, $query);
-	while($row = mysqli_fetch_row($result)) {
-		list($get_table_name) = $row;
+		$x = 0;
+		$query = "SHOW TABLES";
+		$result = mysqli_query($link, $query);
+		while($row = mysqli_fetch_row($result)) {
+			list($get_table_name) = $row;
 
-		// Does the table fit my prefix?
-		$get_table_name_prefix = substr($get_table_name, 0, $my_prefix_lenght);
+			// Does the table fit my prefix?
+			$get_table_name_prefix = substr($get_table_name, 0, $my_prefix_lenght);
 
-		if($get_table_name_prefix == "$mysqlPrefixSav"){
-			// Style
-			if(isset($style) && $style == ""){
-				$style = "odd";
-			}
-			else{
-				$style = "";
-			}
-			echo"
-			 <tr>
-			  <td class=\"$style\">
-				<span>$get_table_name</span>
-			  </td>
-			  <td class=\"$style\">
-				<span>_data/backup/$datetime/mysql/$get_table_name.php</span>
-			  </td>
-			 </tr>
-			";
+			if($get_table_name_prefix == "$mysqlPrefixSav"){
+				// Style
+				if(isset($style) && $style == ""){
+					$style = "odd";
+				}
+				else{
+					$style = "";
+				}
+				echo"
+				 <tr>
+				  <td class=\"$style\">
+					<span>$get_table_name</span>
+				  </td>
+				  <td class=\"$style\">
+					<span>_data/backup/$datetime/mysql/$get_table_name.php</span>
+				  </td>
+				 </tr>
+				";
 			
 			
 
 $input_body ="
 \$table[$x] = \"$get_table_name\";";
 
-			$fh = fopen("_data/backup/$backup_dir_name/mysql/_tables.php", "a+") or die("can not open file");
-			fwrite($fh, $input_body);
-			fclose($fh);
+				$fh = fopen("_data/backup/$backup_dir_name/mysql/_tables.php", "a+") or die("can not open file");
+				fwrite($fh, $input_body);
+				fclose($fh);
 
-			$x++;
+				$x++;
 
-		} // prefix
-	}
-	echo"
+			} // prefix
+		}
+		echo"
 		</table>
-	";
+		";
 
 
-	$fh = fopen("_data/backup/$backup_dir_name/mysql/_tables.php", "a+") or die("can not open file");
-	fwrite($fh, "
+		$fh = fopen("_data/backup/$backup_dir_name/mysql/_tables.php", "a+") or die("can not open file");
+		fwrite($fh, "
 ?>");
-	fclose($fh);
-
-
-
-
-
-	echo"
+		fclose($fh);
 	
-	<meta http-equiv=refresh content=\"1; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_2_mysql_tables_structure&amp;backup_date=$datetime&amp;table_id=0&amp;backup_secret=$backup_secret&amp;debug=$debug\">
+
+
+
+
+		echo"
+	
+		<meta http-equiv=refresh content=\"1; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_2_mysql_tables_structure&amp;backup_date=$datetime&amp;table_id=0&amp;backup_secret=$backup_secret&amp;debug=$debug&amp;backup_type=$backup_type\">
 	
 				<!-- Jquery go to URL after x seconds -->
 					<!-- In case meta refresh doesnt work -->
@@ -374,13 +397,34 @@ $input_body ="
 					\$(document).ready(function(){
 						window.setTimeout(function(){
         						// Move to a new location or you can do something else
-							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_2_mysql_tables_structure&backup_date=$datetime&table_id=0&backup_secret=$backup_secret&debug=$debug\";
+							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_2_mysql_tables_structure&backup_date=$datetime&table_id=0&backup_secret=$backup_secret&debug=$debug&backup_type=$backup_type\";
 						}, 10000);
 					});
    					</script>
 				<!-- //Jquery go to URL after x seconds -->
 
-	";
+		";
+	} // website + db
+	else{
+		// Website only
+		echo"
+		<meta http-equiv=refresh content=\"5; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_5_make_website_list_of_dir_and_files&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;backup_type=$backup_type\">
+				<!-- Jquery go to URL after x seconds -->
+					<!-- In case meta refresh doesnt work -->
+   					<script>
+					\$(document).ready(function(){
+						window.setTimeout(function(){
+        						// Move to a new location or you can do something else
+							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_5_make_website_list_of_dir_and_files&backup_date=$backup_date&backup_secret=$backup_secret&backup_type=$backup_type\";
+						}, 10000);
+					});
+   					</script>
+				<!-- //Jquery go to URL after x seconds -->
+		<p>
+		<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_5_make_website_list_of_dir_and_files&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;backup_type=$backup_type\" class=\"btn\">Continue</a>
+		</p>
+		";
+	}
 }
 elseif($action == "new_backup_step_2_mysql_tables_structure"){
 	$backup_dir_name = $backup_date . "_" . $backup_secret;
@@ -624,7 +668,7 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 				
 			<div class=\"clear\"></div>
 
-			<meta http-equiv=refresh content=\""; if($debug == "1"){ echo"180"; } else{ echo"1"; } echo"; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_3_mysql_table_contents&amp;backup_date=$backup_date&amp;table_id=$table_id&amp;start=0&amp;backup_secret=$backup_secret&amp;debug=$debug\">
+			<meta http-equiv=refresh content=\""; if($debug == "1"){ echo"180"; } else{ echo"1"; } echo"; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_3_mysql_table_contents&amp;backup_date=$backup_date&amp;table_id=$table_id&amp;start=0&amp;backup_secret=$backup_secret&amp;debug=$debug&amp;backup_type=$backup_type\">
 
 				<!-- Jquery go to URL after x seconds -->
 					<!-- In case meta refresh doesnt work -->
@@ -632,7 +676,7 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 					\$(document).ready(function(){
 						window.setTimeout(function(){
         						// Move to a new location or you can do something else
-							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_3_mysql_table_contents&backup_date=$backup_date&table_id=$table_id&start=0&backup_secret=$backup_secret&debug=$debug\";
+							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_3_mysql_table_contents&backup_date=$backup_date&table_id=$table_id&start=0&backup_secret=$backup_secret&debug=$debug&backup_type=$backup_type\";
 						}, 1000000);
 					});
    					</script>
@@ -643,21 +687,21 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 		}
 		else{
 			echo"
-			<meta http-equiv=refresh content=\""; if($debug == "1"){ echo"180"; } else{ echo"1"; } echo"; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_4_mysql_table_zip&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;debug=$debug\">
+			<meta http-equiv=refresh content=\""; if($debug == "1"){ echo"180"; } else{ echo"1"; } echo"; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_4_mysql_table_zip&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;debug=$debug&amp;backup_type=$backup_type\">
 				<!-- Jquery go to URL after x seconds -->
 					<!-- In case meta refresh doesnt work -->
    					<script>
 					\$(document).ready(function(){
 						window.setTimeout(function(){
         						// Move to a new location or you can do something else
-							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_4_mysql_table_zip&backup_date=$backup_date&backup_secret=$backup_secret&debug=$debug\";
+							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_4_mysql_table_zip&backup_date=$backup_date&backup_secret=$backup_secret&debug=$debug&backup_type=$backup_type\";
 						}, 1000000);
 					});
    					</script>
 				<!-- //Jquery go to URL after x seconds -->
 
 			<p>
-			<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_4_mysql_table_zip&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;debug=$debug\" class=\"btn\">Start zip</a>
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_4_mysql_table_zip&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;debug=$debug&amp;backup_type=$backup_type\" class=\"btn\">Start zip</a>
 			</p>
 			
 			";
@@ -669,7 +713,7 @@ elseif($action == "new_backup_step_2_mysql_tables_structure"){
 	echo"
 
 	<p>
-	<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_5_make_website_list_of_dir_and_files&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;debug=$debug\" class=\"btn\">Skip database and go to web</a>
+	<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_5_make_website_list_of_dir_and_files&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;debug=$debug&amp;backup_type=$backup_type\" class=\"btn\">Skip database and go to web</a>
 	</p>
 
 	";
@@ -840,16 +884,16 @@ elseif($action == "new_backup_step_3_mysql_table_contents"){
 				echo"
 
 				<p>
-				<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_2_mysql_tables_structure&amp;backup_date=$backup_date&amp;table_id=$next_table_id&amp;backup_secret=$backup_secret&amp;debug=$debug\" class=\"btn_default\">Next table</a>
+				<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_2_mysql_tables_structure&amp;backup_date=$backup_date&amp;table_id=$next_table_id&amp;backup_secret=$backup_secret&amp;debug=$debug&amp;backup_type=$backup_type\" class=\"btn_default\">Next table</a>
 				</p>
-				<meta http-equiv=refresh content=\""; if($debug == "1"){ echo"180"; } else{ echo"1"; } echo"; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_2_mysql_tables_structure&amp;backup_date=$backup_date&amp;table_id=$next_table_id&amp;backup_secret=$backup_secret&amp;debug=$debug\">
+				<meta http-equiv=refresh content=\""; if($debug == "1"){ echo"180"; } else{ echo"1"; } echo"; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_2_mysql_tables_structure&amp;backup_date=$backup_date&amp;table_id=$next_table_id&amp;backup_secret=$backup_secret&amp;debug=$debug&amp;backup_type=$backup_type\">
 				<!-- Jquery go to URL after x seconds -->
 					<!-- In case meta refresh doesnt work -->
    					<script>
 					\$(document).ready(function(){
 						window.setTimeout(function(){
         						// Move to a new location or you can do something else
-							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_2_mysql_tables_structure&backup_date=$backup_date&table_id=$next_table_id&backup_secret=$backup_secret&debug=$debug\";
+							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_2_mysql_tables_structure&backup_date=$backup_date&table_id=$next_table_id&backup_secret=$backup_secret&debug=$debug&backup_type=$backup_type\";
 						}, 1000000);
 					});
    					</script>
@@ -862,19 +906,19 @@ elseif($action == "new_backup_step_3_mysql_table_contents"){
 				echo"
 
 				<p>
-				<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_3_mysql_table_contents&amp;backup_date=$backup_date&amp;table_id=$table_id&amp;start=$next_start&amp;backup_secret=$backup_secret&amp;debug=$debug\" class=\"btn_default\">Next rows (from $next_start)</a>
+				<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_3_mysql_table_contents&amp;backup_date=$backup_date&amp;table_id=$table_id&amp;start=$next_start&amp;backup_secret=$backup_secret&amp;debug=$debug&amp;backup_type=$backup_type\" class=\"btn_default\">Next rows (from $next_start)</a>
 			
-				<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_2_mysql_tables_structure&amp;backup_date=$backup_date&amp;table_id=$skip_next_table_id&amp;backup_secret=$backup_secret&amp;debug=$debug\" class=\"btn\">Skip this table</a>
+				<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_2_mysql_tables_structure&amp;backup_date=$backup_date&amp;table_id=$skip_next_table_id&amp;backup_secret=$backup_secret&amp;debug=$debug&amp;backup_type=$backup_type\" class=\"btn\">Skip this table</a>
 				</p>
 
-				<meta http-equiv=refresh content=\""; if($debug == "1"){ echo"180"; } else{ echo"1"; } echo"; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_3_mysql_table_contents&amp;backup_date=$backup_date&amp;table_id=$table_id&amp;start=$next_start&amp;backup_secret=$backup_secret&amp;debug=$debug\">
+				<meta http-equiv=refresh content=\""; if($debug == "1"){ echo"180"; } else{ echo"1"; } echo"; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_3_mysql_table_contents&amp;backup_date=$backup_date&amp;table_id=$table_id&amp;start=$next_start&amp;backup_secret=$backup_secret&amp;debug=$debug&amp;backup_type=$backup_type\">
 				<!-- Jquery go to URL after x seconds -->
 					<!-- In case meta refresh doesnt work -->
    					<script>
 					\$(document).ready(function(){
 						window.setTimeout(function(){
         						// Move to a new location or you can do something else
-							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_3_mysql_table_contents&backup_date=$backup_date&table_id=$table_id&start=$next_start&backup_secret=$backup_secret&debug=$debug\";
+							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_3_mysql_table_contents&backup_date=$backup_date&table_id=$table_id&start=$next_start&backup_secret=$backup_secret&debug=$debug&backup_type=$backup_type\";
 						}, 1000000);
 					});
    					</script>
@@ -972,24 +1016,47 @@ elseif($action == "new_backup_step_4_mysql_table_zip"){
 
 	echo"
 	<p>Created <a href=\"$backup_zip_db_file\">$backup_zip_db_file</a></p>
+	";
 
-	<meta http-equiv=refresh content=\"5; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_5_make_website_list_of_dir_and_files&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret\">
+	if($backup_type == "db"){
+		// We are finished with db backup - send email
+		echo"
+		<p>Finished!</p>
+		<meta http-equiv=refresh content=\"3; URL=index.php?open=$open&amp;page=$page&amp;action=send_email&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;backup_type=$backup_type\">
 				<!-- Jquery go to URL after x seconds -->
 					<!-- In case meta refresh doesnt work -->
    					<script>
 					\$(document).ready(function(){
 						window.setTimeout(function(){
         						// Move to a new location or you can do something else
-							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_5_make_website_list_of_dir_and_files&backup_date=$backup_date&backup_secret=$backup_secret\";
+							window.location.href = \"index.php?open=$open&page=$page&action=send_email&backup_date=$backup_date&backup_secret=$backup_secret&backup_type=$backup_type\";
 						}, 10000);
 					});
    					</script>
 				<!-- //Jquery go to URL after x seconds -->
-	<p>
-	<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_5_make_website_list_of_dir_and_files&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret\" class=\"btn\">Continue</a>
-	</p>
-	
-	";
+		<p><a href=\"index.php?open=$open&amp;page=$page&amp;action=send_email&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;backup_type=$backup_type\">Continue</a></p>
+		";
+	}
+	else{
+		// We want website backup also
+		echo"
+		<meta http-equiv=refresh content=\"5; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_5_make_website_list_of_dir_and_files&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;backup_type=$backup_type\">
+				<!-- Jquery go to URL after x seconds -->
+					<!-- In case meta refresh doesnt work -->
+   					<script>
+					\$(document).ready(function(){
+						window.setTimeout(function(){
+        						// Move to a new location or you can do something else
+							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_5_make_website_list_of_dir_and_files&backup_date=$backup_date&backup_secret=$backup_secret&backup_type=$backup_type\";
+						}, 10000);
+					});
+   					</script>
+				<!-- //Jquery go to URL after x seconds -->
+		<p>
+		<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_5_make_website_list_of_dir_and_files&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;backup_type=$backup_type\" class=\"btn\">Continue</a>
+		</p>
+		";
+	}
 }
 elseif($action == "new_backup_step_5_make_website_list_of_dir_and_files"){
 
@@ -1084,20 +1151,20 @@ elseif($action == "new_backup_step_5_make_website_list_of_dir_and_files"){
 		</table>
 
 
-	<meta http-equiv=refresh content=\"2; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_6_make_web_cache&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret\">
+	<meta http-equiv=refresh content=\"2; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_6_make_web_cache&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;backup_type=$backup_type\">
 				<!-- Jquery go to URL after x seconds -->
 					<!-- In case meta refresh doesnt work -->
    					<script>
 					\$(document).ready(function(){
 						window.setTimeout(function(){
         						// Move to a new location or you can do something else
-							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_6_make_web_cache&backup_date=$backup_date&backup_secret=$backup_secret\";
+							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_6_make_web_cache&backup_date=$backup_date&backup_secret=$backup_secret&backup_type=$backup_type\";
 						}, 10000);
 					});
    					</script>
 				<!-- //Jquery go to URL after x seconds -->
 	<p>
-	<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_6_make_web_cache&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret\" class=\"btn\">Continue</a>
+	<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_6_make_web_cache&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;backup_type=$backup_type\" class=\"btn\">Continue</a>
 	</p>
 	
 	";	
@@ -1125,7 +1192,7 @@ elseif($action == "new_backup_step_6_make_web_cache"){
 	if($get_content_id == ""){
 		echo"<h2>Finished with make web cache</h2>\n
 
-		<meta http-equiv=refresh content=\"10; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_7_backup_website&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret\">
+		<meta http-equiv=refresh content=\"10; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_7_backup_website&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;backup_type=$backup_type\">
 
 				<!-- Jquery go to URL after x seconds -->
 					<!-- In case meta refresh doesnt work -->
@@ -1133,14 +1200,14 @@ elseif($action == "new_backup_step_6_make_web_cache"){
 					\$(document).ready(function(){
 						window.setTimeout(function(){
         						// Move to a new location or you can do something else
-							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_7_backup_website&backup_date=$backup_date&backup_secret=$backup_secret\";
+							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_7_backup_website&backup_date=$backup_date&backup_secret=$backup_secret&backup_type=$backup_type\";
 						}, 20000);
 					});
    					</script>
 				<!-- //Jquery go to URL after x seconds -->
 
 		<p>
-		<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_7_backup_website&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret\" class=\"btn\">Continue</a>
+		<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_7_backup_website&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;backup_type=$backup_type\" class=\"btn\">Continue</a>
 		</p>
 		";
 	}
@@ -1201,20 +1268,20 @@ elseif($action == "new_backup_step_6_make_web_cache"){
 		echo"
 		<p>Delete from <em>$get_content_id</em> and go to next</p>
 
-		<meta http-equiv=refresh content=\"1; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_6_make_web_cache&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret\">
+		<meta http-equiv=refresh content=\"1; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_6_make_web_cache&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;backup_type=$backup_type\">
 				<!-- Jquery go to URL after x seconds -->
 					<!-- In case meta refresh doesnt work -->
    					<script>
 					\$(document).ready(function(){
 						window.setTimeout(function(){
         						// Move to a new location or you can do something else
-							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_6_make_web_cache&backup_date=$backup_date&backup_secret=$backup_secret\";
+							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_6_make_web_cache&backup_date=$backup_date&backup_secret=$backup_secret&backup_type=$backup_type\";
 						}, 10000);
 					});
    					</script>
 				<!-- //Jquery go to URL after x seconds -->
 		<p>
-		<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_6_make_web_cache&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret\" class=\"btn\">Continue</a>
+		<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_backup_step_6_make_web_cache&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;backup_type=$backup_type\" class=\"btn\">Continue</a>
 		</p>
 
 		";
@@ -1293,7 +1360,7 @@ elseif($action == "new_backup_step_7_backup_website"){
 		$next = $start+25;
 		$rand = rand(0,1);
 		echo"
-		<meta http-equiv=refresh content=\"$rand; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_7_backup_website&amp;start=$next&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret\">
+		<meta http-equiv=refresh content=\"$rand; URL=index.php?open=$open&amp;page=$page&amp;action=new_backup_step_7_backup_website&amp;start=$next&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;backup_type=$backup_type\">
 
 				<!-- Jquery go to URL after x seconds -->
 					<!-- In case meta refresh doesnt work -->
@@ -1301,7 +1368,7 @@ elseif($action == "new_backup_step_7_backup_website"){
 					\$(document).ready(function(){
 						window.setTimeout(function(){
         						// Move to a new location or you can do something else
-							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_7_backup_website&start=$next&backup_date=$backup_date&backup_secret=$backup_secret\";
+							window.location.href = \"index.php?open=$open&page=$page&action=new_backup_step_7_backup_website&start=$next&backup_date=$backup_date&backup_secret=$backup_secret&backup_type=$backup_type\";
 						}, 10000);
 					});
    					</script>
@@ -1311,19 +1378,19 @@ elseif($action == "new_backup_step_7_backup_website"){
 	else{
 		echo"
 		<p>Finished!</p>
-		<meta http-equiv=refresh content=\"3; URL=index.php?open=$open&amp;page=$page&amp;action=send_email&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret\">
+		<meta http-equiv=refresh content=\"3; URL=index.php?open=$open&amp;page=$page&amp;action=send_email&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;backup_type=$backup_type\">
 				<!-- Jquery go to URL after x seconds -->
 					<!-- In case meta refresh doesnt work -->
    					<script>
 					\$(document).ready(function(){
 						window.setTimeout(function(){
         						// Move to a new location or you can do something else
-							window.location.href = \"index.php?open=$open&page=$page&action=send_email&backup_date=$backup_date&backup_secret=$backup_secret\";
+							window.location.href = \"index.php?open=$open&page=$page&action=send_email&backup_date=$backup_date&backup_secret=$backup_secret&backup_type=$backup_type\";
 						}, 10000);
 					});
    					</script>
 				<!-- //Jquery go to URL after x seconds -->
-		<p><a href=\"index.php?open=$open&amp;page=$page&amp;action=send_email&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret\">Continue</a></p>
+		<p><a href=\"index.php?open=$open&amp;page=$page&amp;action=send_email&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;backup_type=$backup_type\">Continue</a></p>
 		";
 
 		// Email
@@ -1341,7 +1408,7 @@ elseif($action == "send_email"){
 	echo"
 	<p>Finished!</p>
 		
-	<p><a href=\"index.php?open=$open&amp;page=$page&amp;action=send_email&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret\">Continue</a></p>
+	<p><a href=\"index.php?open=$open&amp;page=$page&amp;action=send_email&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;backup_type=$backup_type\">Continue</a></p>
 	";
 
 	$date_saying = date("j F Y");
@@ -1354,25 +1421,35 @@ elseif($action == "send_email"){
 		$subject = "$configWebsiteTitleSav Backup $date_saying";
 		$message = "Hello $get_user_name\n\n";
 		$message = $message . "A backup is ready for download from $date_saying.\n\n";
-		$message = $message . "Database: $configControlPanelURLSav/$backup_zip_db_file\n";
-		$message = $message . "Web: $configControlPanelURLSav/$backup_zip_web_file\n\n";
+		if($backup_type == "db_and_website"){
+			$message = $message . "Database: $configControlPanelURLSav/$backup_zip_db_file\n";
+			$message = $message . "Web: $configControlPanelURLSav/$backup_zip_web_file\n\n";
+		}
+		elseif($backup_type == "db"){
+			$message = $message . "Database: $configControlPanelURLSav/$backup_zip_db_file\n";
+		}
+		else{
+			$message = $message . "Web: $configControlPanelURLSav/$backup_zip_web_file\n\n";
+		}
 		$message = $message . "--\n";
 		$message = $message . "Regards\n";
 		$message = $message . "$configWebsiteWebmasterSav at $configWebsiteTitleSav\n";
 		$headers = "From: $configFromEmailSav" . "\r\n" .
 		    'X-Mailer: PHP/' . phpversion();
 
-		mail($get_user_email, $subject, $message, $headers);
+		if($configMailSendActiveSav == "1"){
+			mail($get_user_email, $subject, $message, $headers);
+		}
 	}
 	echo"
-	<meta http-equiv=refresh content=\"2; URL=index.php?open=$open&amp;page=$page&amp;action=delete_cache&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret\">
+	<meta http-equiv=refresh content=\"2; URL=index.php?open=$open&amp;page=$page&amp;action=delete_cache&amp;backup_date=$backup_date&amp;backup_secret=$backup_secret&amp;backup_type=$backup_type\">
 				<!-- Jquery go to URL after x seconds -->
 					<!-- In case meta refresh doesnt work -->
    					<script>
 					\$(document).ready(function(){
 						window.setTimeout(function(){
         						// Move to a new location or you can do something else
-							window.location.href = \"index.php?open=$open&page=$page&action=delete_cache&backup_date=$backup_date&backup_secret=$backup_secret\";
+							window.location.href = \"index.php?open=$open&page=$page&action=delete_cache&backup_date=$backup_date&backup_secret=$backup_secret&backup_type=$backup_type\";
 						}, 10000);
 					});
    					</script>
@@ -1510,6 +1587,25 @@ elseif($action == "delete_cache"){
 		}
 	}
 
+
+	$filenames = "";
+	$dir = "../_cache/";
+	if ($handle = opendir($dir)) {
+		while (false !== ($file = readdir($handle))) {
+			if ($file === '.') continue;
+			if ($file === '..') continue;
+
+			// Date and secret
+			$name_array = explode("_", $file);
+			$date = $name_array[0];
+			$secret = $name_array[1];
+
+			// Dir?
+			if(is_dir("$dir$file")){
+				delete_directory("$dir$file/");
+			}
+		}
+	}
 	echo"
 	<h2><img src=\"_design/gfx/loading_22.gif\" alt=\"loading_22.gif\" style=\"float: left;padding-right: 6px;\" /> Deleting cache</h2>
 		

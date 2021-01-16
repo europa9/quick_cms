@@ -155,7 +155,7 @@ else{
 
 	<!-- Accepted languages -->
 		<div class=\"left_right_left\">
-			<h2 style=\"padding-bottom:0;margin-bottom:0;\">Countries</h2>
+			<h2 style=\"margin-top:20px;padding-bottom:0;margin-bottom:0;\">Countries</h2>
 
 			<script>
 			am4core.ready(function() {
@@ -192,7 +192,7 @@ else{
 
 	<!-- Accepted languages -->
 		<div class=\"left_right_right\">
-			<h2>$l_accepted_languages</h2>
+			<h2 style=\"margin-top: 20px;\">$l_accepted_languages</h2>
 
 
 			<script>
@@ -232,7 +232,7 @@ else{
 
 	<!-- Os -->
 		<div class=\"left_right_left\">
-			<h2>$l_os</h2>
+			<h2 style=\"margin-top: 20px;\">$l_os</h2>
 
 			<script>
 			am4core.ready(function() {
@@ -272,7 +272,7 @@ else{
 
 	<!-- Browsers -->
 		<div class=\"left_right_right\">
-			<h2>$l_browsers</h2>
+			<h2 style=\"margin-top: 20px;\">$l_browsers</h2>
 
 			<script>
 			am4core.ready(function() {
@@ -310,9 +310,67 @@ else{
 	<!-- //Browsers -->
 
 
+	<!-- Mobile vs desktop -->
+		<div class=\"left_right_left\">
+			<h2 style=\"margin-top: 20px;\">Mobile vs desktop</h2>
+
+			<script>
+			am4core.ready(function() {
+				var chart = am4core.create(\"chartdiv_mobile_vs_desktop\", am4charts.PieChart);
+				chart.data = [
+					{
+					\"x\": \"Desktop\",
+					\"value\": $get_current_stats_visit_per_year_unique_desktop
+					},
+					{
+					\"x\": \"Mobile\",
+					\"value\": $get_current_stats_visit_per_year_unique_mobile
+					}
+
+            			];
+				var series = chart.series.push(new am4charts.PieSeries());
+				series.dataFields.value = \"value\";
+				series.dataFields.category = \"x\";
+			}); // end am4core.ready()
+       			</script>
+       			<div id=\"chartdiv_mobile_vs_desktop\" style=\"max-height: 250px;margin-top:10px;\"></div>
+
+		</div>
+	<!-- //Mobile vs desktop -->
+
+		
+
+	<!-- Humans vs bots unique -->
+		<div class=\"left_right_right\">
+			<h2 style=\"margin-top: 20px;\">Human vs bots unique</h2>
+
+			<script>
+			am4core.ready(function() {
+				var chart = am4core.create(\"chartdiv_humans_vs_bots_unique\", am4charts.PieChart);
+				chart.data = [
+					{
+					\"x\": \"Humans\",
+					\"value\": $get_current_stats_visit_per_year_human_unique
+					},
+					{
+					\"x\": \"Bots\",
+					\"value\": $get_current_stats_visit_per_year_unique_bots
+					}
+
+            			];
+				var series = chart.series.push(new am4charts.PieSeries());
+				series.dataFields.value = \"value\";
+				series.dataFields.category = \"x\";
+			}); // end am4core.ready()
+       			</script>
+       			<div id=\"chartdiv_humans_vs_bots_unique\" style=\"max-height: 250px;margin-top:10px;\"></div>
+
+		</div>
+		<div class=\"clear\"></div>
+	<!-- //Humans vs bots unique -->
 
 	<!-- Comments per month -->
-		<h2>Comments per month</h2>
+		<h2 style=\"margin-top: 20px;\">Comments per month</h2>
 
 
 

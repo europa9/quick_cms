@@ -30,4 +30,6 @@ $l_age_restriction = "Age restriction";
 $l_example_alcohol = "Example alcohol";
 $l_yes = "Yes";
 $l_no = "No";
+$l_published = "Published";
+$l_draft = "Draft";
 ?>

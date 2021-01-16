@@ -42,7 +42,7 @@ else{
 				stats_chef_of_the_month_recipes_posted_count INT,
 				stats_chef_of_the_month_recipes_posted_points INT,
 				stats_chef_of_the_month_got_visits_count INT,
-				stats_chef_of_the_month_got_visits_points INT,
+				stats_chef_of_the_month_got_visits_points double,
 				stats_chef_of_the_month_got_favorites_count INT,
 				stats_chef_of_the_month_got_favorites_points INT,
 				stats_chef_of_the_month_got_comments_count INT,

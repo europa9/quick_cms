@@ -176,7 +176,7 @@ else{
 	// Select recipes
 	$x = 0;
 	$count_recipes = 0;
-	$query = "SELECT $t_recipes.recipe_id, $t_recipes.recipe_title, $t_recipes.recipe_introduction, $t_recipes.recipe_image_path, $t_recipes.recipe_image, $t_recipes.recipe_thumb_278x156, $t_recipes.recipe_unique_hits FROM $t_recipes JOIN $t_recipes_numbers ON $t_recipes.recipe_id=$t_recipes_numbers.number_recipe_id WHERE $t_recipes.recipe_category_id='$get_current_category_id' AND $t_recipes.recipe_language=$l_mysql";
+	$query = "SELECT $t_recipes.recipe_id, $t_recipes.recipe_title, $t_recipes.recipe_introduction, $t_recipes.recipe_image_path, $t_recipes.recipe_image, $t_recipes.recipe_thumb_278x156, $t_recipes.recipe_unique_hits FROM $t_recipes JOIN $t_recipes_numbers ON $t_recipes.recipe_id=$t_recipes_numbers.number_recipe_id WHERE $t_recipes.recipe_category_id='$get_current_category_id' AND $t_recipes.recipe_language=$l_mysql AND $t_recipes.recipe_published=1";
 	// Order
 	if($order_method == "desc"){
 		$order_method_mysql = "DESC";
