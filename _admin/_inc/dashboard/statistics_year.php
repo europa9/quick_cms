@@ -540,6 +540,12 @@ else{
 				
 			}
 
+			// Delete empty
+			if($get_stats_pages_per_year_title == ""){
+				mysqli_query($link, "DELETE FROM $t_stats_pages_visits_per_year WHERE stats_pages_per_year_id=$get_stats_pages_per_year_id") or die(mysqli_error($link));
+				$get_stats_pages_per_year_title = "[Deleted]";
+			}
+
 			echo"
 			 <tr>
 			  <td>

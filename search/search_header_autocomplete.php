@@ -47,10 +47,14 @@ if(isset($_GET['inp_search_query']) && $_GET['inp_search_query'] != ''){
 		$inp_search_query_percentage = $inp_search_query . "%";
 		$part_mysql = quote_smart($link, $inp_search_query_percentage);
 
+
+		$l = output_html($l);
+		$l_mysql = quote_smart($link, $l);
+
 		// Search
 		$last_printed_id = "";
 		$results_counter = 0;
-		$query = "SELECT index_id, index_title, index_url, index_short_description, index_keywords, index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_updated_datetime, index_updated_datetime_print, index_language, index_unique_hits, index_hits_ipblock FROM $t_search_engine_index WHERE index_title LIKE $part_mysql OR index_short_description LIKE $part_mysql OR index_keywords LIKE $part_mysql ORDER BY index_unique_hits DESC";
+		$query = "SELECT index_id, index_title, index_url, index_short_description, index_keywords, index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_updated_datetime, index_updated_datetime_print, index_language, index_unique_hits, index_hits_ipblock FROM $t_search_engine_index WHERE (index_title LIKE $part_mysql OR index_short_description LIKE $part_mysql OR index_keywords LIKE $part_mysql) AND index_language=$l_mysql ORDER BY index_unique_hits DESC";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
 			list($get_index_id, $get_index_title, $get_index_url, $get_index_short_description, $get_index_keywords, $get_index_module_name, $get_index_module_part_name, $get_index_module_part_id, $get_index_reference_name, $get_index_reference_id, $get_index_has_access_control, $get_index_is_ad, $get_index_created_datetime, $get_index_created_datetime_print, $get_index_updated_datetime, $get_index_updated_datetime_print, $get_index_language, $get_index_unique_hits, $get_index_hits_ipblock) = $row;
@@ -75,7 +79,7 @@ if(isset($_GET['inp_search_query']) && $_GET['inp_search_query'] != ''){
 			// Expand search 
 			$percentage_inp_search_query_percentage = "%" . $inp_search_query . "%";
 			$part_mysql = quote_smart($link, $percentage_inp_search_query_percentage);
-			$query = "SELECT index_id, index_title, index_url, index_short_description, index_keywords, index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_updated_datetime, index_updated_datetime_print, index_language, index_unique_hits, index_hits_ipblock FROM $t_search_engine_index WHERE index_title LIKE $part_mysql OR index_short_description LIKE $part_mysql OR index_keywords LIKE $part_mysql ORDER BY index_unique_hits DESC";
+			$query = "SELECT index_id, index_title, index_url, index_short_description, index_keywords, index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_updated_datetime, index_updated_datetime_print, index_language, index_unique_hits, index_hits_ipblock FROM $t_search_engine_index WHERE (index_title LIKE $part_mysql OR index_short_description LIKE $part_mysql OR index_keywords LIKE $part_mysql) AND index_language=$l_mysql ORDER BY index_unique_hits DESC";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
 				list($get_index_id, $get_index_title, $get_index_url, $get_index_short_description, $get_index_keywords, $get_index_module_name, $get_index_module_part_name, $get_index_module_part_id, $get_index_reference_name, $get_index_reference_id, $get_index_has_access_control, $get_index_is_ad, $get_index_created_datetime, $get_index_created_datetime_print, $get_index_updated_datetime, $get_index_updated_datetime_print, $get_index_language, $get_index_unique_hits, $get_index_hits_ipblock) = $row;

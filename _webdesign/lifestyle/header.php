@@ -136,8 +136,8 @@ echo"<!DOCTYPE html>
 					<div id=\"header_center\">
 						<!-- Search -->
 						<div class=\"header_center_search_div\">
-							<form method=\"get\" action=\"$root/_webdesign/$webdesignSav/search_go.php\" enctype=\"multipart/form-data\">
-							<input type=\"text\" name=\"q\" id=\"q\" class=\"header_center_search_text\" value=\"\" size=\"50\" autocomplete=\"off\" />
+							<form method=\"get\" action=\"$root/search/search.php\" enctype=\"multipart/form-data\">
+							<input type=\"text\" name=\"inp_search_query\" id=\"inp_search_query\" class=\"header_center_search_text\" value=\"\" size=\"50\" autocomplete=\"off\" />
 							<input type=\"hidden\" name=\"l\" value=\"$l\" />
 							<input type=\"submit\" value=\"\" class=\"header_center_search_button\" />
 							</form>
@@ -148,11 +148,11 @@ echo"<!DOCTYPE html>
 						<!-- Search engines Autocomplete -->
 						<script id=\"source\" language=\"javascript\" type=\"text/javascript\">
 							$(document).ready(function () {
-								$('#q').keyup(function () {
+								$('#inp_search_query').keyup(function () {
 									// getting the value that user typed
-									var searchString    = $(\"#q\").val();
+									var searchString    = $(\"#inp_search_query\").val();
 									// forming the queryString
-      									var data            = 'q='+ searchString;
+      									var data            = 'l=$l&inp_search_query='+ searchString;
          
         								// if searchString is not empty
         								if(searchString) {
@@ -160,7 +160,7 @@ echo"<!DOCTYPE html>
 										// ajax call
         									$.ajax({
         										type: \"GET\",
-        										url: \"$root/_webdesign/$webdesignSav/search_autocomplete.php\",
+        										url: \"$root/search/search_header_autocomplete.php\",
                 									data: data,
 											beforeSend: function(html) { // this happens before actual call
 												$(\"#header_search_results\").html(''); 

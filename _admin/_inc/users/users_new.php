@@ -190,11 +190,10 @@ if($process == "1"){
 
 
 	// Create password
-    	$password = '';
-    	for ($i = 0; $i < 8; $i++) {
-        	$password .= $characters[rand(0, $charactersLength - 1)];
-    	}
-	$inp_user_password = output_html($password);
+	$inp_user_password = $_POST['inp_user_password'];
+	$inp_user_password = output_html($inp_user_password);
+
+
 
 	$inp_user_password_salt = $inp_user_password . $inp_user_salt;
 	$inp_user_password_salt_encrypted = sha1($inp_user_password_salt);
@@ -206,6 +205,7 @@ if($process == "1"){
 	// Registered
 	$datetime = date("Y-m-d H:i:s");
 	$datetime_saying = date("j M Y H:i");
+	$date = date("Y-m-d");
 
 	// Date format
 	if($l == "no"){
@@ -218,9 +218,21 @@ if($process == "1"){
 
 	// Insert user
 	mysqli_query($link, "INSERT INTO $t_users
-	(user_id, user_email, user_name, user_alias, user_password, user_salt, user_security, user_language, user_date_format, user_registered, user_last_online, user_rank, user_points, user_likes, user_dislikes) 
+	(user_id, user_email, user_name, user_alias, user_password, 
+	user_password_replacement, user_password_date, user_salt, user_security, user_language, 
+	user_gender, user_height, user_measurement, user_dob, user_date_format, 
+	user_registered, user_registered_time, user_last_online, user_last_online_time, user_rank, 
+	user_points, user_points_rank, user_likes, user_dislikes, user_status, 
+	user_login_tries, user_last_ip, user_synchronized, user_verified_by_moderator, user_notes, 
+	user_marked_as_spammer) 
 	VALUES 
-	(NULL, $inp_user_email_mysql, $inp_user_name_mysql, $inp_user_name_mysql, $inp_user_password_mysql, $inp_user_salt_mysql, '$inp_user_security', $inp_user_language_mysql, $inp_user_date_format_mysql, '$datetime', '$datetime', $inp_user_rank_mysql, '0', '0', '0')")
+	(NULL, $inp_user_email_mysql, $inp_user_name_mysql, $inp_user_name_mysql, $inp_user_password_mysql, 
+	'', '$date', $inp_user_salt_mysql, '$inp_user_security', $inp_user_language_mysql, 
+	'', 0, 'metric', '$date', $inp_user_date_format_mysql, 
+	'$datetime', '$time', '$datetime', '$time', $inp_user_rank_mysql, 
+	'0', '', '0', 0, '',
+	0, 0, 0, 1, '',
+	0)")
 	or die(mysqli_error($link));
 
 
@@ -311,6 +323,20 @@ if(isset($_GET['inp_user_language'])) {
 	$inp_user_language = $_GET['inp_user_language'];
 	$inp_user_language = output_html($inp_user_language);
 }
+if(isset($_GET['inp_user_password'])) {
+	$inp_user_password = $_GET['inp_user_password'];
+	$inp_user_password = output_html($inp_user_password);
+}
+else{
+	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    	$charactersLength = strlen($characters);
+    	$password = '';
+    	for ($i = 0; $i < 8; $i++) {
+        	$password .= $characters[rand(0, $charactersLength - 1)];
+    	}
+	$inp_user_password = output_html($password);
+
+}
 if(isset($_GET['inp_user_rank'])) {
 	$inp_user_rank = $_GET['inp_user_rank'];
 	$inp_user_rank = output_html($inp_user_rank);
@@ -327,7 +353,6 @@ if(isset($_GET['inp_profile_last_name'])) {
 	$inp_profile_last_name = $_GET['inp_profile_last_name'];
 	$inp_profile_last_name = output_html($inp_profile_last_name);
 }
-
 
 
 echo"
@@ -397,6 +422,12 @@ $l_email_address:<br />
 $l_user_name:<br />
 <input type=\"text\" name=\"inp_user_name\" size=\"78\" value=\""; if(isset($inp_user_name)){ echo"$inp_user_name"; } echo"\" /><br />
 </p>
+
+<p>
+Password:<br />
+<input type=\"text\" name=\"inp_user_password\" size=\"78\" value=\""; if(isset($inp_user_password)){ echo"$inp_user_password"; } echo"\" /><br />
+</p>
+
 
 <p>
 $l_language:<br />

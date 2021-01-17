@@ -18,6 +18,20 @@ div.search_result_box > p{
 	margin: 8px 0px 8px 0px;
 	padding: 0px 0px 0px 0px;
 }
+
+td.search_index_td_image{
+	vertical-align: top;
+	width: 260px;
+	padding: 10px 10px 10px 10px;
+}
+td.search_index_td_info{
+	vertical-align: top;
+	padding: 4px 0px 0px 0px;
+}
+
+img.search_index_image{
+	border-radius: 5px;
+}
 a.search_index_title{
 	font-size: 110%;
 	color: #00278e;

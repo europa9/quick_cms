@@ -41,6 +41,9 @@ $t_recipes_searches			= $mysqlPrefixSav . "recipes_searches";
 $t_recipes_age_restrictions 	 	= $mysqlPrefixSav . "recipes_age_restrictions";
 $t_recipes_age_restrictions_accepted	= $mysqlPrefixSav . "recipes_age_restrictions_accepted";
 
+/*- Functions ---------------------------------------------------------------------------- */
+include("_functions/get_extension.php");
+
 /*- Variables ---------------------------------------------------------------------------- */
 $datetime = date("Y-m-d H:i:s");
 $datetime_saying = date("j. M Y H:i");
@@ -51,10 +54,10 @@ if($result_exists !== FALSE){
 
 	
 	/* recipes */
-	$query_w = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_country, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_comments, recipe_user_ip, recipe_notes, recipe_password, recipe_last_viewed, recipe_age_restriction FROM $t_recipes";
+	$query_w = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_country, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_comments, recipe_user_ip, recipe_notes, recipe_password, recipe_last_viewed, recipe_age_restriction FROM $t_recipes";
 	$result_w = mysqli_query($link, $query_w);
 	while($row_w = mysqli_fetch_row($result_w)) {
-		list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_country, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb, $get_recipe_video, $get_recipe_date, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_comments, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password, $get_recipe_last_viewed, $get_recipe_age_restriction) = $row_w;
+		list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_country, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_video, $get_recipe_date, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_comments, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password, $get_recipe_last_viewed, $get_recipe_age_restriction) = $row_w;
 
 
 		$inp_index_title = "$get_recipe_title"; 
@@ -81,6 +84,21 @@ if($result_exists !== FALSE){
 		}
 		$inp_index_keywords_mysql = quote_smart($link, $inp_index_keywords);
 
+		// Image
+		$inp_index_image_path_mysql = quote_smart($link, $get_recipe_image_path);
+		$inp_index_image_file_mysql = quote_smart($link, $get_recipe_image);
+
+		// Thumb
+		$thumb = "";
+		if($get_recipe_image != ""){
+			$ext = get_extension($get_recipe_image);
+			$thumb = str_replace(".$ext", "", $get_recipe_image);
+			$thumb = $thumb . "_235x132." . $ext;
+		}
+		$inp_index_image_thumb_mysql = quote_smart($link, $thumb);
+
+
+
 		$inp_index_module_name_mysql = quote_smart($link, "recipes");
 
 		$inp_index_module_part_name_mysql = quote_smart($link, "recipes");
@@ -104,11 +122,13 @@ if($result_exists !== FALSE){
 			echo"<span>Insert $inp_index_title<br /></span>\n";
 			mysqli_query($link, "INSERT INTO $t_search_engine_index 
 			(index_id, index_title, index_url, index_short_description, index_keywords, 
+			index_image_path, index_image_file, index_image_thumb_235x132, 
 			index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, 
 			index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_language, 
 			index_unique_hits) 
 			VALUES 
 			(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_index_short_description_mysql, $inp_index_keywords_mysql, 
+			$inp_index_image_path_mysql, $inp_index_image_file_mysql, $inp_index_image_thumb_mysql, 
 			$inp_index_module_name_mysql, $inp_index_module_part_name_mysql, '0', $inp_index_reference_name_mysql, $inp_index_reference_id_mysql,
 			'0', $inp_index_is_ad_mysql, '$datetime', '$datetime_saying', $inp_index_language_mysql,
 			0)")

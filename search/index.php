@@ -69,7 +69,7 @@ echo"
 					// getting the value that user typed
 					var searchString    = \$(\"#inp_search_query\").val();
 					// forming the queryString
-      					var data            = 'inp_search_query='+ searchString;
+      					var data            = 'l=$l&inp_search_query='+ searchString;
          
         				// if searchString is not empty
         				if(searchString) {

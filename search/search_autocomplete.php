@@ -39,7 +39,11 @@ if(isset($_GET['inp_search_query']) && $_GET['inp_search_query'] != ''){
 	$inp_search_query = $_GET['inp_search_query'];
 
 	echo"
-	<div class=\"search_results\">\n";
+
+	<!-- Search results -->
+
+	<div class=\"search_results\">
+		";
 		$inp_search_query = strip_tags(stripslashes($inp_search_query));
 		$inp_search_query = trim($inp_search_query);
 		$inp_search_query = strtolower($inp_search_query);
@@ -47,61 +51,107 @@ if(isset($_GET['inp_search_query']) && $_GET['inp_search_query'] != ''){
 		$inp_search_query_percentage = $inp_search_query . "%";
 		$part_mysql = quote_smart($link, $inp_search_query_percentage);
 
+		$l = output_html($l);
+		$l_mysql = quote_smart($link, $l);
+
 		// Search
 		$last_printed_id = "";
 		$results_counter = 0;
-		$query = "SELECT index_id, index_title, index_url, index_short_description, index_keywords, index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_updated_datetime, index_updated_datetime_print, index_language, index_unique_hits, index_hits_ipblock FROM $t_search_engine_index WHERE index_title LIKE $part_mysql OR index_short_description LIKE $part_mysql OR index_keywords LIKE $part_mysql ORDER BY index_unique_hits DESC";
+		$query = "SELECT index_id, index_title, index_url, index_short_description, index_keywords, index_image_path, index_image_file, index_image_thumb_235x132, index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_updated_datetime, index_updated_datetime_print, index_language, index_unique_hits, index_hits_ipblock FROM $t_search_engine_index WHERE (index_title LIKE $part_mysql OR index_short_description LIKE $part_mysql OR index_keywords LIKE $part_mysql) AND index_language=$l_mysql ORDER BY index_unique_hits DESC";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
-			list($get_index_id, $get_index_title, $get_index_url, $get_index_short_description, $get_index_keywords, $get_index_module_name, $get_index_module_part_name, $get_index_module_part_id, $get_index_reference_name, $get_index_reference_id, $get_index_has_access_control, $get_index_is_ad, $get_index_created_datetime, $get_index_created_datetime_print, $get_index_updated_datetime, $get_index_updated_datetime_print, $get_index_language, $get_index_unique_hits, $get_index_hits_ipblock) = $row;
+			list($get_index_id, $get_index_title, $get_index_url, $get_index_short_description, $get_index_keywords, $get_index_image_path, $get_index_image_file, $get_index_image_thumb_235x132, $get_index_module_name, $get_index_module_part_name, $get_index_module_part_id, $get_index_reference_name, $get_index_reference_id, $get_index_has_access_control, $get_index_is_ad, $get_index_created_datetime, $get_index_created_datetime_print, $get_index_updated_datetime, $get_index_updated_datetime_print, $get_index_language, $get_index_unique_hits, $get_index_hits_ipblock) = $row;
 		
 			// Can view?
 			$can_view_result = "1";
 
-			if($can_view_result == "1"){
-
-				if($get_index_id != "$last_printed_id"){
-					echo"
-					<div class=\"search_result_box\">
-						<p>
-						<a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\" class=\"search_index_title\">$get_index_title</a><br />
-						<a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\" class=\"search_index_url\">$get_index_url</a><br />
-						<span class=\"search_index_description\">$get_index_short_description</span>
-						</p>
-					</div>";
-					$results_counter++;
-				}
-				$last_printed_id = "$get_index_id";
-			} // can view result
-		} // Search results
+			if($can_view_result == "1" && $get_index_id != "$last_printed_id"){
 
 
-		if($results_counter == "0"){
-			// Expand search 
-			$percentage_inp_search_query_percentage = "%" . $inp_search_query . "%";
-			$part_mysql = quote_smart($link, $percentage_inp_search_query_percentage);
-			$query = "SELECT index_id, index_title, index_url, index_short_description, index_keywords, index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_updated_datetime, index_updated_datetime_print, index_language, index_unique_hits, index_hits_ipblock FROM $t_search_engine_index WHERE index_title LIKE $part_mysql OR index_short_description LIKE $part_mysql OR index_keywords LIKE $part_mysql ORDER BY index_unique_hits DESC";
-			$result = mysqli_query($link, $query);
-			while($row = mysqli_fetch_row($result)) {
-				list($get_index_id, $get_index_title, $get_index_url, $get_index_short_description, $get_index_keywords, $get_index_module_name, $get_index_module_part_name, $get_index_module_part_id, $get_index_reference_name, $get_index_reference_id, $get_index_has_access_control, $get_index_is_ad, $get_index_created_datetime, $get_index_created_datetime_print, $get_index_updated_datetime, $get_index_updated_datetime_print, $get_index_language, $get_index_unique_hits, $get_index_hits_ipblock) = $row;
-		
-				// Can view?
-				$can_view_result = "1";
+				echo"
+				<div class=\"search_result_box\">
+						<table>
+						 <tr>";
+					// Thumb
+					if($get_index_image_file != "" && file_exists("$root/$get_index_image_path/$get_index_image_file")){
+						if($get_index_image_thumb_235x132 != "" && !(file_exists("$root/$get_index_image_path/$get_index_image_thumb_235x132"))){
+							$inp_new_x = 253; 
+							$inp_new_y = 132;
 
-				if($can_view_result == "1"){
+							echo"<div class=\"info\"><p>Creating recipe thumb $inp_new_x x $inp_new_y  px</p></div>";
 
-					if($get_index_id != "$last_printed_id"){
+							resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_index_image_path/$get_index_image_file", "$root/$get_index_image_path/$get_index_image_thumb_235x132");
+						}
 						echo"
-						<div class=\"search_result_box\">
+						  <td class=\"search_index_td_image\">
+							<a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\"><img src=\"$root/$get_index_image_path/$get_index_image_thumb_235x132\" alt=\"$get_index_image_thumb_235x132\" class=\"search_index_image\" /></a>
+						  </td>
+						";
+					}
+					echo"
+						  <td class=\"search_index_td_info\">
 							<p>
 							<a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\" class=\"search_index_title\">$get_index_title</a><br />
 							<a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\" class=\"search_index_url\">$get_index_url</a><br />
 							<span class=\"search_index_description\">$get_index_short_description</span>
 							</p>
-						</div>";
+						  </td>
+						 </tr>
+						</table>
+					</div>";
 
-						$results_counter++;
+					$results_counter++;
+				$last_printed_id = "$get_index_id";
+			} // can view result
+
+		} // Search results
+
+		if($results_counter == "0"){
+			// Expand search 
+			$percentage_inp_search_query_percentage = "%" . $inp_search_query . "%";
+			$part_mysql = quote_smart($link, $percentage_inp_search_query_percentage);
+			$query = "SELECT index_id, index_title, index_url, index_short_description, index_keywords, index_image_path, index_image_file, index_image_thumb_235x132, index_module_name, index_module_part_name, index_module_part_id, index_reference_name, index_reference_id, index_has_access_control, index_is_ad, index_created_datetime, index_created_datetime_print, index_updated_datetime, index_updated_datetime_print, index_language, index_unique_hits, index_hits_ipblock FROM $t_search_engine_index WHERE index_title LIKE $part_mysql OR index_short_description LIKE $part_mysql OR index_keywords LIKE $part_mysql ORDER BY index_unique_hits DESC";
+			$result = mysqli_query($link, $query);
+			while($row = mysqli_fetch_row($result)) {
+				list($get_index_id, $get_index_title, $get_index_url, $get_index_short_description, $get_index_keywords, $get_index_image_path, $get_index_image_file, $get_index_image_thumb_235x132, $get_index_module_name, $get_index_module_part_name, $get_index_module_part_id, $get_index_reference_name, $get_index_reference_id, $get_index_has_access_control, $get_index_is_ad, $get_index_created_datetime, $get_index_created_datetime_print, $get_index_updated_datetime, $get_index_updated_datetime_print, $get_index_language, $get_index_unique_hits, $get_index_hits_ipblock) = $row;
+		
+				// Can view?
+				$can_view_result = "1";
+
+				if($can_view_result == "1" && $get_index_id != "$last_printed_id"){
+					echo"
+					<div class=\"search_result_box\">
+						<table>
+						 <tr>
+					";
+					// Thumb
+					if($get_index_image_file != "" && file_exists("$root/$get_index_image_path/$get_index_image_file")){
+						if($get_index_image_thumb_235x132 != "" && !(file_exists("$root/$get_index_image_path/$get_index_image_thumb_235x132"))){
+							$inp_new_x = 253; 
+							$inp_new_y = 132;
+
+							echo"<div class=\"info\"><p>Creating recipe thumb $inp_new_x x $inp_new_y  px</p></div>";
+
+							resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_index_image_path/$get_index_image_file", "$root/$get_index_image_path/$get_index_image_thumb_235x132");
+						}
+						echo"
+						  <td class=\"search_index_td_image\">
+							<a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\"><img src=\"$root/$get_index_image_path/$get_index_image_thumb_235x132\" alt=\"$get_index_image_thumb_235x132\" class=\"search_index_image\" /></a>
+						  </td>
+						";
 					}
+					echo"
+						  <td class=\"search_index_td_info\">
+							<p>
+							<a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\" class=\"search_index_title\">$get_index_title</a><br />
+							<a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\" class=\"search_index_url\">$get_index_url</a><br />
+							<span class=\"search_index_description\">$get_index_short_description</span>
+							</p>
+						  </td>
+						 </tr>
+						</table>
+					</div>";
+					$results_counter++;
 					$last_printed_id = "$get_index_id";
 				} // can view result
 	
@@ -130,9 +180,9 @@ if(isset($_GET['inp_search_query']) && $_GET['inp_search_query'] != ''){
 			
 
 			mysqli_query($link, "INSERT INTO $t_search_engine_searches 
-			(search_id, search_query, search_unique_counter, search_unique_ip_block, search_number_of_results, search_language_used, search_created_datetime, search_created_datetime_print) 
+			(search_id, search_query, search_unique_counter, search_unique_ip_block, search_number_of_results, search_language_used, search_created_datetime, search_created_datetime_print, search_updated_datetime, search_updated_datetime_print) 
 			VALUES 
-			(NULL, $inp_search_query_mysql, 1, $inp_unique_ip_block_mysql, $results_counter, $inp_language_used_mysql, '$datetime', '$datetime_saying')")
+			(NULL, $inp_search_query_mysql, 1, $inp_unique_ip_block_mysql, $results_counter, $inp_language_used_mysql, '$datetime', '$datetime_saying', '$datetime', '$datetime_saying')")
 			or die(mysqli_error($link)); 
 
 		} // first time search
@@ -165,8 +215,9 @@ if(isset($_GET['inp_search_query']) && $_GET['inp_search_query'] != ''){
 			}
 
 		}
-	echo"
+		echo"
 	</div>
+	<!-- //Search results -->
 	";
 
 }
