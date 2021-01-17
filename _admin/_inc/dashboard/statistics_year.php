@@ -38,6 +38,8 @@ $t_stats_os_per_year = $mysqlPrefixSav . "stats_os_per_year";
 $t_stats_referers_per_year  = $mysqlPrefixSav . "stats_referers_per_year";
 $t_stats_referers_per_month = $mysqlPrefixSav . "stats_referers_per_month";
 
+$t_stats_pages_visits_per_year = $mysqlPrefixSav . "stats_pages_visits_per_year";
+
 $t_stats_user_agents_index = $mysqlPrefixSav . "stats_user_agents_index";
 
 $t_stats_users_registered_per_month = $mysqlPrefixSav . "stats_users_registered_per_month";
@@ -53,10 +55,31 @@ $t_stats_visists_per_month_ips 	= $mysqlPrefixSav . "stats_visists_per_month_ips
 $t_stats_visists_per_year 	= $mysqlPrefixSav . "stats_visists_per_year";
 $t_stats_visists_per_year_ips 	= $mysqlPrefixSav . "stats_visists_per_year_ips";
 
-
+$t_search_engine_searches = $mysqlPrefixSav . "search_engine_searches";
 
 /*- Translation ----------------------------------------------------------------------- */
 include("_translations/admin/$l/dashboard/t_default.php");
+
+
+/*- Functions ----------------------------------------------------------------------- */
+function get_title($url) {
+	$url = str_replace("&amp;", "&", $url);
+
+	$options = array(
+	  'http'=>array(
+	    'method'=>"GET",
+	    'header'=>"Accept-language: en\r\n" .
+	              "Cookie: foo=bar\r\n" .  // check function.stream-context-create on php.net
+	              "User-Agent:  Mozilla/5.0 (compatible; QuickCMS/1; +http://software.frindex.net)\r\n"
+	  )
+	);
+
+	$context = stream_context_create($options);
+	$page = file_get_contents($url, false, $context);
+	$title = preg_match('/<title[^>]*>(.*?)<\/title>/ims', $page, $match) ? $match[1] : null;
+	return $title;
+}
+
 
 /*- Variables -------------------------------------------------------------------------- */
 if(isset($_GET['stats_year'])) {
@@ -482,6 +505,146 @@ else{
 		</table>
 	<!-- //Bots -->
 
+
+
+	<!-- Pages -->
+		<h2>Page Visits</h2>
+		<table class=\"hor-zebra\">
+		 <thead>
+		  <tr>
+		   <th scope=\"col\" style=\"width: 40%;\">
+			<span>$l_bot</span>
+		   </th>
+		   <th scope=\"col\" style=\"width: 30%;\">
+			<span>Human unique</span>
+		   </th>
+		   <th scope=\"col\" style=\"width: 30%;\">
+			<span>Bots unique</span>
+		   </th>
+		  </tr>
+		 </thead>
+		 <tbody>
+		";
+		$query = "SELECT stats_pages_per_year_id, stats_pages_per_year_url, stats_pages_per_year_title, stats_pages_per_year_title_fetched, stats_pages_per_year_human_unique, stats_pages_per_year_unique_desktop, stats_pages_per_year_unique_mobile, stats_pages_per_year_unique_bots FROM $t_stats_pages_visits_per_year WHERE stats_pages_per_year_year=$get_current_stats_visit_per_year_year ORDER BY stats_pages_per_year_human_unique DESC LIMIT 0,50";
+		$result = mysqli_query($link, $query);
+		while($row = mysqli_fetch_row($result)) {
+			list($get_stats_pages_per_year_id, $get_stats_pages_per_year_url, $get_stats_pages_per_year_title, $get_stats_pages_per_year_title_fetched, $get_stats_pages_per_year_human_unique, $get_stats_pages_per_year_unique_desktop, $get_stats_pages_per_year_unique_mobile, $get_stats_pages_per_year_unique_bots) = $row;
+			
+
+			// We need to visit the site in order to get the correct page title
+			if($get_stats_pages_per_year_title_fetched == "0"){
+				$get_stats_pages_per_year_title = get_title($get_stats_pages_per_year_url);
+				$get_stats_pages_per_year_title = output_html($get_stats_pages_per_year_title);
+				$inp_title_mysql = quote_smart($link, $get_stats_pages_per_year_title);
+				mysqli_query($link, "UPDATE $t_stats_pages_visits_per_year SET stats_pages_per_year_title=$inp_title_mysql, stats_pages_per_year_title_fetched=1 WHERE stats_pages_per_year_id=$get_stats_pages_per_year_id") or die(mysqli_error($link));
+				
+			}
+
+			echo"
+			 <tr>
+			  <td>
+				<span><a href=\"$get_stats_pages_per_year_url\">$get_stats_pages_per_year_title</a></span>
+			  </td>
+			  <td>
+				<span>$get_stats_pages_per_year_human_unique</span>
+			  </td>
+			  <td>
+				<span>$get_stats_pages_per_year_unique_bots</span>
+			  </td>
+			 </tr>
+			";
+		}
+		echo"
+		 </tbody>
+		</table>
+	<!-- //Pages -->
+
+	<!-- Searches -->
+		<h2>Searches</h2>
+		<table class=\"hor-zebra\">
+		 <thead>
+		  <tr>
+		   <th scope=\"col\">
+			<span>Query</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Search counter</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Results</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Created</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Updated</span>
+		   </th>
+		  </tr>
+		 </thead>
+		 <tbody>
+		";
+
+		// Calendar
+		$between_from = "$get_current_stats_visit_per_year_year-01-01 00:00:00";
+		$between_from_mysql = quote_smart($link, $between_from);
+
+		$between_to = "$get_current_stats_visit_per_year_year-12-31 00:00:00";
+		$between_to_mysql = quote_smart($link, $between_to);
+
+
+		$query = "SELECT search_id, search_query, search_unique_counter, search_language_used, search_unique_ip_block, search_number_of_results, search_created_datetime, search_created_datetime_print, search_updated_datetime, search_updated_datetime_print FROM $t_search_engine_searches WHERE search_updated_datetime > $between_from_mysql AND search_updated_datetime < $between_to_mysql ORDER BY search_updated_datetime DESC";
+		$result = mysqli_query($link, $query);
+		while($row = mysqli_fetch_row($result)) {
+			list($get_search_id, $get_search_query, $get_search_unique_counter, $get_search_language_used, $get_search_unique_ip_block, $get_search_number_of_results, $get_search_created_datetime, $get_search_created_datetime_print, $get_search_updated_datetime, $get_search_updated_datetime_print) = $row;
+			
+			// Style
+			if(isset($style) && $style == ""){
+				$style = "odd";
+			}
+			else{
+				$style = "";
+			}
+
+
+		
+			echo"
+			 <tr>
+			  <td class=\"$style\">
+				<span>
+				<a href=\"../search/search.php?inp_search_query=$get_search_query&amp;l=$get_search_language_used\">$get_search_query</a>
+				</span>
+			  </td>
+			  <td class=\"$style\">
+				<span>
+				$get_search_unique_counter
+				</span>
+			  </td>
+			  <td class=\"$style\">
+				<span>
+				$get_search_number_of_results
+				</span>
+			  </td>
+			  <td class=\"$style\">
+				<span>
+				$get_search_created_datetime_print
+				</span>
+			  </td>
+			  <td class=\"$style\">
+				<span>
+				$get_search_updated_datetime_print
+				</span>
+			  </td>
+			 </tr>";
+		}
+		
+
+
+		echo"
+		 </tbody>
+		</table>
+	<!-- //Searches -->
+
+
 	<!-- Referers-->
 		<h2>Referrers</h2>
 		<table class=\"hor-zebra\">
@@ -532,7 +695,6 @@ else{
 		 </tbody>
 		</table>
 	<!-- //Referers-->
-
 	";
 	
 } // year found

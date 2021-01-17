@@ -43,6 +43,9 @@ $t_stats_users_registered_per_year = $mysqlPrefixSav . "stats_users_registered_p
 $t_stats_bots_per_month	= $mysqlPrefixSav . "stats_bots_per_month";
 $t_stats_bots_per_year	= $mysqlPrefixSav . "stats_bots_per_year";
 
+$t_stats_pages_visits_per_year		= $mysqlPrefixSav . "stats_pages_visits_per_year";
+$t_stats_pages_visits_per_year_ips 	= $mysqlPrefixSav . "stats_pages_visits_per_year_ips";
+
 $t_stats_visists_per_day 	= $mysqlPrefixSav . "stats_visists_per_day";
 $t_stats_visists_per_day_ips 	= $mysqlPrefixSav . "stats_visists_per_day_ips";
 $t_stats_visists_per_month 	= $mysqlPrefixSav . "stats_visists_per_month";
@@ -177,7 +180,8 @@ else{
 		list($get_stats_visit_per_year_id, $get_stats_visit_per_year_year, $get_stats_visit_per_year_human_unique, $get_stats_visit_per_year_human_unique_diff_from_last_year, $get_stats_visit_per_year_human_average_duration, $get_stats_visit_per_year_human_new_visitor_unique, $get_stats_visit_per_year_human_returning_visitor_unique, $get_stats_visit_per_year_unique_desktop, $get_stats_visit_per_year_unique_mobile, $get_stats_visit_per_year_unique_bots, $get_stats_visit_per_year_hits_total, $get_stats_visit_per_year_hits_human, $get_stats_visit_per_year_hits_desktop, $get_stats_visit_per_year_hits_mobile, $get_stats_visit_per_year_hits_bots) = $row;
 		
 		// Truncate temp data
-		mysqli_query($link,"TRUNCATE TABLE $t_stats_visists_per_year_ips") or die(mysqli_error());
+		mysqli_query($link, "TRUNCATE TABLE $t_stats_visists_per_year_ips") or die(mysqli_error());
+		mysqli_query($link, "TRUNCATE TABLE $t_stats_pages_visits_per_year_ips") or die(mysqli_error());
 	}
 
 
@@ -415,6 +419,55 @@ else{
 			$result = mysqli_query($link, "UPDATE $t_stats_bots_per_month SET stats_bot_unique='$inp_stats_bot_unique', stats_bot_hits='$inp_stats_bot_hits' WHERE stats_bot_id='$get_stats_bot_id'");
 		}
 
+
+
+		// Pages :: Year (Bots)
+		$inp_stats_page_url_mysql = quote_smart($link, $page_url);
+		$inp_stats_page_title_mysql = quote_smart($link, $website_title);
+		$query = "SELECT stats_pages_per_year_id, stats_pages_per_year_unique_bots FROM $t_stats_pages_visits_per_year WHERE stats_pages_per_year_year='$inp_year' AND stats_pages_per_year_url=$inp_stats_page_url_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_stats_pages_per_year_id, $get_stats_pages_per_year_unique_bots) = $row;
+		if($get_stats_pages_per_year_id == ""){
+			// This is a new page
+			mysqli_query($link, "INSERT INTO $t_stats_pages_visits_per_year 
+			(stats_pages_per_year_id, stats_pages_per_year_year, stats_pages_per_year_url, stats_pages_per_year_title, stats_pages_per_year_title_fetched, 
+			stats_pages_per_year_human_unique,  stats_pages_per_year_unique_desktop, stats_pages_per_year_unique_mobile, stats_pages_per_year_unique_bots) 
+			VALUES
+			(NULL, '$inp_year', $inp_stats_page_url_mysql, $inp_stats_page_title_mysql, 0, 
+			0, 0, 0, 1)") or die(mysqli_error($link));
+
+			// Get page ID
+			$query = "SELECT stats_pages_per_year_id, stats_pages_per_year_human_unique, stats_pages_per_year_unique_desktop, stats_pages_per_year_unique_mobile FROM $t_stats_pages_visits_per_year WHERE stats_pages_per_year_year='$inp_year' AND stats_pages_per_year_url=$inp_stats_page_url_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_stats_pages_per_year_id, $get_stats_pages_per_year_human_unique, $get_stats_pages_per_year_unique_desktop, $get_stats_pages_per_year_unique_mobile) = $row;
+
+			// IPBlock
+			mysqli_query($link, "INSERT INTO $t_stats_pages_visits_per_year_ips 
+			(stats_pages_per_year_ip_id, stats_pages_per_year_ip_year, stats_pages_per_year_ip_page_id, stats_pages_per_year_ip_ip) 
+			VALUES
+			(NULL, '$inp_year', $get_stats_pages_per_year_id, $inp_ip_mysql)") or die(mysqli_error($link));
+		}
+		else{
+			// We have record, if unique
+			$query = "SELECT stats_pages_per_year_ip_id FROM $t_stats_pages_visits_per_year_ips WHERE stats_pages_per_year_ip_year='$inp_year' AND stats_pages_per_year_ip_page_id=$get_stats_pages_per_year_id AND stats_pages_per_year_ip_ip=$inp_ip_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_stats_pages_per_year_ip_id) = $row;
+			if($get_stats_pages_per_year_ip_id == ""){
+				// New visitor for this page this year
+				mysqli_query($link, "INSERT INTO $t_stats_pages_visits_per_year_ips 
+				(stats_pages_per_year_ip_id, stats_pages_per_year_ip_year, stats_pages_per_year_ip_page_id, stats_pages_per_year_ip_ip) 
+				VALUES
+				(NULL, '$inp_year', $get_stats_pages_per_year_id, $inp_ip_mysql)") or die(mysqli_error($link));
+	
+
+				// Unique
+				$inp_count = $get_stats_pages_per_year_unique_bots+1;
+				mysqli_query($link, "UPDATE $t_stats_pages_visits_per_year SET stats_pages_per_year_unique_bots=$inp_count WHERE stats_pages_per_year_id=$get_stats_pages_per_year_id") or die(mysqli_error($link));
+			}
+		}
 
 	} // End Bot
 	elseif($get_stats_user_agent_type == "desktop" OR $get_stats_user_agent_type == "mobile"){
@@ -895,6 +948,76 @@ else{
 			}
 		}
 
+
+		// Pages :: Year (Humans)
+		$inp_stats_page_url_mysql = quote_smart($link, $page_url);
+		$inp_stats_page_title_mysql = quote_smart($link, $website_title);
+		$query = "SELECT stats_pages_per_year_id, stats_pages_per_year_human_unique, stats_pages_per_year_unique_desktop, stats_pages_per_year_unique_mobile FROM $t_stats_pages_visits_per_year WHERE stats_pages_per_year_year='$inp_year' AND stats_pages_per_year_url=$inp_stats_page_url_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_stats_pages_per_year_id, $get_stats_pages_per_year_human_unique, $get_stats_pages_per_year_unique_desktop, $get_stats_pages_per_year_unique_mobile) = $row;
+		if($get_stats_pages_per_year_id == ""){
+			// This is a new page
+			$inp_unique_desktop = 0;
+			$inp_unique_mobile = 0;
+			if($get_stats_user_agent_type == "desktop"){
+				$inp_unique_desktop = 1;
+			}
+			elseif($get_stats_user_agent_type == "mobile"){
+				$inp_unique_mobile = 1;
+			}
+			
+			mysqli_query($link, "INSERT INTO $t_stats_pages_visits_per_year 
+			(stats_pages_per_year_id, stats_pages_per_year_year, stats_pages_per_year_url, stats_pages_per_year_title, stats_pages_per_year_title_fetched, 
+			stats_pages_per_year_human_unique,  stats_pages_per_year_unique_desktop, stats_pages_per_year_unique_mobile, stats_pages_per_year_unique_bots) 
+			VALUES
+			(NULL, '$inp_year', $inp_stats_page_url_mysql, $inp_stats_page_title_mysql, 0, 
+			1, $inp_unique_desktop, $inp_unique_mobile, 0)") or die(mysqli_error($link));
+			
+			// Get page ID
+			$query = "SELECT stats_pages_per_year_id, stats_pages_per_year_human_unique, stats_pages_per_year_unique_desktop, stats_pages_per_year_unique_mobile FROM $t_stats_pages_visits_per_year WHERE stats_pages_per_year_year='$inp_year' AND stats_pages_per_year_url=$inp_stats_page_url_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_stats_pages_per_year_id, $get_stats_pages_per_year_human_unique, $get_stats_pages_per_year_unique_desktop, $get_stats_pages_per_year_unique_mobile) = $row;
+
+			// IPBlock
+			mysqli_query($link, "INSERT INTO $t_stats_pages_visits_per_year_ips 
+			(stats_pages_per_year_ip_id, stats_pages_per_year_ip_year, stats_pages_per_year_ip_page_id, stats_pages_per_year_ip_ip) 
+			VALUES
+			(NULL, '$inp_year', $get_stats_pages_per_year_id, $inp_ip_mysql)") or die(mysqli_error($link));
+		}
+		else{
+			// We have record, if unique
+			$query = "SELECT stats_pages_per_year_ip_id FROM $t_stats_pages_visits_per_year_ips WHERE stats_pages_per_year_ip_year='$inp_year' AND stats_pages_per_year_ip_page_id=$get_stats_pages_per_year_id AND stats_pages_per_year_ip_ip=$inp_ip_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_stats_pages_per_year_ip_id) = $row;
+			if($get_stats_pages_per_year_ip_id == ""){
+				// New visitor for this page this year
+				mysqli_query($link, "INSERT INTO $t_stats_pages_visits_per_year_ips 
+				(stats_pages_per_year_ip_id, stats_pages_per_year_ip_year, stats_pages_per_year_ip_page_id, stats_pages_per_year_ip_ip) 
+				VALUES
+				(NULL, '$inp_year', $get_stats_pages_per_year_id, $inp_ip_mysql)") or die(mysqli_error($link));
+	
+
+				// Unique
+				$inp_unique_desktop = $get_stats_pages_per_year_unique_desktop;
+				$inp_unique_mobile = $get_stats_pages_per_year_unique_mobile;
+				if($get_stats_user_agent_type == "desktop"){
+					$inp_unique_desktop = $inp_unique_desktop+1;
+				}
+				elseif($get_stats_user_agent_type == "mobile"){
+					$inp_unique_mobile = $inp_unique_mobile+1;
+				}
+
+				mysqli_query($link, "UPDATE $t_stats_pages_visits_per_year SET stats_pages_per_year_unique_desktop=$inp_unique_desktop, stats_pages_per_year_unique_mobile=$inp_unique_mobile WHERE stats_pages_per_year_id=$get_stats_pages_per_year_id") or die(mysqli_error($link));
+			}
+			else{
+				// Hits
+				// $inp_hits = $get_stats_country_hits+1;
+				// mysqli_query($link, "UPDATE $t_stats_countries_per_year SET stats_country_hits=$inp_hits WHERE stats_country_id=$get_stats_country_id") or die(mysqli_error($link));
+			}
+		}
 	} // End Human
 
 	

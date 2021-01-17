@@ -53,6 +53,8 @@ $t_stats_visists_per_month_ips 	= $mysqlPrefixSav . "stats_visists_per_month_ips
 $t_stats_visists_per_year 	= $mysqlPrefixSav . "stats_visists_per_year";
 $t_stats_visists_per_year_ips 	= $mysqlPrefixSav . "stats_visists_per_year_ips";
 
+$t_search_engine_searches = $mysqlPrefixSav . "search_engine_searches";
+
 
 
 /*- Translation ----------------------------------------------------------------------- */
@@ -441,6 +443,102 @@ else{
 		 </tbody>
 		</table>
 	<!-- //Bots -->
+
+	<!-- Searches -->
+		<h2>Searches</h2>
+		<table class=\"hor-zebra\">
+		 <thead>
+		  <tr>
+		   <th scope=\"col\">
+			<span>Query</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Search counter</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Results</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Created</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Updated</span>
+		   </th>
+		  </tr>
+		 </thead>
+		 <tbody>
+		";
+
+		// Calendar
+		$between_from = "$get_current_stats_visit_per_month_year-$get_current_stats_visit_per_month_month-01 00:00:00";
+		if($get_current_stats_visit_per_month_month < "10"){
+			$between_from = "$get_current_stats_visit_per_month_year-0$get_current_stats_visit_per_month_month-01 00:00:00";
+		}
+		$between_from_mysql = quote_smart($link, $between_from);
+
+		$between_to = "$get_current_stats_visit_per_month_year-$get_current_stats_visit_per_month_month-31 00:00:00";
+		if($get_current_stats_visit_per_month_month == "2"){
+			$between_to = "$get_current_stats_visit_per_month_year-$get_current_stats_visit_per_month_month-28 00:00:00";
+		}
+		elseif($get_current_stats_visit_per_month_month == "4" OR $get_current_stats_visit_per_month_month == "6" OR $get_current_stats_visit_per_month_month == "9" OR $get_current_stats_visit_per_month_month == "11"){
+			$between_to = "$get_current_stats_visit_per_month_year-$get_current_stats_visit_per_month_month-30 00:00:00";
+		}
+		else{
+			$between_to = "$get_current_stats_visit_per_month_year-$get_current_stats_visit_per_month_month-31 00:00:00";
+		}
+		$between_to_mysql = quote_smart($link, $between_to);
+
+		$query = "SELECT search_id, search_query, search_unique_counter, search_language_used, search_unique_ip_block, search_number_of_results, search_created_datetime, search_created_datetime_print, search_updated_datetime, search_updated_datetime_print FROM $t_search_engine_searches WHERE search_updated_datetime > $between_from_mysql AND search_updated_datetime < $between_to_mysql ORDER BY search_updated_datetime DESC";
+		$result = mysqli_query($link, $query);
+		while($row = mysqli_fetch_row($result)) {
+			list($get_search_id, $get_search_query, $get_search_unique_counter, $get_search_language_used, $get_search_unique_ip_block, $get_search_number_of_results, $get_search_created_datetime, $get_search_created_datetime_print, $get_search_updated_datetime, $get_search_updated_datetime_print) = $row;
+			
+			// Style
+			if(isset($style) && $style == ""){
+				$style = "odd";
+			}
+			else{
+				$style = "";
+			}
+
+
+		
+			echo"
+			 <tr>
+			  <td class=\"$style\">
+				<span>
+				<a href=\"../search/search.php?inp_search_query=$get_search_query&amp;l=$get_search_language_used\">$get_search_query</a>
+				</span>
+			  </td>
+			  <td class=\"$style\">
+				<span>
+				$get_search_unique_counter
+				</span>
+			  </td>
+			  <td class=\"$style\">
+				<span>
+				$get_search_number_of_results
+				</span>
+			  </td>
+			  <td class=\"$style\">
+				<span>
+				$get_search_created_datetime_print
+				</span>
+			  </td>
+			  <td class=\"$style\">
+				<span>
+				$get_search_updated_datetime_print
+				</span>
+			  </td>
+			 </tr>";
+		}
+		
+
+
+		echo"
+		 </tbody>
+		</table>
+	<!-- //Searches -->
 
 	<!-- Referers-->
 		<h2>Referrers</h2>

@@ -1105,9 +1105,96 @@ else{
 				</p>
 
 				<p>$l_grocery &middot; <a href=\"$root/food/new_food.php?l=$l\" target=\"_blank\">$l_new_food</a><br />
-				<input type=\"text\" name=\"inp_item_grocery\" class=\"inp_item_grocery\" size=\"25\" value=\"$inp_item_grocery\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" id=\"nettport_inp_search_query\" />
+				<input type=\"text\" name=\"inp_item_grocery\" class=\"inp_item_grocery\" id=\"inp_item_grocery\" size=\"25\" value=\"$inp_item_grocery\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 				<input type=\"hidden\" name=\"inp_item_food_id\" id=\"inp_item_food_id\" /></p>
 
+				<!-- Special character replacer -->
+						<script>
+
+						\$(document).ready(function(){
+							window.setInterval(function(){
+								var inp_item_grocery = \$(\".inp_item_grocery\").val();
+								var inp_item_grocery = inp_item_grocery.replace(\"&aring;\", \"å\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&aelig;\", \"æ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&Aring;\", \"Å\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&Aelig;\", \"Æ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#192;\", \"À\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#193;\", \"Á\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#194;\", \"Â\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#195;\", \"Ã\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#196;\", \"Ä\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#197;\", \"Å\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#198;\", \"Æ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#199;\", \"Ç\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#200;\", \"È\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#201;\", \"É\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#202;\", \"Ê\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#203;\", \"Ë\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#204;\", \"Ì\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#205;\", \"Í\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#206;\", \"Î\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#207;\", \"Ï\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#208;\", \"Ð\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#209;\", \"Ñ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#210;\", \"Ò\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#211;\", \"Ó\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#212;\", \"Ô\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#213;\", \"Õ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#214;\", \"Ö\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#215;\", \"×\");   
+								var inp_item_grocery = inp_item_grocery.replace(\"&#216;\", \"Ø\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&Oslash;\", \"Ø\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&oslash;\", \"ø\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#217;\", \"Ù\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#218;\", \"Ú\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#219;\", \"Û\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#220;\", \"Ü\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#221;\", \"Ý\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#222;\", \"Þ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#223;\", \"ß\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#224;\", \"à\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#225;\", \"á\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#226;\", \"â\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#227;\", \"ã\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#228;\", \"ä\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#229;\", \"å\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#230;\", \"æ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#231;\", \"ç\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#232;\", \"è\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#233;\", \"é\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#234;\", \"ê\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#235;\", \"ë\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#236;\", \"ì\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#237;\", \"í\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#238;\", \"î\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#239;\", \"ï\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#240;\", \"ð\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#241;\", \"ñ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&ntilde;\", \"ñ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#242;\", \"ò\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#243;\", \"ó\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#244;\", \"ô\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#245;\", \"õ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#246;\", \"ö\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#247;\", \"÷\");  
+								var inp_item_grocery = inp_item_grocery.replace(\"&#248;\", \"ø\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#249;\", \"ù\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#250;\", \"ú\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#251;\", \"û\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#252;\", \"ü\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#253;\", \"ý\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#254;\", \"þ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#255;\", \"ÿ\"); 
+
+								\$(\"#inp_item_grocery\").val(inp_item_grocery);
+								
+							}, 1000);
+
+							
+						});
+						</script>
+
+				<!-- //Special character replacer -->
 				<div id=\"nettport_search_results\">
 				</div><div class=\"clear\"></div>
 				
@@ -1257,10 +1344,10 @@ else{
 				<!-- Search script -->
 					<script id=\"source\" language=\"javascript\" type=\"text/javascript\">
 					\$(document).ready(function () {
-						\$('#nettport_inp_search_query').keyup(function () {
+						\$('#inp_item_grocery').keyup(function () {
 							$(\"#nettport_search_results\").show();
        							// getting the value that user typed
-       							var searchString    = $(\"#nettport_inp_search_query\").val();
+       							var searchString    = $(\"#inp_item_grocery\").val();
  							// forming the queryString
       							var data            = 'l=$l&recipe_id=$recipe_id&q='+ searchString;
          
@@ -2409,11 +2496,98 @@ else{
 					  </tr>
 					</table>
 					<p>$l_grocery &middot; <a href=\"$root/food/new_food.php?l=$l\" target=\"_blank\">$l_new_food</a><br />
-					<input type=\"text\" name=\"inp_item_grocery\" class=\"inp_item_grocery\" size=\"25\" value=\"$get_item_grocery\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" id=\"nettport_inp_search_query\" />
+					<input type=\"text\" name=\"inp_item_grocery\" class=\"inp_item_grocery\" id=\"inp_item_grocery\" size=\"25\" value=\"$get_item_grocery\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 					<input type=\"hidden\" name=\"inp_item_food_id\" id=\"inp_item_food_id\" /></p>
 
+					<!-- Special character replacer -->
+						<script>
+
+						\$(document).ready(function(){
+							window.setInterval(function(){
+								var inp_item_grocery = \$(\".inp_item_grocery\").val();
+								var inp_item_grocery = inp_item_grocery.replace(\"&aring;\", \"å\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&aelig;\", \"æ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&Aring;\", \"Å\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&Aelig;\", \"Æ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#192;\", \"À\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#193;\", \"Á\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#194;\", \"Â\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#195;\", \"Ã\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#196;\", \"Ä\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#197;\", \"Å\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#198;\", \"Æ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#199;\", \"Ç\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#200;\", \"È\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#201;\", \"É\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#202;\", \"Ê\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#203;\", \"Ë\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#204;\", \"Ì\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#205;\", \"Í\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#206;\", \"Î\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#207;\", \"Ï\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#208;\", \"Ð\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#209;\", \"Ñ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#210;\", \"Ò\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#211;\", \"Ó\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#212;\", \"Ô\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#213;\", \"Õ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#214;\", \"Ö\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#215;\", \"×\");   
+								var inp_item_grocery = inp_item_grocery.replace(\"&#216;\", \"Ø\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&Oslash;\", \"Ø\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&oslash;\", \"ø\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#217;\", \"Ù\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#218;\", \"Ú\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#219;\", \"Û\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#220;\", \"Ü\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#221;\", \"Ý\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#222;\", \"Þ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#223;\", \"ß\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#224;\", \"à\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#225;\", \"á\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#226;\", \"â\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#227;\", \"ã\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#228;\", \"ä\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#229;\", \"å\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#230;\", \"æ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#231;\", \"ç\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#232;\", \"è\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#233;\", \"é\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#234;\", \"ê\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#235;\", \"ë\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#236;\", \"ì\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#237;\", \"í\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#238;\", \"î\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#239;\", \"ï\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#240;\", \"ð\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#241;\", \"ñ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&ntilde;\", \"ñ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#242;\", \"ò\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#243;\", \"ó\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#244;\", \"ô\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#245;\", \"õ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#246;\", \"ö\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#247;\", \"÷\");  
+								var inp_item_grocery = inp_item_grocery.replace(\"&#248;\", \"ø\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#249;\", \"ù\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#250;\", \"ú\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#251;\", \"û\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#252;\", \"ü\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#253;\", \"ý\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#254;\", \"þ\"); 
+								var inp_item_grocery = inp_item_grocery.replace(\"&#255;\", \"ÿ\"); 
+
+								\$(\"#inp_item_grocery\").val(inp_item_grocery);
+								
+							}, 1000);
+
+							
+						});
+						</script>
+
+					<!-- //Special character replacer -->
 					<div id=\"nettport_search_results\">
-					</div><div class=\"clear\"></div></span>
+					</div><div class=\"clear\"></div>
 
 
 
@@ -2560,10 +2734,10 @@ else{
 					<!-- Search script -->
 					<script id=\"source\" language=\"javascript\" type=\"text/javascript\">
 					\$(document).ready(function () {
-						\$('#nettport_inp_search_query').keyup(function () {
+						\$('#inp_item_grocery').keyup(function () {
 							$(\"#nettport_search_results\").show();
        							// getting the value that user typed
-       							var searchString    = $(\"#nettport_inp_search_query\").val();
+       							var searchString    = $(\"#inp_item_grocery\").val();
  							// forming the queryString
       							var data            = 'l=$l&recipe_id=$recipe_id&q='+ searchString;
          
