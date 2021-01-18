@@ -112,61 +112,65 @@ else{
 
 			if($process == 1){
 				$inp_recipe_title = $_POST['inp_recipe_title'];
-		$inp_recipe_title = output_html($inp_recipe_title);
-		$inp_recipe_title_len = strlen($inp_recipe_title);
-		if($inp_recipe_title_len > 205){
-			$inp_recipe_title = substr($inp_recipe_title, 0, 206);
-			$inp_recipe_title = $inp_recipe_title . "...";
-		}
-		$inp_recipe_title_mysql = quote_smart($link, $inp_recipe_title);
+				$inp_recipe_title = output_html($inp_recipe_title);
+				$inp_recipe_title_len = strlen($inp_recipe_title);
+				if($inp_recipe_title_len > 205){
+					$inp_recipe_title = substr($inp_recipe_title, 0, 206);
+					$inp_recipe_title = $inp_recipe_title . "...";
+				}
+				$inp_recipe_title_mysql = quote_smart($link, $inp_recipe_title);
 
-		$inp_recipe_introduction = $_POST['inp_recipe_introduction'];
-		$inp_recipe_introduction = output_html($inp_recipe_introduction);
-		$inp_recipe_introduction = str_replace("<br />", "\n", $inp_recipe_introduction);
-		$inp_recipe_introduction_mysql = quote_smart($link, $inp_recipe_introduction);
+				$inp_recipe_introduction = $_POST['inp_recipe_introduction'];
+				$inp_recipe_introduction = output_html($inp_recipe_introduction);
+				$inp_recipe_introduction = str_replace("<br />", "\n", $inp_recipe_introduction);
+				$inp_recipe_introduction_mysql = quote_smart($link, $inp_recipe_introduction);
 
-		// Update MySQL
-		$result = mysqli_query($link, "UPDATE $t_recipes SET recipe_title=$inp_recipe_title_mysql, recipe_introduction=$inp_recipe_introduction_mysql WHERE recipe_id=$recipe_id_mysql")  or die(mysqli_error($link));
+				// Update MySQL
+				$result = mysqli_query($link, "UPDATE $t_recipes SET recipe_title=$inp_recipe_title_mysql, recipe_introduction=$inp_recipe_introduction_mysql WHERE recipe_id=$recipe_id_mysql")  or die(mysqli_error($link));
 
-		// Directions
-		$inp_recipe_directions = $_POST['inp_recipe_directions'];
-		require_once "$root/_admin/_functions/htmlpurifier/HTMLPurifier.auto.php";
-		$config = HTMLPurifier_Config::createDefault();
-		$purifier = new HTMLPurifier($config);
-		if($get_user_rank == "admin" OR $get_user_rank == "moderator" OR $get_user_rank == "editor"){
-		}
-		elseif($get_user_rank == "trusted"){
-		}
-		else{
-			// p, ul, li, b
-			$config->set('HTML.Allowed', 'p,b,strong,a[href],i,ul,li');
-			$inp_recipe_directions = $purifier->purify($inp_recipe_directions);
-		}
+				// Directions
+				$inp_recipe_directions = $_POST['inp_recipe_directions'];
+				require_once "$root/_admin/_functions/htmlpurifier/HTMLPurifier.auto.php";
+				$config = HTMLPurifier_Config::createDefault();
+				$purifier = new HTMLPurifier($config);
+				if($get_user_rank == "admin" OR $get_user_rank == "moderator" OR $get_user_rank == "editor"){
+				}
+				elseif($get_user_rank == "trusted"){
+				}
+				else{
+					// p, ul, li, b
+					$config->set('HTML.Allowed', 'p,b,strong,a[href],i,ul,li');
+					$inp_recipe_directions = $purifier->purify($inp_recipe_directions);
+				}
 
-		$inp_recipe_directions = encode_national_letters($inp_recipe_directions);
+				$inp_recipe_directions = encode_national_letters($inp_recipe_directions);
 
-		$sql = "UPDATE $t_recipes SET recipe_directions=? WHERE recipe_id=$recipe_id_mysql";
-		$stmt = $link->prepare($sql);
-		$stmt->bind_param("s", $inp_recipe_directions);
-		$stmt->execute();
-		if ($stmt->errno) {
-			echo "FAILURE!!! " . $stmt->error; die;
-		}
+				$sql = "UPDATE $t_recipes SET recipe_directions=? WHERE recipe_id=$recipe_id_mysql";
+				$stmt = $link->prepare($sql);
+				$stmt->bind_param("s", $inp_recipe_directions);
+				$stmt->execute();
+				if ($stmt->errno) {
+					echo "FAILURE!!! " . $stmt->error; die;
+				}
 
 
-
-		// Header
-		$url = "edit_recipe.php?recipe_id=$recipe_id&l=$l&ft=success&fm=changes_saved";
-		header("Location: $url");
-		exit;
-	}
+				// Search engine
+				include("edit_recipe_include_update_search_engine.php");
 
 
 
-	echo"
-	<h1>$get_recipe_title</h1>
+				// Header
+				$url = "edit_recipe.php?recipe_id=$recipe_id&l=$l&ft=success&fm=changes_saved";
+				header("Location: $url");
+				exit;
+			}
+
+
+
+			echo"
+			<h1>$get_recipe_title</h1>
 	
-	<!-- You are here -->
+			<!-- You are here -->
 			<p>
 			<b>$l_you_are_here:</b><br />
 			<a href=\"index.php?l=$l\">$l_recipes</a>
@@ -177,10 +181,10 @@ else{
 			&gt;
 			<a href=\"edit_recipe.php?recipe_id=$recipe_id&amp;l=$l\">$l_general</a>
 			</p>
-	<!-- //You are here -->
+			<!-- //You are here -->
 
 
-	<!-- Menu -->
+			<!-- Menu -->
 		<div class=\"tabs\">
 			<ul>
 				<li><a href=\"edit_recipe.php?recipe_id=$recipe_id&amp;l=$l\" class=\"active\">$l_general</a></li>

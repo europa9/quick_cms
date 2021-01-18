@@ -15,17 +15,10 @@ if(!(isset($define_access_to_control_panel))){
 }
 
 /*- Tables --------------------------------------------------------------------------- */
-$t_recipes 	 	= $mysqlPrefixSav . "recipes";
-$t_recipes_ingredients	= $mysqlPrefixSav . "recipes_ingredients";
-$t_recipes_groups	= $mysqlPrefixSav . "recipes_groups";
-$t_recipes_items	= $mysqlPrefixSav . "recipes_items";
-$t_recipes_numbers	= $mysqlPrefixSav . "recipes_numbers";
-$t_recipes_rating	= $mysqlPrefixSav . "recipes_rating";
-$t_recipes_cuisines	= $mysqlPrefixSav . "recipes_cuisines";
-$t_recipes_seasons	= $mysqlPrefixSav . "recipes_seasons";
-$t_recipes_occasions	= $mysqlPrefixSav . "recipes_occasions";
-$t_recipes_categories	= $mysqlPrefixSav . "recipes_categories";
+include("_inc/recipes/_tables.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index = $mysqlPrefixSav . "search_engine_index";
 
 /*- Variables ------------------------------------------------------------------------ */
 if(isset($_GET['recipe_id'])) {
@@ -68,6 +61,7 @@ else{
 		$result = mysqli_query($link, "DELETE FROM $t_recipes_items WHERE item_recipe_id=$recipe_id_mysql");
 		$result = mysqli_query($link, "DELETE FROM $t_recipes_numbers WHERE number_recipe_id=$recipe_id_mysql");
 		$result = mysqli_query($link, "DELETE FROM $t_recipes_rating WHERE rating_recipe_id=$recipe_id_mysql");
+		$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_module_name='recipes' AND index_reference_name='recipe_id' AND index_reference_id=$recipe_id_mysql");
 		
 		// Image
 		if($get_recipe_image != "" && file_exists("../$get_recipe_image_path/$get_recipe_image")){

@@ -212,6 +212,12 @@ else{
 		
 		
 
+
+				// Search engine
+				include("edit_recipe_include_update_search_engine.php");
+
+
+
 		// Header
 		$url = "edit_recipe_categorization.php?recipe_id=$recipe_id&l=$l&ft=success&fm=changes_saved";
 		header("Location: $url");

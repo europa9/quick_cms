@@ -14,18 +14,15 @@ if(!(isset($define_access_to_control_panel))){
 	die;
 }
 
-/*- Tables --------------------------------------------------------------------------- */
-$t_recipes 	 	= $mysqlPrefixSav . "recipes";
-$t_recipes_ingredients	= $mysqlPrefixSav . "recipes_ingredients";
-$t_recipes_groups	= $mysqlPrefixSav . "recipes_groups";
-$t_recipes_items	= $mysqlPrefixSav . "recipes_items";
-$t_recipes_numbers	= $mysqlPrefixSav . "recipes_numbers";
-$t_recipes_rating	= $mysqlPrefixSav . "recipes_rating";
-$t_recipes_cuisines	= $mysqlPrefixSav . "recipes_cuisines";
-$t_recipes_seasons	= $mysqlPrefixSav . "recipes_seasons";
-$t_recipes_occasions	= $mysqlPrefixSav . "recipes_occasions";
-$t_recipes_categories	= $mysqlPrefixSav . "recipes_categories";
 
+/*- Tables --------------------------------------------------------------------------- */
+include("_inc/recipes/_tables.php");
+
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index = $mysqlPrefixSav . "search_engine_index";
+
+/*- Functions --------------------------------------------------------------------------- */
+include("_functions/get_extension.php");
 
 /*- Variables ------------------------------------------------------------------------ */
 if(isset($_GET['recipe_id'])) {
@@ -159,6 +156,8 @@ else{
 					imagepng($tmp, $thumb_final_path);
 					imagedestroy($tmp);
 					
+					// Search engine
+					include("edit_recipe_include_update_search_engine.php");
 
 
 					$url = "index.php?open=$open&page=$page&recipe_id=$recipe_id&editor_language=$editor_language&ft=success&fm=image_uploaded";

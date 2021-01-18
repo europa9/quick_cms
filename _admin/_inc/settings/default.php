@@ -98,7 +98,14 @@ if($mode == "save"){
 	// Statisics
 	$inp_site_use_gethostbyaddr = $_POST['inp_site_use_gethostbyaddr'];
 	$inp_site_use_gethostbyaddr = output_html($inp_site_use_gethostbyaddr);
-	
+
+	$inp_site_days_to_keep_page_visits = $_POST['inp_site_days_to_keep_page_visits'];
+	$inp_site_days_to_keep_page_visits = output_html($inp_site_days_to_keep_page_visits);
+	if(!(is_numeric($inp_site_days_to_keep_page_visits))){
+		echo"inp_site_days_to_keep_page_visits must be numeric!";
+		die;
+	}
+
 	// Test
 	$inp_site_is_test = $_POST['inp_site_is_test'];
 	$inp_site_is_test = output_html($inp_site_is_test);
@@ -135,6 +142,7 @@ if($mode == "save"){
 
 // Statisics
 \$configSiteUseGethostbyaddrSav = \"$inp_site_use_gethostbyaddr\";
+\$configSiteDaysToKeepPageVisitsSav = \"$inp_site_days_to_keep_page_visits\";
 
 // Test
 \$configSiteIsTestSav = \"$inp_site_is_test\";
@@ -231,6 +239,13 @@ if($mode == ""){
 	<input type=\"radio\" name=\"inp_site_use_gethostbyaddr\" value=\"1\""; if($configSiteUseGethostbyaddrSav == "1"){ echo" checked=\"checked\""; } echo" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /> Yes
 	&nbsp;
 	<input type=\"radio\" name=\"inp_site_use_gethostbyaddr\" value=\"0\""; if($configSiteUseGethostbyaddrSav == "0"){ echo" checked=\"checked\""; } echo" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /> No
+	</p>
+
+	<p>Days to keep page visits:<br />
+	Every visited page is logged in table <em>stats_pages_visits_per_year</em> for statistical purpose.<br />
+	How many days do you want to store at the most?<br />
+	Set to 0 to deactivate logging.<br />
+	<input type=\"text\" name=\"inp_site_days_to_keep_page_visits\" value=\"$configSiteDaysToKeepPageVisitsSav\" size=\"5\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /><br />
 	</p>
 
 	<h2>Test mode</h2>

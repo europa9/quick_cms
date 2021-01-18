@@ -14,42 +14,15 @@ if(!(isset($define_access_to_control_panel))){
 	die;
 }
 
+/*- Tables --------------------------------------------------------------------------- */
+include("_inc/recipes/_tables.php");
+
 /*- Tables ---------------------------------------------------------------------------- */
-$t_recipes_liquidbase	 			= $mysqlPrefixSav . "recipes_liquidbase";
+$t_search_engine_index = $mysqlPrefixSav . "search_engine_index";
 
-$t_recipes 	 			= $mysqlPrefixSav . "recipes";
-$t_recipes_ingredients			= $mysqlPrefixSav . "recipes_ingredients";
-$t_recipes_groups			= $mysqlPrefixSav . "recipes_groups";
-$t_recipes_items			= $mysqlPrefixSav . "recipes_items";
-$t_recipes_numbers			= $mysqlPrefixSav . "recipes_numbers";
-$t_recipes_rating			= $mysqlPrefixSav . "recipes_rating";
-$t_recipes_cuisines			= $mysqlPrefixSav . "recipes_cuisines";
-$t_recipes_cuisines_translations	= $mysqlPrefixSav . "recipes_cuisines_translations";
-$t_recipes_seasons			= $mysqlPrefixSav . "recipes_seasons";
-$t_recipes_seasons_translations		= $mysqlPrefixSav . "recipes_seasons_translations";
-$t_recipes_occasions			= $mysqlPrefixSav . "recipes_occasions";
-$t_recipes_occasions_translations	= $mysqlPrefixSav . "recipes_occasions_translations";
-$t_recipes_categories			= $mysqlPrefixSav . "recipes_categories";
-$t_recipes_categories_translations	= $mysqlPrefixSav . "recipes_categories_translations";
-$t_recipes_measurements			= $mysqlPrefixSav . "recipes_measurements";
-$t_recipes_measurements_translations	= $mysqlPrefixSav . "recipes_measurements_translations";
-$t_recipes_weekly_special		= $mysqlPrefixSav . "recipes_weekly_special";
-$t_recipes_of_the_day			= $mysqlPrefixSav . "recipes_of_the_day";
-$t_recipes_comments			= $mysqlPrefixSav . "recipes_comments";
-$t_recipes_favorites			= $mysqlPrefixSav . "recipes_favorites";
-$t_recipes_tags				= $mysqlPrefixSav . "recipes_tags";
-$t_recipes_links			= $mysqlPrefixSav . "recipes_links";
-$t_recipes_comments			= $mysqlPrefixSav . "recipes_comments";
-$t_recipes_searches			= $mysqlPrefixSav . "recipes_searches";
-$t_recipes_age_restrictions 	 	= $mysqlPrefixSav . "recipes_age_restrictions";
-$t_recipes_age_restrictions_accepted	= $mysqlPrefixSav . "recipes_age_restrictions_accepted";
+/*- Functions --------------------------------------------------------------------------- */
+include("_functions/get_extension.php");
 
-$t_recipes_pairing_loaded 		= $mysqlPrefixSav . "recipes_pairing_loaded";
-$t_recipes_pairing_recipes		= $mysqlPrefixSav . "recipes_pairing_recipes";
-
-
-$t_recipes_similar_loaded = $mysqlPrefixSav . "recipes_similar_loaded";
-$t_recipes_similar_recipes = $mysqlPrefixSav . "recipes_similar_recipes";
 
 /*- Variables ------------------------------------------------------------------------ */
 if(isset($_GET['recipe_id'])) {
@@ -203,6 +176,9 @@ else{
 		$result = mysqli_query($link, "UPDATE $t_recipes SET recipe_user_id=$inp_recipe_user_id_mysql, recipe_country=$inp_recipe_country_mysql, recipe_language=$inp_recipe_language_mysql, recipe_age_restriction=$inp_age_restriction_mysql, recipe_published=$inp_published_mysql WHERE recipe_id=$recipe_id_mysql");
 		
 		
+		// Search engine
+		include("edit_recipe_include_update_search_engine.php");
+
 
 		// Header
 		$url = "index.php?open=$open&page=$page&recipe_id=$recipe_id&editor_language=$editor_language&ft=success&fm=changes_saved";

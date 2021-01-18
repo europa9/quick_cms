@@ -117,8 +117,8 @@ else{
 		if($get_recipe_user_id == "$my_user_id" OR $get_user_rank == "admin"){
 
 
-	if($action == ""){
-		if($process == 1){
+			if($action == ""){
+				if($process == 1){
 				
 			// Sjekk filen
 			$file_name = basename($_FILES['inp_image']['name']);
@@ -232,6 +232,12 @@ else{
 						imagejpeg($tmp, $thumb_final_path);
 						imagedestroy($tmp);
 					
+
+
+						// Search engine
+						include("edit_recipe_include_update_search_engine.php");
+
+
 						$url = "edit_recipe_image.php?recipe_id=$recipe_id&l=$l&ft=success&fm=image_uploaded";
 						header("Location: $url");
 						exit;

@@ -122,6 +122,7 @@ if($process == "1"){
 
 	// Statisics
 	\$configSiteUseGethostbyaddrSav = \"1\";
+	\$configSiteDaysToKeepPageVisitsSav = \"730\";
 
 	// Test
 	\$configSiteIsTestSav = \"0\";

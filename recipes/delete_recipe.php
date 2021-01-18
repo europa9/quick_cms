@@ -41,6 +41,11 @@ else{
 $l_mysql = quote_smart($link, $l);
 
 
+/*- Tables ---------------------------------------------------------------------------------- */
+include("_tables.php");
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index = $mysqlPrefixSav . "search_engine_index";
+
 
 /*- Get recipe ------------------------------------------------------------------------- */
 // Select
@@ -91,6 +96,7 @@ else{
 		$result = mysqli_query($link, "DELETE FROM $t_recipes_items WHERE item_recipe_id=$recipe_id_mysql");
 		$result = mysqli_query($link, "DELETE FROM $t_recipes_numbers WHERE number_recipe_id=$recipe_id_mysql");
 		$result = mysqli_query($link, "DELETE FROM $t_recipes_rating WHERE rating_recipe_id=$recipe_id_mysql");
+		$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_module_name='recipes' AND index_reference_name='recipe_id' AND index_reference_id=$recipe_id_mysql");
 		
 		// Image
 		if($get_recipe_image != "" && file_exists("../$get_recipe_image_path/$get_recipe_image")){
