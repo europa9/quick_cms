@@ -47,7 +47,8 @@ if(isset($_SESSION['admin_user_id'])){
 		   button_code_plugin TEXT,
 		   button_language VARCHAR(200),
 		   button_image_path VARCHAR(200),
-		   button_image_18x18 VARCHAR(200)
+		   button_image_18x18 VARCHAR(200),
+		   button_updated DATETIME
 		   )")
 		   or die(mysqli_error());
 
@@ -55,7 +56,10 @@ if(isset($_SESSION['admin_user_id'])){
 					VALUES 
 					(NULL, 'Facebook', 'https://www.facebook.com/sharer/sharer.php?u=%url%', 'no', '_webdesign/default_webdesign/images/share', 'facebook_18x18.png'),
 					(NULL, 'Twitter', 'https://twitter.com/intent/tweet?text=%title% %url%&related=AddToAny,micropat', 'no', '_webdesign/default_webdesign/images/share', 'twitter_18x18.png'),
-					(NULL, 'Reddit', 'https://www.reddit.com/submit?url=%url%&title=%title%', 'no', '_webdesign/default_webdesign/images/share', 'reddit_18x18.png')
+					(NULL, 'Reddit', 'https://www.reddit.com/submit?url=%url%&title=%title%', 'no', '_webdesign/default_webdesign/images/share', 'reddit_18x18.png'),
+					(NULL, 'Facebook', 'https://www.facebook.com/sharer/sharer.php?u=%url%', 'en', '_webdesign/default_webdesign/images/share', 'facebook_18x18.png'),
+					(NULL, 'Twitter', 'https://twitter.com/intent/tweet?text=%title% %url%&related=AddToAny,micropat', 'en', '_webdesign/default_webdesign/images/share', 'twitter_18x18.png'),
+					(NULL, 'Reddit', 'https://www.reddit.com/submit?url=%url%&title=%title%', 'en', '_webdesign/default_webdesign/images/share', 'reddit_18x18.png')
 					") or die(mysqli_error());
 	}
 	echo"

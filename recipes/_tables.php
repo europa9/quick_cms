@@ -63,5 +63,6 @@ $t_recipes_stats_favorited_per_year 	= $mysqlPrefixSav . "recipes_stats_favorite
 $t_recipes_stats_chef_of_the_month 	= $mysqlPrefixSav . "recipes_stats_chef_of_the_month";
 $t_recipes_stats_chef_of_the_year 	= $mysqlPrefixSav . "recipes_stats_chef_of_the_year";
 
+$t_webdesign_share_buttons 	= $mysqlPrefixSav . "webdesign_share_buttons";
 
 ?>

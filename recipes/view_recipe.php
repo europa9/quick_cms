@@ -153,6 +153,9 @@ else{
 
 
 	if($can_view_recipe == 1){
+		// Common varaibles
+		$inp_recipe_language_mysql = quote_smart($link, $get_recipe_language);
+
 
 		// Unique hits
 		$inp_ip = $_SERVER['REMOTE_ADDR'];
@@ -274,7 +277,6 @@ else{
 		$inp_recipe_title_mysql = quote_smart($link, $get_recipe_title);
 		$inp_recipe_image_path_mysql = quote_smart($link, $get_recipe_image_path);
 		$inp_recipe_thumb_278x156_mysql = quote_smart($link, $get_recipe_thumb_278x156);
-		$inp_recipe_language_mysql = quote_smart($link, $get_recipe_language);
 
 		if($get_recipe_published == "1"){
 			$query = "SELECT stats_visit_per_month_ip_id FROM $t_recipes_stats_views_per_month_ips WHERE stats_visit_per_month_month=$month AND stats_visit_per_month_year=$year AND stats_visit_per_month_recipe_id=$get_recipe_id AND stats_visit_per_month_ip=$inp_ip_mysql";
@@ -715,7 +717,25 @@ else{
 						<li><a href=\"delete_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\"><img src=\"_gfx/icons/outline_clear_black_18dp.png\" alt=\"outline_clear_black_18dp.png\" /> $l_delete</a></li>
 						";
 					}
+
+					// Share buttons
 					echo"
+						<li>
+					";
+					$query = "SELECT button_id, button_title, button_url, button_code_preload, button_code_plugin, button_image_path, button_image_18x18 FROM $t_webdesign_share_buttons WHERE button_language=$inp_recipe_language_mysql ORDER BY button_id ASC";
+					$result = mysqli_query($link, $query);
+					while($row = mysqli_fetch_row($result)) {
+						list($get_button_id, $get_button_title, $get_button_url, $get_button_code_preload, $get_button_code_plugin, $get_button_image_path, $get_button_image_18x18) = $row;
+						$page_url_encoded = urlencode($page_url);
+						$page_url_encoded = str_replace("%26amp%3B", "%26", $page_url_encoded);
+						$get_button_url = str_replace("%url%", $page_url_encoded, $get_button_url);
+						$get_button_url = str_replace("%title%", $get_recipe_title, $get_button_url);
+						echo"
+						<a href=\"$get_button_url\"><img src=\"$root/$get_button_image_path/$get_button_image_18x18\" alt=\"$get_button_image_18x18\" class=\"share_button\" title=\"$get_button_title\" /></a>
+						";
+					}
+					echo"
+						</li>
 
 				</ul>
 			</div>

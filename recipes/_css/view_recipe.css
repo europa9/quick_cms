@@ -76,6 +76,12 @@ div.recipe_info_line > ul > li > a > img{
 	float: left;
 	padding: 0px 4px 0px 0px;
 }
+div.recipe_info_line > ul > li > a > img.share_button{
+	float: none;
+	position: relative;
+	padding: 0px 0px 0px 0px;
+	top: 3px;
+}
 
 
 /*- Ingredients ----------------------------------------------------- */

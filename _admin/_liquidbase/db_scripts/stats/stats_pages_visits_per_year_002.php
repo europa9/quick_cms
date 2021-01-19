@@ -28,7 +28,7 @@ if(isset($_SESSION['admin_user_id'])){
 					stats_pages_per_year_unique_desktop INT,
 					stats_pages_per_year_unique_mobile INT,
 					stats_pages_per_year_unique_bots INT,
-					stats_pages_per_year_updated_time VARCHAR(200))")
+					stats_pages_per_year_updated_time INT)")
 					or die(mysqli_error($link));
 	}
 

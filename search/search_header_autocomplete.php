@@ -47,7 +47,7 @@ if(isset($_GET['inp_search_query']) && $_GET['inp_search_query'] != ''){
 		$inp_search_query = str_replace("\\", "", $inp_search_query);
 		$inp_search_query = str_replace("/", "", $inp_search_query);
 		$inp_search_query_len = strlen($inp_search_query);
-		if($inp_search_query_len > 3){
+		if($inp_search_query_len > 2){
 			$inp_search_query_percentage = $inp_search_query . "%";
 			$part_mysql = quote_smart($link, $inp_search_query_percentage);
 
@@ -116,7 +116,7 @@ if(isset($_GET['inp_search_query']) && $_GET['inp_search_query'] != ''){
 			$datetime_saying = date("j M Y H:i:s");
 
 			// Insert into searches
-			$query = "SELECT search_id, search_query, search_unique_counter, search_unique_ip_block, search_number_of_results FROM $t_search_engine_searches WHERE search_query=$inp_search_query_mysql";
+			$query = "SELECT search_id, search_query, search_unique_counter, search_unique_ip_block, search_number_of_results FROM $t_search_engine_searches WHERE search_query=$inp_search_query_mysql AND search_language_used=$l_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
 			list($get_search_id, $get_search_query, $get_search_unique_counter, $get_search_unique_ip_block, $get_search_number_of_results) = $row;
