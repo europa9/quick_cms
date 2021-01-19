@@ -89,7 +89,7 @@ echo"
 
 
 			<p>
-			<a href=\"#\" id=\"toggle_recipes_search\" class=\"btn_default\">$l_search</a>
+			<a href=\"#\" id=\"toggle_recipes_search\" class=\"btn_default\"><img src=\"_gfx/icons/outline_search_black_18dp.png\" alt=\"outline_search_black_18dp.png\" /> $l_search</a>
 			<a href=\"$root/food/index.php?l=$l\" class=\"btn_default\">$l_food</a>
 			<a href=\"$root/recipes/my_favorites.php?l=$l\" class=\"btn_default\">$l_my_favorites</a>
 			<a href=\"$root/recipes/my_recipes.php?l=$l\" class=\"btn_default\">$l_my_recipes</a>

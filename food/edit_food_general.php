@@ -395,6 +395,10 @@ WHERE food_id='$get_food_id'") or die(mysqli_error($link));
 						}
 					} // new country
 
+
+					// Search engine
+					include("new_food_00_add_update_search_engine.php");
+
 					// Header	
 					$url = "edit_food_general.php?food_id=$get_food_id&el=$l&ft=success&fm=changes_saved";
 					header("Location: $url");

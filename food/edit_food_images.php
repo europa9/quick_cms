@@ -478,6 +478,12 @@ else{
 				}
 
 
+
+
+				// Search engine
+				include("new_food_00_add_update_search_engine.php");
+
+
 				$url = "edit_food_images.php?food_id=$food_id&l=$l&ft=success&fm=image_rotated";
 				header("Location: $url");
 				exit;
@@ -554,6 +560,12 @@ else{
 						}
 						mysqli_query($link, "UPDATE $t_food_index SET food_image_d='', food_thumb_d_small='', food_thumb_d_medium='', food_thumb_d_large='' WHERE food_id=$food_id_mysql") or die(mysqli_error($link));
 					}
+
+
+
+					// Search engine
+					include("new_food_00_add_update_search_engine.php");
+
 
 					$url = "edit_food_images.php?food_id=$food_id&l=$l&ft=success&fm=image_deleted&image=$image";
 					header("Location: $url");
@@ -802,6 +814,10 @@ else{
 	
 						} // extension check
 					} // if($image){
+
+
+					// Search engine
+					include("new_food_00_add_update_search_engine.php");
 
 					// Feedback
 					if(isset($fm_image)){

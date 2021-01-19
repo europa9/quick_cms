@@ -259,6 +259,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							or die(mysqli_error($link));
 
 							// Rezie image to 950x640
+
+							// Search engine
+							include("new_exercise_step_00_add_update_search_engine.php");
+
 	
 							// Header
 							$url = "new_exercise_step_9_images.php?exercise_id=$exercise_id&l=$l&ft=success&fm=image_uploaded&file_name=$inp_exercise_image_file&file_path=$inp_exercise_image_path";

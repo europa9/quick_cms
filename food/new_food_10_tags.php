@@ -178,6 +178,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				or die(mysqli_error($link));
 			}
 
+
+			// Search engine
+			include("new_food_00_add_update_search_engine.php");
+
 			$url = "new_food_10_stores.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&food_id=$get_food_id&l=$l";
 			header("Location: $url");
 			exit;

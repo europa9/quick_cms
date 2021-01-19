@@ -7,8 +7,34 @@
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
+/*- Headline ------------------------------------------------------------------------------ */
+div.food_headline{
+	float: left;
+}
+div.food_menu{
+	float: right;
+	padding: 10px 0px 0px 0px;
+}
+@media screen and (max-width: 52.375em) {
+	div.food_headline{
+		float: none;
+	}
+	div.food_menu{
+		float: none;
+		padding: 0px 0px 0px 0px;
+		overflow: auto;
+		white-space: nowrap;
+	}
+}
 
-/* Main Categories */
+/*- Search box on home page ---------------------------------------------------------------------- */
+div.food_search{
+	display: none;
+}
+
+
+
+/*- Main Categories ---------------------------------------------------------------------- */
 div.food_all_main_categories_selector{
 	margin-top: 10px;
 	background: #fff;

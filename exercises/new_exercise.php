@@ -306,6 +306,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			}
 
 
+			// Search engine
+			include("new_exercise_step_00_add_update_search_engine.php");
+
 			// Header
 			$url = "new_exercise_step_2_preparation.php?exercise_id=$get_exercise_id&l=$l";
 			header("Location: $url");

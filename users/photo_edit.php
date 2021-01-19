@@ -185,7 +185,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			<p>
 			$l_image:<br />
-			<img src=\"$root/image.php?width=400&amp;image=/_uploads/users/images/$get_user_id/$get_photo_destination\" alt=\"$get_photo_destination\" />
+			<img src=\"$root/_uploads/users/images/$get_user_id/$get_photo_destination\" alt=\"$get_photo_destination\" />
 			</p>
 
 			<p>

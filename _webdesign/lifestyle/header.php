@@ -29,15 +29,17 @@ echo"<!DOCTYPE html>
 	echo"</title>
 
 	<!-- Site CSS-->
-		<link rel=\"stylesheet\" type=\"text/css\" href=\"$root/_webdesign/$webdesignSav/reset.css\" />
-		<link rel=\"stylesheet\" type=\"text/css\" href=\"$root/_webdesign/$webdesignSav/master.css\" />
+		";
+		$datetime = date("Y-m-d H:i:s");
+		echo"
+		<link rel=\"stylesheet\" type=\"text/css\" href=\"$root/_webdesign/$webdesignSav/reset.css?rand=$datetime\" />
+		<link rel=\"stylesheet\" type=\"text/css\" href=\"$root/_webdesign/$webdesignSav/master.css?rand=$datetime\" />
 	<!-- //Site CSS -->
 
 	<!-- Special CSS -->
 		";
 		if(isset($pageCSSFile)){
 			if(file_exists("$pageCSSFile")){
-				$datetime = date("Y-m-d H:i:s");
 				echo"<link rel=\"stylesheet\" type=\"text/css\" href=\"$pageCSSFile?rand=$datetime\" />";
 			}
 			else{

@@ -118,7 +118,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			Test
 				
 				<!-- Upload form -->
-					<form method=\"POST\" action=\"my_blog_new_post_text_upload_image.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\" enctype=\"multipart/form-data\">
+					<form method=\"POST\" action=\"open_case_notes_upload_image.php?case_id=$get_current_case_id&amp;l=$l\" enctype=\"multipart/form-data\">
 					<p>
 					<input name=\"inp_image\" type=\"file\" tabindex=\"1\" />
 					<input type=\"submit\" value=\"Upload\" tabindex=\"2\" />

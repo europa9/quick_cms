@@ -111,17 +111,91 @@ if($get_current_main_category_id == ""){
 else{
 
 	echo"
-	<!-- Headline -->
-		<h1>$get_category_translation_value</h1>
-	<!-- //Headline -->
 
-	<!-- Where am I ? -->
-		<p><b>$l_you_are_here:</b><br />
-		<a href=\"index.php?l=$l\">$l_food</a>
-		&gt;
-		<a href=\"open_main_category.php?main_category_id=$main_category_id&amp;l=$l\">$get_category_translation_value</a>
-		</p>
-	<!-- //Where am I ? -->
+
+	<!-- Headline, buttons, search -->
+		<div class=\"food_headline\">
+		
+			<!-- Headline -->
+				<h1>$get_category_translation_value</h1>
+			<!-- //Headline -->
+
+			<!-- Where am I ? -->
+				<p><b>$l_you_are_here:</b><br />
+				<a href=\"index.php?l=$l\">$l_food</a>
+				&gt;
+				<a href=\"open_main_category.php?main_category_id=$main_category_id&amp;l=$l\">$get_category_translation_value</a>
+				</p>
+			<!-- //Where am I ? -->
+		</div>
+		<div class=\"food_menu\">
+		
+			<!-- Food menu -->
+				<script>
+				\$(document).ready(function() {
+				\$('#toggle_food_search').click(function() {
+							\$(\".food_search\").fadeIn();
+						\$(\"#nettport_inp_search_query\").focus();
+					})
+				});
+				</script>
+
+
+				<p>
+				<a href=\"#\" id=\"toggle_food_search\" class=\"btn_default\"><img src=\"_gfx/icons/outline_search_black_18dp.png\" alt=\"outline_search_black_18dp.png\" /> $l_search</a>
+				<a href=\"$root/food/my_food.php?l=$l\" class=\"btn_default\">$l_my_food</a>
+				<a href=\"$root/food/my_favorites.php?l=$l\" class=\"btn_default\">$l_my_favorites</a>
+				<a href=\"$root/food/new_food.php?l=$l\" class=\"btn_default\">$l_new_food</a>
+				</p>
+			<!-- //Food menu -->
+		</div>
+		<div class=\"clear\"></div>
+	<!-- //Headline, buttons, search -->
+
+
+	<!-- Food Search -->
+		<div class=\"food_search\">
+			<form method=\"get\" action=\"search.php\" enctype=\"multipart/form-data\">
+			<p>
+			<input type=\"text\" name=\"search_query\" id=\"nettport_inp_search_query\" value=\"\" size=\"10\" style=\"width: 50%;\"  />
+			<input type=\"hidden\" name=\"l\" value=\"$l\" />
+			<input type=\"submit\" value=\"$l_search\" id=\"nettport_search_submit_button\" class=\"btn_default\" />
+			</p>
+			</form>
+		</div>
+
+		<!-- Search script -->
+		<script id=\"source\" language=\"javascript\" type=\"text/javascript\">
+		\$(document).ready(function () {
+			\$('#nettport_inp_search_query').keyup(function () {
+       				// getting the value that user typed
+       				var searchString    = $(\"#nettport_inp_search_query\").val();
+ 				// forming the queryString
+      				var data            = 'order_by=$order_by&order_method=$order_method&l=$l&search_query='+ searchString;
+         
+        			// if searchString is not empty
+        			if(searchString) {
+           				// ajax call
+            				\$.ajax({
+                				type: \"GET\",
+               					url: \"search_jquery.php\",
+                				data: data,
+						beforeSend: function(html) { // this happens before actual call
+							\$(\"#nettport_search_results\").html(''); 
+						},
+               					success: function(html){
+                    					\$(\"#nettport_search_results\").append(html);
+              					}
+            				});
+       				}
+        			return false;
+			});
+		});
+		</script>
+		<!-- //Search script -->
+		<div id=\"nettport_search_results\">
+		</div>
+	<!-- //Food Search -->
 
 
 	<!-- All main categories -->

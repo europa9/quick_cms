@@ -191,6 +191,10 @@ input {
 }
 
 
+a.btn > img, a.btn_default > img, a.btn_warning > img, a.btn_danger > img {
+	position: relative;
+	top: 4px;
+}
 
 
 /*- Linker ------------------------------------------------------------------ */

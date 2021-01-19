@@ -272,6 +272,10 @@ else{
 						$fm = "no_image_selected";
 					}
 
+
+					// Search engine
+					include("new_food_00_add_update_search_engine.php");
+
 					// Feedback
 					$url = "new_food_5_images.php?main_category_id=$get_food_main_category_id&sub_category_id=$get_food_sub_category_id&food_id=$get_food_id&image=$image&ft=$ft&fm=$fm&l=$l";
 					header("Location: $url");

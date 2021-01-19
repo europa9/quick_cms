@@ -790,6 +790,9 @@ else{
 					$inp_item_sodium_calculated = $_POST['inp_item_sodium_calculated'];
 					$inp_item_sodium_calculated = output_html($inp_item_sodium_calculated);
 					$inp_item_sodium_calculated = str_replace(",", ".", $inp_item_sodium_calculated);
+					if($inp_item_sodium_calculated == ""){
+						$inp_item_sodium_calculated = 0;
+					}
 				}
 				else{
 					$inp_item_sodium_calculated = ($inp_item_salt_calculated*40)/100; // 40 % of salt
@@ -1497,7 +1500,6 @@ else{
 				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
 					<span><input type=\"text\" name=\"inp_item_proteins_calculated\" id=\"inp_item_proteins_calculated\" size=\"5\" value=\"$inp_item_proteins_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
 				   </td>
-				  </tr>
 				 </tr>";
 				if($get_recipe_country == "United States"){
 					// US uses sodium only, while rest uses salt
