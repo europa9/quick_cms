@@ -1007,6 +1007,7 @@ else{
 				list($get_stats_pages_per_year_ip_id) = $row;
 				if($get_stats_pages_per_year_ip_id == ""){
 					// New visitor for this page this year
+					// echo"We have record, if unique: New visitor for this page this year<br />";
 					mysqli_query($link, "INSERT INTO $t_stats_pages_visits_per_year_ips 
 					(stats_pages_per_year_ip_id, stats_pages_per_year_ip_year, stats_pages_per_year_ip_page_id, stats_pages_per_year_ip_ip) 
 					VALUES
@@ -1022,11 +1023,14 @@ else{
 					elseif($get_stats_user_agent_type == "mobile"){
 						$inp_unique_mobile = $inp_unique_mobile+1;
 					}
+					$inp_human_unique = $inp_unique_desktop+$inp_unique_mobile;
 
-					mysqli_query($link, "UPDATE $t_stats_pages_visits_per_year SET stats_pages_per_year_unique_desktop=$inp_unique_desktop, stats_pages_per_year_unique_mobile=$inp_unique_mobile, stats_pages_per_year_updated_time='$inp_unix_time' WHERE stats_pages_per_year_id=$get_stats_pages_per_year_id") or die(mysqli_error($link));
+					mysqli_query($link, "UPDATE $t_stats_pages_visits_per_year SET stats_pages_per_year_human_unique=$inp_human_unique, stats_pages_per_year_unique_desktop=$inp_unique_desktop, stats_pages_per_year_unique_mobile=$inp_unique_mobile, stats_pages_per_year_updated_time='$inp_unix_time' WHERE stats_pages_per_year_id=$get_stats_pages_per_year_id") or die(mysqli_error($link));
+					// echo"UPDATE $t_stats_pages_visits_per_year SET stats_pages_per_year_unique_desktop=$inp_unique_desktop, stats_pages_per_year_unique_mobile=$inp_unique_mobile, stats_pages_per_year_updated_time='$inp_unix_time' WHERE stats_pages_per_year_id=$get_stats_pages_per_year_id<br />";
 				}
 				else{
 					// Delete old entries
+					// echo"We have record, if unique: Delete old entries, increase hits<br />";
 					// $configSiteDaysToKeepPageVisitsSav
 					mysqli_query($link, "DELETE FROM $t_stats_pages_visits_per_year WHERE stats_pages_per_year_updated_time < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL $configSiteDaysToKeepPageVisitsSav DAY))") or die(mysqli_error($link));
 				}

@@ -52,6 +52,13 @@ if(isset($_GET['sub_category_id'])){
 else{
 	$sub_category_id = "";
 }
+if(isset($_GET['mode'])){
+	$mode = $_GET['mode'];
+	$mode = strip_tags(stripslashes($mode));
+}
+else{
+	$mode = "";
+}
 
 
 /*- Settings ---------------------------------------------------------------------------- */
@@ -91,11 +98,19 @@ else{
 	$row_t = mysqli_fetch_row($result_t);
 	list($get_current_main_category_translation_value) = $row_t;
 
-	$query_t = "SELECT category_translation_value FROM $t_food_categories_translations WHERE category_id=$get_current_food_sub_category_id AND category_translation_language=$editor_language_mysql";
+
+	$query_t = "SELECT category_translation_id, category_id, category_translation_language, category_translation_value, category_translation_no_food, category_translation_last_updated, category_calories_min, category_calories_med, category_calories_max, category_fat_min, category_fat_med, category_fat_max, category_fat_of_which_saturated_fatty_acids_min, category_fat_of_which_saturated_fatty_acids_med, category_fat_of_which_saturated_fatty_acids_max, category_carb_min, category_carb_med, category_carb_max, category_carb_of_which_dietary_fiber_min, category_carb_of_which_dietary_fiber_med, category_carb_of_which_dietary_fiber_max, category_carb_of_which_sugars_min, category_carb_of_which_sugars_med, category_carb_of_which_sugars_max, category_proteins_min, category_proteins_med, category_proteins_max, category_salt_min, category_salt_med, category_salt_max FROM $t_food_categories_translations WHERE category_id=$get_current_food_sub_category_id AND category_translation_language=$editor_language_mysql";
 	$result_t = mysqli_query($link, $query_t);
 	$row_t = mysqli_fetch_row($result_t);
-	list($get_current_sub_category_translation_value) = $row_t;
+	list($get_current_sub_category_translation_id, $get_current_sub_category_id, $get_current_sub_category_translation_language, $get_current_sub_category_translation_value, $get_current_sub_category_translation_no_food, $get_current_sub_category_translation_last_updated, $get_current_sub_category_calories_min, $get_current_sub_category_calories_med, $get_current_sub_category_calories_max, $get_current_sub_category_fat_min, $get_current_sub_category_fat_med, $get_current_sub_category_fat_max, $get_current_sub_category_fat_of_which_saturated_fatty_acids_min, $get_current_sub_category_fat_of_which_saturated_fatty_acids_med, $get_current_sub_category_fat_of_which_saturated_fatty_acids_max, $get_current_sub_category_carb_min, $get_current_sub_category_carb_med, $get_current_sub_category_carb_max, $get_current_sub_category_carb_of_which_dietary_fiber_min, $get_current_sub_category_carb_of_which_dietary_fiber_med, $get_current_sub_category_carb_of_which_dietary_fiber_max, $get_current_sub_category_carb_of_which_sugars_min, $get_current_sub_category_carb_of_which_sugars_med, $get_current_sub_category_carb_of_which_sugars_max, $get_current_sub_category_proteins_min, $get_current_sub_category_proteins_med, $get_current_sub_category_proteins_max, $get_current_sub_category_salt_min, $get_current_sub_category_salt_med, $get_current_sub_category_salt_max) = $row_t;
 		
+
+
+	// Author
+	$query = "SELECT user_id, user_email, user_name, user_alias FROM $t_users WHERE user_id=$get_current_food_user_id";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_current_food_author_user_id, $get_current_food_author_user_email, $get_current_food_author_user_name, $get_current_food_author_user_alias) = $row;
 
 	if($action == ""){
 		echo"
@@ -117,13 +132,524 @@ else{
 			<div class=\"tabs\">
 				<ul>
 					<li><a href=\"index.php?open=$open&amp;page=open_food&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\" class=\"active\">View</a>
-					<li><a href=\"index.php?open=$open&amp;page=edit_food_general&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Edit</a>
-					<li><a href=\"index.php?open=$open&amp;page=edit_food_images&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Images</a>
-					<li><a href=\"index.php?open=$open&amp;page=delete_food&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Delete</a>
+					<li><a href=\"index.php?open=$open&amp;page=edit_food_general_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Edit</a>
+					<li><a href=\"index.php?open=$open&amp;page=edit_food_numbers_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Numbers</a>
+					<li><a href=\"index.php?open=$open&amp;page=edit_food_images_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Images</a>
+					<li><a href=\"index.php?open=$open&amp;page=delete_food_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Delete</a>
 				</ul>
 			</div>
 			<div class=\"clear\"></div>
 		<!-- //Food Menu -->
+
+		<!-- View food -->
+			
+			<!-- Images, width = 845 -->
+				<p style=\"padding-bottom: 0;margin-bottom: 0;\">";
+				
+				// 845/4 = 211
+				if($mode == "show_image" && isset($_GET['image'])){
+					echo"<a id=\"image\"></a>";
+					$image = $_GET['image'];
+					$image = strip_tags(stripslashes($image));
+	
+					if($image == "a" && file_exists("../$get_current_food_image_path/$get_current_food_image_a") && $get_current_food_image_a != ""){
+				
+						if(file_exists("../$get_current_food_image_path/$get_current_food_image_b")){
+							echo"<a href=\"index.php?open=$open&amp;page=open_food&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;mode=show_image&amp;image=b&amp;l=$l#image\"><img src=\"../$get_current_food_image_path/$get_current_food_image_a\" alt=\"$get_current_food_image_a\" /></a>";
+						}
+						else{
+							echo"<img src=\"../$get_current_food_image_path/$get_current_food_image_a\" alt=\"$get_current_food_image_a\" />";
+						}
+					}
+					if($image == "b" && file_exists("../$get_current_food_image_path/$get_current_food_image_b") && $get_current_food_image_b != ""){
+				
+						if(file_exists("../$get_current_food_image_path/$get_current_food_image_c")){
+							echo"<a href=\"index.php?open=$open&amp;page=open_food&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;mode=show_image&amp;image=c&amp;l=$l#image\"><img src=\"../$get_current_food_image_path/$get_current_food_image_b\" alt=\"$get_current_food_image_b\" /></a>";
+						}
+						else{
+							echo"<a href=\"view_food.php?main_category_id=$get_current_main_category_id&amp;sub_category_id=$get_current_sub_category_id&amp;food_id=$food_id&amp;l=$l#image\"><img src=\"../$get_current_food_image_path/$get_current_food_image_b\" alt=\"$get_current_food_image_b\" /></a>";
+						}
+					}
+					if($image == "c" && file_exists("../$get_current_food_image_path/$get_current_food_image_c") && $get_current_food_image_c != ""){
+						
+						if(file_exists("../$get_current_food_image_path/$get_current_food_image_d")){
+							echo"<a href=\"index.php?open=$open&amp;page=open_food&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;mode=show_image&amp;image=d&amp;l=$l#image\"><img src=\"../$get_current_food_image_path/$get_current_food_image_c\" alt=\"$get_current_food_image_c\" /></a>";
+						}
+						else{
+							echo"<a href=\"view_food.php?main_category_id=$get_current_main_category_id&amp;sub_category_id=$get_current_sub_category_id&amp;food_id=$food_id&amp;l=$l#image\"><img src=\"../$get_current_food_image_path/$get_current_food_image_c\" alt=\"$get_current_food_image_c\" /></a>";
+						}
+					}
+					if($image == "d" && file_exists("../$get_current_food_image_path/$get_current_food_image_d") && $get_current_food_image_d != ""){
+				
+						echo"<a href=\"index.php?open=$open&amp;page=open_food&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\"><img src=\"../$get_current_food_image_path/$get_current_food_image_d\" alt=\"$get_current_food_image_d\" /></a>";
+				
+					}
+					echo"<br />";
+
+				}
+
+				if($get_current_food_image_a != ""){
+					echo"<a href=\"index.php?open=$open&amp;page=open_food&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;mode=show_image&amp;image=a&amp;l=$l#image\" style=\"margin-right: 11px;\"><img src=\"../$get_current_food_image_path/$get_current_food_thumb_a_medium\" alt=\"$get_current_food_thumb_a_medium\" /></a>";
+				}
+
+				if($get_current_food_image_b != ""){
+					echo"<a href=\"index.php?open=$open&amp;page=open_food&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;mode=show_image&amp;image=b&amp;l=$l#image\" style=\"margin-right: 11px;\"><img src=\"../$get_current_food_image_path/$get_current_food_thumb_b_medium\" alt=\"$get_current_food_thumb_b_medium\" /></a>";
+				}
+				if($get_current_food_image_c != ""){
+					echo"<a href=\"index.php?open=$open&amp;page=open_food&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;mode=show_image&amp;image=c&amp;l=$l#image\" style=\"margin-right: 11px;\"><img src=\"../$get_current_food_image_path/$get_current_food_thumb_c_medium\" alt=\"$get_current_food_thumb_c_medium\" /></a>";
+				}
+				if($get_current_food_image_d != "" ){
+					echo"<a href=\"index.php?open=$open&amp;page=open_food&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;mode=show_image&amp;image=d&amp;l=$l#image\" style=\"margin-right: 11px;\"><img src=\"../$get_current_food_image_path/$get_current_food_thumb_d_medium\" alt=\"$get_current_food_thumb_d_medium\" /></a>";
+				}
+				echo"
+				</p>
+			<!-- //Images -->
+	
+			<!-- Favorite, edit, delete -->
+				<div class=\"clear\"></div>
+				
+				<p style=\"margin:0;padding:0;\">
+				Published by <a href=\"../users/view_profile.php?user_id=$get_current_food_user_id&amp;l=$l\">$get_current_food_author_user_alias</a><br />
+				$get_current_food_unique_hits  unique views
+				</p>
+			<!-- //Favorite, edit, delete -->
+		
+			<!-- About -->
+				<p>
+				$get_current_food_description
+
+				<!-- Tags -->";
+
+					$query = "SELECT tag_id, tag_title FROM $t_food_index_tags WHERE tag_food_id=$get_current_food_id ORDER BY tag_id ASC";
+					$result = mysqli_query($link, $query);
+					while($row = mysqli_fetch_row($result)) {
+						list($get_tag_id, $get_tag_title) = $row;
+						echo"
+						<a href=\"../food/view_tag.php?tag=$get_tag_title&amp;l=$l\">#$get_tag_title</a>
+						";
+					}
+					echo"
+				<!-- //Tags -->
+
+				</p>
+			<!-- //About -->
+
+
+			<!-- Money link -->";
+
+				$query = "SELECT ad_id, ad_text FROM $t_food_index_ads WHERE ad_food_id='$get_current_food_id'";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_ad_id, $get_ad_text) = $row;
+				if($get_ad_id != ""){
+					echo"
+					$get_ad_text
+					<div class=\"clear\"></div>
+					";
+				}
+				echo"
+			<!-- //Money link -->
+	
+			<!-- Numbers -->
+				<a id=\"numbers\"></a>
+				<h2>Numbers</h2>
+				";
+
+
+				echo"
+				<table class=\"hor-zebra\" style=\"width: auto;min-width: 0;display: table;\">
+				 <thead>
+				  <tr>
+				   <th scope=\"col\">
+				   </th>";
+				if($get_current_food_energy != "0"){
+					echo"
+					   <th scope=\"col\" style=\"text-align: center;padding: 6px 4px 6px 8px;vertical-align: bottom;\">
+						<span>Per 100</span>
+		 			  </th>";
+				}
+				echo"
+				   <th scope=\"col\" style=\"text-align: center;padding: 6px 8px 6px 8px;\">
+					<span>Serving<br />$get_current_food_serving_size_gram $get_current_food_serving_size_gram_measurement ($get_current_food_serving_size_pcs $get_current_food_serving_size_pcs_measurement)</span>
+				   </th>
+			
+				   <th scope=\"col\" style=\"text-align: center;padding: 6px 8px 6px 8px;\" class=\"current_sub_category_calories_med\">
+					<span>Median_for<br />
+					$get_current_sub_category_translation_value</span>
+				   </th>
+				   <th scope=\"col\" style=\"text-align: center;padding: 6px 8px 6px 8px;\" class=\"current_sub_category_calories_diff\">
+					<span>Diff</span>
+				   </th>
+				  </tr>
+				 </thead>
+				 <tbody>
+				  <tr>
+				   <td style=\"padding: 8px 4px 6px 8px;\">
+					<span>Calories</span>
+				   </td>";
+				if($get_current_food_energy != "0"){
+					echo"
+					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+						<span>$get_current_food_energy</span>
+					   </td>";
+				}
+				echo"
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span>$get_current_food_energy_calculated</span>
+				   </td>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\" class=\"current_sub_category_calories_med\">
+					<span>$get_current_sub_category_calories_med</span>
+				   </td>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\" class=\"current_sub_category_calories_diff\">";
+					$energy_diff_med = round($get_current_food_energy-$get_current_sub_category_calories_med, 0);
+
+					if($energy_diff_med > 0){
+						echo"<span style=\"color: red;\">$energy_diff_med</span>";
+					}
+					elseif($energy_diff_med < 0){
+						echo"<span style=\"color: green;\">$energy_diff_med</span>";
+					}
+					else{
+						echo"<span>$energy_diff_med</span>";
+						// $product_score_description = $product_score_description . " $l_have_an_ok_amount_of_calories_lowercase, ";
+					}
+					echo"
+				   </td>
+				  </tr>
+
+				  <tr>
+				   <td style=\"padding: 8px 4px 6px 8px;\">
+					<span>Fat<br /></span>
+					<span>- of which saturated fatty acids</span>
+				   </td>";
+				if($get_current_food_energy != "0"){
+					echo"
+		 			  <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+						<span>$get_current_food_fat<br /></span>
+						<span>$get_current_food_fat_of_which_saturated_fatty_acids</span>
+					   </td>";
+				}
+				echo"
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span>$get_current_food_fat_calculated<br /></span>
+					<span>$get_current_food_fat_of_which_saturated_fatty_acids_calculated</span>
+				   </td>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\" class=\"current_sub_category_calories_med\">
+					<span>$get_current_sub_category_fat_med<br /></span>
+					<span>$get_current_sub_category_fat_of_which_saturated_fatty_acids_med</span>
+				   </td>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\" class=\"current_sub_category_calories_diff\">";
+					$fat_diff_med = round($get_current_food_fat-$get_current_sub_category_fat_med, 0);
+
+					if($fat_diff_med > 0){
+						echo"<span style=\"color: red;\">$fat_diff_med</span>";
+					}
+					elseif($fat_diff_med < 0){
+						echo"<span style=\"color: green;\">$fat_diff_med</span>";
+					}
+					else{
+						echo"<span>$fat_diff_med</span>";
+						// $product_score_description = $product_score_description . " $l_ok_amount_of_fat_lowercase, ";
+					}
+
+					$food_fat_of_which_saturated_fatty_acids_diff_med = round($get_current_food_fat_of_which_saturated_fatty_acids-$get_current_sub_category_fat_of_which_saturated_fatty_acids_med, 0);
+			
+					if($food_fat_of_which_saturated_fatty_acids_diff_med > 0){
+						echo"<span style=\"color: red;\"><br />$food_fat_of_which_saturated_fatty_acids_diff_med</span>";
+					}
+					elseif($food_fat_of_which_saturated_fatty_acids_diff_med < 0){
+						echo"<span style=\"color: green;\"><br />$food_fat_of_which_saturated_fatty_acids_diff_med</span>";
+					}
+					else{
+						echo"<span><br />$food_fat_of_which_saturated_fatty_acids_diff_med</span>";
+						// $product_score_description = $product_score_description . " $l_ok_amount_of_fat_lowercase, ";
+					}
+					echo"
+				   </td>
+				  </tr>
+
+				  <tr>
+				   <td style=\"padding: 8px 4px 6px 8px;\">
+					<span>Carbs<br /></span>
+					<span>- dash of which sugars</span>
+				   </td>";
+				if($get_current_food_energy != "0"){
+					echo"
+					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+						<span>$get_current_food_carbohydrates<br /></span>
+						<span>$get_current_food_carbohydrates_of_which_sugars</span>
+					   </td>
+					";
+				}
+				echo"
+		   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+			<span>$get_current_food_carbohydrates_calculated<br /></span>
+			<span>$get_current_food_carbohydrates_of_which_sugars_calculated</span>
+		   </td>
+		   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\" class=\"current_sub_category_calories_med\">
+			<span>$get_current_sub_category_carb_med<br /></span>
+			<span>$get_current_sub_category_carb_of_which_sugars_med</span>
+		   </td>
+		   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\" class=\"current_sub_category_calories_diff\">";
+			$carbohydrate_diff_med = round($get_current_food_carbohydrates-$get_current_sub_category_carb_med, 0);
+			
+			if($carbohydrate_diff_med > 0){
+				echo"<span style=\"color: red;\">$carbohydrate_diff_med</span>";
+			}
+			elseif($carbohydrate_diff_med < 0){
+				echo"<span style=\"color: green;\">$carbohydrate_diff_med</span>";
+			}
+			else{
+				echo"<span>$carbohydrate_diff_med</span>";
+			}
+			// Sugar
+			$food_carbohydrates_of_which_sugars_diff_med = round($get_current_food_carbohydrates_of_which_sugars-$get_current_sub_category_carb_of_which_sugars_med, 0);
+			
+			if($food_carbohydrates_of_which_sugars_diff_med > 0){
+				echo"<span style=\"color: red;\"><br />$food_carbohydrates_of_which_sugars_diff_med</span>";
+			}
+			elseif($food_carbohydrates_of_which_sugars_diff_med < 0){
+				echo"<span style=\"color: green;\"><br />$food_carbohydrates_of_which_sugars_diff_med</span>";
+			}
+			else{
+				echo"<span><br />$food_carbohydrates_of_which_sugars_diff_med</span>";
+			}
+			echo"
+		   </td>
+		  </tr>
+
+
+
+		  <tr>
+		   <td style=\"padding: 8px 4px 6px 8px;\">
+			<span>Dietary fiber<br /></span>
+		   </td>";
+		if($get_current_food_energy != "0"){
+			echo"
+			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+				<span>$get_current_food_carbohydrates_of_which_dietary_fiber<br /></span>
+			   </td>
+			";
+		}
+		echo"
+		   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+			<span>$get_current_food_carbohydrates_of_which_dietary_fiber_calculated<br /></span>
+		   </td>
+		   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\" class=\"current_sub_category_calories_med\">
+			<span>$get_current_sub_category_carb_of_which_dietary_fiber_med</span>
+		   </td>
+		   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\" class=\"current_sub_category_calories_diff\">";
+			// Fiber
+			$food_carbohydrates_of_which_dietary_fiber_diff_med = round($get_current_food_carbohydrates_of_which_dietary_fiber-$get_current_sub_category_carb_of_which_dietary_fiber_med, 0);
+			
+			if($food_carbohydrates_of_which_dietary_fiber_diff_med > 0){
+				echo"<span style=\"color: red;\"><br />$food_carbohydrates_of_which_dietary_fiber_diff_med</span>";
+			}
+			elseif($food_carbohydrates_of_which_dietary_fiber_diff_med < 0){
+				echo"<span style=\"color: green;\"><br />$food_carbohydrates_of_which_dietary_fiber_diff_med</span>";
+			}
+			else{
+				echo"<span><br />$food_carbohydrates_of_which_dietary_fiber_diff_med</span>";
+			}
+			echo"
+		   </td>
+		  </tr>
+		  <tr>
+		   <td style=\"padding: 8px 4px 6px 8px;\">
+			<span>Proteins</span>
+		   </td>";
+		if($get_current_food_energy != "0"){
+			echo"
+			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+				<span>$get_current_food_proteins</span>
+			   </td>
+			";
+		}
+		echo"
+		   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+			<span>$get_current_food_proteins_calculated</span>
+		   </td>
+		   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\" class=\"current_sub_category_calories_med\">
+			<span>$get_current_sub_category_proteins_med</span>
+		   </td>
+		   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\" class=\"current_sub_category_calories_diff\">";
+			$proteins_diff_med = round($get_current_food_proteins-$get_current_sub_category_proteins_med, 0);
+			$proteins_diff_med = $proteins_diff_med*-1;
+			
+			if($proteins_diff_med < 0){
+				echo"<span style=\"color: green;\">$proteins_diff_med</span>";
+			}
+			elseif($proteins_diff_med > 0){
+				echo"<span style=\"color: red;\">$proteins_diff_med</span>";
+			}
+			else{
+				echo"<span>$proteins_diff_med*</span>";
+			}
+			echo"
+		   </td>
+		  </tr>
+		 </tr>
+		  <tr>
+		   <td style=\"padding: 8px 4px 6px 8px;\">
+			<span>Salt in gram<br />
+			- of which sodium in mg</span>
+		   </td>";
+		if($get_current_food_energy != "0"){
+			echo"
+			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+				<span>$get_current_food_salt<br />
+				$get_current_food_sodium</span>
+			   </td>
+			";
+		}
+		echo"
+		   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+			<span>$get_current_food_salt_calculated<br />
+			$get_current_food_sodium_calculated</span>
+		   </td>
+		   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\" class=\"current_sub_category_calories_med\">
+			<span>$get_current_sub_category_salt_med</span>
+		   </td>
+		   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\" class=\"current_sub_category_calories_diff\">";
+			$salt_diff_med = round($get_current_food_salt-$get_current_sub_category_salt_med, 0);
+			
+			if($salt_diff_med > 0){
+				echo"<span style=\"color: red;\">$salt_diff_med</span>";
+			}
+			elseif($salt_diff_med < 0){
+				echo"<span style=\"color: green;\">$salt_diff_med</span>";
+			}
+			else{
+				echo"<span>$salt_diff_med</span>";
+			}
+			echo"
+		   </td>
+		  </tr>
+		</table>
+
+		<script>
+		\$(document).ready(function(){
+			\$(\".a_show_score\").click(function () {
+				\$(\".current_sub_category_calories_med\").toggle();
+				\$(\".current_sub_category_calories_diff\").toggle();
+				\$(\".protein_diff\").toggle();
+			});
+		});
+		</script>
+
+		<p>
+		<a href=\"#numbers\" class=\"a_show_score\">Score:</a> ";
+
+			$score_number = $energy_diff_med+$fat_diff_med+$food_fat_of_which_saturated_fatty_acids_diff_med+$carbohydrate_diff_med+$food_carbohydrates_of_which_dietary_fiber_diff_med+$food_carbohydrates_of_which_sugars_diff_med+$proteins_diff_med+$salt_diff_med;
+
+			if($get_current_food_score != $score_number){
+				$result = mysqli_query($link, "UPDATE $t_food_index SET food_score='$score_number' WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
+			}
+
+			if($score_number > 0){
+				echo"
+				<em style=\"color: red;\">$score_number</em>";
+			}
+			elseif($score_number < 0){
+				echo"
+				<em style=\"color: green;\">$score_number</em>";
+			}
+			else{
+				echo"
+				<em>$score_number</em>";
+			}
+					echo"
+					</p>
+				<p class=\"protein_diff\">*protein diff is multiplied with minus one to get correct calculation</p>
+			<!-- //Numbers -->
+
+
+			<!-- Info -->
+				<h2>Info</h2>
+
+			<table class=\"hor-zebra\" style=\"width: auto;min-width: 0;display: table;\">
+			 <tbody>
+			  <tr>
+			   <td style=\"padding: 8px 4px 6px 8px;\">
+				<span><b>Manufacturer:</b></span>
+			   </td>
+			   <td style=\"padding: 0px 4px 0px 4px;\">
+				<span><a href=\"../food/search.php?manufacturer_name=$get_current_food_manufacturer_name&amp;l=$l\">$get_current_food_manufacturer_name</a></span>
+			   </td>
+			  </tr>
+			  <tr>
+			   <td style=\"padding: 8px 4px 6px 8px;\">
+				<span><b>Barcode:</b></span>
+			   </td>
+			   <td style=\"padding: 0px 4px 0px 4px;\">
+				<span><a href=\"../food/search.php?barcode=$get_current_food_barcode&amp;l=$l\">$get_current_food_barcode</a></span>
+			   </td>
+			  </tr>
+			  <tr>
+			   <td style=\"padding: 8px 4px 6px 8px;\">
+				<span><b>Net content:</b></span>
+			   </td>
+			   <td style=\"padding: 0px 4px 0px 4px;\">
+				<span>$get_current_food_net_content $get_current_food_net_content_measurement</span>
+			   </td>
+			  </tr>
+			  <tr>
+			   <td style=\"padding: 8px 4px 6px 8px;\">
+				<span><b>Stores:</b></span>
+			   </td>
+			   <td style=\"padding: 0px 4px 0px 4px;\">
+			<span>";
+				
+			// Count stores
+			$query = "SELECT count(food_store_id) FROM $t_food_index_stores  WHERE food_store_food_id=$get_current_food_id";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_count_food_stores) = $row;
+	
+			$x = 0;
+			$count_minus_two = $get_count_food_stores-2;
+
+			$query = "SELECT food_store_id, food_store_store_id, food_store_store_name FROM $t_food_index_stores WHERE food_store_food_id=$get_current_food_id ORDER BY food_store_store_name ASC";
+			$result = mysqli_query($link, $query);
+			while($row = mysqli_fetch_row($result)) {
+				list($get_current_food_store_id, $get_current_food_store_store_id, $get_current_food_store_store_name) = $row;
+				echo"
+				<a href=\"../food/search.php?q=&amp;barcode=&amp;manufacturer_name=&amp;store_id=$get_current_food_store_store_id&amp;order_by=food_score&amp;order_method=asc&amp;l=$l\">$get_current_food_store_store_name</a>";
+				
+				// Check if I have prices
+				$query_p = "SELECT food_price_id, food_price_food_id, food_price_store_id, food_price_store_name, food_price_price, food_price_currency, food_price_offer, food_price_offer_valid_from, food_price_offer_valid_to, food_price_user_id, food_price_user_ip, food_price_added_datetime, food_price_added_datetime_print, food_price_updated, food_price_updated_print, food_price_reported, food_price_reported_checked FROM $t_food_index_prices WHERE food_price_food_id=$get_current_food_id AND food_price_store_id=$get_current_food_store_store_id";
+				$result_p = mysqli_query($link, $query_p);
+				$row_p = mysqli_fetch_row($result_p);
+				list($get_current_food_price_id, $get_current_food_price_food_id, $get_current_food_price_store_id, $get_current_food_price_store_name, $get_current_food_price_price, $get_current_food_price_currency, $get_current_food_price_offer, $get_current_food_price_offer_valid_from, $get_current_food_price_offer_valid_to, $get_current_food_price_user_id, $get_current_food_price_user_ip, $get_current_food_price_added_datetime, $get_current_food_price_added_datetime_print, $get_current_food_price_updated, $get_current_food_price_updated_print, $get_current_food_price_reported, $get_current_food_price_reported_checked) = $row_p;
+				if($get_current_food_price_id == ""){
+					echo"
+					
+					";
+				}
+				else{
+					echo"
+					<span>($get_current_food_price_price)</span>
+					";
+				}
+
+
+				if($x < $count_minus_two){
+					echo", ";
+				}
+				elseif($x == $count_minus_two){
+					echo" $l_and_lowercase ";
+				}
+
+				$x++;
+			}
+			echo"</span>
+			   </td>
+			  </tr>
+			 </tbody>
+			</table>
+
+			<!-- //Info -->
+		<!-- //View food -->
 		";
 	} // action == ""
 } // food found
