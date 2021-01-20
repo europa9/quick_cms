@@ -60,6 +60,16 @@ else{
 	$mode = "";
 }
 
+if(isset($_GET['image'])){
+	$image = $_GET['image'];
+	$image = strip_tags(stripslashes($image));
+}
+else{
+	$image = "";
+}
+
+/*- Functions -------------------------------------------------------------------------- */
+include("_functions/get_extension.php");
 
 /*- Settings ---------------------------------------------------------------------------- */
 $settings_image_width = "847";
@@ -182,12 +192,12 @@ else{
 				}
 				echo"
 				<a href=\"$root/$get_current_food_image_path/$get_current_food_image_a\"><img src=\"$root/$get_current_food_image_path/$get_current_food_thumb_a_medium\" alt=\"$get_current_food_thumb_a_medium\" /></a><br />
-				<a href=\"edit_food_images.php?action=rotate&amp;food_id=$food_id&amp;image=a&amp;l=$l&amp;process=1\" class=\"btn btn_default\">Rotate</a>
-				<a href=\"edit_food_images.php?action=delete&amp;food_id=$food_id&amp;image=a&amp;l=$l\" class=\"btn btn_default\">Delete</a>
+				<a href=\"index.php?open=$open&amp;page=edit_food_images_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;action=rotate&amp;image=a&amp;l=$l&amp;process=1\" class=\"btn btn_default\">Rotate</a>
+				<a href=\"index.php?open=$open&amp;page=edit_food_images_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;action=delete&amp;image=a&amp;l=$l\" class=\"btn btn_default\">Delete</a>
 				";
 			}
 			echo"
-			<a href=\"edit_food_images.php?action=upload_new&amp;food_id=$food_id&amp;image=a&amp;l=$l\" class=\"btn btn_default\">Upload new</a>
+			<a href=\"index.php?open=$open&amp;page=edit_food_images_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;action=upload_new&amp;image=a&amp;l=$l\" class=\"btn btn_default\">Upload new</a>
 			</p>
 		  </td>
 		 </tr>
@@ -211,12 +221,12 @@ else{
 							}
 							echo"
 							<a href=\"$root/$get_current_food_image_path/$get_current_food_image_b\"><img src=\"$root/$get_current_food_image_path/$get_current_food_thumb_b_medium\" alt=\"$get_current_food_thumb_b_medium\" /></a><br />
-							<a href=\"edit_food_images.php?action=rotate&amp;food_id=$food_id&amp;image=b&amp;l=$l&amp;process=1\" class=\"btn btn_default\">Rotate</a>
-							<a href=\"edit_food_images.php?action=delete&amp;food_id=$food_id&amp;image=b&amp;l=$l\" class=\"btn btn_default\">Delete</a>
+							<a href=\"index.php?open=$open&amp;page=edit_food_images_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;action=rotate&amp;image=b&amp;l=$l&amp;process=1\" class=\"btn btn_default\">Rotate</a>
+							<a href=\"index.php?open=$open&amp;page=edit_food_images_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;action=delete&amp;image=b&amp;l=$l\" class=\"btn btn_default\">Delete</a>
 							";
 						}
 						echo"
-						<a href=\"edit_food_images.php?action=upload_new&amp;food_id=$food_id&amp;image=b&amp;l=$l\" class=\"btn btn_default\">Upload new</a>
+						<a href=\"index.php?open=$open&amp;page=edit_food_images_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;action=upload_new&amp;image=b&amp;l=$l\" class=\"btn btn_default\">Upload new</a>
 						</p>
 					  </td>
 					 </tr>
@@ -240,12 +250,12 @@ else{
 
 							echo"
 							<a href=\"$root/$get_current_food_image_path/$get_current_food_image_c\"><img src=\"$root/$get_current_food_image_path/$get_current_food_thumb_c_medium\" alt=\"$get_current_food_thumb_c_medium\" /></a><br />
-							<a href=\"edit_food_images.php?action=rotate&amp;food_id=$food_id&amp;image=c&amp;l=$l&amp;process=1\" class=\"btn btn_default\">Rotate</a>
-							<a href=\"edit_food_images.php?action=delete&amp;food_id=$food_id&amp;image=c&amp;l=$l\" class=\"btn btn_default\">Delete</a>
+							<a href=\"index.php?open=$open&amp;page=edit_food_images_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;action=rotate&amp;image=c&amp;l=$l&amp;process=1\" class=\"btn btn_default\">Rotate</a>
+							<a href=\"index.php?open=$open&amp;page=edit_food_images_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;action=delete&amp;image=c&amp;l=$l\" class=\"btn btn_default\">Delete</a>
 							";
 						}
 						echo"
-						<a href=\"edit_food_images.php?action=upload_new&amp;food_id=$food_id&amp;image=c&amp;l=$l\" class=\"btn btn_default\">Upload new</a>
+						<a href=\"index.php?open=$open&amp;page=edit_food_images_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;action=upload_new&amp;image=c&amp;l=$l\" class=\"btn btn_default\">Upload new</a>
 						</p>
 					  </td>
 					 </tr>
@@ -268,12 +278,12 @@ else{
 
 							echo"
 							<a href=\"$root/$get_current_food_image_path/$get_current_food_image_d\"><img src=\"$root/$get_current_food_image_path/$get_current_food_thumb_d_medium\" alt=\"$get_current_food_thumb_d_medium\" /></a><br />
-							<a href=\"edit_food_images.php?action=rotate&amp;food_id=$food_id&amp;image=d&amp;l=$l&amp;process=1\" class=\"btn btn_default\">Rotate</a>
-							<a href=\"edit_food_images.php?action=delete&amp;food_id=$food_id&amp;image=d&amp;l=$l\" class=\"btn btn_default\">Delete</a>
+							<a href=\"index.php?open=$open&amp;page=edit_food_images_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;action=rotate&amp;image=d&amp;l=$l&amp;process=1\" class=\"btn btn_default\">Rotate</a>
+							<a href=\"index.php?open=$open&amp;page=edit_food_images_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;action=delete&amp;image=d&amp;l=$l\" class=\"btn btn_default\">Delete</a>
 							";
 						}
 						echo"
-						<a href=\"edit_food_images.php?action=upload_new&amp;food_id=$food_id&amp;image=d&amp;l=$l\" class=\"btn btn_default\">Upload new</a>
+						<a href=\"index.php?open=$open&amp;page=edit_food_images_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;action=upload_new&amp;image=d&amp;l=$l\" class=\"btn btn_default\">Upload new</a>
 						</p>
 					  </td>
 					 </tr>
@@ -437,7 +447,7 @@ else{
 				include("new_food_00_add_update_search_engine.php");
 
 
-				$url = "edit_food_images.php?food_id=$food_id&l=$l&ft=success&fm=image_rotated";
+				$url = "index.php?open=$open&page=edit_food_images_admin&main_category_id=$get_current_food_main_category_id&sub_category_id=$get_current_food_sub_category_id&food_id=$get_current_food_id&editor_language=$editor_language&l=$l&ft=success&fm=image_rotated";
 				header("Location: $url");
 				exit;
 	} // action == "rotate"
@@ -516,31 +526,12 @@ else{
 
 
 
-					// Search engine
-					include("new_food_00_add_update_search_engine.php");
-
-
-					$url = "edit_food_images.php?food_id=$food_id&l=$l&ft=success&fm=image_deleted&image=$image";
+					$url = "index.php?open=$open&page=edit_food_images_admin&main_category_id=$get_current_food_main_category_id&sub_category_id=$get_current_food_sub_category_id&food_id=$get_current_food_id&editor_language=$editor_language&ft=success&fm=image_deleted&image=$image";
 					header("Location: $url");
 					exit;
 
 				}
 				echo"
-				<h1>$get_current_food_manufacturer_name $get_current_food_name</h1>
-
-				<!-- Where am I? -->
-					<p>
-					<a href=\"my_food.php?l=$l#food$get_current_food_id\">$l_my_food</a>
-					&gt;
-					<a href=\"view_food.php?main_category_id=$get_current_main_category_id&amp;sub_category_id=$get_current_sub_category_id&amp;food_id=$food_id&amp;l=$l\">$get_current_food_name</a>
-					&gt;
-					<a href=\"edit_food.php?food_id=$food_id&amp;l=$l\">$l_edit</a>
-					&gt;
-					<a href=\"edit_food_images.php?food_id=$food_id&amp;l=$l\">$l_images</a>
-					</p>
-				<!-- //Where am I? -->
-
-
 				<!-- Feedback -->
 					";
 					if($ft != ""){
@@ -558,7 +549,7 @@ else{
 				<!-- Delete -->
 
 					
-					<h2>$l_images</h2>
+					<h2>Images</h2>
 
 					";
 
@@ -577,16 +568,16 @@ else{
 					}
 					if($current_photo_path != ""){
 						echo"
-						<p>$l_are_you_sure_you_want_to_delete
-						$l_the_action_cant_be_undone
+						<p>Are you sure you want to delete?
+						The action cant be undone.
 						</p>
 
 						<p><img src=\"$root/$current_photo_path\" alt=\"$current_photo_path\" />
 						</p>
 
 						<p>
-						<a href=\"edit_food_images.php?action=delete&amp;food_id=$food_id&amp;image=$image&amp;l=$l&amp;process=1\" class=\"btn_danger\">$l_delete</a>
-						<a href=\"edit_food_images.php?food_id=$food_id&amp;l=$l\" class=\"btn btn_default\">$l_cancel</a>		
+						<a href=\"index.php?open=$open&amp;page=edit_food_images_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;action=delete&amp;image=$image&amp;l=$l&amp;process=1\" class=\"btn_danger\">Delete</a>
+						<a href=\"index.php?open=$open&amp;page=edit_food_images_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\" class=\"btn btn_default\">Cancel</a>		
 						</p>
 						";
 					}
@@ -594,11 +585,6 @@ else{
 					echo"
 				<!-- //Delete -->
 
-				<!-- Back -->
-					<p>
-					<a href=\"my_food.php?l=$l#food$get_current_food_id\" class=\"btn btn_default\">$l_my_food</a>
-					</p>
-				<!-- //Back -->
 
 				";
 	} // action == "rotate"
@@ -669,7 +655,7 @@ else{
 				
 					/*- Image upload ------------------------------------------------------------------------------------------ */
 					$name = stripslashes($_FILES['inp_food_image']['name']);
-					$extension = getExtension($name);
+					$extension = get_extension($name);
 					$extension = strtolower($extension);
 
 					if($name){
@@ -775,7 +761,7 @@ else{
 					// Feedback
 					if(isset($fm_image)){
 					// Feedback with error
-					$url = "edit_food_images.php?action=upload_new&food_id=$food_id&image=$image&l=$l";
+					$url = "index.php?open=$open&page=edit_food_images_admin&main_category_id=$get_current_food_main_category_id&sub_category_id=$get_current_food_sub_category_id&food_id=$get_current_food_id&editor_language=$editor_language&action=upload_new&image=$image&l=$l";
 					if(isset($fm_image)){
 						$url = $url . "&fm_image=$fm_image";
 					}
@@ -784,26 +770,13 @@ else{
 					}
 					else{
 						// Feedback without error
-						$url = "edit_food_images.php?food_id=$food_id&l=$l";
+						$url = "index.php?open=$open&page=edit_food_images_admin&main_category_id=$get_current_food_main_category_id&sub_category_id=$get_current_food_sub_category_id&food_id=$get_current_food_id&editor_language=$editor_language&l=$l";
 						header("Location: $url");
 						exit;
 					}
 
 				}
 				echo"
-				<h1>$get_current_food_manufacturer_name $get_current_food_name</h1>
-
-				<!-- Where am I? -->
-					<p>
-					<a href=\"my_food.php?l=$l#food$get_current_food_id\">$l_my_food</a>
-					&gt;
-					<a href=\"view_food.php?main_category_id=$get_current_main_category_id&amp;sub_category_id=$get_current_sub_category_id&amp;food_id=$food_id&amp;l=$l\">$get_current_food_name</a>
-					&gt;
-					<a href=\"edit_food.php?food_id=$food_id&amp;l=$l\">$l_edit</a>
-					&gt;
-					<a href=\"edit_food_images.php?food_id=$food_id&amp;l=$l\">$l_images</a>
-					</p>
-				<!-- //Where am I? -->
 				<!-- Feedback -->
 			";
 			if(isset($_GET['fm_image'])){
@@ -850,38 +823,33 @@ else{
 						</script>
 					<!-- //Focus -->
 
-					<form method=\"post\" action=\"edit_food_images.php?action=upload_new&amp;food_id=$food_id&amp;l=$l&amp;image=$image&amp;process=1\" enctype=\"multipart/form-data\">
+					<form method=\"post\" action=\"index.php?open=$open&amp;page=edit_food_images_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;action=upload_new&amp;l=$l&amp;image=$image&amp;process=1\" enctype=\"multipart/form-data\">
 					";
 
 					if($image == "a"){
-						echo"<h2>$l_upload_product_image</h2>";
+						echo"<h2>Upload product image</h2>";
 					}
 					elseif($image == "b"){
-						echo"<h2>$l_upload_food_table_image</h2>";
+						echo"<h2>Upload food table image</h2>";
 					}
 					elseif($image == "c"){
-						echo"<h2>$l_upload_other_image</h2>";
+						echo"<h2>Upload other image</h2>";
 					}
 					elseif($image == "d"){
-						echo"<h2>$l_upload_inspiration_image</h2>";
+						echo"<h2>Upload inspiration image</h2>";
 					}
 
 					echo"
 
 					<p>
-					<b>$l_select_image (jpg $settings_image_width x $settings_image_height px)</b><br />
+					<b>Select image (jpg $settings_image_width x $settings_image_height px)</b><br />
 					<input type=\"file\" name=\"inp_food_image\" /> 
-					<input type=\"submit\" value=\"$l_upload\" class=\"btn\" />
+					<input type=\"submit\" value=\"Upload\" class=\"btn\" />
 					</p>
 
 				
 				<!-- //Upload new -->
 
-				<!-- Back -->
-					<p>
-					<a href=\"my_food.php?l=$l#food$get_current_food_id\" class=\"btn btn_default\">$l_my_food</a>
-					</p>
-				<!-- //Back -->
 
 		";
 	} // action == "rotate"

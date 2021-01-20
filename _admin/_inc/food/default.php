@@ -276,6 +276,21 @@ elseif($action == "open_sub_category"){
 				</p>
 			<!-- //Where am I ? -->
 
+			<!-- Feedback -->
+				";
+				if($ft != ""){
+					if($fm == "changes_saved"){
+						$fm = "$l_changes_saved";
+					}
+					else{
+						$fm = str_replace("_", " ", $fm);
+						$fm = ucfirst($fm);
+					}
+					echo"<div class=\"$ft\"><span>$fm</span></div>";
+				}
+				echo"	
+			<!-- //Feedback -->
+
 			<!-- Select language -->
 				<script>
 				\$(function(){
