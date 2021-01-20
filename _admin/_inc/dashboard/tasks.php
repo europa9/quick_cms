@@ -1250,12 +1250,24 @@ elseif($action == "edit_task"){
 			$inp_system_id = $_POST['inp_system_id'];
 			$inp_system_id = output_html($inp_system_id);
 			$inp_system_id_mysql = quote_smart($link, $inp_system_id);
+			
+			if($inp_system_id != "0"){
 
+				$query = "SELECT system_id, system_title, system_task_abbr, system_description, system_logo, system_is_active, system_increment_tasks_counter, system_created, system_updated FROM $t_tasks_systems WHERE system_id=$inp_system_id_mysql";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_system_id, $get_system_title, $get_system_task_abbr, $get_system_description, $get_system_logo, $get_system_is_active, $get_system_increment_tasks_counter, $get_system_created, $get_system_updated) = $row;
+			}
+			else{
+				// Pick random system
+				$query = "SELECT system_id, system_title, system_task_abbr, system_description, system_logo, system_is_active, system_increment_tasks_counter, system_created, system_updated FROM $t_tasks_systems LIMIT 0,1";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_system_id, $get_system_title, $get_system_task_abbr, $get_system_description, $get_system_logo, $get_system_is_active, $get_system_increment_tasks_counter, $get_system_created, $get_system_updated) = $row;
+				$inp_system_id = "$get_system_id";
+				$inp_system_id_mysql = quote_smart($link, $inp_system_id);
 
-			$query = "SELECT system_id, system_title, system_task_abbr, system_description, system_logo, system_is_active, system_increment_tasks_counter, system_created, system_updated FROM $t_tasks_systems WHERE system_id=$inp_system_id_mysql";
-			$result = mysqli_query($link, $query);
-			$row = mysqli_fetch_row($result);
-			list($get_system_id, $get_system_title, $get_system_task_abbr, $get_system_description, $get_system_logo, $get_system_is_active, $get_system_increment_tasks_counter, $get_system_created, $get_system_updated) = $row;
+			}
 
 			$inp_system_title_mysql = quote_smart($link, $get_system_title);
 			if($get_current_task_system_id != "$inp_system_id"){
@@ -1554,7 +1566,8 @@ $inp_history_new_hours_planned_mysql , $inp_history_new_hours_used_mysql )")
 			$fm_email = "";
 			if($get_current_task_assigned_to_user_id != "$inp_assigned_to_user_id" && $inp_assigned_to_user_email != "" && $inp_assigned_to_user_id != "$get_my_user_id"){
 				
-				$subject = "Task $inp_title reassiged to you at $configWebsiteTitleSav";
+				$subject = "$inp_title | $configWebsiteTitleSav";
+				$subject = str_replace('&quot;', '"', $subject);
 
 				$message = "<html>\n";
 				$message = $message. "<head>\n";
@@ -1654,6 +1667,7 @@ $inp_history_new_hours_planned_mysql , $inp_history_new_hours_used_mysql )")
 			while($row = mysqli_fetch_row($result)) {
 				list($get_subscription_id, $get_subscription_task_id, $get_subscription_user_id, $get_subscription_user_email) = $row;
 
+				/*
 				if($get_subscription_user_email != "$get_my_user_email" && $get_subscription_user_email != "$inp_assigned_to_user_id"){
 					$subject = "Task $inp_title changed at $configWebsiteTitleSav";
 
@@ -1734,6 +1748,7 @@ $inp_history_new_hours_planned_mysql , $inp_history_new_hours_used_mysql )")
 					or die(mysqli_error($link));
 
 				} // not extra emails
+				*/
 
 			} // while
 
@@ -2271,7 +2286,8 @@ elseif($action == "edit_task_assigned_to"){
 			$fm_email = "";
 			if($get_current_task_assigned_to_user_id != "$inp_assigned_to_user_id" && $inp_assigned_to_user_email != "" && $inp_assigned_to_user_id != "$get_my_user_id"){
 				
-				$subject = "Task $get_current_task_title reassiged to you at $configWebsiteTitleSav";
+				$subject = "$get_current_task_title | $configWebsiteTitleSav";
+				$subject = str_replace('&quot;', '"', $subject);
 
 				$message = "<html>\n";
 				$message = $message. "<head>\n";
@@ -2546,6 +2562,7 @@ elseif($action == "edit_task_status"){
 			}
 
 
+			/*
 			// Email to all task subscribers
 			$query = "SELECT subscription_id, subscription_task_id, subscription_user_id, subscription_user_email FROM $t_tasks_subscriptions WHERE subscription_task_id=$get_current_task_id";
 			$result = mysqli_query($link, $query);
@@ -2553,7 +2570,7 @@ elseif($action == "edit_task_status"){
 				list($get_subscription_id, $get_subscription_task_id, $get_subscription_user_id, $get_subscription_user_email) = $row;
 
 				if($get_subscription_user_email != "$get_my_user_email"){
-					$subject = "Task $inp_title changed status to $inp_history_new_status_code_title at $configWebsiteTitleSav";
+					$subject = "Task $get_current_task_title changed status to $inp_history_new_status_code_title at $configWebsiteTitleSav";
 
 					$message = "<html>\n";
 					$message = $message. "<head>\n";
@@ -2634,6 +2651,7 @@ elseif($action == "edit_task_status"){
 				} // not extra emails
 
 			} // while
+			*/
 			
 			// Is the new status "finished"?
 			if($get_status_code_on_status_close_task == "1"){

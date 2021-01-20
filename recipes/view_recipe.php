@@ -516,7 +516,18 @@ else{
 
 		echo"
 		<!-- Headline -->
+
 		<div class=\"recipe_headline\">
+			<h1>$get_recipe_title</h1>
+
+			<span>
+			<a href=\"index.php?l=$l\">$l_recipes</a>
+			&gt;
+			<a href=\"categories_browse.php?category_id=$get_recipe_category_id&amp;l=$l\">$get_category_translation_value</a>
+			&gt;
+			<a href=\"view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\">$get_recipe_title</a>
+			</span>
+
 			<!-- Recipe image/video -->
 			";
 			if($get_recipe_video != ""){
@@ -531,9 +542,6 @@ else{
 			}
 			echo"	
 			<!-- //Recipe image/video -->
-
-
-			<h1>$get_recipe_title</h1>
 
 
 

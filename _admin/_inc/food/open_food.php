@@ -1,0 +1,130 @@
+<?php
+/**
+*
+* File: _admin/_inc/food/open_food.php
+* Version 14:53 20.01.2021
+* Copyright (c) 2021 Sindre Andre Ditlefsen
+* License: http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+*/
+/*- Access check ----------------------------------------------------------------------- */
+if(!(isset($define_access_to_control_panel))){
+	echo"<h1>Server error 403</h1>";
+	die;
+}
+/*- Tables ---------------------------------------------------------------------------- */
+$t_food_categories		  = $mysqlPrefixSav . "food_categories";
+$t_food_categories_translations	  = $mysqlPrefixSav . "food_categories_translations";
+$t_food_index			  = $mysqlPrefixSav . "food_index";
+$t_food_index_stores		  = $mysqlPrefixSav . "food_index_stores";
+$t_food_index_ads		  = $mysqlPrefixSav . "food_index_ads";
+$t_food_index_tags		  = $mysqlPrefixSav . "food_index_tags";
+$t_food_index_prices		  = $mysqlPrefixSav . "food_index_prices";
+$t_food_index_contents		  = $mysqlPrefixSav . "food_index_contents";
+$t_food_stores		  	  = $mysqlPrefixSav . "food_stores";
+$t_food_prices_currencies	  = $mysqlPrefixSav . "food_prices_currencies";
+$t_food_favorites 		  = $mysqlPrefixSav . "food_favorites";
+$t_food_measurements	 	  = $mysqlPrefixSav . "food_measurements";
+$t_food_measurements_translations = $mysqlPrefixSav . "food_measurements_translations";
+
+
+
+
+/*- Variables -------------------------------------------------------------------------- */
+if(isset($_GET['language'])){
+	$language = $_GET['language'];
+	$language = strip_tags(stripslashes($language));
+}
+else{
+	$language = "en";
+}
+if(isset($_GET['main_category_id'])){
+	$main_category_id= $_GET['main_category_id'];
+	$main_category_id = strip_tags(stripslashes($main_category_id));
+}
+else{
+	$main_category_id = "";
+}
+if(isset($_GET['sub_category_id'])){
+	$sub_category_id= $_GET['sub_category_id'];
+	$sub_category_id = strip_tags(stripslashes($sub_category_id));
+}
+else{
+	$sub_category_id = "";
+}
+
+
+/*- Settings ---------------------------------------------------------------------------- */
+$settings_image_width = "847";
+$settings_image_height = "847";
+
+
+// Get variables
+$food_id = $_GET['food_id'];
+$food_id = strip_tags(stripslashes($food_id));
+$food_id_mysql = quote_smart($link, $food_id);
+$editor_language_mysql = quote_smart($link, $editor_language);
+
+// Select food
+$query = "SELECT food_id, food_user_id, food_name, food_clean_name, food_manufacturer_name, food_manufacturer_name_and_food_name, food_description, food_country, food_net_content, food_net_content_measurement, food_serving_size_gram, food_serving_size_gram_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy, food_fat, food_fat_of_which_saturated_fatty_acids, food_carbohydrates, food_carbohydrates_of_which_dietary_fiber, food_carbohydrates_of_which_sugars, food_proteins, food_salt, food_sodium, food_score, food_energy_calculated, food_fat_calculated, food_fat_of_which_saturated_fatty_acids_calculated, food_carbohydrates_calculated, food_carbohydrates_of_which_dietary_fiber_calculated, food_carbohydrates_of_which_sugars_calculated, food_proteins_calculated, food_salt_calculated, food_sodium_calculated, food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_image_a, food_thumb_a_small, food_thumb_a_medium, food_thumb_a_large, food_image_b, food_thumb_b_small, food_thumb_b_medium, food_thumb_b_large, food_image_c, food_thumb_c_small, food_thumb_c_medium, food_thumb_c_large, food_image_d, food_thumb_d_small, food_thumb_d_medium, food_thumb_d_large, food_image_e, food_thumb_e_small, food_thumb_e_medium, food_thumb_e_large, food_last_used, food_language, food_synchronized, food_accepted_as_master, food_notes, food_unique_hits, food_unique_hits_ip_block, food_comments, food_likes, food_dislikes, food_likes_ip_block, food_user_ip, food_created_date, food_last_viewed, food_age_restriction FROM $t_food_index WHERE food_id=$food_id_mysql";
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_row($result);
+list($get_current_food_id, $get_current_food_user_id, $get_current_food_name, $get_current_food_clean_name, $get_current_food_manufacturer_name, $get_current_food_manufacturer_name_and_food_name, $get_current_food_description, $get_current_food_country, $get_current_food_net_content, $get_current_food_net_content_measurement, $get_current_food_serving_size_gram, $get_current_food_serving_size_gram_measurement, $get_current_food_serving_size_pcs, $get_current_food_serving_size_pcs_measurement, $get_current_food_energy, $get_current_food_fat, $get_current_food_fat_of_which_saturated_fatty_acids, $get_current_food_carbohydrates, $get_current_food_carbohydrates_of_which_dietary_fiber, $get_current_food_carbohydrates_of_which_sugars, $get_current_food_proteins, $get_current_food_salt, $get_current_food_sodium, $get_current_food_score, $get_current_food_energy_calculated, $get_current_food_fat_calculated, $get_current_food_fat_of_which_saturated_fatty_acids_calculated, $get_current_food_carbohydrates_calculated, $get_current_food_carbohydrates_of_which_dietary_fiber_calculated, $get_current_food_carbohydrates_of_which_sugars_calculated, $get_current_food_proteins_calculated, $get_current_food_salt_calculated, $get_current_food_sodium_calculated, $get_current_food_barcode, $get_current_food_main_category_id, $get_current_food_sub_category_id, $get_current_food_image_path, $get_current_food_image_a, $get_current_food_thumb_a_small, $get_current_food_thumb_a_medium, $get_current_food_thumb_a_large, $get_current_food_image_b, $get_current_food_thumb_b_small, $get_current_food_thumb_b_medium, $get_current_food_thumb_b_large, $get_current_food_image_c, $get_current_food_thumb_c_small, $get_current_food_thumb_c_medium, $get_current_food_thumb_c_large, $get_current_food_image_d, $get_current_food_thumb_d_small, $get_current_food_thumb_d_medium, $get_current_food_thumb_d_large, $get_current_food_image_e, $get_current_food_thumb_e_small, $get_current_food_thumb_e_medium, $get_current_food_thumb_e_large, $get_current_food_last_used, $get_current_food_language, $get_current_food_synchronized, $get_current_food_accepted_as_master, $get_current_food_notes, $get_current_food_unique_hits, $get_current_food_unique_hits_ip_block, $get_current_food_comments, $get_current_food_likes, $get_current_food_dislikes, $get_current_food_likes_ip_block, $get_current_food_user_ip, $get_current_food_created_date, $get_current_food_last_viewed, $get_current_food_age_restriction) = $row;
+
+if($get_current_food_id == ""){
+	echo"
+	<h1>Food not found</h1>
+	<p>
+	Sorry, the food was not found.
+	</p>
+
+	<p>
+	<a href=\"index.php?open=$open&amp;page=default&amp;editor_language=$editor_language&amp;l=$l\">Back</a>
+	</p>
+	";
+}
+else{
+
+	// Translation
+	$query_t = "SELECT category_translation_value FROM $t_food_categories_translations WHERE category_id=$get_current_food_main_category_id AND category_translation_language=$editor_language_mysql";
+	$result_t = mysqli_query($link, $query_t);
+	$row_t = mysqli_fetch_row($result_t);
+	list($get_current_main_category_translation_value) = $row_t;
+
+	$query_t = "SELECT category_translation_value FROM $t_food_categories_translations WHERE category_id=$get_current_food_sub_category_id AND category_translation_language=$editor_language_mysql";
+	$result_t = mysqli_query($link, $query_t);
+	$row_t = mysqli_fetch_row($result_t);
+	list($get_current_sub_category_translation_value) = $row_t;
+		
+
+	if($action == ""){
+		echo"
+		<h1>$get_current_food_manufacturer_name $get_current_food_name</h1>
+
+		<!-- Where am I ? -->
+			<p><b>You are here:</b><br />
+			<a href=\"index.php?open=$open&amp;page=default&amp;editor_language=$editor_language&amp;l=$l\">Food</a>
+			&gt;
+			<a href=\"index.php?open=$open&amp;page=default&amp;action=open_main_category&amp;main_category_id=$get_current_food_main_category_id&amp;editor_language=$editor_language&amp;l=$l\">$get_current_main_category_translation_value</a>
+			&gt;
+			<a href=\"index.php?open=$open&amp;page=default&amp;action=open_sub_category&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;editor_language=$editor_language&amp;l=$l\">$get_current_sub_category_translation_value</a>
+			&gt;
+			<a href=\"index.php?open=$open&amp;page=open_food&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">$get_current_food_manufacturer_name $get_current_food_name</a>
+			</p>
+		<!-- //Where am I ? -->
+
+		<!-- Food Menu -->
+			<div class=\"tabs\">
+				<ul>
+					<li><a href=\"index.php?open=$open&amp;page=open_food&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\" class=\"active\">View</a>
+					<li><a href=\"index.php?open=$open&amp;page=edit_food_general&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Edit</a>
+					<li><a href=\"index.php?open=$open&amp;page=edit_food_images&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Images</a>
+					<li><a href=\"index.php?open=$open&amp;page=delete_food&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Delete</a>
+				</ul>
+			</div>
+			<div class=\"clear\"></div>
+		<!-- //Food Menu -->
+		";
+	} // action == ""
+} // food found
+?>

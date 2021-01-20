@@ -115,7 +115,7 @@ else{
 			&gt;
 			<a href=\"categories.php?l=$l\">$l_categories</a>
 			&gt;
-			<a href=\"categories_browse_1200.php?caegory_id=$get_current_category_id&amp;l=$l\">$get_current_category_translation_value</a>
+			<a href=\"categories_browse.php?caegory_id=$get_current_category_id&amp;l=$l\">$get_current_category_translation_value</a>
 			</p>
 		<!-- //Where am I? -->
 	</div>
@@ -143,19 +143,19 @@ else{
 			<form method=\"get\" action=\"search.php\" enctype=\"multipart/form-data\">
 				<p>
 				<select name=\"inp_order_by\" id=\"inp_order_by_select\">
-					<option value=\"categories_browse_1200.php?category_id=$category_id\">- $l_order_by -</option>
-					<option value=\"categories_browse_1200.php?category_id=$category_id&amp;order_by=recipe_id&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "recipe_id" OR $order_by == ""){ echo" selected=\"selected\""; } echo">$l_date</option>
-					<option value=\"categories_browse_1200.php?category_id=$category_id&amp;order_by=recipe_title&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "recipe_title"){ echo" selected=\"selected\""; } echo">$l_title</option>
-					<option value=\"categories_browse_1200.php?category_id=$category_id&amp;order_by=recipe_comments&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "recipe_comments"){ echo" selected=\"selected\""; } echo">$l_comments</option>
-					<option value=\"categories_browse_1200.php?category_id=$category_id&amp;order_by=recipe_unique_hits&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "recipe_unique_hits"){ echo" selected=\"selected\""; } echo">$l_unique_hits</option>
-					<option value=\"categories_browse_1200.php?category_id=$category_id&amp;order_by=number_serving_calories&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "number_serving_calories"){ echo" selected=\"selected\""; } echo">$l_calories</option>
-					<option value=\"categories_browse_1200.php?category_id=$category_id&amp;order_by=number_serving_fat&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "number_serving_fat"){ echo" selected=\"selected\""; } echo">$l_fat</option>
-					<option value=\"categories_browse_1200.php?category_id=$category_id&amp;order_by=number_serving_carbs&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "number_serving_carbs"){ echo" selected=\"selected\""; } echo">$l_carbs</option>
-					<option value=\"categories_browse_1200.php?category_id=$category_id&amp;order_by=number_serving_proteins&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "number_serving_proteins"){ echo" selected=\"selected\""; } echo">$l_proteins</option>
+					<option value=\"categories_browse.php?category_id=$category_id\">- $l_order_by -</option>
+					<option value=\"categories_browse.php?category_id=$category_id&amp;order_by=recipe_id&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "recipe_id" OR $order_by == ""){ echo" selected=\"selected\""; } echo">$l_date</option>
+					<option value=\"categories_browse.php?category_id=$category_id&amp;order_by=recipe_title&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "recipe_title"){ echo" selected=\"selected\""; } echo">$l_title</option>
+					<option value=\"categories_browse.php?category_id=$category_id&amp;order_by=recipe_comments&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "recipe_comments"){ echo" selected=\"selected\""; } echo">$l_comments</option>
+					<option value=\"categories_browse.php?category_id=$category_id&amp;order_by=recipe_unique_hits&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "recipe_unique_hits"){ echo" selected=\"selected\""; } echo">$l_unique_hits</option>
+					<option value=\"categories_browse.php?category_id=$category_id&amp;order_by=number_serving_calories&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "number_serving_calories"){ echo" selected=\"selected\""; } echo">$l_calories</option>
+					<option value=\"categories_browse.php?category_id=$category_id&amp;order_by=number_serving_fat&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "number_serving_fat"){ echo" selected=\"selected\""; } echo">$l_fat</option>
+					<option value=\"categories_browse.php?category_id=$category_id&amp;order_by=number_serving_carbs&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "number_serving_carbs"){ echo" selected=\"selected\""; } echo">$l_carbs</option>
+					<option value=\"categories_browse.php?category_id=$category_id&amp;order_by=number_serving_proteins&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "number_serving_proteins"){ echo" selected=\"selected\""; } echo">$l_proteins</option>
 				</select>
 				<select name=\"inp_order_method\" id=\"inp_order_method_select\">
-					<option value=\"categories_browse_1200.php?category_id=$category_id&amp;order_by=$order_by&amp;order_method=asc&amp;l=$l\""; if($order_method == "asc"){ echo" selected=\"selected\""; } echo">$l_asc</option>
-					<option value=\"categories_browse_1200.php?category_id=$category_id&amp;order_by=$order_by&amp;order_method=desc&amp;l=$l\""; if($order_method == "desc"){ echo" selected=\"selected\""; } echo">$l_desc</option>
+					<option value=\"categories_browse.php?category_id=$category_id&amp;order_by=$order_by&amp;order_method=asc&amp;l=$l\""; if($order_method == "asc"){ echo" selected=\"selected\""; } echo">$l_asc</option>
+					<option value=\"categories_browse.php?category_id=$category_id&amp;order_by=$order_by&amp;order_method=desc&amp;l=$l\""; if($order_method == "desc"){ echo" selected=\"selected\""; } echo">$l_desc</option>
 				</select> 
 				</p>
         		</form>
