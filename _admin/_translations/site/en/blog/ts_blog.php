@@ -11,4 +11,5 @@ $l_home = "Home";
 $l_ad = "Ad";
 $l_this_post_has_ad_links = "This post has ad links";
 $l_ad_links = "Ad links";
+$l_my_posts = "My posts";
 ?>

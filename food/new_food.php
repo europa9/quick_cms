@@ -78,7 +78,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$row_t = mysqli_fetch_row($result_t);
 		list($get_food_id) = $row_t;
 		if($get_food_id == ""){
-			$url = "new_food_2_select_main_category.php?barcode=$inp_food_barcode&amp;l=$l";
+			$url = "new_food_2_select_main_category.php?barcode=$inp_food_barcode&l=$l";
 			header("Location: $url");
 			exit;
 		}

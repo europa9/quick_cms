@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: food/new_food_3_general_information.php
+* File: food/new_food_4_general_information.php
 * Version 1.0.0
 * Date 10:20 17.10.2020
 * Copyright (c) 2011-2020 Localhost
@@ -203,11 +203,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				food_net_content_measurement, food_serving_size_gram, food_serving_size_gram_measurement, 
 				food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy, 
 
-				food_proteins, food_carbohydrates, food_carbohydrates_of_which_dietary_fiber, 
+				food_proteins, food_carbohydrates, food_dietary_fiber, 
 				food_carbohydrates_of_which_sugars, food_fat, food_fat_of_which_saturated_fatty_acids, 
 				food_salt, food_sodium, food_score, 
 				food_energy_calculated, food_proteins_calculated, food_salt_calculated, 
-				food_sodium_calculated, food_carbohydrates_calculated, food_carbohydrates_of_which_dietary_fiber_calculated, 
+				food_sodium_calculated, food_carbohydrates_calculated, food_dietary_fiber_calculated, 
 
 				food_carbohydrates_of_which_sugars_calculated, food_fat_calculated, food_fat_of_which_saturated_fatty_acids_calculated, 
 				food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_last_used, 
@@ -243,7 +243,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$result = mysqli_query($link, $query);
 				$row = mysqli_fetch_row($result);
 				list($get_food_id) = $row;
-	
+				if($get_food_id == ""){
+					echo"Error could not get food id";
+					die;
+				}
 
 
 				// Check if food country is used

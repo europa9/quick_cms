@@ -218,7 +218,7 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 		$x = 0;
 
 		// Query
-		$query = "SELECT food_id, food_user_id, food_name, food_manufacturer_name, food_manufacturer_name_and_food_name, food_description, food_country, food_net_content, food_net_content_measurement, food_serving_size_gram, food_serving_size_gram_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy, food_proteins, food_carbohydrates, food_carbohydrates_of_which_dietary_fiber, food_carbohydrates_of_which_sugars, food_fat, food_fat_of_which_saturated_fatty_acids, food_salt, food_sodium, food_score, food_energy_calculated, food_proteins_calculated, food_salt_calculated, food_sodium_calculated, food_carbohydrates_calculated, food_carbohydrates_of_which_dietary_fiber_calculated, food_carbohydrates_of_which_sugars_calculated, food_fat_calculated, food_fat_of_which_saturated_fatty_acids_calculated, food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_image_a, food_thumb_a_small FROM $t_food_index";
+		$query = "SELECT food_id, food_user_id, food_name, food_manufacturer_name, food_manufacturer_name_and_food_name, food_description, food_country, food_net_content, food_net_content_measurement, food_serving_size_gram, food_serving_size_gram_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy, food_proteins, food_carbohydrates, food_dietary_fiber, food_carbohydrates_of_which_sugars, food_fat, food_fat_of_which_saturated_fatty_acids, food_salt, food_sodium, food_score, food_energy_calculated, food_proteins_calculated, food_salt_calculated, food_sodium_calculated, food_carbohydrates_calculated, food_dietary_fiber_calculated, food_carbohydrates_of_which_sugars_calculated, food_fat_calculated, food_fat_of_which_saturated_fatty_acids_calculated, food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_image_a, food_thumb_a_small FROM $t_food_index";
 		$query = $query  . " WHERE food_language=$l_mysql AND (food_manufacturer_name_and_food_name LIKE $q_mysql OR food_name LIKE $q_mysql)";
 		// Order
 		if($order_by != ""){
@@ -241,7 +241,7 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
-			list($get_food_id, $get_food_user_id, $get_food_name, $get_food_manufacturer_name, $get_food_manufacturer_name_and_food_name, $get_food_description, $get_food_country, $get_food_net_content, $get_food_net_content_measurement, $get_food_serving_size_gram, $get_food_serving_size_gram_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy, $get_food_proteins, $get_food_carbohydrates, $get_food_carbohydrates_of_which_dietary_fiber, $get_food_carbohydrates_of_which_sugars, $get_food_fat, $get_food_fat_of_which_saturated_fatty_acids, $get_food_salt, $get_food_sodium, $get_food_score, $get_food_energy_calculated, $get_food_proteins_calculated, $get_food_salt_calculated, $get_food_sodium_calculated, $get_food_carbohydrates_calculated, $get_food_carbohydrates_of_which_dietary_fiber_calculated, $get_food_carbohydrates_of_which_sugars_calculated, $get_food_fat_calculated, $get_food_fat_of_which_saturated_fatty_acids_calculated, $get_food_barcode, $get_food_main_category_id, $get_food_sub_category_id, $get_food_image_path, $get_food_image_a, $get_food_thumb_a_small) = $row;
+			list($get_food_id, $get_food_user_id, $get_food_name, $get_food_manufacturer_name, $get_food_manufacturer_name_and_food_name, $get_food_description, $get_food_country, $get_food_net_content, $get_food_net_content_measurement, $get_food_serving_size_gram, $get_food_serving_size_gram_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy, $get_food_proteins, $get_food_carbohydrates, $get_food_dietary_fiber, $get_food_carbohydrates_of_which_sugars, $get_food_fat, $get_food_fat_of_which_saturated_fatty_acids, $get_food_salt, $get_food_sodium, $get_food_score, $get_food_energy_calculated, $get_food_proteins_calculated, $get_food_salt_calculated, $get_food_sodium_calculated, $get_food_carbohydrates_calculated, $get_food_dietary_fiber_calculated, $get_food_carbohydrates_of_which_sugars_calculated, $get_food_fat_calculated, $get_food_fat_of_which_saturated_fatty_acids_calculated, $get_food_barcode, $get_food_main_category_id, $get_food_sub_category_id, $get_food_image_path, $get_food_image_a, $get_food_thumb_a_small) = $row;
 
 			if($get_food_image_a != "" && file_exists("../$get_food_image_path/$get_food_image_a")){
 
@@ -254,8 +254,8 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 				if($get_food_fat_of_which_saturated_fatty_acids_calculated == ""){
 					$get_food_fat_of_which_saturated_fatty_acids_calculated = "0";
 				}
-				if($get_food_carbohydrates_of_which_dietary_fiber == ""){
-					$get_food_carbohydrates_of_which_dietary_fiber = "0";
+				if($get_food_dietary_fiber == ""){
+					$get_food_dietary_fiber = "0";
 				}
 				if($get_food_carbohydrates_of_which_sugars_calculated == ""){
 					$get_food_carbohydrates_of_which_sugars_calculated = "0";
@@ -266,8 +266,8 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 				if($get_food_salt_calculated == ""){
 					$get_food_salt_calculated = "0";
 				}
-				if($get_food_carbohydrates_of_which_dietary_fiber_calculated == ""){
-					$get_food_carbohydrates_of_which_dietary_fiber_calculated = "0";
+				if($get_food_dietary_fiber_calculated == ""){
+					$get_food_dietary_fiber_calculated = "0";
 				}
 				if($get_food_sodium == ""){
 					$get_food_sodium = "0";
@@ -391,7 +391,7 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 							\$(\"#inp_item_fat_per_hundred\").val($get_food_fat);
 							\$(\"#inp_item_fat_of_which_saturated_fatty_acids_per_hundred\").val($get_food_fat_of_which_saturated_fatty_acids);
 							\$(\"#inp_item_carbs_per_hundred\").val($get_food_carbohydrates);
-							\$(\"#inp_item_carbs_of_which_dietary_fiber_calculated\").val($get_food_carbohydrates_of_which_dietary_fiber);
+							\$(\"#inp_item_carbs_of_which_dietary_fiber_calculated\").val($get_food_dietary_fiber);
 							\$(\"#inp_item_carbs_of_which_sugars_per_hundred\").val($get_food_carbohydrates_of_which_sugars);
 							\$(\"#inp_item_proteins_per_hundred\").val($get_food_proteins);
 							\$(\"#inp_item_salt_per_hundred\").val($get_food_salt);
@@ -400,7 +400,7 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 							\$(\"#inp_item_fat_calculated\").val(($get_food_fat * inpAmount)/100);
 							\$(\"#inp_item_fat_of_which_saturated_fatty_acids_calculated\").val(($get_food_fat_of_which_saturated_fatty_acids * inpAmount)/100);
 							\$(\"#inp_item_carbs_calculated\").val(($get_food_carbohydrates * inpAmount)/100);
-							\$(\"#inp_item_carbs_of_which_dietary_fiber_calculated\").val(($get_food_carbohydrates_of_which_dietary_fiber * inpAmount)/100);
+							\$(\"#inp_item_carbs_of_which_dietary_fiber_calculated\").val(($get_food_dietary_fiber * inpAmount)/100);
 							\$(\"#inp_item_carbs_of_which_sugars_calculated\").val(($get_food_carbohydrates_of_which_sugars * inpAmount)/100);
 							\$(\"#inp_item_proteins_calculated\").val(($get_food_proteins * inpAmount)/100);
 							\$(\"#inp_item_salt_calculated\").val(($get_food_salt * inpAmount)/100);
@@ -422,7 +422,7 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 							\$(\"#inp_item_fat_calculated\").val(($get_food_fat_calculated / $get_food_serving_size_pcs) *  inpAmount);
 							\$(\"#inp_item_fat_of_which_saturated_fatty_acids_calculated\").val(($get_food_fat_of_which_saturated_fatty_acids_calculated / $get_food_serving_size_pcs) *  inpAmount);
 							\$(\"#inp_item_carbs_calculated\").val(($get_food_carbohydrates_calculated / $get_food_serving_size_pcs) *  inpAmount);
-							\$(\"#inp_item_carbs_of_which_dietary_fiber_calculated\").val(($get_food_carbohydrates_of_which_dietary_fiber_calculated / $get_food_serving_size_pcs) *  inpAmount);
+							\$(\"#inp_item_carbs_of_which_dietary_fiber_calculated\").val(($get_food_dietary_fiber_calculated / $get_food_serving_size_pcs) *  inpAmount);
 							\$(\"#inp_item_carbs_of_which_sugars_calculated\").val(($get_food_carbohydrates_of_which_sugars_calculated / $get_food_serving_size_pcs) *  inpAmount);
 							\$(\"#inp_item_proteins_calculated\").val(($get_food_proteins_calculated / $get_food_serving_size_pcs) *  inpAmount);
 							\$(\"#inp_item_sodium_calculated\").val(($get_food_sodium_calculated / $get_food_serving_size_pcs) *  inpAmount);
@@ -451,7 +451,7 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 							\$(\"#inp_item_fat_per_hundred\").val($get_food_fat);
 							\$(\"#inp_item_fat_of_which_saturated_fatty_acids_per_hundred\").val($get_food_fat_of_which_saturated_fatty_acids);
 							\$(\"#inp_item_carbs_per_hundred\").val($get_food_carbohydrates);
-							\$(\"#inp_item_carbs_of_which_dietary_fiber_calculated\").val($get_food_carbohydrates_of_which_dietary_fiber);
+							\$(\"#inp_item_carbs_of_which_dietary_fiber_calculated\").val($get_food_dietary_fiber);
 							\$(\"#inp_item_carbs_of_which_sugars_per_hundred\").val($get_food_carbohydrates_of_which_sugars);
 							\$(\"#inp_item_proteins_per_hundred\").val($get_food_proteins);
 							\$(\"#inp_item_salt_per_hundred\").val($get_food_salt);
@@ -460,7 +460,7 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 							\$(\"#inp_item_fat_calculated\").val(($get_food_fat * inpAmount)/100);
 							\$(\"#inp_item_fat_of_which_saturated_fatty_acids_calculated\").val(($get_food_fat_of_which_saturated_fatty_acids * inpAmount)/100);
 							\$(\"#inp_item_carbs_calculated\").val(($get_food_carbohydrates * inpAmount)/100);
-							\$(\"#inp_item_carbs_of_which_dietary_fiber_calculated\").val(($get_food_carbohydrates_of_which_dietary_fiber * inpAmount)/100);
+							\$(\"#inp_item_carbs_of_which_dietary_fiber_calculated\").val(($get_food_dietary_fiber * inpAmount)/100);
 							\$(\"#inp_item_carbs_of_which_sugars_calculated\").val(($get_food_carbohydrates_of_which_sugars * inpAmount)/100);
 							\$(\"#inp_item_proteins_calculated\").val(($get_food_proteins * inpAmount)/100);
 							\$(\"#inp_item_salt_calculated\").val(($get_food_salt * inpAmount)/100);
@@ -482,7 +482,7 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 							\$(\"#inp_item_fat_per_hundred\").val($get_food_fat);
 							\$(\"#inp_item_fat_of_which_saturated_fatty_acids_per_hundred\").val($get_food_fat_of_which_saturated_fatty_acids);
 							\$(\"#inp_item_carbs_per_hundred\").val($get_food_carbohydrates);
-							\$(\"#inp_item_carbs_of_which_dietary_fiber_per_hundred\").val($get_food_carbohydrates_of_which_dietary_fiber);
+							\$(\"#inp_item_carbs_of_which_dietary_fiber_per_hundred\").val($get_food_dietary_fiber);
 							\$(\"#inp_item_carbs_of_which_sugars_per_hundred\").val($get_food_carbohydrates_of_which_sugars);
 							\$(\"#inp_item_proteins_per_hundred\").val($get_food_proteins);
 							\$(\"#inp_item_salt_per_hundred\").val($get_food_salt);
@@ -491,7 +491,7 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 							\$(\"#inp_item_fat_calculated\").val($get_food_fat_calculated * inpAmount);
 							\$(\"#inp_item_fat_of_which_saturated_fatty_acids_calculated\").val($get_food_fat_of_which_saturated_fatty_acids_calculated * inpAmount);
 							\$(\"#inp_item_carbs_calculated\").val($get_food_carbohydrates_calculated * inpAmount);
-							\$(\"#inp_item_carbs_of_which_dietary_fiber_calculated\").val($get_food_carbohydrates_of_which_dietary_fiber_calculated * inpAmount);
+							\$(\"#inp_item_carbs_of_which_dietary_fiber_calculated\").val($get_food_dietary_fiber_calculated * inpAmount);
 							\$(\"#inp_item_carbs_of_which_sugars_calculated\").val($get_food_carbohydrates_of_which_sugars_calculated * inpAmount);
 							\$(\"#inp_item_proteins_calculated\").val($get_food_proteins_calculated * inpAmount);
 							\$(\"#inp_item_salt_calculated\").val($get_food_salt_calculated * inpAmount);

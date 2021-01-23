@@ -117,8 +117,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		  <td>
 			<p>
 			<select name=\"main_category_id\" class=\"on_select_go_to_url\">
-			<option value=\"$l\">- $l_please_select -</option>
-			<option value=\"$l\"> </option>
+			<option value=\"new_food_2_select_main_category.php?barcode=$barcode&amp;l=$l\">- $l_please_select -</option>
+			<option value=\"new_food_2_select_main_category.php?barcode=$barcode&amp;l=$l\"> </option>
 			";
 
 			// Get all categories

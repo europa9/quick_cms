@@ -86,9 +86,11 @@ while($row = mysqli_fetch_row($result)) {
 		$x++;
 	} // has image
 } // while
-if($x > 0){
+if($x == "1"){
 	echo"
-	<div class=\"clear\"></div>
+			</div>
+			<div class=\"blog_two_small_on_left__one_big_on_right__right\">
+			</div>
 	<hr />
 	";
 }

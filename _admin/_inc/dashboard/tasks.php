@@ -1074,6 +1074,7 @@ elseif($action == "edit_task"){
 				if($inp_history_summary != ""){ $inp_history_summary = $inp_history_summary . " &middot; "; } 
 				$inp_history_summary = $inp_history_summary . "New text: $inp_text";
 			}
+			$inp_history_new_text = str_replace("\xBD", "", $inp_history_new_text);
 			$inp_history_new_text_mysql = quote_smart($link, $inp_history_new_text);
 
 			$inp_status_code_id = $_POST['inp_status_code_id'];

@@ -291,12 +291,12 @@ elseif($action == "step_2_download"){
 					$inp_food_carbohydrates = output_html($inp_food_carbohydrates);
 					$inp_food_carbohydrates_mysql = quote_smart($link, $inp_food_carbohydrates);
 
-					$inp_food_carbohydrates_of_which_dietary_fiber = $object['index']['food_carbohydrates_of_which_dietary_fiber'];
-					if($inp_food_carbohydrates_of_which_dietary_fiber == ""){
-						$inp_food_carbohydrates_of_which_dietary_fiber = 0;
+					$inp_food_dietary_fiber = $object['index']['food_dietary_fiber'];
+					if($inp_food_dietary_fiber == ""){
+						$inp_food_dietary_fiber = 0;
 					}
-					$inp_food_carbohydrates_of_which_dietary_fiber = output_html($inp_food_carbohydrates_of_which_dietary_fiber);
-					$inp_food_carbohydrates_of_which_dietary_fiber_mysql = quote_smart($link, $inp_food_carbohydrates_of_which_dietary_fiber);
+					$inp_food_dietary_fiber = output_html($inp_food_dietary_fiber);
+					$inp_food_dietary_fiber_mysql = quote_smart($link, $inp_food_dietary_fiber);
 
 					$inp_food_carbohydrates_of_which_sugars = $object['index']['food_carbohydrates_of_which_sugars'];
 					$inp_food_carbohydrates_of_which_sugars = output_html($inp_food_carbohydrates_of_which_sugars);
@@ -330,12 +330,12 @@ elseif($action == "step_2_download"){
 					$inp_food_carbohydrates_calculated = output_html($inp_food_carbohydrates_calculated);
 					$inp_food_carbohydrates_calculated_mysql = quote_smart($link, $inp_food_carbohydrates_calculated);
 
-					$inp_food_carbohydrates_of_which_dietary_fiber_calculated = $object['index']['food_carbohydrates_of_which_dietary_fiber_calculated'];	
-					if($inp_food_carbohydrates_of_which_dietary_fiber_calculated == ""){
-						$inp_food_carbohydrates_of_which_dietary_fiber_calculated = 0;
+					$inp_food_dietary_fiber_calculated = $object['index']['food_dietary_fiber_calculated'];	
+					if($inp_food_dietary_fiber_calculated == ""){
+						$inp_food_dietary_fiber_calculated = 0;
 					}
-					$inp_food_carbohydrates_of_which_dietary_fiber_calculated = output_html($inp_food_carbohydrates_of_which_dietary_fiber_calculated);
-					$inp_food_carbohydrates_of_which_dietary_fiber_calculated_mysql = quote_smart($link, $inp_food_carbohydrates_of_which_dietary_fiber_calculated);
+					$inp_food_dietary_fiber_calculated = output_html($inp_food_dietary_fiber_calculated);
+					$inp_food_dietary_fiber_calculated_mysql = quote_smart($link, $inp_food_dietary_fiber_calculated);
 
 					$inp_food_carbohydrates_of_which_sugars_calculated = $object['index']['food_carbohydrates_of_which_sugars_calculated'];
 					$inp_food_carbohydrates_of_which_sugars_calculated = output_html($inp_food_carbohydrates_of_which_sugars_calculated);
@@ -428,10 +428,10 @@ elseif($action == "step_2_download"){
 						food_description, food_country, food_net_content, food_net_content_measurement, 
 						food_serving_size_gram, food_serving_size_gram_measurement, food_serving_size_pcs, 
 						food_serving_size_pcs_measurement, food_energy, food_fat, 
-						food_fat_of_which_saturated_fatty_acids, food_carbohydrates, food_carbohydrates_of_which_dietary_fiber, 
+						food_fat_of_which_saturated_fatty_acids, food_carbohydrates, food_dietary_fiber, 
 						food_carbohydrates_of_which_sugars, food_proteins, food_salt, 
 						food_score, food_energy_calculated, food_fat_calculated, 
-						food_fat_of_which_saturated_fatty_acids_calculated, food_carbohydrates_calculated, food_carbohydrates_of_which_dietary_fiber_calculated, 
+						food_fat_of_which_saturated_fatty_acids_calculated, food_carbohydrates_calculated, food_dietary_fiber_calculated, 
 						food_carbohydrates_of_which_sugars_calculated, food_proteins_calculated, food_salt_calculated, 
 						food_barcode, food_category_id, food_image_path, 
 						food_thumb_small, food_thumb_medium, food_thumb_large, 
@@ -448,10 +448,10 @@ elseif($action == "step_2_download"){
 						$inp_food_description_mysql, $inp_food_country_mysql, $inp_food_net_content_mysql, $inp_food_net_content_measurement_mysql, 
 						$inp_food_serving_size_gram_mysql, $inp_food_serving_size_gram_measurement_mysql, $inp_food_serving_size_pcs_mysql, 
 						$inp_food_serving_size_pcs_measurement_mysql, $inp_food_energy_mysql, $inp_food_fat_mysql, 
-						$inp_food_fat_of_which_saturated_fatty_acids_mysql, $inp_food_carbohydrates_mysql, $inp_food_carbohydrates_of_which_dietary_fiber_mysql, 
+						$inp_food_fat_of_which_saturated_fatty_acids_mysql, $inp_food_carbohydrates_mysql, $inp_food_dietary_fiber_mysql, 
 						$inp_food_carbohydrates_of_which_sugars_mysql, $inp_food_proteins_mysql, $inp_food_salt_mysql, 
 						$inp_food_score_mysql, $inp_food_energy_calculated_mysql, $inp_food_fat_calculated_mysql, 
-						$inp_food_fat_of_which_saturated_fatty_acids_calculated_mysql, $inp_food_carbohydrates_calculated_mysql, $inp_food_carbohydrates_of_which_dietary_fiber_calculated_mysql, 
+						$inp_food_fat_of_which_saturated_fatty_acids_calculated_mysql, $inp_food_carbohydrates_calculated_mysql, $inp_food_dietary_fiber_calculated_mysql, 
 						$inp_food_carbohydrates_of_which_sugars_calculated_mysql, $inp_food_proteins_calculated_mysql, $inp_food_salt_calculated_mysql, 
 						$inp_food_barcode_mysql, $inp_food_category_id_mysql, $inp_food_image_path_mysql, 
 						$inp_food_thumb_small_mysql, $inp_food_thumb_medium_mysql, $inp_food_thumb_large_mysql, 
