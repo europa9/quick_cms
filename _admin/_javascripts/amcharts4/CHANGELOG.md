@@ -5,6 +5,516 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 Please note, that this project, while following numbering syntax, it DOES NOT
 adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 
+## [4.10.13] - 2020-12-18
+
+### Added
+- Export: PDF export options now support `scale`, `minWidth`, `minHeight`, `maxWidth`, and `maxHeight` options.
+
+### Changed
+- Setting `ignoreZeroValues = true` on `PieSeries`/`PyramidSeries` will now hide `null`-value slices, too.
+
+### Fixed
+- Inserting a new bullet into an initialized Series will now invalidate it cause the new bullet to appear immediately.
+- Using `timezone` might shift axis label values by one day in some cases.
+- `"i"` input date format was not properly parsing formats with no milliseconds and with timezone offset, e.g. (`"...+10:30"`).
+- Export: `normalizeSVG()` method was producing wrong SVG width/height in output if scale parameter was not being passed in.
+- RangeSelector plugin: "YTD" pre-defined period was not working properly with some data-grouping setups.
+
+
+## [4.10.12] - 2020-11-26
+
+### Changed
+- `DateAxis` setting `timezone` is being deprecated. Please consider setting `timezone` on chart or axis `dateFormatter`. `DateAxis` will now properly place grid in time zones that use non-whole hour fractions, e.g. ("Australia/Adelaide").
+- Accessibility: Roles and tabindexes in `ExportMenu` elements has been altered to better comply with ARIA standards.
+
+### Fixed
+- Scrollbar could act funky when repeatedly clicking on its grips.
+- A minor conflict with Google Charts lib on IE fixed.
+- Improved performance of `ValueAxis` scale calculation.
+- Setting `min` and `max` on a `DateAxis` could result in excessive overzoom and an empty grid in some cases.
+- Overzooming `DateAxis` coul dresult in some extra space shown on it.
+- Legend was dynamically adding items on a Treemap chart when drilling-down.
+- When Legend's labels' `width` were set in percent, they were not being properly sized.
+
+
+## [4.10.11] - 2020-11-13
+
+### Added
+- New setting `reverseGeodata` (default: `false`) on `MapChart` and `MapSeries`. amCharts requires polygon coordinates to be in clockwise order. Some map data have them in counter-clockwise. If your custom map appears garbled, try setting this to `true`.
+- New global option: `am4core.options.pixelPerfectPrecision` (default: `0`). Precision (number of decimal points) to be used when rounding point x/y for elements that have `pixelPerfect = true` set.
+
+### Fixed
+- `XYChartScrollbar` was not inheriting `inputDateFormat` from the chart properly.
+- Clicking on a chart on mobile devices could sometimes make them document scroll a bit.
+- Accessibility: pressing ENTER while there is a focused element with `showTooltipOn = "hit"` will not display its tooltip.
+- RangeSelector (plugin) was not properly removing its elements after `dispose()` it will now auto-dispose when related axis is disposed.
+- In some cases a console error could be displayed when using `XYCursor` over chart when data was being updated.
+- Very long labels with `wrap = true` may have been wrapping incorrectly in some cases.
+- JSON config: `rgb(...)` and `rgba(...)` syntax was not recongnised in `ColorSet`'s `baseColor`.
+
+
+## [4.10.10] - 2020-11-03
+
+### Changed
+- License check for `MapChart` was not working. If you are using commercial `MapChart`, make sure you use `addLicense()` for both Charts and Maps products.
+
+### Fixed
+- Better dispose check for delayed `"out"` event.
+- Applying accessibility to some labels with only numeric information was resulting in error.
+- Chart could result in an SO in some rare cases.
+- Using `strictMinMax` with `includeRangesInMinMax` sometimes could caulse wrong zooms.
+- In some cases Legend's item labels were being truncated when cahrt container was shrinking, but were not being restored to their full width once it was enlarged back.
+
+
+## [4.10.9] - 2020-10-23
+
+### Changed
+- Export: API functions like `getCSV`, `getSVG`, `getJSON`, `getExcel` will not error out if no opeionts or format identifier is passed in.
+
+### Fixed
+- Better invalidation of charts with `am4core.options.queue = true` enabled.
+- A slice in `PieSeries` remained enlarged (as hovered) after subsequent taps on it on a touch device.
+- In some rare cases, on mobile devices a JS error could be invoked when disposing series/axes.
+- Vertical `ValueAxis` was not auto-zooming in some cases.
+
+
+## [4.10.8] - 2020-10-19
+
+### Added
+- New `Tooltip` property `ignoreBounds` (default `false`). If set to `true`, will not try to contain tooltips within the boundaries of the chart.
+
+### Fixed
+- Export: Invoking export's `getSVG()` method without passing in options as a second parameter was resulting in error.
+- Series' actual value was not being properly updated in all cases when used with `gropuDataItem` adapter.
+- Series with with extremely small value range could result in an SO.
+- Resetting data to an empty data set on an `XYSeries` witth bullets and a data grouping enabled, could result in bullets being left on the screen.
+
+
+## [4.10.7] - 2020-10-10
+
+### Fixed
+- `numberFormatter` inheritance was broken for `XYSeries` elements like bullets since last version.
+- Chart with a `CategoryAxis` and `XYCursor` was erroring when number-based categories were used in data.
+
+
+## [4.10.6] - 2020-10-09
+
+### Added
+- SVG export options now support `scale`, `minWidth`, `minHeight`, `maxWidth`, and `maxHeight`.
+- New `ExportMenu` property: `element` (a reference to menu's top element).
+
+### Fixed
+- `readerTitle` and `readerDescription` were not being properly populated with data on Map objects.
+- Setting `includeRangesInMinMax = true` on `ValueAxis` in some cases was messing up the chart.
+- Export: Printing via iframe in IE11 was distorting the chart aspect ratio.
+- Export: Exporting in IE11 was leaving behind a stray `<canvas>` element afterwards.
+- Auto-zoom on `ValueAxis` was not working properly with multiple series with incomplete data.
+
+
+## [4.10.5] - 2020-10-02
+
+### Changed
+- Inline curly-bracket data placeholders now support dot-separated data context names as literal strings, e.g. `"my.custom.property"`.
+- A bunch of dependencies were updated to latest versions.
+
+### Fixed
+- Toggling `rtl` value on an existing `Label` was (still) not working properly.
+- `showSystemTooltip` was being ignored since last version (4.10.4).
+- `chart.cursor.snapToSeries` was not causing cursor to snap in wrong place if `groupData` was enabled.
+- Bullet tooltip was being hidden even if it had to stay when cursor moved out of the plot area.
+
+
+## [4.10.4] - 2020-09-22
+
+### Changed
+- Accessibility: `ExportMenu` top item has now role `menubar` rather than `menu`.
+- Accessibility: `ExportMenu` will now set `aria-expanded` attributes for selected menu items/branches.
+
+### Fixed
+- Enabling `groupData` was causing some series not to appear in some cases (since 4.10.3).
+- Toggling a legend item was adding a hidden element outside chart container area, which was sometimes causing scrollbars to appear on the web page.
+- Toggling `rtl` value on an existing `Label` was not working properly.
+- Accessibility: setting `rederTitle` or `itemReaderTitle` was not setting `aria-label` but rather adding `<desc>` tag and `aria-describedby` attirubute. It now will use `aria-label` for `readerTitle` and `<desc>` for `readerDescription`.
+- Accessibility: there was no way to override hard-coded `role` of the slices or columns in series.
+- Accessibility: navigating `ExportMenu` with arrow keys will not scroll web page anymore.
+
+
+## [4.10.3] - 2020-09-19
+
+### Added
+- RangeSelector plugin: a new event `periodselected` added to `DateAxisRangeSelector`.
+- `DateFormatter` now supports quarter format (code: `"q"`).
+
+### Changed
+- More prompt translations to Indonesian locale (`id_ID`).
+
+### Fixed
+- JSON config: Some axis' `title` property was being overwritten if it wasn't last option in the properties list.
+- SliceGrouper plugin was sometimes not functioning properly when used with `options.queue = true`.
+- Scrollable legend was not resetting back to top if its height changed.
+- `TreeMap` with `binaryTree` algorithm was producing a JS error if no initial data was set on chart.
+- If data grouping on `DateAxis` was enabled and there were more than one series in the chart, the second and other series were rendered with data ungrouped in the background before rendering them correctly and thiswas causing performance issues.
+- Vertical `CurvedColumnSeries` with non-inversed `CategoryAxi`s were not positioned properly.
+
+
+## [4.10.2] - 2020-09-08
+
+### Fixed
+- Some `SankeyDiagram` charts were broken after last release.
+- `4.10.0` caused some bullet adapters to kick in earlier which in turn was resulting in critical errors if those adapters relied on `dataItem` to be present without checking.
+
+
+## [4.10.1] - 2020-09-07
+
+### Added
+- New `DateAxis` property: `timezone`. Allows setting timezone to recalculate data in, e.g. `"Australia/Sydney"`. Make sure not to set this on both axis and date formatter.
+- New `DateFormatter` property: `timezone`. Allows setting timezone to recalculate date objects to before applying the format, e.g. `"Australia/Sydney"`.
+- New global option: `am4core.options.disableHoverOnTransform` (`"never"` (default), `"touch"`, `always`)). Allows disabling all hover activity when some element is being dragged or resized. [More info](https://www.amcharts.com/docs/v4/concepts/touch/#Hover_functionality).
+
+### Changed
+- Now `SankeyLink` that points "backwards" will be applied `"backwards"` state (if created) so you can style it differently than regular links.
+
+### Fixed
+- Accessibility: data placeholder population was not working on bullets if Animated theme was not enabled.
+- Tapping on a chart with `Cursor` was triggering an on-screen keyboard on some mobiles devices.
+- Some TypeScript warnings were fixed.
+- A chart with `DateAxis` and `groupData = true` could result a JS error if a series had bullets and a lots of data points.
+- In a chart with `DateAxis` and `groupData = true`, if a series was hidden when zoomed-in, then zoomed-out, and then unhidden, the related  `ValueAxis` was not updating it's min/max to available value range.
+- In some cases a heat rule could result in infinity value which would lead to drawing errors.
+- Errors when cloning a `RadarChart` from a template fixed.
+- `SankeyDiagram` used to produce stack owerflow error if data contained backward links. Now it will correctly draw a link.
+
+
+## [4.10.0] - 2020-09-01
+
+### Added
+- New `LineSeries` property: `smoothing` (`"bezier"` (default), `"monotoneX"`, and `"monotoneY"`) - indicates algorithm to use for smoothing the lines. Monotone algos are better suited for irregularly-spaced data. [More info](https://www.amcharts.com/docs/v4/chart-types/xy-chart/#Alternate_smoothing_algorithm).
+- `ForcedDirectedTree`: new property `zoomable` (default: `false`). If set to `true`, the chart will be zoomable/draggable using mouse, touch, or API. [More information](https://www.amcharts.com/docs/v4/chart-types/force-directed/#Zooming).
+- `ForcedDirectedTree`: zoom related properties added. `mouseWheelBehavior` (`"zoom"`, `"none"`) - controls what happens when mouse wheel is used over chart; `zoomStep` (default: `2`) - step to increase zoom level my each zoom in; `zoomOutButton` - an instance of button which is shown when chart is zoomed in.
+- `ForcedDirectedTree`: new zoom-related methods: `zoomToPoint(point, level, center)` and `zoomToDataItem(dataItem, level, center)`;
+- New global function: `am4core.createDeferred(callback, scope, ...parameters)`. Can be used to create multiple charts in a truly safe daisy-chain (next chart starts to be instantiated only when previous triggers a `ready` event). Returns a `Promise` with chart instance. [More information](https://www.amcharts.com/docs/v4/concepts/performance/#Deferred_daisy_chained_instantiation);
+- New global option: `am4core.options.deferredDelay` (default `100`). Specifies time-gap in milliseconds between deferred chart instantiations.
+
+### Changed
+- Added date ordinal translations for Chinese locales.
+
+### Fixed
+- Accessibility: `readerTitle` was not being properly populated with data on `Label`.
+- Accessibility: `readerDescription` was not being populated with data.
+- Now works with Angular Universal SSR. Please refer to our [Angular doc](https://www.amcharts.com/docs/v4/getting-started/integrations/using-angular2/) for instructions on how to structure your app for SSR to work properly.
+- When `MapChart` was panned with inertia and a polygon with `zoomToObject()` hit event was clicked when the map was still moving, the map was zooming into a wrong position.
+
+
+## [4.9.37] - 2020-08-21
+
+### Fixed
+- Colors for markers in Legend with `useDefaultMarkers = true` were broken since last release.
+
+
+## [4.9.36] - 2020-08-20
+
+### Added
+- New adapter on `XYSeries`: `groupDataitem`. When data grouping occurs, each aggregate data item will be passed through this adapter, where you can modify its aggregate value. [More info](https://www.amcharts.com/docs/v4/tutorials/using-custom-functions-for-data-item-grouping/).
+- Two new `MapPolygonSeries` properties: `sortPolygonsBy` ( `"area"` (default), `"name"`, `"longitude"`, `"latitude"`, `"id"`, and `"none"`) and `sortPolygonsReversed` (default `false`).
+
+### Fixed
+- Export: `fontSize` option was being ignored when exporting data in PDF.
+- Better format object type checks in `DateFormatter` and `NumberFormatter`.
+- Older (non-Chromium) EDGE browser was not showing patterns in the legend markers.
+- If a stacked series was hidden with data item grouping enabled and then axis zoomed in or zoomed out so that group perdiod changes, series were stacked on the wrong position.
+- `CircularAxis` line was flickering while start/end angle was animating.
+
+
+## [4.9.35] - 2020-08-12
+
+### Added
+- New adapter on `XYSeries`: `groupValue`. It's now possible to apply custom aggregate value calculation functions for grouped data items. [More info](https://www.amcharts.com/docs/v4/tutorials/using-custom-functions-for-data-item-grouping/).
+- New adapter on `Cursor`: `cursorPoint`. Use it to custom-position chart cursor using your own logic.
+
+### Changed
+- Accessibility: Now if ENTER is pressed when object with an enabled `"hit"` event is focused, that event will be triggered automatically.
+- Clicking anywhere on the plot area with `XYCursor` will now trigger blur on any focused element on the page (consistent to clicking anywhere else on the document).
+
+### Fixed
+- RangeSelector plugin was not properly inheriting chart's locale.
+- `"x"` (timestamp) in `inputDateFormat` was not working properly.
+- If all values of `SankeyDiagram` were `0` (zero), nodes were not being arranged and their rectangles were not being displayed.
+- First `CategoryAxis` label was not visible if `minGridDistance` was set to `0` (zero).
+- Old series bullets of an `XYSeries` remained visible when data was updated and data grouping was enabled on related `DateAxis`.
+- `Utils.random()` function was not returning value in proper from/to range.
+- Stacking now works only between series of the same type. Previously a `LineSeries` between two stacked `ColumnSeries` could mess up stacking for the latter.
+- Zooming in on a part of `LineSeries` which had `strokeDashArray` enabled via `propertyFields` was making the whole line dashed.
+- On a chart with `XYCursor` hovering on category with a null value for some series, used to display a tooltip for a different category in some cases.
+
+
+## [4.9.34] - 2020-07-31
+
+### Added
+- New bullet `ShapeBullet` in `Bullets` plugin. Please refer to [this documentation article](https://www.amcharts.com/docs/v4/tutorials/plugin-bullets/) for more info.
+- `treatZeroAs` added to `ValueAxis`. Use it to work around zero-value restriction on a logarithmic scale.
+- `stackToNegative` (default: `true`) added to `XYSeries`. Determines whether negative values in a stack will stack in relation to base (zero) line (`true`; default) or in relation to the previous value in the stack (`false`).
+
+### Changed
+- [xlsx](https://www.npmjs.com/package/xlsx) dependency was updated from `0.15.4` to `0.16.4`.
+- Tooltip snapping on `DateAxis` now takes Series' location into account.
+
+### Fixed
+- Regression plugin: `reorder` option was not working properly.
+- `snapToSeries` was not working properly if there was a hidden Series with exactly the same value as the other visible Series.
+- `TreeMap` and `ForceDirectedTree` with a single data item and no children were not working properly with chart legend.
+- Horizontal (X) Axis tooltip in a very small document was sometimes positioned with an offset.
+- `zoomToRectangle()` method of `MapChart` with `deltaLongitude` was not working properly if a rectangle crossed the 180 meridian.
+
+
+## [4.9.33] - 2020-07-23
+
+### Fixed
+- If an item from a chart with `CategoryAxis` was removed and then a new item with the same category name was added, chart was not rendering the new item.
+- A chart with multiple series starting/ending not at the same position could result in wrong zoom on `ValueAxis`
+- Last bullet/column from `XYSeries` could disappear if end date was not exact as last data items date.
+- `LineSeries` could skip a point in case distance between data points was very small, resulting in incorrect line series.
+
+
+## [4.9.32] - 2020-07-23
+
+- Nothing here. Version number snafu.
+
+
+## [4.9.31] - 2020-07-21
+
+### Changed
+- Global adapters are being deprecated due to performance reasons. They will still work on some properties, but may be turned off at some future version. If you are using `am4core.globalAdapter`, please consider refactoring your code in some other way.
+- If `groupInterval` is manually set, `DateAxis` now prepares all intervals. Normally, the chart does not prepare data sets for time intervals longer than the span of dates in the data. This causes problem in case user sets these intervals manually using `groupInterval`. Note, the groupInterval must be set initially, before data parsing in order data to be grouped into all groupIntervals.
+
+### Fixed
+- "Year of week" (`YYYY`) was not being calculated correctly by `DateFormatter`.
+- Regression plugin was not working correctly in an all-`ValueAxis` scenarios.
+- `ColumnSeries` were not working with `dropFromPreviousState`.
+- If data was changed on a chart which was zoomed and there were less data items in the new data than there was before, a JS error was triggered.
+- Sometimes a chart with `XYChartScrollbar` with series in it could produce a JS error if series has its `fillOpacity > 0`.
+- Series in an `XYChartScrollbar` was not being shown if `options.onlyShowOnViewport = true`.
+- `zoomToRectangle()` call was resulting in an error if called after the `MapChart` was rotated.
+- `CurvedColumnSeries` columns were not being filled with proper color (black was being used instead).
+- A chart with multiple series starting/ending not at the same position could result in wrong zoom on `ValueAxis`.
+- `DateAxis` with millisecond `baseInterval` sometimes could show one millisecond less than actual data point in its tooltip.
+
+
+## [4.9.30] - 2020-07-10
+
+### Added
+- `am4core.options.suppressWarnings` global option added (default: `false`). If set to `true`, the charts won't output any warnings into console (e.g. "Chart was not disposed").
+
+### Fixed
+- Drill-down map with `geodataSource` problem fixed (since last release only).
+- Issues with cursor/tooltip and other element positioning fixed, when chart was being initialized outside of DOM (no container on init).
+
+
+## [4.9.29] - 2020-07-09
+
+### Changed
+- Export: data exported as HTML will now have `<thead>` and `<tbody>` tags.
+- `XYChart.getClosest()` method is now public.
+- Accessibility: Now pressing ENTER while there's a `MapChart` element focused (using TAB key) will invoke its `hit` event, if set.
+
+### Fixed
+- JSON: heat rules referring to series' bullets were not working, e.g. `target: "bullet[0].circle"`.
+- IE: More fixes to polyfill overriding.
+- `ColorSet` method `next()` would fail if `currentStep` was bigger than `minColors`, affecting `SliceGrouper` plugin setups with a lot of slices in particular.
+- On `MapChart` settings `minZoomLevel` and `maxZoomLevel` were being ignored when pinch-zooming.
+- Syncing of axes improved, especially when series of one axis were hidden/shown.
+- If a `MapSeries` had its geodata loaded via `geodataSource`, the map used to disappear after div size changed.
+- Legend had a `maxWidth` set to `200` and this could result labels to be truncated even if there was enough space for them to fit in.
+- Ticks/grid could disappear if `ValueAxis` had `min`/`max` set and data of a chart changed.
+
+
+## [4.9.28] - 2020-06-29
+
+### Added
+- New adapter `xlsxWorkbook` in `Export`. Will allow decorating a Workbook object before it is exported.
+- `chart.exporting` text-based API functions (`getSVG()`, `getCSV()`, `getJSON()`, `getHTML()`) now have third parameter (boolean). If set to `false` they will return a raw output, rather than data:uri.
+- `zoomable` property added to all axes (default: `true`). Setting it to `false` will make axis not react to zoom events from scrollbar/cursor.
+
+### Changed
+- Removed `focusable` from map chart background series.
+- Polyfills in `.js` file will now only load on-demand, making it with some frameworks that override default objects.
+
+### Fixed
+- Regression plugin: the regression line was not being drawn correctly on a chart with horizontal `ValueAxis`.
+- Export: images exported on zoomed-out pages sometimes were showing visual artifacts.
+- If a chart cursor was visible (because of soft or hard `triggerMove()` calls) but the real mouse was out of the plot area, the cursor used to react to clicks even though it shouldn't have.
+- `ForceDirectedNode`'s `fill` and `stroke` adapters were not working properly if nodes were initially collapsed.
+- `Sprite.hitTest()` method was not working properly with `nonScaling = true`.
+- If a `MapChart` had geodata loaded via `geodataSource.url`, the map used to disappear after div size changed.
+- If a legend of a `MapChart` was disposed, a JS error might happen in some cases.
+
+
+## [4.9.27] - 2020-06-18
+
+### Added
+- `ExportMenu` item definition can now have `title` property. If set, it will be added to item's `title` property, which should show a system tooltip on hover.
+
+### Changed
+- Hex color parser now supports RGBA format which includes alpha value, e.g. `"#FF000080"` will produce a 50% transparent red.
+
+### Fixed
+- Fixed performance issue with a logarithmic `ValueAxis` with `strictMinMax` set to `true`.
+- Calculated value of `sum` in the selection of an `XYChart` could include one extra data item, not visible in the selection.
+- Pie slices with 0 values were sorted incorrectly in FF.
+
+
+## [4.9.26] - 2020-06-07
+
+### Fixed
+- Series with `showOnInit = false` were not shown on a chart initially (since last release only).
+
+
+## [4.9.25] - 2020-06-06
+
+### Added
+- Global option `am4core.options.autoDispose` added (default `false`). If set to `true`, when chart is being created in a container that has already existing chart, instead of "Chart was not disposed" warning in console, the chart being overwritten will be disposed.
+- New plugin: [Range Selector](https://www.amcharts.com/docs/v4/tutorials/plugin-range-selector/). Collection of controls for adding alternative zoom controls for axes.
+
+### Changed
+- Disabled callbacks will now carry over to a clone when cloning an Adapter.
+
+### Fixed
+- Export: Sometimes background was improperly clipped when upscaling exported image.
+- Export: If chart's `data` was updated open `ExportMenu` was forcibly being closed.
+- `"Z"` and `"ZZ"` indicators in `inputDateFormat` were being ignored.
+- If series had `sequencedInterpolation = true` set and it was hidden via legend, its legend item lost disabled color when chart was resized.
+- `bullet.locationX` and `bullet.locationY` was being ignored on a `ColumnSeries` with `CategoryAxis`.
+- If a chart's Legend was disposed, it could result in JS errors if chart had an `XYCursor` enabled.
+
+
+## [4.9.24] - 2020-05-29
+
+### Added
+- Export: New image export options: `minWidth`, `minHeight`, `maxWidth`, and `maxHeight`. Control minimum and maximum dimensions of the target image.
+- Chart can now be initialized without target container (`am4core.create(undefined, ...)`) then, when needed placed into container using `chart.moveHtmlContainer(target)` (where `target` can either be id or a reference of DOM element).
+- `groupInterval` property added to `DateAxis`. You can use it to force certain grouping internal when `groupData = true` instead of one chosen dynamically.
+
+### Changed
+- `stroke`/`fill` settings will now accept values as RGB objects (e.g.: `{ r: 255, g: 0, b: 0 }`).
+- Export: `scale` now scales source SVG before converting to image, instead of resampling target image.
+- Chart will no longer error out if target container by supplied id is not available at the moment of chart's instantiation. It will still error if such container is not available when DOM is ready. This allows placing chart code before actual chart target markup.
+- If Axis has `syncWithAxis = true` set, it is excluded from common zoom range for better syncing.
+
+### Fixed
+- Sometimes responsive rules were not being applied on chart load in Angular apps.
+- `XYCursor` setting `snapToSeries` now uses better precision in placing cursor lines/axis tooltips.
+
+
+## [4.9.23] - 2020-05-19
+
+### Added
+- `removedfromqueue` event added to `Sprite`. It is invoked when `am4core.options.queue = true` or `am4core.options.onlyShowOnViewport = true` and the Sprite (chart) is removed from queue (appears on the screen).
+- `groupperiodchanged` event added to `DateAxis`. It is invoked when data grouping is on and grouping period is changed.
+
+### Fixed
+- JSON: Array value in `snapToSeries` on `XYCursor` was resulting in error.
+- `RadarChart` was resulting in an error if used as a column or bullet template in some other chart.
+- `AxisRendererRadial.innerRadius` was ignored if set in percent and `RadarChart.innerRadius` was not set.
+- Wide charts were being cut off in the middle when printing.
+
+
+## [4.9.22] - 2020-05-14
+
+### Changed
+- Export: Now using forked version of `canvg` until underlying issues are fixed in source library.
+
+### Fixed
+- `queue` and `onlyShowOnViewport` were not working properly on regular `Container` instances.
+- Export: Garbled IE image exports fixed.
+- Some tooltips were reappearing on `MapChart` after their `showToolipOn` was reset back to `"hover"` from `"always"`.
+
+
+## [4.9.21] - 2020-05-13
+
+### Fixed
+- Latest version of `canvg` was causing issues in some Angular setups. Downgraded to `3.0.0`.
+- The legend marker for `LineSeries` with circle bullet was not properly centered.
+
+
+## [4.9.20] - 2020-05-11
+
+### Changed
+- `hit` and `up` events on nested objects will now respect correct bubbling up order.
+- If `rtl` is not set directly on the `Label`, it will now take `rtl` value not from its parent but from `baseSprite` (performance enhancement).
+- `<desc>` element with amCharts attribution removed from generated SVG.
+
+### Fixed
+- Export: PDF export will now fallback to regular fonts if bold fonts don't exist.
+- Export: Advanced PDF exports with extra content were broken since last release.
+- Export: Image export was essentially broken in IEs.
+- `options.nonce` was not working properly on EDGE.
+- Event `selectedned` was not dispatched by `Cursor` if released outside the chart div and behavior was set to `select*`.
+- If all series were removed and then added quickly to the chart with a legend it could result a JS error.
+- Setting `data` directly on a series not right after it was created could result `series.data` array to be shown as empty.
+- It was impossible to set `SwitchButton` as active initially.
+- Fixed snapping cursor to series when data was missing: if series had gaps in data and `cursor.snapToSeries` was set, the snapping was not working properly.
+- When adding data to `XYSeries` which was `XYCharScrollbar`'s series, the raw data was incorrectly modified.
+
+
+## [4.9.19] - 2020-04-30
+
+### Added
+- Export: Two new PDF export options added: `font` and `extraFonts` which enable specifying non-default font to use when exporting PDF. [More info](https://www.amcharts.com/docs/v4/concepts/exporting/#PDF_and_non_Latin_languages).
+
+### Changed
+- Third party resize sensor replaced with a home-brewed, which is faster and more reliable.
+- `svgContainer.resizeSensor` replaced with a dummy object. Make sure you remove all references to it in your code. Calling it's `reset()` method will now generate a warning in console.
+
+### Fixed
+- Inline text formatting blocks now accept quote-enclosed values, e.g. `[font-family: 'Segoe UI']`.
+- Fills for columns in `RadarColumnSeries` were black (since last release).
+- With Chrome 81 disposing the chart in with DevTools open was very slow.
+- Performance optimizations when showing/hiding series with a lot of data.
+- Tooltip was flickering at 0,0 position if animated theme was not enabled.
+
+
+## [4.9.18] - 2020-04-28
+
+### Added
+- Heatmaps can now be logarithmic (set `logarithmic = true` in the heat rule config).
+
+### Fixed
+- Preloader label was misaligned when RTL was enabled.
+- Double "hit" event invocation on `MapPolygon` fixed.
+- Regression plugin: "processed" event was triggered twice on initial chart load.
+- SliceGrouper plugin: if slice templats had any "hit" events set, `clickBehavior = "break"` was not working.
+- IE was not displaying series in `XYChartScrollbar`. On IE now gray fill/stroke is used instead of desaturate filter.
+- IE was not displaying series with filters. Remnoved filters if IE.
+- Fixed issue with zero-value nodes drill-down `SankeyDiagram`.
+- When animations were disabled through options, showing `XYSeries` and `FunnelSeries` after it was hidden was not working.
+- It was not possible to add `MapImages` to `MapImageSeries` directly from the GeoJSON geodata.
+- `maxWidth` set on Legend's label was being ignored.
+- Layout was not being redrawn when `minGridDistance` was set after chart initialization.
+- If `sprite.showTooltipOn = "hit"` and no animated theme was used, tooltip used to flicker at old position before shown in the correct one.
+- EDGE was not showing `ColumnSeries` gradients if gradient was set on series, not on directly on column template.
+
+
+## [4.9.17] - 2020-04-20
+
+### Added
+- Global option `am4core.options.nonce` added. If set, amCharts will use this as a nonce-parameter for all dynamically created stylesheets, so it can be addressed in `Content-Security-Policy` headers.
+- New `Popup` property: `dynamicResize`. If set to `true` (default) and contents contains unloaded images it will resize itself when those finish loading.
+- `gradientUnits` added to `LinearGradient`. If you're setting gradient on a perfectly straight line, set it to `userSpaceOnUse`.
+- `filterUnits` added to `Filter`. If you're setting gradient on a perfectly straight line, set it to `userSpaceOnUse`.
+- `startLocation` and `endLocation` added to `CategoryAxisBreak`. Can use to indicate where exactly within category break should start and end.
+
+### Changed
+- `Popup` now will size itself to accommodate images inside it as they are being loaded. To disable, set `Popup`'s `dynamicResize = false`. Also make sure you enable `maxWidth`/`maxHeight` in your CSS to avoid unreasonably large popups for unsized images.
+
+### Fixed
+- Week number in date format (`"ww"`) was not accounting for daylight saving.
+- Pressing ENTER on a focused Legend item will no longer toggle related series if legend's item containers are sett to be not togglable.
+- Exporting to SVG no longer breaks if chart contains `foreignObject` elements with SVG's in them.
+- Line smoothing (`tensionX` / `tensionY`) now drops out duplicate points to avoid weird loops on overlapping data items.
+- Chart was zooming incorrectly, when data was added directly to stacked series and one of the series was hidden.
+- Some performance issues with `XYCursor` and a lot of series fixed.
+- `LinearGradient` fill was not working on `LineSeries` under EDGE.
+
+
 ## [4.9.16] - 2020-04-14
 
 ### Fixed

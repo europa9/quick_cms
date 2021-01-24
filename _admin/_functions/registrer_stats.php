@@ -854,6 +854,7 @@ else{
 		// Country :: Find my country based on IP
 		$get_ip_id = 0;
 		$get_geoname_country_name = "Unknown";
+		$get_geoname_country_iso_code = "ZZ";
 		$ip_array = explode(".", $inp_ip);
 		$size = sizeof($ip_array);
 		if($size > 1){
@@ -869,7 +870,7 @@ else{
 			$ip_d = $ip_array[3];
 			$ip_d_mysql = quote_smart($link, $ip_d);
 
-			$query = "SELECT $t_stats_ip_to_country_ipv4.ip_id, $t_stats_ip_to_country_geonames.geoname_country_name FROM $t_stats_ip_to_country_ipv4 JOIN $t_stats_ip_to_country_geonames ON $t_stats_ip_to_country_ipv4.ip_geoname_id=$t_stats_ip_to_country_geonames.geoname_id";
+			$query = "SELECT $t_stats_ip_to_country_ipv4.ip_id, $t_stats_ip_to_country_geonames.geoname_country_iso_code, $t_stats_ip_to_country_geonames.geoname_country_name FROM $t_stats_ip_to_country_ipv4 JOIN $t_stats_ip_to_country_geonames ON $t_stats_ip_to_country_ipv4.ip_geoname_id=$t_stats_ip_to_country_geonames.geoname_id";
 			$query = $query . " WHERE ip_registered_country_geoname_id != ''";
 			$query = $query . " AND $t_stats_ip_to_country_ipv4.ip_from_a<=$ip_a_mysql AND $t_stats_ip_to_country_ipv4.ip_to_a>=$ip_a_mysql";
 			$query = $query . " AND $t_stats_ip_to_country_ipv4.ip_from_b<=$ip_b_mysql AND $t_stats_ip_to_country_ipv4.ip_to_b>=$ip_b_mysql";
@@ -877,7 +878,7 @@ else{
 			$query = $query . " AND $t_stats_ip_to_country_ipv4.ip_from_d<=$ip_d_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
-			list($get_ip_id, $get_geoname_country_name) = $row;
+			list($get_ip_id, $get_geoname_country_iso_code, $get_geoname_country_name) = $row;
 		} // ipv4
 		else{
 			$ip_array = explode(":", $inp_ip);
@@ -888,20 +889,23 @@ else{
 			$ip_b = hexdec($ip_array[1]);
 			$ip_b_mysql = quote_smart($link, $ip_b);
 
-			$query = "SELECT $t_stats_ip_to_country_ipv6.ip_id, $t_stats_ip_to_country_geonames.geoname_country_name FROM $t_stats_ip_to_country_ipv6 JOIN $t_stats_ip_to_country_geonames ON $t_stats_ip_to_country_ipv6.ip_geoname_id=$t_stats_ip_to_country_geonames.geoname_id";
+			$query = "SELECT $t_stats_ip_to_country_ipv6.ip_id, $t_stats_ip_to_country_geonames.geoname_country_iso_code, $t_stats_ip_to_country_geonames.geoname_country_name FROM $t_stats_ip_to_country_ipv6 JOIN $t_stats_ip_to_country_geonames ON $t_stats_ip_to_country_ipv6.ip_geoname_id=$t_stats_ip_to_country_geonames.geoname_id";
 			$query = $query . " WHERE ip_registered_country_geoname_id != ''";
 			$query = $query . " AND $t_stats_ip_to_country_ipv6.ip_from_dec_a<=$ip_a_mysql AND $t_stats_ip_to_country_ipv6.ip_to_dec_a>=$ip_a_mysql";
 			$query = $query . " AND $t_stats_ip_to_country_ipv6.ip_from_dec_b<=$ip_b_mysql AND $t_stats_ip_to_country_ipv6.ip_to_dec_b>=$ip_b_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
-			list($get_ip_id, $get_geoname_country_name) = $row;
+			list($get_ip_id, $get_geoname_country_iso_code, $get_geoname_country_name) = $row;
 		} // ipv6
 
 
 		// Country :: Year
+		$get_geoname_country_iso_code = strtoupper($get_geoname_country_iso_code);
 		if($get_geoname_country_name == ""){
+			$get_geoname_country_iso_code = "ZZ";
 			$get_geoname_country_name = "N/A";
 		}
+		$inp_geoname_country_iso_code_mysql = quote_smart($link, $get_geoname_country_iso_code);
 		$inp_geoname_country_name_mysql = quote_smart($link, $get_geoname_country_name);
 		$query = "SELECT stats_country_id, stats_country_unique, stats_country_hits FROM $t_stats_countries_per_year WHERE stats_country_year='$inp_year' AND stats_country_name=$inp_geoname_country_name_mysql";
 		$result = mysqli_query($link, $query);
@@ -909,9 +913,9 @@ else{
 		list($get_stats_country_id, $get_stats_country_unique, $get_stats_country_hits) = $row;
 		if($get_stats_country_id == ""){
 			mysqli_query($link, "INSERT INTO $t_stats_countries_per_year
-			(stats_country_id, stats_country_year, stats_country_name, stats_country_unique, stats_country_hits) 
+			(stats_country_id, stats_country_year, stats_country_name, stats_country_alpha_2, stats_country_unique, stats_country_hits) 
 			VALUES
-			(NULL, '$inp_year', $inp_geoname_country_name_mysql, 1, 1)") or die(mysqli_error($link));
+			(NULL, '$inp_year', $inp_geoname_country_name_mysql, $inp_geoname_country_iso_code_mysql, 1, 1)") or die(mysqli_error($link));
 		}
 		else{
 			// We have record, if unique
@@ -936,9 +940,9 @@ else{
 		list($get_stats_country_id, $get_stats_country_unique, $get_stats_country_hits) = $row;
 		if($get_stats_country_id == ""){
 			mysqli_query($link, "INSERT INTO $t_stats_countries_per_month
-			(stats_country_id, stats_country_month, stats_country_year, stats_country_name, stats_country_unique, stats_country_hits) 
+			(stats_country_id, stats_country_month, stats_country_year, stats_country_name, stats_country_alpha_2, stats_country_unique, stats_country_hits) 
 			VALUES
-			(NULL, '$inp_month', '$inp_year', $inp_geoname_country_name_mysql, 1, 1)") or die(mysqli_error($link));
+			(NULL, '$inp_month', '$inp_year', $inp_geoname_country_name_mysql, $inp_geoname_country_iso_code_mysql, 1, 1)") or die(mysqli_error($link));
 		}
 		else{
 			// We have record, if unique

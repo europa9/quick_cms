@@ -20,4 +20,16 @@ $l_all_time = "All time";
 $l_order_by = "Order by";
 $l_asc = "Asc";
 $l_desc = "Desc";
+$l_hundred = "Hundred";
+$l_serving = "Serving";
+$l_calories = "Calories";
+$l_calories_abbr_lowercase = "cal";
+$l_carbs = "Carbs";
+$l_carbs_abbr_lowercase = "carbs";
+$l_fat = "Fat";
+$l_fat_abbr_lowercase = "fat";
+$l_proteins = "Proteins";
+$l_proteins_abbr_lowercase = "pro";
+$l_per_hundred = "Per hundred";
+$l_per_serving = "Per serving";
 ?>

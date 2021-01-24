@@ -121,6 +121,8 @@ else{
 		<script src=\"_javascripts/amcharts4/charts.js\"></script>
 		<script src=\"_javascripts/amcharts4/themes/animated.js\"></script>
 		<script src=\"_javascripts/amcharts4/plugins/venn.js\"></script>
+		<script src=\"_javascripts/amcharts4/maps.js\"></script>
+		<script src=\"_javascripts/amcharts4/geodata/worldLow.js\"></script>
 	<!-- //Charts javascript -->
 
 
@@ -175,46 +177,92 @@ else{
 		<div id=\"chartdiv_visits_per_month\" style=\"height: 400px;\"></div>
 	<!-- //Visits per month -->
 
+	<!-- Countries -->
+		<h2 style=\"margin-top:20px;padding-bottom:0;margin-bottom:0;\">Unique Visits per Country</h2>
 
-	<!-- Accepted languages -->
-		<div class=\"left_right_left\">
-			<h2 style=\"margin-top:20px;padding-bottom:0;margin-bottom:0;\">Countries</h2>
+		<script>
+		am4core.ready(function() {
+			am4core.useTheme(am4themes_animated);
+			var chart = am4core.create(\"chartdiv_unique_visits_per_country\", am4maps.MapChart);
+			chart.geodata = am4geodata_worldLow;
 
-			<script>
-			am4core.ready(function() {
-				var chart = am4core.create(\"chartdiv_countries_year\", am4charts.PieChart);
-				chart.data = [";
+
+			chart.projection = new am4maps.projections.Miller();
+
+			var polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
+			var polygonTemplate = polygonSeries.mapPolygons.template;
+			polygonTemplate.tooltipText = \"{name}: {value.value}\";
+			polygonSeries.useGeodata = true;
+			polygonSeries.heatRules.push({ property: \"fill\", target: polygonSeries.mapPolygons.template, min: am4core.color(\"#ffffff\"), max: am4core.color(\"#263544\") });
+
+
+			// add heat legend
+			var heatLegend = chart.chartContainer.createChild(am4maps.HeatLegend);
+			heatLegend.valign = \"bottom\";
+			heatLegend.series = polygonSeries;
+			heatLegend.width = am4core.percent(100);
+			heatLegend.orientation = \"horizontal\";
+			heatLegend.padding(30, 30, 30, 30);
+			heatLegend.valueAxis.renderer.labels.template.fontSize = 10;
+			heatLegend.valueAxis.renderer.minGridDistance = 40;
+
+			polygonSeries.mapPolygons.template.events.on(\"over\", function (event) {
+			  handleHover(event.target);
+			})
+
+			polygonSeries.mapPolygons.template.events.on(\"hit\", function (event) {
+			  handleHover(event.target);
+			})
+
+			function handleHover(mapPolygon) {
+			  if (!isNaN(mapPolygon.dataItem.value)) {
+			    heatLegend.valueAxis.showTooltipAt(mapPolygon.dataItem.value)
+			  }
+			  else {
+			    heatLegend.valueAxis.hideTooltip();
+			  }
+			}
+
+			polygonSeries.mapPolygons.template.events.on(\"out\", function (event) {
+			  heatLegend.valueAxis.hideTooltip();
+			})
+
+
+			// data
+			polygonSeries.data = [";
 				$x = 0;
-				$query = "SELECT stats_country_id, stats_country_name, stats_country_unique, stats_country_hits FROM $t_stats_countries_per_year WHERE stats_country_year=$get_current_stats_visit_per_year_year";
+				$query = "SELECT stats_country_id, stats_country_name, stats_country_alpha_2, stats_country_unique, stats_country_hits FROM $t_stats_countries_per_year WHERE stats_country_year=$get_current_stats_visit_per_year_year";
 				$result = mysqli_query($link, $query);
 				while($row = mysqli_fetch_row($result)) {
-					list($get_stats_country_id, $get_stats_country_name, $get_stats_country_unique, $get_stats_country_hits) = $row;
+					list($get_stats_country_id, $get_stats_country_name, $get_stats_country_alpha_2, $get_stats_country_unique, $get_stats_country_hits) = $row;
 
 					if($x > 0){
 						echo",";
 					}
 					echo"
-					{
-					\"x\": \"$get_stats_country_name\",
-					\"value\": $get_stats_country_unique
-					}";
+					{ \"id\": \"$get_stats_country_alpha_2\", \"value\": $get_stats_country_unique }";
 
 					// x++
 					$x++;
 				} // while
-				echo"
-            			];
-				var series = chart.series.push(new am4charts.PieSeries());
-				series.dataFields.value = \"value\";
-				series.dataFields.category = \"x\";
-			}); // end am4core.ready()
-       			</script>
-       			<div id=\"chartdiv_countries_year\" style=\"max-height: 250px;margin-top:10px;\"></div>
-		</div>
+			echo"];
+
+			// excludes Antarctica
+			polygonSeries.exclude = [\"AQ\"];
+
+			chart.seriesContainer.draggable = false;
+			chart.seriesContainer.resizable = false;
+			chart.maxZoomLevel = 1;
+		}); // end am4core.ready()
+		</script>
+		<div id=\"chartdiv_unique_visits_per_country\" style=\"width: 100%;max-height: 600px;height: 100vh;\"></div>
+		
 	<!-- //Countries -->
 
+
+
 	<!-- Accepted languages -->
-		<div class=\"left_right_right\">
+		<div class=\"left_right_left\">
 			<h2 style=\"margin-top: 20px;\">$l_accepted_languages</h2>
 
 
@@ -249,8 +297,35 @@ else{
        			</script>
        			<div id=\"chartdiv_accepted_language_year\" style=\"max-height: 250px;margin-top:10px;\"></div>
 		</div>
-		<div class=\"clear\"></div>
 	<!-- //Accepted languages -->
+
+	<!-- Mobile vs desktop -->
+		<div class=\"left_right_right\">
+						<h2 style=\"margin-top: 20px;\">Mobile vs desktop</h2>
+
+			<script>
+			am4core.ready(function() {
+				var chart = am4core.create(\"chartdiv_mobile_vs_desktop\", am4charts.PieChart);
+				chart.data = [
+					{
+					\"x\": \"Desktop\",
+					\"value\": $get_current_stats_visit_per_year_unique_desktop
+					},
+					{
+					\"x\": \"Mobile\",
+					\"value\": $get_current_stats_visit_per_year_unique_mobile
+					}
+
+            			];
+				var series = chart.series.push(new am4charts.PieSeries());
+				series.dataFields.value = \"value\";
+				series.dataFields.category = \"x\";
+			}); // end am4core.ready()
+       			</script>
+       			<div id=\"chartdiv_mobile_vs_desktop\" style=\"max-height: 250px;margin-top:10px;\"></div>
+		</div>
+		<div class=\"clear\"></div>
+	<!-- //Mobile vs desktop -->
 
 
 	<!-- Os -->
@@ -333,33 +408,12 @@ else{
 	<!-- //Browsers -->
 
 
-	<!-- Mobile vs desktop -->
+	<!-- x -->
 		<div class=\"left_right_left\">
-			<h2 style=\"margin-top: 20px;\">Mobile vs desktop</h2>
 
-			<script>
-			am4core.ready(function() {
-				var chart = am4core.create(\"chartdiv_mobile_vs_desktop\", am4charts.PieChart);
-				chart.data = [
-					{
-					\"x\": \"Desktop\",
-					\"value\": $get_current_stats_visit_per_year_unique_desktop
-					},
-					{
-					\"x\": \"Mobile\",
-					\"value\": $get_current_stats_visit_per_year_unique_mobile
-					}
-
-            			];
-				var series = chart.series.push(new am4charts.PieSeries());
-				series.dataFields.value = \"value\";
-				series.dataFields.category = \"x\";
-			}); // end am4core.ready()
-       			</script>
-       			<div id=\"chartdiv_mobile_vs_desktop\" style=\"max-height: 250px;margin-top:10px;\"></div>
 
 		</div>
-	<!-- //Mobile vs desktop -->
+	<!-- //uy -->
 
 		
 

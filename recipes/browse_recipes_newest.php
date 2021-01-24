@@ -219,7 +219,7 @@ echo"
 	$offset = ($page-1) * $no_of_records_per_page; 
 
 	if($page > $total_pages){
-		echo"Invalid page #1";
+		echo"<p>No more recips found. </p>";
 		die;
 	}
 	else{
@@ -227,128 +227,206 @@ echo"
 			echo"Invalid page #2";
 			die;
 		}
-	}
 
-	// Select recipes
-	$x = 0;
-	$query = "SELECT $t_recipes.recipe_id, $t_recipes.recipe_title, $t_recipes.recipe_category_id, $t_recipes.recipe_introduction, $t_recipes.recipe_image_path, $t_recipes.recipe_image, $t_recipes.recipe_thumb_278x156, $t_recipes.recipe_unique_hits FROM $t_recipes JOIN $t_recipes_numbers ON $t_recipes.recipe_id=$t_recipes_numbers.number_recipe_id WHERE $t_recipes.recipe_language=$l_mysql AND $t_recipes.recipe_published=1";
 
-	// Order
-	if($order_by == ""){
-		$order_by = "recipe_id";
-	}
+		// Select recipes
+		$x = 0;
+		$query = "SELECT $t_recipes.recipe_id, $t_recipes.recipe_title, $t_recipes.recipe_category_id, $t_recipes.recipe_introduction, $t_recipes.recipe_image_path, $t_recipes.recipe_image, $t_recipes.recipe_thumb_278x156, $t_recipes.recipe_unique_hits FROM $t_recipes JOIN $t_recipes_numbers ON $t_recipes.recipe_id=$t_recipes_numbers.number_recipe_id WHERE $t_recipes.recipe_language=$l_mysql AND $t_recipes.recipe_published=1";
 
-	if($order_method == "desc"){
-		$order_method_mysql = "DESC";
-	}
-	else{
-		$order_method_mysql = "ASC";
-	}
-
-	if($order_by == "recipe_id" OR $order_by == "recipe_title" OR $order_by == "recipe_unique_hits" OR $order_by == "recipe_unique_hits"){
-		$order_by_mysql = "$t_recipes.$order_by";
-	}
-	elseif($order_by == "number_serving_calories" OR $order_by == "number_serving_fat" OR $order_by == "number_serving_carbs" OR $order_by == "number_serving_proteins"){
-		$order_by_mysql = "$t_recipes_numbers.$order_by";
-	}
-	else{
-		$order_by_mysql = "$t_recipes.recipe_id";
-	}
-	$query = $query . " ORDER BY $order_by_mysql $order_method_mysql";
-	// $query = $query . " LIMIT $offset, $no_of_records_per_page";
-	$result = mysqli_query($link, $query);
-	while($row = mysqli_fetch_row($result)) {
-		list($get_recipe_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156, $get_recipe_unique_hits) = $row;
-
-			if($get_recipe_image != "" && file_exists("$root/$get_recipe_image_path/$get_recipe_image")){
-				// Category
-				$query_cat = "SELECT category_translation_id, category_translation_value FROM $t_recipes_categories_translations WHERE category_id=$get_recipe_category_id AND category_translation_language=$l_mysql";
-				$result_cat = mysqli_query($link, $query_cat);
-				$row_cat = mysqli_fetch_row($result_cat);
-				list($get_category_translation_id, $get_category_translation_value) = $row_cat;
+		// Order
+		if($order_by == ""){
+			$order_by = "recipe_id";
+		}
 	
-				if(!(file_exists("$root/$get_recipe_image_path/$get_recipe_thumb_278x156"))){
-					if($get_recipe_thumb_278x156 == ""){
-						echo"<div class=\"info\">Thumb 278x156 is blank</div>";
-						die;
-					}
-					$inp_new_x = 278;
-					$inp_new_y = 156;
-					resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_recipe_image_path/$get_recipe_image", "$root/$get_recipe_image_path/$get_recipe_thumb_278x156");
-				}
-
-				if($x == "0"){
-					echo"
-					<div class=\"clear\"></div>
-					<div class=\"left_center_center_right_left\">
-					";
-				}
-				elseif($x == "1"){
-					echo"
-					<div class=\"left_center_center_left_right_center\">
-					";
-				}
-				elseif($x == "2"){
-					echo"
-					<div class=\"left_center_center_right_right_center\">
-					";
-				}
-				elseif($x == "3"){
-					echo"
-					<div class=\"left_center_center_right_right\">
-					";
-				}
-				echo"
-						<p class=\"frontpage_post_image\"><a id=\"recipe$get_recipe_id\"></a>
-							<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\"><img src=\"$root/$get_recipe_image_path/$get_recipe_thumb_278x156\" alt=\"$get_recipe_image\" /></a><br />
-						</p>
-
-						<p class=\"frontpage_post_title\">
-							<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\" class=\"h2\">$get_recipe_title</a>
-						</p>
-					
-					</div>
-				";
-			
-				// Increment
-				$x = $x+1;
-
-				if($x == "4"){
-					$x = 0;
-				}
-
-			} // image
+		if($order_method == "desc"){
+			$order_method_mysql = "DESC";
+		}
+		else{
+			$order_method_mysql = "ASC";
 		}
 
+		if($order_by == "recipe_id" OR $order_by == "recipe_title" OR $order_by == "recipe_unique_hits" OR $order_by == "recipe_unique_hits"){
+			$order_by_mysql = "$t_recipes.$order_by";
+		}
+		elseif($order_by == "number_serving_calories" OR $order_by == "number_serving_fat" OR $order_by == "number_serving_carbs" OR $order_by == "number_serving_proteins"){
+			$order_by_mysql = "$t_recipes_numbers.$order_by";
+		}
+		else{
+			$order_by_mysql = "$t_recipes.recipe_id";
+		}
+		$query = $query . " ORDER BY $order_by_mysql $order_method_mysql";
+		// $query = $query . " LIMIT $offset, $no_of_records_per_page";
+		$result = mysqli_query($link, $query);
+		while($row = mysqli_fetch_row($result)) {
+			list($get_recipe_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156, $get_recipe_unique_hits) = $row;
 
-	echo"
-		<div class=\"clear\"></div>
-	<!-- Newst recipe paging -->
-	";
-	/*
-		<div class=\"recipes_pagination\">
-			<a href=\"browse_recipes_newest.php?order_by=$order_by&amp;order_method=$order_method&amp;l=$l&amp;page=1\" class=\""; if($page == "1"){ echo"active "; } echo"first\">1</a>
-			";
+				if($get_recipe_image != "" && file_exists("$root/$get_recipe_image_path/$get_recipe_image")){
+					// Category
+					$query_cat = "SELECT category_translation_id, category_translation_value FROM $t_recipes_categories_translations WHERE category_id=$get_recipe_category_id AND category_translation_language=$l_mysql";
+					$result_cat = mysqli_query($link, $query_cat);
+					$row_cat = mysqli_fetch_row($result_cat);
+					list($get_category_translation_id, $get_category_translation_value) = $row_cat;
 
-			// We want to show the first 3 pages, then ...
-			if($total_pages > 4){
-				for($x=2;$x<4+1;$x++){
-					echo"			<a href=\"browse_recipes_newest.php?order_by=$order_by&amp;order_method=$order_method&amp;l=$l&amp;page=$x\">$x</a>\n";
-				}
-				echo"			<a href=\"browse_recipes_newest.php?order_by=$order_by&amp;order_method=$order_method&amp;l=$l&amp;page=5\">...</a>\n";
+					// Select Nutrients
+					$query_n = "SELECT number_id, number_recipe_id, number_hundred_calories, number_hundred_proteins, number_hundred_fat, number_hundred_fat_of_which_saturated_fatty_acids, number_hundred_carbs, number_hundred_carbs_of_which_dietary_fiber, number_hundred_carbs_of_which_sugars, number_hundred_salt, number_hundred_sodium, number_serving_calories, number_serving_proteins, number_serving_fat, number_serving_fat_of_which_saturated_fatty_acids, number_serving_carbs, number_serving_carbs_of_which_dietary_fiber, number_serving_carbs_of_which_sugars, number_serving_salt, number_serving_sodium, number_total_weight, number_total_calories, number_total_proteins, number_total_fat, number_total_fat_of_which_saturated_fatty_acids, number_total_carbs, number_total_carbs_of_which_dietary_fiber, number_total_carbs_of_which_sugars, number_total_salt, number_total_sodium, number_servings FROM $t_recipes_numbers WHERE number_recipe_id=$get_recipe_id";
+					$result_n = mysqli_query($link, $query_n);
+					$row_n = mysqli_fetch_row($result_n);
+					list($get_number_id, $get_number_recipe_id, $get_number_hundred_calories, $get_number_hundred_proteins, $get_number_hundred_fat, $get_number_hundred_fat_of_which_saturated_fatty_acids, $get_number_hundred_carbs, $get_number_hundred_carbs_of_which_dietary_fiber, $get_number_hundred_carbs_of_which_sugars, $get_number_hundred_salt, $get_number_hundred_sodium, $get_number_serving_calories, $get_number_serving_proteins, $get_number_serving_fat, $get_number_serving_fat_of_which_saturated_fatty_acids, $get_number_serving_carbs, $get_number_serving_carbs_of_which_dietary_fiber, $get_number_serving_carbs_of_which_sugars, $get_number_serving_salt, $get_number_serving_sodium, $get_number_total_weight, $get_number_total_calories, $get_number_total_proteins, $get_number_total_fat, $get_number_total_fat_of_which_saturated_fatty_acids, $get_number_total_carbs, $get_number_total_carbs_of_which_dietary_fiber, $get_number_total_carbs_of_which_sugars, $get_number_total_salt, $get_number_total_sodium, $get_number_servings) = $row_n;
+
+
+					if(!(file_exists("$root/$get_recipe_image_path/$get_recipe_thumb_278x156"))){
+						if($get_recipe_thumb_278x156 == ""){
+							echo"<div class=\"info\">Thumb 278x156 is blank</div>";
+							die;
+						}
+						$inp_new_x = 278;
+						$inp_new_y = 156;
+						resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_recipe_image_path/$get_recipe_image", "$root/$get_recipe_image_path/$get_recipe_thumb_278x156");
+					}
+
+					if($x == "0"){
+						echo"
+						<div class=\"clear\"></div>
+						<div class=\"left_center_center_right_left\">
+						";
+					}
+					elseif($x == "1"){
+						echo"
+						<div class=\"left_center_center_left_right_center\">
+						";
+					}
+					elseif($x == "2"){
+						echo"
+						<div class=\"left_center_center_right_right_center\">
+						";
+					}
+					elseif($x == "3"){
+						echo"
+						<div class=\"left_center_center_right_right\">
+						";
+					}
+					echo"
+							<p class=\"recipe_image_p\">
+								<a id=\"recipe$get_recipe_id\"></a>
+								<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\"><img src=\"$root/$get_recipe_image_path/$get_recipe_thumb_278x156\" alt=\"$get_recipe_image\" /></a>
+							</p>
+
+							<p class=\"recipe_category_p\">
+								<a href=\"$root/recipes/categories_browse.php?category_id=$get_recipe_category_id&amp;l=$l\" class=\"recipe_category_a\">$get_category_translation_value</a><br />
+							</p>
+
+							<p class=\"recipe_title_p\">
+								<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\" class=\"h2\">$get_recipe_title</a>
+							</p>
+
+							<!-- Recipe tags -->
+							";
+							$t = 0;
+							$query_t = "SELECT tag_id, tag_title, tag_title_clean FROM $t_recipes_tags WHERE tag_recipe_id=$get_recipe_id ORDER BY tag_id ASC";
+							$result_t = mysqli_query($link, $query_t);
+							while($row_t = mysqli_fetch_row($result_t)) {
+								list($get_tag_id, $get_tag_title, $get_tag_title_clean) = $row_t;
+								if($t == "0"){
+									echo"							<div class=\"recipe_tags\">\n";
+									echo"								<ul>\n";
+								}
+								echo"								";
+								echo"<li><a href=\"view_tag.php?tag=$get_tag_title_clean&amp;l=$l\">#$get_tag_title</a></li>\n";
+								$t++;
+							}
+							if($t != "0"){
+								echo"								</ul>\n";
+								echo"							</div>\n";
+							}
+							echo"
+							<!-- //Recipe tags -->
+
+
+							<!-- Recipe numbers -->
+								<div class=\"recipe_numbers\">
+									<table>
+									 <tbody>";
+									if($get_number_hundred_calories != "0" && $get_number_hundred_carbs != "0" && $get_number_hundred_fat != "0" && $get_number_hundred_proteins != "0"){
+										echo"
+									  <tr>
+									   <td class=\"recipe_numbers_td_first\">
+										<span>$l_per_hundred</span>
+									   </td>
+									   <td>
+										<span>$get_number_hundred_calories</span>
+									   </td>
+									   <td>
+										<span>$get_number_hundred_carbs</span>
+									   </td>
+									   <td>
+										<span>$get_number_hundred_fat</span>
+									   </td>
+									   <td>
+										<span>$get_number_hundred_proteins</span>
+									   </td>
+									  </tr>
+										";
+									}
+									echo"
+									  <tr>
+									   <td class=\"recipe_numbers_td_first\">
+										<span>$l_per_serving</span>
+									   </td>
+									   <td>
+										<span>$get_number_serving_calories</span>
+									   </td>
+									   <td>
+										<span>$get_number_serving_carbs</span>
+									   </td>
+									   <td>
+										<span>$get_number_serving_fat</span>
+									   </td>
+									   <td>
+										<span>$get_number_serving_proteins</span>
+									   </td>
+									  </tr>
+
+									  <tr>
+									   <td>
+									   </td>
+									   <td>
+										<span>$l_calories_abbr_lowercase</span>
+									   </td>
+									   <td>
+										<span>$l_carbs_abbr_lowercase</span>
+									   </td>
+									   <td>
+										<span>$l_fat_abbr_lowercase</span>
+									   </td>
+									   <td>
+										<span>$l_proteins_abbr_lowercase</span>
+									   </td>
+									  </tr>
+									 </tbody>
+									</table>
+								</div>
+							<!-- //Recipe numbers -->
+
+					
+					</div>
+					";
+			
+					// Increment
+					$x = $x+1;
+
+					if($x == "4"){
+						$x = 0;
+					}
+
+				} // image
 			}
 
-			// Last 4 pages
-			if($total_pages > 10){
-				$last = $total_pages+1;
-				for($x=$total_pages-4;$x<$last;$x++){
-					echo"			<a href=\"browse_recipes_newest.php?order_by=$order_by&amp;order_method=$order_method&amp;l=$l&amp;page=$x\""; if($x == "$last"){ echo" class=\"last\""; } echo">$x</a>\n";
-				}
-			}
+
 			echo"
+			<div class=\"clear\"></div>
+			";
+		} // no more recipes found (page > page_no)
 
-		</div>
-	*/
 	echo"
 	<!-- //Newst recipe paging -->
 

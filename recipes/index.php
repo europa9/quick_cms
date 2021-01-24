@@ -440,8 +440,8 @@ echo"
 			<select name=\"inp_selected\" class=\"on_select_go_to_url\">
 				<option value=\"browse_recipes_newest.php?order_by=recipe_id&amp;order_method=desc&amp;l=$l\" selected=\"selected\">- $l_show -</option>
 				<option value=\"browse_recipes_newest.php?order_by=recipe_id&amp;order_method=desc&amp;l=$l\">$l_newest</option>
-				<option value=\"browse_recipes_views.php?order_by=recipe_title&amp;order_method=asc&amp;l=$l\">$l_views</option>
-				<option value=\"browse_recipes_comments.php?order_by=recipe_title&amp;order_method=asc&amp;l=$l\">$l_comments</option>
+				<option value=\"browse_recipes_views.php?order_by=recipe_title&amp;order_method=asc&amp;period=30_days&amp;l=$l\">$l_views</option>
+				<option value=\"browse_recipes_comments.php?order_by=recipe_title&amp;order_method=asc&amp;period=30_days&amp;l=$l\">$l_comments</option>
 				<option value=\"browse_recipes_rating.php?order_by=recipe_title&amp;order_method=asc&amp;l=$l\">$l_rating</option>
 			</select>
 			<select name=\"inp_period\" class=\"on_select_go_to_url\">
