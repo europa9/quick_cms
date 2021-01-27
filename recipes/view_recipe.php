@@ -549,7 +549,7 @@ else{
 					<a id=\"favorite\"></a>
 					<ul>
 						<li>
-						<a href=\"categories_browse.php?category_id=$get_recipe_category_id\"><img src=\"_gfx/icons/outline_folder_black_18dp.png\" alt=\"outline_folder_black_18dp.png\" />
+						<a href=\"categories_browse.php?category_id=$get_recipe_category_id&amp;l=$l\"><img src=\"_gfx/icons/outline_folder_black_18dp.png\" alt=\"outline_folder_black_18dp.png\" />
 						$get_category_translation_value</a>
 						</li>
 						";
@@ -558,7 +558,7 @@ else{
 						if($get_recipe_cusine_id != 0){
 							echo"
 							<li>
-							<a href=\"cuisines_browse.php?cuisine_id=$get_recipe_cusine_id\" title=\"$l_cuisine\"><img src=\"_gfx/icons/outline_public_black_18dp.png\" alt=\"outline_public_black_18dp.png\" />
+							<a href=\"cuisines_browse.php?cuisine_id=$get_recipe_cusine_id&amp;l=$l\" title=\"$l_cuisine\"><img src=\"_gfx/icons/outline_public_black_18dp.png\" alt=\"outline_public_black_18dp.png\" />
 							$get_cusine_translation_value</a>
 							</li>
 							";
@@ -568,7 +568,7 @@ else{
 						if($get_recipe_season_id != 0){
 							echo"
 							<li>
-							<a href=\"seasons_browse.php?season_id=$get_recipe_season_id\" title=\"$l_season\"><img src=\"_gfx/icons/outline_brightness_4_black_18dp.png\" alt=\"outline_brightness_4_black_18dp.png\" />
+							<a href=\"seasons_browse.php?season_id=$get_recipe_season_id&amp;l=$l\" title=\"$l_season\"><img src=\"_gfx/icons/outline_brightness_4_black_18dp.png\" alt=\"outline_brightness_4_black_18dp.png\" />
 							$get_season_translation_value</a>
 							</li>
 							";
@@ -578,7 +578,7 @@ else{
 						if($get_recipe_occasion_id != 0){
 							echo"
 							<li>
-							<a href=\"occasions_browse.php?occasion_id=$get_recipe_occasion_id\" title=\"$l_occasion\"><img src=\"_gfx/icons/outline_cake_black_18dp.png\" alt=\"outline_cake_black_18dp.png\" />
+							<a href=\"occasions_browse.php?occasion_id=$get_recipe_occasion_id&amp;l=$l\" title=\"$l_occasion\"><img src=\"_gfx/icons/outline_cake_black_18dp.png\" alt=\"outline_cake_black_18dp.png\" />
 							$get_occasion_translation_value</a>
 							</li>
 							";
@@ -773,7 +773,6 @@ else{
 			
 
 
-				<table style=\"width: 100%;\">
 			";
 			$x = 0;
 			$query_groups = "SELECT group_id, group_title FROM $t_recipes_groups WHERE group_recipe_id=$get_recipe_id";
@@ -782,33 +781,6 @@ else{
 				list($get_group_id, $get_group_title) = $row_groups;
 				echo"
 
-				 <tr>
-				  <td class=\"ingredients_headcell\">
-					<h2 style=\"padding:0;margin:0;\">$get_group_title</h2>
-				  </td>
-				  <td class=\"ingredients_headcell_desktop\" style=\"text-align: center;\">
-					<span>$l_calories</span>
-				  </td>
-				  <td class=\"ingredients_headcell_desktop\" style=\"text-align: center;\">
-					<span>$l_fat</span>
-				  </td>
-				  <td class=\"ingredients_headcell_desktop\" style=\"text-align: center;\">
-					<span>$l_carbs_abbreviation</span>
-				  </td>
-				  <td class=\"ingredients_headcell_desktop\" style=\"text-align: center;\">
-					<span>$l_protein</span>
-				  </td>
-				  <td class=\"ingredients_headcell_desktop\" style=\"text-align: center;\">
-					<span>";
-					if($get_recipe_country == "United States"){
-						echo"$l_sodium";
-					}
-					else{
-						echo"$l_salt";
-					}
-					echo"</span>
-				  </td>
-				 </tr>
 				";
 				if($x == 0){
 					// Servings
@@ -835,6 +807,34 @@ else{
 						$query_string = "";
 					}
 					echo"
+					<table style=\"width: 100%;\">
+					 <tr>
+					  <td class=\"ingredients_headcell\">
+						<h2 style=\"padding-bottom:0;margin-bottom:0;\">$get_group_title</h2>
+					  </td>
+					  <td class=\"ingredients_headcell_desktop\" style=\"text-align: center;\">
+						<span>$l_calories</span>
+					  </td>
+					  <td class=\"ingredients_headcell_desktop\" style=\"text-align: center;\">
+						<span>$l_fat</span>
+					  </td>
+					  <td class=\"ingredients_headcell_desktop\" style=\"text-align: center;\">
+						<span>$l_carbs_abbreviation</span>
+					  </td>
+					  <td class=\"ingredients_headcell_desktop\" style=\"text-align: center;\">
+						<span>$l_protein</span>
+					  </td>
+					  <td class=\"ingredients_headcell_desktop\" style=\"text-align: center;\">
+					<span>";
+					if($get_recipe_country == "United States"){
+						echo"$l_sodium";
+					}
+					else{
+						echo"$l_salt";
+					}
+					echo"</span>
+					  </td>
+					 </tr>
 					 <tr>
 					  <td class=\"ingredients_headcell\" cellspan=\"6\">
 						<table>
@@ -854,6 +854,17 @@ else{
 					 </tr>
 					";
 				} // servings
+				else{
+				// Headline
+					echo"
+					 <tr>
+					  <td class=\"ingredients_headcell\" cellspan=\"6\">
+						<h2>$get_group_title</h2>
+					  </td>
+					 </tr>
+					
+					";	
+				}
 
 				$items_calories_total 	= 0;
 				$items_fat_total 	= 0;
@@ -869,6 +880,7 @@ else{
 				$items_salt_serving 	= 0;
 				$items_sodium_serving 	= 0;
 	
+				$i = 0;
 				$query_items = "SELECT item_id, item_recipe_id, item_group_id, item_amount, item_measurement, item_grocery, item_grocery_explanation, item_food_id, item_calories_per_hundred, item_fat_per_hundred, item_fat_of_which_saturated_fatty_acids_per_hundred, item_carbs_per_hundred, item_carbs_of_which_dietary_fiber_hundred, item_carbs_of_which_sugars_per_hundred, item_proteins_per_hundred, item_salt_per_hundred, item_sodium_per_hundred, item_calories_calculated, item_fat_calculated, item_fat_of_which_saturated_fatty_acids_calculated, item_carbs_calculated, item_carbs_of_which_dietary_fiber_calculated, item_carbs_of_which_sugars_calculated, item_proteins_calculated, item_salt_calculated, item_sodium_calculated FROM $t_recipes_items WHERE item_group_id=$get_group_id";
 				$result_items = mysqli_query($link, $query_items);
 				$row_cnt = mysqli_num_rows($result_items);
@@ -1056,16 +1068,6 @@ else{
 							  <td style=\"padding: 5px 10px 0px 0px;text-align: center;\">
 								<span class=\"grey_small\">$protein</span>
 							  </td>
-							  <td style=\"padding: 5px 0px 0px 0px;text-align: center;\">
-								<span class=\"grey_small\">";
-								if($get_recipe_country == "United States"){
-									echo"$sodium";
-								}
-								else{
-									echo"$salt";
-								}
-								echo"</span>
-							  </td>
 							 </tr>
 							 <tr>
 							  <td style=\"padding-right: 10px;text-align: center;\">
@@ -1079,16 +1081,6 @@ else{
 							  </td>
 							  <td style=\"padding-right: 10px;text-align: center;\">
 								<span class=\"grey_small\">$l_protein</span>
-							  </td>
-							  <td style=\"text-align: center;\">
-								<span class=\"grey_small\">";
-								if($get_recipe_country == "United States"){
-									echo"$l_sodium";
-								}
-								else{
-									echo"$l_salt";
-								}
-								echo"</span>
 							  </td>
 							 </tr>
 							</table>
@@ -1118,6 +1110,7 @@ else{
 					  </td>
 					 </tr>
 					 ";
+					$i++;
 				}
 
 				// Serving and total
@@ -1168,43 +1161,6 @@ else{
 							  <td style=\"padding: 5px 10px 0px 0px;text-align: center;\">
 								<em>$items_protein_serving</em>
 							  </td>
-							  <td style=\"padding: 5px 0px 0px 0px;text-align: center;\">
-								<em>";
-								if($get_recipe_country == "United States"){
-									echo"$items_sodium_serving";
-								}
-								else{
-									echo"$items_salt_serving";
-								}
-								echo"</em>
-							  </td>
-							 </tr>
-							 <tr>
-							  <td style=\"padding: 5px 10px 0px 0px;text-align: right\">
-								<em>$l_total</em>
-							  </td>
-							  <td style=\"padding: 5px 10px 0px 0px;text-align: center;\">
-								<em>$items_calories_total</em>
-							  </td>
-							  <td style=\"padding: 5px 10px 0px 0px;text-align: center;\">
-								<em>$items_fat_total</em>
-							  </td>
-							  <td style=\"padding: 5px 10px 0px 0px;text-align: center;\">
-								<em>$items_carbs_total</em>
-							  </td>
-							  <td style=\"padding: 5px 10px 0px 0px;text-align: center;\">
-								<em>$items_protein_total</em>
-							  </td>
-							  <td style=\"padding: 5px 0px 0px 0px;text-align: center;\">
-								<em>";
-								if($get_recipe_country == "United States"){
-									echo"$items_sodium_total";
-								}
-								else{
-									echo"$items_salt_total";
-								}
-								echo"</em>
-							  </td>
 							 </tr>
 							 <tr>
 							  <td style=\"padding-right: 10px;text-align: center;\">
@@ -1222,16 +1178,6 @@ else{
 							  <td style=\"padding-right: 10px;text-align: center;\">
 								<span class=\"grey_small\">$l_protein</span>
 							  </td>
-							  <td style=\"text-align: center;\">
-								<span class=\"grey_small\">";
-								if($get_recipe_country == "United States"){
-									echo"$l_sodium";
-								}
-								else{
-									echo"$l_salt";
-								}
-								echo"</span>
-							  </td>
 							 </tr>
 							</table>
 						</div> <!-- Mobile only -->
@@ -1239,60 +1185,29 @@ else{
 
 					  </td>
 					  <td class=\"ingredients_body_desktop_$style\" style=\"text-align: center;\">
-						<em>$items_calories_serving</em>
+						<p style=\"padding-top:0;margin-top:0;\"><em>$items_calories_serving</em></p>
 					  </td>
 					  <td class=\"ingredients_body_desktop_$style\" style=\"text-align: center;\">
-						<em>$items_fat_serving</em>
+						<p style=\"padding-top:0;margin-top:0;\"><em>$items_fat_serving</em></p>
 					  </td>
 					  <td class=\"ingredients_body_desktop_$style\" style=\"text-align: center;\">
-						<em>$items_carbs_serving</em>
+						<p style=\"padding-top:0;margin-top:0;\"><em>$items_carbs_serving</em></p>
 					  </td>
 					  <td class=\"ingredients_body_desktop_$style\" style=\"text-align: center;\">
-						<em>$items_protein_serving</em>
+						<p style=\"padding-top:0;margin-top:0;\"><em>$items_protein_serving</em></p>
 					  </td>
 					  <td class=\"ingredients_body_desktop_$style\" style=\"text-align: center;\">
-						<em>";
+						<p style=\"padding-top:0;margin-top:0;\"><em>";
 						if($get_recipe_country == "United States"){
 							echo"$items_sodium_serving";
 						}
 						else{
 							echo"$items_salt_serving";
 						}
-						echo"</em>
+						echo"</em></p>
+				
 					  </td>
 					 </tr>";
-
-				// Total
-
-				echo"
-					 <tr>
-					  <td class=\"ingredients_body_desktop_$style\" style=\"text-align: right;\">
-						<em>$l_total</em>
-					  </td>
-					  <td class=\"ingredients_body_desktop_$style\" style=\"text-align: center;\">
-						<em>$items_calories_total</em>
-					  </td>
-					  <td class=\"ingredients_body_desktop_$style\" style=\"text-align: center;\">
-						<em>$items_fat_total</em>
-					  </td>
-					  <td class=\"ingredients_body_desktop_$style\" style=\"text-align: center;\">
-						<em>$items_carbs_total</em>
-					  </td>
-					  <td class=\"ingredients_body_desktop_$style\" style=\"text-align: center;\">
-						<em>$items_protein_total</em>
-					  </td>
-					  <td class=\"ingredients_body_desktop_$style\" style=\"text-align: center;\">
-						<em>";
-						if($get_recipe_country == "United States"){
-							echo"$items_sodium_total";
-						}
-						else{
-							echo"$items_salt_total";
-						}
-						echo"</em>
-					  </td>
-					 </tr>
-					 ";
 
 
 

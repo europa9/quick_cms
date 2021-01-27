@@ -102,7 +102,25 @@ div.recipe_numbers > table > tbody > tr > td > span{
 }
 
 td.recipe_numbers_td_first{
-	text-align: left;
+	text-align: right;
+}
+
+span.recipe_desktop_only{
+
+}
+span.recipe_mobile_only{
+	display: none;
+}
+
+@media screen and (max-width: 52.375em) {
+	
+	span.recipe_desktop_only{
+		display: none;
+	}
+	span.recipe_mobile_only{
+		display: inline;
+	}
+
 }
 
 /*- 1 big on left, 2 small on right ----------------------------------------------------- */

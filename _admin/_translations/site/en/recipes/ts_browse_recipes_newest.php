@@ -32,4 +32,12 @@ $l_proteins = "Proteins";
 $l_proteins_abbr_lowercase = "pro";
 $l_per_hundred = "Per hundred";
 $l_per_serving = "Per serving";
+$l_per_hundred_abbr_short_lowercase = "h";
+$l_per_serving_abbr_short_lowercase = "s";
+$l_per_hundred_abbr_short = "H";
+$l_per_serving_abbr_short = "S";
+$l_calories_abbr_short_lowercase = "cal";
+$l_carbs_abbr_short_lowercase = "car";
+$l_fat_abbr_short_lowercase = "fat";
+$l_proteins_abbr_short_lowercase = "pro";
 ?>

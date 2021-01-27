@@ -185,14 +185,15 @@ else{
 			var polygonTemplate = polygonSeries.mapPolygons.template;
 			polygonTemplate.tooltipText = \"{name}: {value.value}\";
 			polygonSeries.useGeodata = true;
-			polygonSeries.heatRules.push({ property: \"fill\", target: polygonSeries.mapPolygons.template, min: am4core.color(\"#ffffff\"), max: am4core.color(\"#263544\") });
+			polygonSeries.heatRules.push({ property: \"fill\", target: polygonSeries.mapPolygons.template, min: am4core.color(\"#8ab7ff\"), max: am4core.color(\"#25529a\") });
 
 
 			// add heat legend
 			var heatLegend = chart.chartContainer.createChild(am4maps.HeatLegend);
+			heatLegend.align = \"center\";
 			heatLegend.valign = \"bottom\";
 			heatLegend.series = polygonSeries;
-			heatLegend.width = am4core.percent(100);
+			heatLegend.width = am4core.percent(50);
 			heatLegend.orientation = \"horizontal\";
 			heatLegend.padding(30, 30, 30, 30);
 			heatLegend.valueAxis.renderer.labels.template.fontSize = 10;
@@ -245,6 +246,7 @@ else{
 			chart.seriesContainer.draggable = false;
 			chart.seriesContainer.resizable = false;
 			chart.maxZoomLevel = 1;
+			chart.chartContainer.wheelable = false;
 		}); // end am4core.ready()
 		</script>
 		<div id=\"chartdiv_unique_visits_per_country\" style=\"width: 100%;max-height: 600px;height: 100vh;\"></div>

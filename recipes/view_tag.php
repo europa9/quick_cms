@@ -227,42 +227,6 @@ echo"
 					<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\" class=\"h2\">$get_recipe_title</a>
 					</p>
 
-					<!-- Numbers -->";
-						if($get_number_hundred_calories != "0"){
-						echo"
-						<table style=\"margin: 0px auto;\">
-						 <tr>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_small\">$get_number_hundred_calories</span>
-						  </td>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_small\">$get_number_hundred_fat</span>
-						  </td>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_small\">$get_number_hundred_carbs</span>
-						  </td>
-						  <td style=\"text-align: center;\">
-							<span class=\"grey_small\">$get_number_hundred_proteins</span>
-						  </td>
-						 </tr>
-						 <tr>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_small\">$l_cal_lowercase</span>
-						  </td>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_small\">$l_fat_lowercase</span>
-						  </td>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_small\">$l_carb_lowercase</span>
-						  </td>
-						  <td style=\"text-align: center;\">
-							<span class=\"grey_small\">$l_proteins_abbr_lowercase</span>
-						  </td>
-						 </tr>
-						</table>
-						";
-					}
-					echo"
 
 				</div>
 			";

@@ -32,7 +32,7 @@ else{
 
 if($action == ""){
 	echo"
-	<h1>$l_slides</h1>
+	<h1>Slides</h1>
 		
 	<!-- Feedback -->
 	";
@@ -80,7 +80,7 @@ if($action == ""){
 
 		<div style=\"float: left\">
 			<p>
-			<a href=\"index.php?open=$open&amp;page=slides_new&amp;editor_language=$editor_language\" class=\"btn\">$l_new_slide</a>
+			<a href=\"index.php?open=$open&amp;page=slides_new&amp;editor_language=$editor_language\" class=\"btn\">New slide</a>
 			<a href=\"index.php?open=$open&amp;page=slides_tables&amp;editor_language=$editor_language\" class=\"btn\">Tables</a>
 			</p>
 		</div>

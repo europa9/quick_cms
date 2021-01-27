@@ -28,11 +28,10 @@ if($page == "menu"){
 echo"
 			<li";if($page == "social_media"){echo" class=\"down\"";}echo"><a href=\"./?open=$open&amp;page=social_media&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "social_media"){echo" class=\"selected\"";}echo">Social media</a></li>
 			<li";if($page == "slides"){echo" class=\"down\"";}echo"><a href=\"index.php?open=$open&amp;page=slides&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "slides"){echo" class=\"selected\"";}echo">Slides</a></li>
-			<li";if($page == "slides_new"){echo" class=\"down\"";}echo"><a href=\"index.php?open=$open&amp;page=slides_new&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "slides_new"){echo" class=\"selected\"";}echo">New slide</a></li>
 			<li";if($page == "favicon"){echo" class=\"down\"";}echo"><a href=\"index.php?open=$open&amp;page=favicon&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "favicon"){echo" class=\"selected\"";}echo">Favicon</a></li>
 			<li";if($page == "logo"){echo" class=\"down\"";}echo"><a href=\"index.php?open=$open&amp;page=logo&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "logo"){echo" class=\"selected\"";}echo">Logo</a></li>
 			<li";if($page == "share_buttons"){echo" class=\"down\"";}echo"><a href=\"index.php?open=$open&amp;page=share_buttons&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "share_buttons"){echo" class=\"selected\"";}echo">Share buttons</a></li>
-		
+			
 ";
 
 if($page == "menu"){

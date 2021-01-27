@@ -30,6 +30,9 @@ echo"
 			<li";if($page == "new_page"){echo" class=\"down\"";}echo"><a href=\"./?open=pages&amp;page=new_page&amp;editor_language=$editor_language\"";if($page == "new_page"){echo" class=\"selected\"";}echo">$l_new_page</a></li>
 			<li";if($page == "navigation"){echo" class=\"down\"";}echo"><a href=\"./?open=pages&amp;page=navigation&amp;editor_language=$editor_language\"";if($page == "navigation"){echo" class=\"selected\"";}echo">$l_navigation</a></li>
 			<li";if($page == "footer"){echo" class=\"down\"";}echo"><a href=\"./?open=pages&amp;page=footer&amp;editor_language=$editor_language\"";if($page == "footer"){echo" class=\"selected\"";}echo">Footer</a></li>
+			<li";if($page == "cookies_policy"){echo" class=\"down\"";}echo"><a href=\"index.php?open=pages&amp;page=cookies_policy&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "cookies_policy"){echo" class=\"selected\"";}echo">Cookies policy</a></li>
+			<li";if($page == "privacy_policy"){echo" class=\"down\"";}echo"><a href=\"index.php?open=pages&amp;page=privacy_policy&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "privacy_policy"){echo" class=\"selected\"";}echo">Privacy policy</a></li>
+			<li";if($page == "terms_of_use"){echo" class=\"down\"";}echo"><a href=\"index.php?open=pages&amp;page=terms_of_use&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "terms_of_use"){echo" class=\"selected\"";}echo">Terms of use</a></li>
 			
 ";
 

@@ -349,8 +349,9 @@ echo"
 									if($get_number_hundred_calories != "0" && $get_number_hundred_carbs != "0" && $get_number_hundred_fat != "0" && $get_number_hundred_proteins != "0"){
 										echo"
 									  <tr>
-									   <td class=\"recipe_numbers_td_first\">
-										<span>$l_per_hundred</span>
+									   <td class=\"recipe_numbers_td_first\" style=\"text-align: right;\">
+										<span class=\"recipe_desktop_only\">$l_hundred</span>
+										<span class=\"recipe_mobile_only\">$l_per_hundred_abbr_short</span>
 									   </td>
 									   <td>
 										<span>$get_number_hundred_calories</span>
@@ -369,8 +370,9 @@ echo"
 									}
 									echo"
 									  <tr>
-									   <td class=\"recipe_numbers_td_first\">
-										<span>$l_per_serving</span>
+									   <td class=\"recipe_numbers_td_first\" style=\"text-align: right;\">
+										<span class=\"recipe_desktop_only\">$l_serving</span>
+										<span class=\"recipe_mobile_only\">$l_per_serving_abbr_short</span>
 									   </td>
 									   <td>
 										<span>$get_number_serving_calories</span>
@@ -390,16 +392,20 @@ echo"
 									   <td>
 									   </td>
 									   <td>
-										<span>$l_calories_abbr_lowercase</span>
+										<span class=\"recipe_desktop_only\">$l_calories_abbr_lowercase</span>
+										<span class=\"recipe_mobile_only\">$l_calories_abbr_short_lowercase</span>
 									   </td>
 									   <td>
-										<span>$l_carbs_abbr_lowercase</span>
+										<span class=\"recipe_desktop_only\">$l_carbs_abbr_lowercase</span>
+										<span class=\"recipe_mobile_only\">$l_carbs_abbr_short_lowercase</span>
 									   </td>
 									   <td>
-										<span>$l_fat_abbr_lowercase</span>
+										<span class=\"recipe_desktop_only\">$l_fat_abbr_lowercase</span>
+										<span class=\"recipe_mobile_only\">$l_fat_abbr_short_lowercase</span>
 									   </td>
 									   <td>
-										<span>$l_proteins_abbr_lowercase</span>
+										<span class=\"recipe_desktop_only\">$l_proteins_abbr_lowercase</span>
+										<span class=\"recipe_mobile_only\">$l_proteins_abbr_short_lowercase</span>
 									   </td>
 									  </tr>
 									 </tbody>
