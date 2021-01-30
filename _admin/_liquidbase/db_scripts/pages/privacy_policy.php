@@ -63,12 +63,15 @@ if(isset($_SESSION['admin_user_id'])){
 		$date = date("Y-m-d");
 		$date_saying = date("j F Y");
 
+		$server_name = $_SERVER['SERVER_NAME'];
+		$email = "$server_name at $server_name";
+
 		// English text
 $inp_text = "<p>In order to receive information about your Personal Data, the purposes and the parties the Data is shared with, contact the Owner.</p>
 
 <h2 id=\"owner_of_the_data\">1. Owner and Data Controller</h2>
-	<p>TheFitPot.com</p>
-	<p><strong>Owner contact email:</strong> thefitpot@thefitpot.com</p>
+	<p>$server_name</p>
+	<p><strong>Owner contact email:</strong> $email</p>
 
 	<hr />
 
