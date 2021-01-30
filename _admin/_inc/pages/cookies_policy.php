@@ -72,8 +72,9 @@ if($get_current_cookies_policy_id == ""){
 }
 
 
-/*- Variables ------------------------------------------------------------------------ */
-if($process == "1"){
+/*- Start ------------------------------------------------------------------------ */
+if($action ==""){
+	if($process == "1"){
 	// Dates
 	$date = date("Y-m-d");
 	$date_saying = date("j F Y");
@@ -105,27 +106,18 @@ if($process == "1"){
 		echo "FAILURE!!! " . $stmt->error; die;
 	}
 
-	// Create page
-	if(!(is_dir("../legal"))){
-		mkdir("../legal");
-	}
-
-	// Input
-	$input="<?php
-
-?>";
 
 	// Header
 	header("Location: index.php?open=$open&page=$page&editor_language=$editor_language&ft=success&fm=changes_saved");
 	exit;
 
-} // process
+	} // process
 
 	
-echo"
-<h1>Cookies Policy</h1>
+	echo"
+	<h1>Cookies Policy</h1>
 
-<!-- Feedback -->
+	<!-- Feedback -->
 	";
 	if($ft != ""){
 		if($fm == "changes_saved"){
@@ -139,7 +131,18 @@ echo"
 	echo"	
 <!-- //Feedback -->
 
-<!-- Select language -->
+	<!-- Menu -->
+		<div class=\"tabs\">
+			<ul>
+				<li><a href=\"index.php?open=pages&amp;page=cookies_policy&amp;editor_language=$editor_language&amp;l=$l\" class=\"active\">Cookies policy</a></li>
+				<li><a href=\"index.php?open=pages&amp;page=cookies_policy&amp;action=cookies_accept_code&amp;editor_language=$editor_language&amp;l=$l\">Cookies accept code</a></li>
+				
+			</ul>
+		</div>
+		<div class=\"clear\"></div>
+	<!-- //Menu -->
+
+	<!-- Select language -->
 
 		<script>
 		\$(function(){
@@ -267,7 +270,30 @@ echo"
 
 
 	</form>
-<!-- //Edit form -->
+	<!-- //Edit form -->
+	";
+}
+elseif($action == "cookies_accept_code"){
+	echo"
+	<h1>Cookies Policy</h1>
+	<!-- Menu -->
+		<div class=\"tabs\">
+			<ul>
+				<li><a href=\"index.php?open=pages&amp;page=cookies_policy&amp;editor_language=$editor_language&amp;l=$l\">Cookies policy</a></li>
+				<li><a href=\"index.php?open=pages&amp;page=cookies_policy&amp;action=cookies_accept_code&amp;editor_language=$editor_language&amp;l=$l\" class=\"active\">Cookies accept code</a></li>	
+			</ul>
+		</div>
+		<div class=\"clear\"></div>
+	<!-- //Menu -->
 
-";
+	<p>
+	<textarea style=\"width:100%;\" cols=\"10\" rows=\"10\"><!-- Cookies warning -->
+	&quot;;
+	include(&quot;\$root/_admin/_functions/cookies_warning_include.php&quot;);
+	echo&quot;
+<!-- //Cookies warning -->
+	</textarea>
+
+	";
+}
 ?>
