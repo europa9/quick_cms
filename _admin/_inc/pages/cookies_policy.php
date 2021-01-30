@@ -286,13 +286,33 @@ elseif($action == "cookies_accept_code"){
 		<div class=\"clear\"></div>
 	<!-- //Menu -->
 
-	<p>
+	<p>PHP:<br />
 	<textarea style=\"width:100%;\" cols=\"10\" rows=\"10\"><!-- Cookies warning -->
 	&quot;;
 	include(&quot;\$root/_admin/_functions/cookies_warning_include.php&quot;);
 	echo&quot;
 <!-- //Cookies warning -->
 	</textarea>
+	</p>
+
+
+	<p>CSS:<br />
+	<textarea style=\"width:100%;\" cols=\"10\" rows=\"10\">/*- Cookies ----------------------------------------------------------------- */
+#div_legal{
+	background: #000;
+	text-align: center;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+}
+#div_legal > p{
+	color: #fff;
+}
+a.legal_read_more{
+	color: #fff;
+	text-decoration: underline;
+}	</textarea>
+	</p>
 
 	";
 }
