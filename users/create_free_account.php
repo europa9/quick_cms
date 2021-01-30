@@ -134,6 +134,29 @@ else{
 			$inp_antispam_answer = strtolower($inp_antispam_answer);
 			$inp_antispam_answer = trim($inp_antispam_answer);
 
+			// Policies
+			if(isset($_POST['inp_cookies_policy'])){
+				$inp_cookies_policy = "1";
+			}
+			else{
+				$inp_cookies_policy = "0";
+			}
+
+			if(isset($_POST['inp_privacy_policy'])){
+				$inp_privacy_policy = "1";
+			}
+			else{
+				$inp_privacy_policy = "0";
+			}
+
+			if(isset($_POST['inp_terms_of_use'])){
+				$inp_terms_of_use = "1";
+			}
+			else{
+				$inp_terms_of_use = "0";
+			}
+
+
 			// -> check answers
 			$antispam_correct = "false"; // make a guess
 			$query = "SELECT antispam_answer_id, antispam_answer FROM $t_users_antispam_answers WHERE antispam_answer_question_id=$question_id_mysql";
@@ -149,8 +172,19 @@ else{
 					$_SESSION['antispam_ok'] = "1";
 					$antispam_correct = "true";
 
-					// Move user
-					header("Location: create_free_account_step_2_user.php?l=$l");
+					if($inp_cookies_policy == "1" && $inp_privacy_policy == "1" && $inp_terms_of_use == "1"){
+			
+						// Move user
+						header("Location: create_free_account_step_2_user.php?l=$l");
+						die;
+					}
+					else{
+						// Move user
+						$ft = "error";
+						$fm = "all_policies_must_be_accepted";
+						header("Location: create_free_account.php?l=$l&ft=$ft&fm=$fm&your_answer=$inp_antispam_answer&question_id=$question_id");
+						die;
+					}
 
 				}
 			}
@@ -201,6 +235,9 @@ else{
 				if($fm == "users_you_answered_wrong_on_antispam_question"){
 					$fm = "$l_users_you_answered_wrong_on_antispam_question";
 				}
+				elseif($fm == "all_policies_must_be_accepted"){
+					$fm = "$l_all_policies_must_be_accepted";
+				}
 				else{
 					$fm = ucfirst($fm);
 				}
@@ -227,6 +264,13 @@ else{
 
 			<p>$get_antispam_question<br />
 			<input type=\"text\" name=\"inp_antispam_answer\" size=\"15\" /><br />
+			</p>
+
+
+			<p>$l_i_accept:<br />
+			<input type=\"checkbox\" name=\"inp_cookies_policy\"> <a href=\"$root/legal/index.php?doc=cookies_policy&amp;l=$l\">$l_cookies_policy</a><br />
+			<input type=\"checkbox\" name=\"inp_privacy_policy\"> <a href=\"$root/legal/index.php?doc=privacy_policy&amp;l=$l\">$l_privacy_policy</a><br />
+			<input type=\"checkbox\" name=\"inp_terms_of_use\"> <a href=\"$root/legal/index.php?doc=terms_of_use&amp;l=$l\">$l_terms_of_use</a><br />
 			</p>
 
 			<p>

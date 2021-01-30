@@ -586,6 +586,7 @@ if($url_minus_one == "index.php"){
 		$language_case = "A";
 		$language_file = $language_file . "/ts_$url_minus_one.php";
 		$pageCSSFile = "_css/$url_minus_one.css";
+
 	}
 	else{
 		$language_case = "C";
@@ -732,4 +733,9 @@ else{
 		}
 	}
 }
+
+
+
+
+
 ?>

@@ -1,10 +1,10 @@
 <?php
 if(isset($_SESSION['admin_user_id'])){
-	$t_footer_link_groups = $mysqlPrefixSav . "footer_link_groups";
+	$t_webdesign_footer_link_groups = $mysqlPrefixSav . "webdesign_footer_link_groups";
 
-	mysqli_query($link,"DROP TABLE IF EXISTS $t_footer_link_groups") or die(mysqli_error());
+	mysqli_query($link,"DROP TABLE IF EXISTS $t_webdesign_footer_link_groups") or die(mysqli_error());
 
-	mysqli_query($link, "CREATE TABLE $t_footer_link_groups(
+	mysqli_query($link, "CREATE TABLE $t_webdesign_footer_link_groups(
 	   group_id INT NOT NULL AUTO_INCREMENT,
 	   PRIMARY KEY(group_id), 
  	   group_title VARCHAR(120),

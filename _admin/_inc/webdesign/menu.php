@@ -31,6 +31,7 @@ echo"
 			<li";if($page == "favicon"){echo" class=\"down\"";}echo"><a href=\"index.php?open=$open&amp;page=favicon&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "favicon"){echo" class=\"selected\"";}echo">Favicon</a></li>
 			<li";if($page == "logo"){echo" class=\"down\"";}echo"><a href=\"index.php?open=$open&amp;page=logo&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "logo"){echo" class=\"selected\"";}echo">Logo</a></li>
 			<li";if($page == "share_buttons"){echo" class=\"down\"";}echo"><a href=\"index.php?open=$open&amp;page=share_buttons&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "share_buttons"){echo" class=\"selected\"";}echo">Share buttons</a></li>
+			<li";if($page == "footer"){echo" class=\"down\"";}echo"><a href=\"index.php?open=$open&amp;page=footer&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "footer"){echo" class=\"selected\"";}echo">Footer</a></li>
 			
 ";
 

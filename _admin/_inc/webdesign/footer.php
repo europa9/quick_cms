@@ -17,8 +17,8 @@ if(!(isset($define_access_to_control_panel))){
 
 
 /*- Tables -------------------------------------------------------------------------- */
-$t_footer_link_groups = $mysqlPrefixSav . "footer_link_groups";
-$t_footer_link_links  = $mysqlPrefixSav . "footer_link_links";
+$t_webdesign_footer_link_groups = $mysqlPrefixSav . "webdesign_footer_link_groups";
+$t_webdesign_footer_link_links  = $mysqlPrefixSav . "webdesign_footer_link_links";
 
 /*- Variables ------------------------------------------------------------------------ */
 if(isset($_GET['group_id'])) {
@@ -112,7 +112,7 @@ if($action == ""){
 				   <td>";
 				// Groups
 				$editor_language_mysql = quote_smart($link, $editor_language);
-				$query = "SELECT group_id, group_title FROM $t_footer_link_groups WHERE group_language=$editor_language_mysql ORDER BY group_weight ASC";
+				$query = "SELECT group_id, group_title FROM $t_webdesign_footer_link_groups WHERE group_language=$editor_language_mysql ORDER BY group_weight ASC";
 				$result = mysqli_query($link, $query);
 				while($row = mysqli_fetch_row($result)) {
 					list($get_group_id, $get_group_title) = $row;
@@ -177,13 +177,13 @@ elseif($action == "new_group"){
 		$inp_created_by_user_id_mysql = quote_smart($link, $inp_created_by_user_id);
 
 		// Get weight
-		$query = "SELECT count(*) FROM $t_footer_link_groups WHERE group_language=$inp_language_mysql";
+		$query = "SELECT count(*) FROM $t_webdesign_footer_link_groups WHERE group_language=$inp_language_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_count_rows) = $row;
 
 		// Insert
-		mysqli_query($link, "INSERT INTO $t_footer_link_groups 
+		mysqli_query($link, "INSERT INTO $t_webdesign_footer_link_groups 
 		(group_id, group_title, group_language, group_weight, group_number_of_links, group_created, group_created_by_user_id) 
 		VALUES 
 		(NULL, $inp_title_mysql, $inp_language_mysql, '$get_count_rows', 0, $inp_date_mysql, $inp_created_by_user_id_mysql)")
@@ -268,7 +268,7 @@ elseif($action == "new_group"){
 elseif($action == "open_group"){
 	$group_id_mysql = quote_smart($link, $group_id);
 
-	$query = "SELECT group_id, group_title, group_language, group_weight, group_number_of_links FROM $t_footer_link_groups WHERE group_id=$group_id_mysql";
+	$query = "SELECT group_id, group_title, group_language, group_weight, group_number_of_links FROM $t_webdesign_footer_link_groups WHERE group_id=$group_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
 	list($get_current_group_id, $get_current_group_title, $get_current_group_language, $get_current_group_weight, $get_current_group_number_of_links) = $row;
@@ -333,7 +333,7 @@ elseif($action == "open_group"){
 					// Groups
 					$editor_language_mysql = quote_smart($link, $editor_language);
 					$x = 0;
-					$query = "SELECT group_id, group_title, group_weight FROM $t_footer_link_groups WHERE group_language=$editor_language_mysql ORDER BY group_weight ASC";
+					$query = "SELECT group_id, group_title, group_weight FROM $t_webdesign_footer_link_groups WHERE group_language=$editor_language_mysql ORDER BY group_weight ASC";
 					$result = mysqli_query($link, $query);
 					while($row = mysqli_fetch_row($result)) {
 						list($get_group_id, $get_group_title, $get_group_weight) = $row;
@@ -343,7 +343,7 @@ elseif($action == "open_group"){
 
 						// Check weight
 						if($get_group_weight != "$x"){
-							$result_update = mysqli_query($link, "UPDATE $t_footer_link_groups SET group_weight=$x WHERE group_id=$get_group_id") OR die(mysqli_error($link));
+							$result_update = mysqli_query($link, "UPDATE $t_webdesign_footer_link_groups SET group_weight=$x WHERE group_id=$get_group_id") OR die(mysqli_error($link));
 						}
 
 
@@ -455,14 +455,14 @@ elseif($action == "open_group"){
 					 <tbody>";
 					// Links
 					$x=0;
-					$query = "SELECT link_id, link_title, link_url, link_weight FROM $t_footer_link_links WHERE link_group_id=$get_current_group_id ORDER BY link_weight ASC";
+					$query = "SELECT link_id, link_title, link_url, link_weight FROM $t_webdesign_footer_link_links WHERE link_group_id=$get_current_group_id ORDER BY link_weight ASC";
 					$result = mysqli_query($link, $query);
 					while($row = mysqli_fetch_row($result)) {
 						list($get_link_id, $get_link_title, $get_link_url, $get_link_weight) = $row;
 
 						// Check weight
 						if($get_link_weight != "$x"){
-							$result_update = mysqli_query($link, "UPDATE $t_footer_link_links SET link_weight=$x WHERE link_id=$get_link_id") OR die(mysqli_error($link));
+							$result_update = mysqli_query($link, "UPDATE $t_webdesign_footer_link_links SET link_weight=$x WHERE link_id=$get_link_id") OR die(mysqli_error($link));
 						}
 
 
@@ -507,7 +507,7 @@ elseif($action == "open_group"){
 elseif($action == "move_group_up"){
 	$group_id_mysql = quote_smart($link, $group_id);
 
-	$query = "SELECT group_id, group_title, group_language, group_weight, group_number_of_links FROM $t_footer_link_groups WHERE group_id=$group_id_mysql";
+	$query = "SELECT group_id, group_title, group_language, group_weight, group_number_of_links FROM $t_webdesign_footer_link_groups WHERE group_id=$group_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
 	list($get_current_group_id, $get_current_group_title, $get_current_group_language, $get_current_group_weight, $get_current_group_number_of_links) = $row;
@@ -529,7 +529,7 @@ elseif($action == "move_group_up"){
 		// Find the group we need to change with
 		$inp_language_mysql = quote_smart($link, $get_current_group_language);
 		$switch_weight = $get_current_group_weight-1;
-		$query = "SELECT group_id, group_title, group_language, group_weight FROM $t_footer_link_groups WHERE group_language=$inp_language_mysql AND group_weight=$switch_weight";
+		$query = "SELECT group_id, group_title, group_language, group_weight FROM $t_webdesign_footer_link_groups WHERE group_language=$inp_language_mysql AND group_weight=$switch_weight";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_switch_group_id, $get_switch_group_title, $get_switch_group_language, $get_switch_group_weight) = $row;
@@ -540,11 +540,11 @@ elseif($action == "move_group_up"){
 		}
 		else{
 			// Update current
-			$result = mysqli_query($link, "UPDATE $t_footer_link_groups SET group_weight=$get_switch_group_weight WHERE group_id=$get_current_group_id") OR die(mysqli_error($link));
+			$result = mysqli_query($link, "UPDATE $t_webdesign_footer_link_groups SET group_weight=$get_switch_group_weight WHERE group_id=$get_current_group_id") OR die(mysqli_error($link));
 			
 
 			// Update switch
-			$result = mysqli_query($link, "UPDATE $t_footer_link_groups SET group_weight=$get_current_group_weight WHERE group_id=$get_switch_group_id") OR die(mysqli_error($link));
+			$result = mysqli_query($link, "UPDATE $t_webdesign_footer_link_groups SET group_weight=$get_current_group_weight WHERE group_id=$get_switch_group_id") OR die(mysqli_error($link));
 
 			// Header
 			$url = "index.php?open=$open&page=$page&action=open_group&group_id=$get_current_group_id&editor_language=$editor_language&l=$l&ft=success&fm=group_moved_up";
@@ -556,7 +556,7 @@ elseif($action == "move_group_up"){
 elseif($action == "move_group_down"){
 	$group_id_mysql = quote_smart($link, $group_id);
 
-	$query = "SELECT group_id, group_title, group_language, group_weight, group_number_of_links FROM $t_footer_link_groups WHERE group_id=$group_id_mysql";
+	$query = "SELECT group_id, group_title, group_language, group_weight, group_number_of_links FROM $t_webdesign_footer_link_groups WHERE group_id=$group_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
 	list($get_current_group_id, $get_current_group_title, $get_current_group_language, $get_current_group_weight, $get_current_group_number_of_links) = $row;
@@ -578,7 +578,7 @@ elseif($action == "move_group_down"){
 		// Find the group we need to change with
 		$inp_language_mysql = quote_smart($link, $get_current_group_language);
 		$switch_weight = $get_current_group_weight+1;
-		$query = "SELECT group_id, group_title, group_language, group_weight FROM $t_footer_link_groups WHERE group_language=$inp_language_mysql AND group_weight=$switch_weight";
+		$query = "SELECT group_id, group_title, group_language, group_weight FROM $t_webdesign_footer_link_groups WHERE group_language=$inp_language_mysql AND group_weight=$switch_weight";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_switch_group_id, $get_switch_group_title, $get_switch_group_language, $get_switch_group_weight) = $row;
@@ -589,11 +589,11 @@ elseif($action == "move_group_down"){
 		}
 		else{
 			// Update current
-			$result = mysqli_query($link, "UPDATE $t_footer_link_groups SET group_weight=$get_switch_group_weight WHERE group_id=$get_current_group_id") OR die(mysqli_error($link));
+			$result = mysqli_query($link, "UPDATE $t_webdesign_footer_link_groups SET group_weight=$get_switch_group_weight WHERE group_id=$get_current_group_id") OR die(mysqli_error($link));
 			
 
 			// Update switch
-			$result = mysqli_query($link, "UPDATE $t_footer_link_groups SET group_weight=$get_current_group_weight WHERE group_id=$get_switch_group_id") OR die(mysqli_error($link));
+			$result = mysqli_query($link, "UPDATE $t_webdesign_footer_link_groups SET group_weight=$get_current_group_weight WHERE group_id=$get_switch_group_id") OR die(mysqli_error($link));
 
 			// Header
 			$url = "index.php?open=$open&page=$page&action=open_group&group_id=$get_current_group_id&editor_language=$editor_language&l=$l&ft=success&fm=group_moved_up";
@@ -605,7 +605,7 @@ elseif($action == "move_group_down"){
 elseif($action == "edit_group"){
 	$group_id_mysql = quote_smart($link, $group_id);
 
-	$query = "SELECT group_id, group_title, group_language, group_weight, group_number_of_links FROM $t_footer_link_groups WHERE group_id=$group_id_mysql";
+	$query = "SELECT group_id, group_title, group_language, group_weight, group_number_of_links FROM $t_webdesign_footer_link_groups WHERE group_id=$group_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
 	list($get_current_group_id, $get_current_group_title, $get_current_group_language, $get_current_group_weight, $get_current_group_number_of_links) = $row;
@@ -648,7 +648,7 @@ elseif($action == "edit_group"){
 			$inp_my_user_id_mysql = quote_smart($link, $inp_my_user_id);
 			
 			// Update
-			$result = mysqli_query($link, "UPDATE $t_footer_link_groups SET 
+			$result = mysqli_query($link, "UPDATE $t_webdesign_footer_link_groups SET 
 							group_title=$inp_title_mysql, 
 							group_language=$inp_language_mysql,
 							group_updated=$inp_date_mysql, 
@@ -729,7 +729,7 @@ elseif($action == "edit_group"){
 elseif($action == "delete_group"){
 	$group_id_mysql = quote_smart($link, $group_id);
 
-	$query = "SELECT group_id, group_title, group_language, group_weight, group_number_of_links FROM $t_footer_link_groups WHERE group_id=$group_id_mysql";
+	$query = "SELECT group_id, group_title, group_language, group_weight, group_number_of_links FROM $t_webdesign_footer_link_groups WHERE group_id=$group_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
 	list($get_current_group_id, $get_current_group_title, $get_current_group_language, $get_current_group_weight, $get_current_group_number_of_links) = $row;
@@ -750,8 +750,8 @@ elseif($action == "delete_group"){
 	else{
 		if($process == "1"){
 			// Delete
-			$result = mysqli_query($link, "DELETE FROM $t_footer_link_groups WHERE group_id=$get_current_group_id") OR die(mysqli_error($link));
-			$result = mysqli_query($link, "DELETE FROM $t_footer_link_links WHERE link_group_id=$get_current_group_id") OR die(mysqli_error($link));
+			$result = mysqli_query($link, "DELETE FROM $t_webdesign_footer_link_groups WHERE group_id=$get_current_group_id") OR die(mysqli_error($link));
+			$result = mysqli_query($link, "DELETE FROM $t_webdesign_footer_link_links WHERE link_group_id=$get_current_group_id") OR die(mysqli_error($link));
 
 			header("Location: index.php?open=$open&page=$page&ft=success&fm=group_deleted&editor_language=$editor_language");
 			exit;
@@ -800,7 +800,7 @@ elseif($action == "delete_group"){
 elseif($action == "new_link"){
 	$group_id_mysql = quote_smart($link, $group_id);
 
-	$query = "SELECT group_id, group_title, group_language, group_weight, group_number_of_links FROM $t_footer_link_groups WHERE group_id=$group_id_mysql";
+	$query = "SELECT group_id, group_title, group_language, group_weight, group_number_of_links FROM $t_webdesign_footer_link_groups WHERE group_id=$group_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
 	list($get_current_group_id, $get_current_group_title, $get_current_group_language, $get_current_group_weight, $get_current_group_number_of_links) = $row;
@@ -873,14 +873,14 @@ elseif($action == "new_link"){
 
 
 			// Get weight
-			$query = "SELECT count(*) FROM $t_footer_link_links WHERE link_group_id=$get_current_group_id";
+			$query = "SELECT count(*) FROM $t_webdesign_footer_link_links WHERE link_group_id=$get_current_group_id";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
 			list($get_count_rows) = $row;
 
 			// Insert
 			$inp_language_mysql = quote_smart($link, $get_current_group_language);
-			mysqli_query($link, "INSERT INTO $t_footer_link_links 
+			mysqli_query($link, "INSERT INTO $t_webdesign_footer_link_links 
 			(link_id, link_group_id, link_title, link_url, link_internal_or_external, link_language, link_weight, link_created, link_created_by_user_id) 
 			VALUES 
 			(NULL, $get_current_group_id, $inp_title_mysql, $inp_url_mysql, '$inp_internal_or_external', $inp_language_mysql, '$get_count_rows', $inp_date_mysql, $my_user_id_mysql)")
@@ -950,7 +950,7 @@ elseif($action == "new_link"){
 elseif($action == "move_link_up"){
 	$link_id_mysql = quote_smart($link, $link_id);
 
-	$query = "SELECT link_id, link_group_id, link_title, link_url, link_internal_or_external, link_language, link_weight FROM $t_footer_link_links WHERE link_id=$link_id_mysql";
+	$query = "SELECT link_id, link_group_id, link_title, link_url, link_internal_or_external, link_language, link_weight FROM $t_webdesign_footer_link_links WHERE link_id=$link_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
 	list($get_current_link_id, $get_current_link_group_id, $get_current_link_title, $get_current_link_url, $get_current_link_internal_or_external, $get_current_link_language, $get_current_link_weight) = $row;
@@ -971,7 +971,7 @@ elseif($action == "move_link_up"){
 	else{
 		// Find switch
 		$switch_weight = $get_current_link_weight-1;
-		$query = "SELECT link_id, link_group_id, link_title, link_url, link_internal_or_external, link_language, link_weight FROM $t_footer_link_links WHERE link_group_id=$get_current_link_group_id AND link_weight=$switch_weight";
+		$query = "SELECT link_id, link_group_id, link_title, link_url, link_internal_or_external, link_language, link_weight FROM $t_webdesign_footer_link_links WHERE link_group_id=$get_current_link_group_id AND link_weight=$switch_weight";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_switch_link_id, $get_switch_link_group_id, $get_switch_link_title, $get_switch_link_url, $get_switch_link_internal_or_external, $get_switch_link_language, $get_switch_link_weight) = $row;
@@ -982,11 +982,11 @@ elseif($action == "move_link_up"){
 		}
 		else{
 			// Update current
-			$result = mysqli_query($link, "UPDATE $t_footer_link_links SET link_weight=$get_switch_link_weight WHERE link_id=$get_current_link_id") OR die(mysqli_error($link));
+			$result = mysqli_query($link, "UPDATE $t_webdesign_footer_link_links SET link_weight=$get_switch_link_weight WHERE link_id=$get_current_link_id") OR die(mysqli_error($link));
 			
 
 			// Update switch
-			$result = mysqli_query($link, "UPDATE $t_footer_link_links SET link_weight=$get_current_link_weight WHERE link_id=$get_switch_link_id") OR die(mysqli_error($link));
+			$result = mysqli_query($link, "UPDATE $t_webdesign_footer_link_links SET link_weight=$get_current_link_weight WHERE link_id=$get_switch_link_id") OR die(mysqli_error($link));
 		
 			// Header
 			$url = "index.php?open=$open&page=$page&action=open_group&group_id=$get_current_link_group_id&editor_language=$editor_language&l=$l&ft=success&fm=link_moved_up";
@@ -999,7 +999,7 @@ elseif($action == "move_link_up"){
 elseif($action == "move_link_down"){
 	$link_id_mysql = quote_smart($link, $link_id);
 
-	$query = "SELECT link_id, link_group_id, link_title, link_url, link_internal_or_external, link_language, link_weight FROM $t_footer_link_links WHERE link_id=$link_id_mysql";
+	$query = "SELECT link_id, link_group_id, link_title, link_url, link_internal_or_external, link_language, link_weight FROM $t_webdesign_footer_link_links WHERE link_id=$link_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
 	list($get_current_link_id, $get_current_link_group_id, $get_current_link_title, $get_current_link_url, $get_current_link_internal_or_external, $get_current_link_language, $get_current_link_weight) = $row;
@@ -1020,7 +1020,7 @@ elseif($action == "move_link_down"){
 	else{
 		// Find switch
 		$switch_weight = $get_current_link_weight+1;
-		$query = "SELECT link_id, link_group_id, link_title, link_url, link_internal_or_external, link_language, link_weight FROM $t_footer_link_links WHERE link_group_id=$get_current_link_group_id AND link_weight=$switch_weight";
+		$query = "SELECT link_id, link_group_id, link_title, link_url, link_internal_or_external, link_language, link_weight FROM $t_webdesign_footer_link_links WHERE link_group_id=$get_current_link_group_id AND link_weight=$switch_weight";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_switch_link_id, $get_switch_link_group_id, $get_switch_link_title, $get_switch_link_url, $get_switch_link_internal_or_external, $get_switch_link_language, $get_switch_link_weight) = $row;
@@ -1031,11 +1031,11 @@ elseif($action == "move_link_down"){
 		}
 		else{
 			// Update current
-			$result = mysqli_query($link, "UPDATE $t_footer_link_links SET link_weight=$get_switch_link_weight WHERE link_id=$get_current_link_id") OR die(mysqli_error($link));
+			$result = mysqli_query($link, "UPDATE $t_webdesign_footer_link_links SET link_weight=$get_switch_link_weight WHERE link_id=$get_current_link_id") OR die(mysqli_error($link));
 			
 
 			// Update switch
-			$result = mysqli_query($link, "UPDATE $t_footer_link_links SET link_weight=$get_current_link_weight WHERE link_id=$get_switch_link_id") OR die(mysqli_error($link));
+			$result = mysqli_query($link, "UPDATE $t_webdesign_footer_link_links SET link_weight=$get_current_link_weight WHERE link_id=$get_switch_link_id") OR die(mysqli_error($link));
 		
 			// Header
 			$url = "index.php?open=$open&page=$page&action=open_group&group_id=$get_current_link_group_id&editor_language=$editor_language&l=$l&ft=success&fm=link_moved_up";
@@ -1048,7 +1048,7 @@ elseif($action == "move_link_down"){
 elseif($action == "edit_link"){
 	$link_id_mysql = quote_smart($link, $link_id);
 
-	$query = "SELECT link_id, link_group_id, link_title, link_url, link_internal_or_external, link_language, link_weight FROM $t_footer_link_links WHERE link_id=$link_id_mysql";
+	$query = "SELECT link_id, link_group_id, link_title, link_url, link_internal_or_external, link_language, link_weight FROM $t_webdesign_footer_link_links WHERE link_id=$link_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
 	list($get_current_link_id, $get_current_link_group_id, $get_current_link_title, $get_current_link_url, $get_current_link_internal_or_external, $get_current_link_language, $get_current_link_weight) = $row;
@@ -1068,7 +1068,7 @@ elseif($action == "edit_link"){
 	}
 	else{
 		// Find group
-		$query = "SELECT group_id, group_title, group_language, group_weight, group_number_of_links FROM $t_footer_link_groups WHERE group_id=$get_current_link_group_id";
+		$query = "SELECT group_id, group_title, group_language, group_weight, group_number_of_links FROM $t_webdesign_footer_link_groups WHERE group_id=$get_current_link_group_id";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_current_group_id, $get_current_group_title, $get_current_group_language, $get_current_group_weight, $get_current_group_number_of_links) = $row;
@@ -1129,7 +1129,7 @@ elseif($action == "edit_link"){
 
 
 			// UPDATE
-			mysqli_query($link, "UPDATE $t_footer_link_links SET
+			mysqli_query($link, "UPDATE $t_webdesign_footer_link_links SET
 						link_title=$inp_title_mysql, 
 						link_url=$inp_url_mysql, 
 						link_internal_or_external='$inp_internal_or_external', 
@@ -1201,7 +1201,7 @@ elseif($action == "edit_link"){
 elseif($action == "delete_link"){
 	$link_id_mysql = quote_smart($link, $link_id);
 
-	$query = "SELECT link_id, link_group_id, link_title, link_url, link_internal_or_external, link_language, link_weight FROM $t_footer_link_links WHERE link_id=$link_id_mysql";
+	$query = "SELECT link_id, link_group_id, link_title, link_url, link_internal_or_external, link_language, link_weight FROM $t_webdesign_footer_link_links WHERE link_id=$link_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
 	list($get_current_link_id, $get_current_link_group_id, $get_current_link_title, $get_current_link_url, $get_current_link_internal_or_external, $get_current_link_language, $get_current_link_weight) = $row;
@@ -1221,7 +1221,7 @@ elseif($action == "delete_link"){
 	}
 	else{
 		// Find group
-		$query = "SELECT group_id, group_title, group_language, group_weight, group_number_of_links FROM $t_footer_link_groups WHERE group_id=$get_current_link_group_id";
+		$query = "SELECT group_id, group_title, group_language, group_weight, group_number_of_links FROM $t_webdesign_footer_link_groups WHERE group_id=$get_current_link_group_id";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_current_group_id, $get_current_group_title, $get_current_group_language, $get_current_group_weight, $get_current_group_number_of_links) = $row;
@@ -1230,7 +1230,7 @@ elseif($action == "delete_link"){
 		if($process == "1"){
 			
 			// Deelte
-			mysqli_query($link, "DELETE FROM $t_footer_link_links WHERE link_id=$get_current_link_id") or die(mysqli_error($link));
+			mysqli_query($link, "DELETE FROM $t_webdesign_footer_link_links WHERE link_id=$get_current_link_id") or die(mysqli_error($link));
 
 			header("Location: index.php?open=$open&page=$page&action=open_group&group_id=$get_current_link_group_id&ft=success&fm=link_deleted&editor_language=$editor_language");
 			exit;

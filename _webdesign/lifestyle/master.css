@@ -1843,3 +1843,19 @@ span.a_main_below_headline_text_ad_arrow{
 		text-align: center;
 	}
 }
+
+/*- Cookies ----------------------------------------------------------------- */
+#div_legal{
+	background: #000;
+	text-align: center;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+}
+#div_legal > p{
+	color: #fff;
+}
+a.legal_read_more{
+	color: #fff;
+	text-decoration: underline;
+}

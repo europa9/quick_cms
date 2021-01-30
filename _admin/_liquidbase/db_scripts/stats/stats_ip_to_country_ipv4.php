@@ -1,6 +1,30 @@
 <?php
 if(isset($_SESSION['admin_user_id'])){
 
+
+
+	/*- Functions -------------------------------------------------------------------------- */
+	function delete_directory($dirname) {
+		echo"<p>delete_directory($dirname)</p>";
+		if (is_dir($dirname))
+			$dir_handle = opendir($dirname);
+			if (!$dir_handle)
+				return false;
+			while($file = readdir($dir_handle)) {
+				if ($file != "." && $file != "..") {
+					if (!is_dir($dirname."/".$file))
+					unlink($dirname."/".$file);
+               		else
+                     		delete_directory($dirname.'/'.$file);
+           		}
+     		}
+     		closedir($dir_handle);
+     		rmdir($dirname);
+    		return true;
+	}
+
+
+	/*- Tables -------------------------------------------------------------------------- */
 	$t_stats_ip_to_country_ipv4 		= $mysqlPrefixSav . "stats_ip_to_country_ipv4";
 	$t_stats_ip_to_country_ipv6 		= $mysqlPrefixSav . "stats_ip_to_country_ipv6";
 	$t_stats_ip_to_country_geonames 	= $mysqlPrefixSav . "stats_ip_to_country_geonames";
@@ -38,6 +62,15 @@ else{
 		   ip_is_anonymous_proxy INT,
 		   ip_is_satellite_provider INT)")
 	   or die(mysqli_error($link));
+
+
+	// Truncate cache
+	// Delete cache
+	delete_directory("../../_cache");
+	if(!(is_dir("../../_cache"))){
+		mkdir("../../_cache");
+	}
+	
 }
 
 

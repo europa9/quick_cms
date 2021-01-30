@@ -71,4 +71,11 @@ $l_your_information = "Your information";
 $l_nice_to_meet_you = "Nice to meet you!";
 $l_are_you_ready_to_upload_your_image = "Are you ready to upload your image?";
 $l_alias = "Alias";
+$l_legal = "Legal";
+$l_i_accept = "I accept";
+$l_cookies_policy = "Cookies policy";
+$l_privacy_policy = "Privacy policy";
+$l_terms_of_use = "Terms of use";
+$l_all_policies_must_be_accepted = "All policies must be accepted";
+ 
 ?>

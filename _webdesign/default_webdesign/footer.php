@@ -58,6 +58,12 @@ else{
 <!-- //Footer -->
 
 
+<!-- Cookies warning -->
+	";
+	include("$root/_admin/_functions/cookies_warning_include.php");
+	echo"
+<!-- //Cookies warning -->
+
 </body>
 </html>";
 	}

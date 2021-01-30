@@ -105,6 +105,16 @@ if($process == "1"){
 		echo "FAILURE!!! " . $stmt->error; die;
 	}
 
+	// Create page
+	if(!(is_dir("../legal"))){
+		mkdir("../legal");
+	}
+
+	// Input
+	$input="<?php
+
+?>";
+
 	// Header
 	header("Location: index.php?open=$open&page=$page&editor_language=$editor_language&ft=success&fm=changes_saved");
 	exit;
@@ -172,6 +182,11 @@ echo"
 		</p>
 	</form>
 <!-- //Select language -->
+
+	<p>
+	URL:<br />
+	<a href=\"../legal/index.php?doc=cookies_policy&amp;l=$editor_language\">../legal/index.php?doc=cookies_policy&amp;l=$editor_language</a>
+	</p>
 
 <!-- Edit form -->
 

@@ -174,6 +174,11 @@ echo"
 	</form>
 <!-- //Select language -->
 
+	<p>
+	URL:<br />
+	<a href=\"../legal/index.php?doc=privacy_policy&amp;l=$editor_language\">../legal/index.php?doc=privacy_policy&amp;l=$editor_language</a>
+	</p>
+
 <!-- Edit form -->
 
 	<form method=\"post\" action=\"index.php?open=$open&amp;page=$page&amp;editor_language=$editor_language&amp;process=1\" enctype=\"multipart/form-data\">
