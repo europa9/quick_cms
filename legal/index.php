@@ -78,7 +78,7 @@ if($doc == "privacy_policy"){
 }
 elseif($doc == "terms_of_use"){
 	// Get policy
-	$query = "SELECT terms_of_use_id, terms_of_use_title, terms_of_use_language, terms_of_use_text, terms_of_use_is_active, terms_of_use_created_date, terms_of_use_created_date_saying, terms_of_use_created_by_user_id, terms_of_use_created_by_user_name, terms_of_use_created_by_user_email, terms_of_use_created_by_name, terms_of_use_updated_date, terms_of_use_updated_date_saying, terms_of_use_updated_by_user_id, terms_of_use_updated_by_user_name, terms_of_use_updated_by_user_email, terms_of_use_updated_by_name FROM $t_pages_terms_of_use WHERE terms_of_use_language=$l_mysql";
+	$query = "SELECT terms_of_use_id, terms_of_use_title, terms_of_use_text, terms_of_use_is_active, terms_of_use_created_date, terms_of_use_created_date_saying, terms_of_use_created_by_user_id, terms_of_use_created_by_user_name, terms_of_use_created_by_user_email, terms_of_use_created_by_name, terms_of_use_updated_date, terms_of_use_updated_date_saying, terms_of_use_updated_by_user_id, terms_of_use_updated_by_user_name, terms_of_use_updated_by_user_email, terms_of_use_updated_by_name FROM $t_pages_terms_of_use WHERE terms_of_use_language=$l_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
 	list($get_current_id, $get_current_title, $get_current_text, $get_current_is_active, $get_current_created_date, $get_current_created_date_saying, $get_current_created_by_user_id, $get_current_created_by_user_name, $get_current_created_by_user_email, $get_current_created_by_name, $get_current_updated_date, $get_current_updated_date_saying, $get_current_updated_by_user_id, $get_current_updated_by_user_name, $get_current_updated_by_user_email, $get_current_updated_by_name) = $row;
