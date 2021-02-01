@@ -367,6 +367,10 @@ WHERE food_id='$get_food_id'") or die(mysqli_error($link));
 				<script>
 				\$(document).ready(function(){
 					\$('[name=\"inp_food_energy_calculated\"]').focus();
+					var input = $('[name=\"inp_food_energy_calculated\"]').val();
+					input = input.replace(\",\", \".\");
+					output = Math.round((input/$get_food_serving_size_gram)*100);
+					\$(\".food_energy\").text(output);
 				});
 				</script>
 			<!-- //Focus -->
@@ -403,7 +407,7 @@ WHERE food_id='$get_food_id'") or die(mysqli_error($link));
 				<span>$l_per_hundred</span>
 			   </th>
 			   <th scope=\"col\" style=\"text-align: center;padding: 6px 4px 6px 4px;vertical-align: bottom;\">
-				<span>$l_per $get_food_serving_size_pcs_measurement</span>
+				<span>$l_serving<br />$get_food_serving_size_gram $get_food_serving_size_gram_measurement ($get_food_serving_size_pcs $get_food_serving_size_pcs_measurement)</span>
 			   </th>
 			  </tr>
 			 </thead>

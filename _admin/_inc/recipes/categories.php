@@ -942,5 +942,23 @@ elseif($action == "translations"){
 		</p>
 	<!-- //Back -->
  	";
+
+	// Make sure that there are no categories translated that should not be there
+	$query = "SELECT category_translation_id, category_id, category_translation_value FROM $t_recipes_categories_translations WHERE category_translation_language=$editor_language_mysql ORDER BY category_translation_value ASC";
+	$result = mysqli_query($link, $query);
+	while($row = mysqli_fetch_row($result)) {
+		list($get_category_translation_id, $get_t_category_id, $get_category_translation_value) = $row;
+
+
+		$query_c = "SELECT category_id FROM $t_recipes_categories WHERE category_id=$get_t_category_id";
+		$result_c = mysqli_query($link, $query_c);
+		$row_c = mysqli_fetch_row($result_c);
+		list($get_category_id) = $row_c;
+		if($get_category_id == ""){
+			echo"<div class=\"info\"><p>Cleanup - Delete $get_category_translation_value from translated</p></div>\n";
+			
+			mysqli_query($link, "DELETE FROM $t_recipes_categories_translations WHERE category_translation_id=$get_category_translation_id") or die(mysqli_error($link));
+		}
+	}
 } // action == "";
 ?>

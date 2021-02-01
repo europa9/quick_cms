@@ -311,7 +311,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				<span>$l_per_hundred</span>
 			   </th>
 			   <th scope=\"col\" style=\"text-align: center;padding: 6px 4px 6px 4px;vertical-align: bottom;\">
-				<span>$l_per $get_food_serving_size_pcs_measurement</span>
+				<span>$l_serving<br />$get_food_serving_size_gram $get_food_serving_size_gram_measurement ($get_food_serving_size_pcs $get_food_serving_size_pcs_measurement)</span>
 			   </th>
 			  </tr>
 			 </thead>

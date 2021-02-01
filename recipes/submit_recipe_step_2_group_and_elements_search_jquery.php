@@ -331,7 +331,7 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 				";
 
 				if($get_food_serving_size_pcs_measurement != "$get_food_serving_size_gram_measurement"){
-					echo"<a href=\"#\" id=\"food_click_action_pcs_$get_food_id\" class=\"btn_default\">$get_food_serving_size_pcs_measurement</a><br />\n";
+					echo"<a href=\"#\" id=\"food_click_action_pcs_$get_food_id\" class=\"btn_default\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement</a><br />\n";
 				}
 				echo"
 				</p>\n";
