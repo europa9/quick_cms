@@ -250,7 +250,7 @@ else{
 				$inp_food_dietary_fiber_calculated = round($inp_food_dietary_fiber*$get_food_serving_size_gram/100, 0);
 				$inp_food_carbohydrates_of_which_sugars_calculated = round($inp_food_carbohydrates_of_which_sugars*$get_food_serving_size_gram/100, 0);
 				$inp_food_proteins_calculated = round($inp_food_proteins*$get_food_serving_size_gram/100, 0);
-				$inp_food_salt_calculated = round($inp_food_salt*$get_food_serving_size_gram/100, 0);
+				$inp_food_salt_calculated = round($inp_food_salt*$get_food_serving_size_gram/100, 2);
 				$inp_food_sodium_calculated = round($inp_food_sodium*$get_food_serving_size_gram/100, 0);
 
 

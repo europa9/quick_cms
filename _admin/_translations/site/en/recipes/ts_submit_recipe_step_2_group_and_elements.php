@@ -63,4 +63,16 @@ $l_ingredient = "Ingredient";
 $l_salt_in_gram = "Salt in gram";
 $l_sodium_in_mg = "Sodium in mg";
 $l_dietary_fiber = "Dietary fiber";
+
+
+$l_cal_lowercase = "cal";
+$l_proteins_lowercase = "proteins";
+$l_fat_lowercase = "fat";
+$l_saturated_fatty_acids_lowercase = "saturated fatty acids";
+$l_carbs_lowercase = "carbs";
+$l_dietary_fiber_lowercase = "dietary fiber";
+$l_sugar_lowercase = "sugar";
+$l_salt_lowercase = "salt";
+$l_sodium_lowercase = "sodium";
+
 ?>
