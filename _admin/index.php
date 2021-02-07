@@ -161,7 +161,7 @@ if(file_exists($mysql_config_file)){
 	
 	$t_pages 			= $mysqlPrefixSav . "pages";
 	$t_pages_comments		= $mysqlPrefixSav . "pages_comments";
-	$t_navigation 			= $mysqlPrefixSav . "navigation";
+	$t_pages_navigation 		= $mysqlPrefixSav . "pages_navigation";
 
 	$t_comments		= $mysqlPrefixSav . "comments";
 	$t_comments_users_block	= $mysqlPrefixSav . "comments_users_block";
@@ -197,17 +197,6 @@ if(file_exists($mysql_config_file)){
 
 	/*- Tables ---------------------------------------------------------------------------- */
 	$t_social_media 	= $mysqlPrefixSav . "social_media";
-
-		
-
-	/*- Tables courses ---------------------------------------------------------------------------- */
-	$t_courses_title_translations	 = $mysqlPrefixSav . "courses_title_translations";
-	$t_courses_index		 = $mysqlPrefixSav . "courses_index";
-	$t_courses_categories		 = $mysqlPrefixSav . "courses_categories";
-	$t_courses_modules		 = $mysqlPrefixSav . "courses_modules";
-	$t_courses_modules_read		 = $mysqlPrefixSav . "courses_modules_read";
-	$t_courses_modules_contents 	 = $mysqlPrefixSav . "courses_modules_contents";
-	$t_courses_modules_contents_read = $mysqlPrefixSav . "courses_modules_contents_read";
 }
 
 /*- Log out -------------------------------------------------------------------------- */

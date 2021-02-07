@@ -120,7 +120,7 @@ if($action == ""){
 
 		// Select
 		$editor_language_mysql = quote_smart($link, $editor_language);
-		$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url, navigation_weight FROM $t_navigation WHERE navigation_parent_id='0' AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
+		$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url, navigation_weight FROM $t_pages_navigation WHERE navigation_parent_id='0' AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
 			list($get_navigation_id, $get_navigation_parent_id, $get_navigation_title, $get_navigation_url, $get_navigation_weight) = $row;
@@ -170,7 +170,7 @@ if($action == ""){
      		 </tr>";
 
 		// Children lvel 1
-		$query_b = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url, navigation_weight FROM $t_navigation WHERE navigation_parent_id=$get_navigation_id AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
+		$query_b = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url, navigation_weight FROM $t_pages_navigation WHERE navigation_parent_id=$get_navigation_id AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
 		$result_b = mysqli_query($link, $query_b);
 		while($row_b = mysqli_fetch_row($result_b)) {
 			list($get_b_navigation_id, $get_b_navigation_parent_id, $get_b_navigation_title, $get_b_navigation_url, $get_b_navigation_weight) = $row_b;
@@ -222,7 +222,7 @@ if($action == ""){
      			 </tr>";
 
 			// Children level 2
-			$query_c = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url, navigation_weight FROM $t_navigation WHERE navigation_parent_id=$get_b_navigation_id AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
+			$query_c = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url, navigation_weight FROM $t_pages_navigation WHERE navigation_parent_id=$get_b_navigation_id AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
 			$result_c = mysqli_query($link, $query_c);
 			while($row_c = mysqli_fetch_row($result_c)) {
 				list($get_c_navigation_id, $get_c_navigation_parent_id, $get_c_navigation_title, $get_c_navigation_url, $get_c_navigation_weight) = $row_c;
@@ -349,8 +349,7 @@ elseif($action == "new"){
 		$inp_parent = output_html($inp_parent);
 		$inp_parent_mysql = quote_smart($link, $inp_parent);
 
-		$inp_created = date("Y-m-d");
-		$inp_created_mysql = quote_smart($link, $inp_created);
+		$datetime = date("Y-m-d H:i:s");
 
 
 		$inp_created_by_user_id = $_SESSION['admin_user_id'];
@@ -358,18 +357,95 @@ elseif($action == "new"){
 		$inp_created_by_user_id_mysql = quote_smart($link, $inp_created_by_user_id);
 
 		// Get weight
-		$query = "SELECT count(*) FROM $t_navigation WHERE navigation_parent_id=$inp_parent_mysql AND navigation_language=$inp_language_mysql";
+		$query = "SELECT count(*) FROM $t_pages_navigation WHERE navigation_parent_id=$inp_parent_mysql AND navigation_language=$inp_language_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_count_rows) = $row;
 
 		// Insert
-		mysqli_query($link, "INSERT INTO $t_navigation 
-		(navigation_id, navigation_parent_id, navigation_title, navigation_title_clean, navigation_url, navigation_url_path, navigation_url_query, navigation_language, navigation_internal_or_external,  navigation_weight, navigation_created, navigation_created_by_user_id) 
+		mysqli_query($link, "INSERT INTO $t_pages_navigation 
+		(navigation_id, navigation_parent_id, navigation_title, navigation_title_clean, navigation_url, navigation_url_path, navigation_url_query, navigation_language, navigation_internal_or_external,  navigation_weight, navigation_created_datetime, navigation_created_by_user_id) 
 		VALUES 
-		(NULL, $inp_parent_mysql, $inp_title_mysql, $inp_slug_mysql, $inp_url_mysql, $inp_url_path_mysql, $inp_url_query_mysql, $inp_language_mysql, '$inp_internal_or_external', '$get_count_rows', $inp_created_mysql, $inp_created_by_user_id_mysql)")
+		(NULL, $inp_parent_mysql, $inp_title_mysql, $inp_slug_mysql, $inp_url_mysql, $inp_url_path_mysql, $inp_url_query_mysql, $inp_language_mysql, '$inp_internal_or_external', '$get_count_rows', '$datetime', $inp_created_by_user_id_mysql)")
 		or die(mysqli_error($link));
 
+		// Get ID
+		$query = "SELECT navigation_id FROM $t_pages_navigation WHERE navigation_created_datetime='$datetime'";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_current_navigation_id) = $row;
+
+		// Dir
+		$upload_path = "../_uploads/pages/navigation/$inp_language";
+		if(!(is_dir("../_uploads"))){
+			mkdir("../_uploads");
+		}
+		if(!(is_dir("../_uploads/pages"))){
+			mkdir("../_uploads/pages");
+		}
+		if(!(is_dir("../_uploads/pages/navigation"))){
+			mkdir("../_uploads/pages/navigation");
+		}
+		if(!(is_dir("../_uploads/pages/navigation/$inp_language"))){
+			mkdir("../_uploads/pages/navigation/$inp_language");
+		}
+
+		// Upload icon
+		$icons_size_array = array("18x18", "24x24");
+		$icons_types_array = array("inactive", "hover", "active");
+		for($x=0;$x<sizeof($icons_size_array);$x++){
+			for($y=0;$y<sizeof($icons_types_array);$y++){
+
+				// Name (inp_icon_18x18_inactive)
+				$file_name = basename($_FILES["inp_icon_" . $icons_size_array[$x] . "_" . $icons_types_array[$y]]['name']);
+				$file_exp = explode('.', $file_name); 
+				$file_type = $file_exp[count($file_exp) -1]; 
+				$file_type = strtolower("$file_type");
+
+				// New name
+				$new_name = $inp_slug . "_" . $icons_size_array[$x] . "_" . $icons_types_array[$y] . "." . $file_type;
+
+				// Sjekk om det er en OK filendelse
+				if($file_type == "jpg" OR $file_type == "jpeg" OR $file_type == "png" OR $file_type == "gif"){
+					if(move_uploaded_file($_FILES["inp_icon_" . $icons_size_array[$x] . "_" . $icons_types_array[$y]]['tmp_name'], "$upload_path/$new_name")) {
+						
+						// Sjekk om det faktisk er et bilde som er lastet opp
+						list($width,$height) = getimagesize("$upload_path/$new_name");
+						if(is_numeric($width) && is_numeric($height)){
+							// Update MySQL
+
+							// path
+							$inp_path = "_uploads/pages/navigation/$inp_language";
+							$inp_path_mysql = quote_smart($link, $inp_path);
+
+							// icon
+							$inp_icon = $new_name;
+							$inp_icon_mysql = quote_smart($link, $inp_icon);
+							
+
+							// Update MySQL
+							$result = mysqli_query($link, "UPDATE $t_pages_navigation SET 
+											navigation_icon_path=$inp_path_mysql, 
+											navigation_icon_$icons_size_array[$x]" . "_" . "$icons_types_array[$y]=$inp_icon_mysql
+											WHERE navigation_id=$get_current_navigation_id") or die(mysqli_error($link));
+						}
+						else{
+							// Not a image
+							unlink("$upload_path/$new_name");
+						}
+					}
+					else{
+						// Could not upload
+					}
+				}
+				else{
+					// Wrong file type
+				}
+
+
+			}  // for icons type
+		} // for icons size
+	
 
 		header("Location: index.php?open=$open&page=navigation&action=new&focus=inp_name&ft=success&fm=menu_item_created&editor_language=$editor_language");
 		exit;
@@ -442,7 +518,7 @@ elseif($action == "new"){
 		<option value=\"0\">-</option>";
 		
 		$editor_language_mysql = quote_smart($link, $editor_language);
-		$query = "SELECT navigation_id, navigation_title FROM $t_navigation WHERE navigation_parent_id='0' AND navigation_language=$editor_language_mysql";
+		$query = "SELECT navigation_id, navigation_title FROM $t_pages_navigation WHERE navigation_parent_id='0' AND navigation_language=$editor_language_mysql";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
 			list($get_navigation_id, $get_navigation_title) = $row;
@@ -450,7 +526,7 @@ elseif($action == "new"){
 			echo"		<option value=\"$get_navigation_id\">$get_navigation_title</option>\n";
 
 			// Sub
-			$query_b = "SELECT navigation_id, navigation_title FROM $t_navigation WHERE navigation_parent_id='$get_navigation_id' AND navigation_editor_language=$editor_language_mysql";
+			$query_b = "SELECT navigation_id, navigation_title FROM $t_pages_navigation WHERE navigation_parent_id='$get_navigation_id' AND navigation_editor_language=$editor_language_mysql";
 			$result_b = mysqli_query($link, $query_b);
 			while($row_b = mysqli_fetch_row($result_b)) {
 				list($get_b_navigation_id, $get_b_navigation_title) = $row_b;
@@ -461,6 +537,30 @@ elseif($action == "new"){
 		echo"
 	</select>
 	</p>
+
+	<!- icons -->
+	";
+	$icons_size_array = array("18x18", "24x24");
+	$icons_types_array = array("inactive", "hover", "active");
+	for($x=0;$x<sizeof($icons_size_array);$x++){
+		echo"
+		<hr />
+		";
+		for($y=0;$y<sizeof($icons_types_array);$y++){
+
+			// Name (inp_icon_18x18_inactive)
+			$inp_name = "inp_icon_" . $icons_size_array[$x] . "_" . $icons_types_array[$y];
+
+			echo"
+			<p><b>Icon $icons_size_array[$x] $icons_types_array[$y]:</b><br />
+			<input type=\"file\" name=\"$inp_name\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+			</p>";
+		}
+	}
+	echo"
+
+
+
 	<p><input type=\"submit\" value=\"$l_create\" class=\"btn btn-success btn-sm\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
 	 
 	</form>
@@ -488,10 +588,10 @@ elseif($action == "new"){
 elseif($action == "edit"){
 	$id_mysql = quote_smart($link, $id);
 
-	$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url, navigation_url_path, navigation_url_query, navigation_language FROM $t_navigation WHERE navigation_id=$id_mysql";
+	$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_title_clean, navigation_url, navigation_url_path, navigation_url_query, navigation_language, navigation_internal_or_external, navigation_icon_path, navigation_icon_16x16_inactive, navigation_icon_16x16_hover, navigation_icon_16x16_active, navigation_icon_18x18_inactive, navigation_icon_18x18_hover, navigation_icon_18x18_active, navigation_icon_24x24_inactive, navigation_icon_24x24_hover, navigation_icon_24x24_active, navigation_weight, navigation_created_datetime, navigation_created_by_user_id, navigation_updated_datetime, navigation_updated_by_user_id FROM $t_pages_navigation WHERE navigation_id=$id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_navigation_id, $get_navigation_parent_id, $get_navigation_title, $get_navigation_url, $get_navigation_url_path, $get_navigation_url_query, $get_navigation_language) = $row;
+	list($get_navigation_id, $get_navigation_parent_id, $get_navigation_title, $get_navigation_title_clean, $get_navigation_url, $get_navigation_url_path, $get_navigation_url_query, $get_navigation_language, $get_navigation_internal_or_external, $get_navigation_icon_path, $get_navigation_icon_16x16_inactive, $get_navigation_icon_16x16_hover, $get_navigation_icon_16x16_active, $get_navigation_icon_18x18_inactive, $get_navigation_icon_18x18_hover, $get_navigation_icon_18x18_active, $get_navigation_icon_24x24_inactive, $get_navigation_icon_24x24_hover, $get_navigation_icon_24x24_active, $get_navigation_weight, $get_navigation_created_datetime, $get_navigation_created_by_user_id, $get_navigation_updated_datetime, $get_navigation_updated_by_user_id) = $row;
 
 	if($get_navigation_id == ""){
 		echo"
@@ -573,15 +673,14 @@ elseif($action == "edit"){
 			$inp_parent = output_html($inp_parent);
 			$inp_parent_mysql = quote_smart($link, $inp_parent);
 
-			$inp_navigation_updated = date("Y-m-d");
-			$inp_navigation_updated_mysql = quote_smart($link, $inp_navigation_updated);
+			$datetime = date("Y-m-d");
 
 			$inp_updated_by_user_id = $_SESSION['admin_user_id'];
 			$inp_updated_by_user_id = output_html($inp_updated_by_user_id);
 			$inp_updated_by_user_id_mysql = quote_smart($link, $inp_updated_by_user_id);
 			
 			// Update
-			$result = mysqli_query($link, "UPDATE $t_navigation SET 
+			$result = mysqli_query($link, "UPDATE $t_pages_navigation SET 
 							navigation_parent_id=$inp_parent_mysql, 
 							navigation_title=$inp_title_mysql, 
 							navigation_title_clean=$inp_title_clean_mysql, 
@@ -590,10 +689,84 @@ elseif($action == "edit"){
 							navigation_url_query=$inp_url_query_mysql, 
 							navigation_language=$inp_language_mysql,
 							navigation_internal_or_external='$inp_internal_or_external', 
-							navigation_updated=$inp_navigation_updated_mysql, 	
+							navigation_updated_datetime='$datetime', 	
 							navigation_updated_by_user_id=$inp_updated_by_user_id_mysql 
 							WHERE navigation_id=$id_mysql") or die(mysqli_error($link));
 			
+
+
+
+			// Dir
+			$upload_path = "../_uploads/pages/navigation/$inp_language";
+			if(!(is_dir("../_uploads"))){
+				mkdir("../_uploads");
+			}
+			if(!(is_dir("../_uploads/pages"))){
+				mkdir("../_uploads/pages");
+			}
+			if(!(is_dir("../_uploads/pages/navigation"))){
+				mkdir("../_uploads/pages/navigation");
+			}
+			if(!(is_dir("../_uploads/pages/navigation/$inp_language"))){
+				mkdir("../_uploads/pages/navigation/$inp_language");
+			}
+
+			// Upload icon
+			$icons_size_array = array("18x18", "24x24");
+			$icons_types_array = array("inactive", "hover", "active");
+			for($x=0;$x<sizeof($icons_size_array);$x++){
+			for($y=0;$y<sizeof($icons_types_array);$y++){
+
+				// Name (inp_icon_18x18_inactive)
+				$file_name = basename($_FILES["inp_icon_" . $icons_size_array[$x] . "_" . $icons_types_array[$y]]['name']);
+				$file_exp = explode('.', $file_name); 
+				$file_type = $file_exp[count($file_exp) -1]; 
+				$file_type = strtolower("$file_type");
+
+				// New name
+				$new_name = $inp_slug . "_" . $icons_size_array[$x] . "_" . $icons_types_array[$y] . "." . $file_type;
+
+				// Sjekk om det er en OK filendelse
+				if($file_type == "jpg" OR $file_type == "jpeg" OR $file_type == "png" OR $file_type == "gif"){
+					if(move_uploaded_file($_FILES["inp_icon_" . $icons_size_array[$x] . "_" . $icons_types_array[$y]]['tmp_name'], "$upload_path/$new_name")) {
+						
+						// Sjekk om det faktisk er et bilde som er lastet opp
+						list($width,$height) = getimagesize("$upload_path/$new_name");
+						if(is_numeric($width) && is_numeric($height)){
+							// Update MySQL
+
+							// path
+							$inp_path = "_uploads/pages/navigation/$inp_language";
+							$inp_path_mysql = quote_smart($link, $inp_path);
+
+							// icon
+							$inp_icon = $new_name;
+							$inp_icon_mysql = quote_smart($link, $inp_icon);
+							
+
+							// Update MySQL
+							$result = mysqli_query($link, "UPDATE $t_pages_navigation SET 
+											navigation_icon_path=$inp_path_mysql, 
+											navigation_icon_$icons_size_array[$x]" . "_" . "$icons_types_array[$y]=$inp_icon_mysql
+											WHERE navigation_id=$get_navigation_id") or die(mysqli_error($link));
+						}
+						else{
+							// Not a image
+							unlink("$upload_path/$new_name");
+						}
+					}
+					else{
+						// Could not upload
+					}
+				}
+				else{
+					// Wrong file type
+				}
+
+
+			}  // for icons type
+			} // for icons size
+
 			
 			// Move to index
 			header("Location: index.php?open=$open&page=navigation&editor_language=$editor_language&ft=success&fm=changes_saved");
@@ -662,7 +835,7 @@ elseif($action == "edit"){
 			<option value=\"0\">-</option>";
 		
 			$language_mysql = quote_smart($link, $editor_language);
-			$query = "SELECT navigation_id, navigation_title FROM $t_navigation WHERE navigation_parent_id='0' AND navigation_language=$editor_language_mysql";
+			$query = "SELECT navigation_id, navigation_title FROM $t_pages_navigation WHERE navigation_parent_id='0' AND navigation_language=$editor_language_mysql";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
 				list($get_navigation_id, $get_navigation_title) = $row;
@@ -670,7 +843,7 @@ elseif($action == "edit"){
 				echo"			<option value=\"$get_navigation_id\""; if($get_navigation_parent_id == $get_navigation_id){ echo" selected=\"selected\""; } echo">$get_navigation_title</option>\n";
 
 				// Sub
-				$query_b = "SELECT navigation_id, navigation_title FROM $t_navigation WHERE navigation_parent_id='$get_navigation_id' AND navigation_language=$editor_language_mysql";
+				$query_b = "SELECT navigation_id, navigation_title FROM $t_pages_navigation WHERE navigation_parent_id='$get_navigation_id' AND navigation_language=$editor_language_mysql";
 				$result_b = mysqli_query($link, $query_b);
 				while($row_b = mysqli_fetch_row($result_b)) {
 					list($get_b_navigation_id, $get_b_navigation_title) = $row_b;
@@ -684,7 +857,65 @@ elseif($action == "edit"){
 		</select>
 		</p>
 	
-		<p><input type=\"submit\" value=\"$l_edit\" class=\"btn btn-success btn-sm\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+
+		";
+		$icons_size_array = array("18x18", "24x24");
+		$icons_types_array = array("inactive", "hover", "active");
+
+		for($x=0;$x<sizeof($icons_size_array);$x++){
+			echo"
+			<hr />
+			";
+			for($y=0;$y<sizeof($icons_types_array);$y++){
+
+				// Name (inp_icon_18x18_inactive)
+				$inp_name = "inp_icon_" . $icons_size_array[$x] . "_" . $icons_types_array[$y];
+
+				echo"
+				<p><b>Icon $icons_size_array[$x] $icons_types_array[$y]:</b><br />";
+
+				if($icons_size_array[$x] == "18x18" && $icons_types_array[$y] == "inactive"){
+					$icon = "$get_navigation_icon_18x18_inactive";
+				}
+				elseif($icons_size_array[$x] == "18x18" && $icons_types_array[$y] == "hover"){
+					$icon = "$get_navigation_icon_18x18_hover";
+				}
+				elseif($icons_size_array[$x] == "18x18" && $icons_types_array[$y] == "active"){
+					$icon = "$get_navigation_icon_18x18_active";
+				}
+				elseif($icons_size_array[$x] == "24x24" && $icons_types_array[$y] == "inactive"){
+					$icon = "$get_navigation_icon_24x24_inactive";
+				}
+				elseif($icons_size_array[$x] == "24x24" && $icons_types_array[$y] == "hover"){
+					$icon = "$get_navigation_icon_24x24_hover";
+				}
+				elseif($icons_size_array[$x] == "24x24" && $icons_types_array[$y] == "active"){
+					$icon = "$get_navigation_icon_24x24_active";
+				}
+				else{
+					$icon = "?";
+				}
+				if(file_exists("../$get_navigation_icon_path/$icon") && $icon != ""){
+					echo"
+					<a href=\"../$get_navigation_icon_path/$icon\">$icon</a>
+					<img src=\"../$get_navigation_icon_path/$icon\" alt=\"$icon\" /><br />
+					";
+				}
+				else{
+					echo"
+					<a href=\"../$get_navigation_icon_path/$icon\">$icon</a>
+					";
+				}
+				echo"
+				<input type=\"file\" name=\"$inp_name\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+				</p>";
+			}
+		}
+		echo"
+
+
+	
+		<p><input type=\"submit\" value=\"Save changes\" class=\"btn_default\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
 			 
 		</form>
 
@@ -711,7 +942,7 @@ elseif($action == "delete"){
 
 	$id_mysql = quote_smart($link, $id);
 
-	$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_language FROM $t_navigation WHERE navigation_id=$id_mysql";
+	$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_language FROM $t_pages_navigation WHERE navigation_id=$id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
 	list($get_navigation_id, $get_navigation_parent_id, $get_navigation_title, $get_navigation_url_path, $get_navigation_url_query, $get_navigation_language) = $row;
@@ -722,7 +953,7 @@ elseif($action == "delete"){
 		";
 	}
 	else{
-		$result = mysqli_query($link, "DELETE FROM $t_navigation WHERE navigation_id=$id_mysql");
+		$result = mysqli_query($link, "DELETE FROM $t_pages_navigation WHERE navigation_id=$id_mysql");
 
 
 		// Move to index
@@ -734,7 +965,7 @@ elseif($action == "move_up"){
 
 	$id_mysql = quote_smart($link, $id);
 
-	$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_language, navigation_weight FROM $t_navigation WHERE navigation_id=$id_mysql";
+	$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_language, navigation_weight FROM $t_pages_navigation WHERE navigation_id=$id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
 	list($get_navigation_id, $get_navigation_parent_id, $get_navigation_title, $get_navigation_url_path, $get_navigation_url_query, $get_navigation_language, $get_navigation_weight) = $row;
@@ -747,7 +978,7 @@ elseif($action == "move_up"){
 	else{
 		
 		$inp_navigation_weight = $get_navigation_weight-2;
-		$result = mysqli_query($link, "UPDATE $t_navigation SET navigation_weight=$inp_navigation_weight WHERE navigation_id=$id_mysql");
+		$result = mysqli_query($link, "UPDATE $t_pages_navigation SET navigation_weight=$inp_navigation_weight WHERE navigation_id=$id_mysql");
 			
 
 		// Go trough entire menu, and order everything
@@ -755,35 +986,35 @@ elseif($action == "move_up"){
 		$count_b = 0;
 		$count_c = 0;
 		$editor_language_mysql = quote_smart($link, $editor_language);
-		$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_weight FROM $t_navigation WHERE navigation_parent_id='0' AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
+		$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_weight FROM $t_pages_navigation WHERE navigation_parent_id='0' AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
 			list($get_navigation_id, $get_navigation_parent_id, $get_navigation_title, $get_navigation_url_path, $get_navigation_url_query, $get_navigation_weight) = $row;
 
 
 			if($get_navigation_weight != $count_a){
-				$res = mysqli_query($link, "UPDATE $t_navigation SET navigation_weight=$count_a WHERE navigation_id=$get_navigation_id");
+				$res = mysqli_query($link, "UPDATE $t_pages_navigation SET navigation_weight=$count_a WHERE navigation_id=$get_navigation_id");
 			}
 
-			$query_b = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_weight FROM $t_navigation WHERE navigation_parent_id=$get_navigation_id AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
+			$query_b = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_weight FROM $t_pages_navigation WHERE navigation_parent_id=$get_navigation_id AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
 			$result_b = mysqli_query($link, $query_b);
 			while($row_b = mysqli_fetch_row($result_b)) {
 				list($get_b_navigation_id, $get_b_navigation_parent_id, $get_b_navigation_title, $get_b_navigation_url_path, $get_b_navigation_url_query, $get_b_navigation_weight) = $row_b;
 
 
 				if($get_b_navigation_weight != $count_b){
-					$res = mysqli_query($link, "UPDATE $t_navigation SET navigation_weight=$count_b WHERE navigation_id=$get_b_navigation_id");
+					$res = mysqli_query($link, "UPDATE $t_pages_navigation SET navigation_weight=$count_b WHERE navigation_id=$get_b_navigation_id");
 				}
 
 				// Children level 2
-				$query_c = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_weight FROM $t_navigation WHERE navigation_parent_id=$get_b_navigation_id AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
+				$query_c = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_weight FROM $t_pages_navigation WHERE navigation_parent_id=$get_b_navigation_id AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
 				$result_c = mysqli_query($link, $query_c);
 				while($row_c = mysqli_fetch_row($result_c)) {
 					list($get_c_navigation_id, $get_c_navigation_parent_id, $get_c_navigation_title, $get_c_navigation_url_path, $get_c_navigation_url_query, $get_c_navigation_weight) = $row_c;
 
 
 					if($get_c_navigation_weight != $count_c){
-						$res = mysqli_query($link, "UPDATE $t_navigation SET navigation_weight=$count_c WHERE navigation_id=$get_c_navigation_id");
+						$res = mysqli_query($link, "UPDATE $t_pages_navigation SET navigation_weight=$count_c WHERE navigation_id=$get_c_navigation_id");
 					}
 
 					$count_c++;
@@ -807,7 +1038,7 @@ elseif($action == "move_down"){
 
 	$id_mysql = quote_smart($link, $id);
 
-	$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_language, navigation_weight FROM $t_navigation WHERE navigation_id=$id_mysql";
+	$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_language, navigation_weight FROM $t_pages_navigation WHERE navigation_id=$id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
 	list($get_navigation_id, $get_navigation_parent_id, $get_navigation_title, $get_navigation_url_path, $get_navigation_url_query, $get_navigation_language, $get_navigation_weight) = $row;
@@ -820,7 +1051,7 @@ elseif($action == "move_down"){
 	else{
 		
 		$inp_navigation_weight = $get_navigation_weight+2;
-		$result = mysqli_query($link, "UPDATE $t_navigation SET navigation_weight=$inp_navigation_weight WHERE navigation_id=$id_mysql");
+		$result = mysqli_query($link, "UPDATE $t_pages_navigation SET navigation_weight=$inp_navigation_weight WHERE navigation_id=$id_mysql");
 			
 
 		// Go trough entire menu, and order everything
@@ -828,35 +1059,35 @@ elseif($action == "move_down"){
 		$count_b = 0;
 		$count_c = 0;
 		$editor_language_mysql = quote_smart($link, $editor_language);
-		$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_weight FROM $t_navigation WHERE navigation_parent_id='0' AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
+		$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_weight FROM $t_pages_navigation WHERE navigation_parent_id='0' AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
 			list($get_navigation_id, $get_navigation_parent_id, $get_navigation_title, $get_navigation_url_path, $get_navigation_url_query, $get_navigation_weight) = $row;
 
 
 			if($get_navigation_weight != $count_a){
-				$res = mysqli_query($link, "UPDATE $t_navigation SET navigation_weight=$count_a WHERE navigation_id=$get_navigation_id");
+				$res = mysqli_query($link, "UPDATE $t_pages_navigation SET navigation_weight=$count_a WHERE navigation_id=$get_navigation_id");
 			}
 
-			$query_b = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_weight FROM $t_navigation WHERE navigation_parent_id=$get_navigation_id AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
+			$query_b = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_weight FROM $t_pages_navigation WHERE navigation_parent_id=$get_navigation_id AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
 			$result_b = mysqli_query($link, $query_b);
 			while($row_b = mysqli_fetch_row($result_b)) {
 				list($get_b_navigation_id, $get_b_navigation_parent_id, $get_b_navigation_title, $get_b_navigation_url_path, $get_b_navigation_url_query,, $get_b_navigation_weight) = $row_b;
 
 
 				if($get_b_navigation_weight != $count_b){
-					$res = mysqli_query($link, "UPDATE $t_navigation SET navigation_weight=$count_b WHERE navigation_id=$get_b_navigation_id");
+					$res = mysqli_query($link, "UPDATE $t_pages_navigation SET navigation_weight=$count_b WHERE navigation_id=$get_b_navigation_id");
 				}
 
 				// Children level 2
-				$query_c = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_weight FROM $t_navigation WHERE navigation_parent_id=$get_b_navigation_id AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
+				$query_c = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_weight FROM $t_pages_navigation WHERE navigation_parent_id=$get_b_navigation_id AND navigation_language=$editor_language_mysql ORDER BY navigation_weight ASC";
 				$result_c = mysqli_query($link, $query_c);
 				while($row_c = mysqli_fetch_row($result_c)) {
 					list($get_c_navigation_id, $get_c_navigation_parent_id, $get_c_navigation_title, $get_c_navigation_url_path, $get_c_navigation_url_query, $get_c_navigation_weight) = $row_c;
 
 
 					if($get_c_navigation_weight != $count_c){
-						$res = mysqli_query($link, "UPDATE $t_navigation SET navigation_weight=$count_c WHERE navigation_id=$get_c_navigation_id");
+						$res = mysqli_query($link, "UPDATE $t_pages_navigation SET navigation_weight=$count_c WHERE navigation_id=$get_c_navigation_id");
 					}
 
 					$count_c++;
