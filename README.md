@@ -14,15 +14,15 @@ I installed Wampserver to `C:\Users\user\wamp64`.
 1.3 Git<br />
 Download and install Git from https://git-scm.com/download/win
 
-1.3 Checkout project<br />
+1.4 Checkout project<br />
 Open program Git Bash (C:\Program Files\Git\git-bash.exe). Browse to your www directory and clone the project with the following commands:<br />
 `cd C:\Users\user\wamp64\www`<br />
 `clone https://github.com/europa9/quick_cms.git`
 
-1.4 Create database<br />
+1.5 Create database<br />
 Open phpMyAdmin at localhost/phpmyadmin/. Default username is root without password. Create a database named quick.
 
-1.5 Install Quick CMS<br />
+1.6 Install Quick CMS<br />
 Open http://localhost/quick_cms and follow the instructions to install the CMS.
 
 
