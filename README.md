@@ -1,6 +1,9 @@
 # Quick CMS
 
-# 1. How to Install Quick CMS on local Windows
+# 1. Licence
+https://github.com/europa9/quick_cms/blob/master/_docs/GNU%20GENERAL%20PUBLIC%20LICENSE.txt
+
+# 2. How to Install Quick CMS on local Windows
 1.1 Visual Studio 2012 VC<br />
 Download and install Visual Studio 2012 : VC 11 vcredist_x64 from http://www.microsoft.com/en-us/download/details.aspx?id=30679
 
@@ -23,12 +26,12 @@ Open phpMyAdmin at localhost/phpmyadmin/. Default username is root without passw
 Open http://localhost/quick_cms and follow the instructions to install the CMS.
 
 
-# 2. How to fetch changes
+# 3. How to fetch changes
 Open Git Bash and write the following commands:<br />
 `cd C:\Users\user\wamp64\www`<br />
 `git pull`
 
-# 3. How to Commit changes
+# 4. How to Commit changes
 Open Git Bash and write the following commands:<br />
 `cd C:\Users\user\wamp64\www`<br />
 `git pull`<br />
