@@ -8,7 +8,11 @@
 *
 */
 
-
+/*- Fonts ------------------------------------------------------------------ */
+@font-face {
+  font-family: DancingScript;
+  src: url("fonts/Dancing_Script/DancingScript-VariableFont_wght.ttf");
+}
 /*- Nullstilling ------------------------------------------------------------------ */
 div.clear{
 	clear: both;
@@ -258,91 +262,55 @@ a.bold:hover {
 }
 #layout_left{
 	background: #27305b;
-	flex: 0 1 auto; /* Consumes the space it needs */
+	flex: 0 1 auto;
+	width: 20%;
+	height: 100%;
+	position: fixed !important; /* always sticky on left side */
+	overflow: auto; /* vertical scroll */
 }
 #layout_center{
 	background: #b1e2e7;
-	flex: 70%;
+	flex: 60%;
+	margin: 0px 20% 0px 20%;
 }
 #layout_right{
 	background: #f2f8f8;
-	flex: 20%;
+	flex: 0 1 auto;
 }
 
 
 
-/*- Header ------------------------------------------------------------------ */
-header{
-	background: #ffffff;
-	overflow: auto;
+/*- Logo ------------------------------------------------------------------ */
+#logo{
+	margin: 10px 10px 10px 10px;
+}
+#logo > a{
+	background: url("images/logo/logo_white_inactive_24dp.png") no-repeat center left;
+	padding: 0px 7px 0px 30px;
+	font: bold 26px DancingScript, 'Open Sans',sans-serif;
+	color: #8492b7;
+	text-decoration:none;
+}
+#logo > a:hover{
+	background: url("images/logo/logo_white_active_24dp.png") no-repeat center left;
+	color: #fff;
+}
+#logo > a > span{
+	letter-spacing: 11px;
+	padding: 0px 4px 0px 0px;
 }
 
-	/*- Header main ------------------------------------------------------- */
-	#header_main{
-		width: 1200px;
-		margin: 0px auto;
-		display: flex;
-	}
-	@media screen and (max-width: 52.375em) {
-		#header_main{
-			width: 100%;
-		}
-
-	}
-
-	/*- Header hamburger -------------------------------------------------- */
-	#header_hamburger{
-		flex: 0 1 auto; /* Consumes the space it needs */
-		display: none;
-		margin: 20px 7px 0px 15px;
-	}
-	@media screen and (max-width: 52.375em) {
-		#header_hamburger{
-			margin: 16px 7px 0px 15px;
-			display: inline;  /* Make visible on mobile phones */
-		}
-	}
-
-
-	/*- Header Logo ------------------------------------------------------ */
-	#header_logo{
-		flex: 0 1 auto; /* Consumes the space it needs */
-		margin: 12px 0px 12px 0px;
-	}
-	#header_logo > a{
-		font: bold 34px Georgia, 'Open Sans', sans-serif;
-		display:block;
-		color: #262626;
-		padding: 0px 7px 0px 7px;
-		text-decoration:none;
-		text-transform: uppercase;
-		letter-spacing: -1px;
-	}
-	#header_logo > a:hover{
-		color: #fff;
-		background: #ff502c;
-	}
-	@media screen and (max-width: 52.375em) {
-		#header_logo{
-			margin: 13px 0px 12px 0px;
-		}
-		#header_logo > a{
-			font: bold 26px Georgia, 'Open Sans', sans-serif;
-		}
-	}
-
-	/*- Header Navigation ------------------------------------------------------ */
+/*- Navigation ------------------------------------------------------------ */
+nav{
+	margin: 10px 0px 0px 10px;
+}
+@media screen and (max-width: 52.375em) {
 	nav{
-		flex: 1;
-		margin: 17px 0px 0px 20px;
+			
 	}
-	@media screen and (max-width: 52.375em) {
-		nav{
-			margin: 15px 5px 5px 5px;
-		}
-	}
+}
 
-	/*- Header Navigation :: Desktop ------------------------------------------- */
+	/*- Navigation :: Desktop ------------------------------------------------- */
 	nav ul{
 		list-style:none;
 		margin: 0px 0px 0px 0px;
@@ -350,359 +318,87 @@ header{
 	}
 
 	nav ul > li{
-		float:left;
-		position:relative;
-		margin-right: 15px;
-		padding: 0px 0px 0px 0px;
+		margin: 0px 0px 0px 0px;
+		padding: 10px 0px 10px 0px;
 	}
-	nav ul > li:last-child{
-		margin-right: 0px;
-	}
-	nav ul > li.main_navigation_has_sub{
-		background: url("images/main_navigation/main_navigation_has_sub_screen_black.png") right center no-repeat;
-		padding-right: 10px;
-	}
-
 
 	nav ul > li > a{
-		font: normal 15px 'Open Sans',sans-serif;
-		text-transform: uppercase;
-		display:block;
-		color: #000;
+		font: normal 16px 'Open Sans',sans-serif;
+		color: #8492b7;
 		text-decoration:none;
-		padding: 5px 5px 5px 5px;
+		padding: 10px 0px 10px 25px;
 	}
 	nav ul > li > a:hover{
 		color: #fff;
 		text-decoration:none;
-		background: #ff502c;
 	}
 
-	nav ul > li > img.main_navigation_has_sub_mobile{
-		display: none;
+	a.nav_oppskrifter{
+		background: url("../../_uploads/pages/navigation/no/oppskrifter_18x18_inactive.png") no-repeat center left;
+	}
+	a.nav_oppskrifter:hover{
+		background: url("../../_uploads/pages/navigation/no/oppskrifter_18x18_hover.png") no-repeat center left;
+	}
+	a.nav_oppskrifter:active{
+		background: url("../../_uploads/pages/navigation/no/oppskrifter_18x18_active.png") no-repeat center left;
 	}
 
-
-	
-	/*  Sub menu dropdown */
-	nav ul > li:hover ul.main_navigation_sub{
-		display: block; /* Make visible */
-		background: #fff;
-		border: #dcdcdc 1px solid;
-		margin-top: 16px;
+	a.nav_mat{
+		background: url("../../_uploads/pages/navigation/no/mat_18x18_inactive.png") no-repeat center left;
 	}
-	nav ul > li > ul{ /* UL sub menu */
-		position: absolute;
-		left: 0;
-		top: 0px; /* Relative */
-		z-index: 1;
-		float: left;
-		display: none;  /* Make hidden */
+	a.nav_mat:hover{
+		background: url("../../_uploads/pages/navigation/no/mat_18x18_hover.png") no-repeat center left;
+	}
+	a.nav_mat:active{
+		background: url("../../_uploads/pages/navigation/no/mat_18x18_active.png") no-repeat center left;
 	}
 
-	nav ul > li > ul > li{
-		width: 100%; /* 100 % to make li fill horizontal ul */
+	a.nav_ovelser{
+		background: url("../../_uploads/pages/navigation/no/ovelser_18x18_inactive.png") no-repeat center left;
 	}
-	nav ul > li > ul > li.header_up{
-		border-top: #ccc 1px solid;
-		padding-top: 8px;
+	a.nav_ovelser:hover{
+		background: url("../../_uploads/pages/navigation/no/ovelser_18x18_hover.png") no-repeat center left;
 	}
-
-	nav ul > li > ul > li > a{
-		padding: 4px 10px 4px 10px;
-		color: #282828;
-		text-decoration:none;
-		font: bold 15px 'Open Sans', sans-serif;
-		white-space: nowrap;
-		text-transform: none;
-	}
-
-	nav ul > li > ul > li.main_navigation_sub_has_sub > a{
-		background: #333333 url("images/main_navigation_has_sub_sub_screen.png") right center no-repeat;
-	}
-	nav ul > li > ul > li a:hover{
-		color: #246ad3;
-		/* background: #4f4f4f; */
-	}
-	nav ul > li > ul > li.main_navigation_sub_has_sub > a:hover, nav ul > li > ul > li.main_navigation_sub_has_sub > a:active{
-		background: #4f4f4f url("images/main_navigation_has_sub_sub_screen.png") right center no-repeat;
-	}
-
-	/*  Sub sub menu dropdown */
-	nav ul > li > ul > li:hover ul.main_navigation_sub_sub{
-		display: block; /* Make visible */
-	}
-	nav ul > li > ul > li > ul{ /* UL sub sub menu */
-		position: absolute;
-   		left: 100%;
-  		top: 0;
-		margin: 0px 0px 0px 0px;
-		display: none;  /* Make hidden */
-	}
-	nav ul > li > ul > li > ul > li > a{
-		background: #fff;
-		text-decoration:underline;
-		padding: 4px 6px 4px 6px;
-		color: #282828;
-		text-decoration:none;
-		font: bold 14px Verdana, Tahoma, Arial, Helvetica, sans-serif;
-		display: block;
-		white-space: nowrap;
-		width: 100%;
-	}
-	nav ul > li > ul > li > ul > li > a:hover{
-		color: #246ad3;
-	}
-	/*- Header Navigation :: Mobile ------------------------------------------- */
-	@media screen and (max-width: 52.375em) {
-		nav{
-			float: right;
-			padding: 0px 0px 0px 0px;
-			margin: 0px 0px 0px 0px;
-			background: red;
-			position: absolute;
-			top: 45px;
-			left: 0px;
-			width: 100%;
-			z-index: 1;
-			display: none;
-		}
-
-		nav ul{ /* First ul */
-			list-style:none;
-			margin: 0px 0px 0px 0px;
-			padding: 0;
-		}
-		nav ul > li{ /* First li */
-			float: none;
-			position: static;
-			background: url("images/main_navigation/main_navigation_arrow_right.png") no-repeat center right 20px #fff;
-			display: block; /* horizontal */
-			margin: 0px 0px 0px 0px;
-			padding 0px 0px 0px 0px;
-			border-bottom: #dcdcdc 1px solid;
-			width: 100%;
-		}
-		nav ul > li:hover{  /* First li hover */
-			background: url("images/main_navigation/main_navigation_arrow_right.png") no-repeat center right 20px #f1f1f2;
-			margin: 0px 0px 0px 0px;
-			padding 0px 0px 0px 0px;
-		}
-		nav ul > li > a{  /* First li a */
-			display: block; /* make link fill enitre li */
-			font: bold 15px 'Open Sans', sans-serif;
-			color: #282828;
-			padding: 10px 0px 6px 15px;
-			text-decoration:none;
-		}
-		nav ul > li > a:hover{  /* First li a, hover */
-			color: #246ada;
-			background: url("images/main_navigation/main_navigation_arrow_right.png") no-repeat center right 20px #f1f1f2;
-		}
-	nav ul > li.main_navigation_has_sub{  /* First li a with sub arrow down */
-		background: #fff; /* We want the icon to be clickable, so we will render it in HTML instead of background */
-		padding-right: 0px;
-	}
-	nav ul > li.main_navigation_has_sub:hover, nav ul > li.main_navigation_has_sub:active{  /* Hover for first li / a */
-		background: #f1f1f2; /* We want the icon to be clickable, so we will render it in HTML instead of background */
-	}
-
-	nav ul > li > img.main_navigation_has_sub_mobile{
-		display: inline;
-		right: 0;
-		top: -35px;
-		position: relative;
-		padding: 0px 20px 0px 20px; /* Make icon big so it is easy to click on */
-		cursor:pointer;
-		float: right;
-		clear: right;
-	}
-
-	/*  Sub menu dropdown */
-	nav ul > li:hover ul.main_navigation_sub{
-		display: none; /* Make sub menu invisible on hover*/
-		margin: 0px 0px 0px 0px;
-		padding 0px 0px 0px 0px;
-	}
-	nav ul > li > ul{ /* UL sub menu */
-		display: none; /* Make sub menu invisible on load */
-		/* display: block; */  /* For test, remove when finished */
-		float: none;
-		position: static;
-		background: #fff;
-	}
-	nav ul > li > ul > li{
-		float: none;
-		position: static;
-		display: block; /* horizontal */
-		margin: 0px 0px 0px 0px;
-		padding 0px 0px 0px 0px;
-		border-bottom: #dddddd 0px solid;
-		background: #fff;
-	}
-	nav ul > li > ul > li > a{
-		background: url("images/main_navigation/main_navigation_arrow_right_sub.png") no-repeat center right 20px #fff;
-		font: normal 15px 'Open Sans', sans-serif;
-		color: #282828; /* Black */
-		padding: 10px 0px 10px 20px;
-		margin: 0px 0px 0px 0px;
-		text-decoration:none;
-		border-top: #dddddd 1px solid;
-		
-	}
-	nav ul > li > ul > li > a:hover{
-		background: url("images/main_navigation/main_navigation_arrow_right_sub.png") no-repeat center right 20px #f5f5f5; /* grey bakground on hover */
-		color: #246ad6; /* Blue */
-	}
-
-	nav ul > li > ul > li.header_up{
-		border-top: #fff 1px solid;
-		font: bold 15px 'Open Sans', sans-serif;
-		color: #101317;
-	}
-	nav ul > li > ul > li.header_up > a{
-		border-top: #fff 1px solid;
-		font: bold 15px 'Open Sans', sans-serif;
-		color: #101317;
-	}
-	nav ul > li > ul > li.main_navigation_sub_has_sub > a{
-		background: #fff; /* Want to generate clickable icon in HTML */
-	}
-	nav ul > li > ul > li.main_navigation_sub_has_sub > a:hover{
-		background: #f1f1f2; /* Want to generate clickable icon in HTML */
-		color: #246ad6; /* Blue */
-	}
-	img.main_navigation_has_sub_mobile{
-		
-		top: 20px;
-		position: relative;
-		padding: 20px 20px 0px 20px; /* Make icon big so it is easy to click on */
-		cursor:pointer;
-		float: right;
-		clear: none;
+	a.nav_ovelser:active{
+		background: url("../../_uploads/pages/navigation/no/ovelser_18x18_active.png") no-repeat center left;
 	}
 
 
 
+/*- Left bottom ------------------------------------------------------------ */
+div.left_bottom{
+	position: absolute;
+	left: auto;
+	bottom: 10px;
+}
+div.left_bottom > ul{
+	list-style:none;
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+}
 
-		/*  Sub sub menu dropdown */
-		nav ul > li > ul > li:hover ul.main_navigation_sub_sub{
-			display: none; /* Make sub menu invisible on hover*/
-		}
-		nav ul > li > ul > li > ul{ /* UL sub sub menu */
-			display: none; /* Make sub menu invisible on load */
-			/* display: block; */ /* For test, remove when finished */
-			float: none;
-			position: static;
-		}
-		nav ul > li > ul > li > ul > li{
-			float: none;
-			position: static;
-			display: block; /* horizontal */
-			margin: 0px 0px 0px 0px;
-			padding 0px 0px 0px 0px;
-			border-top: #dddddd 0px solid;
-			width: 100%; 
-		}
-		nav ul > li > ul > li > ul > li > a{
-			background: url("images/main_navigation_arrow_right_sub.png") no-repeat center right 2px #fff;
-			font: normal 12px Verdana, Tahoma, Arial, Helvetica, sans-serif;
-			color: #000006;
-			padding: 10px 0px 10px 20px;
-			text-decoration:none;
-			border-top: #dddddd 1px solid;
-		}
-		nav ul > li > ul > li > ul > li > a:hover{
-			background: url("images/main_navigation_arrow_right_sub.png") no-repeat center right 2px #ccccee;
-			color: #000006;
-		}
+div.left_bottom > ul > li{
+	margin: 0px 0px 0px 0px;
+	padding: 10px 0px 10px 0px;
+}
 
-	}
-
-	/*- Header User Icons ---------------------------------------------------------- */
-	#header_user_icons{
-		flex: 0 1 auto;
-		width: auto;
-		overflow: auto;
-		float: right;
-	}
-	@media screen and (max-width: 52.375em) {
-		#header_user_icons{
-			flex: 1;
-		}
-	}
-	#header_user_icons > ul{
-		list-style:none;
-		padding: 0;
-		margin: 0;
-	}
-	#header_user_icons > ul > li{
-		float: right;
-	}
-	#header_user_icons > ul > li > a{
-		display:block;
-		padding: 16px 15px 5px 10px;
-	}
-
-	#header_user_icons > ul > li > a.active{
-		background: #fff;
-	}
-
-	@media screen and (max-width: 52.375em) {
-		#header_user_icons > ul > li > a{
-			display:block;
-			padding: 15px 15px 0px 10px;
-		}
-	}
-
-	/*- Header new ---------------------------------------------------- */
-	#header_new_wrapper{
-		position: absolute;
-		background: #fff;
-		top: 45px;
-		border: #dfdfdf 1px solid;
-		overflow: auto;
-		display: none;
-		z-index: 1;
-	}
-	#header_new_wrapper > p{
-		font-weight: bold;
-		margin: 6px 0px 0px 15px;
-		padding: 0px 0px 0px 0px;
-	}
-
-	#header_new_wrapper ul{
-		list-style:none;
-		margin: 0px 0px 0px 0px;
-		padding: 0;
-	}
-	#header_new_wrapper ul > li{
-		float: none;
-		position: static;
-		display: block; /* horizontal */
-		margin: 0px 0px 0px 0px;
-		padding 0px 0px 0px 0px;
-		border-bottom: #dcdcdc 1px solid;
-		width: 100%;
-	}
-	#header_new_wrapper ul > li > a{
-		background: #fff;
-		display: block; /* make link fill enitre li */
-		font: bold 15px 'Open Sans', sans-serif;
-		color: #282828;
-		padding: 10px 15px 6px 15px;
-		text-decoration:none;
-	}
-	#header_new_wrapper ul > li > a:hover{
-		background: #f1f1f2;
-		color: #246ada;
-	}
-	#header_new_wrapper ul > li > a > img{
-		float: left;
-		padding: 0px 6px 0px 0px;
-	}
-
-
+div.left_bottom > ul > li > a{
+	font: normal 16px 'Open Sans',sans-serif;
+	color: #8492b7;
+	text-decoration:none;
+	padding: 10px 0px 10px 10px;
+}
+div.left_bottom > ul > li > a:hover{
+	color: #fff;
+	text-decoration:none;
+}
+div.left_bottom > ul > li > a > img{
+	border-radius: 50%;
+	position: relative;
+	top: 7px;
+	margin-right: 6px;
+}
+  
 /*- Header Search --------------------------------------------------------- */
 #header_search_wrapper{
 	background: #ffffff;

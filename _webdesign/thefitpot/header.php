@@ -104,73 +104,79 @@ echo"<!DOCTYPE html>
 <div id=\"layout_wrapper\">
 	<div id=\"layout_left\">
 
-		<!-- Header logo -->
-			<div id=\"header_logo\">
-				<a href=\"$root/index.php?l=$l\">$configWebsiteTitleSav</a>
+		<!-- Logo -->
+			<div id=\"logo\">
+				<a href=\"$root/index.php?l=$l\" title=\"$configWebsiteTitleSav\">The<span></span>Fit<span></span>Pot</a>
 			</div>
-		<!-- //Header logo -->
+		<!-- //Logo -->
 
 
-		<!-- Header navigation -->
+		<!-- Left navigation -->
 			<nav>
-				<ul>";
-				$count_parent = 0;
-				$count_children = 0;
-				$include_as_navigation_main_mode = 1; // We want to include navigation.php, in special navigation main mode
-
+				<ul class=\"main_navigation\">\n";
 				$navigation_language_mysql = quote_smart($link, $l);
-				$query_nav_main = "SELECT navigation_id, navigation_title, navigation_url_path, navigation_url_query FROM $t_navigation WHERE navigation_parent_id='0' AND navigation_language=$navigation_language_mysql ORDER BY navigation_weight ASC";
+				$query_nav_main = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_title_clean, navigation_url, navigation_url_path, navigation_url_query, navigation_language, navigation_internal_or_external, navigation_icon_path, navigation_icon_16x16_inactive, navigation_icon_16x16_hover, navigation_icon_16x16_active, navigation_icon_18x18_inactive, navigation_icon_18x18_hover, navigation_icon_18x18_active, navigation_weight, navigation_created_datetime, navigation_created_by_user_id, navigation_updated_datetime, navigation_updated_by_user_id FROM $t_pages_navigation WHERE navigation_parent_id='0' AND navigation_language=$navigation_language_mysql ORDER BY navigation_weight ASC";
 				$result_nav_main = mysqli_query($link, $query_nav_main);
-						$row_cnt_nav_main = mysqli_num_rows($result_nav_main);
-						while($row_nav_main = mysqli_fetch_row($result_nav_main)) {
-							list($get_parent_navigation_id, $get_parent_navigation_title, $get_parent_navigation_url_path, $get_parent_navigation_url_query) = $row_nav_main;
-					
-							$query_children = "SELECT navigation_id, navigation_title, navigation_url_path, navigation_url_query FROM $t_navigation WHERE navigation_parent_id='$get_parent_navigation_id' AND navigation_language=$navigation_language_mysql ORDER BY navigation_weight ASC";
-							$result_children = mysqli_query($link, $query_children);
-							$row_cnt_children = mysqli_num_rows($result_children);
-							$y = 1;
-							while($row_children = mysqli_fetch_row($result_children)) {
-								list($get_child_navigation_id, $get_child_navigation_title, $get_child_navigation_url_path, $get_child_navigation_url_query) = $row_children;
-
-
-								if($count_children == 0){
-									// Parent with children
-									echo"				<li><a href=\"$root/$get_parent_navigation_url_path$get_parent_navigation_url_query\">$get_parent_navigation_title</a></li>\n";
-								}
-
-
-								echo"
-								<!-- child here -->
-								";
-								$count_children++;
-							}
-							if($count_children == 0){
-								if(file_exists("$root/$get_parent_navigation_url_path/navigation.php")){
-									// Parent have children in php file
-									echo"
-									<li class=\"main_navigation_has_sub\"><a href=\"$root/$get_parent_navigation_url_path$get_parent_navigation_url_query\">$get_parent_navigation_title</a>  <img src=\"$root/_webdesign/$webdesignSav/images/main_navigation/main_navigation_has_sub_mobile.png\" alt=\"main_navigation_has_sub_mobile.png\" class=\"main_navigation_has_sub_mobile toggle\" data-divid=\"diplay_main_navigation_sub_$get_parent_navigation_id\" />
-										<ul class=\"main_navigation_sub diplay_main_navigation_sub_$get_parent_navigation_id\">
-									";
-									include("$root/$get_parent_navigation_url_path/navigation.php");
-
-									echo"
-										</ul>
-									</li>\n";
-								}	
-								else{
-									// Parent doesnt have children
-									echo"				<li><a href=\"$root/$get_parent_navigation_url_path$get_parent_navigation_url_query\">$get_parent_navigation_title</a></li>\n";
-								}
-							}
-							$count_parent = 0;
-							$count_children = 0;
-						}
-						$include_as_navigation_main_mode = 0; // We reset special navigation main mode
-						echo"
-						</ul>
-
+				$row_cnt_nav_main = mysqli_num_rows($result_nav_main);
+				while($row_nav_main = mysqli_fetch_row($result_nav_main)) {
+					list($get_parent_navigation_id, $get_parent_navigation_parent_id, $get_parent_navigation_title, $get_parent_navigation_title_clean, $get_parent_navigation_url, $get_parent_navigation_url_path, $get_parent_navigation_url_query, $get_parent_navigation_language, $get_parent_navigation_internal_or_external, $get_parent_navigation_icon_path, $get_parent_navigation_icon_16x16_inactive, $get_parent_navigation_icon_16x16_hover, $get_parent_navigation_icon_16x16_active, $get_parent_navigation_icon_18x18_inactive, $get_parent_navigation_icon_18x18_hover, $get_parent_navigation_icon_18x18_active, $get_parent_navigation_weight, $get_parent_navigation_created_datetime, $get_parent_navigation_created_by_user_id, $get_parent_navigation_updated_datetime, $get_parent_navigation_updated_by_user_id) = $row_nav_main;
+					echo"				";
+					echo"				<li><a href=\"$root/$get_parent_navigation_url_path$get_parent_navigation_url_query\" class=\"nav_$get_parent_navigation_title_clean\">$get_parent_navigation_title</a></li>\n";
+				}
+				echo"
+				</ul>
 			</nav>
-		<!-- //Header navigation -->
+
+		<!-- //Left navigation -->
+
+
+		<!-- Left Bottom -->
+			<div class=\"left_bottom\">
+				<ul>
+				";
+				// Am I logged in?
+				if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
+					// Get my user alias, date format, profile image
+					$my_user_id 	  = $_SESSION['user_id'];
+					$my_user_id_mysql = quote_smart($link, $my_user_id);
+
+					// User
+					$query = "SELECT user_id, user_name, user_alias, user_date_format FROM $t_users WHERE user_id=$my_user_id_mysql";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_my_user_id, $get_my_user_name, $get_my_user_alias, $get_my_user_date_format) = $row;
+					if($get_my_user_id == ""){
+						echo"<p style=\"color:red\">Session error</p>";
+						unset($_SESSION['user_id']);
+					}
+
+					// Image
+					$query = "SELECT photo_id, photo_user_id, photo_profile_image, photo_title, photo_destination, photo_thumb_40, photo_thumb_50, photo_thumb_60 FROM $t_users_profile_photo WHERE photo_user_id=$get_my_user_id";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_my_photo_id, $get_my_photo_user_id, $get_my_photo_profile_image, $get_my_photo_title, $get_my_photo_destination, $get_my_photo_thumb_40, $get_my_photo_thumb_50, $get_my_photo_thumb_60) = $row;
+
+					echo"
+					<li><a href=\"$root/users/my_profile.php?l=$l\">";
+					if(file_exists("$root/$get_my_photo_destination/$get_my_photo_thumb_40") && $get_my_photo_thumb_40 != ""){
+						echo"<img src=\"$root/$get_my_photo_destination/$get_my_photo_thumb_40\" alt=\"$get_my_photo_thumb_40\" title=\"$get_my_user_alias\" />";
+					}
+					else{
+						echo"<img src=\"$root/_webdesign/thefitpot/images/left/user_no_image_30.png\" alt=\"user_no_image_40.png\" />";
+					}
+
+					echo" $get_my_user_name</a></li>
+					";
+				}
+				else{
+					echo"
+					<li><a href=\"$root/users/login.php?l=$l\" class=\"last\"><img src=\"$root/_webdesign/$webdesignSav/images/header/ic_login_24x24_333333.png\" alt=\"ic_login_24x24_333333.png\" title=\"$l_login\" /></a></li>
+					";
+				}
+				echo"
+				</ul>
+			</div>
+		<!-- //Left Bottom -->
 	</div> <!-- //layout_left -->
 	<div id=\"layout_center\">
 

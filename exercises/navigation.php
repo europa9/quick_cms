@@ -15,6 +15,9 @@ $minus_two	= $self_array[$minus_two];
 $complex	= $minus_two . "/" . $minus_one;
 
 
+/*- Tables ---------------------------------------------------------------------------- */
+include("_tables_exercises.php");
+
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/exercises/ts_exercises.php");
 

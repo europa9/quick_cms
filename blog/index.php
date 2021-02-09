@@ -29,6 +29,9 @@ else{
 /*- Blog config -------------------------------------------------------------------- */
 include("$root/_admin/_data/blog.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+include("_tables_blog.php");
+
 header("Location: index_1200.php?l=$l");
 exit;
 ?>

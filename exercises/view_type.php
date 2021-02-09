@@ -25,6 +25,9 @@ else{ $root = "../../.."; }
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+include("_tables_exercises.php");
+
 /*- Get extention ---------------------------------------------------------------------- */
 function getExtension($str) {
 	$i = strrpos($str,".");

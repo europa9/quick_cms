@@ -9,6 +9,9 @@
 *
 */
 
+
+/*- Tables ---------------------------------------------------------------------------- */
+include("_tables_exercises.php");
 /*- Tables ------------------------------------------------------------------------- */
 $t_search_engine_index = $mysqlPrefixSav . "search_engine_index";
 

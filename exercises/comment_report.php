@@ -25,6 +25,9 @@ else{ $root = "../../.."; }
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+include("_tables_exercises.php");
+
 
 /*- Tables ---------------------------------------------------------------------------- */
 $t_exercise_index 				= $mysqlPrefixSav . "exercise_index";

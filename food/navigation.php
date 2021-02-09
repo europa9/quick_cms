@@ -15,6 +15,10 @@ $minus_two	= $self_array[$minus_two];
 $complex	= $minus_two . "/" . $minus_one;
 
 
+
+/*- Tables ---------------------------------------------------------------------------- */
+include("_tables_food.php");
+
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/food/ts_food.php");
 

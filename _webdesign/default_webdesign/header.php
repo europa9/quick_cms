@@ -214,12 +214,18 @@ echo"
 		<div id=\"header_center\">
 			<div id=\"main_navigation\">
 				<ul>";
-					// Translation
-					include("$root/_admin/_translations/site/$l/knowledge/ts_header.php");
-					include("$root/_admin/_translations/site/$l/office_calendar/ts_header.php");
-					include("$root/_admin/_translations/site/$l/talk/ts_header.php");
-					echo"
-					<li><a href=\"$root/discuss/index.php?l=$l\">Forum</a></li>
+
+
+				$navigation_language_mysql = quote_smart($link, $l);
+				$query_nav_main = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_title_clean, navigation_url, navigation_url_path, navigation_url_query, navigation_language, navigation_internal_or_external, navigation_icon_path, navigation_icon_16x16_inactive, navigation_icon_16x16_hover, navigation_icon_16x16_active, navigation_icon_18x18_inactive, navigation_icon_18x18_hover, navigation_icon_18x18_active, navigation_weight, navigation_created_datetime, navigation_created_by_user_id, navigation_updated_datetime, navigation_updated_by_user_id FROM $t_pages_navigation WHERE navigation_parent_id='0' AND navigation_language=$navigation_language_mysql ORDER BY navigation_weight ASC";
+				$result_nav_main = mysqli_query($link, $query_nav_main);
+				$row_cnt_nav_main = mysqli_num_rows($result_nav_main);
+				while($row_nav_main = mysqli_fetch_row($result_nav_main)) {
+					list($get_parent_navigation_id, $get_parent_navigation_parent_id, $get_parent_navigation_title, $get_parent_navigation_title_clean, $get_parent_navigation_url, $get_parent_navigation_url_path, $get_parent_navigation_url_query, $get_parent_navigation_language, $get_parent_navigation_internal_or_external, $get_parent_navigation_icon_path, $get_parent_navigation_icon_16x16_inactive, $get_parent_navigation_icon_16x16_hover, $get_parent_navigation_icon_16x16_active, $get_parent_navigation_icon_18x18_inactive, $get_parent_navigation_icon_18x18_hover, $get_parent_navigation_icon_18x18_active, $get_parent_navigation_weight, $get_parent_navigation_created_datetime, $get_parent_navigation_created_by_user_id, $get_parent_navigation_updated_datetime, $get_parent_navigation_updated_by_user_id) = $row_nav_main;
+					echo"				";
+					echo"				<li><a href=\"$root/$get_parent_navigation_url_path$get_parent_navigation_url_query\" class=\"nav_$get_parent_navigation_title_clean\">$get_parent_navigation_title</a></li>\n";
+				}
+				echo"
 				</ul>
 				<!-- Talk total unread messages count script -->
 						<script language=\"javascript\" type=\"text/javascript\">
@@ -253,7 +259,7 @@ echo"
 				if(isset($_SESSION['user_id'])){
 					echo"
 					<li><a href=\"$root/users/view_profile.php?user_id=$get_my_user_id&amp;l=en\">$get_my_user_alias</a></li>
-					<li><a href=\"$root/users/logout.php?process=1&amp;l=en\">$l_log_out</a></li>
+					<li><a href=\"$root/users/logout.php?process=1&amp;l=en\">$l_logout</a></li>
 					";
 				}
 				else{

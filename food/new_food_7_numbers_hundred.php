@@ -25,6 +25,10 @@ else{ $root = "../../.."; }
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+include("_tables_food.php");
+
+
 
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/food/ts_food.php");

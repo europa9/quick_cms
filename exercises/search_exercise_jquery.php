@@ -44,6 +44,9 @@ if (mysqli_connect_errno()){
 
 
 
+
+/*- Tables ---------------------------------------------------------------------------- */
+include("_tables_exercises.php");
 /*- MySQL Tables -------------------------------------------------------------------- */
 $t_exercise_index 		= $mysqlPrefixSav . "exercise_index";
 $t_exercise_index_images	= $mysqlPrefixSav . "exercise_index_images";
