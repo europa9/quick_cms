@@ -258,24 +258,26 @@ a.bold:hover {
 
 /*- Layout ------------------------------------------------------------------ */
 #layout_wrapper{
-	display: flex;
+	width: 100%;
+    display: flex;
 }
-#layout_left{
+
+#layout_header{
 	background: #27305b;
-	flex: 0 1 auto;
-	width: 20%;
-	height: 100%;
-	position: fixed !important; /* always sticky on left side */
-	overflow: auto; /* vertical scroll */
+	width: 200px;
 }
-#layout_center{
+
+#layout_content_wrapper{
 	background: #b1e2e7;
-	flex: 60%;
-	margin: 0px 20% 0px 20%;
+	flex-grow: 1;
 }
-#layout_right{
+#layout_content_inner{
+	padding: 10px 10px 10px 10px;
+}
+
+#layout_aside{
 	background: #f2f8f8;
-	flex: 0 1 auto;
+	width: 200px;
 }
 
 
@@ -366,33 +368,33 @@ nav{
 
 
 /*- Left bottom ------------------------------------------------------------ */
-div.left_bottom{
+div.header_bottom{
 	position: absolute;
 	left: auto;
 	bottom: 10px;
 }
-div.left_bottom > ul{
+div.header_bottom > ul{
 	list-style:none;
 	margin: 0px 0px 0px 0px;
 	padding: 0px 0px 0px 0px;
 }
 
-div.left_bottom > ul > li{
+div.header_bottom > ul > li{
 	margin: 0px 0px 0px 0px;
 	padding: 10px 0px 10px 0px;
 }
 
-div.left_bottom > ul > li > a{
+div.header_bottom > ul > li > a{
 	font: normal 16px 'Open Sans',sans-serif;
 	color: #8492b7;
 	text-decoration:none;
 	padding: 10px 0px 10px 10px;
 }
-div.left_bottom > ul > li > a:hover{
+div.header_bottom > ul > li > a:hover{
 	color: #fff;
 	text-decoration:none;
 }
-div.left_bottom > ul > li > a > img{
+div.header_bottom > ul > li > a > img{
 	border-radius: 50%;
 	position: relative;
 	top: 7px;

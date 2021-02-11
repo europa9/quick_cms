@@ -199,6 +199,140 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 									blog_post_user_ip=$inp_user_ip_mysql
 									 WHERE blog_post_id=$get_current_blog_post_id");
 
+				if($inp_submit == "$l_publish" OR $inp_submit == "$l_save"){
+
+					// Feed text
+					$inp_feed_text = substr($inp_text, 0, 200);
+					$inp_feed_text_mysql = quote_smart($link, $inp_feed_text);
+
+					// Feed image path
+					$inp_feed_image_path_mysql = quote_smart($link, $get_current_blog_post_image_path);
+
+					// Feed image file
+					$inp_feed_image_file_mysql = quote_smart($link, $get_current_blog_post_image_file);
+
+					// Feed image thumb 300x169
+					$extension = get_extension($get_current_blog_post_image_file);
+					$inp_feed_image_thumb = str_replace(".$extension", "", $get_current_blog_post_image_file);
+					$inp_feed_image_thumb_a = $inp_feed_image_thumb . "_300x169." . $extension;
+					$inp_feed_image_thumb_a_mysql = quote_smart($link, $inp_feed_image_thumb_a);
+
+					// Feed image thumb 540x304
+					$extension = get_extension($get_current_blog_post_image_file);
+					$inp_feed_image_thumb = str_replace(".$extension", "", $get_current_blog_post_image_file);
+					$inp_feed_image_thumb_b = $inp_feed_image_thumb . "_540x304." . $extension;
+					$inp_feed_image_thumb_b_mysql = quote_smart($link, $inp_feed_image_thumb_b);
+
+					// Feed link URL
+					$inp_feed_link_url = "blog/view_post.php?post_id=$get_current_blog_post_id&amp;l=$l";
+					$inp_feed_link_url_mysql = quote_smart($link, $inp_feed_link_url);
+
+					// Feed link name
+					$inp_feed_link_name = "$l_read_more";
+					$inp_feed_link_name_mysql = quote_smart($link, $inp_feed_link_name);
+
+					// Feed category name
+					$inp_feed_category_name_mysql = quote_smart($link, $get_current_blog_post_category_title);
+
+					// Get current user
+					$query = "SELECT user_id, user_email, user_name, user_alias, user_rank FROM $t_users WHERE user_id=$get_current_blog_post_user_id";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_my_user_id, $get_my_user_email, $get_my_user_name, $get_my_user_alias, $get_my_user_rank) = $row;
+		
+					// Author image
+					$query = "SELECT photo_id, photo_destination, photo_thumb_40, photo_thumb_50, photo_thumb_60, photo_thumb_200 FROM $t_users_profile_photo WHERE photo_user_id='$get_current_blog_post_user_id' AND photo_profile_image='1'";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_my_photo_id, $get_my_photo_destination, $get_my_photo_thumb_40, $get_my_photo_thumb_50, $get_my_photo_thumb_60, $get_my_photo_thumb_200) = $row;
+
+
+					$inp_feed_user_email_mysql = quote_smart($link, $get_my_user_email);
+					$inp_feed_user_name_mysql = quote_smart($link, $get_my_user_name);
+					$inp_feed_user_alias_mysql = quote_smart($link, $get_my_user_alias);
+					$inp_feed_user_photo_file_mysql = quote_smart($link, $get_my_photo_destination);
+					$inp_feed_user_photo_thumb_40_mysql = quote_smart($link, $get_my_photo_thumb_40);
+					$inp_feed_user_photo_thumb_50_mysql = quote_smart($link, $get_my_photo_thumb_50);
+					$inp_feed_user_photo_thumb_60_mysql = quote_smart($link, $get_my_photo_thumb_60);
+					$inp_feed_user_photo_thumb_200_mysql = quote_smart($link, $get_my_photo_thumb_200);
+
+
+					// My IP
+					$inp_my_ip = $_SERVER['REMOTE_ADDR'];
+					$inp_my_ip = output_html($inp_my_ip);
+					$inp_my_ip_mysql = quote_smart($link, $inp_my_ip);
+
+					// My hostname
+					$inp_my_hostname = "$inp_ip";
+					if($configSiteUseGethostbyaddrSav == "1"){
+						$inp_my_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']); // Some servers in local network cant use getostbyaddr because of nameserver missing
+					}
+					$inp_my_hostname = output_html($inp_my_hostname);
+					$inp_my_hostname_mysql = quote_smart($link, $inp_my_hostname);
+					
+					// Lang
+					$inp_feed_language = output_html($l);
+					$inp_feed_language_mysql = quote_smart($link, $inp_feed_language);
+					
+					// Subscribe
+					$query = "SELECT es_id, es_user_id, es_type, es_on_off FROM $t_users_email_subscriptions WHERE es_user_id='$get_current_blog_post_user_id' AND es_type='users_feed'";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_es_id, $get_es_user_id, $get_es_type, $get_es_on_off) = $row;
+					if($get_es_id == ""){
+						// Dont know
+						mysqli_query($link, "INSERT INTO $t_users_email_subscriptions 
+						(es_id, es_user_id, es_type, es_on_off) 
+						VALUES 
+						(NULL, $get_my_user_id, 'users_feed', 0)") or die(mysqli_error($link));
+						$get_es_on_off = 0;
+					}
+					
+					$year = date("Y");
+					$date_saying = date("j M Y");
+
+					// Check if exists
+					$query = "SELECT feed_id FROM $t_users_feeds_index WHERE feed_module_name='blog' AND feed_module_part_name='post' AND feed_module_part_id=$get_current_blog_post_id AND feed_user_id=$get_current_blog_post_user_id";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_current_feed_id) = $row;
+					if($get_current_feed_id == ""){
+						// Insert feed
+						mysqli_query($link, "INSERT INTO $t_users_feeds_index
+						(feed_id, feed_title, feed_text, feed_image_path, feed_image_file, 
+						feed_image_thumb_300x169, feed_image_thumb_540x304, feed_link_url, feed_link_name, feed_module_name, 
+						feed_module_part_name, feed_module_part_id, feed_main_category_id, feed_main_category_name, 
+						feed_user_id, feed_user_email, feed_user_name, feed_user_alias, 
+						feed_user_photo_file, feed_user_photo_thumb_40, feed_user_photo_thumb_50, feed_user_photo_thumb_60, feed_user_photo_thumb_200, 
+						feed_user_subscribe, feed_user_ip, feed_user_hostname, feed_language, feed_created_datetime, 
+						feed_created_year, feed_created_time, feed_created_date_saying, feed_likes, feed_dislikes, feed_comments) 
+						VALUES 
+						(NULL, $inp_title_mysql, $inp_feed_text_mysql, $inp_feed_image_path_mysql, $inp_feed_image_file_mysql, 
+						$inp_feed_image_thumb_a_mysql, $inp_feed_image_thumb_b_mysql, $inp_feed_link_url_mysql, $inp_feed_link_name_mysql, 'blog', 
+						'post', $get_current_blog_post_id, $get_current_blog_post_category_id, $inp_feed_category_name_mysql, 
+						$get_my_user_id, $inp_feed_user_email_mysql, $inp_feed_user_name_mysql, $inp_feed_user_alias_mysql, 
+						$inp_feed_user_photo_file_mysql, $inp_feed_user_photo_thumb_40_mysql, $inp_feed_user_photo_thumb_50_mysql, $inp_feed_user_photo_thumb_60_mysql, $inp_feed_user_photo_thumb_200_mysql, 
+						$get_es_on_off, $inp_my_ip_mysql, $inp_my_hostname_mysql, $inp_feed_language_mysql, '$datetime',
+						'$year', '$time', '$date_saying', 0, 0, 0)")
+						or die(mysqli_error($link));
+						
+					} // Create feed
+					else{
+						// Update feed
+						mysqli_query($link, "UPDATE $t_users_feeds_index SET
+									feed_title=$inp_title_mysql, 
+									feed_text=$inp_feed_text_mysql, 
+									feed_image_path=$inp_feed_image_path_mysql, 
+									feed_image_file=$inp_feed_image_file_mysql, 
+									feed_image_thumb_300x169=$inp_feed_image_thumb_a_mysql, 
+									feed_image_thumb_540x304=$inp_feed_image_thumb_b_mysql, 
+									feed_modified_datetime='$datetime'
+									WHERE feed_id=$get_current_feed_id")
+									or die(mysqli_error($link));
+					} // Update feed
+				} // feed
+
+
 				if($inp_submit == "$l_publish" OR $inp_submit == "$l_save" OR $inp_submit == "$l_save_draft" OR $inp_submit == "$l_unpublish_and_save_as_draft" OR $inp_submit == "$l_text"){
 					$url = "my_blog_edit_post.php?post_id=$get_current_blog_post_id&l=$l&ft=success&fm=changes_saved";
 				}

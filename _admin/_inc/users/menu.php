@@ -40,6 +40,7 @@ echo"
 			<li";if($page == "professional_allowed_departments"){echo" class=\"down\"";}echo"><a href=\"./?open=$open&amp;page=professional_allowed_departments&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "professional_allowed_departments"){echo" class=\"selected\"";}echo">Allowed departments</a></li>
 			<li";if($page == "professional_allowed_positions"){echo" class=\"down\"";}echo"><a href=\"./?open=$open&amp;page=professional_allowed_positions&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "professional_allowed_positions"){echo" class=\"selected\"";}echo">Allowed positions</a></li>
 			<li";if($page == "professional_allowed_districts"){echo" class=\"down\"";}echo"><a href=\"./?open=$open&amp;page=professional_allowed_districts&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "professional_allowed_districts"){echo" class=\"selected\"";}echo">Allowed districts</a></li>
+			<li";if($page == "feed"){echo" class=\"down\"";}echo"><a href=\"index.php?open=$open&amp;page=feed&amp;editor_language=$editor_language&amp;l=$l\"";if($page == "feed"){echo" class=\"selected\"";}echo">Feed</a></li>
 		
 
 ";

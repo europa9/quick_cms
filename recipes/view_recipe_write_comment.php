@@ -26,6 +26,9 @@ else{ $root = "../../.."; }
 include("$root/_admin/website_config.php");
 include("$root/_admin/_data/logo.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+include("_tables.php");
+
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/recipes/ts_recipes.php");
 include("$root/_admin/_translations/site/$l/recipes/ts_view_recipe.php");

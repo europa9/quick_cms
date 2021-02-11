@@ -31,7 +31,6 @@ include("_tables_blog.php");
 
 /*- Blog config -------------------------------------------------------------------- */
 include("$root/_admin/_data/blog.php");
-include("_include_tables.php");
 
 /*- Title ------------------------------------------------------------------------------------ */
 $query_t = "SELECT title_id, title_value FROM $t_blog_titles WHERE title_language=$l_mysql";

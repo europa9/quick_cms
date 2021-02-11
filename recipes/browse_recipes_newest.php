@@ -25,6 +25,9 @@ else{ $root = "../../.."; }
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+include("_tables.php");
+
 /*- Tables ------------------------------------------------------------------------ */
 $t_recipes_tags_unique			= $mysqlPrefixSav . "recipes_tags_unique";
 

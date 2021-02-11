@@ -102,7 +102,7 @@ echo"<!DOCTYPE html>
 
 
 <div id=\"layout_wrapper\">
-	<div id=\"layout_left\">
+	<div id=\"layout_header\">
 
 		<!-- Logo -->
 			<div id=\"logo\">
@@ -111,7 +111,7 @@ echo"<!DOCTYPE html>
 		<!-- //Logo -->
 
 
-		<!-- Left navigation -->
+		<!-- Header navigation -->
 			<nav>
 				<ul class=\"main_navigation\">\n";
 				$navigation_language_mysql = quote_smart($link, $l);
@@ -127,11 +127,11 @@ echo"<!DOCTYPE html>
 				</ul>
 			</nav>
 
-		<!-- //Left navigation -->
+		<!-- //Header navigation -->
 
 
-		<!-- Left Bottom -->
-			<div class=\"left_bottom\">
+		<!-- Header Bottom -->
+			<div class=\"header_bottom\">
 				<ul>
 				";
 				// Am I logged in?
@@ -176,9 +176,12 @@ echo"<!DOCTYPE html>
 				echo"
 				</ul>
 			</div>
-		<!-- //Left Bottom -->
-	</div> <!-- //layout_left -->
-	<div id=\"layout_center\">
+		<!-- //Header Bottom -->
+	</div> <!-- //layout_header -->
+
+
+	<div id=\"layout_content_wrapper\">
+		<div id=\"layout_content_inner\">
 
 	";
 	

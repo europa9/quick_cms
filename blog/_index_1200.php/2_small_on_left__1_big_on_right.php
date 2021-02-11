@@ -22,7 +22,7 @@ while($row = mysqli_fetch_row($result)) {
 			$thumb = $get_blog_post_id . "_thumb_" . $width . "x" . $height . "." . $get_blog_post_image_ext;
 			if(!(file_exists("$root/$get_blog_post_image_path/$thumb"))){
 				resize_crop_image($width, $height, "$root/$get_blog_post_image_path/$get_blog_post_image_file", "$root/$get_blog_post_image_path/$thumb");
-			}	
+			}
 
 
 			echo"

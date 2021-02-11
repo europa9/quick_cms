@@ -8,4 +8,5 @@ $l_pre_title = "Pre title";
 $l_save_draft = "Save draft";
 $l_unpublish_and_save_as_draft = "Unpublish and save draft";
 $l_publish = "Publish";
+$l_read_more = "Read more";
 ?>

@@ -59,6 +59,9 @@ if (mysqli_connect_errno()){
 
 
 
+/*- Tables ---------------------------------------------------------------------------- */
+include("_tables.php");
+
 /*- MySQL Tables -------------------------------------------------------------------- */
 $t_food_index		= $mysqlPrefixSav . "food_index";
 $t_food_queries 	= $mysqlPrefixSav . "food_queries";

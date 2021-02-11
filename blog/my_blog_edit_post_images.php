@@ -374,9 +374,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 
 				<!-- Form Buttons (Navigation) -->
 					<p>
-					<a href=\"my_blog_new_post.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_text</a>
-					<a href=\"my_blog_new_post_meta.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_meta</a>
-					<a href=\"my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_main_image</a>
+					<a href=\"my_blog_edit_post.php?post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_text</a>
+					<a href=\"my_blog_edit_post_meta.php?post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_meta</a>
+					<a href=\"my_blog_edit_post_main_image.php?post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_main_image</a>
 					<a href=\"my_blog_edit_post_images.php?post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\" style=\"font-weight: bold;\">$l_images</a>
 					<a href=\"view_post.php?post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_view_post</a>
 					</p>
