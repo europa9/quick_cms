@@ -123,6 +123,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<option value=\"new_food_2_select_main_category.php?barcode=$barcode&amp;l=$l\">- $l_please_select -</option>
 			<option value=\"new_food_2_select_main_category.php?barcode=$barcode&amp;l=$l\"> </option>
 			";
+			if(!(isset($main_category_id))){
+				$main_category_id = "";
+			}
 
 			// Get all categories
 			$query = "SELECT category_id, category_name, category_parent_id FROM $t_food_categories WHERE category_user_id='0' AND category_parent_id='0' ORDER BY category_name ASC";

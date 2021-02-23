@@ -185,16 +185,13 @@ if($action == ""){
 
 			echo"
 			 <tr>
-       			  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 10px;\">
-				<span>$get_b_navigation_id</span>
-       			  </td>
-       			  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 10px;\">
+       			  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 20px;\">
           			<span>$get_b_navigation_title</span>
 			  </td>
-       			  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 10px;\">
+       			  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 20px;\">
 				<span><a href=\"../$get_b_navigation_url\">$get_b_navigation_url</a></span>
 			  </td>
-       			  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 10px;\">
+       			  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 20px;\">
 				<script type=\"text/javascript\">
 				function confirmDelete$get_b_navigation_id() {
 					if (confirm(\"$l_are_your_sure_you_want_to_delete_the_item\")) {
@@ -237,16 +234,16 @@ if($action == ""){
 
 				echo"
 				 <tr>
-       				  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 20px;\">
+       				  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 30px;\">
 					<span>$get_c_navigation_id</span>
        				  </td>
-       				  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 20px;\">
+       				  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 30px;\">
           				<span>$get_c_navigation_title</span>
 				  </td>
-       				  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 20px;\">
+       				  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 30px;\">
 					<span><a href=\"../$get_c_navigation_url\">$get_c_navigation_url</a></span>
 			   	 </td>
-       				  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 20px;\">
+       				  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 30px;\">
 					<script type=\"text/javascript\">
 					function confirmDelete$get_c_navigation_id() {
 						if (confirm(\"$l_are_your_sure_you_want_to_delete_the_item\")) {
@@ -342,6 +339,9 @@ elseif($action == "new"){
 		$inp_url_path = output_html($inp_url_path);
 		$inp_url_path_mysql = quote_smart($link, $inp_url_path);
 
+		$inp_url_path_md5 = md5($inp_url_path);
+		$inp_url_path_md5_mysql = quote_smart($link, $inp_url_path_md5);
+
 		$inp_url_query = output_html($inp_url_query);
 		$inp_url_query_mysql = quote_smart($link, $inp_url_query);
 
@@ -364,9 +364,13 @@ elseif($action == "new"){
 
 		// Insert
 		mysqli_query($link, "INSERT INTO $t_pages_navigation 
-		(navigation_id, navigation_parent_id, navigation_title, navigation_title_clean, navigation_url, navigation_url_path, navigation_url_query, navigation_language, navigation_internal_or_external,  navigation_weight, navigation_created_datetime, navigation_created_by_user_id) 
+		(navigation_id, navigation_parent_id, navigation_title, navigation_title_clean, navigation_url, 
+		navigation_url_path, navigation_url_path_md5, navigation_url_query, navigation_language, navigation_internal_or_external, 
+		navigation_weight, navigation_created_datetime, navigation_created_by_user_id) 
 		VALUES 
-		(NULL, $inp_parent_mysql, $inp_title_mysql, $inp_slug_mysql, $inp_url_mysql, $inp_url_path_mysql, $inp_url_query_mysql, $inp_language_mysql, '$inp_internal_or_external', '$get_count_rows', '$datetime', $inp_created_by_user_id_mysql)")
+		(NULL, $inp_parent_mysql, $inp_title_mysql, $inp_slug_mysql, $inp_url_mysql, 
+		$inp_url_path_mysql, $inp_url_path_md5_mysql, $inp_url_query_mysql, $inp_language_mysql, '$inp_internal_or_external', 
+		'$get_count_rows', '$datetime', $inp_created_by_user_id_mysql)")
 		or die(mysqli_error($link));
 
 		// Get ID
@@ -666,6 +670,9 @@ elseif($action == "edit"){
 			$inp_url_path = output_html($inp_url_path);
 			$inp_url_path_mysql = quote_smart($link, $inp_url_path);
 
+			$inp_url_path_md5 = md5($inp_url_path);
+			$inp_url_path_md5_mysql = quote_smart($link, $inp_url_path_md5);
+
 			$inp_url_query = output_html($inp_url_query);
 			$inp_url_query_mysql = quote_smart($link, $inp_url_query);
 
@@ -686,6 +693,7 @@ elseif($action == "edit"){
 							navigation_title_clean=$inp_title_clean_mysql, 
 							navigation_url=$inp_url_mysql, 
 							navigation_url_path=$inp_url_path_mysql, 
+							navigation_url_path_md5=$inp_url_path_md5_mysql, 
 							navigation_url_query=$inp_url_query_mysql, 
 							navigation_language=$inp_language_mysql,
 							navigation_internal_or_external='$inp_internal_or_external', 
@@ -724,7 +732,7 @@ elseif($action == "edit"){
 				$file_type = strtolower("$file_type");
 
 				// New name
-				$new_name = $inp_slug . "_" . $icons_size_array[$x] . "_" . $icons_types_array[$y] . "." . $file_type;
+				$new_name = $inp_title_clean . "_" . $icons_size_array[$x] . "_" . $icons_types_array[$y] . "." . $file_type;
 
 				// Sjekk om det er en OK filendelse
 				if($file_type == "jpg" OR $file_type == "jpeg" OR $file_type == "png" OR $file_type == "gif"){
@@ -768,8 +776,8 @@ elseif($action == "edit"){
 			} // for icons size
 
 			
-			// Move to index
-			header("Location: index.php?open=$open&page=navigation&editor_language=$editor_language&ft=success&fm=changes_saved");
+			// Move to edit
+			header("Location: index.php?open=$open&page=navigation&action=edit&id=$id&editor_language=$editor_language&ft=success&fm=changes_saved");
 			exit;
 		} // end process
 			
@@ -777,6 +785,16 @@ elseif($action == "edit"){
 		
 		echo"
 		<h1>$l_edit_menu_item</h1>
+
+		<!-- Where am I? -->
+			<p><b>$l_you_are_here</b><br />
+			<a href=\"index.php?open=$open&amp;page=navigation&amp;editor_language=$editor_language&amp;l=$l\">Navigation</a>
+			&gt;
+			<a href=\"index.php?open=$open&amp;page=navigation&amp;action=edit&amp;id=$id&amp;editor_language=$editor_language&amp;l=$l\">Edit $get_navigation_title</a>
+			</p>
+		<!-- //Where am I? -->
+
+
 		<form method=\"post\" action=\"?open=$open&amp;page=navigation&amp;action=edit&amp;id=$id&amp;editor_language=$editor_language&amp;process=1\" enctype=\"multipart/form-data\">
 				
 	
@@ -834,8 +852,8 @@ elseif($action == "edit"){
 			<option value=\"0\""; if($get_navigation_parent_id == 0){ echo" selected=\"selected\""; } echo">$l_this_is_parent</option>
 			<option value=\"0\">-</option>";
 		
-			$language_mysql = quote_smart($link, $editor_language);
-			$query = "SELECT navigation_id, navigation_title FROM $t_pages_navigation WHERE navigation_parent_id='0' AND navigation_language=$editor_language_mysql";
+			$language_mysql = quote_smart($link, $get_navigation_language);
+			$query = "SELECT navigation_id, navigation_title FROM $t_pages_navigation WHERE navigation_parent_id='0' AND navigation_language=$language_mysql";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
 				list($get_navigation_id, $get_navigation_title) = $row;
@@ -843,7 +861,7 @@ elseif($action == "edit"){
 				echo"			<option value=\"$get_navigation_id\""; if($get_navigation_parent_id == $get_navigation_id){ echo" selected=\"selected\""; } echo">$get_navigation_title</option>\n";
 
 				// Sub
-				$query_b = "SELECT navigation_id, navigation_title FROM $t_pages_navigation WHERE navigation_parent_id='$get_navigation_id' AND navigation_language=$editor_language_mysql";
+				$query_b = "SELECT navigation_id, navigation_title FROM $t_pages_navigation WHERE navigation_parent_id='$get_navigation_id' AND navigation_language=$language_mysql";
 				$result_b = mysqli_query($link, $query_b);
 				while($row_b = mysqli_fetch_row($result_b)) {
 					list($get_b_navigation_id, $get_b_navigation_title) = $row_b;

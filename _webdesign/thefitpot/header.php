@@ -100,9 +100,8 @@ echo"<!DOCTYPE html>
 <body>
 <a id=\"top\"></a>
 
-
-<div id=\"layout_wrapper\">
-	<div id=\"layout_header\">
+<!-- Header -->
+	<header>
 
 		<!-- Logo -->
 			<div id=\"logo\">
@@ -115,13 +114,23 @@ echo"<!DOCTYPE html>
 			<nav>
 				<ul class=\"main_navigation\">\n";
 				$navigation_language_mysql = quote_smart($link, $l);
-				$query_nav_main = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_title_clean, navigation_url, navigation_url_path, navigation_url_query, navigation_language, navigation_internal_or_external, navigation_icon_path, navigation_icon_16x16_inactive, navigation_icon_16x16_hover, navigation_icon_16x16_active, navigation_icon_18x18_inactive, navigation_icon_18x18_hover, navigation_icon_18x18_active, navigation_weight, navigation_created_datetime, navigation_created_by_user_id, navigation_updated_datetime, navigation_updated_by_user_id FROM $t_pages_navigation WHERE navigation_parent_id='0' AND navigation_language=$navigation_language_mysql ORDER BY navigation_weight ASC";
+				$query_nav_main = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_title_clean, navigation_url, navigation_url_path, navigation_url_query, navigation_internal_or_external, navigation_icon_path, navigation_icon_18x18_inactive, navigation_icon_18x18_hover, navigation_icon_18x18_active FROM $t_pages_navigation WHERE navigation_parent_id='0' AND navigation_language=$navigation_language_mysql ORDER BY navigation_weight ASC";
 				$result_nav_main = mysqli_query($link, $query_nav_main);
 				$row_cnt_nav_main = mysqli_num_rows($result_nav_main);
 				while($row_nav_main = mysqli_fetch_row($result_nav_main)) {
-					list($get_parent_navigation_id, $get_parent_navigation_parent_id, $get_parent_navigation_title, $get_parent_navigation_title_clean, $get_parent_navigation_url, $get_parent_navigation_url_path, $get_parent_navigation_url_query, $get_parent_navigation_language, $get_parent_navigation_internal_or_external, $get_parent_navigation_icon_path, $get_parent_navigation_icon_16x16_inactive, $get_parent_navigation_icon_16x16_hover, $get_parent_navigation_icon_16x16_active, $get_parent_navigation_icon_18x18_inactive, $get_parent_navigation_icon_18x18_hover, $get_parent_navigation_icon_18x18_active, $get_parent_navigation_weight, $get_parent_navigation_created_datetime, $get_parent_navigation_created_by_user_id, $get_parent_navigation_updated_datetime, $get_parent_navigation_updated_by_user_id) = $row_nav_main;
+					list($get_a_navigation_id, $get_a_navigation_a_id, $get_a_navigation_title, $get_a_navigation_title_clean, $get_a_navigation_url, $get_a_navigation_url_path, $get_a_navigation_url_query, $get_a_navigation_internal_or_external, $get_a_navigation_icon_path, $get_a_navigation_icon_18x18_inactive, $get_a_navigation_icon_18x18_hover, $get_a_navigation_icon_18x18_active) = $row_nav_main;
 					echo"				";
-					echo"				<li><a href=\"$root/$get_parent_navigation_url_path$get_parent_navigation_url_query\" class=\"nav_$get_parent_navigation_title_clean\">$get_parent_navigation_title</a></li>\n";
+					echo"<p>$get_a_navigation_title</p>\n";
+
+
+					// Children level 2
+					$query_c = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_title_clean, navigation_url, navigation_url_path, navigation_url_path_md5, navigation_url_query, navigation_internal_or_external, navigation_icon_path, navigation_icon_18x18_inactive, navigation_icon_18x18_hover, navigation_icon_18x18_active FROM $t_pages_navigation WHERE navigation_parent_id=$get_a_navigation_id AND navigation_language=$navigation_language_mysql ORDER BY navigation_weight ASC";
+					$result_c = mysqli_query($link, $query_c);
+					while($row_c = mysqli_fetch_row($result_c)) {
+						list($get_b_navigation_id, $get_b_navigation_b_id, $get_b_navigation_title, $get_b_navigation_title_clean, $get_b_navigation_url, $get_b_navigation_url_path, $get_b_navigation_url_path_md5, $get_b_navigation_url_query, $get_b_navigation_internal_or_external, $get_b_navigation_icon_path, $get_b_navigation_icon_18x18_inactive, $get_b_navigation_icon_18x18_hover, $get_b_navigation_icon_18x18_active) = $row_c;
+						echo"				";
+						echo"				<li><a href=\"$root/$get_b_navigation_url_path$get_b_navigation_url_query\" class=\"nav_$get_b_navigation_url_path_md5\">$get_b_navigation_title</a></li>\n";
+					}
 				}
 				echo"
 				</ul>
@@ -177,11 +186,13 @@ echo"<!DOCTYPE html>
 				</ul>
 			</div>
 		<!-- //Header Bottom -->
-	</div> <!-- //layout_header -->
+	</header>
+<!-- //Header -->
 
 
-	<div id=\"layout_content_wrapper\">
-		<div id=\"layout_content_inner\">
+<!-- Content -->
+	<main>
+		<div id=\"main_inner\">
 
 	";
 	

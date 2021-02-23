@@ -200,45 +200,32 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 				mysqli_query($link, "INSERT INTO $t_food_index
-				(food_id, food_user_id, food_name, 
-				food_clean_name, food_manufacturer_name, food_manufacturer_name_and_food_name, 
-				food_description, food_country, food_net_content, 
-				food_net_content_measurement, food_serving_size_gram, food_serving_size_gram_measurement, 
-				food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy, 
+				(food_id, food_user_id, food_name, food_clean_name, food_manufacturer_name, 
+				food_manufacturer_name_and_food_name, food_description, food_country, food_net_content_metric, food_net_content_metric_measurement, 
+				food_net_content_us_system, food_net_content_us_system_measurement, food_serving_size_metric, food_serving_size_metric_measurement, food_serving_size_us_system, 
 
-				food_proteins, food_carbohydrates, food_dietary_fiber, 
-				food_carbohydrates_of_which_sugars, food_fat, food_fat_of_which_saturated_fatty_acids, 
-				food_salt, food_sodium, food_score, 
-				food_energy_calculated, food_proteins_calculated, food_salt_calculated, 
-				food_sodium_calculated, food_carbohydrates_calculated, food_dietary_fiber_calculated, 
-
-				food_carbohydrates_of_which_sugars_calculated, food_fat_calculated, food_fat_of_which_saturated_fatty_acids_calculated, 
-				food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_last_used, 
-
-				food_language, food_synchronized, food_accepted_as_master, 
-				food_notes, food_unique_hits, food_unique_hits_ip_block, 
-				food_comments, food_likes, food_dislikes, 
-				food_likes_ip_block, food_user_ip, food_created_date, food_last_viewed, food_age_restriction) 
+				food_serving_size_us_system_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy, food_proteins, 
+				food_carbohydrates, food_dietary_fiber, food_carbohydrates_of_which_sugars, food_fat, food_fat_of_which_saturated_fatty_acids, 
+				food_salt, food_sodium, food_score, food_energy_calculated, food_proteins_calculated, 
+				food_salt_calculated, food_sodium_calculated, food_carbohydrates_calculated, food_dietary_fiber_calculated, food_carbohydrates_of_which_sugars_calculated, 
+				food_fat_calculated, food_fat_of_which_saturated_fatty_acids_calculated, food_barcode, food_main_category_id, food_sub_category_id, 
+				food_image_path, food_last_used, food_language, food_synchronized, food_accepted_as_master, 
+				food_notes, food_unique_hits, food_unique_hits_ip_block, food_comments, food_likes, 
+				food_dislikes, food_likes_ip_block, food_user_ip, food_created_date, food_last_viewed, 
+				food_age_restriction) 
 				VALUES 
-				(NULL, $inp_food_user_id_mysql, $inp_food_name_mysql, 
-				$inp_food_clean_name_mysql, $inp_food_manufacturer_name_mysql, $inp_food_manufacturer_name_and_food_name_mysql, 
-				$inp_food_description_mysql, $inp_food_country_mysql, '0', 
-				'g', '0', 'g', 
-				'0',  'g', '0', 
-
-				'0', '0', '0',
-				'0', '0', '0', 
-				'0', '0', '0', 
-				'0', '0', '0', 
-				'0', '0', '0', 
-
-				'0', '0', '0', 
-				$inp_food_barcode_mysql, '$get_current_main_category_id', '$get_current_sub_category_id', $inp_food_image_path_mysql, '$datetime', 
-				$l_mysql, '$datetime', $inp_accepted_as_master_mysql,
-				$inp_notes_mysql, '0', '',
-				'0', '0', '0', 
-				'', $inp_user_ip_mysql, '$datetime',
-				'$datetime', $inp_age_restriction_mysql)")
+				(NULL, $inp_food_user_id_mysql, $inp_food_name_mysql, $inp_food_clean_name_mysql, $inp_food_manufacturer_name_mysql, 
+				$inp_food_manufacturer_name_and_food_name_mysql, $inp_food_description_mysql, $inp_food_country_mysql, '0', 'g', 
+				'0', 'US oz', '0', 'g', '0',
+				'US oz', 0, 'g', '0', '0', 
+				'0', '0', '0', '0', '0', 
+				'0', '0', '0', '0', '0', 
+				'0', '0', '0', '0', '0',
+				 '0', '0', $inp_food_barcode_mysql, '$get_current_main_category_id', '$get_current_sub_category_id', 
+				$inp_food_image_path_mysql, '$datetime', $l_mysql, '$datetime', $inp_accepted_as_master_mysql,
+				$inp_notes_mysql, '0', '', '0', '0', 
+				'0', '', $inp_user_ip_mysql, '$datetime','$datetime', 
+				$inp_age_restriction_mysql)")
 				or die(mysqli_error($link));
 
 				// Get _id
@@ -297,8 +284,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				'food', 'food', 'food_id','$get_food_id', 0, 
 				'$datetime', '$datetime_saying', $inp_index_language_mysql)")
 				or die(mysqli_error($link));
-				
-
+		
 				// Search engine
 				include("new_food_00_add_update_search_engine.php");
 

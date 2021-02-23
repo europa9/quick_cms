@@ -1,9 +1,13 @@
 <?php
 echo"
 		</div> <!-- //layout_content_inner -->
-	</div> <!-- //layout_content_wrapper -->
+	</main> <!-- //layout_content_wrapper -->
+<!-- //Content -->
 
-	<div id=\"layout_aside\">	
+
+<!-- Aside -->
+	<aside>
+		
 		<!-- Feeds -->
 			";
 			$t_users_feeds_index		= $mysqlPrefixSav . "users_feeds_index";
@@ -63,12 +67,13 @@ echo"
 					</table>
 
 				</div>
+				<div class=\"feed_bodycell_after\"></div>
 				";
 			}
 			echo"
 		<!-- //Feeds -->
-	</div> <!-- //layout_aside -->
-</div> <!-- //layout_wrapper -->
+	</aside> 
+<!-- //Aside wrapper -->
 
 <!-- Cookies warning -->
 	";

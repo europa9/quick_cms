@@ -2,6 +2,7 @@
 $l_admin = "Admin";
 $l_april = "April";
 $l_august = "August";
+$l_community = "Fellesskap";
 $l_create_free_account = "Lag en gratis konto";
 $l_december = "Desember";
 $l_editor = "Editor";

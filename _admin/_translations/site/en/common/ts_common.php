@@ -36,4 +36,5 @@ $l_newest_members = "Newest members";
 
 $l_follow_us = "Follow us!";
 $l_registrer = "Register";
+$l_community = "Community";
 ?>

@@ -252,7 +252,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<!-- New store -->
 				<p>
 				<a href=\"my_stores_new.php?l=$l\" class=\"btn_default\">$l_new_store</a>
-				<a href=\"view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$food_id&amp;l=$l\" class=\"btn_default\">$l_view_food</a>
+				<a href=\"new_food_10_publish.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$food_id&amp;l=$l\" class=\"btn_default\">$l_view_food</a>
 				</p>
 				
 			<!-- //New store -->
