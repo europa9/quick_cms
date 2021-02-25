@@ -12,6 +12,9 @@ header("Content-Type: text/html;charset=ISO-8859-1");
 
 
 
+/*- Tables --------------------------------------------------------------------------- */
+include("_tables.php");
+
 /*- Functions ------------------------------------------------------------------------ */
 include("../_admin/_functions/output_html.php");
 include("../_admin/_functions/clean.php");

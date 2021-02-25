@@ -24,6 +24,9 @@ else{ $root = "../../.."; }
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+include("_tables.php");
+
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/workout_plans/ts_new_workout_plan.php");
 
