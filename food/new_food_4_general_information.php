@@ -200,9 +200,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				mysqli_query($link, "INSERT INTO $t_food_index
 				(food_id, food_user_id, food_name, food_clean_name, food_manufacturer_name, 
-				food_manufacturer_name_and_food_name, food_description, food_country, food_net_content_metric, food_net_content_metric_measurement, 
-				food_net_content_us_system, food_net_content_us_system_measurement, food_serving_size_metric, food_serving_size_metric_measurement, food_serving_size_us_system, 
-				food_serving_size_us_system_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy_metric, food_fat_metric, 
+				food_manufacturer_name_and_food_name, food_description, food_country, food_net_content_metric, food_net_content_measurement_metric, 
+				food_net_content_us_system, food_net_content_measurement_us_system, food_serving_size_metric, food_serving_size_measurement_metric, food_serving_size_us_system, 
+				food_serving_size_measurement_us_system, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy_metric, food_fat_metric, 
 
 				food_fat_of_which_saturated_fatty_acids_metric, food_monounsaturated_fat_metric, food_polyunsaturated_fat_metric, food_cholesterol_metric, food_carbohydrates_metric, 
 				food_carbohydrates_of_which_sugars_metric, food_dietary_fiber_metric, food_proteins_metric, food_salt_metric, food_sodium_metric, 

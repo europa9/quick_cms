@@ -263,7 +263,7 @@ a.bold:hover {
 /*- Header - */
 header{
 	background: #05192d;
-	width: 220px;
+	width: 14%;
 	height: 100%;
 	position: fixed !important; /* always sticky on left side */
 	overflow: auto; /* vertical scroll */
@@ -278,7 +278,9 @@ header{
 main{
 	background: #f7f3eb;
 	float: left;
-	margin: 52px 400px 0px 240px;
+	width: 58%;
+	margin: 52px 25% 0px 14%;
+	
 }
 #main_inner{
 	background: #ffffff;
@@ -292,7 +294,7 @@ main{
 /*- Aside - */
 aside{
 	background: #ffffff;
-	width: 380px;
+	width: 25%;
 	height: 100%;
 	position:fixed  !important; /* always sticky on right side */
 	right: 0px;

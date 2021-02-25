@@ -64,4 +64,11 @@ $l_ratings = "Ratings";
 $l_view_rating = "View rating";
 $l_login_to_post_comment = "Login to post comment";
 $l_create_new_account  = "Create new account";
+$l_net_content_metric  = "Net content metric";
+$l_net_content_us_system = "Net content US system";
+$l_metric  = "Metric";
+$l_us_system = "US system";
+$l_us = "US";
+$l_per_8 = "Per 8";
+$l_all = "All";
 ?>
