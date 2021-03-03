@@ -26,4 +26,7 @@ $t_blog_ping_list_per_blog		= $mysqlPrefixSav . "blog_ping_list_per_blog";
 $t_blog_stats_most_used_categories	= $mysqlPrefixSav . "blog_stats_most_used_categories";
 $t_stats_comments_per_year 		= $mysqlPrefixSav . "stats_comments_per_year";
 $t_stats_comments_per_month 		= $mysqlPrefixSav . "stats_comments_per_month";
+
+/*- Tables ads ---------------------------------------------------------------------------- */
+$t_ads_index	= $mysqlPrefixSav . "ads_index";
 ?>

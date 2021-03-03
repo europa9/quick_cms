@@ -30,8 +30,8 @@ div.recipes_categories_row{
 	flex-wrap: wrap;
 }
 div.recipes_categories_column{
-	flex: 20%;
-	max-width: 20%;
+	flex: 25%;
+	max-width: 25%;
 	text-align: center;
 }
 div.recipes_categories_column > p{

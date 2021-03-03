@@ -137,10 +137,10 @@ echo"
 				<option value=\"view_tag.php?tag=$tag&amp;order_by=food_name&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "food_name"){ echo" selected=\"selected\""; } echo">$l_name</option>
 				<option value=\"view_tag.php?tag=$tag&amp;order_by=food_manufacturer_name_and_food_name&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "food_manufacturer_name_and_food_name" OR $order_by == ""){ echo" selected=\"selected\""; } echo">$l_manufacturer_and_name</option>
 				<option value=\"view_tag.php?tag=$tag&amp;order_by=food_unique_hits&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "food_unique_hits"){ echo" selected=\"selected\""; } echo">$l_unique_hits</option>
-				<option value=\"view_tag.php?tag=$tag&amp;order_by=food_energy&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "food_energy"){ echo" selected=\"selected\""; } echo">$l_calories</option>
-				<option value=\"view_tag.php?tag=$tag&amp;order_by=food_fat&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "food_fat"){ echo" selected=\"selected\""; } echo">$l_fat</option>
-				<option value=\"view_tag.php?tag=$tag&amp;order_by=food_carbohydrates&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "food_carbohydrates"){ echo" selected=\"selected\""; } echo">$l_carbs</option>
-				<option value=\"view_tag.php?tag=$tag&amp;order_by=food_proteins&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "food_proteins"){ echo" selected=\"selected\""; } echo">$l_proteins</option>
+				<option value=\"view_tag.php?tag=$tag&amp;order_by=food_energy_metric&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "food_energy_metric"){ echo" selected=\"selected\""; } echo">$l_calories</option>
+				<option value=\"view_tag.php?tag=$tag&amp;order_by=food_fat_metric&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "food_fat_metric"){ echo" selected=\"selected\""; } echo">$l_fat</option>
+				<option value=\"view_tag.php?tag=$tag&amp;order_by=food_carbohydrates_metric&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "food_carbohydrates_metric"){ echo" selected=\"selected\""; } echo">$l_carbs</option>
+				<option value=\"view_tag.php?tag=$tag&amp;order_by=food_proteins_metric&amp;order_method=$order_method&amp;l=$l\""; if($order_by == "food_proteins_metric"){ echo" selected=\"selected\""; } echo">$l_proteins</option>
 			</select>
 			<select name=\"inp_order_method\" id=\"inp_order_method_select\">";
 				if($order_by == ""){
@@ -163,7 +163,7 @@ echo"
 
 // Get food with that tag
 $x = 0;
-$query = "SELECT $t_food_index_tags.tag_id, $t_food_index.food_id, $t_food_index.food_name, $t_food_index.food_manufacturer_name, $t_food_index.food_energy, $t_food_index.food_proteins, $t_food_index.food_carbohydrates, $t_food_index.food_fat, $t_food_index.food_image_path, $t_food_index.food_image_a, $t_food_index.food_thumb_a_small, $t_food_index.food_score, $t_food_index.food_main_category_id, $t_food_index.food_sub_category_id FROM $t_food_index_tags INNER JOIN $t_food_index ON $t_food_index_tags.tag_food_id=$t_food_index.food_id WHERE $t_food_index_tags.tag_title_clean=$tag_mysql AND $t_food_index_tags.tag_language=$l_mysql";
+$query = "SELECT $t_food_index_tags.tag_id, $t_food_index.food_id, $t_food_index.food_user_id, $t_food_index.food_name, $t_food_index.food_clean_name, $t_food_index.food_manufacturer_name, $t_food_index.food_manufacturer_name_and_food_name, $t_food_index.food_description, $t_food_index.food_country, $t_food_index.food_net_content_metric, $t_food_index.food_net_content_measurement_metric, $t_food_index.food_net_content_us_system, $t_food_index.food_net_content_measurement_us_system, $t_food_index.food_net_content_added_measurement, $t_food_index.food_serving_size_metric, $t_food_index.food_serving_size_measurement_metric, $t_food_index.food_serving_size_us_system, $t_food_index.food_serving_size_measurement_us_system, $t_food_index.food_serving_size_added_measurement, $t_food_index.food_serving_size_pcs, $t_food_index.food_serving_size_pcs_measurement, $t_food_index.food_energy_metric, $t_food_index.food_fat_metric, $t_food_index.food_fat_of_which_saturated_fatty_acids_metric, $t_food_index.food_monounsaturated_fat_metric, $t_food_index.food_polyunsaturated_fat_metric, $t_food_index.food_cholesterol_metric, $t_food_index.food_carbohydrates_metric, $t_food_index.food_carbohydrates_of_which_sugars_metric, $t_food_index.food_dietary_fiber_metric, $t_food_index.food_proteins_metric, $t_food_index.food_salt_metric, $t_food_index.food_sodium_metric, $t_food_index.food_energy_us_system, $t_food_index.food_fat_us_system, $t_food_index.food_fat_of_which_saturated_fatty_acids_us_system, $t_food_index.food_monounsaturated_fat_us_system, $t_food_index.food_polyunsaturated_fat_us_system, $t_food_index.food_cholesterol_us_system, $t_food_index.food_carbohydrates_us_system, $t_food_index.food_carbohydrates_of_which_sugars_us_system, $t_food_index.food_dietary_fiber_us_system, $t_food_index.food_proteins_us_system, $t_food_index.food_salt_us_system, $t_food_index.food_sodium_us_system, $t_food_index.food_score, $t_food_index.food_energy_calculated_metric, $t_food_index.food_fat_calculated_metric, $t_food_index.food_fat_of_which_saturated_fatty_acids_calculated_metric, $t_food_index.food_monounsaturated_fat_calculated_metric, $t_food_index.food_polyunsaturated_fat_calculated_metric, $t_food_index.food_carbohydrates_calculated_metric, $t_food_index.food_carbohydrates_of_which_sugars_calculated_metric, $t_food_index.food_dietary_fiber_calculated_metric, $t_food_index.food_proteins_calculated_metric, $t_food_index.food_salt_calculated_metric, $t_food_index.food_sodium_calculated_metric, $t_food_index.food_energy_calculated_us_system, $t_food_index.food_fat_calculated_us_system, $t_food_index.food_fat_of_which_saturated_fatty_acids_calculated_us_system, $t_food_index.food_monounsaturated_fat_calculated_us_system, $t_food_index.food_polyunsaturated_fat_calculated_us_system, $t_food_index.food_carbohydrates_calculated_us_system, $t_food_index.food_carbohydrates_of_which_sugars_calculated_us_system, $t_food_index.food_dietary_fiber_calculated_us_system, $t_food_index.food_proteins_calculated_us_system, $t_food_index.food_salt_calculated_us_system, $t_food_index.food_sodium_calculated_us_system, $t_food_index.food_barcode, $t_food_index.food_main_category_id, $t_food_index.food_sub_category_id, $t_food_index.food_image_path, $t_food_index.food_image_a, $t_food_index.food_thumb_a_small FROM $t_food_index_tags INNER JOIN $t_food_index ON $t_food_index_tags.tag_food_id=$t_food_index.food_id WHERE $t_food_index_tags.tag_title_clean=$tag_mysql AND $t_food_index_tags.tag_language=$l_mysql";
 // Order
 if($order_by != ""){
 	if($order_method == "desc"){
@@ -174,7 +174,7 @@ if($order_by != ""){
 	}
 
 	if($order_by == "food_score" OR $order_by == "food_id" OR $order_by == "food_manufacturer_name_and_food_name" OR $order_by == "food_name" OR $order_by == "food_unique_hits" 
-	OR $order_by == "food_energy" OR $order_by == "food_proteins" OR $order_by == "food_carbohydrates" OR $order_by == "food_fat"){
+	OR $order_by == "food_energy_metric" OR $order_by == "food_proteins_metric" OR $order_by == "food_carbohydrates_metric" OR $order_by == "food_fat_metric"){
 		$order_by_mysql = "$t_food_index.$order_by";
 	}
 	else{
@@ -184,7 +184,7 @@ if($order_by != ""){
 }
 $result = mysqli_query($link, $query);
 while($row = mysqli_fetch_row($result)) {
-	list($get_tag_id, $get_food_id, $get_food_name, $get_food_manufacturer_name, $get_food_energy, $get_food_proteins, $get_food_carbohydrates, $get_food_fat, $get_food_image_path, $get_food_image_a, $get_food_thumb_a_small, $get_food_score, $get_food_main_category_id, $get_food_sub_category_id) = $row;
+	list($get_tag_id, $get_food_id, $get_food_user_id, $get_food_name, $get_food_clean_name, $get_food_manufacturer_name, $get_food_manufacturer_name_and_food_name, $get_food_description, $get_food_country, $get_food_net_content_metric, $get_food_net_content_measurement_metric, $get_food_net_content_us_system, $get_food_net_content_measurement_us_system, $get_food_net_content_added_measurement, $get_food_serving_size_metric, $get_food_serving_size_measurement_metric, $get_food_serving_size_us_system, $get_food_serving_size_measurement_us_system, $get_food_serving_size_added_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy_metric, $get_food_fat_metric, $get_food_fat_of_which_saturated_fatty_acids_metric, $get_food_monounsaturated_fat_metric, $get_food_polyunsaturated_fat_metric, $get_food_cholesterol_metric, $get_food_carbohydrates_metric, $get_food_carbohydrates_of_which_sugars_metric, $get_food_dietary_fiber_metric, $get_food_proteins_metric, $get_food_salt_metric, $get_food_sodium_metric, $get_food_energy_us_system, $get_food_fat_us_system, $get_food_fat_of_which_saturated_fatty_acids_us_system, $get_food_monounsaturated_fat_us_system, $get_food_polyunsaturated_fat_us_system, $get_food_cholesterol_us_system, $get_food_carbohydrates_us_system, $get_food_carbohydrates_of_which_sugars_us_system, $get_food_dietary_fiber_us_system, $get_food_proteins_us_system, $get_food_salt_us_system, $get_food_sodium_us_system, $get_food_score, $get_food_energy_calculated_metric, $get_food_fat_calculated_metric, $get_food_fat_of_which_saturated_fatty_acids_calculated_metric, $get_food_monounsaturated_fat_calculated_metric, $get_food_polyunsaturated_fat_calculated_metric, $get_food_carbohydrates_calculated_metric, $get_food_carbohydrates_of_which_sugars_calculated_metric, $get_food_dietary_fiber_calculated_metric, $get_food_proteins_calculated_metric, $get_food_salt_calculated_metric, $get_food_sodium_calculated_metric, $get_food_energy_calculated_us_system, $get_food_fat_calculated_us_system, $get_food_fat_of_which_saturated_fatty_acids_calculated_us_system, $get_food_monounsaturated_fat_calculated_us_system, $get_food_polyunsaturated_fat_calculated_us_system, $get_food_carbohydrates_calculated_us_system, $get_food_carbohydrates_of_which_sugars_calculated_us_system, $get_food_dietary_fiber_calculated_us_system, $get_food_proteins_calculated_us_system, $get_food_salt_calculated_us_system, $get_food_sodium_calculated_us_system, $get_food_barcode, $get_food_main_category_id, $get_food_sub_category_id, $get_food_image_path, $get_food_image_a, $get_food_thumb_a_small) = $row;
 		
 	if(file_exists("$root/$get_food_image_path/$get_food_image_a")){
 	
@@ -248,16 +248,16 @@ while($row = mysqli_fetch_row($result)) {
 		<table style=\"margin: 0px auto;\">
 		 <tr>
 		  <td style=\"padding-right: 10px;text-align: center;\">
-			<span class=\"grey_smal\">$get_food_energy</span>
+			<span class=\"grey_smal\">$get_food_energy_metric</span>
 		  </td>
 		  <td style=\"padding-right: 10px;text-align: center;\">
-			<span class=\"grey_smal\">$get_food_fat</span>
+			<span class=\"grey_smal\">$get_food_fat_metric</span>
 		  </td>
 		  <td style=\"padding-right: 10px;text-align: center;\">
-			<span class=\"grey_smal\">$get_food_carbohydrates</span>
+			<span class=\"grey_smal\">$get_food_carbohydrates_metric</span>
 		  </td>
 		  <td style=\"text-align: center;\">
-			<span class=\"grey_smal\">$get_food_proteins</span>
+			<span class=\"grey_smal\">$get_food_proteins_metric</span>
 		  </td>
 		 </tr>
 		 <tr>

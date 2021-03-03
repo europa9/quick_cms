@@ -109,6 +109,98 @@ echo"<!DOCTYPE html>
 			</div>
 		<!-- //Logo -->
 
+		<!-- Mobile icons -->
+			<div id=\"header_user_icons\">
+
+				<!-- Hide show search, Header hamburger -->
+							<script>
+							\$(document).ready(function(){
+								\$(\".header_show_search\").click(function () {
+									\$(\".site_search\").fadeToggle();
+									\$(\"#inp_site_search_query\").focus();
+								});
+								\$(\".header_show_new_a\").click(function () {
+									\$(\"#header_new_wrapper\").fadeToggle();
+
+									var src = (\$(\".header_show_new_img\").attr('src') === '$root/_webdesign/$webdesignSav/images/header/header_show_new_img_add_white.png')
+										? '$root/_webdesign/$webdesignSav/images/header/header_show_new_img_clear_white.png'
+										: '$root/_webdesign/$webdesignSav/images/header/header_show_new_img_add_white.png';
+									\$(\".header_show_new_img\").attr(\"src\", src);
+								});
+								\$(\".main_navigation_menu_icon\").click(function () {
+									\$(\"nav\").fadeToggle();
+
+									var src = (\$(this).attr('src') === '$root/_webdesign/$webdesignSav/images/header/menu_24x24_white.png')
+										? '$root/_webdesign/$webdesignSav/images/header/clear_24x24_white.png'
+										: '$root/_webdesign/$webdesignSav/images/header/menu_24x24_white.png';
+									\$(\".main_navigation_menu_icon\").attr('src', src);
+
+
+								});
+							});
+							</script>
+						<!-- //Hide show nav + change hamburger icon -->
+						
+				<!-- //Header hamburger -->
+
+
+
+
+				<ul>
+					<li><a href=\"#\" class=\"a_header_left_hamburger\"><img src=\"$root/_webdesign/$webdesignSav/images/header/menu_24x24_white.png\" alt=\"ic_menu_24x24_333333.png\" class=\"main_navigation_menu_icon\" /></a></li>
+					<li><a href=\"#\" class=\"header_show_search\"><img src=\"$root/_webdesign/$webdesignSav/images/header/search_24x24_white.png\" alt=\"search_24x24_white.png\" /></a></li>
+						";
+
+						// Am I logged in?
+						if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
+							// Get my user alias, date format, profile image
+							$my_user_id 	  = $_SESSION['user_id'];
+							$my_user_id_mysql = quote_smart($link, $my_user_id);
+
+							$query = "SELECT user_id, user_alias, user_date_format FROM $t_users WHERE user_id=$my_user_id_mysql";
+							$result = mysqli_query($link, $query);
+							$row = mysqli_fetch_row($result);
+							list($get_my_user_id, $get_my_user_alias, $get_my_user_date_format) = $row;
+
+							if($get_my_user_id == ""){
+								echo"<p style=\"color:red\">Session error</p>";
+								unset($_SESSION['user_id']);
+							}
+						}
+						if(isset($my_user_id)){
+							echo"
+							<li><a href=\"$root/users/my_profile.php?l=$l\"><img src=\"$root/_webdesign/$webdesignSav/images/header/my_profile_24x24_white.png\" alt=\"my_profile_24x24_white.png\" title=\"$get_my_user_alias\" /></a></li>
+							";
+						}
+						else{
+							echo"
+							<li><a href=\"$root/users/login.php?l=$l\" class=\"last\"><img src=\"$root/_webdesign/$webdesignSav/images/header/login_24x24_white.png\" alt=\"login_24x24_white.png\" title=\"$l_login\" /></a></li>
+							";
+						}
+						echo"
+							<li><a href=\"#\" class=\"header_show_new_a\"><img src=\"$root/_webdesign/$webdesignSav/images/header/header_show_new_img_add_white.png\" alt=\"header_show_new_img_add_white.png\" class=\"header_show_new_img\" /></a></li>
+				</ul>
+
+				<div id=\"header_new_wrapper\">";
+						include("$root/_admin/_translations/site/$l/root/ts_header_new_wrapper.php");
+						echo"
+						<p>$l_new</p>
+						<ul>";
+						if(!(isset($my_user_id))){
+							echo"
+							<li><a href=\"$root/$root/users/create_free_account.php?l=$l\"><img src=\"$root/_webdesign/$webdesignSav/images/header/ic_registrer_24x24_333333.png\" alt=\"ic_registrer_24x24_333333.png\" /> $l_registrer</a></li>\n";
+						}
+						echo"
+							<li><a href=\"$root/blog/my_blog_new_post.php?l=$l\"><img src=\"$root/_webdesign/$webdesignSav/images/header/outline_article_black_18dp.png\" alt=\"outline_post_add_black_18dp.png\" /> $l_new_post</a></li>
+							<li><a href=\"$root/food/new_food.php?l=$l\"><img src=\"$root/_webdesign/$webdesignSav/images/header/outline_restaurant_black_18dp.png\" alt=\"outline_restaurant_black_18dp.png\" /> $l_new_food</a></li>
+							<li><a href=\"$root/recipes/submit_recipe.php?l=$l\"><img src=\"$root/_webdesign/$webdesignSav/images/header/outline_restaurant_menu_black_18dp.png\" alt=\"outline_restaurant_menu_black_18dp.png\" /> $l_new_recipe</a></li>
+							<li><a href=\"$root/exercises/new_exercise.php?l=$l\"><img src=\"$root/_webdesign/$webdesignSav/images/header/outline_directions_bike_black_18dp.png\" alt=\"outline_directions_bike_black_18dp.png\" /> $l_new_exercise</a></li>
+							<li><a href=\"$root/workout_plans/new_workout_plan.php?l=$l\"><img src=\"$root/_webdesign/$webdesignSav/images/header/outline_directions_run_black_18dp.png\" alt=\"outline_directions_run_black_18dp.png\" /> $l_new_workout_plan</a></li>
+							<li><a href=\"$root/forum/new_topic.php?l=$l\"><img src=\"$root/_webdesign/$webdesignSav/images/header/outline_topic_black_18dp.png\" alt=\"outline_topic_black_18dp.png\" /> $l_new_topic</a></li>
+						</ul>
+				</div>
+			</div> <!-- //Header user icons -->
+		<!-- //Mobile icons -->
 
 		<!-- Header navigation -->
 			<nav>
@@ -138,6 +230,53 @@ echo"<!DOCTYPE html>
 
 		<!-- //Header navigation -->
 
+		<!-- Search -->	
+			<div class=\"site_search\">
+					<form method=\"get\" action=\"$root/search/search.php\" enctype=\"multipart/form-data\">
+					
+					<p>
+					<span>$l_search</span><br />
+					<input type=\"text\" name=\"inp_search_query\" id=\"inp_site_search_query\" class=\"site_search_text\" value=\"\" size=\"20\" autocomplete=\"off\" />
+					<input type=\"hidden\" name=\"l\" value=\"$l\" />
+					<input type=\"submit\" value=\"\" class=\"site_search_button\" />
+					</p>
+					</form>
+					<div id=\"site_search_results\"></div>
+				<div class=\"site_search_after\"></div>
+			</div>
+
+			<!-- Search engines Autocomplete -->
+
+			<script language=\"javascript\" type=\"text/javascript\">
+			\$(document).ready(function () {
+				\$('#inp_site_search_query').keyup(function () {
+					// getting the value that user typed
+					var searchString    = \$(\"#inp_search_query\").val();
+					// forming the queryString
+      					var data            = 'l=$l&inp_search_query='+ searchString;
+        				// if searchString is not empty
+        				if(searchString) {
+						\$(\"#site_search_results\").css('visibility','visible');
+						// ajax call
+        					\$.ajax({
+        						type: \"GET\",
+        						url: \"$root/search/search_header_autocomplete.php\",
+                					data: data,
+							beforeSend: function(html) { // this happens before actual call
+								\$(\"#site_search_results\").html(''); 
+							},
+               						success: function(html){
+								\$(\"#site_search_results\").append(html);
+              						}
+            					});
+       					}
+        				return false;
+            			});
+         		});
+			</script>
+			<!-- //Search engines Autocomplete -->
+		<!-- //Search -->
+		
 
 		<!-- Header Bottom -->
 			<div class=\"header_bottom\">

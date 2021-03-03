@@ -169,6 +169,14 @@ elseif($action == "new_group"){
 			exit;
 		}
 
+		$inp_show_title = $_POST['inp_show_title'];
+		$inp_show_title = output_html($inp_show_title);
+		$inp_show_title_mysql = quote_smart($link, $inp_show_title);
+
+		$inp_type = $_POST['inp_type'];
+		$inp_type = output_html($inp_type);
+		$inp_type_mysql = quote_smart($link, $inp_type);
+
 		$inp_date = date("Y-m-d");
 		$inp_date_mysql = quote_smart($link, $inp_date);
 
@@ -184,9 +192,9 @@ elseif($action == "new_group"){
 
 		// Insert
 		mysqli_query($link, "INSERT INTO $t_webdesign_footer_link_groups 
-		(group_id, group_title, group_language, group_weight, group_number_of_links, group_created, group_created_by_user_id) 
+		(group_id, group_title, group_type, group_show_title, group_language, group_weight, group_number_of_links, group_created, group_created_by_user_id) 
 		VALUES 
-		(NULL, $inp_title_mysql, $inp_language_mysql, '$get_count_rows', 0, $inp_date_mysql, $inp_created_by_user_id_mysql)")
+		(NULL, $inp_title_mysql, $inp_type_mysql, $inp_show_title_mysql, $inp_language_mysql, '$get_count_rows', 0, $inp_date_mysql, $inp_created_by_user_id_mysql)")
 		or die(mysqli_error($link));
 
 
@@ -241,6 +249,20 @@ elseif($action == "new_group"){
 		<input type=\"text\" name=\"inp_title\" value=\"\" size=\"60\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 		</p>
 	
+		<p><b>Show title</b><br />
+		<input type=\"radio\" name=\"inp_show_title\" value=\"1\" tabindex=\"";$tabindex=0; $tabindex=$tabindex+1;echo"$tabindex\" checked=\"checked\" /> Yes
+		&nbsp;
+		<input type=\"radio\" name=\"inp_show_title\" value=\"0\" tabindex=\"";$tabindex=0; $tabindex=$tabindex+1;echo"$tabindex\" /> No
+		</p>
+	
+		<p><b>Type of links</b><br />
+		<select name=\"inp_type\" tabindex=\"";$tabindex=0; $tabindex=$tabindex+1;echo"$tabindex\" />
+			<option value=\"text_links\">Text links</option>
+			<option value=\"icons\">Icons</option>
+			<option value=\"text_and_icons\">Text and icons</option>
+		</select>
+		</p>
+
 		<p><input type=\"submit\" value=\"Create\" class=\"btn btn-success btn-sm\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
 	 
 		</form>
@@ -605,10 +627,10 @@ elseif($action == "move_group_down"){
 elseif($action == "edit_group"){
 	$group_id_mysql = quote_smart($link, $group_id);
 
-	$query = "SELECT group_id, group_title, group_language, group_weight, group_number_of_links FROM $t_webdesign_footer_link_groups WHERE group_id=$group_id_mysql";
+	$query = "SELECT group_id, group_title, group_type, group_show_title, group_language, group_weight, group_number_of_links FROM $t_webdesign_footer_link_groups WHERE group_id=$group_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_group_id, $get_current_group_title, $get_current_group_language, $get_current_group_weight, $get_current_group_number_of_links) = $row;
+	list($get_current_group_id, $get_current_group_title, $get_current_group_type, $get_current_group_show_title, $get_current_group_language, $get_current_group_weight, $get_current_group_number_of_links) = $row;
 
 	if($get_current_group_id == ""){
 		echo"
@@ -640,6 +662,14 @@ elseif($action == "edit_group"){
 				exit;
 			}
 
+			$inp_show_title = $_POST['inp_show_title'];
+			$inp_show_title = output_html($inp_show_title);
+			$inp_show_title_mysql = quote_smart($link, $inp_show_title);
+
+			$inp_type = $_POST['inp_type'];
+			$inp_type = output_html($inp_type);
+			$inp_type_mysql = quote_smart($link, $inp_type);
+
 			$inp_date = date("Y-m-d");
 			$inp_date_mysql = quote_smart($link, $inp_date);
 
@@ -650,6 +680,8 @@ elseif($action == "edit_group"){
 			// Update
 			$result = mysqli_query($link, "UPDATE $t_webdesign_footer_link_groups SET 
 							group_title=$inp_title_mysql, 
+							group_type=$inp_type_mysql,
+							group_show_title=$inp_show_title_mysql, 
 							group_language=$inp_language_mysql,
 							group_updated=$inp_date_mysql, 
 							group_updated_by_user_id=$inp_my_user_id_mysql
@@ -715,6 +747,20 @@ elseif($action == "edit_group"){
 	
 			<p><b>Title</b>*<br />
 			<input type=\"text\" name=\"inp_title\" value=\"$get_current_group_title\" size=\"60\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+			</p>
+
+			<p><b>Show title</b><br />
+			<input type=\"radio\" name=\"inp_show_title\" value=\"1\" tabindex=\"";$tabindex=0; $tabindex=$tabindex+1;echo"$tabindex\""; if($get_current_group_show_title == "1"){ echo" checked=\"checked\""; } echo" /> Yes
+			&nbsp;
+			<input type=\"radio\" name=\"inp_show_title\" value=\"0\" tabindex=\"";$tabindex=0; $tabindex=$tabindex+1;echo"$tabindex\""; if($get_current_group_show_title == "0"){ echo" checked=\"checked\""; } echo" /> No
+			</p>
+
+			<p><b>Type of links</b><br />
+			<select name=\"inp_type\" tabindex=\"";$tabindex=0; $tabindex=$tabindex+1;echo"$tabindex\" />
+				<option value=\"text_links\""; if($get_current_group_type == "text_links"){ echo" selected=\"selected\""; } echo">Text links</option>
+				<option value=\"icons\""; if($get_current_group_type == "icons"){ echo" selected=\"selected\""; } echo">Icons</option>
+				<option value=\"text_and_icons\""; if($get_current_group_type == "text_and_icons"){ echo" selected=\"selected\""; } echo">Text and icons</option>
+			</select>
 			</p>
 	
 			<p><input type=\"submit\" value=\"Update\" class=\"btn btn-success btn-sm\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
@@ -842,8 +888,12 @@ elseif($action == "new_link"){
 				$inp_url_host = $inp_url_parsed['host'];
 			}
 			$inp_url_path = $inp_url_parsed['path'];
-			$inp_url_query = $inp_url_parsed['query'];
-			
+			if(isset($inp_url_parsed['query'])){
+				$inp_url_query = $inp_url_parsed['query'];
+			}
+			else{
+				$inp_url_query = "";
+			}		
 			if($inp_url_query != ""){
 				$inp_url_query = "?" . $inp_url_query;
 			}
@@ -864,8 +914,7 @@ elseif($action == "new_link"){
 
 
 
-			$inp_date = date("Y-m-d");
-			$inp_date_mysql = quote_smart($link, $inp_date);
+			$datetime = date("Y-m-d H:i:s");
 
 			$my_user_id = $_SESSION['admin_user_id'];
 			$my_user_id = output_html($my_user_id);
@@ -881,11 +930,80 @@ elseif($action == "new_link"){
 			// Insert
 			$inp_language_mysql = quote_smart($link, $get_current_group_language);
 			mysqli_query($link, "INSERT INTO $t_webdesign_footer_link_links 
-			(link_id, link_group_id, link_title, link_url, link_internal_or_external, link_language, link_weight, link_created, link_created_by_user_id) 
+			(link_id, link_group_id, link_title, link_url, link_internal_or_external, link_language, link_weight, link_created_datetime, link_created_by_user_id) 
 			VALUES 
-			(NULL, $get_current_group_id, $inp_title_mysql, $inp_url_mysql, '$inp_internal_or_external', $inp_language_mysql, '$get_count_rows', $inp_date_mysql, $my_user_id_mysql)")
+			(NULL, $get_current_group_id, $inp_title_mysql, $inp_url_mysql, '$inp_internal_or_external', $inp_language_mysql, '$get_count_rows', '$datetime', $my_user_id_mysql)")
 			or die(mysqli_error($link));
 
+			// Get ID
+			$query = "SELECT link_id FROM $t_webdesign_footer_link_links WHERE link_created_datetime='$datetime'";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_current_link_id) = $row;
+
+
+			// Dir
+			$upload_path = "../_uploads/webdesign_footer/$get_current_group_language";
+			if(!(is_dir("../_uploads"))){
+				mkdir("../_uploads");
+			}
+			if(!(is_dir("../_uploads/webdesign_footer"))){
+				mkdir("../_uploads/webdesign_footer");
+			}
+			if(!(is_dir("../_uploads/webdesign_footer/$get_current_group_language"))){
+				mkdir("../_uploads/webdesign_footer/$get_current_group_language");
+			}
+
+			$icons_size_array = array("24x24", "32x32");
+			for($x=0;$x<sizeof($icons_size_array);$x++){
+				// Name (inp_icon_18x18)
+				
+				$file_name = basename($_FILES["inp_icon_" . $icons_size_array[$x]]['name']);
+				$file_exp = explode('.', $file_name); 
+				$file_type = $file_exp[count($file_exp) -1]; 
+				$file_type = strtolower("$file_type");
+
+				// New name
+				$new_name = $get_current_link_id . "_" . $icons_size_array[$x] . "." . $file_type;
+
+				// Sjekk om det er en OK filendelse
+				if($file_type == "jpg" OR $file_type == "jpeg" OR $file_type == "png" OR $file_type == "gif"){
+					if(move_uploaded_file($_FILES["inp_icon_" . $icons_size_array[$x]]['tmp_name'], "$upload_path/$new_name")) {
+						
+						// Sjekk om det faktisk er et bilde som er lastet opp
+						list($width,$height) = getimagesize("$upload_path/$new_name");
+						if(is_numeric($width) && is_numeric($height)){
+							// Update MySQL
+
+							// path
+							$inp_path = "_uploads/webdesign_footer/$get_current_group_language";
+							$inp_path_mysql = quote_smart($link, $inp_path);
+
+							// icon
+							$inp_icon = $new_name;
+							$inp_icon_mysql = quote_smart($link, $inp_icon);
+							
+
+							// Update MySQL
+							$result = mysqli_query($link, "UPDATE $t_webdesign_footer_link_links SET 
+											link_icon_path=$inp_path_mysql, 
+											link_icon_$icons_size_array[$x]=$inp_icon_mysql
+											WHERE link_id=$get_current_link_id") or die(mysqli_error($link));
+						}
+						else{
+							// Not a image
+							unlink("$upload_path/$new_name");
+						}
+					}
+					else{
+						// Could not upload
+					}
+				}
+				else{
+					// Wrong file type
+				}
+
+			}
 
 
 			header("Location: index.php?open=$open&page=$page&action=$action&group_id=$get_current_group_id&ft=success&fm=link_created&editor_language=$editor_language");
@@ -938,6 +1056,21 @@ elseif($action == "new_link"){
 			<input type=\"text\" name=\"inp_url\" value=\"\" size=\"60\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 			</p>
 	
+			<!- icons -->
+			";
+			$icons_size_array = array("24x24", "32x32");
+			for($x=0;$x<sizeof($icons_size_array);$x++){
+				// Name (inp_icon_18x18_inactive)
+				$inp_name = "inp_icon_" . $icons_size_array[$x];
+
+				echo"
+				<p><b>Icon $icons_size_array[$x]:</b><br />
+				<input type=\"file\" name=\"$inp_name\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+				</p>";
+			}
+			echo"
+
+
 			<p><input type=\"submit\" value=\"Create link\" class=\"btn btn-success btn-sm\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
 	 
 			</form>
@@ -1048,10 +1181,10 @@ elseif($action == "move_link_down"){
 elseif($action == "edit_link"){
 	$link_id_mysql = quote_smart($link, $link_id);
 
-	$query = "SELECT link_id, link_group_id, link_title, link_url, link_internal_or_external, link_language, link_weight FROM $t_webdesign_footer_link_links WHERE link_id=$link_id_mysql";
+	$query = "SELECT link_id, link_group_id, link_title, link_url, link_icon_path, link_icon_24x24, link_icon_32x32, link_internal_or_external, link_language, link_weight FROM $t_webdesign_footer_link_links WHERE link_id=$link_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_link_id, $get_current_link_group_id, $get_current_link_title, $get_current_link_url, $get_current_link_internal_or_external, $get_current_link_language, $get_current_link_weight) = $row;
+	list($get_current_link_id, $get_current_link_group_id, $get_current_link_title, $get_current_link_url, $get_current_link_icon_path, $get_current_link_icon_24x24, $get_current_link_icon_32x32, $get_current_link_internal_or_external, $get_current_link_language, $get_current_link_weight) = $row;
 
 	if($get_current_link_id == ""){
 		echo"
@@ -1119,9 +1252,7 @@ elseif($action == "edit_link"){
 
 
 
-			$inp_date = date("Y-m-d");
-			$inp_date_mysql = quote_smart($link, $inp_date);
-
+			$datetime = date("Y-m-d H:i:s");
 			$my_user_id = $_SESSION['admin_user_id'];
 			$my_user_id = output_html($my_user_id);
 			$my_user_id_mysql = quote_smart($link, $my_user_id);
@@ -1133,11 +1264,73 @@ elseif($action == "edit_link"){
 						link_title=$inp_title_mysql, 
 						link_url=$inp_url_mysql, 
 						link_internal_or_external='$inp_internal_or_external', 
-						link_updated=$inp_date_mysql,
+						link_updated_datetime='$datetime',
 						link_updated_by_user_id=$my_user_id_mysql
 						WHERE link_id=$get_current_link_id") or die(mysqli_error($link));
 
 
+			// Dir
+			$upload_path = "../_uploads/webdesign_footer/$get_current_group_language";
+			if(!(is_dir("../_uploads"))){
+				mkdir("../_uploads");
+			}
+			if(!(is_dir("../_uploads/webdesign_footer"))){
+				mkdir("../_uploads/webdesign_footer");
+			}
+			if(!(is_dir("../_uploads/webdesign_footer/$get_current_group_language"))){
+				mkdir("../_uploads/webdesign_footer/$get_current_group_language");
+			}
+
+			$icons_size_array = array("24x24", "32x32");
+			for($x=0;$x<sizeof($icons_size_array);$x++){
+				// Name (inp_icon_18x18)
+				
+				$file_name = basename($_FILES["inp_icon_" . $icons_size_array[$x]]['name']);
+				$file_exp = explode('.', $file_name); 
+				$file_type = $file_exp[count($file_exp) -1]; 
+				$file_type = strtolower("$file_type");
+
+				// New name
+				$new_name = $get_current_link_id . "_" . $icons_size_array[$x] . "." . $file_type;
+
+				// Sjekk om det er en OK filendelse
+				if($file_type == "jpg" OR $file_type == "jpeg" OR $file_type == "png" OR $file_type == "gif"){
+					if(move_uploaded_file($_FILES["inp_icon_" . $icons_size_array[$x]]['tmp_name'], "$upload_path/$new_name")) {
+						
+						// Sjekk om det faktisk er et bilde som er lastet opp
+						list($width,$height) = getimagesize("$upload_path/$new_name");
+						if(is_numeric($width) && is_numeric($height)){
+							// Update MySQL
+
+							// path
+							$inp_path = "_uploads/webdesign_footer/$get_current_group_language";
+							$inp_path_mysql = quote_smart($link, $inp_path);
+
+							// icon
+							$inp_icon = $new_name;
+							$inp_icon_mysql = quote_smart($link, $inp_icon);
+							
+
+							// Update MySQL
+							$result = mysqli_query($link, "UPDATE $t_webdesign_footer_link_links SET 
+											link_icon_path=$inp_path_mysql, 
+											link_icon_$icons_size_array[$x]=$inp_icon_mysql
+											WHERE link_id=$get_current_link_id") or die(mysqli_error($link));
+						}
+						else{
+							// Not a image
+							unlink("$upload_path/$new_name");
+						}
+					}
+					else{
+						// Could not upload
+					}
+				}
+				else{
+					// Wrong file type
+				}
+
+			}
 
 			header("Location: index.php?open=$open&page=$page&action=$action&link_id=$get_current_link_id&ft=success&fm=link_updated&editor_language=$editor_language");
 			exit;
@@ -1188,6 +1381,43 @@ elseif($action == "edit_link"){
 			<p><b>URL</b>*<br />
 			<input type=\"text\" name=\"inp_url\" value=\"$get_current_link_url\" size=\"60\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 			</p>
+
+			<!- icons -->
+			";
+			$icons_size_array = array("24x24", "32x32");
+			for($x=0;$x<sizeof($icons_size_array);$x++){
+				// Name (inp_icon_18x18_inactive)
+				$inp_name = "inp_icon_" . $icons_size_array[$x];
+
+				if($icons_size_array[$x] == "24x24"){
+					$icon = $get_current_link_icon_24x24;
+				}
+				else{
+					$icon = $get_current_link_icon_32x32;
+				}
+				echo"
+				<p><b>Icon $icons_size_array[$x]:</b><br />
+				";
+				if(file_exists("../$get_current_link_icon_path/$icon") && $icon != ""){
+					echo"
+					<img src=\"../$get_current_link_icon_path/$icon\" alt=\"$icon\" />
+					<a href=\"../$get_current_link_icon_path/$icon\">$icon</a>
+					</p>
+					<p>New icon $icons_size_array[$x]:<br />
+					";
+				}
+				else{
+					echo"
+					<a href=\"../$get_current_link_icon_path/$icon\" style=\"text-decoration: line-through\">$icon</a><br />
+					";
+				}
+
+				echo"
+				<input type=\"file\" name=\"$inp_name\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+				</p>";
+			}
+			echo"
+
 	
 			<p><input type=\"submit\" value=\"Update link\" class=\"btn btn-success btn-sm\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
 	 

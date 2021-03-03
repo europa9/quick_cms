@@ -27,6 +27,9 @@ else{ $root = "../../.."; }
 include("$root/_admin/website_config.php");
 
 
+/*- Tables ---------------------------------------------------------------------------- */
+include("_tables_muslces.php");
+
 /*- Variables ------------------------------------------------------------------------- */
 $l_mysql = quote_smart($link, $l);
 

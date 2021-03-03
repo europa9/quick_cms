@@ -22,6 +22,8 @@ else{ $root = "../../.."; }
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
+/*- Tables ------ -------------------------------------------------------------------- */
+include("_tables_ad.php");
 
 /*- Variables ------------------------------------------------------------------------- */
 $tabindex = 0;
@@ -53,7 +55,7 @@ if($get_current_ad_id == ""){
 	elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
 	elseif(file_exists("../../../favicon.ico")){ $root = "../../.."; }
 	include("$root/_webdesign/header.php");
-	echo"<p>Ad not found.</p>$query ";
+	echo"<p>Ad not found.</p>";
 	
 }
 else{

@@ -27,6 +27,9 @@ else{ $root = "../../.."; }
 include("$root/_admin/website_config.php");
 
 
+/*- Tables ---------------------------------------------------------------------------- */
+include("_tables_muslces.php");
+
 /*- Variables ------------------------------------------------------------------------- */
 $l_mysql = quote_smart($link, $l);
 
@@ -280,27 +283,6 @@ else {
 		$get_current_main_muscle_group_translation_text
 	<!-- //Text -->
 
-
-	<div class=\"clear\" style=\"height: 20px;\"></div>
-	<!-- Add a comment -->";
-		$object         = "muscle_groups";
-		$object_id      = "$get_current_main_muscle_group_id";
-		$object_user_id = "1";
-		$refer          = "../muscles/open_main_group.php?main_group_id=$get_current_main_muscle_group_id";
-		include("../comments/_includes/add_comment_form.php");
-
-	echo"
-	<!-- //Add a comment -->
-
-	<!-- View comments -->";
-		include("../comments/_includes/view_comments.php");
-
-		// Number of comments correct?
-		//if($get_current_blog_post_comments != "$number_of_comments"){
-		//	$result = mysqli_query($link, "UPDATE $t_blog_posts SET blog_post_comments=$number_of_comments WHERE blog_post_id=$post_id_mysql") or die(mysqli_error($link));
-		//}
-		echo" 
-	<!-- //View comments -->
 	";
 } // muscle not found
 

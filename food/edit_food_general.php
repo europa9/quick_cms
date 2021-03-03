@@ -634,7 +634,7 @@ WHERE food_id='$get_food_id'") or die(mysqli_error($link));
 			
 				<p><b>$l_serving:</b><br />
 				<input type=\"text\" name=\"inp_food_serving_size\" value=\"";
-				if($get_food_serving_size_added_measurement == "g" OR $food_serving_size_added_measurement == "ml"){
+				if($get_food_serving_size_added_measurement == "g" OR $get_food_serving_size_added_measurement == "ml"){
 					echo"$get_food_serving_size_metric";
 				}
 				else{

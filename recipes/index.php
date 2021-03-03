@@ -160,7 +160,6 @@ echo"
 	<div class=\"recipes_categories_row\">
 	";
 	// Select categories
-	$x = 0;
 	$month = date("m");
 	$query = "SELECT category_id, category_name, category_image_path, category_image_file, category_image_updated_month, category_icon_file FROM $t_recipes_categories ORDER BY category_name ASC";
 	$result = mysqli_query($link, $query);
@@ -219,10 +218,6 @@ echo"
 			}
 		} // new image for category
 		
-		if($x == 2){
-			// echo"		<div class=\"recipes_categories_break\"></div>\n";
-			$x = 0;
-		}
 		
 		echo"
 		<div class=\"recipes_categories_column\">
@@ -232,9 +227,6 @@ echo"
 			</p>
 		</div>
 		";
-
-		// Increment
-		$x++;
 
 	}
 	echo"

@@ -27,6 +27,9 @@ else{ $root = "../../.."; }
 include("$root/_admin/website_config.php");
 
 
+/*- Tables ---------------------------------------------------------------------------- */
+include("_tables_muslces.php");
+
 /*- Variables ------------------------------------------------------------------------- */
 $l_mysql = quote_smart($link, $l);
 
@@ -230,27 +233,6 @@ else {
 		$get_current_muscle_translation_text
 	<!-- //Text -->
 		
-
-
-	<!-- Add a comment -->";
-		$object         = "muscle";
-		$object_id      = "$get_current_muscle_id";
-		$object_user_id = "1";
-		$refer          = "../muscles/muscle.php?muscle_id=$get_current_muscle_id";
-		include("../comments/_includes/add_comment_form.php");
-
-	echo"
-	<!-- //Add a comment -->
-
-	<!-- View comments -->";
-		include("../comments/_includes/view_comments.php");
-
-		// Number of comments correct?
-		//if($get_current_blog_post_comments != "$number_of_comments"){
-		//	$result = mysqli_query($link, "UPDATE $t_blog_posts SET blog_post_comments=$number_of_comments WHERE blog_post_id=$post_id_mysql") or die(mysqli_error($link));
-		//}
-		echo" 
-	<!-- //View comments -->
 
 
 	";
