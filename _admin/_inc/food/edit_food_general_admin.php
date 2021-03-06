@@ -115,11 +115,6 @@ else{
 
 	// Process == 1
 	if($process == "1"){
-		// Dates
-		$datetime = date("Y-m-d H:i:s");
-
-
-		// General
 				$inp_food_name = $_POST['inp_food_name'];
 				$inp_food_name = output_html($inp_food_name);
 				$inp_food_name_mysql = quote_smart($link, $inp_food_name);
@@ -166,28 +161,121 @@ else{
 				$inp_food_net_content_measurement = output_html($inp_food_net_content_measurement);
 				$inp_food_net_content_measurement_mysql = quote_smart($link, $inp_food_net_content_measurement);
 
-				$inp_food_serving_size_gram = $_POST['inp_food_serving_size_gram'];
-				$inp_food_serving_size_gram = output_html($inp_food_serving_size_gram);
-				$inp_food_serving_size_gram = str_replace(",", ".", $inp_food_serving_size_gram);
-				$inp_food_serving_size_gram_mysql = quote_smart($link, $inp_food_serving_size_gram);
-				if(empty($inp_food_serving_size_gram)){
+
+				/* Net content g, ml, oz, fl oz */
+				if($inp_food_net_content_measurement == "g"){
+					// We have gram below
+					$inp_food_net_content_metric = "$inp_food_net_content";
+					$inp_food_net_content_measurement_metric = "g";
+
+					// We need to calculate oz
+					$inp_food_net_content_us_system = round($inp_food_net_content/28.35, 1);
+					$inp_food_net_content_measurement_us_system = "oz";
+	
+				
+				}
+				elseif($inp_food_net_content_measurement == "ml"){
+					// We have gram below
+					$inp_food_net_content_metric = "$inp_food_net_content";
+					$inp_food_net_content_measurement_metric = "ml";
+
+					// We need to calculate oz
+					$inp_food_net_content_us_system = round($inp_food_net_content/29.574, 1);
+					$inp_food_net_content_measurement_us_system = "fl oz";
+
+				}
+				elseif($inp_food_net_content_measurement == "oz_us"){
+					// We have gram below
+					$inp_food_net_content_metric = round($inp_food_net_content*28.35, 0);
+					$inp_food_net_content_measurement_metric = "g";
+
+					// We need to calculate oz
+					$inp_food_net_content_us_system = "$inp_food_net_content";
+					$inp_food_net_content_measurement_us_system = "oz";
+				}
+				elseif($inp_food_net_content_measurement == "fl_oz_us"){
+					// We have gram below
+					$inp_food_net_content_metric = round($inp_food_net_content*29.574, 0);
+					$inp_food_net_content_measurement_metric = "ml";
+
+					// We need to calculate oz
+					$inp_food_net_content_us_system = "$inp_food_net_content";
+					$inp_food_net_content_measurement_us_system = "fl oz";
+				}
+				$inp_food_net_content_metric_mysql = quote_smart($link, $inp_food_net_content_metric);
+				$inp_food_net_content_measurement_metric_mysql = quote_smart($link, $inp_food_net_content_measurement_metric);
+				$inp_food_net_content_us_system_mysql = quote_smart($link, $inp_food_net_content_us_system);
+				$inp_food_net_content_measurement_us_system_mysql = quote_smart($link, $inp_food_net_content_measurement_us_system);
+
+
+
+				$inp_food_serving_size = $_POST['inp_food_serving_size'];
+				$inp_food_serving_size = output_html($inp_food_serving_size);
+				$inp_food_serving_size = str_replace(",", ".", $inp_food_serving_size);
+				$inp_food_serving_size_mysql = quote_smart($link, $inp_food_serving_size);
+				if(empty($inp_food_serving_size)){
 					$ft = "error";
-					$fm = "missing_serving_size_gram";
+					$fm = "missing_serving_size";
 				}
 				else{
-					if(!(is_numeric($inp_food_serving_size_gram))){
+					if(!(is_numeric($inp_food_serving_size))){
 						$ft = "error";
-						$fm = "food_serving_size_gram_is_not_numeric";
+						$fm = "food_serving_size_is_not_numeric";
 					}
 				}
 
-				$inp_food_serving_size_gram_measurement = $_POST['inp_food_serving_size_gram_measurement'];
-				$inp_food_serving_size_gram_measurement = output_html($inp_food_serving_size_gram_measurement);
-				$inp_food_serving_size_gram_measurement_mysql = quote_smart($link, $inp_food_serving_size_gram_measurement);
-				if(empty($inp_food_serving_size_gram_measurement)){
+				$inp_food_serving_size_measurement = $_POST['inp_food_serving_size_measurement'];
+				$inp_food_serving_size_measurement = output_html($inp_food_serving_size_measurement);
+				$inp_food_serving_size_measurement_mysql = quote_smart($link, $inp_food_serving_size_measurement);
+				if(empty($inp_food_serving_size_measurement)){
 					$ft = "error";
-					$fm = "missing_serving_size_gram_measurement";
+					$fm = "missing_serving_size_measurement";
 				}
+
+				/* Serving Size g, ml, oz, fl oz */
+				if($inp_food_serving_size_measurement == "g"){
+					// We have gram below
+					$inp_food_serving_size_metric = "$inp_food_serving_size";
+					$inp_food_serving_size_measurement_metric = "g";
+
+					// We need to calculate oz
+					$inp_food_serving_size_us_system = round($inp_food_serving_size/28.35, 1);
+					$inp_food_serving_size_measurement_us_system = "oz";
+
+				}
+				elseif($inp_food_serving_size_measurement == "ml"){
+					// We have gram below
+					$inp_food_serving_size_metric = "$inp_food_serving_size";
+					$inp_food_serving_size_measurement_metric = "ml";
+
+					// We need to calculate oz
+					$inp_food_serving_size_us_system = round($inp_food_serving_size/29.574, 1);
+					$inp_food_serving_size_measurement_us_system = "fl oz";
+
+				}
+				elseif($inp_food_serving_size_measurement == "oz_us"){
+					// We have gram below
+					$inp_food_serving_size_metric = round($inp_food_serving_size*28.35, 0);
+					$inp_food_serving_size_measurement_metric = "g";
+
+					// We need to calculate oz
+					$inp_food_serving_size_us_system = "$inp_food_serving_size";
+					$inp_food_serving_size_measurement_us_system = "oz";
+				}
+				elseif($inp_food_serving_size_measurement == "fl_oz_us"){
+					// We have gram below
+					$inp_food_serving_size_metric = round($inp_food_serving_size*29.574, 0);
+					$inp_food_serving_size_measurement_metric = "ml";
+
+					// We need to calculate oz
+					$inp_food_serving_size_us_system = "$inp_food_serving_size";
+					$inp_food_serving_size_measurement_us_system = "fl oz";
+				}
+
+				$inp_food_serving_size_metric_mysql = quote_smart($link, $inp_food_serving_size_metric);
+				$inp_food_serving_size_measurement_metric_mysql = quote_smart($link, $inp_food_serving_size_measurement_metric);
+				$inp_food_serving_size_us_system_mysql = quote_smart($link, $inp_food_serving_size_us_system);
+				$inp_food_serving_size_measurement_us_system_mysql = quote_smart($link, $inp_food_serving_size_measurement_us_system);
 
 				$inp_food_serving_size_pcs = $_POST['inp_food_serving_size_pcs'];
 				$inp_food_serving_size_pcs = output_html($inp_food_serving_size_pcs);
@@ -218,157 +306,159 @@ else{
 				$inp_age_restriction_mysql = quote_smart($link, $inp_age_restriction);
 
 
+					$inp_food_user_id = $_SESSION['user_id'];
+					$inp_food_user_id = output_html($inp_food_user_id);
+					$inp_food_user_id_mysql = quote_smart($link, $inp_food_user_id);
 
-		// Category
-		$inp_language = $_POST['inp_language'];
-		$inp_language = strip_tags(stripslashes($inp_language));
-		$inp_language_mysql = quote_smart($link, $inp_language);
+					// IP 
+					$inp_user_ip = $_SERVER['REMOTE_ADDR'];
+					$inp_user_ip = output_html($inp_user_ip);
+					$inp_user_ip_mysql = quote_smart($link, $inp_user_ip);
 
-		$inp_main_category_id = $_POST['inp_main_category_id'];
-		$inp_main_category_id = strip_tags(stripslashes($inp_main_category_id));
-		$inp_main_category_id_mysql = quote_smart($link, $inp_main_category_id);	
+					// Datetime (notes)
+					$datetime = date("Y-m-d H:i:s");
+					$inp_notes = "Started on $datetime by user id $inp_food_user_id";
+					$inp_notes_mysql = quote_smart($link, $inp_notes);
 
-		$inp_sub_category_id = $_POST['inp_sub_category_id'];
-		$inp_sub_category_id = strip_tags(stripslashes($inp_sub_category_id));
-		$inp_sub_category_id_mysql = quote_smart($link, $inp_sub_category_id);	
-
-		// Author
-		$inp_author_user_name = $_POST['inp_author_user_name'];
-		$inp_author_user_name = output_html($inp_author_user_name);
-		$inp_author_user_name_mysql = quote_smart($link, $inp_author_user_name);
-
-		$query = "SELECT user_id, user_email, user_name, user_alias FROM $t_users WHERE user_name=$inp_author_user_name_mysql";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_new_food_author_user_id, $get_new_food_author_user_email, $get_new_food_author_user_name, $get_new_food_author_user_alias) = $row;
-		if($get_new_food_author_user_id == ""){
-			$get_new_food_author_user_id = "0";
-		}
 					
-		$result = mysqli_query($link, "UPDATE $t_food_index SET 
-						food_user_id=$get_new_food_author_user_id,
-						food_name=$inp_food_name_mysql, 
-						food_clean_name=$inp_food_clean_name_mysql, 
-						food_manufacturer_name=$inp_food_manufacturer_name_mysql, 
-						food_description=$inp_food_description_mysql, 
-						food_country=$inp_food_country_mysql,
-						food_net_content=$inp_food_net_content_mysql, 
-						food_net_content_measurement=$inp_food_net_content_measurement_mysql, 
-						food_serving_size_gram=$inp_food_serving_size_gram_mysql, 
-						food_serving_size_gram_measurement=$inp_food_serving_size_gram_measurement_mysql, 
-						food_serving_size_pcs=$inp_food_serving_size_pcs_mysql, 
-						food_serving_size_pcs_measurement=$inp_food_serving_size_pcs_measurement_mysql, 
-						food_barcode=$inp_food_barcode_mysql,
-						food_age_restriction=$inp_age_restriction_mysql,
-						food_language=$inp_language_mysql,
-						food_main_category_id=$inp_main_category_id_mysql,
-						food_sub_category_id=$inp_sub_category_id_mysql
+				
+					// Update food_id
+					$result = mysqli_query($link, "UPDATE $t_food_index SET food_name=$inp_food_name_mysql, food_clean_name=$inp_food_clean_name_mysql, 
+									food_manufacturer_name=$inp_food_manufacturer_name_mysql, 
+									food_description=$inp_food_description_mysql, 
+									food_country=$inp_food_country_mysql,
 
-						 WHERE food_id=$food_id_mysql") or die(mysqli_error($link));
+									food_net_content_metric=$inp_food_net_content_metric_mysql,
+									food_net_content_measurement_metric=$inp_food_net_content_measurement_metric_mysql, 
+
+									food_net_content_us_system=$inp_food_net_content_us_system_mysql, 
+									food_net_content_measurement_us_system=$inp_food_net_content_measurement_us_system_mysql, 
+	
+									food_net_content_added_measurement=$inp_food_net_content_measurement_mysql, 
+
+									food_serving_size_metric=$inp_food_serving_size_metric_mysql,
+									food_serving_size_measurement_metric=$inp_food_serving_size_measurement_metric_mysql, 
+
+									food_serving_size_us_system=$inp_food_serving_size_us_system_mysql, 
+									food_serving_size_measurement_us_system=$inp_food_serving_size_measurement_us_system_mysql,
+
+									food_serving_size_added_measurement=$inp_food_serving_size_measurement_mysql, 
 
 
-		// We changed size, so we need to update numbers
-		if($inp_food_serving_size_gram != "$get_current_food_serving_size_gram"){
-			if($get_current_food_energy != ""){
-				$inp_food_energy_calculated = round($get_current_food_energy*$inp_food_serving_size_gram/100, 0);
-			}
-			else{
-				$inp_food_energy_calculated = $get_current_food_energy_calculated;
-			}
 
-			if($get_current_food_fat != ""){
-				$inp_food_fat_calculated = round($get_current_food_fat*$inp_food_serving_size_gram/100, 0);
-			}
-			else{
-				$inp_food_fat_calculated = $get_current_food_fat_calculated;
-			}
+									food_serving_size_pcs=$inp_food_serving_size_pcs_mysql, food_serving_size_pcs_measurement=$inp_food_serving_size_pcs_measurement_mysql, 
+									food_barcode=$inp_food_barcode_mysql, food_user_ip=$inp_user_ip_mysql,
+									food_age_restriction=$inp_age_restriction_mysql WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 
-			if($get_current_food_fat_of_which_saturated_fatty_acids != ""){
-				$inp_food_fat_of_which_saturated_fatty_acids_calculated = round($get_current_food_fat_of_which_saturated_fatty_acids*$inp_food_serving_size_gram/100, 0);
-			}
-			else{
-				$inp_food_fat_of_which_saturated_fatty_acids_calculated = $get_current_food_fat_of_which_saturated_fatty_acids_calculated;
-			}
-			if($get_current_food_carbohydrates != ""){
-				$inp_food_carbohydrates_calculated = round($get_current_food_carbohydrates*$inp_food_serving_size_gram/100, 0);
-			}
-			else{
-				$inp_food_carbohydrates_calculated = $get_current_food_carbohydrates_calculated;
-			}
 
-			if($get_current_food_dietary_fiber != ""){
-				$inp_food_dietary_fiber_calculated = round($get_current_food_dietary_fiber*$inp_food_serving_size_gram/100, 0);
-			}
-			else{
-				$inp_food_dietary_fiber_calculated = $get_current_food_dietary_fiber_calculated;
-			}
+					// We changed size, so we need to update numbers
+					if($inp_food_serving_size_metric != "$get_food_serving_size_metric"){
+						if($get_food_energy_metric != ""){
+							$inp_food_energy_calculated_metric = round($get_current_food_energy_metric*$inp_food_serving_size_metric/100, 0);
+						}
+						else{
+							$inp_food_energy_calculated_metric = $get_current_food_energy_calculated_metric;
+						}
 
-			if($get_current_food_carbohydrates_of_which_sugars != ""){
-				$inp_food_carbohydrates_of_which_sugars_calculated = round($get_current_food_carbohydrates_of_which_sugars*$inp_food_serving_size_gram/100, 0);
-			}
-			else{
-				$inp_food_carbohydrates_of_which_sugars_calculated = $get_current_food_carbohydrates_of_which_sugars_calculated;
-			}
+						if($get_food_fat_metric != ""){
+							$inp_food_fat_calculated_metric = round($get_current_food_fat_metric*$inp_food_serving_size_metric/100, 0);
+						}
+						else{
+							$inp_food_fat_calculated_metric = $get_current_food_fat_calculated_metric;
+						}
+
+						if($get_food_fat_of_which_saturated_fatty_acids_metric != ""){
+							$inp_food_fat_of_which_saturated_fatty_acids_calculated_metric = round($get_current_food_fat_of_which_saturated_fatty_acids_metric*$inp_food_serving_size_metric/100, 0);
+						}
+						else{
+							$inp_food_fat_of_which_saturated_fatty_acids_calculated_metric = $get_current_food_fat_of_which_saturated_fatty_acids_calculated_metric;
+						}
+
+						if($get_food_carbohydrates_metric != ""){
+							$inp_food_carbohydrates_calculated_metric = round($get_current_food_carbohydrates_metric*$inp_food_serving_size_metric/100, 0);
+						}
+						else{
+							$inp_food_carbohydrates_calculated_metric = $get_current_food_carbohydrates_calculated_metric;
+						}
+
+						if($get_food_dietary_fiber_metric != ""){
+							$inp_food_dietary_fiber_calculated_metric = round($get_current_food_dietary_fiber_metric*$inp_food_serving_size_metric/100, 0);
+						}
+						else{
+							$inp_food_dietary_fiber_calculated_metric = $get_current_food_dietary_fiber_calculated_metric;
+						}
+	
+						if($get_food_carbohydrates_of_which_sugars_metric != ""){
+							$inp_food_carbohydrates_of_which_sugars_calculated_metric = round($get_current_food_carbohydrates_of_which_sugars_metric*$inp_food_serving_size_metric/100, 0);
+						}
+						else{
+							$inp_food_carbohydrates_of_which_sugars_calculated_metric = $get_current_food_carbohydrates_of_which_sugars_calculated_metric;
+						}
 		
-			if($get_current_food_proteins != ""){
-				$inp_food_proteins_calculated = round($get_current_food_proteins*$inp_food_serving_size_gram/100, 0);
-			}
-			else{
-				$inp_food_proteins_calculated = $get_current_food_proteins_calculated;
-			}
 
-			if($get_current_food_salt != ""){
-				$inp_food_salt_calculated = round($get_current_food_salt*$inp_food_serving_size_gram/100, 0);
-			}
-			else{
-				$inp_food_salt_calculated = $get_current_food_salt_calculated;
-			}
+						if($get_food_proteins_metric != ""){
+							$inp_food_proteins_calculated_metric = round($get_current_food_proteins_metric*$inp_food_serving_size_metric/100, 0);
+						}
+						else{
+							$inp_food_proteins_calculated_metric = $get_current_food_proteins_calculated_metric;
+						}
 
-			if($get_current_food_sodium != ""){
-				$inp_food_sodium_calculated = round($get_current_food_sodium*$inp_food_serving_size_gram/100, 0);
-			}
-			else{
-				$inp_food_sodium_calculated = $get_current_food_sodium_calculated;
-			}
-			if($inp_food_sodium_calculated == ""){
-				$inp_food_sodium_calculated = 0;
-			}
+	
+	
+						if($get_food_salt_metric != ""){
+							$inp_food_salt_calculated_metric = round($get_current_food_salt_metric*$inp_food_serving_size_metric/100, 0);
+						}
+						else{
+							$inp_food_salt_calculated_metric = $get_current_food_salt_calculated_metric;
+						}
 
-
-
-			$result = mysqli_query($link, "UPDATE $t_food_index SET food_energy_calculated='$inp_food_energy_calculated',
-							food_proteins_calculated='$inp_food_proteins_calculated',
-							food_salt_calculated='$inp_food_salt_calculated', 
-							food_sodium_calculated='$inp_food_sodium_calculated',
-							food_carbohydrates_calculated='$inp_food_carbohydrates_calculated',
-							food_dietary_fiber_calculated='$inp_food_dietary_fiber_calculated',
-							food_carbohydrates_of_which_sugars_calculated='$inp_food_carbohydrates_of_which_sugars_calculated',
-							food_fat_calculated='$inp_food_fat_calculated',
-							food_fat_of_which_saturated_fatty_acids_calculated='$inp_food_fat_of_which_saturated_fatty_acids_calculated'
-							WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
-
-		}
+						if($get_food_sodium_metric != ""){
+							$inp_food_sodium_calculated_metric = round($get_current_food_sodium_metric*$inp_food_serving_size_metric/100, 0);
+						}
+						else{
+							$inp_food_sodium_calculated_metric = $get_current_food_sodium_calculated_metric;
+						}
+						if($inp_food_sodium_calculated_metric == ""){
+							$inp_food_sodium_calculated_metric = 0;
+						}
 
 
-		// Countries
-		if($inp_food_country != "$get_current_food_country"){
-			$query_t = "SELECT food_country_id, food_country_count_food FROM $t_food_countries_used WHERE food_country_name=$inp_food_country_mysql";
-			$result_t = mysqli_query($link, $query_t);
-			$row_t = mysqli_fetch_row($result_t);
-			list($get_food_country_id, $get_food_country_count_food) = $row_t;
-			if($get_food_country_id == ""){
-				// New food country
-				mysqli_query($link, "INSERT INTO $t_food_countries_used 
-				(food_country_id, food_country_name, food_country_count_food) 
-				VALUES 
-				(NULL, $inp_food_country_mysql, '1')")
-				or die(mysqli_error($link));
-			}
-			else{
-				$inp_count = $get_food_country_count_food+1;
-				$result = mysqli_query($link, "UPDATE $t_food_countries_used SET food_country_count_food=$inp_count WHERE food_country_id=$get_food_country_id");
-			}
-		} // new country
+
+						$result = mysqli_query($link, "UPDATE $t_food_index SET 
+										food_energy_calculated_metric='$inp_food_energy_calculated_metric',
+food_proteins_calculated_metric='$inp_food_proteins_calculated_metric',
+food_salt_calculated_metric='$inp_food_salt_calculated_metric', 
+food_sodium_calculated_metric='$inp_food_sodium_calculated_metric',
+food_carbohydrates_calculated_metric='$inp_food_carbohydrates_calculated_metric',
+food_dietary_fiber_calculated_metric='$inp_food_dietary_fiber_calculated_metric',
+food_carbohydrates_of_which_sugars_calculated_metric='$inp_food_carbohydrates_of_which_sugars_calculated_metric',
+food_fat_calculated_metric='$inp_food_fat_calculated_metric',
+food_fat_of_which_saturated_fatty_acids_calculated_metric='$inp_food_fat_of_which_saturated_fatty_acids_calculated_metric'
+WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
+
+
+					}
+
+
+					// Countries
+					if($inp_food_country != "$get_food_country"){
+						$query_t = "SELECT food_country_id, food_country_count_food FROM $t_food_countries_used WHERE food_country_name=$inp_current_food_country_mysql";
+						$result_t = mysqli_query($link, $query_t);
+						$row_t = mysqli_fetch_row($result_t);
+						list($get_food_country_id, $get_food_country_count_food) = $row_t;
+						if($get_food_country_id == ""){
+							// New food country
+							mysqli_query($link, "INSERT INTO $t_food_countries_used 
+							(food_country_id, food_country_name, food_country_count_food) 
+							VALUES 
+							(NULL, $inp_food_country_mysql, '1')")
+							or die(mysqli_error($link));
+						}
+						else{
+							$inp_count = $get_food_country_count_food+1;
+							$result = mysqli_query($link, "UPDATE $t_food_countries_used SET food_country_count_food=$inp_count WHERE food_country_id=$get_current_food_country_id");
+						}
+					} // new country
 
 
 		$url = "index.php?open=$open&page=edit_food_general_admin&main_category_id=$get_current_food_main_category_id&sub_category_id=$get_current_food_sub_category_id&food_id=$get_current_food_id&editor_language=$editor_language&l=$l&ft=success&fm=changes_saved";
@@ -396,7 +486,7 @@ else{
 			<ul>
 				<li><a href=\"index.php?open=$open&amp;page=open_food&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">View</a>
 				<li><a href=\"index.php?open=$open&amp;page=edit_food_general_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\" class=\"active\">Edit</a>
-				<li><a href=\"index.php?open=$open&amp;page=edit_food_numbers_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Numbers</a>
+				<li><a href=\"index.php?open=$open&amp;page=edit_food_numbers_hundred_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Numbers</a>
 				<li><a href=\"index.php?open=$open&amp;page=edit_food_images_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Images</a>
 				<li><a href=\"index.php?open=$open&amp;page=delete_food_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Delete</a>
 			</ul>
@@ -478,11 +568,11 @@ else{
 			
 				<p><b>Net content ($get_current_food_net_content_added_measurement):</b><br />
 				<input type=\"text\" name=\"inp_food_net_content\" value=\"";
-				if($get_current_food_net_content_added_measurement == "g" OR $get_current_food_net_content_added_measurement == "ml"){
-					echo"$get_current_food_net_content_metric";
+				if($get_current_food_serving_size_added_measurement == "oz_us" OR $get_current_food_serving_size_added_measurement == "fl_oz_us"){
+					echo"$get_current_food_net_content_us_system";
 				}
 				else{
-					echo"$get_current_food_net_content_us_system";
+					echo"$get_current_food_net_content_metric";
 				}
 				echo"\" size=\"3\" />
 
@@ -496,11 +586,11 @@ else{
 			
 				<p><b>Serving:</b><br />
 				<input type=\"text\" name=\"inp_food_serving_size\" value=\"";
-				if($get_current_food_serving_size_added_measurement == "g" OR $get_current_food_serving_size_added_measurement == "ml"){
-					echo"$get_current_food_serving_size_metric";
+				if($get_current_food_serving_size_added_measurement == "oz_us" OR $get_current_food_serving_size_added_measurement == "fl_oz_us"){
+					echo"$get_current_food_serving_size_us_system";
 				}
 				else{
-					echo"$get_current_food_serving_size_us_system";
+					echo"$get_current_food_serving_size_metric";
 				}
 				echo"\" size=\"3\" />
 						

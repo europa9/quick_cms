@@ -287,7 +287,13 @@ while($row = mysqli_fetch_row($result)) {
 		}
 	} // img
 }
-
+if($x == "3"){
+	echo"
+		<div class=\"left_center_center_right_right\" style=\"text-align: center;padding-bottom: 20px;\">
+		</div>
+		<div class=\"clear\"></div>
+	";
+}
 
 
 /*- Footer ----------------------------------------------------------------------------------- */

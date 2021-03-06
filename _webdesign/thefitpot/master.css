@@ -425,6 +425,18 @@ header{
 		background: #213147 url("../../_uploads/pages/navigation/no/ovelser_18x18_active.png") no-repeat 10px center;
 	}
 
+	/* Entries */
+	a.nav_1db9981d25abcc90b10c013169a972f7{
+		background: url("../../_uploads/pages/navigation/no/innlegg_18x18_inactive.png") no-repeat 10px center;
+	}
+	a.nav_1db9981d25abcc90b10c013169a972f7:hover{
+		background: #213147 url("../../_uploads/pages/navigation/no/innlegg_18x18_hover.png") no-repeat 10px center;
+	}
+	a.nav_1db9981d25abcc90b10c013169a972f7:active{
+		background: #213147 url("../../_uploads/pages/navigation/no/innlegg_18x18_active.png") no-repeat 10px center;
+	}
+
+
 	/* Workout diary */
 	a.nav_87159b11d4b4c0e30f591a59abc66b16{
 		background: url("../../_uploads/pages/navigation/no/matdagbok_18x18_inactive.png") no-repeat 10px center;

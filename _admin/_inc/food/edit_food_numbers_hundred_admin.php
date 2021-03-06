@@ -65,6 +65,10 @@ else{
 $settings_image_width = "847";
 $settings_image_height = "847";
 
+/*- Languages -------------------------------------------------------------------------- */
+include("_translations/site/$l/food/ts_edit_food.php");
+include("_translations/site/$l/food/ts_edit_food_numbers_hundred.php");
+include("_translations/site/$l/food/ts_view_food.php");
 
 // Get variables
 $food_id = $_GET['food_id'];
@@ -250,7 +254,7 @@ food_salt_calculated='$inp_food_salt_calculated'
 			<ul>
 				<li><a href=\"index.php?open=$open&amp;page=open_food&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">View</a>
 				<li><a href=\"index.php?open=$open&amp;page=edit_food_general_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Edit</a>
-				<li><a href=\"index.php?open=$open&amp;page=edit_food_numbers_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\" class=\"active\">Numbers</a>
+				<li><a href=\"index.php?open=$open&amp;page=edit_food_numbers_hundred_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\" class=\"active\">Numbers</a>
 				<li><a href=\"index.php?open=$open&amp;page=edit_food_images_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Images</a>
 				<li><a href=\"index.php?open=$open&amp;page=delete_food_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Delete</a>
 			</ul>
@@ -282,15 +286,15 @@ food_salt_calculated='$inp_food_salt_calculated'
 	<!-- //Focus -->
 
 	<!-- Edit food general -->
-		<form method=\"post\" action=\"index.php?open=$open&amp;page=edit_food_numbers_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\" id=\"my_form\">
+		<form method=\"post\" action=\"index.php?open=$open&amp;page=edit_food_numbers_hundred_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\" id=\"my_form\">
 		
 		<p>
-		<a href=\"index.php?open=$open&amp;page=edit_food_numbers_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\" style=\"font-weight: bold;\">Per 100</a>
+		<a href=\"index.php?open=$open&amp;page=edit_food_numbers_hundred_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\" style=\"font-weight: bold;\">Per 100</a>
 		&middot;
 		<a href=\"index.php?open=$open&amp;page=edit_food_numbers_pcs_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Per pcs</a>
 		</p>
 		";
-		if($get_current_food_serving_size_gram == "" OR $get_current_food_serving_size_gram == "0"){
+		if($get_current_food_serving_size_metric == "" OR $get_current_food_serving_size_metric == "0"){
 			echo"<div class=\"warning\"><p>Missing serving size!</p></div>\n";
 		}
 		echo"
@@ -301,23 +305,23 @@ food_salt_calculated='$inp_food_salt_calculated'
 			   <th scope=\"col\">
 			   </th>
 			   <th scope=\"col\" style=\"text-align: center;padding: 6px 4px 6px 4px;vertical-align: bottom;\">
-				<span>Per 100</span>
+				<span>$l_per_100</span>
 			   </th>
 			   <th scope=\"col\" style=\"text-align: center;padding: 6px 4px 6px 4px;vertical-align: bottom;\">
-				<span>Per $get_current_food_serving_size_pcs_measurement</span>
+				<span>$l_serving<br />$get_current_food_serving_size_metric $get_current_food_serving_size_measurement_metric ($get_current_food_serving_size_pcs $get_current_food_serving_size_pcs_measurement)</span>
 			   </th>
 			  </tr>
 			 </thead>
 			 <tbody>
 			  <tr>
 			   <td style=\"padding: 8px 4px 6px 8px;\">
-				<span>Calories</span>
+				<span>$l_calories</span>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<span><input type=\"text\" name=\"inp_food_energy\" value=\"$get_current_food_energy\" size=\"3\" /></span>
+				<span><input type=\"text\" name=\"inp_food_energy\" value=\"$get_current_food_energy_metric\" size=\"3\" /></span>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<span class=\"food_energy_calculated\">$get_current_food_energy_calculated</span>
+				<span class=\"food_energy_calculated\">$get_current_food_energy_calculated_metric</span>
 
 				<!-- On change energy calculate -->
 				<script>
@@ -325,7 +329,7 @@ food_salt_calculated='$inp_food_salt_calculated'
 					\$('[name=\"inp_food_energy\"]').on(\"change paste keyup\", function() {
 						var energy_hundred = $('[name=\"inp_food_energy\"]').val();
 						energy_hundred = energy_hundred.replace(\",\", \".\");
-						energy_calculated = Math.round((energy_hundred*$get_current_food_serving_size_gram)/100);
+						energy_calculated = Math.round((energy_hundred*$get_current_food_serving_size_metric)/100);
 						\$(\".food_energy_calculated\").text(energy_calculated);
 					});
 				});
@@ -336,16 +340,16 @@ food_salt_calculated='$inp_food_salt_calculated'
 			  </tr>
 			  <tr>
 			   <td style=\"padding: 8px 4px 6px 8px;\">
-				<p style=\"margin:0;padding: 0px 0px 4px 0px;\">Fat:</p>
-				<p style=\"margin:0;padding: 0;\">- of which saturated fatty acids</p>
+				<p style=\"margin:0;padding: 0px 0px 4px 0px;\">$l_fat:</p>
+				<p style=\"margin:0;padding: 0;\">$l_dash_of_which_saturated_fatty_acids</p>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_food_fat\" value=\"$get_current_food_fat\" size=\"3\" /><br /></p>
-				<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_food_fat_of_which_saturated_fatty_acids\" value=\"$get_current_food_fat_of_which_saturated_fatty_acids\" size=\"3\" /></p>
+				<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_food_fat\" value=\"$get_current_food_fat_metric\" size=\"3\" /><br /></p>
+				<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_food_fat_of_which_saturated_fatty_acids\" value=\"$get_current_food_fat_of_which_saturated_fatty_acids_metric\" size=\"3\" /></p>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><span class=\"food_fat_calculated\">$get_current_food_fat_calculated</span><br />
-				<span class=\"food_fat_of_which_saturated_fatty_acids_calculated\">$get_current_food_fat_of_which_saturated_fatty_acids_calculated</span></p>
+				<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><span class=\"food_fat_calculated\">$get_current_food_fat_calculated_metric</span><br />
+				<span class=\"food_fat_of_which_saturated_fatty_acids_calculated\">$get_current_food_fat_of_which_saturated_fatty_acids_calculated_metric</span></p>
 
 				<!-- On change fat calculate -->
 				<script>
@@ -353,13 +357,13 @@ food_salt_calculated='$inp_food_salt_calculated'
 					\$('[name=\"inp_food_fat\"]').on(\"change paste keyup\", function() {
 						var fat_hundred = $('[name=\"inp_food_fat\"]').val();
 						fat_hundred = fat_hundred.replace(\",\", \".\");
-						fat_calculated = Math.round((fat_hundred*$get_current_food_serving_size_gram)/100);
+						fat_calculated = Math.round((fat_hundred*$get_current_food_serving_size_metric)/100);
 						\$(\".food_fat_calculated\").text(fat_calculated);
 					});
 					\$('[name=\"inp_food_fat_of_which_saturated_fatty_acids\"]').on(\"change paste keyup\", function() {
 						var food_fat_of_which_saturated_fatty_acids_hundred = $('[name=\"inp_food_fat_of_which_saturated_fatty_acids\"]').val();
 						food_fat_of_which_saturated_fatty_acids_hundred = food_fat_of_which_saturated_fatty_acids_hundred.replace(\",\", \".\");
-						food_fat_of_which_saturated_fatty_acids_calculated = Math.round((food_fat_of_which_saturated_fatty_acids_hundred*$get_current_food_serving_size_gram)/100);
+						food_fat_of_which_saturated_fatty_acids_calculated = Math.round((food_fat_of_which_saturated_fatty_acids_hundred*$get_current_food_serving_size_metric)/100);
 						\$(\".food_fat_of_which_saturated_fatty_acids_calculated\").text(food_fat_of_which_saturated_fatty_acids_calculated);
 					});
 				});
@@ -369,16 +373,16 @@ food_salt_calculated='$inp_food_salt_calculated'
 			 </tr>
 			 <tr>
 		 	  <td style=\"padding: 8px 4px 6px 8px;\">
-				<p style=\"margin:0;padding: 0px 0px 4px 0px;\">Carbs:</p>
-				<p style=\"margin:0;padding: 0;\">- of which sugars</p>
+				<p style=\"margin:0;padding: 0px 0px 4px 0px;\">$l_carbs:</p>
+				<p style=\"margin:0;padding: 0;\">$l_dash_of_which_sugars</p>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_food_carbohydrates\" value=\"$get_current_food_carbohydrates\" size=\"3\" /></p>
-				<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_food_carbohydrates_of_which_sugars\" value=\"$get_current_food_carbohydrates_of_which_sugars\" size=\"3\" /></p>
+				<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_food_carbohydrates\" value=\"$get_current_food_carbohydrates_metric\" size=\"3\" /></p>
+				<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_food_carbohydrates_of_which_sugars\" value=\"$get_current_food_carbohydrates_of_which_sugars_metric\" size=\"3\" /></p>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><span class=\"food_carbohydrates_calculated\">$get_current_food_carbohydrates_calculated</span><br />
-				<span class=\"food_carbohydrates_of_which_sugars_calculated\">$get_current_food_carbohydrates_of_which_sugars_calculated</span></p>
+				<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><span class=\"food_carbohydrates_calculated\">$get_current_food_carbohydrates_calculated_metric</span><br />
+				<span class=\"food_carbohydrates_of_which_sugars_calculated\">$get_current_food_carbohydrates_of_which_sugars_calculated_metric</span></p>
 
 				<!-- On change fat calculate -->
 				<script>
@@ -386,13 +390,13 @@ food_salt_calculated='$inp_food_salt_calculated'
 					\$('[name=\"inp_food_carbohydrates\"]').on(\"change paste keyup\", function() {
 						var food_carbohydrates_hundred = $('[name=\"inp_food_carbohydrates\"]').val();
 						food_carbohydrates_hundred = food_carbohydrates_hundred.replace(\",\", \".\");
-						food_carbohydrates_calculated = Math.round((food_carbohydrates_hundred*$get_current_food_serving_size_gram)/100);
+						food_carbohydrates_calculated = Math.round((food_carbohydrates_hundred*$get_current_food_serving_size_metric)/100);
 						\$(\".food_carbohydrates_calculated\").text(food_carbohydrates_calculated);
 					});
 					\$('[name=\"inp_food_carbohydrates_of_which_sugars\"]').on(\"change paste keyup\", function() {
 						var food_carbohydrates_of_which_sugars_hundred = $('[name=\"inp_food_carbohydrates_of_which_sugars\"]').val();
 						food_carbohydrates_of_which_sugars_hundred = food_carbohydrates_of_which_sugars_hundred.replace(\",\", \".\");
-						food_carbohydrates_of_which_sugars_calculated = Math.round((food_carbohydrates_of_which_sugars_hundred*$get_current_food_serving_size_gram)/100);
+						food_carbohydrates_of_which_sugars_calculated = Math.round((food_carbohydrates_of_which_sugars_hundred*$get_current_food_serving_size_metric)/100);
 						\$(\".food_carbohydrates_of_which_sugars_calculated\").text(food_carbohydrates_of_which_sugars_calculated);
 					});
 				});
@@ -402,13 +406,13 @@ food_salt_calculated='$inp_food_salt_calculated'
 			  </tr>
 			 <tr>
 		 	  <td style=\"padding: 8px 4px 6px 8px;\">
-				<p style=\"margin:0;padding: 0;\">Dietary fiber:</p>
+				<p style=\"margin:0;padding: 0;\">$l_dietary_fiber:</p>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<p style=\"margin:0px 0px 4px 0px;padding: 0;\"><input type=\"text\" name=\"inp_food_dietary_fiber\" value=\"$get_current_food_dietary_fiber\" size=\"3\" /></p>
+				<p style=\"margin:0px 0px 4px 0px;padding: 0;\"><input type=\"text\" name=\"inp_food_dietary_fiber\" value=\"$get_current_food_dietary_fiber_metric\" size=\"3\" /></p>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<span class=\"food_dietary_fiber_calculated\">$get_current_food_dietary_fiber_calculated</span>
+				<span class=\"food_dietary_fiber_calculated\">$get_current_food_dietary_fiber_calculated_metric</span>
 
 				<!-- On change dietary fiber calculate -->
 				<script>
@@ -416,7 +420,7 @@ food_salt_calculated='$inp_food_salt_calculated'
 					\$('[name=\"inp_food_dietary_fiber\"]').on(\"change paste keyup\", function() {
 						var food_dietary_fiber_hundred = $('[name=\"inp_food_dietary_fiber\"]').val();
 						food_dietary_fiber_hundred = food_dietary_fiber_hundred.replace(\",\", \".\");
-						food_dietary_fiber_calculated = Math.round((food_dietary_fiber_hundred*$get_current_food_serving_size_gram)/100);
+						food_dietary_fiber_calculated = Math.round((food_dietary_fiber_hundred*$get_current_food_serving_size_metric)/100);
 						\$(\".food_dietary_fiber_calculated\").text(food_dietary_fiber_calculated);
 					});
 				});
@@ -426,20 +430,20 @@ food_salt_calculated='$inp_food_salt_calculated'
 			  </tr>
 			  <tr>
 			   <td style=\"padding: 8px 4px 6px 8px;\">
-				<span>Protein:</span>
+				<span>$l_protein:</span>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<span><input type=\"text\" name=\"inp_food_proteins\" value=\"$get_current_food_proteins\" size=\"3\" /></span>
+				<span><input type=\"text\" name=\"inp_food_proteins\" value=\"$get_current_food_proteins_metric\" size=\"3\" /></span>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<span class=\"food_proteins_calculated\">$get_current_food_proteins_calculated</span>
+				<span class=\"food_proteins_calculated\">$get_current_food_proteins_calculated_metric</span>
 				<!-- On change protein calculate -->
 				<script>
 				\$(document).ready(function(){
 					\$('[name=\"inp_food_proteins\"]').on(\"change paste keyup\", function() {
 						var food_proteins_hundred = $('[name=\"inp_food_proteins\"]').val();
 						food_proteins_hundred = food_proteins_hundred.replace(\",\", \".\");
-						food_proteins_calculated = Math.round((food_proteins_hundred*$get_current_food_serving_size_gram)/100);
+						food_proteins_calculated = Math.round((food_proteins_hundred*$get_current_food_serving_size_metric)/100);
 						\$(\".food_proteins_calculated\").text(food_proteins_calculated);
 					});
 				});
@@ -450,13 +454,13 @@ food_salt_calculated='$inp_food_salt_calculated'
 			 </tr>
 			  <tr>
 			   <td style=\"padding: 8px 4px 6px 8px;\">
-				<span>Salt in gram</span>
+				<span>$l_salt_in_gram</span>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<span><input type=\"text\" name=\"inp_food_salt\" value=\"$get_current_food_salt\" size=\"3\" /></span>
+				<span><input type=\"text\" name=\"inp_food_salt\" value=\"$get_current_food_salt_metric\" size=\"3\" /></span>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<span class=\"food_salt_calculated\">$get_current_food_salt_calculated</span>
+				<span class=\"food_salt_calculated\">$get_current_food_salt_calculated_metric</span>
 				<!-- On change salt calculate -->
 				<script>
 				\$(document).ready(function(){
@@ -465,14 +469,14 @@ food_salt_calculated='$inp_food_salt_calculated'
 						// Calculate salt pr pc
 						var food_salt_hundred = \$('[name=\"inp_food_salt\"]').val();
 						food_salt_hundred = food_salt_hundred.replace(\",\", \".\");
-						food_salt_calculated = (food_salt_hundred*$get_current_food_serving_size_gram)/100;
+						food_salt_calculated = (food_salt_hundred*$get_current_food_serving_size_metric)/100;
 						food_salt_calculated = food_salt_calculated.toFixed(2)
 						\$(\".food_salt_calculated\").text(food_salt_calculated);
 
 						// Calculate sodium (Sodium is 40 % of salt)
 						food_sodium_hundred = (food_salt_hundred*40)/100; // g
 						food_sodium_hundred = food_sodium_hundred*1000; // mg
-						food_sodium_calculated = Math.round((food_sodium_hundred*$get_current_food_serving_size_gram)/100);
+						food_sodium_calculated = Math.round((food_sodium_hundred*$get_current_food_serving_size_metric)/100);
 						\$(\".food_sodium_calculated\").text(food_sodium_calculated);
 						\$('[name=\"inp_food_sodium\"]').val(Math.round(food_sodium_hundred));
 						
@@ -485,20 +489,20 @@ food_salt_calculated='$inp_food_salt_calculated'
 			  </tr>
 			  <tr>
 			   <td style=\"padding: 8px 4px 6px 8px;\">
-				<span>Sodium in mg</span>
+				<span>$l_sodium_in_mg</span>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<span><input type=\"text\" name=\"inp_food_sodium\" value=\"$get_current_food_sodium\" size=\"3\" /></span>
+				<span><input type=\"text\" name=\"inp_food_sodium\" value=\"$get_current_food_sodium_metric\" size=\"3\" /></span>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<span class=\"food_sodium_calculated\">$get_current_food_sodium_calculated</span>
+				<span class=\"food_sodium_calculated\">$get_current_food_sodium_calculated_metric</span>
 				<!-- On change sodium calculate -->
 				<script>
 				\$(document).ready(function(){
 					\$('[name=\"inp_food_sodium\"]').on(\"change paste keyup\", function() {
 						var food_sodium_hundred = \$('[name=\"inp_food_sodium\"]').val();
 						food_sodium_hundred = food_sodium_hundred.replace(\",\", \".\");
-						food_sodium_calculated = (food_sodium_hundred*$get_current_food_serving_size_gram)/100;
+						food_sodium_calculated = (food_sodium_hundred*$get_current_food_serving_size_metric)/100;
 						food_sodium_calculated = food_sodium_calculated.toFixed(2)
 						\$(\".food_sodium_calculated\").text(food_sodium_calculated);
 						

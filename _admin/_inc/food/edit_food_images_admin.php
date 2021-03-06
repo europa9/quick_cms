@@ -144,7 +144,7 @@ else{
 			<ul>
 				<li><a href=\"index.php?open=$open&amp;page=open_food&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">View</a>
 				<li><a href=\"index.php?open=$open&amp;page=edit_food_general_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Edit</a>
-				<li><a href=\"index.php?open=$open&amp;page=edit_food_numbers_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Numbers</a>
+				<li><a href=\"index.php?open=$open&amp;page=edit_food_numbers_hundred_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Numbers</a>
 				<li><a href=\"index.php?open=$open&amp;page=edit_food_images_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\" class=\"active\">Images</a>
 				<li><a href=\"index.php?open=$open&amp;page=delete_food_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Delete</a>
 			</ul>
@@ -208,7 +208,7 @@ else{
 					  </td>
 					  <td>
 						<p>";
-						if($get_current_food_image_b != ""){
+						if(file_exists("../$get_current_food_image_path/$get_current_food_image_b") && $get_current_food_image_b != ""){
 							// Thumb B medium
 							if(!(file_exists("../$get_current_food_image_path/$get_current_food_thumb_b_medium")) OR $get_current_food_thumb_b_medium == ""){
 								$ext = get_extension("$get_current_food_image_b");
@@ -236,7 +236,7 @@ else{
 				 	 </td>
 				 	 <td>
 						<p>";
-						if($get_current_food_image_c != ""){
+						if(file_exists("../$get_current_food_image_path/$get_current_food_image_c") && $get_current_food_image_c != ""){
 							// Thumb C medium
 							if(!(file_exists("../$get_current_food_image_path/$get_current_food_thumb_c_medium")) OR $get_current_food_thumb_c_medium == ""){
 								$ext = get_extension("$get_current_food_image_c");
@@ -265,7 +265,7 @@ else{
 					  </td>
 					  <td>
 						<p>";
-						if($get_current_food_image_d != ""){
+						if(file_exists("../$get_current_food_image_path/$get_current_food_image_d") && $get_current_food_image_d != ""){
 							if(!(file_exists("../$get_current_food_image_path/$get_current_food_thumb_d_medium")) OR $get_current_food_thumb_d_medium == ""){
 								$ext = get_extension("$get_current_food_image_d");
 								$inp_thumb_name = str_replace(".$ext", "", $get_current_food_image_d);

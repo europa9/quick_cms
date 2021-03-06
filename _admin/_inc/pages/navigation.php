@@ -456,6 +456,15 @@ elseif($action == "new"){
 	}
 	echo"
 	<h1>$l_new_menu_item</h1>
+
+	<!-- Where am I? -->
+		<p><b>You are here:</b><br />
+		<a href=\"index.php?open=$open&amp;page=$page&amp;l=$l&amp;editor_language=$editor_language\">Navigation</a>
+		&gt;
+		<a href=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;l=$l&amp;editor_language=$editor_language\">New</a>
+		</p>
+	<!-- //Where am I? -->
+
 	<form method=\"post\" action=\"?open=$open&amp;page=navigation&amp;action=new&amp;process=1&amp;editor_language=$editor_language\" enctype=\"multipart/form-data\">
 				
 	

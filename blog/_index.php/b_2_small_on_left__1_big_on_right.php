@@ -1,4 +1,7 @@
 <?php
+echo"
+<div class=\"blog_flex_row_b\">
+";
 
 $x = 0;
 $query = "SELECT blog_post_id, blog_post_user_id, blog_post_title, blog_post_title_pre, blog_post_category_id, blog_post_category_title, blog_post_privacy_level, blog_post_image_path, blog_post_image_thumb_small, blog_post_image_thumb_medium, blog_post_image_thumb_large, blog_post_image_file, blog_post_image_ext, blog_post_image_text, blog_post_updated, blog_post_comments FROM $t_blog_posts WHERE blog_post_language=$l_mysql AND blog_post_privacy_level='everyone' AND blog_post_image_file != '' ORDER BY blog_post_id DESC LIMIT $limit";
@@ -14,30 +17,38 @@ while($row = mysqli_fetch_row($result)) {
 	list($get_user_id, $get_user_name, $get_user_alias) = $row_owner;
 		
 	if($get_blog_post_image_file != "" && file_exists("$root/$get_blog_post_image_path/$get_blog_post_image_file")){
+		// Ext
+		if($get_blog_post_image_ext == ""){
+			$ext = get_extension($get_blog_post_image_file);
+			$ext_mysql = quote_smart($link, $ext);
+			echo"<div class=\"info\"><p>Update ext to $ext</p></div>\n";
+			mysqli_query($link, "UPDATE $t_blog_posts SET blog_post_image_ext=$ext_mysql WHERE blog_post_id=$get_blog_post_id") or die(mysqli_error($link));
+		}
+
+
+
 		if($x == "0"){
 
 			// Create thumb
-			$width = 800;
-			$height = 430;
+			$width = 300;
+			$height = 180;
 			$thumb = $get_blog_post_id . "_thumb_" . $width . "x" . $height . "." . $get_blog_post_image_ext;
 			if(!(file_exists("$root/$get_blog_post_image_path/$thumb"))){
 				resize_crop_image($width, $height, "$root/$get_blog_post_image_path/$get_blog_post_image_file", "$root/$get_blog_post_image_path/$thumb");
-			}	
+			}
 
 
 			echo"
-			<div class=\"blog_one_big_on_left__two_small_on_right__left\">
-				<a href=\"$root/blog/view_post.php?post_id=$get_blog_post_id&amp;l=$l\"><img src=\"$root/$get_blog_post_image_path/$thumb\" alt=\"$get_blog_post_image_file\" class=\"recipe_of_the_day_img\" /></a>
+			
+			<div class=\"blog_flex_column_b_left\">
+				<div class=\"blog_flex_column_b_left_item\">
+					<a href=\"$root/blog/view_post.php?post_id=$get_blog_post_id&amp;l=$l\"><img src=\"$root/$get_blog_post_image_path/$thumb\" alt=\"$get_blog_post_image_file\" class=\"recipe_of_the_day_img\" /></a>
 
-				<p>
-				";
-				if($get_blog_post_title_pre != ""){
-					echo"<a href=\"$root/blog/view_post.php?post_id=$get_blog_post_id&amp;l=$l\" class=\"blog_post_a_pre_h\">$get_blog_post_title_pre</a><br />\n";
-				}
-				echo"
-				<a href=\"$root/blog/view_post.php?post_id=$get_blog_post_id&amp;l=$l\" class=\"blog_post_a_h1\">$get_blog_post_title</a>
-				</p>
-			</div>
+					<p>
+					<a href=\"$root/blog/view_post.php?post_id=$get_blog_post_id&amp;l=$l\" class=\"blog_post_a_h3\">$get_blog_post_title</a>
+					</p>
+					<hr />
+				</div>
 			";
 		}
 		elseif($x == "1"){
@@ -52,20 +63,22 @@ while($row = mysqli_fetch_row($result)) {
 
 
 			echo"
-			<div class=\"blog_one_big_on_left__two_small_on_right__right\">
-				<a href=\"$root/blog/view_post.php?post_id=$get_blog_post_id&amp;l=$l\"><img src=\"$root/$get_blog_post_image_path/$thumb\" alt=\"$get_blog_post_image_file\" class=\"recipe_of_the_day_img\" /></a>
+				<div class=\"blog_flex_column_b_left_item\">
+					<a href=\"$root/blog/view_post.php?post_id=$get_blog_post_id&amp;l=$l\"><img src=\"$root/$get_blog_post_image_path/$thumb\" alt=\"$get_blog_post_image_file\" class=\"recipe_of_the_day_img\" /></a>
 
-				<p>
-				<a href=\"$root/blog/view_post.php?post_id=$get_blog_post_id&amp;l=$l\" class=\"blog_post_a_h3\">$get_blog_post_title</a>
-				</p>
-				<hr />
+					<p>
+					<a href=\"$root/blog/view_post.php?post_id=$get_blog_post_id&amp;l=$l\" class=\"blog_post_a_h3\">$get_blog_post_title</a>
+					</p>
+				</div>
+			</div>
+			
 			";
 		}
 		elseif($x == "2"){
 
 			// Create thumb
-			$width = 300;
-			$height = 180;
+			$width = 670;
+			$height = 451;
 			$thumb = $get_blog_post_id . "_thumb_" . $width . "x" . $height . "." . $get_blog_post_image_ext;
 			if(!(file_exists("$root/$get_blog_post_image_path/$thumb"))){
 				resize_crop_image($width, $height, "$root/$get_blog_post_image_path/$get_blog_post_image_file", "$root/$get_blog_post_image_path/$thumb");
@@ -73,10 +86,16 @@ while($row = mysqli_fetch_row($result)) {
 
 
 			echo"
+			<div class=\"blog_flex_column_b_right\">
 				<a href=\"$root/blog/view_post.php?post_id=$get_blog_post_id&amp;l=$l\"><img src=\"$root/$get_blog_post_image_path/$thumb\" alt=\"$get_blog_post_image_file\" class=\"recipe_of_the_day_img\" /></a>
 
 				<p>
-				<a href=\"$root/blog/view_post.php?post_id=$get_blog_post_id&amp;l=$l\" class=\"blog_post_a_h3\">$get_blog_post_title</a>
+				";
+				if($get_blog_post_title_pre != ""){
+					echo"<a href=\"$root/blog/view_post.php?post_id=$get_blog_post_id&amp;l=$l\" class=\"blog_post_a_pre_h\">$get_blog_post_title_pre</a><br />\n";
+				}
+				echo"
+				<a href=\"$root/blog/view_post.php?post_id=$get_blog_post_id&amp;l=$l\" class=\"blog_post_a_h1\">$get_blog_post_title</a>
 				</p>
 			</div>
 			";
@@ -86,10 +105,9 @@ while($row = mysqli_fetch_row($result)) {
 	} // has image
 } // while
 
-if($x > 0){
-	echo"
-	<div class=\"clear\"></div>
-	<hr />
-	";
-}
+echo"
+</div> <!-- //blog_flex_row_b -->
+<hr />
+<div class=\"clear\"></div>
+";
 ?>

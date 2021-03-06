@@ -65,6 +65,10 @@ else{
 $settings_image_width = "847";
 $settings_image_height = "847";
 
+/*- Languages -------------------------------------------------------------------------- */
+include("_translations/site/$l/food/ts_edit_food.php");
+include("_translations/site/$l/food/ts_edit_food_numbers_pcs.php");
+include("_translations/site/$l/food/ts_view_food.php");
 
 // Get variables
 $food_id = $_GET['food_id'];
@@ -304,7 +308,7 @@ WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 			<ul>
 				<li><a href=\"index.php?open=$open&amp;page=open_food&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">View</a>
 				<li><a href=\"index.php?open=$open&amp;page=edit_food_general_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Edit</a>
-				<li><a href=\"index.php?open=$open&amp;page=edit_food_numbers_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\" class=\"active\">Numbers</a>
+				<li><a href=\"index.php?open=$open&amp;page=edit_food_numbers_hundred_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\" class=\"active\">Numbers</a>
 				<li><a href=\"index.php?open=$open&amp;page=edit_food_images_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Images</a>
 				<li><a href=\"index.php?open=$open&amp;page=delete_food_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\">Delete</a>
 			</ul>
@@ -344,30 +348,32 @@ WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 		<a href=\"index.php?open=$open&amp;page=edit_food_numbers_pcs_admin&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;editor_language=$editor_language&amp;l=$l\" style=\"font-weight: bold;\">Per pcs</a>
 		</p>
 		";
-		if($get_current_food_serving_size_gram == "" OR $get_current_food_serving_size_gram == "0"){
+		if($get_current_food_serving_size_metric == "" OR $get_current_food_serving_size_metric == "0"){
 			echo"<div class=\"warning\"><p>Missing serving size!</p></div>\n";
 		}
 		echo"
+
+
 			<table class=\"hor-zebra\" style=\"width: 350px\">
 			 <thead>
 			  <tr>
 			   <th scope=\"col\">
 			   </th>
 			   <th scope=\"col\" style=\"text-align: center;padding: 6px 4px 6px 4px;vertical-align: bottom;\">
-				<span>Per hundred</span>
+				<span>$l_per_hundred</span>
 			   </th>
 			   <th scope=\"col\" style=\"text-align: center;padding: 6px 4px 6px 4px;vertical-align: bottom;\">
-				<span>Per $get_current_food_serving_size_pcs_measurement</span>
+				<span>$l_serving<br />$get_current_food_serving_size_metric $get_current_food_serving_size_measurement_metric ($get_current_food_serving_size_pcs $get_current_food_serving_size_pcs_measurement)</span>
 			   </th>
 			  </tr>
 			 </thead>
 			 <tbody>
 			  <tr>
 			   <td style=\"padding: 8px 4px 6px 8px;\">
-				<span>Calories</span>
+				<span>$l_calories</span>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<span class=\"food_energy\">$get_current_food_salt</span>
+				<span class=\"food_energy\">$get_current_food_energy_metric</span>
 
 				<!-- On change energy calculate -->
 				<script>
@@ -375,7 +381,7 @@ WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 					\$('[name=\"inp_food_energy_calculated\"]').on(\"change paste keyup\", function() {
 						var input = $('[name=\"inp_food_energy_calculated\"]').val();
 						input = input.replace(\",\", \".\");
-						output = Math.round((input/$get_current_food_serving_size_gram)*100);
+						output = Math.round((input/$get_current_food_serving_size_metric)*100);
 						\$(\".food_energy\").text(output);
 					});
 				});
@@ -383,18 +389,18 @@ WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 				<!-- On change energy calculate -->
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<span><input type=\"text\" name=\"inp_food_energy_calculated\" value=\"$get_current_food_energy_calculated\" size=\"3\" /></span>
+				<span><input type=\"text\" name=\"inp_food_energy_calculated\" value=\"$get_current_food_energy_calculated_metric\" size=\"3\" /></span>
 			   </td>
 			  </tr>
 			  <tr>
 			   <td style=\"padding: 8px 4px 6px 8px;\">
-				<p style=\"margin:0;padding: 0px 0px 4px 0px;\">Fat:</p>
-				<p style=\"margin:0;padding: 0;\">- of which saturated fatty acids</p>
+				<p style=\"margin:0;padding: 0px 0px 4px 0px;\">$l_fat:</p>
+				<p style=\"margin:0;padding: 0;\">$l_dash_of_which_saturated_fatty_acids</p>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
 				<p style=\"margin:0;padding: 0px 0px 4px 0px;\">
-				<span class=\"food_fat\">$get_current_food_fat</span><br />
-				<span class=\"food_fat_of_which_saturated_fatty_acids\">$get_current_food_fat_of_which_saturated_fatty_acids</span>
+				<span class=\"food_fat\">$get_current_food_fat_metric</span><br />
+				<span class=\"food_fat_of_which_saturated_fatty_acids\">$get_current_food_fat_of_which_saturated_fatty_acids_metric</span>
 				</p>
 
 				<!-- On change energy calculate -->
@@ -403,13 +409,13 @@ WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 					\$('[name=\"inp_food_fat_calculated\"]').on(\"change paste keyup\", function() {
 						var input = $('[name=\"inp_food_fat_calculated\"]').val();
 						input = input.replace(\",\", \".\");
-						output = Math.round((input/$get_current_food_serving_size_gram)*100);
+						output = Math.round((input/$get_current_food_serving_size_metric)*100);
 						\$(\".food_fat\").text(output);
 					});
 					\$('[name=\"inp_food_fat_of_which_saturated_fatty_acids_calculated\"]').on(\"change paste keyup\", function() {
 						var input_b = $('[name=\"inp_food_fat_of_which_saturated_fatty_acids_calculated\"]').val();
 						input_b = input_b.replace(\",\", \".\");
-						output_b = Math.round((input_b/$get_current_food_serving_size_gram)*100);
+						output_b = Math.round((input_b/$get_current_food_serving_size_metric)*100);
 						\$(\".food_fat_of_which_saturated_fatty_acids\").text(output_b);
 					});
 				});
@@ -417,18 +423,18 @@ WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 				<!-- On change energy calculate -->
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_food_fat_calculated\" value=\"$get_current_food_fat_calculated\" size=\"3\" /><br /></p>
-				<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_food_fat_of_which_saturated_fatty_acids_calculated\" value=\"$get_current_food_fat_of_which_saturated_fatty_acids_calculated\" size=\"3\" /></p>
+				<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_food_fat_calculated\" value=\"$get_current_food_fat_calculated_metric\" size=\"3\" /><br /></p>
+				<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_food_fat_of_which_saturated_fatty_acids_calculated\" value=\"$get_current_food_fat_of_which_saturated_fatty_acids_calculated_metric\" size=\"3\" /></p>
 			   </td>
 			 </tr>
 			  <tr>
 		 	  <td style=\"padding: 8px 4px 6px 8px;\">
-				<p style=\"margin:0;padding: 0px 0px 4px 0px;\">Carbs:</p>
-				<p style=\"margin:0;padding: 0;\">- of which sugars</p>
+				<p style=\"margin:0;padding: 0px 0px 4px 0px;\">$l_carbs:</p>
+				<p style=\"margin:0;padding: 0;\">$l_dash_of_which_sugars</p>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><span class=\"food_carbohydrates\">$get_current_food_carbohydrates</span><br />
-				<span class=\"food_carbohydrates_of_which_sugars\">$get_current_food_carbohydrates_of_which_sugars</span></p>
+				<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><span class=\"food_carbohydrates\">$get_current_food_carbohydrates_metric</span><br />
+				<span class=\"food_carbohydrates_of_which_sugars\">$get_current_food_carbohydrates_of_which_sugars_metric</span></p>
 
 				<!-- On change energy calculate -->
 				<script>
@@ -436,13 +442,13 @@ WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 					\$('[name=\"inp_food_carbohydrates_calculated\"]').on(\"change paste keyup\", function() {
 						var input = $('[name=\"inp_food_carbohydrates_calculated\"]').val();
 						input = input.replace(\",\", \".\");
-						output = Math.round((input/$get_current_food_serving_size_gram)*100);
+						output = Math.round((input/$get_current_food_serving_size_metric)*100);
 						\$(\".food_carbohydrates\").text(output);
 					});
 					\$('[name=\"inp_food_carbohydrates_of_which_sugars_calculated\"]').on(\"change paste keyup\", function() {
 						var input_b = $('[name=\"inp_food_carbohydrates_of_which_sugars_calculated\"]').val();
 						input_b = input_b.replace(\",\", \".\");
-						output_b = Math.round((input_b/$get_current_food_serving_size_gram)*100);
+						output_b = Math.round((input_b/$get_current_food_serving_size_metric)*100);
 						\$(\".food_carbohydrates_of_which_sugars\").text(output_b);
 					});
 				});
@@ -450,16 +456,16 @@ WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 				<!-- On change energy calculate -->
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_food_carbohydrates_calculated\" value=\"$get_current_food_carbohydrates_calculated\" size=\"3\" /></p>
-				<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_food_carbohydrates_of_which_sugars_calculated\" value=\"$get_current_food_carbohydrates_of_which_sugars_calculated\" size=\"3\" /></p>
+				<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_food_carbohydrates_calculated\" value=\"$get_current_food_carbohydrates_calculated_metric\" size=\"3\" /></p>
+				<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_food_carbohydrates_of_which_sugars_calculated\" value=\"$get_current_food_carbohydrates_of_which_sugars_calculated_metric\" size=\"3\" /></p>
 			   </td>
 			  </tr>
 			  <tr>
 		 	  <td style=\"padding: 8px 4px 6px 8px;\">
-				<p style=\"margin:0;padding: 0;\">Dietary fiber:</p>
+				<p style=\"margin:0;padding: 0;\">$l_dietary_fiber:</p>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<span class=\"food_dietary_fiber\">$get_current_food_dietary_fiber</span>
+				<span class=\"food_dietary_fiber\">$get_current_food_dietary_fiber_metric</span>
 
 				<!-- On change dietary fiber calculate -->
 				<script>
@@ -467,7 +473,7 @@ WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 					\$('[name=\"inp_food_dietary_fiber_calculated\"]').on(\"change paste keyup\", function() {
 						var input = $('[name=\"inp_food_dietary_fiber_calculated\"]').val();
 						input = input.replace(\",\", \".\");
-						output = Math.round((input/$get_current_food_serving_size_gram)*100);
+						output = Math.round((input/$get_current_food_serving_size_metric)*100);
 						\$(\".food_dietary_fiber\").text(output);
 					});
 				});
@@ -475,15 +481,15 @@ WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 				<!-- On change dietary fiber calculate -->
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<p style=\"margin:0px 0px 4px 0px;padding: 0;\"><input type=\"text\" name=\"inp_food_dietary_fiber_calculated\" value=\"$get_current_food_dietary_fiber_calculated\" size=\"3\" /></p>
+				<p style=\"margin:0px 0px 4px 0px;padding: 0;\"><input type=\"text\" name=\"inp_food_dietary_fiber_calculated\" value=\"$get_current_food_dietary_fiber_calculated_metric\" size=\"3\" /></p>
 			   </td>
 			  </tr>
 			  <tr>
 			   <td style=\"padding: 8px 4px 6px 8px;\">
-				<span>Protein:</span>
+				<span>$l_protein:</span>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<span class=\"food_proteins\">$get_current_food_proteins</span>
+				<span class=\"food_proteins\">$get_current_food_proteins_metric</span>
 
 				<!-- On change dietary fiber calculate -->
 				<script>
@@ -491,7 +497,7 @@ WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 					\$('[name=\"inp_food_proteins_calculated\"]').on(\"change paste keyup\", function() {
 						var input = $('[name=\"inp_food_proteins_calculated\"]').val();
 						input = input.replace(\",\", \".\");
-						output = Math.round((input/$get_current_food_serving_size_gram)*100);
+						output = Math.round((input/$get_current_food_serving_size_metric)*100);
 						\$(\".food_proteins\").text(output);
 					});
 				});
@@ -499,16 +505,16 @@ WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 				<!-- On change dietary fiber calculate -->
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<span><input type=\"text\" name=\"inp_food_proteins_calculated\" value=\"$get_current_food_proteins_calculated\" size=\"3\" /></span>
+				<span><input type=\"text\" name=\"inp_food_proteins_calculated\" value=\"$get_current_food_proteins_calculated_metric\" size=\"3\" /></span>
 			   </td>
 			  </tr>
 			 </tr>
 			  <tr>
 			   <td style=\"padding: 8px 4px 6px 8px;\">
-				<span>Salt in g</span>
+				<span>$l_salt_in_g</span>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<span class=\"food_salt_hundred\">$get_current_food_salt</span>
+				<span class=\"food_salt_hundred\">$get_current_food_salt_metric</span>
 				<!-- On change salt calculate -->
 				<script>
 				\$(document).ready(function(){
@@ -517,7 +523,7 @@ WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 						// Calculate salt pr pc
 						var food_salt_calculated = \$('[name=\"inp_food_salt_calculated\"]').val();
 						food_salt_calculated = food_salt_calculated.replace(\",\", \".\");
-						food_salt_hundred = (food_salt_calculated/$get_current_food_serving_size_gram)*100;
+						food_salt_hundred = (food_salt_calculated/$get_current_food_serving_size_metric)*100;
 						food_salt_hundred = food_salt_hundred.toFixed(2)
 						\$(\".food_salt_hundred\").text(food_salt_hundred);
 
@@ -525,7 +531,7 @@ WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 						// Calculate sodium (Sodium is 40 % of salt)
 						food_sodium_hundred = (food_salt_hundred*40)/100; // g
 						food_sodium_hundred = food_sodium_hundred*1000; // mg
-						food_sodium_calculated = Math.round((food_sodium_hundred*$get_current_food_serving_size_gram)/100);
+						food_sodium_calculated = Math.round((food_sodium_hundred*$get_current_food_serving_size_metric)/100);
 						\$(\".food_sodium_hundred\").text(Math.round(food_sodium_hundred));
 						\$('[name=\"inp_food_sodium_calculated\"]').val(Math.round(food_sodium_calculated));
 
@@ -535,15 +541,15 @@ WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 				<!-- On change salt calculate -->
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<span><input type=\"text\" name=\"inp_food_salt_calculated\" value=\"$get_current_food_salt_calculated\" size=\"3\" /></span>
+				<span><input type=\"text\" name=\"inp_food_salt_calculated\" value=\"$get_current_food_salt_calculated_metric\" size=\"3\" /></span>
 			   </td>
 			  </tr>
 			  <tr>
 			   <td style=\"padding: 8px 4px 6px 8px;\">
-				<span>Sodium in mg</span>
+				<span>$l_sodium_in_mg</span>
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<span class=\"food_sodium_hundred\">$get_current_food_sodium</span>
+				<span class=\"food_sodium_hundred\">$get_current_food_sodium_metric</span>
 				<!-- On change sodium calculate -->
 				<script>
 				\$(document).ready(function(){
@@ -552,7 +558,7 @@ WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 						// Calculate sodium pr pc
 						var food_sodium_calculated = \$('[name=\"inp_food_sodium_calculated\"]').val();
 						food_sodium_calculated = food_sodium_calculated.replace(\",\", \".\");
-						food_sodium_hundred = (food_sodium_calculated/$get_current_food_serving_size_gram)*100;
+						food_sodium_hundred = (food_sodium_calculated/$get_current_food_serving_size_metric)*100;
 						food_sodium_hundred = food_sodium_hundred.toFixed(2)
 						\$(\".food_sodium_hundred\").text(food_sodium_hundred);
 
@@ -563,7 +569,7 @@ WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 						food_salt_calculated = food_salt_calculated.toFixed(2);
 						\$('[name=\"inp_food_salt_calculated\"]').val(food_salt_calculated);
 
-						food_salt_hundred = (food_salt_calculated/$get_current_food_serving_size_gram)*100;
+						food_salt_hundred = (food_salt_calculated/$get_current_food_serving_size_metric)*100;
 						food_salt_hundred = food_salt_hundred.toFixed(2);
 						\$(\".food_salt_hundred\").text(food_salt_hundred);
 
@@ -573,11 +579,12 @@ WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 				<!-- On change sodium calculate -->
 			   </td>
 			   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-				<span><input type=\"text\" name=\"inp_food_sodium_calculated\" value=\"$get_current_food_sodium_calculated\" size=\"3\" /></span>
+				<span><input type=\"text\" name=\"inp_food_sodium_calculated\" value=\"$get_current_food_sodium_calculated_metric\" size=\"3\" /></span>
 			   </td>
 			  </tr>
 			 </tbody>
 			</table>
+					
 					
 
 
