@@ -59,9 +59,6 @@ $inp_user_agent = output_html($inp_user_agent);
 $inp_user_agent_mysql = quote_smart($link, $inp_user_agent);
 
 $inp_ip = $_SERVER['REMOTE_ADDR'];
-if($inp_ip == "::1"){
-	$inp_ip = "193.214.73.246";
-}
 $inp_ip = output_html($inp_ip);
 $inp_ip_mysql = quote_smart($link, $inp_ip);
 

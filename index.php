@@ -289,7 +289,7 @@ echo"
 	<!-- 1: 1 big on left, 2 small on right -->
 		";
 		$limit = "4,3";
-		include("blog/_index_1200.php/1_big_on_left__2_small_on_right.php");
+		include("blog/_index.php/a_1_big_on_left__2_small_on_right.php");
 		echo"
 	<!-- //1: 1 big on left, 2 small on right -->
 
@@ -297,7 +297,7 @@ echo"
 	<!-- 2: 2 small on left, 1 big on right -->
 		";
 		$limit = "7,3";
-		include("blog/_index_1200.php/2_small_on_left__1_big_on_right.php");
+		include("blog/_index.php/b_2_small_on_left__1_big_on_right.php");
 		echo"
 	<!-- //2: 2 small on left, 1 big on right -->
 
@@ -392,7 +392,7 @@ echo"
 <!-- 3: 3 small -->
 	";
 	$limit = "10,3";
-	include("blog/_index_1200.php/3_small.php");
+	include("blog/_index.php/c_3_small.php");
 	echo"
 <!-- //3: 3 small -->
 
@@ -400,7 +400,7 @@ echo"
 <!-- 4: 1 special on left, 2 small on right -->
 	";
 	// $limit = "13,3";
-	// include("blog/_index_1200.php/1_special_on_left__2_small_on_right.php");
+	// include("blog/_index.php/d_1_special_on_left__2_small_on_right.php");
 	echo"
 <!-- //4: 1 special on left, 2 small on right -->
 
@@ -408,7 +408,7 @@ echo"
 <!-- 5: 2 small -->
 	";
 	$limit = "16,2";
-	include("blog/_index_1200.php/2_small.php");
+	include("blog/_index.php/e_2_small.php");
 	echo"
 <!-- //5: 2 small -->
 
@@ -416,7 +416,7 @@ echo"
 <!-- 6: 2 small -->
 	";
 	$limit = "18,2";
-	include("blog/_index_1200.php/2_small.php");
+	include("blog/_index.php/e_2_small.php");
 	echo"
 <!--// 6: 2 small -->
 
@@ -425,7 +425,7 @@ echo"
 <!-- 7: 1 big on left, 2 small on right -->
 	";
 	$limit = "20,3";
-	include("blog/_index_1200.php/1_big_on_left__2_small_on_right.php");
+	include("blog/_index.php/a_1_big_on_left__2_small_on_right.php");
 	echo"
 <!-- //7: 1 big on left, 2 small on right -->
 

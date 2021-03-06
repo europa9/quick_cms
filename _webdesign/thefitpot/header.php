@@ -203,8 +203,10 @@ echo"<!DOCTYPE html>
 		<!-- //Mobile icons -->
 
 		<!-- Header navigation -->
-			<nav>
-				<ul class=\"main_navigation\">\n";
+			<nav>\n";
+				// Chat
+				include("$root/chat/_tables_chat.php");
+				$look_for_chat_messages = 0;
 				$navigation_language_mysql = quote_smart($link, $l);
 				$query_nav_main = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_title_clean, navigation_url, navigation_url_path, navigation_url_query, navigation_internal_or_external, navigation_icon_path, navigation_icon_18x18_inactive, navigation_icon_18x18_hover, navigation_icon_18x18_active FROM $t_pages_navigation WHERE navigation_parent_id='0' AND navigation_language=$navigation_language_mysql ORDER BY navigation_weight ASC";
 				$result_nav_main = mysqli_query($link, $query_nav_main);
@@ -212,7 +214,8 @@ echo"<!DOCTYPE html>
 				while($row_nav_main = mysqli_fetch_row($result_nav_main)) {
 					list($get_a_navigation_id, $get_a_navigation_a_id, $get_a_navigation_title, $get_a_navigation_title_clean, $get_a_navigation_url, $get_a_navigation_url_path, $get_a_navigation_url_query, $get_a_navigation_internal_or_external, $get_a_navigation_icon_path, $get_a_navigation_icon_18x18_inactive, $get_a_navigation_icon_18x18_hover, $get_a_navigation_icon_18x18_active) = $row_nav_main;
 					echo"				";
-					echo"<p>$get_a_navigation_title</p>\n";
+					echo"<p>$get_a_navigation_title</p>
+					<ul class=\"main_navigation\">\n";
 
 
 					// Children level 2
@@ -221,12 +224,45 @@ echo"<!DOCTYPE html>
 					while($row_c = mysqli_fetch_row($result_c)) {
 						list($get_b_navigation_id, $get_b_navigation_b_id, $get_b_navigation_title, $get_b_navigation_title_clean, $get_b_navigation_url, $get_b_navigation_url_path, $get_b_navigation_url_path_md5, $get_b_navigation_url_query, $get_b_navigation_internal_or_external, $get_b_navigation_icon_path, $get_b_navigation_icon_18x18_inactive, $get_b_navigation_icon_18x18_hover, $get_b_navigation_icon_18x18_active) = $row_c;
 						echo"				";
-						echo"				<li><a href=\"$root/$get_b_navigation_url_path$get_b_navigation_url_query\" class=\"nav_$get_b_navigation_url_path_md5\">$get_b_navigation_title</a></li>\n";
+						echo"				<li><a href=\"$root/$get_b_navigation_url_path$get_b_navigation_url_query\" class=\"nav_$get_b_navigation_url_path_md5\">$get_b_navigation_title";
+
+					
+
+						echo"</a></li>\n";
 					}
+					echo"
+					</ul>
+					";
 				}
 				echo"
-				</ul>
-			</nav>
+			</nav>";
+			if($look_for_chat_messages == "1"){
+				echo"
+				<!-- Look for new messages script -->
+					<script language=\"javascript\" type=\"text/javascript\">
+					\$(document).ready(function () {
+						function navigation_look_for_new_messages_and_conversations(){
+
+							var data = 'l=$l&starred_channel_id=$get_starred_channel_id&t_user_id=$my_user_id';
+            						\$.ajax({
+                						type: \"POST\",
+               							url: \"$root/chat/navigation_look_for_new_messages_and_conversations.php\",
+                						data: data,
+								beforeSend: function(html) { // this happens before actual call
+								},
+               							success: function(html){
+                    							\$(\"#navigation_look_for_new_messages_and_conversations_result\").html(html);
+              							}
+       									
+							});
+						}
+						setInterval(navigation_look_for_new_messages_and_conversations,2000);
+         				});
+					</script>
+				<!-- //Look for new messages script -->
+				";
+			}
+			echo"
 
 		<!-- //Header navigation -->
 
@@ -276,6 +312,7 @@ echo"<!DOCTYPE html>
 			</script>
 			<!-- //Search engines Autocomplete -->
 		<!-- //Search -->
+
 		
 
 		<!-- Header Bottom -->

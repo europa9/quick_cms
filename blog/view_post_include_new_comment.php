@@ -262,7 +262,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			  </td>
 			  <td style=\"vertical-align: top;\">
 				<p>
-				<textarea name=\"inp_text\" rows=\"5\" cols=\"80\"></textarea><br />
+				<textarea name=\"inp_text\" rows=\"5\" cols=\"80\" style=\"width: 90%;\"></textarea><br />
 				<input type=\"submit\" value=\"$l_save_comment\" class=\"btn_default\" />
 				</p>
 			  </td>

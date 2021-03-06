@@ -590,6 +590,11 @@ else{
 					} // x == 0 OR x == 1 + post not same as beeing viewed
 
 				} // loop
+				if($x == "2"){
+					echo"
+					<div class=\"clear\"></div>
+					";
+				}
 				echo"
 			<!-- //Other posts from same category -->
 

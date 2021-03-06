@@ -526,7 +526,7 @@ elseif($action == "new"){
 	</p>
 
 	<p><b>$l_parent</b>*<br />
-	<select name=\"inp_parent\">
+	<select name=\"inp_parent\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">
 		<option value=\"0\" selected=\"selected\">$l_this_is_parent</option>
 		<option value=\"0\">-</option>";
 		

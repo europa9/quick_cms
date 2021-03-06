@@ -52,6 +52,7 @@ if(!(file_exists("_data/chat.php"))){
 \$chatWebcameraChatActiveDmsSav		= \"0\";
 
 \$chatCompensateForEmojisStringErrorSav = \"0\";
+\$chatUsersCanCreateChannelsSav  	= \"0\";
 ?>";
 
 		$fh = fopen("_data/chat.php", "w+") or die("can not open file");
@@ -82,6 +83,9 @@ if($action == ""){
 		$inp_compensate_for_emojis_string_error = $_POST['inp_compensate_for_emojis_string_error'];
 		$inp_compensate_for_emojis_string_error = output_html($inp_compensate_for_emojis_string_error);
 
+		$inp_users_can_create_channels = $_POST['inp_users_can_create_channels'];
+		$inp_users_can_create_channels = output_html($inp_users_can_create_channels);
+
 	$update_file="<?php
 \$chatTitleSav	= \"$inp_title\";
 
@@ -92,6 +96,8 @@ if($action == ""){
 \$chatWebcameraChatActiveDmsSav		= \"$inp_webcamera_chat_active_dms\";
 
 \$chatCompensateForEmojisStringErrorSav = \"$inp_compensate_for_emojis_string_error\";
+
+\$chatUsersCanCreateChannelsSav		= \"$inp_users_can_create_channels\";
 ?>";
 
 		$fh = fopen("_data/chat.php", "w+") or die("can not open file");
@@ -192,6 +198,14 @@ if($action == ""){
 		Yes
 		&nbsp;
 		<input type=\"radio\" name=\"inp_compensate_for_emojis_string_error\" value=\"0\" "; if($chatCompensateForEmojisStringErrorSav == "0"){ echo" checked=\"checked\""; } echo" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+		No
+		</p>
+
+		<p>Users can create channels:<br />
+		<input type=\"radio\" name=\"inp_users_can_create_channels\" value=\"1\" "; if($chatUsersCanCreateChannelsSav == "1"){ echo" checked=\"checked\""; } echo" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+		Yes
+		&nbsp;
+		<input type=\"radio\" name=\"inp_users_can_create_channels\" value=\"0\" "; if($chatUsersCanCreateChannelsSav == "0"){ echo" checked=\"checked\""; } echo" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 		No
 		</p>
 
