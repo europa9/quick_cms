@@ -436,14 +436,14 @@ else{
 				}
 
 	
-				// Thumb 300 x 200
+				// Thumb 278x156
 				$thumb_final_path = "$root/" . $get_recipe_image_path . "/" . $get_recipe_id . "-thumb" . ".jpg";
-				resize_crop_image(300, 200, $image_final_path, $thumb_final_path);
+				resize_crop_image(278, 156, $image_final_path, $thumb_final_path);
 
 				// Update
 				$inp_recipe_thumb = $get_recipe_id . "-thumb" . ".jpg";
 				$inp_recipe_thumb_mysql = quote_smart($link, $inp_recipe_thumb);
-				mysqli_query($link, "UPDATE $t_recipes SET recipe_thumb=$inp_recipe_thumb_mysql, recipe_user_ip=$inp_ip_mysql WHERE recipe_id=$get_recipe_id") or die(mysqli_error($link));
+				mysqli_query($link, "UPDATE $t_recipes SET recipe_thumb_278x156=$inp_recipe_thumb_mysql, recipe_user_ip=$inp_ip_mysql WHERE recipe_id=$get_recipe_id") or die(mysqli_error($link));
 
 
 				// Delete cache

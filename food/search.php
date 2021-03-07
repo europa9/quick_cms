@@ -401,7 +401,7 @@ if($search_query != "" OR $manufacturer_name != "" OR $store_id != "" OR $barcod
 		$search_query_encrypted = md5("$search_query");
 		$search_query_antispam_file = "$root/_cache/recipe_search_no_results_" . $search_query_encrypted . ".txt";
 		
-		if(!(file_exists("$search_query_antispam_file"))){
+		if(!(file_exists("$search_query_antispam_file")) && $search_query != ""){
 			
 			$fh = fopen($search_query_antispam_file, "w") or die("can not open file");
 			fwrite($fh, "$search_query");

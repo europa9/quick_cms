@@ -198,31 +198,41 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$inp_accepted_as_master = 0;
 				$inp_accepted_as_master_mysql = quote_smart($link, $inp_accepted_as_master);
 
+				// Get the measurment I used for my last food
+				$query = "SELECT food_id, food_net_content_added_measurement, food_serving_size_added_measurement FROM $t_food_index WHERE food_user_id=$inp_food_user_id_mysql ORDER BY food_id DESC LIMIT 0,1";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_last_food_id, $get_last_food_net_content_added_measurement, $get_last_food_serving_size_added_measurement) = $row;
+
+				$inp_net_content_added_measurement_mysql = quote_smart($link, $get_last_food_net_content_added_measurement);
+				$inp_serving_size_added_measurement_mysql = quote_smart($link, $get_last_food_serving_size_added_measurement);
+
 				mysqli_query($link, "INSERT INTO $t_food_index
 				(food_id, food_user_id, food_name, food_clean_name, food_manufacturer_name, 
 				food_manufacturer_name_and_food_name, food_description, food_country, food_net_content_metric, food_net_content_measurement_metric, 
-				food_net_content_us_system, food_net_content_measurement_us_system, food_serving_size_metric, food_serving_size_measurement_metric, food_serving_size_us_system, 
-				food_serving_size_measurement_us_system, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy_metric, food_fat_metric, 
+				food_net_content_us, food_net_content_measurement_us, food_net_content_added_measurement, food_serving_size_metric, food_serving_size_measurement_metric, 
+				food_serving_size_us, food_serving_size_measurement_us, food_serving_size_added_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, 
 
-				food_fat_of_which_saturated_fatty_acids_metric, food_monounsaturated_fat_metric, food_polyunsaturated_fat_metric, food_cholesterol_metric, food_carbohydrates_metric, 
-				food_carbohydrates_of_which_sugars_metric, food_dietary_fiber_metric, food_proteins_metric, food_salt_metric, food_sodium_metric, 
-				food_energy_us_system, food_fat_us_system, food_fat_of_which_saturated_fatty_acids_us_system, food_monounsaturated_fat_us_system, food_polyunsaturated_fat_us_system, 
-				food_cholesterol_us_system, food_carbohydrates_us_system, food_carbohydrates_of_which_sugars_us_system, food_dietary_fiber_us_system, food_proteins_us_system, 
+				food_energy_metric, food_fat_metric, food_saturated_fat_metric, food_monounsaturated_fat_metric, food_polyunsaturated_fat_metric, 
+				food_cholesterol_metric, food_carbohydrates_metric, food_carbohydrates_of_which_sugars_metric, food_dietary_fiber_metric, food_proteins_metric, 
+				food_salt_metric, food_sodium_metric, food_energy_us, food_fat_us, food_saturated_fat_us, 
+				food_monounsaturated_fat_us, food_polyunsaturated_fat_us, food_cholesterol_us, food_carbohydrates_us, food_carbohydrates_of_which_sugars_us, 
 				
-				food_salt_us_system, food_sodium_us_system, food_score, food_energy_calculated_metric, food_fat_calculated_metric, 
-				food_fat_of_which_saturated_fatty_acids_calculated_metric, food_monounsaturated_fat_calculated_metric, food_polyunsaturated_fat_calculated_metric, food_carbohydrates_calculated_metric, food_carbohydrates_of_which_sugars_calculated_metric, 
-				food_dietary_fiber_calculated_metric, food_proteins_calculated_metric, food_salt_calculated_metric, food_sodium_calculated_metric, food_energy_calculated_us_system, 
-				food_fat_calculated_us_system, food_fat_of_which_saturated_fatty_acids_calculated_us_system, food_monounsaturated_fat_calculated_us_system, food_polyunsaturated_fat_calculated_us_system, food_carbohydrates_calculated_us_system, 
-				
-				food_carbohydrates_of_which_sugars_calculated_us_system, food_dietary_fiber_calculated_us_system, food_proteins_calculated_us_system, food_salt_calculated_us_system, food_sodium_calculated_us_system, 
-				food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_language, 
-				food_notes, food_unique_hits, food_likes, food_dislikes, food_user_ip, 
+				food_dietary_fiber_us, food_proteins_us, food_salt_us, food_sodium_us, food_score, 
+				food_energy_calculated_metric, food_fat_calculated_metric, food_saturated_fat_calculated_metric, food_monounsaturated_fat_calculated_metric, food_polyunsaturated_fat_calculated_metric, 
+				food_cholesterol_calculated_metric, food_carbohydrates_calculated_metric, food_carbohydrates_of_which_sugars_calculated_metric, food_dietary_fiber_calculated_metric, food_proteins_calculated_metric, 
+				food_salt_calculated_metric, food_sodium_calculated_metric, food_energy_calculated_us, food_fat_calculated_us, food_saturated_fat_calculated_us, 
+
+				food_monounsaturated_fat_calculated_us, food_polyunsaturated_fat_calculated_us, food_cholesterol_calculated_us, food_carbohydrates_calculated_us, food_carbohydrates_of_which_sugars_calculated_us, 
+				food_dietary_fiber_calculated_us, food_proteins_calculated_us, food_salt_calculated_us, food_sodium_calculated_us, food_barcode, 
+				food_main_category_id, food_sub_category_id, food_image_path, food_language, food_notes, 
+				food_unique_hits, food_comments, food_likes, food_dislikes, food_user_ip, 
 				food_created_date, food_age_restriction) 
 				VALUES 
 				(NULL, $inp_food_user_id_mysql, $inp_food_name_mysql, $inp_food_clean_name_mysql, $inp_food_manufacturer_name_mysql, 
 				$inp_food_manufacturer_name_and_food_name_mysql, $inp_food_description_mysql, $inp_food_country_mysql, '0', 'g', 
-				'0', 'US oz', '0', 'g', '0',
-				'US oz', 0, 'g', '0', '0', 
+				'0', 'US oz', $inp_net_content_added_measurement_mysql, '0', 'g', 
+				0, 'US oz', $inp_serving_size_added_measurement_mysql, 0, 'g', 
 
 				'0', '0', '0', '0', '0', 
 				'0', '0', '0', '0', '0', 
@@ -234,9 +244,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				'0', '0', '0', '0', '0',
 				'0', '0', '0', '0', '0',
 
-				'0', '0', '0', '0', '0',
-				$inp_food_barcode_mysql, '$get_current_main_category_id', '$get_current_sub_category_id', $inp_food_image_path_mysql, $l_mysql, 
-				$inp_notes_mysql, 0, 0, 0, $inp_user_ip_mysql, 
+				'0', '0', '0', '0', '0', 
+				'0', '0', '0', '0', $inp_food_barcode_mysql, 
+				'$get_current_main_category_id', '$get_current_sub_category_id', $inp_food_image_path_mysql, $l_mysql, $inp_notes_mysql, 
+				0, 0, 0, 0, $inp_user_ip_mysql,
 				'$datetime', $inp_age_restriction_mysql)")
 				or die(mysqli_error($link));
 

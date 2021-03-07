@@ -15,4 +15,13 @@ $l_dash_of_which_dietary_fiber = "- of which dietary fiber";
 $l_salt = "Salt";
 $l_per_hundred = "Per 100";
 $l_per = "Per";
+$l_system = "System";
+$l_metric = "Metric";
+$l_us = "US";
+$l_dash_saturated_fat = "- saturated fat";
+$l_dash_monounsaturated_fat = "- monounsaturated fat";
+$l_dash_polyunsaturated_fat = "- polyunsaturated fat";
+$l_dietary_fiber  = "Dietary fiber";
+$l_sodium  = "Sodium";
+$l_cholesterol  = "Cholesterol";
 ?>

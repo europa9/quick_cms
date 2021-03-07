@@ -470,6 +470,27 @@ header{
 		background: #213147 url("../../_uploads/pages/navigation/no/matdagbok_18x18_active.png") no-repeat 10px center;
 	}
 
+	/* Chat */
+	a.nav_ec6e877a6b411b16d730b8b8d73cc302{
+		background: url("../../_uploads/pages/navigation/no/chat_18x18_inactive.png") no-repeat 10px center;
+	}
+	a.nav_ec6e877a6b411b16d730b8b8d73cc302:hover{
+		background: #213147 url("../../_uploads/pages/navigation/no/chat_18x18_hover.png") no-repeat 10px center;
+	}
+	a.nav_ec6e877a6b411b16d730b8b8d73cc302:active{
+		background: #213147 url("../../_uploads/pages/navigation/no/chat_18x18_active.png") no-repeat 10px center;
+	}
+
+	/* Forum */
+	a.nav_ca41891f4e88efcf2e6b6426704c9fb1{
+		background: url("../../_uploads/pages/navigation/no/forum_18x18_inactive.png") no-repeat 10px center;
+	}
+	a.nav_ca41891f4e88efcf2e6b6426704c9fb1:hover{
+		background: #213147 url("../../_uploads/pages/navigation/no/forum_18x18_hover.png") no-repeat 10px center;
+	}
+	a.nav_ca41891f4e88efcf2e6b6426704c9fb1:active{
+		background: #213147 url("../../_uploads/pages/navigation/no/forum_18x18_active.png") no-repeat 10px center;
+	}
 
 	/*- Header Search --------------------------------------------------------- */
 	div.site_search{

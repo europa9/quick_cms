@@ -73,12 +73,12 @@ $food_id_mysql = quote_smart($link, $food_id);
 
 
 // Select food
-$query = "SELECT food_id, food_user_id, food_name, food_clean_name, food_manufacturer_name, food_manufacturer_name_and_food_name, food_description, food_country, food_net_content_metric, food_net_content_measurement_metric, food_net_content_us_system, food_net_content_measurement_us_system, food_net_content_added_measurement, food_serving_size_metric, food_serving_size_measurement_metric, food_serving_size_us_system, food_serving_size_measurement_us_system, food_serving_size_added_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy_metric, food_fat_metric, food_fat_of_which_saturated_fatty_acids_metric, food_monounsaturated_fat_metric, food_polyunsaturated_fat_metric, food_cholesterol_metric, food_carbohydrates_metric, food_carbohydrates_of_which_sugars_metric, food_dietary_fiber_metric, food_proteins_metric, food_salt_metric, food_sodium_metric, food_energy_us_system, food_fat_us_system, food_fat_of_which_saturated_fatty_acids_us_system, food_monounsaturated_fat_us_system, food_polyunsaturated_fat_us_system, food_cholesterol_us_system, food_carbohydrates_us_system, food_carbohydrates_of_which_sugars_us_system, food_dietary_fiber_us_system, food_proteins_us_system, food_salt_us_system, food_sodium_us_system, food_score, food_energy_calculated_metric, food_fat_calculated_metric, food_fat_of_which_saturated_fatty_acids_calculated_metric, food_monounsaturated_fat_calculated_metric, food_polyunsaturated_fat_calculated_metric, food_carbohydrates_calculated_metric, food_carbohydrates_of_which_sugars_calculated_metric, food_dietary_fiber_calculated_metric, food_proteins_calculated_metric, food_salt_calculated_metric, food_sodium_calculated_metric, food_energy_calculated_us_system, food_fat_calculated_us_system, food_fat_of_which_saturated_fatty_acids_calculated_us_system, food_monounsaturated_fat_calculated_us_system, food_polyunsaturated_fat_calculated_us_system, food_carbohydrates_calculated_us_system, food_carbohydrates_of_which_sugars_calculated_us_system, food_dietary_fiber_calculated_us_system, food_proteins_calculated_us_system, food_salt_calculated_us_system, food_sodium_calculated_us_system, food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_image_a, food_thumb_a_small, food_thumb_a_medium, food_thumb_a_large, food_image_b, food_thumb_b_small, food_thumb_b_medium, food_thumb_b_large, food_image_c, food_thumb_c_small, food_thumb_c_medium, food_thumb_c_large, food_image_d, food_thumb_d_small, food_thumb_d_medium, food_thumb_d_large, food_image_e, food_thumb_e_small, food_thumb_e_medium, food_thumb_e_large, food_last_used, food_language, food_synchronized, food_accepted_as_master, food_notes, food_unique_hits, food_unique_hits_ip_block, food_comments, food_likes, food_dislikes, food_likes_ip_block, food_user_ip, food_created_date, food_last_viewed, food_age_restriction FROM $t_food_index WHERE food_id=$food_id_mysql";
+$query = "SELECT food_id, food_user_id, food_name, food_clean_name, food_manufacturer_name, food_manufacturer_name_and_food_name, food_description, food_country, food_net_content_metric, food_net_content_measurement_metric, food_net_content_us, food_net_content_measurement_us, food_net_content_added_measurement, food_serving_size_metric, food_serving_size_measurement_metric, food_serving_size_us, food_serving_size_measurement_us, food_serving_size_added_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy_metric, food_fat_metric, food_saturated_fat_metric, food_monounsaturated_fat_metric, food_polyunsaturated_fat_metric, food_cholesterol_metric, food_carbohydrates_metric, food_carbohydrates_of_which_sugars_metric, food_dietary_fiber_metric, food_proteins_metric, food_salt_metric, food_sodium_metric, food_energy_us, food_fat_us, food_saturated_fat_us, food_monounsaturated_fat_us, food_polyunsaturated_fat_us, food_cholesterol_us, food_carbohydrates_us, food_carbohydrates_of_which_sugars_us, food_dietary_fiber_us, food_proteins_us, food_salt_us, food_sodium_us, food_score, food_energy_calculated_metric, food_fat_calculated_metric, food_saturated_fat_calculated_metric, food_monounsaturated_fat_calculated_metric, food_polyunsaturated_fat_calculated_metric, food_cholesterol_calculated_metric, food_carbohydrates_calculated_metric, food_carbohydrates_of_which_sugars_calculated_metric, food_dietary_fiber_calculated_metric, food_proteins_calculated_metric, food_salt_calculated_metric, food_sodium_calculated_metric, food_energy_calculated_us, food_fat_calculated_us, food_saturated_fat_calculated_us, food_monounsaturated_fat_calculated_us, food_polyunsaturated_fat_calculated_us, food_cholesterol_calculated_us, food_carbohydrates_calculated_us, food_carbohydrates_of_which_sugars_calculated_us, food_dietary_fiber_calculated_us, food_proteins_calculated_us, food_salt_calculated_us, food_sodium_calculated_us, food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_image_a, food_thumb_a_small, food_thumb_a_medium, food_thumb_a_large, food_image_b, food_thumb_b_small, food_thumb_b_medium, food_thumb_b_large, food_image_c, food_thumb_c_small, food_thumb_c_medium, food_thumb_c_large, food_image_d, food_thumb_d_small, food_thumb_d_medium, food_thumb_d_large, food_image_e, food_thumb_e_small, food_thumb_e_medium, food_thumb_e_large, food_last_used, food_language, food_synchronized, food_accepted_as_master, food_notes, food_unique_hits, food_unique_hits_ip_block, food_comments, food_likes, food_dislikes, food_likes_ip_block, food_user_ip, food_created_date, food_last_viewed, food_age_restriction FROM $t_food_index WHERE food_id=$food_id_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
-list($get_food_id, $get_food_user_id, $get_food_name, $get_food_clean_name, $get_food_manufacturer_name, $get_food_manufacturer_name_and_food_name, $get_food_description, $get_food_country, $get_food_net_content_metric, $get_food_net_content_measurement_metric, $get_food_net_content_us_system, $get_food_net_content_measurement_us_system, $get_food_net_content_added_measurement, $get_food_serving_size_metric, $get_food_serving_size_measurement_metric, $get_food_serving_size_us_system, $get_food_serving_size_measurement_us_system, $get_food_serving_size_added_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy_metric, $get_food_fat_metric, $get_food_fat_of_which_saturated_fatty_acids_metric, $get_food_monounsaturated_fat_metric, $get_food_polyunsaturated_fat_metric, $get_food_cholesterol_metric, $get_food_carbohydrates_metric, $get_food_carbohydrates_of_which_sugars_metric, $get_food_dietary_fiber_metric, $get_food_proteins_metric, $get_food_salt_metric, $get_food_sodium_metric, $get_food_energy_us_system, $get_food_fat_us_system, $get_food_fat_of_which_saturated_fatty_acids_us_system, $get_food_monounsaturated_fat_us_system, $get_food_polyunsaturated_fat_us_system, $get_food_cholesterol_us_system, $get_food_carbohydrates_us_system, $get_food_carbohydrates_of_which_sugars_us_system, $get_food_dietary_fiber_us_system, $get_food_proteins_us_system, $get_food_salt_us_system, $get_food_sodium_us_system, $get_food_score, $get_food_energy_calculated_metric, $get_food_fat_calculated_metric, $get_food_fat_of_which_saturated_fatty_acids_calculated_metric, $get_food_monounsaturated_fat_calculated_metric, $get_food_polyunsaturated_fat_calculated_metric, $get_food_carbohydrates_calculated_metric, $get_food_carbohydrates_of_which_sugars_calculated_metric, $get_food_dietary_fiber_calculated_metric, $get_food_proteins_calculated_metric, $get_food_salt_calculated_metric, $get_food_sodium_calculated_metric, $get_food_energy_calculated_us_system, $get_food_fat_calculated_us_system, $get_food_fat_of_which_saturated_fatty_acids_calculated_us_system, $get_food_monounsaturated_fat_calculated_us_system, $get_food_polyunsaturated_fat_calculated_us_system, $get_food_carbohydrates_calculated_us_system, $get_food_carbohydrates_of_which_sugars_calculated_us_system, $get_food_dietary_fiber_calculated_us_system, $get_food_proteins_calculated_us_system, $get_food_salt_calculated_us_system, $get_food_sodium_calculated_us_system, $get_food_barcode, $get_food_main_category_id, $get_food_sub_category_id, $get_food_image_path, $get_food_image_a, $get_food_thumb_a_small, $get_food_thumb_a_medium, $get_food_thumb_a_large, $get_food_image_b, $get_food_thumb_b_small, $get_food_thumb_b_medium, $get_food_thumb_b_large, $get_food_image_c, $get_food_thumb_c_small, $get_food_thumb_c_medium, $get_food_thumb_c_large, $get_food_image_d, $get_food_thumb_d_small, $get_food_thumb_d_medium, $get_food_thumb_d_large, $get_food_image_e, $get_food_thumb_e_small, $get_food_thumb_e_medium, $get_food_thumb_e_large, $get_food_last_used, $get_food_language, $get_food_synchronized, $get_food_accepted_as_master, $get_food_notes, $get_food_unique_hits, $get_food_unique_hits_ip_block, $get_food_comments, $get_food_likes, $get_food_dislikes, $get_food_likes_ip_block, $get_food_user_ip, $get_food_created_date, $get_food_last_viewed, $get_food_age_restriction) = $row;
+list($get_current_food_id, $get_current_food_user_id, $get_current_food_name, $get_current_food_clean_name, $get_current_food_manufacturer_name, $get_current_food_manufacturer_name_and_food_name, $get_current_food_description, $get_current_food_country, $get_current_food_net_content_metric, $get_current_food_net_content_measurement_metric, $get_current_food_net_content_us, $get_current_food_net_content_measurement_us, $get_current_food_net_content_added_measurement, $get_current_food_serving_size_metric, $get_current_food_serving_size_measurement_metric, $get_current_food_serving_size_us, $get_current_food_serving_size_measurement_us, $get_current_food_serving_size_added_measurement, $get_current_food_serving_size_pcs, $get_current_food_serving_size_pcs_measurement, $get_current_food_energy_metric, $get_current_food_fat_metric, $get_current_food_saturated_fat_metric, $get_current_food_monounsaturated_fat_metric, $get_current_food_polyunsaturated_fat_metric, $get_current_food_cholesterol_metric, $get_current_food_carbohydrates_metric, $get_current_food_carbohydrates_of_which_sugars_metric, $get_current_food_dietary_fiber_metric, $get_current_food_proteins_metric, $get_current_food_salt_metric, $get_current_food_sodium_metric, $get_current_food_energy_us, $get_current_food_fat_us, $get_current_food_saturated_fat_us, $get_current_food_monounsaturated_fat_us, $get_current_food_polyunsaturated_fat_us, $get_current_food_cholesterol_us, $get_current_food_carbohydrates_us, $get_current_food_carbohydrates_of_which_sugars_us, $get_current_food_dietary_fiber_us, $get_current_food_proteins_us, $get_current_food_salt_us, $get_current_food_sodium_us, $get_current_food_score, $get_current_food_energy_calculated_metric, $get_current_food_fat_calculated_metric, $get_current_food_saturated_fat_calculated_metric, $get_current_food_monounsaturated_fat_calculated_metric, $get_current_food_polyunsaturated_fat_calculated_metric, $get_current_food_cholesterol_calculated_metric, $get_current_food_carbohydrates_calculated_metric, $get_current_food_carbohydrates_of_which_sugars_calculated_metric, $get_current_food_dietary_fiber_calculated_metric, $get_current_food_proteins_calculated_metric, $get_current_food_salt_calculated_metric, $get_current_food_sodium_calculated_metric, $get_current_food_energy_calculated_us, $get_current_food_fat_calculated_us, $get_current_food_saturated_fat_calculated_us, $get_current_food_monounsaturated_fat_calculated_us, $get_current_food_polyunsaturated_fat_calculated_us, $get_current_food_cholesterol_calculated_us, $get_current_food_carbohydrates_calculated_us, $get_current_food_carbohydrates_of_which_sugars_calculated_us, $get_current_food_dietary_fiber_calculated_us, $get_current_food_proteins_calculated_us, $get_current_food_salt_calculated_us, $get_current_food_sodium_calculated_us, $get_current_food_barcode, $get_current_food_main_category_id, $get_current_food_sub_category_id, $get_current_food_image_path, $get_current_food_image_a, $get_current_food_thumb_a_small, $get_current_food_thumb_a_medium, $get_current_food_thumb_a_large, $get_current_food_image_b, $get_current_food_thumb_b_small, $get_current_food_thumb_b_medium, $get_current_food_thumb_b_large, $get_current_food_image_c, $get_current_food_thumb_c_small, $get_current_food_thumb_c_medium, $get_current_food_thumb_c_large, $get_current_food_image_d, $get_current_food_thumb_d_small, $get_current_food_thumb_d_medium, $get_current_food_thumb_d_large, $get_current_food_image_e, $get_current_food_thumb_e_small, $get_current_food_thumb_e_medium, $get_current_food_thumb_e_large, $get_current_food_last_used, $get_current_food_language, $get_current_food_synchronized, $get_current_food_accepted_as_master, $get_current_food_notes, $get_current_food_unique_hits, $get_current_food_unique_hits_ip_block, $get_current_food_comments, $get_current_food_likes, $get_current_food_dislikes, $get_current_food_likes_ip_block, $get_current_food_user_ip, $get_current_food_created_date, $get_current_food_last_viewed, $get_current_food_age_restriction) = $row;
 
-if($get_food_id == ""){
+if($get_current_food_id == ""){
 	/*- Headers ---------------------------------------------------------------------------------- */
 	$website_title = "$l_food - Server error 404";
 	if(file_exists("./favicon.ico")){ $root = "."; }
@@ -104,7 +104,7 @@ else{
 
 
 	/*- Headers ---------------------------------------------------------------------------------- */
-	$website_title = "$l_food - $get_food_name $get_food_manufacturer_name";
+	$website_title = "$l_food - $get_current_food_name $get_current_food_manufacturer_name";
 	if(file_exists("./favicon.ico")){ $root = "."; }
 	elseif(file_exists("../favicon.ico")){ $root = ".."; }
 	elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -116,7 +116,7 @@ else{
 
 
 	// Get sub category
-	$query = "SELECT category_id, category_user_id, category_name, category_parent_id FROM $t_food_categories WHERE category_id=$get_food_sub_category_id";
+	$query = "SELECT category_id, category_user_id, category_name, category_parent_id FROM $t_food_categories WHERE category_id=$get_current_food_sub_category_id";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
 	list($get_current_sub_category_id, $get_current_sub_category_user_id, $get_current_sub_category_name, $get_current_sub_category_parent_id) = $row;
@@ -133,7 +133,7 @@ else{
 
 		echo"<p><b>Update sub category to $get_current_sub_category_id, $get_current_sub_category_user_id, $get_current_sub_category_name, $get_current_sub_category_parent_id.</b></p>";
 
-		$result = mysqli_query($link, "UPDATE $t_food_index SET food_sub_category_id='$get_current_sub_category_id' WHERE food_id='$get_food_id'") or die(mysqli_error($link));
+		$result = mysqli_query($link, "UPDATE $t_food_index SET food_sub_category_id='$get_current_sub_category_id' WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 
 	}
 
@@ -164,7 +164,7 @@ else{
 		$my_user_id = $_SESSION['user_id'];
 		$my_user_id_mysql = quote_smart($link, $my_user_id);
 
-		if($get_food_user_id != "$my_user_id"){
+		if($get_current_food_user_id != "$my_user_id"){
 			echo"
 			<p>Access denied.</p>
 			";
@@ -175,13 +175,13 @@ else{
 
 
 				echo"
-				<h1>$get_food_manufacturer_name $get_food_name</h1>
+				<h1>$get_current_food_manufacturer_name $get_current_food_name</h1>
 
 				<!-- Where am I? -->
 					<p>
-					<a href=\"my_food.php?l=$l#food$get_food_id\">$l_my_food</a>
+					<a href=\"my_food.php?l=$l#food$get_current_food_id\">$l_my_food</a>
 					&gt;
-					<a href=\"view_food.php?main_category_id=$get_current_main_category_id&amp;sub_category_id=$get_current_sub_category_id&amp;food_id=$food_id&amp;l=$l\">$get_food_name</a>
+					<a href=\"view_food.php?main_category_id=$get_current_main_category_id&amp;sub_category_id=$get_current_sub_category_id&amp;food_id=$food_id&amp;l=$l\">$get_current_food_name</a>
 					&gt;
 					<a href=\"edit_food.php?food_id=$food_id&amp;l=$l\">$l_edit</a>
 					&gt;
@@ -215,19 +215,19 @@ else{
 					  </td>
 					  <td>
 						<p>";
-						if($get_food_image_a != ""){
+						if($get_current_food_image_a != ""){
 							// Thumb A medium
-							if(!(file_exists("../$get_food_image_path/$get_food_thumb_a_medium")) OR $get_food_thumb_a_medium == ""){
-								$ext = get_extension("$get_food_image_a");
-								$inp_thumb_name = str_replace(".$ext", "", $get_food_image_a);
-								$get_food_thumb_a_medium = $inp_thumb_name . "_thumb_200x200." . $ext;
-								$inp_food_thumb_a_medium_mysql = quote_smart($link, $get_food_thumb_a_medium);
-								$result_update = mysqli_query($link, "UPDATE $t_food_index SET food_thumb_a_medium=$inp_food_thumb_a_medium_mysql WHERE food_id=$get_food_id") or die(mysqli_error($link));
+							if(!(file_exists("../$get_current_food_image_path/$get_current_food_thumb_a_medium")) OR $get_current_food_thumb_a_medium == ""){
+								$ext = get_extension("$get_current_food_image_a");
+								$inp_thumb_name = str_replace(".$ext", "", $get_current_food_image_a);
+								$get_current_food_thumb_a_medium = $inp_thumb_name . "_thumb_200x200." . $ext;
+								$inp_food_thumb_a_medium_mysql = quote_smart($link, $get_current_food_thumb_a_medium);
+								$result_update = mysqli_query($link, "UPDATE $t_food_index SET food_thumb_a_medium=$inp_food_thumb_a_medium_mysql WHERE food_id=$get_current_food_id") or die(mysqli_error($link));
 				
-								resize_crop_image(200, 200, "$root/$get_food_image_path/$get_food_image_a", "$root/$get_food_image_path/$get_food_thumb_a_medium");
+								resize_crop_image(200, 200, "$root/$get_current_food_image_path/$get_current_food_image_a", "$root/$get_current_food_image_path/$get_current_food_thumb_a_medium");
 							}
 							echo"
-							<a href=\"$root/$get_food_image_path/$get_food_image_a\"><img src=\"$root/$get_food_image_path/$get_food_thumb_a_medium\" alt=\"$get_food_thumb_a_medium\" /></a><br />
+							<a href=\"$root/$get_current_food_image_path/$get_current_food_image_a\"><img src=\"$root/$get_current_food_image_path/$get_current_food_thumb_a_medium\" alt=\"$get_current_food_thumb_a_medium\" /></a><br />
 							<a href=\"edit_food_images.php?action=rotate&amp;food_id=$food_id&amp;image=a&amp;l=$l&amp;process=1\" class=\"btn btn_default\">$l_rotate</a>
 							<a href=\"edit_food_images.php?action=delete&amp;food_id=$food_id&amp;image=a&amp;l=$l\" class=\"btn btn_default\">$l_delete</a>
 							";
@@ -243,19 +243,19 @@ else{
 					  </td>
 					  <td>
 						<p>";
-						if($get_food_image_b != ""){
+						if($get_current_food_image_b != ""){
 							// Thumb B medium
-							if(!(file_exists("../$get_food_image_path/$get_food_thumb_b_medium")) OR $get_food_thumb_b_medium == ""){
-								$ext = get_extension("$get_food_image_b");
-								$inp_thumb_name = str_replace(".$ext", "", $get_food_image_b);
-								$get_food_thumb_b_medium = $inp_thumb_name . "_thumb_200x200." . $ext;
-								$inp_food_thumb_b_medium_mysql = quote_smart($link, $get_food_thumb_b_medium);
-								$result_update = mysqli_query($link, "UPDATE $t_food_index SET food_thumb_b_medium=$inp_food_thumb_b_medium_mysql WHERE food_id=$get_food_id") or die(mysqli_error($link));
+							if(!(file_exists("../$get_current_food_image_path/$get_current_food_thumb_b_medium")) OR $get_current_food_thumb_b_medium == ""){
+								$ext = get_extension("$get_current_food_image_b");
+								$inp_thumb_name = str_replace(".$ext", "", $get_current_food_image_b);
+								$get_current_food_thumb_b_medium = $inp_thumb_name . "_thumb_200x200." . $ext;
+								$inp_food_thumb_b_medium_mysql = quote_smart($link, $get_current_food_thumb_b_medium);
+								$result_update = mysqli_query($link, "UPDATE $t_food_index SET food_thumb_b_medium=$inp_food_thumb_b_medium_mysql WHERE food_id=$get_current_food_id") or die(mysqli_error($link));
 				
-								resize_crop_image(200, 200, "$root/$get_food_image_path/$get_food_image_b", "$root/$get_food_image_path/$get_food_thumb_b_medium");
+								resize_crop_image(200, 200, "$root/$get_current_food_image_path/$get_current_food_image_b", "$root/$get_current_food_image_path/$get_current_food_thumb_b_medium");
 							}
 							echo"
-							<a href=\"$root/$get_food_image_path/$get_food_image_b\"><img src=\"$root/$get_food_image_path/$get_food_thumb_b_medium\" alt=\"$get_food_thumb_b_medium\" /></a><br />
+							<a href=\"$root/$get_current_food_image_path/$get_current_food_image_b\"><img src=\"$root/$get_current_food_image_path/$get_current_food_thumb_b_medium\" alt=\"$get_current_food_thumb_b_medium\" /></a><br />
 							<a href=\"edit_food_images.php?action=rotate&amp;food_id=$food_id&amp;image=b&amp;l=$l&amp;process=1\" class=\"btn btn_default\">$l_rotate</a>
 							<a href=\"edit_food_images.php?action=delete&amp;food_id=$food_id&amp;image=b&amp;l=$l\" class=\"btn btn_default\">$l_delete</a>
 							";
@@ -271,20 +271,20 @@ else{
 				 	 </td>
 				 	 <td>
 						<p>";
-						if($get_food_image_c != ""){
+						if($get_current_food_image_c != ""){
 							// Thumb C medium
-							if(!(file_exists("../$get_food_image_path/$get_food_thumb_c_medium")) OR $get_food_thumb_c_medium == ""){
-								$ext = get_extension("$get_food_image_c");
-								$inp_thumb_name = str_replace(".$ext", "", $get_food_image_c);
-								$get_food_thumb_c_medium = $inp_thumb_name . "_thumb_200x200." . $ext;
-								$inp_food_thumb_c_medium_mysql = quote_smart($link, $get_food_thumb_c_medium);
-								$result_update = mysqli_query($link, "UPDATE $t_food_index SET food_thumb_c_medium=$inp_food_thumb_c_medium_mysql WHERE food_id=$get_food_id") or die(mysqli_error($link));
+							if(!(file_exists("../$get_current_food_image_path/$get_current_food_thumb_c_medium")) OR $get_current_food_thumb_c_medium == ""){
+								$ext = get_extension("$get_current_food_image_c");
+								$inp_thumb_name = str_replace(".$ext", "", $get_current_food_image_c);
+								$get_current_food_thumb_c_medium = $inp_thumb_name . "_thumb_200x200." . $ext;
+								$inp_food_thumb_c_medium_mysql = quote_smart($link, $get_current_food_thumb_c_medium);
+								$result_update = mysqli_query($link, "UPDATE $t_food_index SET food_thumb_c_medium=$inp_food_thumb_c_medium_mysql WHERE food_id=$get_current_food_id") or die(mysqli_error($link));
 				
-								resize_crop_image(200, 200, "$root/$get_food_image_path/$get_food_image_c", "$root/$get_food_image_path/$get_food_thumb_c_medium");
+								resize_crop_image(200, 200, "$root/$get_current_food_image_path/$get_current_food_image_c", "$root/$get_current_food_image_path/$get_current_food_thumb_c_medium");
 							}
 
 							echo"
-							<a href=\"$root/$get_food_image_path/$get_food_image_c\"><img src=\"$root/$get_food_image_path/$get_food_thumb_c_medium\" alt=\"$get_food_thumb_c_medium\" /></a><br />
+							<a href=\"$root/$get_current_food_image_path/$get_current_food_image_c\"><img src=\"$root/$get_current_food_image_path/$get_current_food_thumb_c_medium\" alt=\"$get_current_food_thumb_c_medium\" /></a><br />
 							<a href=\"edit_food_images.php?action=rotate&amp;food_id=$food_id&amp;image=c&amp;l=$l&amp;process=1\" class=\"btn btn_default\">$l_rotate</a>
 							<a href=\"edit_food_images.php?action=delete&amp;food_id=$food_id&amp;image=c&amp;l=$l\" class=\"btn btn_default\">$l_delete</a>
 							";
@@ -300,19 +300,19 @@ else{
 					  </td>
 					  <td>
 						<p>";
-						if($get_food_image_d != ""){
-							if(!(file_exists("../$get_food_image_path/$get_food_thumb_d_medium")) OR $get_food_thumb_d_medium == ""){
-								$ext = get_extension("$get_food_image_d");
-								$inp_thumb_name = str_replace(".$ext", "", $get_food_image_d);
-								$get_food_thumb_d_medium = $inp_thumb_name . "_thumb_200x200." . $ext;
-								$inp_food_thumb_d_medium_mysql = quote_smart($link, $get_food_thumb_d_medium);
-								$result_update = mysqli_query($link, "UPDATE $t_food_index SET food_thumb_d_medium=$inp_food_thumb_d_medium_mysql WHERE food_id=$get_food_id") or die(mysqli_error($link));
+						if($get_current_food_image_d != ""){
+							if(!(file_exists("../$get_current_food_image_path/$get_current_food_thumb_d_medium")) OR $get_current_food_thumb_d_medium == ""){
+								$ext = get_extension("$get_current_food_image_d");
+								$inp_thumb_name = str_replace(".$ext", "", $get_current_food_image_d);
+								$get_current_food_thumb_d_medium = $inp_thumb_name . "_thumb_200x200." . $ext;
+								$inp_food_thumb_d_medium_mysql = quote_smart($link, $get_current_food_thumb_d_medium);
+								$result_update = mysqli_query($link, "UPDATE $t_food_index SET food_thumb_d_medium=$inp_food_thumb_d_medium_mysql WHERE food_id=$get_current_food_id") or die(mysqli_error($link));
 				
-								resize_crop_image(200, 200, "$root/$get_food_image_path/$get_food_image_d", "$root/$get_food_image_path/$get_food_thumb_d_medium");
+								resize_crop_image(200, 200, "$root/$get_current_food_image_path/$get_current_food_image_d", "$root/$get_current_food_image_path/$get_current_food_thumb_d_medium");
 							}
 
 							echo"
-							<a href=\"$root/$get_food_image_path/$get_food_image_d\"><img src=\"$root/$get_food_image_path/$get_food_thumb_d_medium\" alt=\"$get_food_thumb_d_medium\" /></a><br />
+							<a href=\"$root/$get_current_food_image_path/$get_current_food_image_d\"><img src=\"$root/$get_current_food_image_path/$get_current_food_thumb_d_medium\" alt=\"$get_current_food_thumb_d_medium\" /></a><br />
 							<a href=\"edit_food_images.php?action=rotate&amp;food_id=$food_id&amp;image=d&amp;l=$l&amp;process=1\" class=\"btn btn_default\">$l_rotate</a>
 							<a href=\"edit_food_images.php?action=delete&amp;food_id=$food_id&amp;image=d&amp;l=$l\" class=\"btn btn_default\">$l_delete</a>
 							";
@@ -327,7 +327,7 @@ else{
 
 				<!-- Back -->
 					<p>
-					<a href=\"my_food.php?l=$l#food$get_food_id\" class=\"btn btn_default\">$l_my_food</a>
+					<a href=\"my_food.php?l=$l#food$get_current_food_id\" class=\"btn btn_default\">$l_my_food</a>
 					</p>
 				<!-- //Back -->
 
@@ -335,67 +335,67 @@ else{
 			} // action == ""
 			elseif($action == "rotate" && $process == 1 && $image != ""){
 				// Delete all old thumbnails
-				if(file_exists("../$get_food_image_path/$get_food_thumb_a_small") && $get_food_thumb_a_small != ""){
-					unlink("../$get_food_image_path/$get_food_thumb_a_small");
+				if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_a_small") && $get_current_food_thumb_a_small != ""){
+					unlink("../$get_current_food_image_path/$get_current_food_thumb_a_small");
 				}
-				if(file_exists("../$get_food_image_path/$get_food_thumb_a_medium") && $get_food_thumb_a_medium != ""){
-					unlink("../$get_food_image_path/$get_food_thumb_a_medium");
+				if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_a_medium") && $get_current_food_thumb_a_medium != ""){
+					unlink("../$get_current_food_image_path/$get_current_food_thumb_a_medium");
 				}
-				if(file_exists("../$get_food_image_path/$get_food_thumb_a_large") && $get_food_thumb_a_large != ""){
-					unlink("../$get_food_image_path/$get_food_thumb_a_large");
-				}
-
-				if(file_exists("../$get_food_image_path/$get_food_thumb_b_small") && $get_food_thumb_b_small != ""){
-					unlink("../$get_food_image_path/$get_food_thumb_b_small");
-				}
-				if(file_exists("../$get_food_image_path/$get_food_thumb_b_medium") && $get_food_thumb_b_medium != ""){
-					unlink("../$get_food_image_path/$get_food_thumb_b_medium");
-				}
-				if(file_exists("../$get_food_image_path/$get_food_thumb_b_large") && $get_food_thumb_b_large != ""){
-					unlink("../$get_food_image_path/$get_food_thumb_b_large");
+				if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_a_large") && $get_current_food_thumb_a_large != ""){
+					unlink("../$get_current_food_image_path/$get_current_food_thumb_a_large");
 				}
 
-				if(file_exists("../$get_food_image_path/$get_food_thumb_c_small") && $get_food_thumb_c_small != ""){
-					unlink("../$get_food_image_path/$get_food_thumb_c_small");
+				if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_b_small") && $get_current_food_thumb_b_small != ""){
+					unlink("../$get_current_food_image_path/$get_current_food_thumb_b_small");
 				}
-				if(file_exists("../$get_food_image_path/$get_food_thumb_c_medium") && $get_food_thumb_c_medium != ""){
-					unlink("../$get_food_image_path/$get_food_thumb_c_medium");
+				if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_b_medium") && $get_current_food_thumb_b_medium != ""){
+					unlink("../$get_current_food_image_path/$get_current_food_thumb_b_medium");
 				}
-				if(file_exists("../$get_food_image_path/$get_food_thumb_c_large") && $get_food_thumb_c_large != ""){
-					unlink("../$get_food_image_path/$get_food_thumb_c_large");
+				if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_b_large") && $get_current_food_thumb_b_large != ""){
+					unlink("../$get_current_food_image_path/$get_current_food_thumb_b_large");
 				}
 
-				if(file_exists("../$get_food_image_path/$get_food_thumb_d_small") && $get_food_thumb_d_small != ""){
-					unlink("../$get_food_image_path/$get_food_thumb_d_small");
+				if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_c_small") && $get_current_food_thumb_c_small != ""){
+					unlink("../$get_current_food_image_path/$get_current_food_thumb_c_small");
 				}
-				if(file_exists("../$get_food_image_path/$get_food_thumb_d_medium") && $get_food_thumb_d_medium != ""){
-					unlink("../$get_food_image_path/$get_food_thumb_d_medium");
+				if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_c_medium") && $get_current_food_thumb_c_medium != ""){
+					unlink("../$get_current_food_image_path/$get_current_food_thumb_c_medium");
 				}
-				if(file_exists("../$get_food_image_path/$get_food_thumb_d_large") && $get_food_thumb_d_large != ""){
-					unlink("../$get_food_image_path/$get_food_thumb_d_large");
+				if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_c_large") && $get_current_food_thumb_c_large != ""){
+					unlink("../$get_current_food_image_path/$get_current_food_thumb_c_large");
+				}
+
+				if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_d_small") && $get_current_food_thumb_d_small != ""){
+					unlink("../$get_current_food_image_path/$get_current_food_thumb_d_small");
+				}
+				if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_d_medium") && $get_current_food_thumb_d_medium != ""){
+					unlink("../$get_current_food_image_path/$get_current_food_thumb_d_medium");
+				}
+				if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_d_large") && $get_current_food_thumb_d_large != ""){
+					unlink("../$get_current_food_image_path/$get_current_food_thumb_d_large");
 				}
 
 				// Determine current photo
 				$current_photo_path = "";
 			
 				if($image == "a"){
-					if(file_exists("../$get_food_image_path/$get_food_image_a")){
-						$current_photo_path = "$get_food_image_path/$get_food_image_a";
+					if(file_exists("../$get_current_food_image_path/$get_current_food_image_a")){
+						$current_photo_path = "$get_current_food_image_path/$get_current_food_image_a";
 					}
 				}
 				elseif($image == "b"){
-					if(file_exists("../$get_food_image_path/$get_food_image_b")){
-						$current_photo_path = "$get_food_image_path/$get_food_image_b";
+					if(file_exists("../$get_current_food_image_path/$get_current_food_image_b")){
+						$current_photo_path = "$get_current_food_image_path/$get_current_food_image_b";
 					}
 				}
 				elseif($image == "c"){
-					if(file_exists("../$get_food_image_path/$get_food_image_c")){
-						$current_photo_path = "$get_food_image_path/$get_food_image_c";
+					if(file_exists("../$get_current_food_image_path/$get_current_food_image_c")){
+						$current_photo_path = "$get_current_food_image_path/$get_current_food_image_c";
 					}
 				}
 				elseif($image == "d"){
-					if(file_exists("../$get_food_image_path/$get_food_image_d")){
-						$current_photo_path = "$get_food_image_path/$get_food_image_d";
+					if(file_exists("../$get_current_food_image_path/$get_current_food_image_d")){
+						$current_photo_path = "$get_current_food_image_path/$get_current_food_image_d";
 					}
 				}
 
@@ -418,10 +418,10 @@ else{
 				$extension = strtolower($extension);
 
 				// New name
-				$inp_food_manufacturer_name = clean($get_food_manufacturer_name);
-				$inp_food_name_clean = clean($get_food_name);
+				$inp_food_manufacturer_name = clean($get_current_food_manufacturer_name);
+				$inp_food_name_clean = clean($get_current_food_name);
 
-				$image_final_path = "../" . $get_food_image_path . "/" . $inp_food_manufacturer_name . "_" . $inp_food_name_clean . "_" . $random_string . "_" . $image . ".$extension";
+				$image_final_path = "../" . $get_current_food_image_path . "/" . $inp_food_manufacturer_name . "_" . $inp_food_name_clean . "_" . $random_string . "_" . $image . ".$extension";
 
 
 				// Load
@@ -498,68 +498,68 @@ else{
 				if($process == 1){
 
 					// Delete all old thumbnails
-					if(file_exists("../$get_food_image_path/$get_food_thumb_a_small") && $get_food_thumb_a_small != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_a_small");
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_a_small") && $get_current_food_thumb_a_small != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_a_small");
 					}
-					if(file_exists("../$get_food_image_path/$get_food_thumb_a_medium") && $get_food_thumb_a_medium != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_a_medium");
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_a_medium") && $get_current_food_thumb_a_medium != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_a_medium");
 					}
-					if(file_exists("../$get_food_image_path/$get_food_thumb_a_large") && $get_food_thumb_a_large != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_a_large");
-					}
-
-					if(file_exists("../$get_food_image_path/$get_food_thumb_b_small") && $get_food_thumb_b_small != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_b_small");
-					}
-					if(file_exists("../$get_food_image_path/$get_food_thumb_b_medium") && $get_food_thumb_b_medium != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_b_medium");
-					}
-					if(file_exists("../$get_food_image_path/$get_food_thumb_b_large") && $get_food_thumb_b_large != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_b_large");
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_a_large") && $get_current_food_thumb_a_large != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_a_large");
 					}
 
-					if(file_exists("../$get_food_image_path/$get_food_thumb_c_small") && $get_food_thumb_c_small != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_c_small");
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_b_small") && $get_current_food_thumb_b_small != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_b_small");
 					}
-					if(file_exists("../$get_food_image_path/$get_food_thumb_c_medium") && $get_food_thumb_c_medium != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_c_medium");
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_b_medium") && $get_current_food_thumb_b_medium != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_b_medium");
 					}
-					if(file_exists("../$get_food_image_path/$get_food_thumb_c_large") && $get_food_thumb_c_large != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_c_large");
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_b_large") && $get_current_food_thumb_b_large != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_b_large");
 					}
 
-					if(file_exists("../$get_food_image_path/$get_food_thumb_d_small") && $get_food_thumb_d_small != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_d_small");
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_c_small") && $get_current_food_thumb_c_small != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_c_small");
 					}
-					if(file_exists("../$get_food_image_path/$get_food_thumb_d_medium") && $get_food_thumb_d_medium != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_d_medium");
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_c_medium") && $get_current_food_thumb_c_medium != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_c_medium");
 					}
-					if(file_exists("../$get_food_image_path/$get_food_thumb_d_large") && $get_food_thumb_d_large != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_d_large");
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_c_large") && $get_current_food_thumb_c_large != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_c_large");
+					}
+
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_d_small") && $get_current_food_thumb_d_small != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_d_small");
+					}
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_d_medium") && $get_current_food_thumb_d_medium != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_d_medium");
+					}
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_d_large") && $get_current_food_thumb_d_large != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_d_large");
 					}
 
 
 					if($image == "a"){
-						if(file_exists("../$get_food_image_path/$get_food_image_a")){
-							unlink("../$get_food_image_path/$get_food_image_a");
+						if(file_exists("../$get_current_food_image_path/$get_current_food_image_a")){
+							unlink("../$get_current_food_image_path/$get_current_food_image_a");
 						}
 						mysqli_query($link, "UPDATE $t_food_index SET food_image_a='', food_thumb_a_small='', food_thumb_a_medium='', food_thumb_a_large='' WHERE food_id=$food_id_mysql") or die(mysqli_error($link));
 					}
 					elseif($image == "b"){
-						if(file_exists("../$get_food_image_path/$get_food_image_b")){
-							unlink("../$get_food_image_path/$get_food_image_b");
+						if(file_exists("../$get_current_food_image_path/$get_current_food_image_b")){
+							unlink("../$get_current_food_image_path/$get_current_food_image_b");
 						}
 						mysqli_query($link, "UPDATE $t_food_index SET food_image_b='', food_thumb_b_small='', food_thumb_b_medium='', food_thumb_b_large='' WHERE food_id=$food_id_mysql") or die(mysqli_error($link));
 					}
 					elseif($image == "c"){
-						if(file_exists("../$get_food_image_path/$get_food_image_c")){
-							unlink("../$get_food_image_path/$get_food_image_c");
+						if(file_exists("../$get_current_food_image_path/$get_current_food_image_c")){
+							unlink("../$get_current_food_image_path/$get_current_food_image_c");
 						}
 						mysqli_query($link, "UPDATE $t_food_index SET food_image_c='', food_thumb_c_small='', food_thumb_c_medium='', food_thumb_c_large='' WHERE food_id=$food_id_mysql") or die(mysqli_error($link));
 					}
 					elseif($image == "d"){
-						if(file_exists("../$get_food_image_path/$get_food_image_d")){
-							unlink("../$get_food_image_path/$get_food_image_d");
+						if(file_exists("../$get_current_food_image_path/$get_current_food_image_d")){
+							unlink("../$get_current_food_image_path/$get_current_food_image_d");
 						}
 						mysqli_query($link, "UPDATE $t_food_index SET food_image_d='', food_thumb_d_small='', food_thumb_d_medium='', food_thumb_d_large='' WHERE food_id=$food_id_mysql") or die(mysqli_error($link));
 					}
@@ -576,13 +576,13 @@ else{
 
 				}
 				echo"
-				<h1>$get_food_manufacturer_name $get_food_name</h1>
+				<h1>$get_current_food_manufacturer_name $get_current_food_name</h1>
 
 				<!-- Where am I? -->
 					<p>
-					<a href=\"my_food.php?l=$l#food$get_food_id\">$l_my_food</a>
+					<a href=\"my_food.php?l=$l#food$get_current_food_id\">$l_my_food</a>
 					&gt;
-					<a href=\"view_food.php?main_category_id=$get_current_main_category_id&amp;sub_category_id=$get_current_sub_category_id&amp;food_id=$food_id&amp;l=$l\">$get_food_name</a>
+					<a href=\"view_food.php?main_category_id=$get_current_main_category_id&amp;sub_category_id=$get_current_sub_category_id&amp;food_id=$food_id&amp;l=$l\">$get_current_food_name</a>
 					&gt;
 					<a href=\"edit_food.php?food_id=$food_id&amp;l=$l\">$l_edit</a>
 					&gt;
@@ -613,17 +613,17 @@ else{
 					";
 
 					$current_photo_path = "";
-					if($image == "a" && file_exists("../$get_food_image_path/$get_food_image_a")){
-						$current_photo_path = "$get_food_image_path/$get_food_image_a";
+					if($image == "a" && file_exists("../$get_current_food_image_path/$get_current_food_image_a")){
+						$current_photo_path = "$get_current_food_image_path/$get_current_food_image_a";
 					}
-					elseif($image == "b" && file_exists("../$get_food_image_path/$get_food_image_b")){
-						$current_photo_path = "$get_food_image_path/$get_food_image_b";
+					elseif($image == "b" && file_exists("../$get_current_food_image_path/$get_current_food_image_b")){
+						$current_photo_path = "$get_current_food_image_path/$get_current_food_image_b";
 					}
-					elseif($image == "c" && file_exists("../$get_food_image_path/$get_food_image_c")){
-						$current_photo_path = "$get_food_image_path/$get_food_image_c";
+					elseif($image == "c" && file_exists("../$get_current_food_image_path/$get_current_food_image_c")){
+						$current_photo_path = "$get_current_food_image_path/$get_current_food_image_c";
 					}
-					elseif($image == "d" && file_exists("../$get_food_image_path/$get_food_image_d")){
-						$current_photo_path = "$get_food_image_path/$get_food_image_d";
+					elseif($image == "d" && file_exists("../$get_current_food_image_path/$get_current_food_image_d")){
+						$current_photo_path = "$get_current_food_image_path/$get_current_food_image_d";
 					}
 					if($current_photo_path != ""){
 						echo"
@@ -646,7 +646,7 @@ else{
 
 				<!-- Back -->
 					<p>
-					<a href=\"my_food.php?l=$l#food$get_food_id\" class=\"btn btn_default\">$l_my_food</a>
+					<a href=\"my_food.php?l=$l#food$get_current_food_id\" class=\"btn btn_default\">$l_my_food</a>
 					</p>
 				<!-- //Back -->
 
@@ -655,49 +655,49 @@ else{
 			elseif($action == "upload_new" && $image != ""){
 				if($process == 1){
 					// Delete all old thumbnails
-					if(file_exists("../$get_food_image_path/$get_food_thumb_a_small") && $get_food_thumb_a_small != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_a_small");
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_a_small") && $get_current_food_thumb_a_small != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_a_small");
 					}
-					if(file_exists("../$get_food_image_path/$get_food_thumb_a_medium") && $get_food_thumb_a_medium != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_a_medium");
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_a_medium") && $get_current_food_thumb_a_medium != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_a_medium");
 					}
-					if(file_exists("../$get_food_image_path/$get_food_thumb_a_large") && $get_food_thumb_a_large != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_a_large");
-					}
-
-					if(file_exists("../$get_food_image_path/$get_food_thumb_b_small") && $get_food_thumb_b_small != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_b_small");
-					}
-					if(file_exists("../$get_food_image_path/$get_food_thumb_b_medium") && $get_food_thumb_b_medium != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_b_medium");
-					}
-					if(file_exists("../$get_food_image_path/$get_food_thumb_b_large") && $get_food_thumb_b_large != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_b_large");
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_a_large") && $get_current_food_thumb_a_large != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_a_large");
 					}
 
-					if(file_exists("../$get_food_image_path/$get_food_thumb_c_small") && $get_food_thumb_c_small != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_c_small");
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_b_small") && $get_current_food_thumb_b_small != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_b_small");
 					}
-					if(file_exists("../$get_food_image_path/$get_food_thumb_c_medium") && $get_food_thumb_c_medium != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_c_medium");
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_b_medium") && $get_current_food_thumb_b_medium != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_b_medium");
 					}
-					if(file_exists("../$get_food_image_path/$get_food_thumb_c_large") && $get_food_thumb_c_large != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_c_large");
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_b_large") && $get_current_food_thumb_b_large != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_b_large");
 					}
 
-					if(file_exists("../$get_food_image_path/$get_food_thumb_d_small") && $get_food_thumb_d_small != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_d_small");
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_c_small") && $get_current_food_thumb_c_small != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_c_small");
 					}
-					if(file_exists("../$get_food_image_path/$get_food_thumb_d_medium") && $get_food_thumb_d_medium != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_d_medium");
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_c_medium") && $get_current_food_thumb_c_medium != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_c_medium");
 					}
-					if(file_exists("../$get_food_image_path/$get_food_thumb_d_large") && $get_food_thumb_d_large != ""){
-						unlink("../$get_food_image_path/$get_food_thumb_d_large");
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_c_large") && $get_current_food_thumb_c_large != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_c_large");
+					}
+
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_d_small") && $get_current_food_thumb_d_small != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_d_small");
+					}
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_d_medium") && $get_current_food_thumb_d_medium != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_d_medium");
+					}
+					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_d_large") && $get_current_food_thumb_d_large != ""){
+						unlink("../$get_current_food_image_path/$get_current_food_thumb_d_large");
 					}
 
 					// Clean name
-					$food_name_clean = clean($get_food_name);
-					$food_manufacturer_name_clean = clean($get_food_manufacturer_name);
+					$food_name_clean = clean($get_current_food_name);
+					$food_manufacturer_name_clean = clean($get_current_food_manufacturer_name);
 
 
 					// Directory for storing
@@ -713,8 +713,8 @@ else{
 					if(!(is_dir("../_uploads/food/_img/$l"))){
 						mkdir("../_uploads/food/_img/$l");
 					}
-					if(!(is_dir("../_uploads/food/_img/$l/$get_food_id"))){
-						mkdir("../_uploads/food/_img/$l/$get_food_id");
+					if(!(is_dir("../_uploads/food/_img/$l/$get_current_food_id"))){
+						mkdir("../_uploads/food/_img/$l/$get_current_food_id");
 					}
 				
 					/*- Image upload ------------------------------------------------------------------------------------------ */
@@ -731,7 +731,7 @@ else{
 					
  
 							// Give new name
-							$food_manufacturer_name_clean = clean($get_food_manufacturer_name);
+							$food_manufacturer_name_clean = clean($get_current_food_manufacturer_name);
 
 
 							if($image == "a"){
@@ -751,7 +751,7 @@ else{
 								die;
 							}
 						
-							$new_path = "../_uploads/food/_img/$l/$get_food_id/";
+							$new_path = "../_uploads/food/_img/$l/$get_current_food_id/";
 							$uploaded_file = $new_path . $new_name;
 							// Upload file
 							if (move_uploaded_file($_FILES['inp_food_image']['tmp_name'], $uploaded_file)) {
@@ -775,22 +775,22 @@ else{
 										resize_crop_image($settings_image_width, $settings_image_height, $uploaded_file, $uploaded_file_new, $quality = 80);
 									}
 
-									$inp_food_image_path = "_uploads/food/_img/$l/$get_food_id";
+									$inp_food_image_path = "_uploads/food/_img/$l/$get_current_food_id";
 									$inp_food_image_path = output_html($inp_food_image_path);
 									$inp_food_image_path_mysql = quote_smart($link, $inp_food_image_path);
 									$inp_food_image_mysql = quote_smart($link, $new_name);
 
 									if($image == "a"){
-										$result = mysqli_query($link, "UPDATE $t_food_index SET food_image_path=$inp_food_image_path_mysql, food_image_a=$inp_food_image_mysql, food_thumb_a_small='', food_thumb_a_medium='', food_thumb_a_large='' WHERE food_id='$get_food_id'");
+										$result = mysqli_query($link, "UPDATE $t_food_index SET food_image_path=$inp_food_image_path_mysql, food_image_a=$inp_food_image_mysql, food_thumb_a_small='', food_thumb_a_medium='', food_thumb_a_large='' WHERE food_id='$get_current_food_id'");
 									}
 									elseif($image == "b"){
-										$result = mysqli_query($link, "UPDATE $t_food_index SET food_image_path=$inp_food_image_path_mysql, food_image_b=$inp_food_image_mysql, food_thumb_b_small='', food_thumb_b_medium='', food_thumb_b_large='' WHERE food_id='$get_food_id'");
+										$result = mysqli_query($link, "UPDATE $t_food_index SET food_image_path=$inp_food_image_path_mysql, food_image_b=$inp_food_image_mysql, food_thumb_b_small='', food_thumb_b_medium='', food_thumb_b_large='' WHERE food_id='$get_current_food_id'");
 									}
 									elseif($image == "c"){
-										$result = mysqli_query($link, "UPDATE $t_food_index SET food_image_path=$inp_food_image_path_mysql, food_image_c=$inp_food_image_mysql, food_thumb_c_small='', food_thumb_c_medium='', food_thumb_c_large='' WHERE food_id='$get_food_id'");
+										$result = mysqli_query($link, "UPDATE $t_food_index SET food_image_path=$inp_food_image_path_mysql, food_image_c=$inp_food_image_mysql, food_thumb_c_small='', food_thumb_c_medium='', food_thumb_c_large='' WHERE food_id='$get_current_food_id'");
 									}
 									elseif($image == "d"){
-										$result = mysqli_query($link, "UPDATE $t_food_index SET food_image_path=$inp_food_image_path_mysql, food_image_d=$inp_food_image_mysql, food_thumb_d_small='', food_thumb_d_medium='', food_thumb_d_large='' WHERE food_id='$get_food_id'");
+										$result = mysqli_query($link, "UPDATE $t_food_index SET food_image_path=$inp_food_image_path_mysql, food_image_d=$inp_food_image_mysql, food_thumb_d_small='', food_thumb_d_medium='', food_thumb_d_large='' WHERE food_id='$get_current_food_id'");
 									}
 
 								}  // if($width == "" OR $height == ""){
@@ -841,13 +841,13 @@ else{
 
 				}
 				echo"
-				<h1>$get_food_manufacturer_name $get_food_name</h1>
+				<h1>$get_current_food_manufacturer_name $get_current_food_name</h1>
 
 				<!-- Where am I? -->
 					<p>
-					<a href=\"my_food.php?l=$l#food$get_food_id\">$l_my_food</a>
+					<a href=\"my_food.php?l=$l#food$get_current_food_id\">$l_my_food</a>
 					&gt;
-					<a href=\"view_food.php?main_category_id=$get_current_main_category_id&amp;sub_category_id=$get_current_sub_category_id&amp;food_id=$food_id&amp;l=$l\">$get_food_name</a>
+					<a href=\"view_food.php?main_category_id=$get_current_main_category_id&amp;sub_category_id=$get_current_sub_category_id&amp;food_id=$food_id&amp;l=$l\">$get_current_food_name</a>
 					&gt;
 					<a href=\"edit_food.php?food_id=$food_id&amp;l=$l\">$l_edit</a>
 					&gt;
@@ -929,7 +929,7 @@ else{
 
 				<!-- Back -->
 					<p>
-					<a href=\"my_food.php?l=$l#food$get_food_id\" class=\"btn btn_default\">$l_my_food</a>
+					<a href=\"my_food.php?l=$l#food$get_current_food_id\" class=\"btn btn_default\">$l_my_food</a>
 					</p>
 				<!-- //Back -->
 

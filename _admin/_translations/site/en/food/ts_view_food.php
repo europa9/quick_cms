@@ -71,4 +71,9 @@ $l_us_system = "US system";
 $l_us = "US";
 $l_per_8 = "Per 8";
 $l_all = "All";
+$l_dash_saturated_fat = "- saturated fat";
+$l_dash_monounsaturated_fat = "- monounsaturated fat";
+$l_dash_polyunsaturated_fat = "- polyunsaturated fat";
+$l_cholesterol_in_mg = "Cholesterol in mg";
+
 ?>
