@@ -8,7 +8,7 @@
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
-if(!(isset($get_food_id))){
+if(!(isset($get_current_food_id))){
 	echo"error";
 	die;
 }
@@ -17,7 +17,7 @@ if(!(isset($get_food_id))){
 
 
 $count_ratings = 0;
-$query = "SELECT rating_id, rating_food_id, rating_text, rating_by_user_id, rating_by_user_name, rating_by_user_image_path, rating_by_user_image_file, rating_by_user_image_thumb_60, rating_by_user_ip, rating_starts, rating_created, rating_created_saying, rating_created_timestamp, rating_updated, rating_updated_saying, rating_likes, rating_dislikes, rating_number_of_replies, rating_read_blog_owner, rating_reported, rating_reported_by_user_id, rating_reported_reason, rating_reported_checked FROM $t_food_index_ratings WHERE rating_food_id=$get_food_id";
+$query = "SELECT rating_id, rating_food_id, rating_text, rating_by_user_id, rating_by_user_name, rating_by_user_image_path, rating_by_user_image_file, rating_by_user_image_thumb_60, rating_by_user_ip, rating_starts, rating_created, rating_created_saying, rating_created_timestamp, rating_updated, rating_updated_saying, rating_likes, rating_dislikes, rating_number_of_replies, rating_read_blog_owner, rating_reported, rating_reported_by_user_id, rating_reported_reason, rating_reported_checked FROM $t_food_index_ratings WHERE rating_food_id=$get_current_food_id";
 $result = mysqli_query($link, $query);
 while($row = mysqli_fetch_row($result)) {
 	list($get_rating_id, $get_rating_food_id, $get_rating_text, $get_rating_by_user_id, $get_rating_by_user_name, $get_rating_by_user_image_path, $get_rating_by_user_image_file, $get_rating_by_user_image_thumb_60, $get_rating_by_user_ip, $get_rating_starts, $get_rating_created, $get_rating_created_saying, $get_rating_created_timestamp, $get_rating_updated, $get_rating_updated_saying, $get_rating_likes, $get_rating_dislikes, $get_rating_number_of_replies, $get_rating_read_blog_owner, $get_rating_reported, $get_rating_reported_by_user_id, $get_rating_reported_reason, $get_rating_reported_checked) = $row;

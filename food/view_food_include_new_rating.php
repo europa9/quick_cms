@@ -8,7 +8,7 @@
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
-if(!(isset($get_food_id))){
+if(!(isset($get_current_food_id))){
 	echo"error, food id not found";
 	die;
 }
@@ -94,7 +94,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 			if($inp_text == ""){
-				$url = "view_food.php?main_category_id=$get_current_main_category_id&sub_category_id=$get_current_sub_category_id&food_id=$get_food_id&l=$l&ft_rating=warning&fm_rating=missing_text#new_rating_form";
+				$url = "view_food.php?main_category_id=$get_current_main_category_id&sub_category_id=$get_current_sub_category_id&food_id=$get_current_food_id&l=$l&ft_rating=warning&fm_rating=missing_text#new_rating_form";
 				header("Location: $url");
 				exit;
 			} // no text 
@@ -108,7 +108,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				rating_created, rating_created_saying, rating_created_timestamp, rating_updated, rating_updated_saying, 
 				rating_read_blog_owner, rating_reported) 
 				VALUES 
-				(NULL, $get_food_id, $inp_text_mysql, $get_my_user_id, 
+				(NULL, $get_current_food_id, $inp_text_mysql, $get_my_user_id, 
 				$inp_my_user_name_mysql, $inp_my_image_path_mysql, $inp_my_image_file_mysql, $inp_my_image_thumb_mysql, $my_ip_mysql, 
 				'$datetime', '$date_saying', '$time', '$datetime', '$date_saying',
 				0, 0)")
@@ -141,7 +141,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						// Send mail
 						$host = $_SERVER['HTTP_HOST'];
 
-						$subject = "$l_new_rating_for_food $get_food_manufacturer_name_and_food_name";
+						$subject = "$l_new_rating_for_food $get_current_food_manufacturer_name_and_food_name";
 			
 						$message = "<html>\n";
 						$message = $message. "<head>\n";
@@ -149,7 +149,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						$message = $message. " </head>\n";
 						$message = $message. "<body>\n";
 
-						$message = $message . "<h1>$l_new_rating_for_food $get_food_manufacturer_name_and_food_name</h1>\n\n";
+						$message = $message . "<h1>$l_new_rating_for_food $get_current_food_manufacturer_name_and_food_name</h1>\n\n";
 						$message = $message . "<table>\n";
 						$message = $message . " <tr>\n";
 						$message = $message . "  <td style=\"padding: 0px 6px 0px 0x;text-align:center;vertical-align:top;\">\n";
@@ -167,8 +167,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						$message = $message . " </tr>\n";
 						$message = $message . "</table>\n\n";
 						$message = $message . "<p><b>$l_actions:</b><br />\n";
-						$message = $message . "1. <a href=\"$configSiteURLSav/food/view_food.php?main_category_id=$get_current_main_category_id&amp;sub_category_id=$get_current_sub_category_id&amp;food_id=$get_food_id\">$l_view_food</a><br />\n";
-						$message = $message . "2. <a href=\"$configSiteURLSav/food/view_food.php?main_category_id=$get_current_main_category_id&amp;sub_category_id=$get_current_sub_category_id&amp;food_id=$get_food_id#rating$get_current_rating_id\">$l_view_rating</a><br />\n";
+						$message = $message . "1. <a href=\"$configSiteURLSav/food/view_food.php?main_category_id=$get_current_main_category_id&amp;sub_category_id=$get_current_sub_category_id&amp;food_id=$get_current_food_id\">$l_view_food</a><br />\n";
+						$message = $message . "2. <a href=\"$configSiteURLSav/food/view_food.php?main_category_id=$get_current_main_category_id&amp;sub_category_id=$get_current_sub_category_id&amp;food_id=$get_current_food_id#rating$get_current_rating_id\">$l_view_rating</a><br />\n";
 						$message = $message . "5. <a href=\"$configSiteURLSav/food/rating_report.php?rating_id=$get_current_comment_id\">$l_report</a><br />\n";
 						$message = $message . "</p>\n\n";
 
@@ -231,7 +231,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				
 				// Refresh site
-				$url = "view_food.php?main_category_id=$get_current_main_category_id&sub_category_id=$get_current_sub_category_id&food_id=$get_food_id&&l=$l&ft_rating=success&fm_rating=rating_saved#rating$get_current_rating_id";
+				$url = "view_food.php?main_category_id=$get_current_main_category_id&sub_category_id=$get_current_sub_category_id&food_id=$get_current_food_id&&l=$l&ft_rating=success&fm_rating=rating_saved#rating$get_current_rating_id";
 				header("Location: $url");
 				exit;
 			} // text 
@@ -242,7 +242,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		<!-- New rating form -->
 			<hr />
 			<h2>$l_rate_this_food</h2>
-			<form method=\"post\" action=\"view_food.php?main_category_id=$get_current_main_category_id&amp;sub_category_id=$get_current_sub_category_id&amp;food_id=$get_food_id&amp;rating_action=post_rating&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+			<form method=\"post\" action=\"view_food.php?main_category_id=$get_current_main_category_id&amp;sub_category_id=$get_current_sub_category_id&amp;food_id=$get_current_food_id&amp;rating_action=post_rating&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 		
 			<table>
 	 		 <tr>
