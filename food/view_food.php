@@ -1021,8 +1021,8 @@ else{
 
 				
 				if($system == "all" OR $system == "metric"){
-					$score_number = $energy_diff_med+$fat_diff_med+$saturated_fat_diff_med+$monounsaturated_fat_diff_med+$polyunsaturated_fat_diff_med+$carbohydrate_diff_med+$carbohydrates_of_which_sugars_diff_med+$dietary_fiber_diff_med+$proteins_diff_med+$salt_diff_med+$sodium_diff_med+$cholesterol_diff_med;
-					if($get_current_food_score != $score_number){
+					$score_number = $energy_diff_med+$fat_diff_med+$saturated_fat_diff_med+$monounsaturated_fat_diff_med+$polyunsaturated_fat_diff_med+$carbohydrate_diff_med+$carbohydrates_of_which_sugars_diff_med+$dietary_fiber_diff_med+$proteins_diff_med+$salt_diff_med; // +$sodium_diff_med+$cholesterol_diff_med
+	 				if($get_current_food_score != $score_number){
 						$result = mysqli_query($link, "UPDATE $t_food_index SET food_score='$score_number' WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 					}
 				}

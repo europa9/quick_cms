@@ -317,7 +317,7 @@ list($get_current_food_id, $get_current_food_user_id, $get_current_food_name, $g
 
 
 				// Header
-				if($$get_current_food_net_content_added_measurement == "oz" OR $get_current_food_net_content_added_measurement == "fl_oz"){
+				if($get_current_food_net_content_added_measurement == "oz" OR $get_current_food_net_content_added_measurement == "fl_oz"){
 					$url = "new_food_7_numbers_hundred_pcs_us.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&food_id=$get_current_food_id&el=$l";
 				}
 				else{

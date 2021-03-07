@@ -240,16 +240,16 @@ list($get_current_food_id, $get_current_food_user_id, $get_current_food_name, $g
 					$inp_food_energy_calculated_metric = round($inp_food_energy*$get_current_food_serving_size_metric/100, 0);
 					$inp_food_energy_calculated_metric_mysql = quote_smart($link, $inp_food_energy_calculated_metric);
 
-					$inp_food_fat_calculated_metric = round($inp_food_fat*$get_current_food_serving_size_metric/100, 0);
+					$inp_food_fat_calculated_metric = round($inp_food_fat*$get_current_food_serving_size_metric/100, 1);
 					$inp_food_fat_calculated_metric_mysql = quote_smart($link, $inp_food_fat_calculated_metric);
 
-					$inp_food_saturated_fat_calculated_metric = round($inp_food_saturated_fat*$get_current_food_serving_size_metric/100, 0);
+					$inp_food_saturated_fat_calculated_metric = round($inp_food_saturated_fat*$get_current_food_serving_size_metric/100, 1);
 					$inp_food_saturated_fat_calculated_metric_mysql = quote_smart($link, $inp_food_saturated_fat_calculated_metric);
 
-					$inp_food_monounsaturated_fat_calculated_metric = round($inp_food_monounsaturated_fat*$get_current_food_serving_size_metric/100, 0);
+					$inp_food_monounsaturated_fat_calculated_metric = round($inp_food_monounsaturated_fat*$get_current_food_serving_size_metric/100, 1);
 					$inp_food_monounsaturated_fat_calculated_metric_mysql = quote_smart($link, $inp_food_monounsaturated_fat_calculated_metric);
 
-					$inp_food_polyunsaturated_fat_calculated_metric = round($inp_food_polyunsaturated_fat*$get_current_food_serving_size_metric/100, 0);
+					$inp_food_polyunsaturated_fat_calculated_metric = round($inp_food_polyunsaturated_fat*$get_current_food_serving_size_metric/100, 1);
 					$inp_food_polyunsaturated_fat_calculated_metric_mysql = quote_smart($link, $inp_food_polyunsaturated_fat_calculated_metric);
 
 					$inp_food_carbohydrates_calculated_metric = round($inp_food_carbohydrates*$get_current_food_serving_size_metric/100, 0);
@@ -400,12 +400,12 @@ list($get_current_food_id, $get_current_food_user_id, $get_current_food_name, $g
 
 
 				// Header
-				$url = "new_food_8_tags.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&food_id=$get_food_id&el=$l";
+				$url = "new_food_8_tags.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&food_id=$get_current_food_id&el=$l";
 				header("Location: $url");
 				exit;
 			}
 			else{
-				$url = "new_food_7_numbers_hundred_metric.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&food_id=$get_food_id&l=$l";
+				$url = "new_food_7_numbers_hundred_metric.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&food_id=$get_current_food_id&l=$l";
 				$url = $url . "&ft=$ft&fm=$fm";
 				$url = $url . "&inp_food_energy=$inp_food_energy";
 				$url = $url . "&inp_food_proteins=$inp_food_proteins";

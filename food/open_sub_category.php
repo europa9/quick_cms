@@ -400,8 +400,9 @@ else{
 		<div class=\"info\">
 			<h2>$l_calculating...</h2>
 			<p>
-			<a href=\"open_sub_category.php?main_category_id=$main_category_id&amp;sub_category_id=$sub_category_id&system=$system&l=$l#statistics\">open_sub_category.php?main_category_id=$main_category_id&amp;sub_category_id=$sub_category_id&system=$system&l=$l</a>
+			<a href=\"open_sub_category.php?main_category_id=$main_category_id&amp;sub_category_id=$sub_category_id&amp;system=$system&l=$l#statistics\">open_sub_category.php?main_category_id=$main_category_id&amp;sub_category_id=$sub_category_id&system=$system&l=$l</a>
 			</p>
+			<meta http-equiv=\"refresh\" content=\"1;url=open_sub_category.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&system=$system\">
 		</div>
 		";
 	}

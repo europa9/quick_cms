@@ -228,16 +228,16 @@ else{
 				$inp_food_energy = round($inp_food_energy_calculated/$get_current_food_serving_size_metric*100, 0);
 				$inp_food_energy_metric_mysql = quote_smart($link, $inp_food_energy);
 	
-				$inp_food_fat = round($inp_food_fat_calculated/$get_current_food_serving_size_metric*100, 0);
+				$inp_food_fat = round($inp_food_fat_calculated/$get_current_food_serving_size_metric*100, 1);
 				$inp_food_fat_metric_mysql = quote_smart($link, $inp_food_fat);
 	
-				$inp_food_saturated_fat = round($inp_food_saturated_fat_calculated/$get_current_food_serving_size_metric*100, 0);
+				$inp_food_saturated_fat = round($inp_food_saturated_fat_calculated/$get_current_food_serving_size_metric*100, 1);
 				$inp_food_saturated_fat_metric_mysql = quote_smart($link, $inp_food_saturated_fat);
 	
-				$inp_food_monounsaturated_fat = round($inp_food_monounsaturated_fat_calculated/$get_current_food_serving_size_metric*100, 0);
+				$inp_food_monounsaturated_fat = round($inp_food_monounsaturated_fat_calculated/$get_current_food_serving_size_metric*100, 1);
 				$inp_food_monounsaturated_fat_metric_mysql = quote_smart($link, $inp_food_monounsaturated_fat);
 	
-				$inp_food_polyunsaturated_fat = round($inp_food_polyunsaturated_fat_calculated/$get_current_food_serving_size_metric*100, 0);
+				$inp_food_polyunsaturated_fat = round($inp_food_polyunsaturated_fat_calculated/$get_current_food_serving_size_metric*100, 1);
 				$inp_food_polyunsaturated_fat_metric_mysql = quote_smart($link, $inp_food_polyunsaturated_fat);
 
 				$inp_food_carbohydrates = round($inp_food_carbohydrates_calculated/$get_current_food_serving_size_metric*100, 0);
