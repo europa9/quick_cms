@@ -35,4 +35,23 @@ $l_dash_of_which_saturated_fatty_acids = "- of which is saturated fatty acids";
 $l_dash_of_which_sugars_calculated = "- of which is sugars";
 $l_my_stores = "My stores";
 $l_integrations = "Integrations";
+$l_system = "System";
+$l_metric = "Metric";
+$l_us = "US";
+$l_show = "Show";
+$l_hundred_metric = "100 metric";
+$l_pcs_metric = "Pcs metric";
+$l_eight_us = "8 US";
+$l_pcs_us = "Pcs us";
+$l_per_hundred_abbr_lowercase = "per 100";
+$l_calories_abbr_lowercase = "cal";
+$l_fat_abbr_lowercase = "fat";
+$l_carbohydrates_abbr_lowercase = "car";
+$l_proteins_abbr_lowercase = "pro";
+$l_per_eight_abbr_lowercase = "per 8";
+$l_per_hundred  = "Per 100";
+$l_per_pcs_metric = "Per pcs (metric)";
+$l_per_eight = "Per 8";
+$l_per_pcs_us = "Per pcs (US)";
+
 ?>

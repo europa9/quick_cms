@@ -69,10 +69,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	list($get_my_user_id, $get_my_user_email, $get_my_user_name, $get_my_user_alias, $get_my_user_rank) = $row;
 
 	// Check if I have subscription for entire board
-	$query = "SELECT discuss_subscription_id, discuss_subscription_user_id, discuss_subscription_user_email FROM $t_forum_subscriptions WHERE discuss_subscription_user_id=$my_user_id_mysql";
+	$query = "SELECT forum_subscription_id, forum_subscription_user_id, forum_subscription_user_email FROM $t_forum_subscriptions WHERE forum_subscription_user_id=$my_user_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_discuss_subscription_id, $get_discuss_subscription_user_id, $get_discuss_subscription_user_email) = $row;
+	list($get_forum_subscription_id, $get_forum_subscription_user_id, $get_forum_subscription_user_email) = $row;
 
 	if($action == ""){
 		if($process == "1"){
@@ -87,7 +87,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$time = time();
 
 					mysqli_query($link, "INSERT INTO $t_forum_subscriptions
-					(discuss_subscription_id, discuss_subscription_user_id, discuss_subscription_user_email, discuss_subscription_last_sendt_datetime, discuss_subscription_last_sendt_time) 
+					(forum_subscription_id, forum_subscription_user_id, forum_subscription_user_email, forum_subscription_last_sendt_datetime, forum_subscription_last_sendt_time) 
 					VALUES 
 					(NULL, $my_user_id_mysql, $inp_email_mysql, '$datetime', '$time')")
 					or die(mysqli_error($link));
@@ -96,7 +96,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			else{
 				if($get_discuss_subscription_id != ""){
 					// Delete
-					$result = mysqli_query($link, "DELETE FROM $t_forum_subscriptions WHERE discuss_subscription_id='$get_discuss_subscription_id'");
+					$result = mysqli_query($link, "DELETE FROM $t_forum_subscriptions WHERE forum_subscription_id='$get_discuss_subscription_id'");
 				}
 			}
 			$url = "subscription.php?l=$l&ft=success&fm=changes_saved";
@@ -125,10 +125,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		<form method=\"post\" action=\"subscription.php?l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
 		<p><b>$l_subscribe_to_all_new_topics</b><br />
-		<input type=\"radio\" name=\"inp_subscribe_to_all_new_topics\" value=\"1\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\"";if($get_discuss_subscription_id != ""){ echo" checked=\"checked\"";}echo" />
+		<input type=\"radio\" name=\"inp_subscribe_to_all_new_topics\" value=\"1\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\"";if($get_forum_subscription_id != ""){ echo" checked=\"checked\"";}echo" />
 		$l_yes
 		&nbsp;
-		<input type=\"radio\" name=\"inp_subscribe_to_all_new_topics\" value=\"0\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\"";if($get_discuss_subscription_id == ""){ echo" checked=\"checked\"";}echo" />
+		<input type=\"radio\" name=\"inp_subscribe_to_all_new_topics\" value=\"0\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\"";if($get_forum_subscription_id == ""){ echo" checked=\"checked\"";}echo" />
 		$l_no
 		</p>
 		

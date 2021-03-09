@@ -210,42 +210,52 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	<!-- //Yesterday, tomorrow -->
 
 
-	<!-- Todays Totals -->";
+	<!-- Todays Consumed Totals -->";
 		$date_mysql = quote_smart($link, $date);
-		$query = "SELECT total_day_id, total_day_user_id, total_day_date, total_day_consumed_energy, total_day_consumed_fat, total_day_consumed_carb, total_day_consumed_protein, total_day_target_sedentary_energy, total_day_target_sedentary_fat, total_day_target_sedentary_carb, total_day_target_sedentary_protein, total_day_target_with_activity_energy, total_day_target_with_activity_fat, total_day_target_with_activity_carb, total_day_target_with_activity_protein, total_day_diff_sedentary_energy, total_day_diff_sedentary_fat, total_day_diff_sedentary_carb, total_day_diff_sedentary_protein, total_day_diff_with_activity_energy, total_day_diff_with_activity_fat, total_day_diff_with_activity_carb, total_day_diff_with_activity_protein, total_day_updated FROM $t_food_diary_totals_days WHERE total_day_user_id=$my_user_id_mysql AND total_day_date=$date_mysql";
+		$query = "SELECT consumed_day_id, consumed_day_user_id, consumed_day_year, consumed_day_month, consumed_day_month_saying, consumed_day_day, consumed_day_day_saying, consumed_day_date, consumed_day_energy, consumed_day_fat, consumed_day_saturated_fat, consumed_day_monounsaturated_fat, consumed_day_polyunsaturated_fat, consumed_day_cholesterol, consumed_day_carbohydrates, consumed_day_carbohydrates_of_which_sugars, consumed_day_dietary, consumed_day_proteins, consumed_day_salt, consumed_day_sodium, consumed_day_target_sedentary_energy, consumed_day_target_sedentary_fat, consumed_day_target_sedentary_carb, consumed_day_target_sedentary_protein, consumed_day_target_with_activity_energy, consumed_day_target_with_activity_fat, consumed_day_target_with_activity_carb, consumed_day_target_with_activity_protein, consumed_day_diff_sedentary_energy, consumed_day_diff_sedentary_fat, consumed_day_diff_sedentary_carb, consumed_day_diff_sedentary_protein, consumed_day_diff_with_activity_energy, consumed_day_diff_with_activity_fat, consumed_day_diff_with_activity_carb, consumed_day_diff_with_activity_protein, consumed_day_updated_datetime, consumed_day_synchronized FROM $t_food_diary_consumed_days WHERE consumed_day_user_id=$my_user_id_mysql AND consumed_day_date=$date_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
-		list($get_total_day_id, $get_total_day_user_id, $get_total_day_date, $get_total_day_consumed_energy, $get_total_day_consumed_fat, $get_total_day_consumed_carb, $get_total_day_consumed_protein, $get_total_day_target_sedentary_energy, $get_total_day_target_sedentary_fat, $get_total_day_target_sedentary_carb, $get_total_day_target_sedentary_protein, $get_total_day_target_with_activity_energy, $get_total_day_target_with_activity_fat, $get_total_day_target_with_activity_carb, $get_total_day_target_with_activity_protein, $get_total_day_diff_sedentary_energy, $get_total_day_diff_sedentary_fat, $get_total_day_diff_sedentary_carb, $get_total_day_diff_sedentary_protein, $get_total_day_diff_with_activity_energy, $get_total_day_diff_with_activity_fat, $get_total_day_diff_with_activity_carb, $get_total_day_diff_with_activity_protein, $get_total_day_updated) = $row;
-		if($get_total_day_id == ""){
-			// Insert this meal
-			$inp_total_day_updated = date("Y-m-d H:i:s");
-			mysqli_query($link, "INSERT INTO $t_food_diary_totals_days
-			(total_day_id, total_day_user_id, total_day_date, 
-			total_day_consumed_energy, total_day_consumed_fat, total_day_consumed_carb, total_day_consumed_protein, 
-			total_day_target_sedentary_energy, total_day_target_sedentary_fat, total_day_target_sedentary_carb, total_day_target_sedentary_protein, 
-			total_day_target_with_activity_energy, total_day_target_with_activity_fat, total_day_target_with_activity_carb, total_day_target_with_activity_protein, 
-			total_day_diff_sedentary_energy, total_day_diff_sedentary_fat, total_day_diff_sedentary_carb, total_day_diff_sedentary_protein, 
-			total_day_diff_with_activity_energy, total_day_diff_with_activity_fat, total_day_diff_with_activity_carb, total_day_diff_with_activity_protein,
-			total_day_updated) 
+		list($get_consumed_day_id, $get_consumed_day_user_id, $get_consumed_day_year, $get_consumed_day_month, $get_consumed_day_month_saying, $get_consumed_day_day, $get_consumed_day_day_saying, $get_consumed_day_date, $get_consumed_day_energy, $get_consumed_day_fat, $get_consumed_day_saturated_fat, $get_consumed_day_monounsaturated_fat, $get_consumed_day_polyunsaturated_fat, $get_consumed_day_cholesterol, $get_consumed_day_carbohydrates, $get_consumed_day_carbohydrates_of_which_sugars, $get_consumed_day_dietary, $get_consumed_day_proteins, $get_consumed_day_salt, $get_consumed_day_sodium, $get_consumed_day_target_sedentary_energy, $get_consumed_day_target_sedentary_fat, $get_consumed_day_target_sedentary_carb, $get_consumed_day_target_sedentary_protein, $get_consumed_day_target_with_activity_energy, $get_consumed_day_target_with_activity_fat, $get_consumed_day_target_with_activity_carb, $get_consumed_day_target_with_activity_protein, $get_consumed_day_diff_sedentary_energy, $get_consumed_day_diff_sedentary_fat, $get_consumed_day_diff_sedentary_carb, $get_consumed_day_diff_sedentary_protein, $get_consumed_day_diff_with_activity_energy, $get_consumed_day_diff_with_activity_fat, $get_consumed_day_diff_with_activity_carb, $get_consumed_day_diff_with_activity_protein, $get_consumed_day_updated_datetime, $get_consumed_day_synchronized) = $row;
+		if($get_consumed_day_id == ""){
+			// Insert this day
+			$year = date("Y");
+			$month = date("m");
+			$month_saying = date("M");
+			$day = date("d");
+			$day_saying = date("D");
+			$date = date("Y-m-d");
+			$datetime = date("Y-m-d H:i:s");
+			mysqli_query($link, "INSERT INTO $t_food_diary_consumed_days
+			(consumed_day_id, consumed_day_user_id, consumed_day_year, consumed_day_month, consumed_day_month_saying, 
+			consumed_day_day, consumed_day_day_saying, consumed_day_date, consumed_day_energy, consumed_day_fat, 
+			consumed_day_saturated_fat, consumed_day_monounsaturated_fat, consumed_day_polyunsaturated_fat, consumed_day_cholesterol, consumed_day_carbohydrates, 
+			consumed_day_carbohydrates_of_which_sugars, consumed_day_dietary, consumed_day_proteins, consumed_day_salt, consumed_day_sodium, 
+			consumed_day_target_sedentary_energy, consumed_day_target_sedentary_fat, consumed_day_target_sedentary_carb, consumed_day_target_sedentary_protein, consumed_day_target_with_activity_energy, 
+			consumed_day_target_with_activity_fat, consumed_day_target_with_activity_carb, consumed_day_target_with_activity_protein, consumed_day_diff_sedentary_energy, consumed_day_diff_sedentary_fat, 
+			consumed_day_diff_sedentary_carb, consumed_day_diff_sedentary_protein, consumed_day_diff_with_activity_energy, consumed_day_diff_with_activity_fat, consumed_day_diff_with_activity_carb, 
+			consumed_day_diff_with_activity_protein, consumed_day_updated_datetime, consumed_day_synchronized) 
 			VALUES 
-			(NULL, $my_user_id_mysql, $date_mysql, 
-			'0', '0', '0', '0',
+			(NULL, $my_user_id_mysql, $year, $month, '$month_saying',
+			$day, '$day_saying', '$date', '0', '0',
+			 '0', '0',  '0', '0',  '0',
+			 '0', '0',  '0', '0',  '0',
+			
 			'$get_goal_target_sedentary_calories', '$get_goal_target_sedentary_fat', '$get_goal_target_sedentary_carbs', '$get_goal_target_sedentary_proteins',
 			'$get_goal_target_with_activity_calories', '$get_goal_target_with_activity_fat', '$get_goal_target_with_activity_carbs', '$get_goal_target_with_activity_proteins',
 			'$get_goal_target_sedentary_calories', '$get_goal_target_sedentary_fat', '$get_goal_target_sedentary_carbs', '$get_goal_target_sedentary_proteins',
-			'$get_goal_target_with_activity_calories', '$get_goal_target_with_activity_fat', '$get_goal_target_with_activity_carbs', '$get_goal_target_with_activity_proteins',
-			'$inp_total_day_updated'
+			'$get_goal_target_with_activity_calories', '$get_goal_target_with_activity_fat', '$get_goal_target_with_activity_carbs', 
+			'$get_goal_target_with_activity_proteins', '$datetime', 0
 			)")
 			or die(mysqli_error($link));
 			// echo"Ny dag, nye muligheter";
 		}
 
 		echo"
-	<!-- //Todays Totals -->
+	<!-- //Todays Consumed Totals -->
 
 	<!-- Rest -->
 		";
-		if($get_total_day_id != ""){
+		if($get_consumed_day_id != ""){
 			echo"
 
 			<!-- sedentary -->
@@ -277,47 +287,47 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				  </td>
 				  <td style=\"text-align:center;\">
 					<span>
-					$get_total_day_target_with_activity_energy<br />
-					$get_total_day_target_sedentary_energy<br />
+					$get_consumed_day_target_with_activity_energy<br />
+					$get_consumed_day_target_sedentary_energy<br />
 					</span>
 				  </td>
 				  <td style=\"text-align:center;\">
 					<span>-</span>
 				  </td>
 				  <td style=\"text-align:center;\">
-					<span>$get_total_day_consumed_energy</span>
+					<span>$get_consumed_day_energy</span>
 				  </td>
 				  <td>
 					<span>=</span>
 				  </td>
 				  <td style=\"text-align:center;\">
 					<span";
-					if($get_total_day_consumed_energy > "$get_total_day_target_with_activity_energy"){
+					if($get_consumed_day_energy > "$get_consumed_day_target_with_activity_energy"){
 						echo" style=\"color:red;\"";
 					}
 					else{
-						if($get_total_day_diff_with_activity_energy < 100){
+						if($get_consumed_day_diff_with_activity_energy < 100){
 							echo" style=\"color: #996600;\"";
 						}
 						else{
 							echo" style=\"color: green;\"";
 						}
 					}
-					echo">$get_total_day_diff_with_activity_energy<br /></span>
+					echo">$get_consumed_day_diff_with_activity_energy<br /></span>
 
 					<span";
-					if($get_total_day_consumed_energy > "$get_total_day_target_sedentary_energy"){
+					if($get_consumed_day_energy > "$get_consumed_day_target_sedentary_energy"){
 						echo" style=\"color:red;\"";
 					}
 					else{
-						if($get_total_day_diff_sedentary_energy < 100){
+						if($get_consumed_day_diff_sedentary_energy < 100){
 							echo" style=\"color: #996600;\"";
 						}
 						else{
 							echo" style=\"color: green;\"";
 						}
 					}
-					echo">$get_total_day_diff_sedentary_energy<br /></span>
+					echo">$get_consumed_day_diff_sedentary_energy<br /></span>
 					
 				  </td>
 				 </tr>
@@ -332,57 +342,63 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	<!-- Meals -->
 	";
 	// Start loop
-	$meal_title = array("$l_breakfast", "$l_lunch", "$l_before_training", "$l_after_training", "$l_dinner", "$l_snacks", "$l_supper");
+	$hour_names = array("breakfast", "lunch", "before_training", "after_training", "dinner", "snacks", "supper");
+	$hour_names_translated = array("$l_breakfast", "$l_lunch", "$l_before_training", "$l_after_training", "$l_dinner", "$l_snacks", "$l_supper");
 	$date_mysql = quote_smart($link, $date);
 	for($x=0;$x<7;$x++){
 		// Find out how many calories I have eaten for this meal
-		$query = "SELECT total_meal_id, total_meal_user_id, total_meal_date, total_meal_meal_id, total_meal_energy, total_meal_fat, total_meal_carb, total_meal_protein FROM $t_food_diary_totals_meals WHERE total_meal_user_id=$my_user_id_mysql AND total_meal_date=$date_mysql AND total_meal_meal_id='$x'";
+		$query = "SELECT consumed_hour_id, consumed_hour_user_id, consumed_hour_date, consumed_hour_name, consumed_hour_energy, consumed_hour_fat, consumed_hour_saturated_fat, consumed_hour_monounsaturated_fat, consumed_hour_polyunsaturated_fat, consumed_hour_cholesterol, consumed_hour_carbohydrates, consumed_hour_carbohydrates_of_which_sugars, consumed_hour_dietary_fiber, consumed_hour_proteins, consumed_hour_salt, consumed_hour_sodium, consumed_hour_updated_datetime, consumed_hour_synchronized FROM $t_food_diary_consumed_hours WHERE consumed_hour_user_id=$my_user_id_mysql AND consumed_hour_date=$date_mysql AND consumed_hour_name='$hour_names[$x]'";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
-		list($get_total_meal_id, $get_total_meal_user_id, $get_total_meal_date, $get_total_meal_meal_id, $get_total_meal_energy, $get_total_meal_fat, $get_total_meal_carb, $get_total_meal_protein) = $row;
-		if($get_total_meal_id == ""){
-			// Insert this meal
-			mysqli_query($link, "INSERT INTO $t_food_diary_totals_meals
-			(total_meal_id, total_meal_user_id, total_meal_date, total_meal_meal_id, total_meal_energy, total_meal_fat, total_meal_carb, total_meal_protein) 
+		list($get_consumed_hour_id, $get_consumed_hour_user_id, $get_consumed_hour_date, $get_consumed_hour_name, $get_consumed_hour_energy, $get_consumed_hour_fat, $get_consumed_hour_saturated_fat, $get_consumed_hour_monounsaturated_fat, $get_consumed_hour_polyunsaturated_fat, $get_consumed_hour_cholesterol, $get_consumed_hour_carbohydrates, $get_consumed_hour_carbohydrates_of_which_sugars, $get_consumed_hour_dietary_fiber, $get_consumed_hour_proteins, $get_consumed_hour_salt, $get_consumed_hour_sodium, $get_consumed_hour_updated_datetime, $get_consumed_hour_synchronized) = $row;
+		if($get_consumed_hour_id == ""){
+			// Insert this hour
+			mysqli_query($link, "INSERT INTO $t_food_diary_consumed_hours
+			(consumed_hour_id, consumed_hour_user_id, consumed_hour_date, consumed_hour_name, consumed_hour_energy, 
+			consumed_hour_fat, consumed_hour_saturated_fat, consumed_hour_monounsaturated_fat, consumed_hour_polyunsaturated_fat, consumed_hour_cholesterol, 
+			consumed_hour_carbohydrates, consumed_hour_carbohydrates_of_which_sugars, consumed_hour_dietary_fiber, consumed_hour_proteins, consumed_hour_salt, 
+			consumed_hour_sodium, consumed_hour_updated_datetime, consumed_hour_synchronized) 
 			VALUES 
-			(NULL, $my_user_id_mysql, $date_mysql, '$x', '0', '0', '0', '0')")
+			(NULL, $my_user_id_mysql, $date_mysql, '$hour_names[$x]', '0', 
+			'0', '0', '0', '0', '0',
+			'0', '0', '0', '0', '0',
+			'0', '$datetime', 0)")
 			or die(mysqli_error($link));
-			// echo"Ny dag, nye muligheter";
 		}
 
 		echo"
 		<div style=\"height: 8px;\"></div>
-		<a id=\"meal$x\"></a>
+		<a id=\"hour_$hour_names[$x]\"></a>
 		<table class=\"hor-zebra\">
 		 <thead>
 		  <tr>
-		   <th scope=\"col\" id=\"thmeal$x\">
+		   <th scope=\"col\" id=\"thhour_$hour_names[$x]\">
 			";
 			if($date == "$today"){
 				echo"
-				<span style=\"font-weight: bold;\"><a href=\"food_diary_add.php?date=$date&amp;meal_id=$x&amp;l=$l\"><img src=\"_gfx/list-add.png\" alt=\"list-add.png\" style=\"float: left;padding: 1px 4px 0px 0px;\" /></a></span>  
+				<span style=\"font-weight: bold;\"><a href=\"food_diary_add.php?date=$date&amp;hour_name=$hour_names[$x]&amp;l=$l\"><img src=\"_gfx/list-add.png\" alt=\"list-add.png\" style=\"float: left;padding: 1px 4px 0px 0px;\" /></a></span>  
 				  
 					<script>
 					\$(document).ready(function(){
-						\$('#thmeal$x').click(function(){
-							window.location= \"food_diary_add.php?date=$date&meal_id=$x&l=$l\";
+						\$('#thhour_$hour_names[$x]').click(function(){
+							window.location= \"food_diary_add.php?date=$date&hour_name=$hour_names[$x]&l=$l\";
 						});
 					});
 					</script>
 
 
-					<span><a href=\"food_diary_add.php?date=$date&amp;meal_id=$x&amp;l=$l\" style=\"font-weight: bold;color: #000;\">$meal_title[$x]</a></span>  
+					<span><a href=\"food_diary_add.php?date=$date&amp;hour_name=$hour_names[$x]&amp;l=$l\" style=\"font-weight: bold;color: #000;\">$hour_names_translated[$x]</a></span>  
 				  ";
 			}
 			else{
 				echo"
-				<span style=\"font-weight: bold;color: #000;\">$meal_title[$x]</span>  
+				<span style=\"font-weight: bold;color: #000;\">$hour_names_translated[$x]</span>  
 				";
 			}
 			echo"
 		   </th>
 		   <th style=\"text-align: right;vertical-align: top;padding: 0px 4px 0px 0px;\">
-			<span style=\"font-weight: bold;\">$get_total_meal_energy</span>  
+			<span style=\"font-weight: bold;\">$get_consumed_hour_energy</span>  
 		   </th>
 		  </tr>
 		 </thead>
@@ -390,10 +406,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		";
 	
 
-		$query = "SELECT entry_id, entry_user_id, entry_date, entry_meal_id, entry_food_id, entry_recipe_id, entry_name, entry_manufacturer_name, entry_serving_size, entry_serving_size_measurement, entry_energy_per_entry, entry_fat_per_entry, entry_carb_per_entry, entry_protein_per_entry, entry_text FROM $t_food_diary_entires WHERE entry_user_id=$my_user_id_mysql AND entry_date=$date_mysql AND entry_meal_id='$x'";
+		$query = "SELECT entry_id, entry_user_id, entry_date, entry_hour_name, entry_food_id, entry_recipe_id, entry_name, entry_manufacturer_name, entry_serving_size, entry_serving_size_measurement, entry_energy_per_entry, entry_fat_per_entry, entry_saturated_fat_per_entry, entry_monounsaturated_fat_per_entry, entry_polyunsaturated_fat_per_entry, entry_cholesterol_per_entry, entry_carbohydrates_per_entry, entry_carbohydrates_of_which_sugars_per_entry, entry_dietary_fiber_per_entry, entry_proteins_per_entry, entry_salt_per_entry, entry_sodium_per_entry, entry_text, entry_deleted, entry_updated_datetime, entry_synchronized FROM $t_food_diary_entires WHERE entry_user_id=$my_user_id_mysql AND entry_date=$date_mysql AND entry_hour_name='$hour_names[$x]'";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
-    		list($get_entry_id, $get_entry_user_id, $get_entry_date, $get_entry_meal_id, $get_entry_food_id, $get_entry_recipe_id, $get_entry_name, $get_entry_manufacturer_name, $get_entry_serving_size, $get_entry_serving_size_measurement, $get_entry_energy_per_entry, $get_entry_fat_per_entry, $get_entry_carb_per_entry, $get_entry_protein_per_entry, $get_entry_text) = $row;
+    		list($get_entry_id, $get_entry_user_id, $get_entry_date, $get_entry_hour_name, $get_entry_food_id, $get_entry_recipe_id, $get_entry_name, $get_entry_manufacturer_name, $get_entry_serving_size, $get_entry_serving_size_measurement, $get_entry_energy_per_entry, $get_entry_fat_per_entry, $get_entry_saturated_fat_per_entry, $get_entry_monounsaturated_fat_per_entry, $get_entry_polyunsaturated_fat_per_entry, $get_entry_cholesterol_per_entry, $get_entry_carbohydrates_per_entry, $get_entry_carbohydrates_of_which_sugars_per_entry, $get_entry_dietary_fiber_per_entry, $get_entry_proteins_per_entry, $get_entry_salt_per_entry, $get_entry_sodium_per_entry, $get_entry_text, $get_entry_deleted, $get_entry_updated_datetime, $get_entry_synchronized) = $row;
 			if(isset($style) && $style == ""){
 				$style = "odd";
 			}
@@ -459,29 +475,29 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			  <td class=\"subcell\" style=\"padding: 4px;\">
 				";
 
-				$total_fat_carb_proteins = $get_total_day_consumed_fat+$get_total_day_consumed_carb+$get_total_day_consumed_protein;
-				if($get_total_day_id != "" && $get_total_day_consumed_fat != "0"){
-					$get_total_day_consumed_fat_percentage = round(($get_total_day_consumed_fat/$total_fat_carb_proteins)*100, 0);
+				$total_fat_carb_proteins = $get_consumed_day_fat+$get_consumed_day_carbohydrates+$get_consumed_day_proteins;
+				if($get_consumed_day_id != "" && $get_consumed_day_fat != "0"){
+					$get_consumed_day_fat_percentage = round(($get_consumed_day_fat/$total_fat_carb_proteins)*100, 0);
 				}
 				else{
-					$get_total_day_consumed_fat_percentage = 0;
+					$get_consumed_day_fat_percentage = 0;
 				}
-				if($get_total_day_id != "" && $get_total_day_consumed_carb != "0"){
-					$get_total_day_consumed_carb_percentage = round(($get_total_day_consumed_carb/$total_fat_carb_proteins)*100, 0);
+				if($get_consumed_day_id != "" && $get_consumed_day_carbohydrates != "0"){
+					$get_consumed_day_carb_percentage = round(($get_consumed_day_carbohydrates/$total_fat_carb_proteins)*100, 0);
 				}
 				else{
-					$get_total_day_consumed_carb_percentage = 0;
+					$get_consumed_day_carb_percentage = 0;
 				}
 				
-				if($get_total_day_id != "" && $get_total_day_consumed_protein!= "0"){
-					$get_total_day_consumed_protein_percentage = round(($get_total_day_consumed_protein/$total_fat_carb_proteins)*100, 0);
+				if($get_consumed_day_id != "" && $get_consumed_day_proteins != "0"){
+					$get_consumed_day_protein_percentage = round(($get_consumed_day_proteins/$total_fat_carb_proteins)*100, 0);
 				}
 				else{
-					$get_total_day_consumed_protein_percentage = 0;
+					$get_consumed_day_protein_percentage = 0;
 				}
-				$sum_total_fat_carb_proteins_percentage  = $get_total_day_consumed_fat_percentage + $get_total_day_consumed_carb_percentage + $get_total_day_consumed_protein_percentage;
-				if($sum_total_fat_carb_proteins_percentage != "0" && $sum_total_fat_carb_proteins_percentage != "100"){
-					 $get_total_day_consumed_protein_percentage = $get_total_day_consumed_protein_percentage+1;
+				$sum_consumed_fat_carb_proteins_percentage  = $get_consumed_day_fat_percentage + $get_consumed_day_carb_percentage + $get_consumed_day_protein_percentage;
+				if($sum_consumed_fat_carb_proteins_percentage != "0" && $sum_consumed_fat_carb_proteins_percentage != "100"){
+					 $get_consumed_day_protein_percentage = $get_consumed_day_protein_percentage+1;
 				}
 
 				echo"
@@ -494,7 +510,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						<span style=\"font-weight: bold;\">$l_energy:</span>
 					  </td>
 					  <td>
-						<span>$get_total_day_consumed_energy&nbsp;$l_kcal_lowercase</span>
+						<span>$get_consumed_day_energy&nbsp;$l_kcal_lowercase</span>
 					  </td>
 					 </tr>
 					 <tr>
@@ -502,7 +518,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						<span style=\"font-weight: bold;\">$l_fat:</span>
 					  </td>
 					  <td>
-						<span>$get_total_day_consumed_fat</span>
+						<span>$get_consumed_day_fat</span>
 					  </td>
 					 </tr>
 					 <tr>
@@ -510,7 +526,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						<span style=\"font-weight: bold;\">$l_carb:</span>
 					  </td>
 					  <td>
-						<span>$get_total_day_consumed_carb</span>
+						<span>$get_consumed_day_carbohydrates</span>
 					  </td>
 					 </tr>
 					 <tr>
@@ -518,14 +534,14 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						<span style=\"font-weight: bold;\">$l_proteins:</span>
 					  </td>
 					  <td>
-						<span>$get_total_day_consumed_protein</span>
+						<span>$get_consumed_day_proteins</span>
 					  </td>
 					 </tr>
 					</table>
 				  </td>
 				  <td style=\"text-align: right;width:100px;padding-top: 6px;\">
 					<span>
-					<img src=\"_gfx/pie_chart.php?numbers=$get_total_day_consumed_protein_percentage,$get_total_day_consumed_carb_percentage,$get_total_day_consumed_fat_percentage\" alt=\"pie_chart.php\" style=\"padding-bottom: 4px;\" />
+					<img src=\"_gfx/pie_chart.php?numbers=$get_consumed_day_protein_percentage,$get_consumed_day_carb_percentage,$get_consumed_day_fat_percentage\" alt=\"pie_chart.php\" style=\"padding-bottom: 4px;\" />
 					
 					</span>
 				  </td>
@@ -533,7 +549,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					<table style=\"width: 100%\">
 					 <tr>
 					  <td style=\"padding: 0px 4px 0px 0px;\">
-						<span>$l_fat ($get_total_day_consumed_fat_percentage %)</span>
+						<span>$l_fat ($get_consumed_day_fat_percentage %)</span>
 					  </td>
 					  <td>
 						<span style=\"font-weight: bold;\"><img src=\"_gfx/dot_blue.png\" alt=\"dot_blue.png\" /></span>
@@ -541,7 +557,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					 </tr>
 					 <tr>
 					  <td style=\"padding: 0px 4px 0px 0px;\">
-						<span>$l_carbs ($get_total_day_consumed_carb_percentage %)</span>
+						<span>$l_carbs ($get_consumed_day_carb_percentage %)</span>
 					  </td>
 					  <td>
 						<span style=\"font-weight: bold;\"><img src=\"_gfx/dot_red.png\" alt=\"dot_red.png\" /></span>
@@ -549,7 +565,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					 </tr>
 					 <tr>
 					  <td style=\"padding: 0px 4px 0px 0px;\">
-						<span>$l_proteins ($get_total_day_consumed_protein_percentage %)</span>
+						<span>$l_proteins ($get_consumed_day_protein_percentage %)</span>
 					  </td>
 					  <td>
 						<span style=\"font-weight: bold;\"><img src=\"_gfx/dot_green.png\" alt=\"dot_green.png\" /></span>

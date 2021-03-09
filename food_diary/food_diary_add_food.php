@@ -47,12 +47,17 @@ if(isset($_GET['date'])) {
 else{
 	$date = "";
 }
-if (isset($_GET['meal_id'])) {
-	$meal_id = $_GET['meal_id'];
-	$meal_id = stripslashes(strip_tags($meal_id));
+if(isset($_GET['hour_name'])) {
+	$hour_name = $_GET['hour_name'];
+	$hour_name = stripslashes(strip_tags($hour_name));
+	if($hour_name != "breakfast" && $hour_name != "lunch" && $hour_name != "before_training" && $hour_name != "after_training" && $hour_name != "dinner" && $hour_name != "snacks" && $hour_name != "supper"){
+		echo"Unknown hour name";
+		die;
+	}
 }
 else{
-	$meal_id = "";
+	echo"Missing hour name";
+	die;
 }
 
 if(isset($_GET['main_category_id'])){
@@ -115,9 +120,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<p><b>$l_you_are_here</b><br />
 			<a href=\"index.php?l=$l\">$l_food_diary</a>
 			&gt;
-			<a href=\"food_diary_add.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_new_entry</a>
+			<a href=\"food_diary_add.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_new_entry</a>
 			&gt;
-			<a href=\"food_diary_add_food.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_food</a>
+			<a href=\"food_diary_add_food.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_food</a>
 			</p>
 		<!-- //You are here -->
 		
@@ -142,7 +147,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
         					// getting the value that user typed
         					var searchString    = $(\"#inp_entry_food_query\").val();
         					// forming the queryString
-       						var data            = 'l=$l&date=$date&meal_id=$meal_id&q='+ searchString;
+       						var data            = 'l=$l&date=$date&hour_name=$hour_name&q='+ searchString;
          
         					// if searchString is not empty
         					if(searchString) {
@@ -171,7 +176,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					<input type=\"text\" id=\"inp_entry_food_query\" name=\"inp_entry_food_query\" value=\"";if(isset($_GET['inp_entry_food_query'])){ echo"$inp_entry_food_query"; } echo"\" size=\"12\" />
 					<input type=\"hidden\" name=\"action\" value=\"search\" />
 					<input type=\"hidden\" name=\"date\" value=\"$date\" />
-					<input type=\"hidden\" name=\"meal_id\" value=\"$meal_id\" />
+					<input type=\"hidden\" name=\"hour_name\" value=\"$hour_name\" />
 					<input type=\"submit\" value=\"$l_search\" class=\"btn btn_default\" />
 					<a href=\"$root/food/new_food.php?l=$l\" class=\"btn btn_default\">$l_new_food</a>
 					</p>
@@ -183,9 +188,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		<!-- Menu -->
 			<div class=\"tabs\">
 				<ul>
-					<li><a href=\"food_diary_add.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_recent</a></li>
-					<li><a href=\"food_diary_add_food.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\" class=\"selected\">$l_food</a></li>
-					<li><a href=\"food_diary_add_recipe.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_recipes</a></li>
+					<li><a href=\"food_diary_add.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_recent</a></li>
+					<li><a href=\"food_diary_add_food.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\" class=\"selected\">$l_food</a></li>
+					<li><a href=\"food_diary_add_recipe.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_recipes</a></li>
 				</ul>
 			</div>
 			<div class=\"clear\" style=\"height: 20px;\"></div>
@@ -207,7 +212,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					list($get_category_translation_value) = $row_t;
 
 					echo"					";
-					echo"<li><a href=\"food_diary_add_food.php?action=open_main_category&amp;date=$date&amp;meal_id=$meal_id&amp;inp_entry_food_query=$inp_entry_food_query&amp;main_category_id=$get_category_id&amp;l=$l\""; if($main_category_id == "$get_category_id"){ echo" style=\"font-weight: bold;\"";}echo">$get_category_translation_value</a></li>\n";
+					echo"<li><a href=\"food_diary_add_food.php?action=open_main_category&amp;date=$date&amp;hour_name=$hour_name&amp;inp_entry_food_query=$inp_entry_food_query&amp;main_category_id=$get_category_id&amp;l=$l\""; if($main_category_id == "$get_category_id"){ echo" style=\"font-weight: bold;\"";}echo">$get_category_translation_value</a></li>\n";
 				}
 			echo"
 				</ul>
@@ -306,7 +311,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				 </tr>
 				</table>
 				<!-- Add food -->
-					<form method=\"post\" action=\"food_diary_add_food.php?action=add_food_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+					<form method=\"post\" action=\"food_diary_add_food.php?action=add_food_to_diary&amp;date=$date&amp;hour_name=$hour_name&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 					<p>
 					<input type=\"hidden\" name=\"inp_entry_food_id\" value=\"$get_food_id\" />
 					";
@@ -352,11 +357,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<p><b>$l_you_are_here</b><br />
 			<a href=\"index.php?l=$l\">$l_food_diary</a>
 			&gt;
-			<a href=\"food_diary_add.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_new_entry</a>
+			<a href=\"food_diary_add.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_new_entry</a>
 			&gt;
-			<a href=\"food_diary_add_food.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_food</a>
+			<a href=\"food_diary_add_food.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_food</a>
 			&gt;
-			<a href=\"food_diary_add_food.php?action=search&amp;date=$date&amp;meal_id=$meal_id&amp;inp_entry_food_query=$inp_entry_food_query&amp;l=$l\">$inp_entry_food_query</a>
+			<a href=\"food_diary_add_food.php?action=search&amp;date=$date&amp;hour_name=$hour_name&amp;inp_entry_food_query=$inp_entry_food_query&amp;l=$l\">$inp_entry_food_query</a>
 			</p>
 		<!-- //You are here -->
 
@@ -372,7 +377,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
         					// getting the value that user typed
         					var searchString    = $(\"#inp_entry_food_query\").val();
         					// forming the queryString
-       						var data            = 'l=$l&date=$date&meal_id=$meal_id&q='+ searchString;
+       						var data            = 'l=$l&date=$date&hour_name=$hour_name&q='+ searchString;
          
         					// if searchString is not empty
         					if(searchString) {
@@ -402,7 +407,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					<input type=\"text\" id=\"inp_entry_food_query\" name=\"inp_entry_food_query\" value=\"";if(isset($_GET['inp_entry_food_query'])){ echo"$inp_entry_food_query"; } echo"\" size=\"17\" />
 					<input type=\"hidden\" name=\"action\" value=\"search\" />
 					<input type=\"hidden\" name=\"date\" value=\"$date\" />
-					<input type=\"hidden\" name=\"meal_id\" value=\"$meal_id\" />
+					<input type=\"hidden\" name=\"hour_name\" value=\"$hour_name\" />
 					<input type=\"submit\" value=\"$l_search\" class=\"btn btn_default\" />
 					<a href=\"$root/food/new_food.php?l=$l\" class=\"btn btn_default\">$l_new_food</a>
 					</p>
@@ -414,9 +419,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		<!-- Menu -->
 			<div class=\"tabs\">
 				<ul>
-					<li><a href=\"food_diary_add.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_recent</a></li>
-					<li><a href=\"food_diary_add_food.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\" class=\"selected\">$l_food</a></li>
-					<li><a href=\"food_diary_add_recipe.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_recipes</a></li>
+					<li><a href=\"food_diary_add.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_recent</a></li>
+					<li><a href=\"food_diary_add_food.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\" class=\"selected\">$l_food</a></li>
+					<li><a href=\"food_diary_add_recipe.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_recipes</a></li>
 				</ul>
 			</div>
 			<div class=\"clear\" style=\"height: 20px;\"></div>
@@ -432,12 +437,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$x = 0;
 
 			// Get all food
-			$query = "SELECT food_id, food_user_id, food_name, food_clean_name, food_manufacturer_name, food_manufacturer_name_and_food_name, food_description, food_country, food_net_content_metric, food_net_content_measurement_metric, food_net_content_us_system, food_net_content_measurement_us_system, food_net_content_added_measurement, food_serving_size_metric, food_serving_size_measurement_metric, food_serving_size_us_system, food_serving_size_measurement_us_system, food_serving_size_added_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy_metric, food_fat_metric, food_fat_of_which_saturated_fatty_acids_metric, food_monounsaturated_fat_metric, food_polyunsaturated_fat_metric, food_cholesterol_metric, food_carbohydrates_metric, food_carbohydrates_of_which_sugars_metric, food_dietary_fiber_metric, food_proteins_metric, food_salt_metric, food_sodium_metric, food_energy_us_system, food_fat_us_system, food_fat_of_which_saturated_fatty_acids_us_system, food_monounsaturated_fat_us_system, food_polyunsaturated_fat_us_system, food_cholesterol_us_system, food_carbohydrates_us_system, food_carbohydrates_of_which_sugars_us_system, food_dietary_fiber_us_system, food_proteins_us_system, food_salt_us_system, food_sodium_us_system, food_score, food_energy_calculated_metric, food_fat_calculated_metric, food_fat_of_which_saturated_fatty_acids_calculated_metric, food_monounsaturated_fat_calculated_metric, food_polyunsaturated_fat_calculated_metric, food_carbohydrates_calculated_metric, food_carbohydrates_of_which_sugars_calculated_metric, food_dietary_fiber_calculated_metric, food_proteins_calculated_metric, food_salt_calculated_metric, food_sodium_calculated_metric, food_energy_calculated_us_system, food_fat_calculated_us_system, food_fat_of_which_saturated_fatty_acids_calculated_us_system, food_monounsaturated_fat_calculated_us_system, food_polyunsaturated_fat_calculated_us_system, food_carbohydrates_calculated_us_system, food_carbohydrates_of_which_sugars_calculated_us_system, food_dietary_fiber_calculated_us_system, food_proteins_calculated_us_system, food_salt_calculated_us_system, food_sodium_calculated_us_system, food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_image_a, food_thumb_a_small, food_thumb_a_medium, food_thumb_a_large, food_image_b, food_thumb_b_small, food_thumb_b_medium, food_thumb_b_large, food_image_c, food_thumb_c_small, food_thumb_c_medium, food_thumb_c_large, food_image_d, food_thumb_d_small, food_thumb_d_medium, food_thumb_d_large, food_image_e, food_thumb_e_small, food_thumb_e_medium, food_thumb_e_large, food_last_used, food_language, food_synchronized, food_accepted_as_master, food_notes, food_unique_hits, food_unique_hits_ip_block, food_comments, food_likes, food_dislikes, food_likes_ip_block, food_user_ip, food_created_date, food_last_viewed, food_age_restriction FROM $t_food_index WHERE food_language=$l_mysql";
+			$query = "SELECT food_id, food_user_id, food_name, food_clean_name, food_manufacturer_name, food_manufacturer_name_and_food_name, food_description, food_country, food_net_content_metric, food_net_content_measurement_metric, food_net_content_us, food_net_content_measurement_us, food_net_content_added_measurement, food_serving_size_metric, food_serving_size_measurement_metric, food_serving_size_us, food_serving_size_measurement_us, food_serving_size_added_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy_metric, food_fat_metric, food_saturated_fat_metric, food_monounsaturated_fat_metric, food_polyunsaturated_fat_metric, food_cholesterol_metric, food_carbohydrates_metric, food_carbohydrates_of_which_sugars_metric, food_dietary_fiber_metric, food_proteins_metric, food_salt_metric, food_sodium_metric, food_energy_us, food_fat_us, food_saturated_fat_us, food_monounsaturated_fat_us, food_polyunsaturated_fat_us, food_cholesterol_us, food_carbohydrates_us, food_carbohydrates_of_which_sugars_us, food_dietary_fiber_us, food_proteins_us, food_salt_us, food_sodium_us, food_score, food_energy_calculated_metric, food_fat_calculated_metric, food_saturated_fat_calculated_metric, food_monounsaturated_fat_calculated_metric, food_polyunsaturated_fat_calculated_metric, food_cholesterol_calculated_metric, food_carbohydrates_calculated_metric, food_carbohydrates_of_which_sugars_calculated_metric, food_dietary_fiber_calculated_metric, food_proteins_calculated_metric, food_salt_calculated_metric, food_sodium_calculated_metric, food_energy_calculated_us, food_fat_calculated_us, food_saturated_fat_calculated_us, food_monounsaturated_fat_calculated_us, food_polyunsaturated_fat_calculated_us, food_cholesterol_calculated_us, food_carbohydrates_calculated_us, food_carbohydrates_of_which_sugars_calculated_us, food_dietary_fiber_calculated_us, food_proteins_calculated_us, food_salt_calculated_us, food_sodium_calculated_us, food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_image_a, food_thumb_a_small, food_thumb_a_medium, food_thumb_a_large, food_image_b, food_thumb_b_small, food_thumb_b_medium, food_thumb_b_large, food_image_c, food_thumb_c_small, food_thumb_c_medium, food_thumb_c_large, food_image_d, food_thumb_d_small, food_thumb_d_medium, food_thumb_d_large, food_image_e, food_thumb_e_small, food_thumb_e_medium, food_thumb_e_large, food_last_used, food_language, food_synchronized, food_accepted_as_master, food_notes, food_unique_hits, food_unique_hits_ip_block, food_comments, food_likes, food_dislikes, food_likes_ip_block, food_user_ip, food_created_date, food_last_viewed, food_age_restriction FROM $t_food_index WHERE food_language=$l_mysql";
 			$query = $query . " ORDER BY food_manufacturer_name, food_name ASC";
 
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
-				list($get_food_id, $get_food_user_id, $get_food_name, $get_food_clean_name, $get_food_manufacturer_name, $get_food_manufacturer_name_and_food_name, $get_food_description, $get_food_country, $get_food_net_content_metric, $get_food_net_content_measurement_metric, $get_food_net_content_us_system, $get_food_net_content_measurement_us_system, $get_food_net_content_added_measurement, $get_food_serving_size_metric, $get_food_serving_size_measurement_metric, $get_food_serving_size_us_system, $get_food_serving_size_measurement_us_system, $get_food_serving_size_added_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy_metric, $get_food_fat_metric, $get_food_fat_of_which_saturated_fatty_acids_metric, $get_food_monounsaturated_fat_metric, $get_food_polyunsaturated_fat_metric, $get_food_cholesterol_metric, $get_food_carbohydrates_metric, $get_food_carbohydrates_of_which_sugars_metric, $get_food_dietary_fiber_metric, $get_food_proteins_metric, $get_food_salt_metric, $get_food_sodium_metric, $get_food_energy_us_system, $get_food_fat_us_system, $get_food_fat_of_which_saturated_fatty_acids_us_system, $get_food_monounsaturated_fat_us_system, $get_food_polyunsaturated_fat_us_system, $get_food_cholesterol_us_system, $get_food_carbohydrates_us_system, $get_food_carbohydrates_of_which_sugars_us_system, $get_food_dietary_fiber_us_system, $get_food_proteins_us_system, $get_food_salt_us_system, $get_food_sodium_us_system, $get_food_score, $get_food_energy_calculated_metric, $get_food_fat_calculated_metric, $get_food_fat_of_which_saturated_fatty_acids_calculated_metric, $get_food_monounsaturated_fat_calculated_metric, $get_food_polyunsaturated_fat_calculated_metric, $get_food_carbohydrates_calculated_metric, $get_food_carbohydrates_of_which_sugars_calculated_metric, $get_food_dietary_fiber_calculated_metric, $get_food_proteins_calculated_metric, $get_food_salt_calculated_metric, $get_food_sodium_calculated_metric, $get_food_energy_calculated_us_system, $get_food_fat_calculated_us_system, $get_food_fat_of_which_saturated_fatty_acids_calculated_us_system, $get_food_monounsaturated_fat_calculated_us_system, $get_food_polyunsaturated_fat_calculated_us_system, $get_food_carbohydrates_calculated_us_system, $get_food_carbohydrates_of_which_sugars_calculated_us_system, $get_food_dietary_fiber_calculated_us_system, $get_food_proteins_calculated_us_system, $get_food_salt_calculated_us_system, $get_food_sodium_calculated_us_system, $get_food_barcode, $get_food_main_category_id, $get_food_sub_category_id, $get_food_image_path, $get_food_image_a, $get_food_thumb_a_small, $get_food_thumb_a_medium, $get_food_thumb_a_large, $get_food_image_b, $get_food_thumb_b_small, $get_food_thumb_b_medium, $get_food_thumb_b_large, $get_food_image_c, $get_food_thumb_c_small, $get_food_thumb_c_medium, $get_food_thumb_c_large, $get_food_image_d, $get_food_thumb_d_small, $get_food_thumb_d_medium, $get_food_thumb_d_large, $get_food_image_e, $get_food_thumb_e_small, $get_food_thumb_e_medium, $get_food_thumb_e_large, $get_food_last_used, $get_food_language, $get_food_synchronized, $get_food_accepted_as_master, $get_food_notes, $get_food_unique_hits, $get_food_unique_hits_ip_block, $get_food_comments, $get_food_likes, $get_food_dislikes, $get_food_likes_ip_block, $get_food_user_ip, $get_food_created_date, $get_food_last_viewed, $get_food_age_restriction) = $row;
+				list($get_food_id, $get_food_user_id, $get_food_name, $get_food_clean_name, $get_food_manufacturer_name, $get_food_manufacturer_name_and_food_name, $get_food_description, $get_food_country, $get_food_net_content_metric, $get_food_net_content_measurement_metric, $get_food_net_content_us, $get_food_net_content_measurement_us, $get_food_net_content_added_measurement, $get_food_serving_size_metric, $get_food_serving_size_measurement_metric, $get_food_serving_size_us, $get_food_serving_size_measurement_us, $get_food_serving_size_added_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy_metric, $get_food_fat_metric, $get_food_saturated_fat_metric, $get_food_monounsaturated_fat_metric, $get_food_polyunsaturated_fat_metric, $get_food_cholesterol_metric, $get_food_carbohydrates_metric, $get_food_carbohydrates_of_which_sugars_metric, $get_food_dietary_fiber_metric, $get_food_proteins_metric, $get_food_salt_metric, $get_food_sodium_metric, $get_food_energy_us, $get_food_fat_us, $get_food_saturated_fat_us, $get_food_monounsaturated_fat_us, $get_food_polyunsaturated_fat_us, $get_food_cholesterol_us, $get_food_carbohydrates_us, $get_food_carbohydrates_of_which_sugars_us, $get_food_dietary_fiber_us, $get_food_proteins_us, $get_food_salt_us, $get_food_sodium_us, $get_food_score, $get_food_energy_calculated_metric, $get_food_fat_calculated_metric, $get_food_saturated_fat_calculated_metric, $get_food_monounsaturated_fat_calculated_metric, $get_food_polyunsaturated_fat_calculated_metric, $get_food_cholesterol_calculated_metric, $get_food_carbohydrates_calculated_metric, $get_food_carbohydrates_of_which_sugars_calculated_metric, $get_food_dietary_fiber_calculated_metric, $get_food_proteins_calculated_metric, $get_food_salt_calculated_metric, $get_food_sodium_calculated_metric, $get_food_energy_calculated_us, $get_food_fat_calculated_us, $get_food_saturated_fat_calculated_us, $get_food_monounsaturated_fat_calculated_us, $get_food_polyunsaturated_fat_calculated_us, $get_food_cholesterol_calculated_us, $get_food_carbohydrates_calculated_us, $get_food_carbohydrates_of_which_sugars_calculated_us, $get_food_dietary_fiber_calculated_us, $get_food_proteins_calculated_us, $get_food_salt_calculated_us, $get_food_sodium_calculated_us, $get_food_barcode, $get_food_main_category_id, $get_food_sub_category_id, $get_food_image_path, $get_food_image_a, $get_food_thumb_a_small, $get_food_thumb_a_medium, $get_food_thumb_a_large, $get_food_image_b, $get_food_thumb_b_small, $get_food_thumb_b_medium, $get_food_thumb_b_large, $get_food_image_c, $get_food_thumb_c_small, $get_food_thumb_c_medium, $get_food_thumb_c_large, $get_food_image_d, $get_food_thumb_d_small, $get_food_thumb_d_medium, $get_food_thumb_d_large, $get_food_image_e, $get_food_thumb_e_small, $get_food_thumb_e_medium, $get_food_thumb_e_large, $get_food_last_used, $get_food_language, $get_food_synchronized, $get_food_accepted_as_master, $get_food_notes, $get_food_unique_hits, $get_food_unique_hits_ip_block, $get_food_comments, $get_food_likes, $get_food_dislikes, $get_food_likes_ip_block, $get_food_user_ip, $get_food_created_date, $get_food_last_viewed, $get_food_age_restriction) = $row;
 			
 				// Name saying
 				$title = "$get_food_manufacturer_name $get_food_name";
@@ -513,7 +518,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				 </tr>
 				</table>
 				<!-- Add food -->
-					<form method=\"post\" action=\"food_diary_add_food.php?action=add_food_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+					<form method=\"post\" action=\"food_diary_add_food.php?action=add_food_to_diary&amp;date=$date&amp;hour_name=$hour_name&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 					<p>
 					<input type=\"hidden\" name=\"inp_entry_food_id\" value=\"$get_food_id\" />
 					";
@@ -575,11 +580,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				<p><b>$l_you_are_here</b><br />
 				<a href=\"index.php?l=$l\">$l_food_diary</a>
 				&gt;
-				<a href=\"food_diary_add.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_new_entry</a>
+				<a href=\"food_diary_add.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_new_entry</a>
 				&gt;
-				<a href=\"food_diary_add_food.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_food</a>
+				<a href=\"food_diary_add_food.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_food</a>
 				&gt;
-				<a href=\"food_diary_add_food.php?action=$action&amp;date=$date&amp;meal_id=$meal_id&amp;main_category_id=$main_category_id&amp;l=$l\">$get_current_main_category_translation_value</a>
+				<a href=\"food_diary_add_food.php?action=$action&amp;date=$date&amp;hour_name=$hour_name&amp;main_category_id=$main_category_id&amp;l=$l\">$get_current_main_category_translation_value</a>
 				</p>
 			<!-- //You are here -->
 
@@ -595,7 +600,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
         					// getting the value that user typed
         					var searchString    = $(\"#inp_entry_food_query\").val();
         					// forming the queryString
-       						var data            = 'l=$l&date=$date&meal_id=$meal_id&q='+ searchString;
+       						var data            = 'l=$l&date=$date&hour_name=$hour_name&q='+ searchString;
          
         					// if searchString is not empty
         					if(searchString) {
@@ -624,7 +629,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					<input type=\"text\" id=\"inp_entry_food_query\" name=\"inp_entry_food_query\" value=\"";if(isset($_GET['inp_entry_food_query'])){ echo"$inp_entry_food_query"; } echo"\" size=\"17\" />
 					<input type=\"hidden\" name=\"action\" value=\"search\" />
 					<input type=\"hidden\" name=\"date\" value=\"$date\" />
-					<input type=\"hidden\" name=\"meal_id\" value=\"$meal_id\" />
+					<input type=\"hidden\" name=\"hour_name\" value=\"$hour_name\" />
 					<input type=\"submit\" value=\"$l_search\" class=\"btn btn_default\" />
 					<a href=\"$root/food/new_food.php?l=$l\" class=\"btn btn_default\">$l_new_food</a>
 					</p>
@@ -636,9 +641,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<!-- Menu -->
 			<div class=\"tabs\">
 				<ul>
-					<li><a href=\"food_diary_add.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_recent</a></li>
-					<li><a href=\"food_diary_add_food.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\" class=\"selected\">$l_food</a></li>
-					<li><a href=\"food_diary_add_recipe.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_recipes</a></li>
+					<li><a href=\"food_diary_add.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_recent</a></li>
+					<li><a href=\"food_diary_add_food.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\" class=\"selected\">$l_food</a></li>
+					<li><a href=\"food_diary_add_recipe.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_recipes</a></li>
 				</ul>
 			</div>
 			<div class=\"clear\" style=\"height: 20px;\"></div>
@@ -647,7 +652,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<!-- Food sub categories -->
 			<div class=\"vertical\">
 				<ul>
-					<li><a href=\"food_diary_add_food.php?action=$action&amp;date=$date&amp;meal_id=$meal_id&amp;main_category_id=$main_category_id&amp;l=$l\">$get_current_main_category_translation_value</a>\n";
+					<li><a href=\"food_diary_add_food.php?action=$action&amp;date=$date&amp;hour_name=$hour_name&amp;main_category_id=$main_category_id&amp;l=$l\">$get_current_main_category_translation_value</a>\n";
 				// Get sub categories
 
 				
@@ -666,7 +671,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$get_sub_category_translation_value_len = strlen($get_sub_category_translation_value);
 
 					echo"						";
-					echo"<li><a href=\"food_diary_add_food.php?action=open_sub_category&amp;date=$date&amp;meal_id=$meal_id&amp;inp_entry_food_query=$inp_entry_food_query&amp;main_category_id=$main_category_id&amp;sub_category_id=$get_sub_category_id&amp;l=$l\""; if($sub_category_id == "$get_sub_category_id"){ echo" style=\"font-weight: bold;\"";}echo">&nbsp; &nbsp; $get_sub_category_translation_value</a></li>\n";
+					echo"<li><a href=\"food_diary_add_food.php?action=open_sub_category&amp;date=$date&amp;hour_name=$hour_name&amp;inp_entry_food_query=$inp_entry_food_query&amp;main_category_id=$main_category_id&amp;sub_category_id=$get_sub_category_id&amp;l=$l\""; if($sub_category_id == "$get_sub_category_id"){ echo" style=\"font-weight: bold;\"";}echo">&nbsp; &nbsp; $get_sub_category_translation_value</a></li>\n";
 
 
 					// In category for mysql
@@ -794,7 +799,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							 </tr>
 							</table>
 							<!-- Add food -->
-								<form method=\"post\" action=\"food_diary_add_food.php?action=add_food_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+								<form method=\"post\" action=\"food_diary_add_food.php?action=add_food_to_diary&amp;date=$date&amp;hour_name=$hour_name&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 								<p>
 								<input type=\"hidden\" name=\"inp_entry_food_id\" value=\"$get_food_id\" />
 								";
@@ -874,13 +879,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					<p><b>$l_you_are_here</b><br />
 					<a href=\"index.php?l=$l\">$l_food_diary</a>
 					&gt;
-					<a href=\"food_diary_add.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_new_entry</a>
+					<a href=\"food_diary_add.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_new_entry</a>
 					&gt;
-					<a href=\"food_diary_add_food.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_food</a>
+					<a href=\"food_diary_add_food.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_food</a>
 					&gt;
-					<a href=\"food_diary_add_food.php?action=open_main_category&amp;date=$date&amp;meal_id=$meal_id&amp;main_category_id=$main_category_id&amp;l=$l\">$get_current_main_category_translation_value</a>
+					<a href=\"food_diary_add_food.php?action=open_main_category&amp;date=$date&amp;hour_name=$hour_name&amp;main_category_id=$main_category_id&amp;l=$l\">$get_current_main_category_translation_value</a>
 					&gt;
-					<a href=\"food_diary_add_food.php?action=$action&amp;date=$date&amp;meal_id=$meal_id&amp;main_category_id=$main_category_id&amp;sub_category_id=$sub_category_id&am;l=$l\">$get_current_sub_category_translation_value</a>
+					<a href=\"food_diary_add_food.php?action=$action&amp;date=$date&amp;hour_name=$hour_name&amp;main_category_id=$main_category_id&amp;sub_category_id=$sub_category_id&am;l=$l\">$get_current_sub_category_translation_value</a>
 					</p>
 				<!-- //You are here -->
 
@@ -896,7 +901,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
         					// getting the value that user typed
         					var searchString    = $(\"#inp_entry_food_query\").val();
         					// forming the queryString
-       						var data            = 'l=$l&date=$date&meal_id=$meal_id&q='+ searchString;
+       						var data            = 'l=$l&date=$date&hour_name=$hour_name&q='+ searchString;
          
         					// if searchString is not empty
         					if(searchString) {
@@ -926,7 +931,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					<input type=\"text\" id=\"inp_entry_food_query\" name=\"inp_entry_food_query\" value=\"";if(isset($_GET['inp_entry_food_query'])){ echo"$inp_entry_food_query"; } echo"\" size=\"17\" />
 					<input type=\"hidden\" name=\"action\" value=\"search\" />
 					<input type=\"hidden\" name=\"date\" value=\"$date\" />
-					<input type=\"hidden\" name=\"meal_id\" value=\"$meal_id\" />
+					<input type=\"hidden\" name=\"hour_name\" value=\"$hour_name\" />
 					<input type=\"submit\" value=\"$l_search\" class=\"btn btn_default\" />
 					<a href=\"$root/food/new_food.php?l=$l\" class=\"btn btn_default\">$l_new_food</a>
 					</p>
@@ -938,9 +943,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				<!-- Menu -->
 					<div class=\"tabs\">
 						<ul>
-							<li><a href=\"food_diary_add.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_recent</a></li>
-							<li><a href=\"food_diary_add_food.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\" class=\"selected\">$l_food</a></li>
-							<li><a href=\"food_diary_add_recipe.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_recipes</a></li>
+							<li><a href=\"food_diary_add.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_recent</a></li>
+							<li><a href=\"food_diary_add_food.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\" class=\"selected\">$l_food</a></li>
+							<li><a href=\"food_diary_add_recipe.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_recipes</a></li>
 						</ul>
 					</div>
 					<div class=\"clear\" style=\"height: 20px;\"></div>
@@ -1059,7 +1064,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							 </tr>
 							</table>
 							<!-- Add food -->
-								<form method=\"post\" action=\"food_diary_add_food.php?action=add_food_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+								<form method=\"post\" action=\"food_diary_add_food.php?action=add_food_to_diary&amp;date=$date&amp;hour_name=$hour_name&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 								<p>
 								<input type=\"hidden\" name=\"inp_entry_food_id\" value=\"$get_food_id\" />
 								";
@@ -1091,7 +1096,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				echo"
 					</div> <!-- //nettport_search_results -->
-		
+					<div class=\"clear\"></div>
 				<!-- //List all food in sub category -->
 					
 				";
@@ -1106,8 +1111,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$inp_entry_date = output_html($date);
 			$inp_entry_date_mysql = quote_smart($link, $inp_entry_date);
 
-			$inp_entry_meal_id = output_html($meal_id);
-			$inp_entry_meal_id_mysql = quote_smart($link, $inp_entry_meal_id);
+			$inp_entry_hour_name = output_html($hour_name);
+			$inp_entry_hour_name_mysql = quote_smart($link, $inp_entry_hour_name);
 
 			$inp_entry_food_id = $_POST['inp_entry_food_id'];
 			$inp_entry_food_id = output_html($inp_entry_food_id);
@@ -1118,7 +1123,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$inp_entry_food_serving_size = str_replace(",", ".", $inp_entry_food_serving_size);
 			$inp_entry_food_serving_size_mysql = quote_smart($link, $inp_entry_food_serving_size);
 			if($inp_entry_food_serving_size == ""){
-				$url = "food_diary_add_food.php?date=$date&meal_id=$meal_id&l=$l";
+				$url = "food_diary_add_food.php?date=$date&hour_name=$hour_name&l=$l";
 				$url = $url . "&ft=error&fm=missing_amount";
 				header("Location: $url");
 				exit;
@@ -1132,7 +1137,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			list($get_food_id, $get_food_user_id, $get_food_name, $get_food_clean_name, $get_food_manufacturer_name, $get_food_manufacturer_name_and_food_name, $get_food_description, $get_food_country, $get_food_net_content_metric, $get_food_net_content_measurement_metric, $get_food_net_content_us, $get_food_net_content_measurement_us, $get_food_net_content_added_measurement, $get_food_serving_size_metric, $get_food_serving_size_measurement_metric, $get_food_serving_size_us, $get_food_serving_size_measurement_us, $get_food_serving_size_added_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy_metric, $get_food_fat_metric, $get_food_saturated_fat_metric, $get_food_monounsaturated_fat_metric, $get_food_polyunsaturated_fat_metric, $get_food_cholesterol_metric, $get_food_carbohydrates_metric, $get_food_carbohydrates_of_which_sugars_metric, $get_food_dietary_fiber_metric, $get_food_proteins_metric, $get_food_salt_metric, $get_food_sodium_metric, $get_food_energy_us, $get_food_fat_us, $get_food_saturated_fat_us, $get_food_monounsaturated_fat_us, $get_food_polyunsaturated_fat_us, $get_food_cholesterol_us, $get_food_carbohydrates_us, $get_food_carbohydrates_of_which_sugars_us, $get_food_dietary_fiber_us, $get_food_proteins_us, $get_food_salt_us, $get_food_sodium_us, $get_food_score, $get_food_energy_calculated_metric, $get_food_fat_calculated_metric, $get_food_saturated_fat_calculated_metric, $get_food_monounsaturated_fat_calculated_metric, $get_food_polyunsaturated_fat_calculated_metric, $get_food_cholesterol_calculated_metric, $get_food_carbohydrates_calculated_metric, $get_food_carbohydrates_of_which_sugars_calculated_metric, $get_food_dietary_fiber_calculated_metric, $get_food_proteins_calculated_metric, $get_food_salt_calculated_metric, $get_food_sodium_calculated_metric, $get_food_energy_calculated_us, $get_food_fat_calculated_us, $get_food_saturated_fat_calculated_us, $get_food_monounsaturated_fat_calculated_us, $get_food_polyunsaturated_fat_calculated_us, $get_food_cholesterol_calculated_us, $get_food_carbohydrates_calculated_us, $get_food_carbohydrates_of_which_sugars_calculated_us, $get_food_dietary_fiber_calculated_us, $get_food_proteins_calculated_us, $get_food_salt_calculated_us, $get_food_sodium_calculated_us, $get_food_barcode, $get_food_main_category_id, $get_food_sub_category_id, $get_food_image_path, $get_food_image_a, $get_food_thumb_a_small, $get_food_thumb_a_medium, $get_food_thumb_a_large, $get_food_image_b, $get_food_thumb_b_small, $get_food_thumb_b_medium, $get_food_thumb_b_large, $get_food_image_c, $get_food_thumb_c_small, $get_food_thumb_c_medium, $get_food_thumb_c_large, $get_food_image_d, $get_food_thumb_d_small, $get_food_thumb_d_medium, $get_food_thumb_d_large, $get_food_image_e, $get_food_thumb_e_small, $get_food_thumb_e_medium, $get_food_thumb_e_large, $get_food_last_used, $get_food_language, $get_food_synchronized, $get_food_accepted_as_master, $get_food_notes, $get_food_unique_hits, $get_food_unique_hits_ip_block, $get_food_comments, $get_food_likes, $get_food_dislikes, $get_food_likes_ip_block, $get_food_user_ip, $get_food_created_date, $get_food_last_viewed, $get_food_age_restriction) = $row;
 
 			if($get_food_id == ""){
-				$url = "food_diary_add_food.php?date=$date&meal_id=$meal_id&l=$l";
+				$url = "food_diary_add_food.php?date=$date&hour_name=$hour_name&l=$l";
 				$url = $url . "&ft=error&fm=food_not_found";
 				header("Location: $url");
 				exit;
@@ -1163,16 +1168,40 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$inp_entry_food_fat_per_entry = round(($inp_entry_food_serving_size*$get_food_fat_metric)/100, 1);
 				$inp_entry_food_fat_per_entry_mysql = quote_smart($link, $inp_entry_food_fat_per_entry);
 
+				$inp_entry_food_saturated_fat_per_entry = round(($inp_entry_food_serving_size*$get_food_saturated_fat_metric)/100, 1);
+				$inp_entry_food_saturated_fat_per_entry_mysql = quote_smart($link, $inp_entry_food_saturated_fat_per_entry);
+
+				$inp_entry_food_monounsaturated_fat_per_entry = round(($inp_entry_food_serving_size*$get_food_monounsaturated_fat_metric)/100, 1);
+				$inp_entry_food_monounsaturated_fat_per_entry_mysql = quote_smart($link, $inp_entry_food_monounsaturated_fat_per_entry);
+
+				$inp_entry_food_polyunsaturated_fat_per_entry = round(($inp_entry_food_serving_size*$get_food_polyunsaturated_fat_metric)/100, 1);
+				$inp_entry_food_polyunsaturated_fat_per_entry_mysql = quote_smart($link, $inp_entry_food_polyunsaturated_fat_per_entry);
+
+				$inp_entry_food_cholesterol_per_entry = round(($inp_entry_food_serving_size*$get_food_cholesterol_metric)/100, 0);
+				$inp_entry_food_cholesterol_per_entry_mysql = quote_smart($link, $inp_entry_food_cholesterol_per_entry);
+
 				$inp_entry_food_carb_per_entry = round(($inp_entry_food_serving_size*$get_food_carbohydrates_metric)/100, 1);
 				$inp_entry_food_carb_per_entry_mysql = quote_smart($link, $inp_entry_food_carb_per_entry);
+
+				$inp_entry_food_carbohydrates_of_which_sugars_per_entry = round(($inp_entry_food_serving_size*$get_food_carbohydrates_of_which_sugars_metric)/100, 1);
+				$inp_entry_food_carbohydrates_of_which_sugars_per_entry_mysql = quote_smart($link, $inp_entry_food_carbohydrates_of_which_sugars_per_entry);
+
+				$inp_entry_food_dietary_fiber_per_entry = round(($inp_entry_food_serving_size*$get_food_dietary_fiber_metric)/100, 1);
+				$inp_entry_food_dietary_fiber_per_entry_mysql = quote_smart($link, $inp_entry_food_dietary_fiber_per_entry);
 
 				$inp_entry_food_protein_per_entry = round(($inp_entry_food_serving_size*$get_food_proteins_metric)/100, 1);
 				$inp_entry_food_protein_per_entry_mysql = quote_smart($link, $inp_entry_food_protein_per_entry);
 
+				$inp_entry_food_salt_per_entry = round(($inp_entry_food_serving_size*$get_food_salt_metric)/100, 1);
+				$inp_entry_food_salt_per_entry_mysql = quote_smart($link, $inp_entry_food_salt_per_entry);
+
+				$inp_entry_food_sodium_per_entry = round(($inp_entry_food_serving_size*$get_food_sodium_metric)/100, 1);
+				$inp_entry_food_sodium_per_entry_mysql = quote_smart($link, $inp_entry_food_sodium_per_entry);
+
+			
 			}
 			else{
 				// PCS
-
 				$inp_entry_food_serving_size_measurement = output_html($get_food_serving_size_pcs_measurement);
 				$inp_entry_food_serving_size_measurement_mysql = quote_smart($link, $inp_entry_food_serving_size_measurement);
 
@@ -1182,120 +1211,196 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$inp_entry_food_fat_per_entry = round(($inp_entry_food_serving_size*$get_food_fat_calculated_metric)/$get_food_serving_size_pcs, 1);
 				$inp_entry_food_fat_per_entry_mysql = quote_smart($link, $inp_entry_food_fat_per_entry);
 
+				$inp_entry_food_saturated_fat_per_entry = round(($inp_entry_food_serving_size*$get_food_saturated_fat_metric)/$get_food_serving_size_pcs, 1);
+				$inp_entry_food_saturated_fat_per_entry_mysql = quote_smart($link, $inp_entry_food_saturated_fat_per_entry);
+
+				$inp_entry_food_monounsaturated_fat_per_entry = round(($inp_entry_food_serving_size*$get_food_monounsaturated_fat_metric)/$get_food_serving_size_pcs, 1);
+				$inp_entry_food_monounsaturated_fat_per_entry_mysql = quote_smart($link, $inp_entry_food_monounsaturated_fat_per_entry);
+
+				$inp_entry_food_polyunsaturated_fat_per_entry = round(($inp_entry_food_serving_size*$get_food_polyunsaturated_fat_metric)/$get_food_serving_size_pcs, 1);
+				$inp_entry_food_polyunsaturated_fat_per_entry_mysql = quote_smart($link, $inp_entry_food_polyunsaturated_fat_per_entry);
+
+				$inp_entry_food_cholesterol_per_entry = round(($inp_entry_food_serving_size*$get_food_cholesterol_metric)/$get_food_serving_size_pcs, 1);
+				$inp_entry_food_cholesterol_per_entry_mysql = quote_smart($link, $inp_entry_food_cholesterol_per_entry);
+
+
 				$inp_entry_food_carb_per_entry = round(($inp_entry_food_serving_size*$get_food_carbohydrates_calculated_metric)/$get_food_serving_size_pcs, 1);
 				$inp_entry_food_carb_per_entry_mysql = quote_smart($link, $inp_entry_food_carb_per_entry);
 
+				$inp_entry_food_carbohydrates_of_which_sugars_per_entry = round(($inp_entry_food_serving_size*$get_food_carbohydrates_of_which_sugars_metric)/$get_food_serving_size_pcs, 1);
+				$inp_entry_food_carbohydrates_of_which_sugars_per_entry_mysql = quote_smart($link, $inp_entry_food_carbohydrates_of_which_sugars_per_entry);
+
+				$inp_entry_food_dietary_fiber_per_entry = round(($inp_entry_food_serving_size*$get_food_dietary_fiber_metric)/$get_food_serving_size_pcs, 1);
+				$inp_entry_food_dietary_fiber_per_entry_mysql = quote_smart($link, $inp_entry_food_dietary_fiber_per_entry);
+
 				$inp_entry_food_protein_per_entry = round(($inp_entry_food_serving_size*$get_food_proteins_calculated_metric)/$get_food_serving_size_pcs, 1);
 				$inp_entry_food_protein_per_entry_mysql = quote_smart($link, $inp_entry_food_protein_per_entry);
+
+				$inp_entry_food_salt_per_entry = round(($inp_entry_food_serving_size*$get_food_salt_metric)/$get_food_serving_size_pcs, 1);
+				$inp_entry_food_salt_per_entry_mysql = quote_smart($link, $inp_entry_food_salt_per_entry);
+
+				$inp_entry_food_sodium_per_entry = round(($inp_entry_food_serving_size*$get_food_sodium_metric)/$get_food_serving_size_pcs, 1);
+				$inp_entry_food_sodium_per_entry_mysql = quote_smart($link, $inp_entry_food_sodium_per_entry);
 			}
 
-			// Insert
+
+			// Insert food into entry
 			mysqli_query($link, "INSERT INTO $t_food_diary_entires
-			(entry_id, entry_user_id, entry_date, entry_meal_id, entry_food_id, entry_recipe_id, 
-			entry_name, entry_manufacturer_name, entry_serving_size, entry_serving_size_measurement, 
-			entry_energy_per_entry, entry_fat_per_entry, entry_carb_per_entry, entry_protein_per_entry,
-			entry_updated, entry_synchronized) 
+			(entry_id, entry_user_id, entry_date, entry_hour_name, entry_food_id, 
+			entry_recipe_id, entry_name, entry_manufacturer_name, entry_serving_size, entry_serving_size_measurement, 
+			entry_energy_per_entry, entry_fat_per_entry, entry_saturated_fat_per_entry, entry_monounsaturated_fat_per_entry, entry_polyunsaturated_fat_per_entry, 
+			entry_cholesterol_per_entry, entry_carbohydrates_per_entry, entry_carbohydrates_of_which_sugars_per_entry, entry_dietary_fiber_per_entry, entry_proteins_per_entry, 
+			entry_salt_per_entry, entry_sodium_per_entry, entry_updated_datetime, entry_synchronized) 
 			VALUES 
-			(NULL, '$get_my_user_id', $inp_entry_date_mysql, $inp_entry_meal_id_mysql, $inp_entry_food_id_mysql, '0',
-			$inp_entry_food_name_mysql, $inp_entry_food_manufacturer_name_mysql, $inp_entry_food_serving_size_mysql, $inp_entry_food_serving_size_measurement_mysql, 
-			$inp_entry_food_energy_per_entry_mysql, $inp_entry_food_fat_per_entry_mysql, $inp_entry_food_carb_per_entry_mysql, $inp_entry_food_protein_per_entry_mysql,
-			$inp_updated_mysql, '0')")
+			(NULL, '$get_my_user_id', $inp_entry_date_mysql, $inp_entry_hour_name_mysql, $inp_entry_food_id_mysql, 
+			'0', $inp_entry_food_name_mysql, $inp_entry_food_manufacturer_name_mysql, $inp_entry_food_serving_size_mysql, $inp_entry_food_serving_size_measurement_mysql, 
+			$inp_entry_food_energy_per_entry_mysql, $inp_entry_food_fat_per_entry_mysql, $inp_entry_food_saturated_fat_per_entry_mysql, $inp_entry_food_monounsaturated_fat_per_entry_mysql, $inp_entry_food_polyunsaturated_fat_per_entry_mysql, 
+			$inp_entry_food_cholesterol_per_entry_mysql, $inp_entry_food_carb_per_entry_mysql, $inp_entry_food_carbohydrates_of_which_sugars_per_entry_mysql, $inp_entry_food_dietary_fiber_per_entry_mysql, $inp_entry_food_protein_per_entry_mysql,
+			$inp_entry_food_salt_per_entry_mysql, $inp_entry_food_sodium_per_entry_mysql, $inp_updated_mysql, '0')")
 			or die(mysqli_error($link));
 
 
-			// food_diary_totals_meals :: Calcualte :: Get all meals for that day, and update numbers
-			$inp_total_meal_energy = 0;
-			$inp_total_meal_fat = 0;
-			$inp_total_meal_carb = 0;
-			$inp_total_meal_protein = 0;
+
+			// Update Consumed Hours (Example breakfast, lunch, dinner)
+			$inp_hour_energy = 0;
+			$inp_hour_fat = 0;
+			$inp_hour_saturated_fat = 0;
+			$inp_hour_monounsaturated_fat = 0;
+			$inp_hour_polyunsaturated_fat = 0;
+			$inp_hour_cholesterol = 0;
+			$inp_hour_carbohydrates = 0;
+			$inp_hour_carbohydrates_of_which_sugars = 0;
+			$inp_hour_dietary_fiber = 0;
+			$inp_hour_proteins = 0;
+			$inp_hour_salt = 0;
+			$inp_hour_sodium = 0;
 			
-			$query = "SELECT entry_id, entry_energy_per_entry, entry_fat_per_entry, entry_carb_per_entry, entry_protein_per_entry FROM $t_food_diary_entires WHERE entry_user_id=$my_user_id_mysql AND entry_date=$inp_entry_date_mysql AND entry_meal_id=$inp_entry_meal_id_mysql";
+			$query = "SELECT entry_id, entry_energy_per_entry, entry_fat_per_entry, entry_saturated_fat_per_entry, entry_monounsaturated_fat_per_entry, entry_polyunsaturated_fat_per_entry, entry_cholesterol_per_entry, entry_carbohydrates_per_entry, entry_carbohydrates_of_which_sugars_per_entry, entry_dietary_fiber_per_entry, entry_proteins_per_entry, entry_salt_per_entry, entry_sodium_per_entry FROM $t_food_diary_entires WHERE entry_user_id=$my_user_id_mysql AND entry_date=$inp_entry_date_mysql AND entry_hour_name=$inp_entry_hour_name_mysql";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
-    				list($get_entry_id, $get_entry_energy_per_entry, $get_entry_fat_per_entry, $get_entry_carb_per_entry, $get_entry_protein_per_entry) = $row;
+    				list($get_entry_id, $get_entry_energy_per_entry, $get_entry_fat_per_entry, $get_entry_saturated_fat_per_entry, $get_entry_monounsaturated_fat_per_entry, $get_entry_polyunsaturated_fat_per_entry, $get_entry_cholesterol_per_entry, $get_entry_carbohydrates_per_entry, $get_entry_carbohydrates_of_which_sugars_per_entry, $get_entry_dietary_fiber_per_entry, $get_entry_proteins_per_entry, $get_entry_salt_per_entry, $get_entry_sodium_per_entry) = $row;
 
+				$inp_hour_energy = $inp_hour_energy+$get_entry_energy_per_entry;
+				$inp_hour_fat = $inp_hour_fat+$get_entry_fat_per_entry;
+				$inp_hour_saturated_fat = $inp_hour_saturated_fat+$get_entry_saturated_fat_per_entry;
+				$inp_hour_monounsaturated_fat = $inp_hour_monounsaturated_fat+$get_entry_monounsaturated_fat_per_entry;
+				$inp_hour_polyunsaturated_fat = $inp_hour_polyunsaturated_fat+$get_entry_polyunsaturated_fat_per_entry;
+				$inp_hour_cholesterol = $inp_hour_cholesterol+$get_entry_cholesterol_per_entry;
+				$inp_hour_carbohydrates = $inp_hour_carbohydrates+$get_entry_carbohydrates_per_entry;
+				$inp_hour_carbohydrates_of_which_sugars = $inp_hour_carbohydrates_of_which_sugars+$get_entry_carbohydrates_of_which_sugars_per_entry;
+				$inp_hour_dietary_fiber = $inp_hour_dietary_fiber+$get_entry_dietary_fiber_per_entry;
+				$inp_hour_proteins = $inp_hour_proteins+$get_entry_proteins_per_entry;
+				$inp_hour_salt = $inp_hour_salt+$get_entry_salt_per_entry;
+				$inp_hour_sodium = $inp_hour_sodium+$get_entry_sodium_per_entry;
 				
-				$inp_total_meal_energy 		= $inp_total_meal_energy+$get_entry_energy_per_entry;
-				$inp_total_meal_fat 		= $inp_total_meal_fat+$get_entry_fat_per_entry;
-				$inp_total_meal_carb		= $inp_total_meal_carb+$get_entry_carb_per_entry;
-				$inp_total_meal_protein 	= $inp_total_meal_protein+$get_entry_protein_per_entry;
 			}
 			
-			$result = mysqli_query($link, "UPDATE $t_food_diary_totals_meals SET 
-			total_meal_energy='$inp_total_meal_energy', total_meal_fat='$inp_total_meal_fat', total_meal_carb='$inp_total_meal_carb', total_meal_protein='$inp_total_meal_protein',
-			total_meal_updated=$inp_updated_mysql, total_meal_synchronized='0'
-			 WHERE total_meal_user_id=$my_user_id_mysql AND total_meal_date=$inp_entry_date_mysql AND total_meal_meal_id=$inp_entry_meal_id_mysql");
+			$date = date("Y-m-d");
+			$datetime = date("Y-m-d H:i:s");
+			$hour_name_mysql = quote_smart($link, $hour_name);
 
+			$result = mysqli_query($link, "UPDATE $t_food_diary_consumed_hours SET 
+							consumed_hour_energy=$inp_hour_energy,
+							consumed_hour_fat=$inp_hour_fat,
+							consumed_hour_saturated_fat='$inp_hour_saturated_fat',
+							consumed_hour_monounsaturated_fat='$inp_hour_monounsaturated_fat',
+							consumed_hour_polyunsaturated_fat='$inp_hour_polyunsaturated_fat',
+							consumed_hour_cholesterol='$inp_hour_cholesterol',
+							consumed_hour_carbohydrates='$inp_hour_carbohydrates',
+							consumed_hour_carbohydrates_of_which_sugars='$inp_hour_carbohydrates_of_which_sugars',
+							consumed_hour_dietary_fiber='$inp_hour_dietary_fiber',
+							consumed_hour_proteins='$inp_hour_proteins',
+							consumed_hour_salt='$inp_hour_salt',
+							consumed_hour_sodium='$inp_hour_sodium',
+							consumed_hour_updated_datetime='$datetime',
+							consumed_hour_synchronized=0
+							 WHERE consumed_hour_user_id=$my_user_id_mysql AND consumed_hour_date='$date' AND consumed_hour_name=$hour_name_mysql") or die(mysqli_error($link));
 
-			// food_diary_totals_days
-			$query = "SELECT total_day_id, total_day_user_id, total_day_date, total_day_consumed_energy, total_day_consumed_fat, total_day_consumed_carb, total_day_consumed_protein, total_day_target_sedentary_energy, total_day_target_sedentary_fat, total_day_target_sedentary_carb, total_day_target_sedentary_protein, total_day_target_with_activity_energy, total_day_target_with_activity_fat, total_day_target_with_activity_carb, total_day_target_with_activity_protein, total_day_diff_sedentary_energy, total_day_diff_sedentary_fat, total_day_diff_sedentary_carb, total_day_diff_sedentary_protein, total_day_diff_with_activity_energy, total_day_diff_with_activity_fat, total_day_diff_with_activity_carb, total_day_diff_with_activity_protein FROM $t_food_diary_totals_days WHERE total_day_user_id=$my_user_id_mysql AND total_day_date=$inp_entry_date_mysql";
+			// Update Consumed Days (first calculate calories, fat etc used)
+			$inp_day_energy = 0;
+			$inp_day_fat = 0;
+			$inp_day_saturated_fat = 0;
+			$inp_day_monounsaturated_fat = 0;
+			$inp_day_polyunsaturated_fat = 0;
+			$inp_day_cholesterol = 0;
+			$inp_day_carbohydrates = 0;
+			$inp_day_carbohydrates_of_which_sugars = 0;
+			$inp_day_dietary_fiber = 0;
+			$inp_day_proteins = 0;
+			$inp_day_salt = 0;
+			$inp_day_sodium = 0;
+			
+			$query = "SELECT entry_id, entry_energy_per_entry, entry_fat_per_entry, entry_saturated_fat_per_entry, entry_monounsaturated_fat_per_entry, entry_polyunsaturated_fat_per_entry, entry_cholesterol_per_entry, entry_carbohydrates_per_entry, entry_carbohydrates_of_which_sugars_per_entry, entry_dietary_fiber_per_entry, entry_proteins_per_entry, entry_salt_per_entry, entry_sodium_per_entry FROM $t_food_diary_entires WHERE entry_user_id=$my_user_id_mysql AND entry_date=$inp_entry_date_mysql";
+			$result = mysqli_query($link, $query);
+			while($row = mysqli_fetch_row($result)) {
+    				list($get_entry_id, $get_entry_energy_per_entry, $get_entry_fat_per_entry, $get_entry_saturated_fat_per_entry, $get_entry_monounsaturated_fat_per_entry, $get_entry_polyunsaturated_fat_per_entry, $get_entry_cholesterol_per_entry, $get_entry_carbohydrates_per_entry, $get_entry_carbohydrates_of_which_sugars_per_entry, $get_entry_dietary_fiber_per_entry, $get_entry_proteins_per_entry, $get_entry_salt_per_entry, $get_entry_sodium_per_entry) = $row;
+
+				$inp_day_energy 		= $inp_day_energy+$get_entry_energy_per_entry;
+				$inp_day_fat 			= $inp_day_fat+$get_entry_fat_per_entry;
+				$inp_day_saturated_fat 		= $inp_day_saturated_fat+$get_entry_saturated_fat_per_entry;
+				$inp_day_monounsaturated_fat 	= $inp_day_monounsaturated_fat+$get_entry_monounsaturated_fat_per_entry;
+				$inp_day_polyunsaturated_fat 	= $inp_day_polyunsaturated_fat+$get_entry_polyunsaturated_fat_per_entry;
+				$inp_day_cholesterol 		= $inp_day_cholesterol+$get_entry_cholesterol_per_entry;
+				$inp_day_carbohydrates 		= $inp_day_carbohydrates+$get_entry_carbohydrates_per_entry;
+				$inp_day_carbohydrates_of_which_sugars = $inp_day_carbohydrates_of_which_sugars+$get_entry_carbohydrates_of_which_sugars_per_entry;
+				$inp_day_dietary_fiber 		= $inp_day_dietary_fiber+$get_entry_dietary_fiber_per_entry;
+				$inp_day_proteins 		= $inp_day_proteins+$get_entry_proteins_per_entry;
+				$inp_day_salt 			= $inp_day_salt+$get_entry_salt_per_entry;
+				$inp_day_sodium 		= $inp_day_sodium+$get_entry_sodium_per_entry;
+				
+			}
+			
+			$query = "SELECT consumed_day_id, consumed_day_user_id, consumed_day_year, consumed_day_month, consumed_day_month_saying, consumed_day_day, consumed_day_day_saying, consumed_day_date, consumed_day_energy, consumed_day_fat, consumed_day_saturated_fat, consumed_day_monounsaturated_fat, consumed_day_polyunsaturated_fat, consumed_day_cholesterol, consumed_day_carbohydrates, consumed_day_carbohydrates_of_which_sugars, consumed_day_dietary, consumed_day_proteins, consumed_day_salt, consumed_day_sodium, consumed_day_target_sedentary_energy, consumed_day_target_sedentary_fat, consumed_day_target_sedentary_carb, consumed_day_target_sedentary_protein, consumed_day_target_with_activity_energy, consumed_day_target_with_activity_fat, consumed_day_target_with_activity_carb, consumed_day_target_with_activity_protein, consumed_day_diff_sedentary_energy, consumed_day_diff_sedentary_fat, consumed_day_diff_sedentary_carb, consumed_day_diff_sedentary_protein, consumed_day_diff_with_activity_energy, consumed_day_diff_with_activity_fat, consumed_day_diff_with_activity_carb, consumed_day_diff_with_activity_protein, consumed_day_updated_datetime, consumed_day_synchronized FROM $t_food_diary_consumed_days WHERE consumed_day_user_id=$my_user_id_mysql AND consumed_day_date=$inp_entry_date_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
-			list($get_total_day_id, $get_total_day_user_id, $get_total_day_date, $get_total_day_consumed_energy, $get_total_day_consumed_fat, $get_total_day_consumed_carb, $get_total_day_consumed_protein, $get_total_day_target_sedentary_energy, $get_total_day_target_sedentary_fat, $get_total_day_target_sedentary_carb, $get_total_day_target_sedentary_protein, $get_total_day_target_with_activity_energy, $get_total_day_target_with_activity_fat, $get_total_day_target_with_activity_carb, $get_total_day_target_with_activity_protein, $get_total_day_diff_sedentary_energy, $get_total_day_diff_sedentary_fat, $get_total_day_diff_sedentary_carb, $get_total_day_diff_sedentary_protein, $get_total_day_diff_with_activity_energy, $get_total_day_diff_with_activity_fat, $get_total_day_diff_with_activity_carb, $get_total_day_diff_with_activity_protein) = $row;
-
-			$inp_total_day_consumed_energy = 0;
-			$inp_total_day_consumed_fat = 0;
-			$inp_total_day_consumed_carb = 0;
-			$inp_total_day_consumed_protein = 0;
-			$query = "SELECT total_meal_id, total_meal_energy, total_meal_fat, total_meal_carb, total_meal_protein FROM $t_food_diary_totals_meals WHERE total_meal_user_id=$my_user_id_mysql AND total_meal_date=$inp_entry_date_mysql";
-			$result = mysqli_query($link, $query);
-			while($row = mysqli_fetch_row($result)) {
-    				list($get_total_meal_id, $get_total_meal_energy, $get_total_meal_fat, $get_total_meal_carb, $get_total_meal_protein) = $row;
-
-				if($get_total_meal_energy == ""){
-					$get_total_meal_energy = 0;
-				}
-				if($get_total_meal_fat == ""){
-					$get_total_meal_fat = 0;
-				}
-				if($get_total_meal_carb == ""){
-					$get_total_meal_carb = 0;
-				}
-				if($get_total_meal_protein == ""){
-					$get_total_meal_protein = 0;
-				}
-				
-				$inp_total_day_consumed_energy = $inp_total_day_consumed_energy+$get_total_meal_energy;
-				$inp_total_day_consumed_fat = $inp_total_day_consumed_fat+$get_total_meal_fat;
-				$inp_total_day_consumed_carb = $inp_total_day_consumed_carb+$get_total_meal_carb;
-				$inp_total_day_consumed_protein = $inp_total_day_consumed_protein+$get_total_meal_protein;
-			}
+			list($get_consumed_day_id, $get_consumed_day_user_id, $get_consumed_day_year, $get_consumed_day_month, $get_consumed_day_month_saying, $get_consumed_day_day, $get_consumed_day_day_saying, $get_consumed_day_date, $get_consumed_day_energy, $get_consumed_day_fat, $get_consumed_day_saturated_fat, $get_consumed_day_monounsaturated_fat, $get_consumed_day_polyunsaturated_fat, $get_consumed_day_cholesterol, $get_consumed_day_carbohydrates, $get_consumed_day_carbohydrates_of_which_sugars, $get_consumed_day_dietary, $get_consumed_day_proteins, $get_consumed_day_salt, $get_consumed_day_sodium, $get_consumed_day_target_sedentary_energy, $get_consumed_day_target_sedentary_fat, $get_consumed_day_target_sedentary_carb, $get_consumed_day_target_sedentary_protein, $get_consumed_day_target_with_activity_energy, $get_consumed_day_target_with_activity_fat, $get_consumed_day_target_with_activity_carb, $get_consumed_day_target_with_activity_protein, $get_consumed_day_diff_sedentary_energy, $get_consumed_day_diff_sedentary_fat, $get_consumed_day_diff_sedentary_carb, $get_consumed_day_diff_sedentary_protein, $get_consumed_day_diff_with_activity_energy, $get_consumed_day_diff_with_activity_fat, $get_consumed_day_diff_with_activity_carb, $get_consumed_day_diff_with_activity_protein, $get_consumed_day_updated_datetime, $get_consumed_day_synchronized) = $row;
 
 
 
-			$inp_total_day_diff_sedentary_energy = $get_total_day_target_sedentary_energy-$inp_total_day_consumed_energy;
-			$inp_total_day_diff_sedentary_fat = $get_total_day_target_sedentary_fat-$inp_total_day_consumed_fat;
-			$inp_total_day_diff_sedentary_carb = $get_total_day_target_sedentary_carb-$inp_total_day_consumed_carb;
-			$inp_total_day_diff_sedentary_protein = $get_total_day_target_sedentary_protein-$inp_total_day_consumed_protein;
+			$inp_consumed_day_diff_sedentary_energy 	= $get_consumed_day_target_sedentary_energy-$inp_day_energy;
+			$inp_consumed_day_diff_sedentary_fat 		= $get_consumed_day_target_sedentary_fat-$inp_consumed_day_consumed_fat;
+			$inp_consumed_day_diff_sedentary_carb 		= $get_consumed_day_target_sedentary_carb-$inp_consumed_day_consumed_carb;
+			$inp_consumed_day_diff_sedentary_protein 	= $get_consumed_day_target_sedentary_protein-$inp_consumed_day_consumed_protein;
 	
 
-			$inp_total_day_diff_with_activity_energy = $get_total_day_target_with_activity_energy-$inp_total_day_consumed_energy;
-			$inp_total_day_diff_with_activity_fat = $get_total_day_target_with_activity_fat-$inp_total_day_consumed_fat;
-			$inp_total_day_diff_with_activity_carb = $get_total_day_target_with_activity_carb-$inp_total_day_consumed_carb;
-			$inp_total_day_diff_with_activity_protein = $get_total_day_target_with_activity_protein-$inp_total_day_consumed_protein;
+			$inp_consumed_day_diff_with_activity_energy = $get_consumed_day_target_with_activity_energy-$inp_consumed_day_consumed_energy;
+			$inp_consumed_day_diff_with_activity_fat = $get_consumed_day_target_with_activity_fat-$inp_consumed_day_consumed_fat;
+			$inp_consumed_day_diff_with_activity_carb = $get_consumed_day_target_with_activity_carb-$inp_consumed_day_consumed_carb;
+			$inp_consumed_day_diff_with_activity_protein = $get_consumed_day_target_with_activity_protein-$inp_consumed_day_consumed_protein;
 
-			$result = mysqli_query($link, "UPDATE $t_food_diary_totals_days SET 
-			total_day_consumed_energy='$inp_total_day_consumed_energy', total_day_consumed_fat='$inp_total_day_consumed_fat', total_day_consumed_carb='$inp_total_day_consumed_carb', total_day_consumed_protein=$inp_total_day_consumed_protein,
-			total_day_diff_sedentary_energy='$inp_total_day_diff_sedentary_energy', total_day_diff_sedentary_fat='$inp_total_day_diff_sedentary_fat', total_day_diff_sedentary_carb='$inp_total_day_diff_sedentary_carb', total_day_diff_sedentary_protein='$inp_total_day_diff_sedentary_protein',
-			total_day_diff_with_activity_energy='$inp_total_day_diff_with_activity_energy', total_day_diff_with_activity_fat='$inp_total_day_diff_with_activity_fat', total_day_diff_with_activity_carb='$inp_total_day_diff_with_activity_carb', total_day_diff_with_activity_protein='$inp_total_day_diff_with_activity_protein',
-			total_day_updated=$inp_updated_mysql, total_day_synchronized='0'
-			 WHERE total_day_user_id=$my_user_id_mysql AND total_day_date=$inp_entry_date_mysql");
+			$result = mysqli_query($link, "UPDATE $t_food_diary_consumed_days SET 
+							consumed_day_consumed_energy='$inp_consumed_day_consumed_energy', 
+							consumed_day_consumed_fat='$inp_consumed_day_consumed_fat', 
+							total_day_consumed_carb='$inp_consumed_day_consumed_carb', 
+							total_day_consumed_protein=$inp_consumed_day_consumed_protein,
+							total_day_diff_sedentary_energy='$inp_consumed_day_diff_sedentary_energy', 
+							total_day_diff_sedentary_fat='$inp_consumed_day_diff_sedentary_fat', 
+							total_day_diff_sedentary_carb='$inp_consumed_day_diff_sedentary_carb', 
+							total_day_diff_sedentary_protein='$inp_consumed_day_diff_sedentary_protein',
+							total_day_diff_with_activity_energy='$inp_consumed_day_diff_with_activity_energy', 
+							total_day_diff_with_activity_fat='$inp_consumed_day_diff_with_activity_fat', 
+							total_day_diff_with_activity_carb='$inp_consumed_day_diff_with_activity_carb', 
+							total_day_diff_with_activity_protein='$inp_consumed_day_diff_with_activity_protein',
+							total_day_updated=$inp_updated_mysql, 
+							total_day_synchronized='0'
+							 WHERE consumed_day_user_id=$my_user_id_mysql AND consumed_day_date=$inp_entry_date_mysql") or die(mysqli_error($link));
 
 
+die;
 			// Insert into last used food
 			$day_of_the_week = date("N");
 
-			$query = "SELECT last_used_id, last_used_times FROM $t_food_diary_last_used WHERE last_used_user_id=$my_user_id_mysql AND last_used_day_of_week='$day_of_the_week' AND last_used_meal_id=$inp_entry_meal_id_mysql AND last_used_food_id=$inp_entry_food_id_mysql";
+			$query = "SELECT last_used_id, last_used_times FROM $t_food_diary_last_used WHERE last_used_user_id=$my_user_id_mysql AND last_used_hour_name=$inp_entry_hour_name_mysql AND last_used_food_id=$inp_entry_food_id_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
 			list($get_last_used_id, $get_last_used_times) = $row;
 			if($get_last_used_id == ""){
 				// First time used this food
 				mysqli_query($link, "INSERT INTO $t_food_diary_last_used
-				(last_used_id, last_used_user_id, last_used_day_of_week, last_used_meal_id, last_used_food_id, last_used_recipe_id, last_used_serving_size, last_used_times, last_used_date,
+				(last_used_id, last_used_user_id, last_used_day_of_week, last_used_hour_name, last_used_food_id, last_used_recipe_id, last_used_serving_size, last_used_times, last_used_date,
 				last_used_updated, last_used_synchronized) 
 				VALUES 
-				(NULL, '$get_my_user_id', '$day_of_the_week', $inp_entry_meal_id_mysql, $inp_entry_food_id_mysql, '0', $inp_entry_food_serving_size_mysql, '1', $inp_entry_date_mysql,
+				(NULL, '$get_my_user_id', '$day_of_the_week', $inp_entry_hour_name_mysql, $inp_entry_food_id_mysql, '0', $inp_entry_food_serving_size_mysql, '1', $inp_entry_date_mysql,
 				$inp_updated_mysql, '0')")
 				or die(mysqli_error($link));
 			}
@@ -1306,13 +1411,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$result = mysqli_query($link, "UPDATE $t_food_diary_last_used SET 
 				last_used_times='$inp_last_used_times', last_serving_size=$inp_entry_food_serving_size_mysql, last_used_date=$inp_entry_date_mysql,
 				last_used_updated=$inp_updated_mysql, last_used_synchronized='0'
-				 WHERE last_used_id='$get_last_used_id'");
+				 WHERE last_used_id='$get_last_used_id'") or die(mysqli_error($link));
 
 			}
 
 
 			$url = "index.php?action=food_diary&date=$date";
-			$url = $url . "&ft=success&fm=food_added#meal_id$meal_id";
+			$url = $url . "&ft=success&fm=food_added#hour_name$hour_name";
 			header("Location: $url");
 			exit;
 		}

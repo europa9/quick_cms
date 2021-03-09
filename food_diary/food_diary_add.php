@@ -46,12 +46,17 @@ if(isset($_GET['date'])) {
 else{
 	$date = "";
 }
-if (isset($_GET['meal_id'])) {
-	$meal_id = $_GET['meal_id'];
-	$meal_id = stripslashes(strip_tags($meal_id));
+if(isset($_GET['hour_name'])) {
+	$hour_name = $_GET['hour_name'];
+	$hour_name = stripslashes(strip_tags($hour_name));
+	if($hour_name != "breakfast" && $hour_name != "lunch" && $hour_name != "before_training" && $hour_name != "after_training" && $hour_name != "dinner" && $hour_name != "snacks" && $hour_name != "supper"){
+		echo"Unknown hour name";
+		die;
+	}
 }
 else{
-	$meal_id = "";
+	echo"Missing hour name";
+	die;
 }
 
 if(isset($_GET['main_category_id'])){
@@ -127,7 +132,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<p><b>$l_you_are_here</b><br />
 			<a href=\"index.php?l=$l\">$l_food_diary</a>
 			&gt;
-			<a href=\"food_diary_add_food.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_new_entry</a>
+			<a href=\"food_diary_add_food.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_new_entry</a>
 			</p>
 		<!-- //You are here -->
 
@@ -143,7 +148,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
         					// getting the value that user typed
         					var searchString    = $(\"#inp_entry_food_query\").val();
         					// forming the queryString
-       						var data            = 'l=$l&date=$date&meal_id=$meal_id&q='+ searchString;
+       						var data            = 'l=$l&date=$date&hour_name=$hour_name&q='+ searchString;
          
         					// if searchString is not empty
         					if(searchString) {
@@ -172,7 +177,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					<input type=\"text\" id=\"inp_entry_food_query\" name=\"inp_entry_food_query\" value=\"";if(isset($_GET['inp_entry_food_query'])){ echo"$inp_entry_food_query"; } echo"\" size=\"12\" />
 					<input type=\"hidden\" name=\"action\" value=\"search\" />
 					<input type=\"hidden\" name=\"date\" value=\"$date\" />
-					<input type=\"hidden\" name=\"meal_id\" value=\"$meal_id\" />
+					<input type=\"hidden\" name=\"hour_name\" value=\"$hour_name\" />
 					<input type=\"submit\" value=\"$l_search\" class=\"btn btn_default\" />
 					<a href=\"$root/food/new_food.php?l=$l\" class=\"btn btn_default\">$l_new_food</a>
 					</p>
@@ -184,9 +189,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	
 		<div class=\"tabs\" style=\"margin-top: 10px;\">
 			<ul>
-				<li><a href=\"food_diary_add.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\" class=\"selected\">$l_recent</a></li>
-				<li><a href=\"food_diary_add_food.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_food</a></li>
-				<li><a href=\"food_diary_add_recipe.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_recipes</a></li>
+				<li><a href=\"food_diary_add.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\" class=\"selected\">$l_recent</a></li>
+				<li><a href=\"food_diary_add_food.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_food</a></li>
+				<li><a href=\"food_diary_add_recipe.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_recipes</a></li>
 			</ul>
 		</div>
 		<div class=\"clear\" style=\"height: 20px;\"></div>
@@ -210,9 +215,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				// Set layout
 				$x = 0;
 				$day_of_the_week = date("N");
-				// Can add last_used_day_of_week='$day_of_the_week' AND  to make it more precise
-				$meal_id_mysql = quote_smart($link, $meal_id);
-				$query = "SELECT last_used_id, last_used_food_id, last_used_recipe_id, last_used_serving_size, last_used_serving_size_gram, last_used_serving_size_gram_measurement, last_used_serving_size_pcs, last_used_serving_size_pcs_measurement FROM $t_food_diary_last_used WHERE last_used_user_id='$get_my_user_id' AND last_used_meal_id=$meal_id_mysql ORDER BY last_used_times DESC";
+				// Last used food
+				$hour_name_mysql = quote_smart($link, $hour_name);
+				$query = "SELECT xx WHERE last_used_user_id='$get_my_user_id' AND last_used_meal_id=$meal_id_mysql ORDER BY last_used_times DESC";
 				$result = mysqli_query($link, $query);
 				while($row = mysqli_fetch_row($result)) {
 					list($get_last_used_id, $get_last_used_food_id, $get_last_used_recipe_id, $get_last_used_serving_size, $get_last_used_serving_size_gram, $get_last_used_serving_size_gram_measurement, $get_last_used_serving_size_pcs, $get_last_used_serving_size_pcs_measurement) = $row;
@@ -419,9 +424,18 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$x = 0;
 				}
 			} // while
+			if($x == "2"){
+				echo"
+						<div class=\"left_center_center_right_right_center\" style=\"text-align: center;padding-bottom: 20px;\">
+						</div>
+						<div class=\"left_center_center_right_right\" style=\"text-align: center;padding-bottom: 20px;\">
+						</div>
+				";
+			}
 
 			echo"
 			</div> <!-- //nettport_search_results -->
+			<div class=\"clear\"></div>
 		
 			";
 			if($x == "0"){

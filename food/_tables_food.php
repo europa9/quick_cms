@@ -21,6 +21,7 @@ $t_food_countries_used	 	 	= $mysqlPrefixSav . "food_countries_used";
 $t_food_integration	 	  	= $mysqlPrefixSav . "food_integration";
 $t_food_age_restrictions 	 	= $mysqlPrefixSav . "food_age_restrictions";
 $t_food_age_restrictions_accepted	= $mysqlPrefixSav . "food_age_restrictions_accepted";
+$t_food_user_adapted_view		= $mysqlPrefixSav . "food_user_adapted_view";
 
 /*- Tables ads ---------------------------------------------------------------------------- */
 $t_ads_index	= $mysqlPrefixSav . "ads_index";

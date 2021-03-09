@@ -389,7 +389,7 @@ header{
 	}
 	ul.main_navigation > li > a:hover{
 		color: #fff;
-		background: #213147;
+		
 		text-decoration:none;
 	}
 	/* Recipes */
@@ -397,10 +397,10 @@ header{
 		background: url("../../_uploads/pages/navigation/no/oppskrifter_18x18_inactive.png") no-repeat 10px center;
 	}
 	a.nav_aacd8b1788fd3ab955695f1d9179049f:hover{
-		background: #213147 url("../../_uploads/pages/navigation/no/oppskrifter_18x18_hover.png") no-repeat 10px center;
+		background: url("../../_uploads/pages/navigation/no/oppskrifter_18x18_active.png") no-repeat 10px center;
 	}
 	a.nav_aacd8b1788fd3ab955695f1d9179049f:active{
-		background: #213147 url("../../_uploads/pages/navigation/no/oppskrifter_18x18_active.png") no-repeat 10px center;
+		background: url("../../_uploads/pages/navigation/no/oppskrifter_18x18_active.png") no-repeat 10px center;
 	}
 
 	/* Food */

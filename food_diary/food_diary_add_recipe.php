@@ -40,12 +40,17 @@ if(isset($_GET['date'])) {
 else{
 	$date = "";
 }
-if (isset($_GET['meal_id'])) {
-	$meal_id = $_GET['meal_id'];
-	$meal_id = stripslashes(strip_tags($meal_id));
+if(isset($_GET['hour_name'])) {
+	$hour_name = $_GET['hour_name'];
+	$hour_name = stripslashes(strip_tags($hour_name));
+	if($hour_name != "breakfast" && $hour_name != "lunch" && $hour_name != "before_training" && $hour_name != "after_training" && $hour_name != "dinner" && $hour_name != "snacks" && $hour_name != "supper"){
+		echo"Unknown hour name";
+		die;
+	}
 }
 else{
-	$meal_id = "";
+	echo"Missing hour name";
+	die;
 }
 		if(isset($_GET['inp_entry_recipe_query'])){
 			$inp_entry_recipe_query = $_GET['inp_entry_recipe_query'];
@@ -224,7 +229,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$x = 0;
 
 				// Get all recipes
-				$query = "SELECT recipe_id, recipe_title, recipe_introduction, recipe_image_path, recipe_image FROM $t_recipes WHERE recipe_language=$l_mysql";
+				$query = "SELECT recipe_id, recipe_title, recipe_category_id, recipe_introduction, recipe_image_path, recipe_image, recipe_thumb_278x156 FROM $t_recipes WHERE recipe_language=$l_mysql";
 
 				if(isset($_GET['inp_entry_recipe_query'])){
 					$inp_entry_recipe_query = $_GET['inp_entry_recipe_query'];
@@ -242,7 +247,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$query = $query . " ORDER BY recipe_last_viewed ASC";
 				$result = mysqli_query($link, $query);
 				while($row = mysqli_fetch_row($result)) {
-					list($get_recipe_id, $get_recipe_title, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image) = $row;
+					list($get_recipe_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156) = $row;
 		
 					// Select Nutrients
 					$query_n = "SELECT number_id, number_recipe_id, number_hundred_calories, number_hundred_proteins, number_hundred_fat, number_hundred_carbs, number_serving_calories, number_serving_proteins, number_serving_fat, number_serving_carbs, number_total_weight, number_total_calories, number_total_proteins, number_total_fat, number_total_carbs, number_servings FROM $t_recipes_numbers WHERE number_recipe_id=$get_recipe_id";
@@ -278,7 +283,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						<p style=\"padding-bottom:5px;\">
 						<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\"><img src=\"";
 						if($get_recipe_image != "" && file_exists("../$get_recipe_image_path/$get_recipe_image")){
-							echo"../image.php?width=132&amp;height=132&amp;image=/$get_recipe_image_path/$get_recipe_image";
+							echo"$root/$get_recipe_image_path/$get_recipe_thumb_278x156";
 						}
 						else{
 							echo"_gfx/no_thumb.png";
@@ -346,7 +351,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				} // while
 				echo"
 			</div> <!-- //nettport_search_results -->
-				
+			<div class=\"clear\"></div>
 					
 		<!-- //All recipes list -->
 		";
@@ -724,7 +729,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$x = 0;
 
 				// Get all recipes
-				$query = "SELECT recipe_id, recipe_title, recipe_introduction, recipe_image_path, recipe_image FROM $t_recipes WHERE recipe_language=$l_mysql";
+				$query = "SELECT recipe_id, recipe_title, recipe_category_id, recipe_introduction, recipe_image_path, recipe_image, recipe_thumb_278x156 FROM $t_recipes WHERE recipe_language=$l_mysql";
 
 				if($recipe_category_id != ""){
 					$recipe_category_id_mysql = quote_smart($link, $recipe_category_id);
@@ -733,7 +738,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$query = $query . " ORDER BY recipe_last_viewed ASC";
 				$result = mysqli_query($link, $query);
 				while($row = mysqli_fetch_row($result)) {
-					list($get_recipe_id, $get_recipe_title, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image) = $row;
+					list($get_recipe_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156) = $row;
 		
 					// Select Nutrients
 					$query_n = "SELECT number_id, number_recipe_id, number_hundred_calories, number_hundred_proteins, number_hundred_fat, number_hundred_carbs, number_serving_calories, number_serving_proteins, number_serving_fat, number_serving_carbs, number_total_weight, number_total_calories, number_total_proteins, number_total_fat, number_total_carbs, number_servings FROM $t_recipes_numbers WHERE number_recipe_id=$get_recipe_id";
@@ -769,7 +774,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						<p style=\"padding-bottom:5px;\">
 						<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\"><img src=\"";
 						if($get_recipe_image != "" && file_exists("../$get_recipe_image_path/$get_recipe_image")){
-							echo"../image.php?width=132&amp;height=132&amp;image=/$get_recipe_image_path/$get_recipe_image";
+							echo"$root/$get_recipe_image_path/$get_recipe_thumb_278x156";
 						}
 						else{
 							echo"_gfx/no_thumb.png";
@@ -837,7 +842,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				} // while
 				echo"
 			</div> <!-- //nettport_search_results -->
-				
+			<div class=\"clear\"></div>
 					
 			<!-- //Recipes in category list -->
 			";
@@ -1001,7 +1006,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			// Add recipe to recent list
 			$day_of_the_week = date("N");
 
-			$query = "SELECT last_used_id, last_used_times FROM $t_food_diary_last_used WHERE last_used_user_id=$my_user_id_mysql AND last_used_day_of_week='$day_of_the_week' AND last_used_meal_id=$inp_entry_meal_id_mysql AND last_used_recipe_id=$inp_entry_recipe_id_mysql";
+			$query = "SELECT last_used_id, last_used_times FROM $t_food_diary_last_used WHERE last_used_user_id=$my_user_id_mysql AND last_used_meal_id=$inp_entry_meal_id_mysql AND last_used_recipe_id=$inp_entry_recipe_id_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
 			list($get_last_used_id, $get_last_used_times) = $row;

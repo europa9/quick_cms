@@ -419,12 +419,15 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$row = mysqli_fetch_row($result);
 			list($get_goal_id) = $row;
 
+			// Feet or inches
+			$inp_kg_feet_inches_mysql = quote_smart($link, $get_user_measurement);
+
 			if($get_goal_id == ""){
 				// Insert my goal
 				mysqli_query($link, "INSERT INTO $t_food_diary_goals
-				(goal_id, goal_user_id, goal_current_weight, goal_date, goal_current_bmi) 
+				(goal_id, goal_user_id, goal_kg_feet_inches, goal_current_weight, goal_date, goal_current_bmi) 
 				VALUES 
-				(NULL, '$get_my_user_id', $inp_weight_mysql, '$inp_date', $current_bmi_mysql)")
+				(NULL, '$get_my_user_id', $inp_kg_feet_inches_mysql, $inp_weight_mysql, '$inp_date', $current_bmi_mysql)")
 				or die(mysqli_error($link));
 			}
 			else{

@@ -10,7 +10,17 @@
 */
 
 
-/*- Tables ---------------------------------------------------------------------------- */
+
+/*- Food diary ---------------------------------------------------------------------------- */
+$t_food_diary_goals 	  		= $mysqlPrefixSav . "food_diary_goals";
+$t_food_diary_entires	  		= $mysqlPrefixSav . "food_diary_entires";
+$t_food_diary_consumed_days  		= $mysqlPrefixSav . "food_diary_consumed_days";
+$t_food_diary_consumed_hours  		= $mysqlPrefixSav . "food_diary_consumed_hours";
+$t_food_diary_last_used_food  		= $mysqlPrefixSav . "food_diary_last_used_food";
+$t_food_diary_last_used_recipes 	= $mysqlPrefixSav . "food_diary_last_used_recipes";
+
+
+/*- Food ---------------------------------------------------------------------------- */
 $t_food_liquidbase			= $mysqlPrefixSav . "food_liquidbase";
 
 $t_food_categories		  	= $mysqlPrefixSav . "food_categories";
@@ -32,16 +42,7 @@ $t_food_integration	 	  	= $mysqlPrefixSav . "food_integration";
 $t_food_age_restrictions 	 	= $mysqlPrefixSav . "food_age_restrictions";
 $t_food_age_restrictions_accepted	= $mysqlPrefixSav . "food_age_restrictions_accepted";
 
-
-
-
-$t_food_diary_goals 	  	= $mysqlPrefixSav . "food_diary_goals";
-$t_food_diary_entires	  	= $mysqlPrefixSav . "food_diary_entires";
-$t_food_diary_totals_meals  	= $mysqlPrefixSav . "food_diary_totals_meals";
-$t_food_diary_totals_days  	= $mysqlPrefixSav . "food_diary_totals_days";
-$t_food_diary_last_used  	= $mysqlPrefixSav . "food_diary_last_used";
-
-/*- Tables ---------------------------------------------------------------------------- */
+/*- Recipes ---------------------------------------------------------------------------- */
 $t_recipes_liquidbase	 			= $mysqlPrefixSav . "recipes_liquidbase";
 
 $t_recipes 	 			= $mysqlPrefixSav . "recipes";

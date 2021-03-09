@@ -107,17 +107,16 @@ else{
 	echo"Missing meal plan id";
 	die;
 }
-if(isset($_GET['meal_id']) OR isset($_POST['meal_id'])) {
-	if(isset($_GET['meal_id'])){
-		$meal_id = $_GET['meal_id'];
+if(isset($_GET['hour_name'])) {
+	$hour_name = $_GET['hour_name'];
+	$hour_name = stripslashes(strip_tags($hour_name));
+	if($hour_name != "breakfast" && $hour_name != "lunch" && $hour_name != "before_training" && $hour_name != "after_training" && $hour_name != "dinner" && $hour_name != "snacks" && $hour_name != "supper"){
+		echo"Unknown hour name";
+		die;
 	}
-	else{
-		$meal_id = $_POST['meal_id'];
-	}
-	$meal_id = output_html($meal_id);
 }
 else{
-	echo"Missing entry day number";
+	echo"Missing hour name";
 	die;
 }
 
