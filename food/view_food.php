@@ -96,7 +96,39 @@ if(isset($_GET['system'])){
 	}
 }
 else{
-	$system = "metric";
+	// Use the user adapted view if present
+
+	if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
+		$my_user_id = $_SESSION['user_id'];
+		$my_user_id = output_html($my_user_id);
+		$my_user_id_mysql = quote_smart($link, $my_user_id);
+	
+		$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_food_user_adapted_view WHERE view_user_id=$my_user_id_mysql";
+		$result_t = mysqli_query($link, $query_t);
+		$row_t = mysqli_fetch_row($result_t);
+		list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
+	}
+	else{
+		// IP
+		$my_user_ip = $_SERVER['REMOTE_ADDR'];
+		$my_user_ip = output_html($my_user_ip);
+		$my_user_ip_mysql = quote_smart($link, $my_user_ip);
+	
+		$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_food_user_adapted_view WHERE view_ip=$my_user_ip_mysql";
+		$result_t = mysqli_query($link, $query_t);
+		$row_t = mysqli_fetch_row($result_t);
+		list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
+
+	}
+	if($get_current_view_hundred_metric == "1" && $get_current_view_pcs_metric == "1" && $get_current_view_eight_us == "1" && $get_current_view_pcs_us == "1"){
+		$system = "all";
+	}
+	elseif(($get_current_view_hundred_metric == "1" OR $get_current_view_pcs_metric == "1")){
+		$system = "metric";
+	}
+	else{
+		$system = "us";
+	}
 }
 
 

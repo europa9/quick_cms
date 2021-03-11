@@ -37,7 +37,7 @@ $l_mysql = quote_smart($link, $l);
 if(isset($_GET['set'])) {
 	$set = $_GET['set'];
 	$set = strip_tags(stripslashes($set));
-	if($set != "system" && $set != "hundred_metric" && $set != "pcs_metric" && $set != "eight_us" && $set != "pcs_us"){
+	if($set != "system" && $set != "hundred_metric" && $set != "pcs_metric" && $set != "eight_us" && $set != "pcs_us" && $set != "metric" && $set != "us"){
 		echo"Unknown set";
 		die;
 	}
@@ -61,7 +61,7 @@ else{
 if(isset($_GET['referer'])) {
 	$referer = $_GET['referer'];
 	$referer = strip_tags(stripslashes($referer));
-	if($referer != "index"){
+	if($referer != "index" && $referer != "open_main_category" && $referer != "open_sub_category" && $referer != "view_food"){
 		echo"Unknown referer";
 		die;
 	}
@@ -70,6 +70,31 @@ else{
 	echo"Missing referer";
 	die;
 }
+if(isset($_GET['main_category_id'])){
+	$main_category_id= $_GET['main_category_id'];
+	$main_category_id = strip_tags(stripslashes($main_category_id));
+}
+else{
+	$main_category_id = "";
+}
+if(isset($_GET['sub_category_id'])){
+	$sub_category_id= $_GET['sub_category_id'];
+	$sub_category_id = strip_tags(stripslashes($sub_category_id));
+}
+else{
+	$sub_category_id = "";
+}
+if(isset($_GET['food_id'])){
+	$food_id = $_GET['food_id'];
+	$food_id = strip_tags(stripslashes($food_id));
+	
+}
+else{
+	$food_id = "";
+}
+$food_id_mysql = quote_smart($link, $food_id);
+
+
 
 
 /*- Headers ---------------------------------------------------------------------------------- */
@@ -208,8 +233,18 @@ if($referer == "index"){
 	header("Location: $url");
 	exit;
 }
+elseif($referer == "open_main_category"){
+	$url = "open_main_category.php?main_category_id=$main_category_id&l=$l&ft=info&fm=$fm";
+	header("Location: $url");
+	exit;
+}
+elseif($referer == "open_sub_category"){
+	$url = "open_sub_category.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&l=$l&ft=info&fm=$fm";
+	header("Location: $url");
+	exit;
+}
 else{
-	echo"Unkwnon referer";
+	echo"?";
 	die;
 }
 

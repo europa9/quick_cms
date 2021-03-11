@@ -39,6 +39,7 @@ $l_system = "System";
 $l_metric = "Metric";
 $l_us = "US";
 $l_show = "Show";
+$l_show_per = "Show per";
 $l_hundred_metric = "100 metric";
 $l_pcs_metric = "Pcs metric";
 $l_eight_us = "8 US";
@@ -53,5 +54,12 @@ $l_per_hundred  = "Per 100";
 $l_per_pcs_metric = "Per pcs (metric)";
 $l_per_eight = "Per 8";
 $l_per_pcs_us = "Per pcs (US)";
+
+$l_hundred  = "100";
+$l_hundred_g  = "100 g";
+$l_pcs_g = "Pcs g";
+$l_eight = "8";
+$l_eight_oz = "8 oz";
+$l_pcs_oz = "Pcs oz";
 
 ?>

@@ -78,3 +78,10 @@ img.show_all_main_categories_img{
 	background: #f1f1f2;
 	color: #246ada;
 }
+
+
+/*- Food in list ---------------------------------------------------------------------- */
+span.nutritional_number{
+	font-size: 90%;
+	color: #655c5a;
+}

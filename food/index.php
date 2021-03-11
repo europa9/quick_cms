@@ -163,16 +163,11 @@ echo"
 	}
 	echo"
 	<p>
-	<b>$l_show:</b>
-	<input type=\"checkbox\" name=\"inp_show_hundred_metric\" class=\"onclick_go_to_url\""; if($get_current_view_hundred_metric == "1"){ echo" checked=\"checked\" data-target=\"food_user_adapted_view.php?set=hundred_metric&amp;value=0&amp;process=1&amp;referer=index&amp;l=$l\""; } else{ echo" data-target=\"food_user_adapted_view.php?set=hundred_metric&amp;value=1&amp;process=1&amp;referer=index&amp;l=$l\""; } echo" /> $l_per_hundred
-	&nbsp;
-	<input type=\"checkbox\" name=\"inp_show_pcs_metric\" class=\"onclick_go_to_url\""; if($get_current_view_pcs_metric == "1"){ echo" checked=\"checked\" data-target=\"food_user_adapted_view.php?set=pcs_metric&amp;value=0&amp;process=1&amp;referer=index&amp;l=$l\""; } else{ echo" data-target=\"food_user_adapted_view.php?set=pcs_metric&amp;value=1&amp;process=1&amp;referer=index&amp;l=$l\""; } echo" /> $l_per_pcs_metric
-	&nbsp;
-	<input type=\"checkbox\" name=\"inp_show_metric_us_and_or_pcs\" class=\"onclick_go_to_url\""; if($get_current_view_eight_us == "1"){ echo" checked=\"checked\" data-target=\"food_user_adapted_view.php?set=eight_us&amp;value=0&amp;process=1&amp;referer=index&amp;l=$l\""; } else{ echo" data-target=\"food_user_adapted_view.php?set=eight_us&amp;value=1&amp;process=1&amp;referer=index&amp;l=$l\""; } echo" /> $l_per_eight
-	&nbsp;
-	<input type=\"checkbox\" name=\"inp_show_metric_us_and_or_pcs\" class=\"onclick_go_to_url\""; if($get_current_view_pcs_us == "1"){ echo" checked=\"checked\" data-target=\"food_user_adapted_view.php?set=pcs_us&amp;value=0&amp;process=1&amp;referer=index&amp;l=$l\""; } else{ echo" data-target=\"food_user_adapted_view.php?set=pcs_us&amp;value=1&amp;process=1&amp;referer=index&amp;l=$l\""; } echo" /> $l_per_pcs_us
-	
-	
+	<b>$l_show_per:</b>
+	<input type=\"checkbox\" name=\"inp_show_hundred_metric\" class=\"onclick_go_to_url\""; if($get_current_view_hundred_metric == "1"){ echo" checked=\"checked\" data-target=\"user_adapted_view.php?set=hundred_metric&amp;value=0&amp;process=1&amp;referer=index&amp;l=$l\""; } else{ echo" data-target=\"user_adapted_view.php?set=hundred_metric&amp;value=1&amp;process=1&amp;referer=index&amp;l=$l\""; } echo" /> $l_hundred
+	<input type=\"checkbox\" name=\"inp_show_pcs_metric\" class=\"onclick_go_to_url\""; if($get_current_view_pcs_metric == "1"){ echo" checked=\"checked\" data-target=\"user_adapted_view.php?set=pcs_metric&amp;value=0&amp;process=1&amp;referer=index&amp;l=$l\""; } else{ echo" data-target=\"user_adapted_view.php?set=pcs_metric&amp;value=1&amp;process=1&amp;referer=index&amp;l=$l\""; } echo" /> $l_pcs_g
+	<input type=\"checkbox\" name=\"inp_show_metric_us_and_or_pcs\" class=\"onclick_go_to_url\""; if($get_current_view_eight_us == "1"){ echo" checked=\"checked\" data-target=\"user_adapted_view.php?set=eight_us&amp;value=0&amp;process=1&amp;referer=index&amp;l=$l\""; } else{ echo" data-target=\"user_adapted_view.php?set=eight_us&amp;value=1&amp;process=1&amp;referer=index&amp;l=$l\""; } echo" /> $l_eight
+	<input type=\"checkbox\" name=\"inp_show_metric_us_and_or_pcs\" class=\"onclick_go_to_url\""; if($get_current_view_pcs_us == "1"){ echo" checked=\"checked\" data-target=\"user_adapted_view.php?set=pcs_us&amp;value=0&amp;process=1&amp;referer=index&amp;l=$l\""; } else{ echo" data-target=\"user_adapted_view.php?set=pcs_us&amp;value=1&amp;process=1&amp;referer=index&amp;l=$l\""; } echo" /> $l_pcs_oz
 	</p>
 
 	<!-- On check go to URL -->
@@ -241,6 +236,8 @@ echo"
 	";
 	
 	// Set layout
+	$nutritional_content_layout = "1";
+
 	$x = 0;
 
 	// Get all food
@@ -327,28 +324,29 @@ echo"
 				echo"
 				</p>
 				";
-				if($get_current_view_hundred_metric == "1" OR $get_current_view_pcs_metric == "1" OR $get_current_view_eight_us == "1" OR $get_current_view_pcs_us == "1"){
-					echo"
-					<table style=\"margin: 0px auto;\">
-					";
-				}
+
+		if($nutritional_content_layout == "1" && ($get_current_view_hundred_metric == "1" OR $get_current_view_pcs_metric == "1" OR $get_current_view_eight_us == "1" OR $get_current_view_pcs_us == "1")){
+				
+				echo"
+				<table style=\"margin: 0px auto;\">
+				";
 				if($get_current_view_hundred_metric == "1"){
 					echo"
 					 <tr>
 					  <td style=\"padding-right: 6px;text-align: center;\">
-						<span class=\"grey_small\">$l_per_hundred_abbr_lowercase</span>
+						<span class=\"nutritional_number\">$l_hundred</span>
 					  </td>
 					  <td style=\"padding-right: 6px;text-align: center;\">
-						<span class=\"grey_small\">$get_food_energy_metric</span>
+						<span class=\"nutritional_number\">$get_food_energy_metric</span>
 					  </td>
 					  <td style=\"padding-right: 6px;text-align: center;\">
-						<span class=\"grey_small\">$get_food_fat_metric</span>
+						<span class=\"nutritional_number\">$get_food_fat_metric</span>
 					  </td>
 					  <td style=\"padding-right: 6px;text-align: center;\">
-						<span class=\"grey_small\">$get_food_carbohydrates_metric</span>
+						<span class=\"nutritional_number\">$get_food_carbohydrates_metric</span>
 					  </td>
 					  <td style=\"text-align: center;\">
-						<span class=\"grey_small\">$get_food_proteins_metric</span>
+						<span class=\"nutritional_number\">$get_food_proteins_metric</span>
 					  </td>
 					 </tr>
 					";
@@ -357,19 +355,19 @@ echo"
 					echo"
 					 <tr>
 					  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-						<span class=\"grey_small\" title=\"$get_food_serving_size_metric $get_food_serving_size_measurement_metric\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement / $get_food_serving_size_metric $get_food_serving_size_measurement_metric</span>
+						<span class=\"nutritional_number\" title=\"$get_food_serving_size_metric $get_food_serving_size_measurement_metric\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement</span>
 					  </td>
 					  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-						<span class=\"grey_small\">$get_food_energy_calculated_metric</span>
+						<span class=\"nutritional_number\">$get_food_energy_calculated_metric</span>
 					  </td>
 					  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-						<span class=\"grey_small\">$get_food_fat_calculated_metric</span>
+						<span class=\"nutritional_number\">$get_food_fat_calculated_metric</span>
 					  </td>
 					  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-						<span class=\"grey_small\">$get_food_carbohydrates_calculated_metric</span>
+						<span class=\"nutritional_number\">$get_food_carbohydrates_calculated_metric</span>
 					  </td>
 					  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-						<span class=\"grey_small\">$get_food_proteins_calculated_metric</span>
+						<span class=\"nutritional_number\">$get_food_proteins_calculated_metric</span>
 					  </td>
 					 </tr>
 					";
@@ -378,19 +376,19 @@ echo"
 					echo"
 					 <tr>
 					  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-						<span class=\"grey_small\">$l_per_eight_abbr_lowercase</span>
+						<span class=\"nutritional_number\">$l_per_eight_abbr_lowercase</span>
 					  </td>
 					  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-						<span class=\"grey_small\">$get_food_energy_us</span>
+						<span class=\"nutritional_number\">$get_food_energy_us</span>
 					  </td>
 					  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-						<span class=\"grey_small\">$get_food_fat_us</span>
+						<span class=\"nutritional_number\">$get_food_fat_us</span>
 					  </td>
 					  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-						<span class=\"grey_small\">$get_food_carbohydrates_us</span>
+						<span class=\"nutritional_number\">$get_food_carbohydrates_us</span>
 					  </td>
 					  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-						<span class=\"grey_small\">$get_food_proteins_us</span>
+						<span class=\"nutritional_number\">$get_food_proteins_us</span>
 					  </td>
 					 </tr>
 					";
@@ -399,19 +397,19 @@ echo"
 					echo"
 					 <tr>
 					  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-						<span class=\"grey_small\" title=\"$get_food_serving_size_us $get_food_serving_size_measurement_us\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement / $get_food_serving_size_us $get_food_serving_size_measurement_us</span>
+						<span class=\"nutritional_number\" title=\"$get_food_serving_size_us $get_food_serving_size_measurement_us\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement</span>
 					  </td>
 					  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-						<span class=\"grey_small\">$get_food_energy_calculated_us</span>
+						<span class=\"nutritional_number\">$get_food_energy_calculated_us</span>
 					  </td>
 					  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-						<span class=\"grey_small\">$get_food_fat_calculated_us</span>
+						<span class=\"nutritional_number\">$get_food_fat_calculated_us</span>
 					  </td>
 					  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-						<span class=\"grey_small\">$get_food_carbohydrates_calculated_us</span>
+						<span class=\"nutritional_number\">$get_food_carbohydrates_calculated_us</span>
 					  </td>
 					  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-						<span class=\"grey_small\">$get_food_proteins_calculated_us</span>
+						<span class=\"nutritional_number\">$get_food_proteins_calculated_us</span>
 					  </td>
 					 </tr>
 					";
@@ -422,21 +420,199 @@ echo"
 					  <td style=\"padding-right: 6px;text-align: center;\">
 					  </td>
 					  <td style=\"padding-right: 6px;text-align: center;\">
-						<span class=\"grey_small\">$l_calories_abbr_lowercase</span>
+						<span class=\"nutritional_number\">$l_calories_abbr_lowercase</span>
 					  </td>
 					  <td style=\"padding-right: 6px;text-align: center;\">
-						<span class=\"grey_small\">$l_fat_abbr_lowercase</span>
+						<span class=\"nutritional_number\">$l_fat_abbr_lowercase</span>
 					  </td>
 					  <td style=\"padding-right: 6px;text-align: center;\">
-						<span class=\"grey_small\">$l_carbohydrates_abbr_lowercase</span>
+						<span class=\"nutritional_number\">$l_carbohydrates_abbr_lowercase</span>
 					  </td>
 					  <td style=\"text-align: center;\">
-						<span class=\"grey_small\">$l_proteins_abbr_lowercase</span>
+						<span class=\"nutritional_number\">$l_proteins_abbr_lowercase</span>
 					  </td>
 					 </tr>
 					</table>
 					";
 				}
+			}
+			elseif($nutritional_content_layout == "2" && ($get_current_view_hundred_metric == "1" OR $get_current_view_pcs_metric == "1" OR $get_current_view_eight_us == "1" OR $get_current_view_pcs_us == "1")){
+				
+					echo"
+					<table style=\"margin: 0px auto;\">
+					 <tr>
+					  <td style=\"padding-right: 3px;\">
+					  </td>";
+					if($get_current_view_hundred_metric == "1"){
+						echo"
+						  <td style=\"padding-right: 3px;text-align: center;vertical-align: bottom;\">
+							<span class=\"grey_small\">$l_hundred</span>
+						  </td>
+						";
+					}
+					if($get_current_view_pcs_metric == "1"){
+						echo"
+						  <td style=\"padding-right: 3px;text-align: center;vertical-align: bottom;\">
+							<span class=\"grey_small\" title=\"$get_food_serving_size_metric $get_food_serving_size_measurement_metric\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement<br />$get_food_serving_size_metric $get_food_serving_size_measurement_metric</span>
+						  </td>
+						";
+					}
+					if($get_current_view_eight_us == "1"){
+						echo"
+						  <td style=\"padding-right: 3px;text-align: center;vertical-align: bottom;\">
+							<span class=\"grey_small\">$l_eight</span>
+						  </td>
+						";
+					}
+					if($get_current_view_pcs_us == "1"){
+						echo"
+						  <td style=\"padding-right: 3px;text-align: center;vertical-align: bottom;\">
+							<span class=\"grey_small\" title=\"$get_food_serving_size_us $get_food_serving_size_measurement_us\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement<br />$get_food_serving_size_us $get_food_serving_size_measurement_us</span>
+						  </td>
+						";
+					}
+					echo"
+					 </tr>
+					 <tr>
+					  <td style=\"text-align: center;\">
+						<span class=\"grey_small\">$l_calories_abbr_lowercase</span>
+					  </td>";
+					if($get_current_view_hundred_metric == "1"){
+						echo"
+						  <td style=\"text-align: center;\">
+							<span class=\"grey_small\">$get_food_energy_metric</span>
+						  </td>
+						";
+					}
+					if($get_current_view_pcs_metric == "1"){
+						echo"
+						  <td style=\"text-align: center;\">
+							<span class=\"grey_small\">$get_food_energy_calculated_metric</span>
+						  </td>
+						";
+					}
+					if($get_current_view_eight_us == "1"){
+						echo"
+						  <td style=\"text-align: center;\">
+							<span class=\"grey_small\">$get_food_energy_us</span>
+						  </td>
+						";
+					}
+					if($get_current_view_pcs_us == "1"){
+						echo"
+						  <td style=\"text-align: center;\">
+							<span class=\"grey_small\">$get_food_energy_calculated_us</span>
+						  </td>
+						";
+					}
+					echo"
+					 </tr>
+					 <tr>
+					  <td style=\"text-align: center;\">
+						<span class=\"grey_small\">$l_fat_abbr_lowercase</span>
+					  </td>";
+					if($get_current_view_hundred_metric == "1"){
+						echo"
+						  <td style=\"text-align: center;\">
+							<span class=\"grey_small\">$get_food_fat_metric</span>
+						  </td>
+						";
+					}
+					if($get_current_view_pcs_metric == "1"){
+						echo"
+						  <td style=\"text-align: center;\">
+							<span class=\"grey_small\">$get_food_fat_calculated_metric</span>
+						  </td>
+						";
+					}
+					if($get_current_view_eight_us == "1"){
+						echo"
+						  <td style=\"text-align: center;\">
+							<span class=\"grey_small\">$get_food_fat_us</span>
+						  </td>
+						";
+					}
+					if($get_current_view_pcs_us == "1"){
+						echo"
+						  <td style=\"text-align: center;\">
+							<span class=\"grey_small\">$get_food_fat_calculated_us</span>
+						  </td>
+						";
+					}
+					echo"
+					 </tr>
+					 <tr>
+					  <td style=\"text-align: center;\">
+						<span class=\"grey_small\">$l_carbohydrates_abbr_lowercase</span>
+					  </td>";
+					if($get_current_view_hundred_metric == "1"){
+						echo"
+						  <td style=\"text-align: center;\">
+							<span class=\"grey_small\">$get_food_carbohydrates_metric</span>
+						  </td>
+						";
+					}
+					if($get_current_view_pcs_metric == "1"){
+						echo"
+						  <td style=\"text-align: center;\">
+							<span class=\"grey_small\">$get_food_carbohydrates_calculated_metric</span>
+						  </td>
+						";
+					}
+					if($get_current_view_eight_us == "1"){
+						echo"
+						  <td style=\"text-align: center;\">
+							<span class=\"grey_small\">$get_food_carbohydrates_us</span>
+						  </td>
+						";
+					}
+					if($get_current_view_pcs_us == "1"){
+						echo"
+						  <td style=\"text-align: center;\">
+							<span class=\"grey_small\">$get_food_carbohydrates_calculated_us</span>
+						  </td>
+						";
+					}
+					echo"
+					 </tr>
+					 <tr>
+					  <td style=\"text-align: center;\">
+						<span class=\"grey_small\">$l_proteins_abbr_lowercase</span>
+					  </td>";
+					if($get_current_view_hundred_metric == "1"){
+						echo"
+						  <td style=\"text-align: center;\">
+							<span class=\"grey_small\">$get_food_proteins_metric</span>
+						  </td>
+						";
+					}
+					if($get_current_view_pcs_metric == "1"){
+						echo"
+						  <td style=\"text-align: center;\">
+							<span class=\"grey_small\">$get_food_proteins_calculated_metric</span>
+						  </td>
+						";
+					}
+					if($get_current_view_eight_us == "1"){
+						echo"
+						  <td style=\"text-align: center;\">
+							<span class=\"grey_small\">$get_food_proteins_us</span>
+						  </td>
+						";
+					}
+					if($get_current_view_pcs_us == "1"){
+						echo"
+						  <td style=\"text-align: center;\">
+							<span class=\"grey_small\">$get_food_proteins_calculated_us</span>
+						  </td>
+						";
+					}
+				echo"
+					 </tr>
+				</table>
+				";
+
+			} // $nutritional_content_layout == 2
 				echo"
 			</div>
 			";
