@@ -102,6 +102,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 	// Get my profile
 	$my_user_id = $_SESSION['user_id'];
+	$my_user_id = output_html($my_user_id);
 	$my_user_id_mysql = quote_smart($link, $my_user_id);
 	$query = "SELECT user_id, user_alias, user_email, user_gender, user_height, user_measurement, user_dob FROM $t_users WHERE user_id=$my_user_id_mysql";
 	$result = mysqli_query($link, $query);
@@ -138,10 +139,15 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 		<!-- Search -->	
 			<!-- Search engines Autocomplete -->
-				<script>
-				\$(document).ready(function(){
-					\$('[name=\"inp_entry_food_query\"]').focus();
-				});
+				<script>";
+				if(!(isset($_GET['focus']))){
+					echo"
+					\$(document).ready(function(){
+						\$('[name=\"inp_entry_food_query\"]').focus();
+					});
+					";
+				}
+				echo"
 				\$(document).ready(function () {
 					\$('#inp_entry_food_query').keyup(function () {
         					// getting the value that user typed
@@ -219,6 +225,32 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			</div>
 		<!-- //Food main categories -->
 		
+		<!-- Adapter view -->";
+			
+			$query_t = "SELECT view_id, view_user_id, view_system, view_hundred_metric, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_food_diary_user_adapted_view WHERE view_user_id=$get_my_user_id";
+			$result_t = mysqli_query($link, $query_t);
+			$row_t = mysqli_fetch_row($result_t);
+			list($get_current_view_id, $get_current_view_user_id, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
+			echo"
+			<p><a id=\"adapter_view\"></a>
+			<b>$l_show_per:</b>
+			<input type=\"checkbox\" name=\"inp_show_hundred_metric\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=hundred_metric&amp;process=1&amp;referer=food_diary_add_food&amp;date=$date&amp;hour_name=$hour_name&amp;l=$l\""; if($get_current_view_hundred_metric == "1"){ echo" checked=\"checked\""; } echo" /> $l_hundred
+			<input type=\"checkbox\" name=\"inp_show_pcs_metric\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=pcs_metric&amp;process=1&amp;referer=food_diary_add_food&amp;date=$date&amp;hour_name=$hour_name&amp;l=$l\""; if($get_current_view_pcs_metric == "1"){ echo" checked=\"checked\""; } echo" /> $l_pcs_g
+			<input type=\"checkbox\" name=\"inp_show_metric_us_and_or_pcs\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=eight_us&amp;process=1&amp;referer=food_diary_add_food&amp;date=$date&amp;hour_name=$hour_name&amp;l=$l\""; if($get_current_view_eight_us == "1"){ echo" checked=\"checked\""; } echo" /> $l_eight
+			<input type=\"checkbox\" name=\"inp_show_metric_us_and_or_pcs\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=pcs_us&amp;process=1&amp;referer=food_diary_add_food&amp;date=$date&amp;hour_name=$hour_name&amp;l=$l\""; if($get_current_view_pcs_us == "1"){ echo" checked=\"checked\""; } echo" /> $l_pcs_oz
+			</p>
+
+			<!-- On check go to URL -->
+				<script>
+				\$(function() {
+					\$(\".onclick_go_to_url\").change(function(){
+						var item=\$(this);
+						window.location.href= item.data(\"target\")
+					});
+   				});
+				</script>
+			<!-- //On check go to URL -->
+		<!-- //Adapter view -->
 
 		<!-- List all food in all categories -->
 

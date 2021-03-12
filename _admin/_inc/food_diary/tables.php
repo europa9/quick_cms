@@ -34,6 +34,7 @@ $t_food_diary_consumed_days  	= $mysqlPrefixSav . "food_diary_consumed_days";
 $t_food_diary_consumed_hours  	= $mysqlPrefixSav . "food_diary_consumed_hours";
 $t_food_diary_last_used_food 	= $mysqlPrefixSav . "food_diary_last_used_food";
 $t_food_diary_last_used_recipes = $mysqlPrefixSav . "food_diary_last_used_recipes";
+$t_food_diary_user_adapted_view = $mysqlPrefixSav . "food_diary_user_adapted_view";
 
 if($action == ""){
 	echo"

@@ -87,48 +87,31 @@ else{
 }
 $food_id_mysql = quote_smart($link, $food_id);
 
-if(isset($_GET['system'])){
-	$system = $_GET['system'];
-	$system = strip_tags(stripslashes($system));
-	if($system != "all" && $system != "metric" && $system != "us"){
-		echo"Unknown system";
-		die;
-	}
+
+// System
+if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
+	$my_user_id = $_SESSION['user_id'];
+	$my_user_id = output_html($my_user_id);
+	$my_user_id_mysql = quote_smart($link, $my_user_id);
+
+	$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_food_user_adapted_view WHERE view_user_id=$my_user_id_mysql";
+	$result_t = mysqli_query($link, $query_t);
+	$row_t = mysqli_fetch_row($result_t);
+	list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
 }
 else{
-	// Use the user adapted view if present
+	// IP
+	$my_user_ip = $_SERVER['REMOTE_ADDR'];
+	$my_user_ip = output_html($my_user_ip);
+	$my_user_ip_mysql = quote_smart($link, $my_user_ip);
 
-	if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
-		$my_user_id = $_SESSION['user_id'];
-		$my_user_id = output_html($my_user_id);
-		$my_user_id_mysql = quote_smart($link, $my_user_id);
-	
-		$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_food_user_adapted_view WHERE view_user_id=$my_user_id_mysql";
-		$result_t = mysqli_query($link, $query_t);
-		$row_t = mysqli_fetch_row($result_t);
-		list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
-	}
-	else{
-		// IP
-		$my_user_ip = $_SERVER['REMOTE_ADDR'];
-		$my_user_ip = output_html($my_user_ip);
-		$my_user_ip_mysql = quote_smart($link, $my_user_ip);
-	
-		$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_food_user_adapted_view WHERE view_ip=$my_user_ip_mysql";
-		$result_t = mysqli_query($link, $query_t);
-		$row_t = mysqli_fetch_row($result_t);
-		list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
-
-	}
-	if($get_current_view_hundred_metric == "1" && $get_current_view_pcs_metric == "1" && $get_current_view_eight_us == "1" && $get_current_view_pcs_us == "1"){
-		$system = "all";
-	}
-	elseif(($get_current_view_hundred_metric == "1" OR $get_current_view_pcs_metric == "1")){
-		$system = "metric";
-	}
-	else{
-		$system = "us";
-	}
+	$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_food_user_adapted_view WHERE view_ip=$my_user_ip_mysql";
+	$result_t = mysqli_query($link, $query_t);
+	$row_t = mysqli_fetch_row($result_t);
+	list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
+}
+if($get_current_view_system == ""){
+	$get_current_view_system = "metric";
 }
 
 
@@ -167,10 +150,10 @@ else{
 
 	/*- Headers ---------------------------------------------------------------------------------- */
 	$website_title = "$l_food - $get_current_food_name $get_current_food_manufacturer_name";
-	if($system == "metric"){
+	if($get_current_view_system == "metric"){
 		$website_title = "$l_food - $get_current_food_name $get_current_food_manufacturer_name ($l_metric)";
 	}
-	elseif($system == "us"){
+	elseif($get_current_view_system == "us"){
 		$website_title = "$l_food - $get_current_food_name $get_current_food_manufacturer_name ($l_us)";
 	}
 	if(file_exists("./favicon.ico")){ $root = "."; }
@@ -584,11 +567,11 @@ else{
 				</div>
 				<div style=\"float: left;padding-left: 10px;\">
 					<p>
-					<a href=\"view_food.php?main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;system=all&amp;l=$l#numbers\""; if($system == "all"){ echo" style=\"font-weight:bold;\""; } echo">$l_all</a>
+					<a href=\"user_adapted_view.php?set=system&amp;value=all&amp;process=1&amp;referer=view_food&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;l=$l\""; if($get_current_view_system == "all"){ echo" style=\"font-weight:bold;\""; } echo">$l_all</a>
 					&middot;
-					<a href=\"view_food.php?main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;system=metric&amp;l=$l#numbers\""; if($system == "metric"){ echo" style=\"font-weight:bold;\""; } echo">$l_metric</a>
+					<a href=\"user_adapted_view.php?set=system&amp;value=metric&amp;process=1&amp;referer=view_food&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;l=$l\""; if($get_current_view_system == "metric"){ echo" style=\"font-weight:bold;\""; } echo">$l_metric</a>
 					&middot;
-					<a href=\"view_food.php?main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;system=us&amp;l=$l#numbers\""; if($system == "us"){ echo" style=\"font-weight:bold;\""; } echo">$l_us</a>
+					<a href=\"user_adapted_view.php?set=system&amp;value=us&amp;process=1&amp;referer=view_food&amp;main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$get_current_food_id&amp;l=$l\""; if($get_current_view_system == "us"){ echo" style=\"font-weight:bold;\""; } echo">$l_us</a>
 					</p>
 				</div>
 				<div class=\"clear\"></div>
@@ -601,7 +584,7 @@ else{
 				  <tr>
 				   <th scope=\"col\">
 				   </th>";
-				if($system == "all" OR $system == "metric"){
+				if($get_current_view_system == "all" OR $get_current_view_system == "metric"){
 					echo"
 					   <th scope=\"col\" style=\"text-align: center;padding: 6px 4px 6px 8px;vertical-align: bottom;\">
 						<span>$l_per_100</span>
@@ -611,7 +594,7 @@ else{
 					   </th>
 					";
 				}
-				if($system == "all" OR $system == "us"){
+				if($get_current_view_system == "all" OR $get_current_view_system == "us"){
 					echo"
 					  <th scope=\"col\" style=\"text-align: center;padding: 6px 4px 6px 8px;vertical-align: bottom;\">
 						<span>$l_per_8 $get_current_food_net_content_measurement_us</span>
@@ -636,7 +619,7 @@ else{
 				   <td style=\"padding: 8px 4px 6px 8px;\">
 					<span>$l_calories</span>
 				   </td>";
-				if($system == "all" OR $system == "metric"){
+				if($get_current_view_system == "all" OR $get_current_view_system == "metric"){
 					echo"
 					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
 						<span>$get_current_food_energy_metric</span>
@@ -664,7 +647,7 @@ else{
 					   </td>
 					";
 				}
-				if($system == "all" OR $system == "us"){
+				if($get_current_view_system == "all" OR $get_current_view_system == "us"){
 					echo"
 					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
 						<span>$get_current_food_energy_us</span>
@@ -684,7 +667,7 @@ else{
 					$l_dash_monounsaturated_fat<br />
 					$l_dash_polyunsaturated_fat</span>
 				   </td>";
-				if($system == "all" OR $system == "metric"){
+				if($get_current_view_system == "all" OR $get_current_view_system == "metric"){
 					echo"
 		 			  <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
 						<span>
@@ -758,7 +741,7 @@ else{
 					   </td>
 					";
 				}
-				if($system == "all" OR $system == "us"){
+				if($get_current_view_system == "all" OR $get_current_view_system == "us"){
 					echo"
 		 			  <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
 						<span>
@@ -784,7 +767,7 @@ else{
 					<span>$l_carbs<br /></span>
 					<span>$l_dash_of_which_sugars</span>
 				   </td>";
-				if($system == "all" OR $system == "metric"){
+				if($get_current_view_system == "all" OR $get_current_view_system == "metric"){
 					echo"
 					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
 						<span>$get_current_food_carbohydrates_metric<br /></span>
@@ -826,7 +809,7 @@ else{
 					   </td>
 					";
 				}
-				if($system == "all" OR $system == "us"){
+				if($get_current_view_system == "all" OR $get_current_view_system == "us"){
 					echo"
 					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
 						<span>$get_current_food_carbohydrates_us<br /></span>
@@ -847,7 +830,7 @@ else{
 				   <td style=\"padding: 8px 4px 6px 8px;\">
 					<span>$l_dietary_fiber<br /></span>
 				   </td>";
-				if($system == "all" OR $system == "metric"){
+				if($get_current_view_system == "all" OR $get_current_view_system == "metric"){
 					echo"
 					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
 						<span>$get_current_food_dietary_fiber_metric<br /></span>
@@ -875,7 +858,7 @@ else{
 					   </td>
 					";
 				}
-				if($system == "all" OR $system == "us"){
+				if($get_current_view_system == "all" OR $get_current_view_system == "us"){
 					echo"
 					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
 						<span>$get_current_food_dietary_fiber_us<br /></span>
@@ -892,7 +875,7 @@ else{
 				   <td style=\"padding: 8px 4px 6px 8px;\">
 					<span>$l_proteins</span>
 				   </td>";
-				if($system == "all" OR $system == "metric"){
+				if($get_current_view_system == "all" OR $get_current_view_system == "metric"){
 					echo"
 					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
 						<span>$get_current_food_proteins_metric</span>
@@ -920,7 +903,7 @@ else{
 					   </td>
 					";
 				}
-				if($system == "all" OR $system == "us"){
+				if($get_current_view_system == "all" OR $get_current_view_system == "us"){
 					echo"
 					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
 						<span>$get_current_food_proteins_us</span>
@@ -938,7 +921,7 @@ else{
 					<span>$l_salt_in_gram<br />
 					$l_dash_of_which_sodium_in_mg</span>
 				   </td>";
-				if($system == "all" OR $system == "metric"){
+				if($get_current_view_system == "all" OR $get_current_view_system == "metric"){
 					echo"
 					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
 						<span>$get_current_food_salt_metric<br />
@@ -977,7 +960,7 @@ else{
 					   </td>
 					";
 				}
-				if($system == "all" OR $system == "us"){
+				if($get_current_view_system == "all" OR $get_current_view_system == "us"){
 					echo"
 					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
 						<span>$get_current_food_salt_us<br />
@@ -996,7 +979,7 @@ else{
 				   <td style=\"padding: 8px 4px 6px 8px;\">
 					<span>$l_cholesterol_in_mg</span>
 				   </td>";
-				if($system == "all" OR $system == "metric"){
+				if($get_current_view_system == "all" OR $get_current_view_system == "metric"){
 					echo"
 					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
 						<span>$get_current_food_cholesterol_metric</span>
@@ -1023,7 +1006,7 @@ else{
 					   </td>
 					";
 				}
-				if($system == "all" OR $system == "us"){
+				if($get_current_view_system == "all" OR $get_current_view_system == "us"){
 					echo"
 					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
 						<span>$get_current_food_cholesterol_us</span>
@@ -1052,7 +1035,7 @@ else{
 				<a href=\"#numbers\" class=\"a_show_score\">$l_score:</a> ";
 
 				
-				if($system == "all" OR $system == "metric"){
+				if($get_current_view_system == "all" OR $get_current_view_system == "metric"){
 					$score_number = $energy_diff_med+$fat_diff_med+$saturated_fat_diff_med+$monounsaturated_fat_diff_med+$polyunsaturated_fat_diff_med+$carbohydrate_diff_med+$carbohydrates_of_which_sugars_diff_med+$dietary_fiber_diff_med+$proteins_diff_med+$salt_diff_med; // +$sodium_diff_med+$cholesterol_diff_med
 	 				if($get_current_food_score != $score_number){
 						$result = mysqli_query($link, "UPDATE $t_food_index SET food_score='$score_number' WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));

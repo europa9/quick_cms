@@ -49,7 +49,7 @@ else{
 if(isset($_GET['value'])) {
 	$value = $_GET['value'];
 	$value = strip_tags(stripslashes($value));
-	if($value != "1" && $value != "0" && $value != "metric" && $value != "us"){
+	if($value != "1" && $value != "0" && $value != "all" && $value != "metric" && $value != "us"){
 		echo"Unknown value";
 		die;
 	}
@@ -168,7 +168,11 @@ else{
 // Update $get_current_view_id
 $fm = "";
 if($set == "system"){
-	if($value == "metric"){
+	if($value == "all"){
+		mysqli_query($link, "UPDATE $t_food_user_adapted_view SET view_system='all' WHERE view_id=$get_current_view_id") or die(mysqli_error($link));
+		$fm = "system_changed_to_all";
+	}
+	elseif($value == "metric"){
 		mysqli_query($link, "UPDATE $t_food_user_adapted_view SET view_system='metric' WHERE view_id=$get_current_view_id") or die(mysqli_error($link));
 		$fm = "system_changed_to_metric";
 	}
@@ -240,6 +244,11 @@ elseif($referer == "open_main_category"){
 }
 elseif($referer == "open_sub_category"){
 	$url = "open_sub_category.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&l=$l&ft=info&fm=$fm";
+	header("Location: $url");
+	exit;
+}
+elseif($referer == "view_food"){
+	$url = "view_food.php?main_category_id=$main_category_id&sub_category_id=$sub_category_id&l=$l&food_id=$food_id&ft=info&fm=$fm#numbers";
 	header("Location: $url");
 	exit;
 }

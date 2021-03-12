@@ -30,4 +30,9 @@ $l_thursdays_lowercase = "thursdays";
 $l_fridays_lowercase = "fridays";
 $l_saturdays_lowercase = "saturdays";
 $l_sundays_lowercase = "sundays";
+$l_show_per = "Show per";
+$l_hundred = "100";
+$l_pcs_g = "Pcs g";
+$l_eight = "8";
+$l_pcs_oz = "Pcs oz";
 ?>
