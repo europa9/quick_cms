@@ -52,7 +52,7 @@ echo"
 	  	   consumed_day_cholesterol DOUBLE,
 	  	   consumed_day_carbohydrates DOUBLE,
 	  	   consumed_day_carbohydrates_of_which_sugars DOUBLE,
-	  	   consumed_day_dietary DOUBLE,
+	  	   consumed_day_dietary_fiber DOUBLE,
 	  	   consumed_day_proteins DOUBLE,
 	  	   consumed_day_salt DOUBLE,
 	  	   consumed_day_sodium INT,
