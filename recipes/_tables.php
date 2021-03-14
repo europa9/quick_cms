@@ -65,6 +65,8 @@ $t_recipes_stats_chef_of_the_year 	= $mysqlPrefixSav . "recipes_stats_chef_of_th
 
 $t_webdesign_share_buttons 	= $mysqlPrefixSav . "webdesign_share_buttons";
 
+$t_recipes_user_adapted_view 	= $mysqlPrefixSav . "recipes_user_adapted_view";
+
 /*- Tables ads ---------------------------------------------------------------------------- */
 $t_ads_index	= $mysqlPrefixSav . "ads_index";
 ?>

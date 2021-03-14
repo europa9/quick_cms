@@ -196,6 +196,32 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		</div>
 		<div class=\"clear\" style=\"height: 20px;\"></div>
 	
+		<!-- Adapter view -->";
+			
+			$query_t = "SELECT view_id, view_user_id, view_system, view_hundred_metric, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_food_diary_user_adapted_view WHERE view_user_id=$get_my_user_id";
+			$result_t = mysqli_query($link, $query_t);
+			$row_t = mysqli_fetch_row($result_t);
+			list($get_current_view_id, $get_current_view_user_id, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
+			echo"
+			<p><a id=\"adapter_view\"></a>
+			<b>$l_show_per:</b>
+			<input type=\"checkbox\" name=\"inp_show_hundred_metric\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=hundred_metric&amp;process=1&amp;referer=food_diary_add&amp;date=$date&amp;hour_name=$hour_name&amp;l=$l\""; if($get_current_view_hundred_metric == "1"){ echo" checked=\"checked\""; } echo" /> $l_hundred
+			<input type=\"checkbox\" name=\"inp_show_pcs_metric\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=pcs_metric&amp;process=1&amp;referer=food_diary_add&amp;date=$date&amp;hour_name=$hour_name&amp;l=$l\""; if($get_current_view_pcs_metric == "1"){ echo" checked=\"checked\""; } echo" /> $l_pcs_g
+			<input type=\"checkbox\" name=\"inp_show_metric_us_and_or_pcs\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=eight_us&amp;process=1&amp;referer=food_diary_add&amp;date=$date&amp;hour_name=$hour_name&amp;l=$l\""; if($get_current_view_eight_us == "1"){ echo" checked=\"checked\""; } echo" /> $l_eight
+			<input type=\"checkbox\" name=\"inp_show_metric_us_and_or_pcs\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=pcs_us&amp;process=1&amp;referer=food_diary_add&amp;date=$date&amp;hour_name=$hour_name&amp;l=$l\""; if($get_current_view_pcs_us == "1"){ echo" checked=\"checked\""; } echo" /> $l_pcs_oz
+			</p>
+
+			<!-- On check go to URL -->
+				<script>
+				\$(function() {
+					\$(\".onclick_go_to_url\").change(function(){
+						var item=\$(this);
+						window.location.href= item.data(\"target\")
+					});
+   				});
+				</script>
+			<!-- //On check go to URL -->
+		<!-- //Adapter view -->
 
 
 		<!-- Recent food/recipe list -->
@@ -214,45 +240,29 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				";
 				// Set layout
 				$x = 0;
-				$day_of_the_week = date("N");
+
+
 				// Last used food
 				$hour_name_mysql = quote_smart($link, $hour_name);
-				$query = "SELECT xx WHERE last_used_user_id='$get_my_user_id' AND last_used_meal_id=$meal_id_mysql ORDER BY last_used_times DESC";
+				$query = "SELECT last_used_id, last_used_user_id, last_used_hour_name, last_used_food_id, last_used_times, last_used_datetime, last_used_name, last_used_manufacturer, last_used_image_path, last_used_image_thumb_132x132, last_used_food_main_category_id, last_used_food_sub_category_id, last_used_metric_or_us, last_used_selected_serving_size, last_used_selected_measurement, last_used_serving_size_metric, last_used_serving_size_measurement_metric, last_used_serving_size_us, last_used_serving_size_measurement_us, last_used_serving_size_pcs, last_used_serving_size_pcs_measurement, last_used_energy_metric, last_used_fat_metric, last_used_saturated_fat_metric, last_used_monounsaturated_fat_metric, last_used_polyunsaturated_fat_metric, last_used_cholesterol_metric, last_used_carbohydrates_metric, last_used_carbohydrates_of_which_sugars_metric, last_used_dietary_fiber_metric, last_used_proteins_metric, last_used_salt_metric, last_used_sodium_metric, last_used_energy_us, last_used_fat_us, last_used_saturated_fat_us, last_used_monounsaturated_fat_us, last_used_polyunsaturated_fat_us, last_used_cholesterol_us, last_used_carbohydrates_us, last_used_carbohydrates_of_which_sugars_us, last_used_dietary_fiber_us, last_used_proteins_us, last_used_salt_us, last_used_sodium_us, last_used_energy_serving, last_used_fat_serving, last_used_saturated_fat_serving, last_used_monounsaturated_fat_serving, last_used_polyunsaturated_fat_serving, last_used_cholesterol_serving, last_used_carbohydrates_serving, last_used_carbohydrates_of_which_sugars_serving, last_used_dietary_fiber_serving, last_used_proteins_serving, last_used_salt_serving, last_used_sodium_serving FROM $t_food_diary_last_used_food WHERE last_used_user_id='$get_my_user_id' AND last_used_hour_name=$hour_name_mysql ORDER BY last_used_times DESC";
 				$result = mysqli_query($link, $query);
 				while($row = mysqli_fetch_row($result)) {
-					list($get_last_used_id, $get_last_used_food_id, $get_last_used_recipe_id, $get_last_used_serving_size, $get_last_used_serving_size_gram, $get_last_used_serving_size_gram_measurement, $get_last_used_serving_size_pcs, $get_last_used_serving_size_pcs_measurement) = $row;
+					list($get_last_used_id, $get_last_used_user_id, $get_last_used_hour_name, $get_last_used_food_id, $get_last_used_times, $get_last_used_datetime, $get_last_used_name, $get_last_used_manufacturer, $get_last_used_image_path, $get_last_used_image_thumb_132x132, $get_last_used_food_main_category_id, $get_last_used_food_sub_category_id, $get_last_used_metric_or_us, $get_last_used_selected_serving_size, $get_last_used_selected_measurement, $get_last_used_serving_size_metric, $get_last_used_serving_size_measurement_metric, $get_last_used_serving_size_us, $get_last_used_serving_size_measurement_us, $get_last_used_serving_size_pcs, $get_last_used_serving_size_pcs_measurement, $get_last_used_energy_metric, $get_last_used_fat_metric, $get_last_used_saturated_fat_metric, $get_last_used_monounsaturated_fat_metric, $get_last_used_polyunsaturated_fat_metric, $get_last_used_cholesterol_metric, $get_last_used_carbohydrates_metric, $get_last_used_carbohydrates_of_which_sugars_metric, $get_last_used_dietary_fiber_metric, $get_last_used_proteins_metric, $get_last_used_salt_metric, $get_last_used_sodium_metric, $get_last_used_energy_us, $get_last_used_fat_us, $get_last_used_saturated_fat_us, $get_last_used_monounsaturated_fat_us, $get_last_used_polyunsaturated_fat_us, $get_last_used_cholesterol_us, $get_last_used_carbohydrates_us, $get_last_used_carbohydrates_of_which_sugars_us, $get_last_used_dietary_fiber_us, $get_last_used_proteins_us, $get_last_used_salt_us, $get_last_used_sodium_us, $get_last_used_energy_serving, $get_last_used_fat_serving, $get_last_used_saturated_fat_serving, $get_last_used_monounsaturated_fat_serving, $get_last_used_polyunsaturated_fat_serving, $get_last_used_cholesterol_serving, $get_last_used_carbohydrates_serving, $get_last_used_carbohydrates_of_which_sugars_serving, $get_last_used_dietary_fiber_serving, $get_last_used_proteins_serving, $get_last_used_salt_serving, $get_last_used_sodium_serving) = $row;
 
-					if($get_last_used_food_id != "0"){
-						// Get this food
-						$query_food = "SELECT food_id, food_user_id, food_name, food_clean_name, food_manufacturer_name, food_manufacturer_name_and_food_name, food_description, food_country, food_net_content_metric, food_net_content_measurement_metric, food_net_content_us, food_net_content_measurement_us, food_net_content_added_measurement, food_serving_size_metric, food_serving_size_measurement_metric, food_serving_size_us, food_serving_size_measurement_us, food_serving_size_added_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy_metric, food_fat_metric, food_saturated_fat_metric, food_monounsaturated_fat_metric, food_polyunsaturated_fat_metric, food_cholesterol_metric, food_carbohydrates_metric, food_carbohydrates_of_which_sugars_metric, food_dietary_fiber_metric, food_proteins_metric, food_salt_metric, food_sodium_metric, food_energy_us, food_fat_us, food_saturated_fat_us, food_monounsaturated_fat_us, food_polyunsaturated_fat_us, food_cholesterol_us, food_carbohydrates_us, food_carbohydrates_of_which_sugars_us, food_dietary_fiber_us, food_proteins_us, food_salt_us, food_sodium_us, food_score, food_energy_calculated_metric, food_fat_calculated_metric, food_saturated_fat_calculated_metric, food_monounsaturated_fat_calculated_metric, food_polyunsaturated_fat_calculated_metric, food_cholesterol_calculated_metric, food_carbohydrates_calculated_metric, food_carbohydrates_of_which_sugars_calculated_metric, food_dietary_fiber_calculated_metric, food_proteins_calculated_metric, food_salt_calculated_metric, food_sodium_calculated_metric, food_energy_calculated_us, food_fat_calculated_us, food_saturated_fat_calculated_us, food_monounsaturated_fat_calculated_us, food_polyunsaturated_fat_calculated_us, food_cholesterol_calculated_us, food_carbohydrates_calculated_us, food_carbohydrates_of_which_sugars_calculated_us, food_dietary_fiber_calculated_us, food_proteins_calculated_us, food_salt_calculated_us, food_sodium_calculated_us, food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_image_a, food_thumb_a_small, food_thumb_a_medium, food_thumb_a_large, food_image_b, food_thumb_b_small, food_thumb_b_medium, food_thumb_b_large, food_image_c, food_thumb_c_small, food_thumb_c_medium, food_thumb_c_large, food_image_d, food_thumb_d_small, food_thumb_d_medium, food_thumb_d_large, food_image_e, food_thumb_e_small, food_thumb_e_medium, food_thumb_e_large, food_last_used, food_language, food_synchronized, food_accepted_as_master, food_notes, food_unique_hits, food_unique_hits_ip_block, food_comments, food_likes, food_dislikes, food_likes_ip_block, food_user_ip, food_created_date, food_last_viewed, food_age_restriction FROM $t_food_index WHERE food_id=$get_last_used_food_id";
-						$result_food = mysqli_query($link, $query_food);
-						$row_food = mysqli_fetch_row($result_food);
-						list($get_food_id, $get_food_user_id, $get_food_name, $get_food_clean_name, $get_food_manufacturer_name, $get_food_manufacturer_name_and_food_name, $get_food_description, $get_food_country, $get_food_net_content_metric, $get_food_net_content_measurement_metric, $get_food_net_content_us, $get_food_net_content_measurement_us, $get_food_net_content_added_measurement, $get_food_serving_size_metric, $get_food_serving_size_measurement_metric, $get_food_serving_size_us, $get_food_serving_size_measurement_us, $get_food_serving_size_added_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy_metric, $get_food_fat_metric, $get_food_saturated_fat_metric, $get_food_monounsaturated_fat_metric, $get_food_polyunsaturated_fat_metric, $get_food_cholesterol_metric, $get_food_carbohydrates_metric, $get_food_carbohydrates_of_which_sugars_metric, $get_food_dietary_fiber_metric, $get_food_proteins_metric, $get_food_salt_metric, $get_food_sodium_metric, $get_food_energy_us, $get_food_fat_us, $get_food_saturated_fat_us, $get_food_monounsaturated_fat_us, $get_food_polyunsaturated_fat_us, $get_food_cholesterol_us, $get_food_carbohydrates_us, $get_food_carbohydrates_of_which_sugars_us, $get_food_dietary_fiber_us, $get_food_proteins_us, $get_food_salt_us, $get_food_sodium_us, $get_food_score, $get_food_energy_calculated_metric, $get_food_fat_calculated_metric, $get_food_saturated_fat_calculated_metric, $get_food_monounsaturated_fat_calculated_metric, $get_food_polyunsaturated_fat_calculated_metric, $get_food_cholesterol_calculated_metric, $get_food_carbohydrates_calculated_metric, $get_food_carbohydrates_of_which_sugars_calculated_metric, $get_food_dietary_fiber_calculated_metric, $get_food_proteins_calculated_metric, $get_food_salt_calculated_metric, $get_food_sodium_calculated_metric, $get_food_energy_calculated_us, $get_food_fat_calculated_us, $get_food_saturated_fat_calculated_us, $get_food_monounsaturated_fat_calculated_us, $get_food_polyunsaturated_fat_calculated_us, $get_food_cholesterol_calculated_us, $get_food_carbohydrates_calculated_us, $get_food_carbohydrates_of_which_sugars_calculated_us, $get_food_dietary_fiber_calculated_us, $get_food_proteins_calculated_us, $get_food_salt_calculated_us, $get_food_sodium_calculated_us, $get_food_barcode, $get_food_main_category_id, $get_food_sub_category_id, $get_food_image_path, $get_food_image_a, $get_food_thumb_a_small, $get_food_thumb_a_medium, $get_food_thumb_a_large, $get_food_image_b, $get_food_thumb_b_small, $get_food_thumb_b_medium, $get_food_thumb_b_large, $get_food_image_c, $get_food_thumb_c_small, $get_food_thumb_c_medium, $get_food_thumb_c_large, $get_food_image_d, $get_food_thumb_d_small, $get_food_thumb_d_medium, $get_food_thumb_d_large, $get_food_image_e, $get_food_thumb_e_small, $get_food_thumb_e_medium, $get_food_thumb_e_large, $get_food_last_used, $get_food_language, $get_food_synchronized, $get_food_accepted_as_master, $get_food_notes, $get_food_unique_hits, $get_food_unique_hits_ip_block, $get_food_comments, $get_food_likes, $get_food_dislikes, $get_food_likes_ip_block, $get_food_user_ip, $get_food_created_date, $get_food_last_viewed, $get_food_age_restriction) = $row_food;
-	
+					// Get food
+					$query_f = "SELECT food_id, food_user_id, food_name, food_clean_name, food_manufacturer_name, food_manufacturer_name_and_food_name, food_description, food_country, food_net_content_metric, food_net_content_measurement_metric, food_net_content_us, food_net_content_measurement_us, food_net_content_added_measurement, food_serving_size_metric, food_serving_size_measurement_metric, food_serving_size_us, food_serving_size_measurement_us, food_serving_size_added_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy_metric, food_fat_metric, food_saturated_fat_metric, food_monounsaturated_fat_metric, food_polyunsaturated_fat_metric, food_cholesterol_metric, food_carbohydrates_metric, food_carbohydrates_of_which_sugars_metric, food_dietary_fiber_metric, food_proteins_metric, food_salt_metric, food_sodium_metric, food_energy_us, food_fat_us, food_saturated_fat_us, food_monounsaturated_fat_us, food_polyunsaturated_fat_us, food_cholesterol_us, food_carbohydrates_us, food_carbohydrates_of_which_sugars_us, food_dietary_fiber_us, food_proteins_us, food_salt_us, food_sodium_us, food_score, food_energy_calculated_metric, food_fat_calculated_metric, food_saturated_fat_calculated_metric, food_monounsaturated_fat_calculated_metric, food_polyunsaturated_fat_calculated_metric, food_cholesterol_calculated_metric, food_carbohydrates_calculated_metric, food_carbohydrates_of_which_sugars_calculated_metric, food_dietary_fiber_calculated_metric, food_proteins_calculated_metric, food_salt_calculated_metric, food_sodium_calculated_metric, food_energy_calculated_us, food_fat_calculated_us, food_saturated_fat_calculated_us, food_monounsaturated_fat_calculated_us, food_polyunsaturated_fat_calculated_us, food_cholesterol_calculated_us, food_carbohydrates_calculated_us, food_carbohydrates_of_which_sugars_calculated_us, food_dietary_fiber_calculated_us, food_proteins_calculated_us, food_salt_calculated_us, food_sodium_calculated_us, food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_image_a, food_thumb_a_small, food_thumb_a_medium, food_thumb_a_large, food_image_b, food_thumb_b_small, food_thumb_b_medium, food_thumb_b_large, food_image_c, food_thumb_c_small, food_thumb_c_medium, food_thumb_c_large, food_image_d, food_thumb_d_small, food_thumb_d_medium, food_thumb_d_large, food_image_e, food_thumb_e_small, food_thumb_e_medium, food_thumb_e_large, food_last_used, food_language, food_synchronized, food_accepted_as_master, food_notes, food_unique_hits, food_unique_hits_ip_block, food_comments, food_likes, food_dislikes, food_likes_ip_block, food_user_ip, food_created_date, food_last_viewed, food_age_restriction FROM $t_food_index WHERE food_id=$get_last_used_food_id";
+					$result_f = mysqli_query($link, $query_f);
+					$row_f = mysqli_fetch_row($result_f);
+					list($get_food_id, $get_food_user_id, $get_food_name, $get_food_clean_name, $get_food_manufacturer_name, $get_food_manufacturer_name_and_food_name, $get_food_description, $get_food_country, $get_food_net_content_metric, $get_food_net_content_measurement_metric, $get_food_net_content_us, $get_food_net_content_measurement_us, $get_food_net_content_added_measurement, $get_food_serving_size_metric, $get_food_serving_size_measurement_metric, $get_food_serving_size_us, $get_food_serving_size_measurement_us, $get_food_serving_size_added_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy_metric, $get_food_fat_metric, $get_food_saturated_fat_metric, $get_food_monounsaturated_fat_metric, $get_food_polyunsaturated_fat_metric, $get_food_cholesterol_metric, $get_food_carbohydrates_metric, $get_food_carbohydrates_of_which_sugars_metric, $get_food_dietary_fiber_metric, $get_food_proteins_metric, $get_food_salt_metric, $get_food_sodium_metric, $get_food_energy_us, $get_food_fat_us, $get_food_saturated_fat_us, $get_food_monounsaturated_fat_us, $get_food_polyunsaturated_fat_us, $get_food_cholesterol_us, $get_food_carbohydrates_us, $get_food_carbohydrates_of_which_sugars_us, $get_food_dietary_fiber_us, $get_food_proteins_us, $get_food_salt_us, $get_food_sodium_us, $get_food_score, $get_food_energy_calculated_metric, $get_food_fat_calculated_metric, $get_food_saturated_fat_calculated_metric, $get_food_monounsaturated_fat_calculated_metric, $get_food_polyunsaturated_fat_calculated_metric, $get_food_cholesterol_calculated_metric, $get_food_carbohydrates_calculated_metric, $get_food_carbohydrates_of_which_sugars_calculated_metric, $get_food_dietary_fiber_calculated_metric, $get_food_proteins_calculated_metric, $get_food_salt_calculated_metric, $get_food_sodium_calculated_metric, $get_food_energy_calculated_us, $get_food_fat_calculated_us, $get_food_saturated_fat_calculated_us, $get_food_monounsaturated_fat_calculated_us, $get_food_polyunsaturated_fat_calculated_us, $get_food_cholesterol_calculated_us, $get_food_carbohydrates_calculated_us, $get_food_carbohydrates_of_which_sugars_calculated_us, $get_food_dietary_fiber_calculated_us, $get_food_proteins_calculated_us, $get_food_salt_calculated_us, $get_food_sodium_calculated_us, $get_food_barcode, $get_food_main_category_id, $get_food_sub_category_id, $get_food_image_path, $get_food_image_a, $get_food_thumb_a_small, $get_food_thumb_a_medium, $get_food_thumb_a_large, $get_food_image_b, $get_food_thumb_b_small, $get_food_thumb_b_medium, $get_food_thumb_b_large, $get_food_image_c, $get_food_thumb_c_small, $get_food_thumb_c_medium, $get_food_thumb_c_large, $get_food_image_d, $get_food_thumb_d_small, $get_food_thumb_d_medium, $get_food_thumb_d_large, $get_food_image_e, $get_food_thumb_e_small, $get_food_thumb_e_medium, $get_food_thumb_e_large, $get_food_last_used, $get_food_language, $get_food_synchronized, $get_food_accepted_as_master, $get_food_notes, $get_food_unique_hits, $get_food_unique_hits_ip_block, $get_food_comments, $get_food_likes, $get_food_dislikes, $get_food_likes_ip_block, $get_food_user_ip, $get_food_created_date, $get_food_last_viewed, $get_food_age_restriction) = $row_f;
 
-						// Name saying
-						$title = "$get_food_manufacturer_name $get_food_name";
-						$check = strlen($title);
-						if($check > 35){
-							$title = substr($title, 0, 35);
-							$title = $title . "...";
-						}
-					} // food
-					else{
-						// Get recipe
-						$query_recipe = "SELECT recipe_id, recipe_title, recipe_introduction, recipe_image_path, recipe_image FROM $t_recipes WHERE recipe_id=$get_last_used_recipe_id";
-						$result_recipe = mysqli_query($link, $query_recipe);
-						$row_recipe = mysqli_fetch_row($result_recipe);
-						list($get_recipe_id, $get_recipe_title, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image) = $row_recipe;
-	
+					// Name saying
+					$title = "$get_food_manufacturer_name $get_food_name";
+					$check = strlen($title);
+					if($check > 35){
+						$title = substr($title, 0, 35);
+						$title = $title . "...";
+					}
 
-						// Select Nutrients
-						$query_n = "SELECT number_id, number_recipe_id, number_hundred_calories, number_hundred_proteins, number_hundred_fat, number_hundred_carbs, number_serving_calories, number_serving_proteins, number_serving_fat, number_serving_carbs, number_total_weight, number_total_calories, number_total_proteins, number_total_fat, number_total_carbs, number_servings FROM $t_recipes_numbers WHERE number_recipe_id=$get_recipe_id";
-						$result_n = mysqli_query($link, $query_n);
-						$row_n = mysqli_fetch_row($result_n);
-						list($get_number_id, $get_number_recipe_id, $get_number_hundred_calories, $get_number_hundred_proteins, $get_number_hundred_fat, $get_number_hundred_carbs, $get_number_serving_calories, $get_number_serving_proteins, $get_number_serving_fat, $get_number_serving_carbs, $get_number_total_weight, $get_number_total_calories, $get_number_total_proteins, $get_number_total_fat, $get_number_total_carbs, $get_number_servings) = $row_n;
-
-					} // recipe
 
 
 					if($x == 0){
@@ -277,161 +287,180 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						";
 					}
 
-					// Food
-					if($get_last_used_food_id != "0"){
-
-						// Thumb
-						if($get_food_image_a != "" && file_exists("../$get_food_image_path/$get_food_image_a")){
-							$thumb = "../$get_food_image_path/$get_food_thumb_a_small";
-						}
-						else{
-							$thumb = "_gfx/no_thumb.png";
-						}
-
-
-						echo"
-						<p style=\"padding-bottom:5px;\">
-						<a href=\"$root/food/view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\"><img src=\"$thumb\" alt=\"$get_food_image_a\" style=\"margin-bottom: 5px;\" /></a><br />
-		
-						<a href=\"$root/food/view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\" style=\"font-weight: bold;color: #444444;\">$title</a><br />
-						";
-						echo"
-						</p>
-						<table style=\"margin: 0px auto;\">
-						 <tr>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_smal\">$get_food_energy_metric</span>
-						  </td>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_smal\">$get_food_fat_metric</span>
-						  </td>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_smal\">$get_food_carbohydrates_metric</span>
-						  </td>
-						  <td style=\"text-align: center;\">
-							<span class=\"grey_smal\">$get_food_proteins_metric</span>
-						  </td>
-						 </tr>
-						 <tr>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_smal\">$l_cal_lowercase</span>
-						  </td>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_smal\">$l_fat_lowercase</span>
-						  </td>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_smal\">$l_carb_lowercase</span>
-						  </td>
-						  <td style=\"text-align: center;\">
-							<span class=\"grey_smal\">$l_proteins_lowercase</span>
-						  </td>
-						 </tr>
-						</table>
-						<!-- Add food -->
-							<form method=\"post\" action=\"food_diary_add_food.php?action=add_food_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
-								<p>
-								<input type=\"hidden\" name=\"inp_entry_food_id\" value=\"$get_food_id\" />
-								<input type=\"text\" name=\"inp_entry_food_serving_size\" size=\"3\" value=\"$get_last_used_serving_size\" />
-								<input type=\"submit\" name=\"inp_submit_gram\" value=\"$get_food_serving_size_measurement_metric\" class=\"btn btn_default\" />
-								";
-								if($get_food_serving_size_pcs_measurement != "g"){
-									echo"<input type=\"submit\" name=\"inp_submit_pcs\" value=\"$get_food_serving_size_pcs_measurement\" class=\"btn btn_default\" />";
-								}
-								echo"
-								</p>
-								</form>
-						<!-- //Add food -->
-						";
-					} // food
+					// Thumb
+					if($get_food_image_a != "" && file_exists("../$get_food_image_path/$get_food_image_a")){
+						$thumb = "../$get_food_image_path/$get_food_thumb_a_small";
+					}
 					else{
-						if($get_recipe_image != "" && file_exists("../$get_recipe_image_path/$get_recipe_image")){
+						$thumb = "_gfx/no_thumb.png";
+					}
 
-							$inp_new_x = 132;
-							$inp_new_y = 132;
-							$thumb = "recipe_" . $get_recipe_id . "-" . $inp_new_x . "x" . $inp_new_y . ".png";
 
-							if(!(file_exists("$root/_cache/$thumb"))){
-								resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_recipe_image_path/$get_recipe_image", "$root/_cache/$thumb");
-							}
-							$thumb = "$root/_cache/$thumb";
-						}
-						else{
-							$thumb = "_gfx/no_thumb.png";
-						}
+					echo"
+					<p style=\"padding-bottom:5px;\">
+					<a href=\"$root/food/view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\"><img src=\"$thumb\" alt=\"$get_food_image_a\" style=\"margin-bottom: 5px;\" /></a><br />
+					<a href=\"$root/food/view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\" style=\"font-weight: bold;color: #444444;\">$title</a><br />
+					</p>";
 
+					if($get_current_view_hundred_metric == "1" OR $get_current_view_pcs_metric == "1" OR $get_current_view_eight_us == "1" OR $get_current_view_pcs_us == "1"){
+				
 						echo"
-						<p style=\"padding-bottom:5px;\">
-						<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\"><img src=\"$thumb\" alt=\"$get_recipe_image\" style=\"margin-bottom: 5px;\" /></a><br />
-						<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\" style=\"font-weight: bold;color: #444444;\">$get_recipe_title</a><br />
-						</p>
-
 						<table style=\"margin: 0px auto;\">
-						 <tr>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_smal\">$get_number_serving_calories</span>
-						  </td>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_smal\">$get_number_serving_fat</span>
-						  </td>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_smal\">$get_number_serving_carbs</span>
-						  </td>
-						  <td style=\"text-align: center;\">
-							<span class=\"grey_smal\">$get_number_serving_proteins</span>
-						  </td>
-						 </tr>
-						 <tr>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_smal\">$l_cal_lowercase</span>
-						  </td>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_smal\">$l_fat_lowercase</span>
-						  </td>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_smal\">$l_carb_lowercase</span>
-						  </td>
-						  <td style=\"text-align: center;\">
-							<span class=\"grey_smal\">$l_proteins_lowercase</span>
-						  </td>
-						 </tr>
-						</table>
-						<!-- Add Recipe -->
-							<form>
+						";
+						if($get_current_view_hundred_metric == "1"){
+							echo"
+							 <tr>
+							  <td style=\"padding-right: 6px;text-align: center;\">
+								<span class=\"nutritional_number\">$l_hundred</span>
+							  </td>
+							  <td style=\"padding-right: 6px;text-align: center;\">
+								<span class=\"nutritional_number\">$get_food_energy_metric</span>
+							  </td>
+							  <td style=\"padding-right: 6px;text-align: center;\">
+								<span class=\"nutritional_number\">$get_food_fat_metric</span>
+							  </td>
+							  <td style=\"padding-right: 6px;text-align: center;\">
+								<span class=\"nutritional_number\">$get_food_carbohydrates_metric</span>
+							  </td>
+							  <td style=\"text-align: center;\">
+								<span class=\"nutritional_number\">$get_food_proteins_metric</span>
+							  </td>
+							 </tr>
+							";
+						}
+						if($get_current_view_pcs_metric == "1"){
+							echo"
+							 <tr>
+							  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+								<span class=\"nutritional_number\" title=\"$get_food_serving_size_metric $get_food_serving_size_measurement_metric\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement</span>
+							  </td>
+							  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+								<span class=\"nutritional_number\">$get_food_energy_calculated_metric</span>
+							  </td>
+							  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+								<span class=\"nutritional_number\">$get_food_fat_calculated_metric</span>
+							  </td>
+							  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+								<span class=\"nutritional_number\">$get_food_carbohydrates_calculated_metric</span>
+							  </td>
+							  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+								<span class=\"nutritional_number\">$get_food_proteins_calculated_metric</span>
+							  </td>
+							 </tr>
+							";
+						}
+						if($get_current_view_eight_us == "1"){
+							echo"
+							 <tr>
+							  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+								<span class=\"nutritional_number\">$l_per_eight_abbr_lowercase</span>
+							  </td>
+							  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+								<span class=\"nutritional_number\">$get_food_energy_us</span>
+							  </td>
+							  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+								<span class=\"nutritional_number\">$get_food_fat_us</span>
+							  </td>
+							  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+								<span class=\"nutritional_number\">$get_food_carbohydrates_us</span>
+							  </td>
+							  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+								<span class=\"nutritional_number\">$get_food_proteins_us</span>
+							  </td>
+							 </tr>
+							";
+						}
+						if($get_current_view_pcs_us == "1"){
+							echo"
+							 <tr>
+							  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+								<span class=\"nutritional_number\" title=\"$get_food_serving_size_us $get_food_serving_size_measurement_us\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement</span>
+							  </td>
+							  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+								<span class=\"nutritional_number\">$get_food_energy_calculated_us</span>
+							  </td>
+							  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+								<span class=\"nutritional_number\">$get_food_fat_calculated_us</span>
+							  </td>
+							  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+								<span class=\"nutritional_number\">$get_food_carbohydrates_calculated_us</span>
+							  </td>
+							  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+								<span class=\"nutritional_number\">$get_food_proteins_calculated_us</span>
+							  </td>
+							 </tr>
+							";
+						}
+						echo"
+							 <tr>
+							  <td style=\"padding-right: 6px;text-align: center;\">
+							  </td>
+							  <td style=\"padding-right: 6px;text-align: center;\">
+								<span class=\"nutritional_number\">$l_calories_abbr_lowercase</span>
+							  </td>
+						 	 <td style=\"padding-right: 6px;text-align: center;\">
+								<span class=\"nutritional_number\">$l_fat_abbr_lowercase</span>
+							  </td>
+							  <td style=\"padding-right: 6px;text-align: center;\">
+								<span class=\"nutritional_number\">$l_carbohydrates_abbr_lowercase</span>
+							  </td>
+							  <td style=\"text-align: center;\">
+								<span class=\"nutritional_number\">$l_proteins_abbr_lowercase</span>
+							  </td>
+							 </tr>
+							</table>
+							";
+						} // get_current_view_hundred_metric
+						echo"
+						<!-- Add food -->
+							<form method=\"post\" action=\"food_diary_add_food.php?action=add_food_to_diary&amp;date=$date&amp;hour_name=$hour_name&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 							<p>
-							<select classs=\"inp_amount_select\">
-								<option value=\"1\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=1&amp;l=$l&amp;process=1\">1</option>
-								<option value=\"2\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=2&amp;l=$l&amp;process=1\">2</option>
-								<option value=\"3\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=3&amp;l=$l&amp;process=1\">3</option>
-								<option value=\"4\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=4&amp;l=$l&amp;process=1\">4</option>
-								<option value=\"5\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=5&amp;l=$l&amp;process=1\">5</option>
-								<option value=\"6\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=6&amp;l=$l&amp;process=1\">6</option>
-								<option value=\"7\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=7&amp;l=$l&amp;process=1\">7</option>
-								<option value=\"8\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=8&amp;l=$l&amp;process=1\">8</option>
-							</select>
-							<a href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=1&amp;l=$l&amp;process=1\" class=\"btn btn_default\">$l_add</a>
+							<input type=\"hidden\" name=\"inp_entry_food_id\" value=\"$get_food_id\" />
+							";
+							if($get_current_view_hundred_metric == "1" OR $get_current_view_pcs_metric == "1"){
+								if($get_food_serving_size_pcs_measurement == "g"){
+									echo"
+									<input type=\"text\" name=\"inp_entry_food_serving_size\" size=\"2\" value=\"$get_last_used_selected_serving_size\" />
+									<input type=\"submit\" name=\"inp_submit_metric\" value=\"$get_food_serving_size_measurement_metric\" class=\"btn btn_default\" />
+									";
+								}
+								else{
+									echo"
+									<input type=\"text\" name=\"inp_entry_food_serving_size\" size=\"2\" value=\"$get_last_used_selected_serving_size\" />
+									<input type=\"submit\" name=\"inp_submit_metric\" value=\"$get_food_serving_size_measurement_metric\" class=\"btn btn_default\" />
+									<input type=\"submit\" name=\"inp_submit_pcs\" value=\"$get_food_serving_size_pcs_measurement\" class=\"btn btn_default\" />
+									";
+								}
+							} // metric
+							if($get_current_view_eight_us == "1" OR $get_current_view_pcs_us == "1"){
+								echo"
+								<input type=\"text\" name=\"inp_entry_food_serving_size\" size=\"2\" value=\"$get_last_used_selected_serving_size\" />
+								<input type=\"submit\" name=\"inp_submit_us\" value=\"$get_food_serving_size_measurement_metric\" class=\"btn btn_default\" />
+								<input type=\"submit\" name=\"inp_submit_pcs\" value=\"$get_food_serving_size_pcs_measurement\" class=\"btn btn_default\" />
+								";
+							} // us
+							echo"
 							</p>
 							</form>
-						<!-- //Add Recipe -->";
-					} // recipe
-					echo"
+						<!-- //Add food -->
 					</div>
-				";
-				// Increment
-				$x++;
+					";
+					// Increment
+					$x++;
 		
-				// Reset
-				if($x == 4){
-					$x = 0;
-				}
-			} // while
-			if($x == "2"){
-				echo"
+					// Reset
+					if($x == 4){
+						$x = 0;
+					}
+				} // while recent food
+				if($x == "2"){
+					echo"
 						<div class=\"left_center_center_right_right_center\" style=\"text-align: center;padding-bottom: 20px;\">
 						</div>
 						<div class=\"left_center_center_right_right\" style=\"text-align: center;padding-bottom: 20px;\">
 						</div>
-				";
-			}
+					";
+				}
 
 			echo"
 			</div> <!-- //nettport_search_results -->

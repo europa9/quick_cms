@@ -49,7 +49,7 @@ else{
 if(isset($_GET['referer'])) {
 	$referer = $_GET['referer'];
 	$referer = strip_tags(stripslashes($referer));
-	if($referer != "food_diary_add_food"){
+	if($referer != "food_diary_add_food" && $referer != "food_diary_add"){
 		echo"Unknown referer";
 		die;
 	}
@@ -102,6 +102,13 @@ else{
 $food_id_mysql = quote_smart($link, $food_id);
 
 
+if(isset($_GET['action'])){
+	$action = $_GET['action'];
+	$action = strip_tags(stripslashes($action));
+}
+else{
+	$action = "";
+}
 
 
 /*- Headers ---------------------------------------------------------------------------------- */
@@ -205,7 +212,35 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 	// Header
 	if($referer == "food_diary_add_food"){
-		$url = "food_diary_add_food.php?date=$date&hour_name=$hour_name&l=$l&ft=info&fm=$fm&focus=null#adapter_view";
+		if($action == ""){
+			$url = "food_diary_add_food.php?date=$date&hour_name=$hour_name&l=$l&ft=info&fm=$fm&focus=null#adapter_view";
+			header("Location: $url");
+			exit;
+		}
+		elseif($action == "search"){
+			if(isset($_GET['inp_entry_food_query'])){
+				$inp_entry_food_query = $_GET['inp_entry_food_query'];
+				$inp_entry_food_query = output_html($inp_entry_food_query);
+			}
+			else{
+				$inp_entry_food_query = "";
+			}
+
+			$url = "food_diary_add_food.php?inp_entry_food_query=$inp_entry_food_query&action=search&date=$date&hour_name=$hour_name&l=$l&ft=info&fm=$fm&focus=null#adapter_view";
+			header("Location: $url");
+			exit;
+		}
+		elseif($action == "open_main_category"){
+			$url = "food_diary_add_food.php?action=open_main_category&main_category_id=$main_category_id&date=$date&hour_name=$hour_name&l=$l&ft=info&fm=$fm&focus=null#adapter_view";
+			header("Location: $url");
+			exit;
+		}
+		else{
+			echo"Unknown action";
+		}
+	}
+	elseif($referer == "food_diary_add"){
+		$url = "food_diary_add.php?date=$date&hour_name=$hour_name&l=$l&ft=info&fm=$fm&focus=null#adapter_view";
 		header("Location: $url");
 		exit;
 	}

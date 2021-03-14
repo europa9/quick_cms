@@ -45,16 +45,21 @@ echo"
 	  	   last_used_image_path VARCHAR(200),
 	  	   last_used_image_thumb_132x132 VARCHAR(200),
 
+	  	   last_used_food_main_category_id INT,
+	  	   last_used_food_sub_category_id INT,
+
 	  	   last_used_metric_or_us VARCHAR(20),
 	  	   last_used_selected_serving_size DOUBLE,
 	  	   last_used_selected_measurement VARCHAR(20),
 
-	  	   last_used_equivalent_metric DOUBLE,
-	  	   last_used_equivalent_measurement_metric VARCHAR(50),
-	  	   last_used_equivalent_us DOUBLE,
-	  	   last_used_equivalent_measurement_us VARCHAR(50),
-	  	   last_used_equivalent_pcs DOUBLE,
-	  	   last_used_equivalent_pcs_measurement VARCHAR(50),
+	  	   last_used_serving_size_metric DOUBLE,
+	  	   last_used_serving_size_measurement_metric VARCHAR(50),
+	  	   last_used_serving_size_us DOUBLE,
+	  	   last_used_serving_size_measurement_us VARCHAR(50),
+
+	  	   last_used_serving_size_pcs DOUBLE,
+	  	   last_used_serving_size_pcs_measurement VARCHAR(50),
+
 
 	  	   last_used_energy_metric DOUBLE,
 	  	   last_used_fat_metric DOUBLE,

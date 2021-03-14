@@ -14,6 +14,9 @@ if(!(isset($define_access_to_control_panel))){
 	die;
 }
 
+mysqli_query($link, "DROP TABLE $t_recipes_numbers") or die(mysqli_error());
+
+
 echo"
 
 	<!-- $t_recipes_numbers -->
@@ -28,71 +31,98 @@ echo"
 		";
 	}
 	else{
+		echo"<pre>CREATE TABLE $t_recipes_numbers(
+	  	 number_id INT NOT NULL AUTO_INCREMENT,
+	 	  PRIMARY KEY(number_id), 
+	  	   number_recipe_id INT,
+	  	   number_servings INT,
+
+		  `number_energy_metric` double DEFAULT NULL,
+		  `number_fat_metric` double DEFAULT NULL,
+		  `number_saturated_fat_metric` double DEFAULT NULL,
+		  `number_monounsaturated_fat_metric` double DEFAULT NULL,
+		  `number_polyunsaturated_fat_metric` double DEFAULT NULL,
+	  	   number_cholesterol_metric DOUBLE,
+		  `number_carbohydrates_metric` double DEFAULT NULL,
+		  `number_carbohydrates_of_which_sugars_metric` double DEFAULT NULL,
+		  `number_dietary_fiber_metric` double DEFAULT NULL,
+		  `number_proteins_metric` double DEFAULT NULL,
+		  number_salt_metric double DEFAULT NULL,
+ 		  number_sodium_metric int(11) DEFAULT NULL,
+
+		  `number_energy_serving` double DEFAULT NULL,
+		  `number_fat_serving` double DEFAULT NULL,
+		  `number_saturated_fat_serving` double DEFAULT NULL,
+		  `number_monounsaturated_fat_serving` double DEFAULT NULL,
+		  `number_polyunsaturated_fat_serving` double DEFAULT NULL,
+	  	   number_cholesterol_serving DOUBLE,
+		  `number_carbohydrates_serving` double DEFAULT NULL,
+		  `number_carbohydrates_of_which_sugars_serving` double DEFAULT NULL,
+		  `number_dietary_fiber_serving` double DEFAULT NULL,
+		  `number_proteins_serving` double DEFAULT NULL,
+		  number_salt_serving double DEFAULT NULL,
+ 		  number_sodium_serving int(11) DEFAULT NULL,
+
+		  `number_energy_total` double DEFAULT NULL,
+		  `number_fat_total` double DEFAULT NULL,
+		  `number_saturated_fat_total` double DEFAULT NULL,
+		  `number_monounsaturated_fat_total` double DEFAULT NULL,
+		  `number_polyunsaturated_fat_total` double DEFAULT NULL,
+	  	   number_cholesterol_total DOUBLE,
+		  `number_carbohydrates_total` double DEFAULT NULL,
+		  `number_carbohydrates_of_which_sugars_total` double DEFAULT NULL,
+		  `number_dietary_fiber_total` double DEFAULT NULL,
+		  `number_proteins_total` double DEFAULT NULL,
+		  number_salt_total double DEFAULT NULL,
+ 		  number_sodium_total int(11) DEFAULT NULL)</pre>";
+
 		mysqli_query($link, "CREATE TABLE $t_recipes_numbers(
 	  	 number_id INT NOT NULL AUTO_INCREMENT,
 	 	  PRIMARY KEY(number_id), 
 	  	   number_recipe_id INT,
-	  	   number_hundred_calories INT,
-	  	   number_hundred_proteins INT,
-	  	   number_hundred_fat INT,
-	  	   number_hundred_fat_of_which_saturated_fatty_acids INT,
-	  	   number_hundred_carbs INT,
-	  	   number_hundred_carbs_of_which_dietary_fiber INT,
-	  	   number_hundred_carbs_of_which_sugars INT,
-	  	   number_hundred_salt DOUBLE,
-	  	   number_hundred_sodium INT,
+	  	   number_servings INT,
 
-	  	   number_serving_calories INT,
-	  	   number_serving_proteins INT,
-	  	   number_serving_fat INT,
-	  	   number_serving_fat_of_which_saturated_fatty_acids INT,
-	  	   number_serving_carbs INT,
-	  	   number_serving_carbs_of_which_dietary_fiber INT,
-	  	   number_serving_carbs_of_which_sugars INT,
-	  	   number_serving_salt DOUBLE,
-	  	   number_serving_sodium INT,
+		  `number_energy_metric` double DEFAULT NULL,
+		  `number_fat_metric` double DEFAULT NULL,
+		  `number_saturated_fat_metric` double DEFAULT NULL,
+		  `number_monounsaturated_fat_metric` double DEFAULT NULL,
+		  `number_polyunsaturated_fat_metric` double DEFAULT NULL,
+	  	   number_cholesterol_metric DOUBLE,
+		  `number_carbohydrates_metric` double DEFAULT NULL,
+		  `number_carbohydrates_of_which_sugars_metric` double DEFAULT NULL,
+		  `number_dietary_fiber_metric` double DEFAULT NULL,
+		  `number_proteins_metric` double DEFAULT NULL,
+		  number_salt_metric double DEFAULT NULL,
+ 		  number_sodium_metric int(11) DEFAULT NULL,
 
-	  	   number_total_weight INT,
-	  	   number_total_calories INT,
-	  	   number_total_proteins INT,
-	  	   number_total_fat INT,
-	  	   number_total_fat_of_which_saturated_fatty_acids INT,
-	  	   number_total_carbs INT,
-	  	   number_total_carbs_of_which_dietary_fiber INT,
-	  	   number_total_carbs_of_which_sugars INT,
-	  	   number_total_salt DOUBLE,
-	  	   number_total_sodium INT,
+		  `number_energy_serving` double DEFAULT NULL,
+		  `number_fat_serving` double DEFAULT NULL,
+		  `number_saturated_fat_serving` double DEFAULT NULL,
+		  `number_monounsaturated_fat_serving` double DEFAULT NULL,
+		  `number_polyunsaturated_fat_serving` double DEFAULT NULL,
+	  	   number_cholesterol_serving DOUBLE,
+		  `number_carbohydrates_serving` double DEFAULT NULL,
+		  `number_carbohydrates_of_which_sugars_serving` double DEFAULT NULL,
+		  `number_dietary_fiber_serving` double DEFAULT NULL,
+		  `number_proteins_serving` double DEFAULT NULL,
+		  number_salt_serving double DEFAULT NULL,
+ 		  number_sodium_serving int(11) DEFAULT NULL,
 
-	  	   number_servings INT)")
+		  `number_energy_total` double DEFAULT NULL,
+		  `number_fat_total` double DEFAULT NULL,
+		  `number_saturated_fat_total` double DEFAULT NULL,
+		  `number_monounsaturated_fat_total` double DEFAULT NULL,
+		  `number_polyunsaturated_fat_total` double DEFAULT NULL,
+	  	   number_cholesterol_total DOUBLE,
+		  `number_carbohydrates_total` double DEFAULT NULL,
+		  `number_carbohydrates_of_which_sugars_total` double DEFAULT NULL,
+		  `number_dietary_fiber_total` double DEFAULT NULL,
+		  `number_proteins_total` double DEFAULT NULL,
+		  number_salt_total double DEFAULT NULL,
+ 		  number_sodium_total int(11) DEFAULT NULL)")
 		   or die(mysqli_error());
 
-		/*
-		mysqli_query($link, "
-INSERT INTO $t_recipes_numbers (`number_id`, `number_recipe_id`, `number_hundred_calories`, `number_hundred_proteins`, `number_hundred_fat`, `number_hundred_carbs`, `number_serving_calories`, `number_serving_proteins`, `number_serving_fat`, `number_serving_carbs`, `number_total_weight`, `number_total_calories`, `number_total_proteins`, `number_total_fat`, `number_total_carbs`, `number_servings`) VALUES
-(1, 1, 0, 0, 0, 0, 250, 0, 0, 0, 0, 1251, 0, 0, 0, 5),
-(2, 2, 0, 0, 0, 0, 265, 0, 0, 0, 0, 3190, 0, 0, 0, 12),
-(3, 3, 0, 0, 0, 0, 163, 0, 0, 0, 0, 163, 0, 0, 0, 1),
-(4, 4, 0, 0, 0, 0, 382, 0, 0, 0, 0, 382, 0, 0, 0, 1),
-(5, 5, 0, 0, 0, 0, 126, 0, 0, 0, 0, 1260, 0, 0, 0, 10),
-(6, 6, 0, 0, 0, 0, 210, 0, 0, 0, 0, 841, 0, 0, 0, 4),
-(7, 7, 0, 0, 0, 0, 87, 0, 0, 0, 0, 174, 0, 0, 0, 2),
-(8, 8, 0, 0, 0, 0, 80, 0, 0, 0, 0, 161, 0, 0, 0, 2),
-(9, 9, 0, 0, 0, 0, 110, 0, 0, 0, 0, 110, 0, 0, 0, 1),
-(10, 10, 0, 0, 0, 0, 472, 0, 0, 0, 0, 1889, 0, 0, 0, 4),
-(11, 11, 0, 0, 0, 0, 655, 0, 0, 0, 0, 2623, 0, 0, 0, 4),
-(12, 12, 0, 0, 0, 0, 551, 0, 0, 0, 0, 551, 0, 0, 0, 1),
-(13, 13, 0, 0, 0, 0, 136, 0, 0, 0, 0, 136, 0, 0, 0, 1),
-(14, 14, 0, 0, 0, 0, 116, 0, 0, 0, 0, 116, 0, 0, 0, 1),
-(15, 15, 0, 0, 0, 0, 159, 0, 0, 0, 0, 159, 0, 0, 0, 1),
-(16, 16, 0, 0, 0, 0, 44, 0, 0, 0, 0, 44, 0, 0, 0, 1),
-(17, 17, 0, 0, 0, 0, 136, 0, 0, 0, 0, 136, 0, 0, 0, 1),
-(18, 18, 0, 0, 0, 0, 89, 0, 0, 0, 0, 89, 0, 0, 0, 1),
-(19, 19, 0, 0, 0, 0, 6, 0, 0, 0, 0, 6, 0, 0, 0, 1),
-(20, 20, 0, 0, 0, 0, 155, 0, 0, 0, 0, 155, 0, 0, 0, 1),
-
-		(21, 21, 0, 0, 0, 0, 424, 0, 0, 0, 0, 424, 0, 0, 0, 1)")
-		   or die(mysqli_error());
-		*/
+		// Loop trough all and calculate?
 	}
 	echo"
 	<!-- //$t_recipes_numbers -->
