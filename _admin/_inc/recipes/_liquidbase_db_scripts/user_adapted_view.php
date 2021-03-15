@@ -44,7 +44,9 @@ echo"
 	  	 view_system VARCHAR(20),
 	  	 view_hundred_metric INT,
 	  	 view_serving INT,
-	  	 view_eight_us INT
+	  	 view_pcs_metric INT,
+	  	 view_eight_us INT,
+	  	 view_pcs_us INT
 	  	   )")
 		   or die(mysqli_error());
 

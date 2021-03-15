@@ -37,7 +37,7 @@ $l_mysql = quote_smart($link, $l);
 if(isset($_GET['set'])) {
 	$set = $_GET['set'];
 	$set = strip_tags(stripslashes($set));
-	if($set != "hundred_metric" && $set != "serving" && $set != "eight_us"){
+	if($set != "hundred_metric" && $set != "serving" && $set != "pcs_metric" && $set != "eight_us" && $set != "pcs_us"){
 		echo"Unknown set";
 		die;
 	}
@@ -49,7 +49,7 @@ else{
 if(isset($_GET['referer'])) {
 	$referer = $_GET['referer'];
 	$referer = strip_tags(stripslashes($referer));
-	if($referer != "index" && $referer != "categories_browse"){
+	if($referer != "index" && $referer != "categories_browse" && $referer != "edit_recipe_ingredients"){
 		echo"Unknown referer";
 		die;
 	}
@@ -58,6 +58,28 @@ else{
 	echo"Missing referer";
 	die;
 }
+if(isset($_GET['action'])){
+	$action= $_GET['action'];
+	$action = strip_tags(stripslashes($action));
+}
+else{
+	$action = "";
+}
+if(isset($_GET['recipe_id'])){
+	$recipe_id= $_GET['recipe_id'];
+	$recipe_id = strip_tags(stripslashes($recipe_id));
+}
+else{
+	$recipe_id = "";
+}
+if(isset($_GET['group_id'])){
+	$group_id= $_GET['group_id'];
+	$group_id = strip_tags(stripslashes($group_id));
+}
+else{
+	$group_id = "";
+}
+
 if(isset($_GET['category_id'])){
 	$category_id= $_GET['category_id'];
 	$category_id = strip_tags(stripslashes($category_id));
@@ -81,10 +103,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	$my_user_id = output_html($my_user_id);
 	$my_user_id_mysql = quote_smart($link, $my_user_id);
 	
-	$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_eight_us FROM $t_recipes_user_adapted_view WHERE view_user_id=$my_user_id_mysql";
+	$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_recipes_user_adapted_view WHERE view_user_id=$my_user_id_mysql";
 	$result_t = mysqli_query($link, $query_t);
 	$row_t = mysqli_fetch_row($result_t);
-	list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_eight_us) = $row_t;
+	list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
 	
 	if($get_current_view_id == ""){
 		// Create default
@@ -95,10 +117,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				or die(mysqli_error($link));
 
 
-		$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_eight_us FROM $t_recipes_user_adapted_view WHERE view_user_id=$my_user_id_mysql";
+		$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_recipes_user_adapted_view WHERE view_user_id=$my_user_id_mysql";
 		$result_t = mysqli_query($link, $query_t);
 		$row_t = mysqli_fetch_row($result_t);
-		list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_eight_us) = $row_t;
+		list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
 	}
 }
 else{
@@ -108,10 +130,10 @@ else{
 	$my_user_ip_mysql = quote_smart($link, $my_user_ip);
 	
 	
-	$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_eight_us FROM $t_recipes_user_adapted_view WHERE view_ip=$my_user_ip_mysql";
+	$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_recipes_user_adapted_view WHERE view_ip=$my_user_ip_mysql";
 	$result_t = mysqli_query($link, $query_t);
 	$row_t = mysqli_fetch_row($result_t);
-	list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_eight_us) = $row_t;
+	list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
 
 
 	if($get_current_view_id == ""){
@@ -122,10 +144,10 @@ else{
 				(NULL, $my_user_id_mysql, $my_user_ip_mysql, $year, 'metric', 1, 1, 0)")
 				or die(mysqli_error($link));
 
-		$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_eight_us FROM $t_recipes_user_adapted_view WHERE view_ip=$my_user_ip_mysql";
+		$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_recipes_user_adapted_view WHERE view_ip=$my_user_ip_mysql";
 		$result_t = mysqli_query($link, $query_t);
 		$row_t = mysqli_fetch_row($result_t);
-		list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_eight_us) = $row_t;
+		list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
 	}
 }
 
@@ -152,6 +174,16 @@ elseif($set == "serving"){
 		$fm = "activaed_serving";
 	}
 }
+elseif($set == "pcs_metric"){
+	if($get_current_view_pcs_metric == "1"){
+		mysqli_query($link, "UPDATE $t_recipes_user_adapted_view SET view_pcs_metric=0 WHERE view_id=$get_current_view_id") or die(mysqli_error($link));
+		$fm = "deactivated_pcs_metric";
+	}
+	else{
+		mysqli_query($link, "UPDATE $t_recipes_user_adapted_view SET view_pcs_metric=1 WHERE view_id=$get_current_view_id") or die(mysqli_error($link));
+		$fm = "activaed_pcs_metric";
+	}
+}
 elseif($set == "eight_us"){
 	if($get_current_view_eight_us == "1"){
 		mysqli_query($link, "UPDATE $t_recipes_user_adapted_view SET view_eight_us=0 WHERE view_id=$get_current_view_id") or die(mysqli_error($link));
@@ -160,6 +192,16 @@ elseif($set == "eight_us"){
 	else{
 		mysqli_query($link, "UPDATE $t_recipes_user_adapted_view SET view_eight_us=1 WHERE view_id=$get_current_view_id") or die(mysqli_error($link));
 		$fm = "activaed_eight_us";
+	}
+}
+elseif($set == "pcs_us"){
+	if($get_current_view_pcs_us == "1"){
+		mysqli_query($link, "UPDATE $t_recipes_user_adapted_view SET view_pcs_us=0 WHERE view_id=$get_current_view_id") or die(mysqli_error($link));
+		$fm = "deactivated_pcs_us";
+	}
+	else{
+		mysqli_query($link, "UPDATE $t_recipes_user_adapted_view SET view_pcs_us=1 WHERE view_id=$get_current_view_id") or die(mysqli_error($link));
+		$fm = "activaed_pcs_us";
 	}
 }
 else{
@@ -180,6 +222,11 @@ if($referer == "index"){
 }
 elseif($referer == "categories_browse"){
 	$url = "categories_browse.php?category_id=$category_id&l=$l&ft=info&fm=$fm";
+	header("Location: $url");
+	exit;
+}
+elseif($referer == "edit_recipe_ingredients"){
+	$url = "edit_recipe_ingredients.php?action=add_items&recipe_id=$recipe_id&group_id=$group_id&l=$l&ft=info&fm=$fm";
 	header("Location: $url");
 	exit;
 }

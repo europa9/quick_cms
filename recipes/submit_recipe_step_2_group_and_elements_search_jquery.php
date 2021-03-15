@@ -1,4 +1,7 @@
 ﻿<?php 
+error_reporting(E_ALL & ~E_STRICT);
+@session_start();
+ini_set('arg_separator.output', '&amp;');
 /**
 *
 * File: food/search_jquery.php
@@ -66,6 +69,7 @@ include("_tables.php");
 $t_food_index		= $mysqlPrefixSav . "food_index";
 $t_food_queries 	= $mysqlPrefixSav . "food_queries";
 $t_recipes 		= $mysqlPrefixSav . "recipes";
+$t_recipes_user_adapted_view 	= $mysqlPrefixSav . "recipes_user_adapted_view";
 
 
 
@@ -177,6 +181,25 @@ else{
 }
 
 
+/*- User adapted view ---------------------------------------------------------------- */
+if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
+	$my_user_id = $_SESSION['user_id'];
+	$my_user_id = output_html($my_user_id);
+	$my_user_id_mysql = quote_smart($link, $my_user_id);
+			
+	$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_recipes_user_adapted_view WHERE view_user_id=$my_user_id_mysql";
+	$result_t = mysqli_query($link, $query_t);
+	$row_t = mysqli_fetch_row($result_t);
+	list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
+}
+else{
+	echo"<div class=\"warning\"><p>Your not logged in</p></div>";
+}
+if($get_current_view_id == ""){
+	echo"No view $query_t ";
+}
+
+
 /*- Query --------------------------------------------------------------------------- */
 if(isset($_GET['q']) OR isset($_POST['q'])){
 	if(isset($_GET['q'])) {
@@ -190,7 +213,6 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 	$inp_datetime = date("Y-m-d H:i:s");
 	$q = output_html($q);
 	$q_mysql = quote_smart($link, $q);
-
 	if($q != ""){
 		$query = "SELECT query_name, query_times FROM $t_food_queries WHERE query_name=$q_mysql";
 		$res = mysqli_query($link, $query);
@@ -214,7 +236,7 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 
 
 		// Ready for MySQL search
-		$q = $q . "%";
+		$q = "%" . $q . "%";
 		$q_mysql = quote_smart($link, $q);
 
 		// Set layout
@@ -290,52 +312,129 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 				<a href=\"../food/view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\" class=\"_blank\">$title</a>
 				</p>
 
-				
-				<p style=\"margin:0;padding: 0px 0px 5px 0px;\">
+				<!-- Add food to recipe buttons -->
+					<p style=\"margin:0;padding: 0px 0px 5px 0px;\">
 					<a href=\"#\" id=\"food_click_action_gram_$get_food_id\" class=\"btn_default\">$get_food_serving_size_measurement_metric</a>
-				";
+					";
 
-				if($get_food_serving_size_pcs_measurement != "$get_food_serving_size_measurement_metric"){
-					echo"<a href=\"#\" id=\"food_click_action_pcs_$get_food_id\" class=\"btn_default\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement</a><br />\n";
-				}
-				echo"
-				</p>\n";
+					if($get_food_serving_size_pcs_measurement != "$get_food_serving_size_measurement_metric"){
+						echo"<a href=\"#\" id=\"food_click_action_pcs_$get_food_id\" class=\"btn_default\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement</a><br />\n";
+					}
+					echo"
+					</p>
+				<!-- //Add food to recipe buttons -->\n";
 
-				if($get_food_energy_metric != "0" && $get_food_fat_metric != "0" && $get_food_carbohydrates_metric != "0" && $get_food_proteins_metric != "0"){
+	
+				if($get_current_view_hundred_metric == "1" OR $get_current_view_pcs_metric == "1" OR $get_current_view_eight_us == "1" OR $get_current_view_pcs_us == "1"){
+				
 					echo"
 					<table style=\"margin: 0px auto;\">
-					 <tr>
-					  <td style=\"padding-right: 10px;text-align: center;\">
-						<span class=\"grey_small\">$get_food_energy_metric</span>
-					  </td>
-					  <td style=\"padding-right: 10px;text-align: center;\">
-						<span class=\"grey_small\">$get_food_fat_metric</span>
-					  </td>
-					  <td style=\"padding-right: 10px;text-align: center;\">
-						<span class=\"grey_small\">$get_food_carbohydrates_metric</span>
-					  </td>
-					  <td style=\"text-align: center;\">
-						<span class=\"grey_small\">$get_food_proteins_metric</span>
-					  </td>
-					 </tr>
-					 <tr>
-					  <td style=\"padding-right: 10px;text-align: center;\">
-						<span class=\"grey_small\">$l_cal_lowercase</span>
-					  </td>
-					  <td style=\"padding-right: 10px;text-align: center;\">
-						<span class=\"grey_small\">$l_fat_lowercase</span>
-					  </td>
-					  <td style=\"padding-right: 10px;text-align: center;\">
-						<span class=\"grey_small\">$l_carb_lowercase</span>
-					  </td>
-					  <td style=\"text-align: center;\">
-						<span class=\"grey_small\">$l_proteins_lowercase</span>
-					  </td>
-					 </tr>
-					</table>";
+					";
+					if($get_current_view_hundred_metric == "1"){
+						echo"
+						 <tr>
+						  <td style=\"padding-right: 6px;text-align: center;\">
+						<span class=\"nutritional_number\">$l_hundred</span>
+						  </td>
+						  <td style=\"padding-right: 6px;text-align: center;\">
+						<span class=\"nutritional_number\">$get_food_energy_metric</span>
+						  </td>
+						  <td style=\"padding-right: 6px;text-align: center;\">
+						<span class=\"nutritional_number\">$get_food_fat_metric</span>
+						  </td>
+						  <td style=\"padding-right: 6px;text-align: center;\">
+						<span class=\"nutritional_number\">$get_food_carbohydrates_metric</span>
+						  </td>
+						  <td style=\"text-align: center;\">
+						<span class=\"nutritional_number\">$get_food_proteins_metric</span>
+						  </td>
+						 </tr>
+						";
+					}
+					if($get_current_view_pcs_metric == "1"){
+						echo"
+						 <tr>
+						  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+							<span class=\"nutritional_number\" title=\"$get_food_serving_size_metric $get_food_serving_size_measurement_metric\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement</span>
+						  </td>
+						  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+						<span class=\"nutritional_number\">$get_food_energy_calculated_metric</span>
+						  </td>
+						  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+						<span class=\"nutritional_number\">$get_food_fat_calculated_metric</span>
+						  </td>
+						  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+						<span class=\"nutritional_number\">$get_food_carbohydrates_calculated_metric</span>
+						  </td>
+						  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+						<span class=\"nutritional_number\">$get_food_proteins_calculated_metric</span>
+						  </td>
+						 </tr>
+						";
+					}
+					if($get_current_view_eight_us == "1"){
+						echo"
+						 <tr>
+						  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+						<span class=\"nutritional_number\">$l_per_eight_abbr_lowercase</span>
+						  </td>
+						  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+						<span class=\"nutritional_number\">$get_food_energy_us</span>
+						  </td>
+						  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+						<span class=\"nutritional_number\">$get_food_fat_us</span>
+						  </td>
+						  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+						<span class=\"nutritional_number\">$get_food_carbohydrates_us</span>
+						  </td>
+						  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+						<span class=\"nutritional_number\">$get_food_proteins_us</span>
+						  </td>
+						 </tr>
+						";
+					}
+					if($get_current_view_pcs_us == "1"){
+						echo"
+						 <tr>
+						  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+						<span class=\"nutritional_number\" title=\"$get_food_serving_size_us $get_food_serving_size_measurement_us\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement</span>
+						  </td>
+						  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+						<span class=\"nutritional_number\">$get_food_energy_calculated_us</span>
+						  </td>
+						  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+							<span class=\"nutritional_number\">$get_food_fat_calculated_us</span>
+						  </td>
+						  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+						<span class=\"nutritional_number\">$get_food_carbohydrates_calculated_us</span>
+						  </td>
+						  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+						<span class=\"nutritional_number\">$get_food_proteins_calculated_us</span>
+						  </td>
+						 </tr>
+						";
+					}
+					echo"
+						 <tr>
+						  <td style=\"padding-right: 6px;text-align: center;\">
+						  </td>
+						  <td style=\"padding-right: 6px;text-align: center;\">
+							<span class=\"nutritional_number\">$l_calories_abbr_lowercase</span>
+						  </td>
+						  <td style=\"padding-right: 6px;text-align: center;\">
+							<span class=\"nutritional_number\">$l_fat_abbr_lowercase</span>
+						  </td>
+						  <td style=\"padding-right: 6px;text-align: center;\">
+							<span class=\"nutritional_number\">$l_carbohydrates_abbr_lowercase</span>
+						  </td>
+						  <td style=\"text-align: center;\">
+							<span class=\"nutritional_number\">$l_proteins_abbr_lowercase</span>
+						  </td>
+						 </tr>
+						</table>
+					";
 				}
 				echo"
-
 				<!-- If else two numbers -->
 				
 					<script>
@@ -344,26 +443,44 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 							var inpAmount = \$('#inp_item_amount').val().replace(',', '.');
 
 
-							\$(\".inp_item_measurement\").val(\"$get_food_serving_size_measurement_metric\");
+							\$(\"#inp_item_measurement\").val(\"$get_food_serving_size_measurement_metric\");
 							\$(\".inp_item_grocery\").val(\"$get_food_name\");
 							\$(\"#inp_item_food_id\").val($get_food_id);
 
-							\$(\"#inp_item_calories_per_hundred\").val($get_food_energy_metric);
-							\$(\"#inp_item_fat_per_hundred\").val($get_food_fat_metric);
-							\$(\"#inp_item_fat_of_which_saturated_fatty_acids_per_hundred\").val($get_food_saturated_fat_metric);
-							\$(\"#inp_item_carbs_per_hundred\").val($get_food_carbohydrates_metric);
-							\$(\"#inp_item_carbs_of_which_dietary_fiber_per_hundred\").val($get_food_dietary_fiber_metric);
-							\$(\"#inp_item_carbs_of_which_sugars_per_hundred\").val($get_food_carbohydrates_of_which_sugars_metric);
-							\$(\"#inp_item_proteins_per_hundred\").val($get_food_proteins_metric);
-							\$(\"#inp_item_salt_per_hundred\").val($get_food_salt_metric);
-							\$(\"#inp_item_sodium_per_hundred\").val($get_food_sodium_metric);
+							\$(\"#inp_item_calories_metric\").val($get_food_energy_metric);
+							\$(\"#inp_item_fat_metric\").val($get_food_fat_metric);
+							\$(\"#inp_item_saturated_fat_metric\").val($get_food_saturated_fat_metric);\n";
+							if($get_food_monounsaturated_fat_metric != ""){
+								echo"							";
+								echo"\$(\"#inp_item_monounsaturated_fat_metric\").val($get_food_monounsaturated_fat_metric);\n";
+							}
+							if($get_food_polyunsaturated_fat_metric != ""){
+								echo"							";
+								echo"\$(\"#inp_item_polyunsaturated_fat_metric\").val($get_food_polyunsaturated_fat_metric);\n";
+							}
+							echo"
+							\$(\"#inp_item_carbohydrates_metric\").val($get_food_carbohydrates_metric);
+							\$(\"#inp_item_carbohydrates_of_which_sugars_metric\").val($get_food_carbohydrates_of_which_sugars_metric);
+							\$(\"#inp_item_dietary_fiber_metric\").val($get_food_dietary_fiber_metric);
+							\$(\"#inp_item_proteins_metric\").val($get_food_proteins_metric);
+							\$(\"#inp_item_salt_metric\").val($get_food_salt_metric);
+							\$(\"#inp_item_sodium_metric\").val($get_food_sodium_metric);
 
 							\$(\"#inp_item_calories_calculated\").val(($get_food_energy_metric * inpAmount)/100);
 							\$(\"#inp_item_fat_calculated\").val(($get_food_fat_metric * inpAmount)/100);
-							\$(\"#inp_item_fat_of_which_saturated_fatty_acids_calculated\").val(($get_food_saturated_fat_metric * inpAmount)/100);
-							\$(\"#inp_item_carbs_calculated\").val(($get_food_carbohydrates_metric * inpAmount)/100);
-							\$(\"#inp_item_carbs_of_which_dietary_fiber_calculated\").val(($get_food_dietary_fiber_metric * inpAmount)/100);
-							\$(\"#inp_item_carbs_of_which_sugars_calculated\").val(($get_food_carbohydrates_of_which_sugars_metric * inpAmount)/100);
+							\$(\"#inp_item_saturated_fat_calculated\").val(($get_food_saturated_fat_metric * inpAmount)/100);\n";
+							if($get_food_monounsaturated_fat_metric != ""){
+								echo"							";
+								echo"\$(\"#inp_item_monounsaturated_fat_calculated\").val(($get_food_monounsaturated_fat_metric * inpAmount)/100);\n";
+							}
+							if($get_food_polyunsaturated_fat_metric != ""){
+								echo"							";
+								echo"\$(\"#inp_item_polyunsaturated_fat_calculated\").val(($get_food_polyunsaturated_fat_metric * inpAmount)/100);\n";
+							}
+							echo"
+							\$(\"#inp_item_carbohydrates_calculated\").val(($get_food_carbohydrates_metric * inpAmount)/100);
+							\$(\"#inp_item_carbohydrates_of_which_sugars_calculated\").val(($get_food_dietary_fiber_metric * inpAmount)/100);
+							\$(\"#inp_item_dietary_fiber_calculated\").val(($get_food_dietary_fiber_metric * inpAmount)/100);
 							\$(\"#inp_item_proteins_calculated\").val(($get_food_proteins_metric * inpAmount)/100);
 							\$(\"#inp_item_salt_calculated\").val(($get_food_salt_metric * inpAmount)/100);
 							\$(\"#inp_item_sodium_calculated\").val(($get_food_sodium_metric * inpAmount)/100);
@@ -377,29 +494,47 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 							var inpAmount = \$('#inp_item_amount').val().replace(',', '.');
 
 
-							\$(\".inp_item_measurement\").val(\"$get_food_serving_size_pcs_measurement\");
+							\$(\"#inp_item_measurement\").val(\"$get_food_serving_size_pcs_measurement\");
 							\$(\".inp_item_grocery\").val(\"$get_food_name\");
 							\$(\"#inp_item_food_id\").val($get_food_id);
 					
-							\$(\"#inp_item_calories_per_hundred\").val($get_food_energy_metric);
-							\$(\"#inp_item_fat_per_hundred\").val($get_food_fat_metric);
-							\$(\"#inp_item_fat_of_which_saturated_fatty_acids_per_hundred\").val($get_food_saturated_fat_metric);
-							\$(\"#inp_item_carbs_per_hundred\").val($get_food_carbohydrates_metric);
-							\$(\"#inp_item_carbs_of_which_dietary_fiber_per_hundred\").val($get_food_dietary_fiber_metric);
-							\$(\"#inp_item_carbs_of_which_sugars_per_hundred\").val($get_food_carbohydrates_of_which_sugars_metric);
-							\$(\"#inp_item_proteins_per_hundred\").val($get_food_proteins_metric);
-							\$(\"#inp_item_salt_per_hundred\").val($get_food_salt_metric);
-							\$(\"#inp_item_sodium_per_hundred\").val($get_food_sodium_metric);
+							\$(\"#inp_item_calories_metric\").val($get_food_energy_metric);
+							\$(\"#inp_item_fat_metric\").val($get_food_fat_metric);
+							\$(\"#inp_item_saturated_fat_metric\").val($get_food_saturated_fat_metric);\n";
+							if($get_food_monounsaturated_fat_metric != ""){
+								echo"							";
+								echo"\$(\"#inp_item_monounsaturated_fat_metric\").val($get_food_monounsaturated_fat_metric);\n";
+							}
+							if($get_food_polyunsaturated_fat_metric != ""){
+								echo"							";
+								echo"\$(\"#inp_item_polyunsaturated_fat_metric\").val($get_food_polyunsaturated_fat_metric);\n";
+							}
+							echo"
+							\$(\"#inp_item_carbohydrates_metric\").val($get_food_carbohydrates_metric);
+							\$(\"#inp_item_carbohydrates_of_which_sugars_metric\").val($get_food_carbohydrates_of_which_sugars_metric);
+							\$(\"#inp_item_dietary_fiber_metric\").val($get_food_dietary_fiber_metric);
+							\$(\"#inp_item_proteins_metric\").val($get_food_proteins_metric);
+							\$(\"#inp_item_salt_metric\").val($get_food_salt_metric);
+							\$(\"#inp_item_sodium_metric\").val($get_food_sodium_metric);
 
-							\$(\"#inp_item_calories_calculated\").val($get_food_energy_calculated_metric * inpAmount);
-							\$(\"#inp_item_fat_calculated\").val($get_food_fat_calculated_metric * inpAmount);
-							\$(\"#inp_item_fat_of_which_saturated_fatty_acids_calculated\").val($get_food_saturated_fat_metric * inpAmount);
-							\$(\"#inp_item_carbs_calculated\").val($get_food_carbohydrates_calculated_metric * inpAmount);
-							\$(\"#inp_item_carbs_of_which_dietary_fiber_calculated\").val($get_food_dietary_fiber_calculated_metric * inpAmount);
-							\$(\"#inp_item_carbs_of_which_sugars_calculated\").val($get_food_carbohydrates_of_which_sugars_calculated_metric * inpAmount);
-							\$(\"#inp_item_proteins_calculated\").val($get_food_proteins_calculated_metric * inpAmount);
-							\$(\"#inp_item_salt_calculated\").val($get_food_salt_calculated_metric * inpAmount);
-							\$(\"#inp_item_sodium_calculated\").val($get_food_sodium_calculated_metric * inpAmount);
+							\$(\"#inp_item_calories_calculated\").val($get_food_energy_metric * inpAmount);
+							\$(\"#inp_item_fat_calculated\").val($get_food_fat_metric * inpAmount);
+							\$(\"#inp_item_saturated_fat_calculated\").val($get_food_saturated_fat_metric * inpAmount);\n";
+							if($get_food_monounsaturated_fat_metric != ""){
+								echo"							";
+								echo"\$(\"#inp_item_monounsaturated_fat_calculated\").val($get_food_monounsaturated_fat_metric * inpAmount);\n";
+							}
+							if($get_food_polyunsaturated_fat_metric != ""){
+								echo"							";
+								echo"\$(\"#inp_item_polyunsaturated_fat_calculated\").val($get_food_polyunsaturated_fat_metric * inpAmount);\n";
+							}
+							echo"
+							\$(\"#inp_item_carbohydrates_calculated\").val($get_food_carbohydrates_metric * inpAmount);
+							\$(\"#inp_item_carbohydrates_of_which_sugars_calculated\").val($get_food_dietary_fiber_metric * inpAmount);
+							\$(\"#inp_item_dietary_fiber_calculated\").val($get_food_dietary_fiber_metric * inpAmount);
+							\$(\"#inp_item_proteins_calculated\").val($get_food_proteins_metric * inpAmount);
+							\$(\"#inp_item_salt_calculated\").val($get_food_salt_metric * inpAmount);
+							\$(\"#inp_item_sodium_calculated\").val($get_food_sodium_metric * inpAmount);
 				
 							$(\"#nettport_search_results\").hide();
 

@@ -307,48 +307,82 @@ else{
 						<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\"><img src=\"$root/$get_recipe_image_path/$get_recipe_thumb_278x156\" alt=\"$get_recipe_image\" /></a><br />
 						<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\" class=\"h2\">$get_recipe_title</a>
 						</p>
-					<!-- Recipe image + title -->
+					<!-- //Recipe image + title -->
 
 					<!-- Numbers -->";
-						if($get_number_hundred_calories != "0"){
-						echo"
-						<table style=\"margin: 0px auto;\">
-						 <tr>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_small\">$get_number_hundred_calories</span>
-						  </td>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_small\">$get_number_hundred_fat</span>
-						  </td>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_small\">$get_number_hundred_carbs</span>
-						  </td>
-						  <td style=\"text-align: center;\">
-							<span class=\"grey_small\">$get_number_hundred_proteins</span>
-						  </td>
-						 </tr>
-						 <tr>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_small\">$l_cal_lowercase</span>
-						  </td>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_small\">$l_fat_lowercase</span>
-						  </td>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_small\">$l_carb_lowercase</span>
-						  </td>
-						  <td style=\"text-align: center;\">
-							<span class=\"grey_small\">$l_proteins_abbr_lowercase</span>
-						  </td>
-						 </tr>
-						</table>
-						";
-					}
-					echo"
+
+						if($get_current_view_hundred_metric == "1" OR $get_current_view_serving == "1" OR $get_current_view_eight_us == "1"){
+							echo"
+							<table style=\"margin: 0px auto;\">
+							";
+							if($get_current_view_hundred_metric == "1"){
+								echo"
+								 <tr>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$l_hundred</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$get_number_energy_metric</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$get_number_fat_metric</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$get_number_carbohydrates_metric</span>
+								  </td>
+								  <td style=\"text-align: center;\">
+									<span class=\"nutritional_number\">$get_number_proteins_metric</span>
+								  </td>
+								 </tr>
+								";
+							}
+							if($get_current_view_serving == "1"){
+								echo"
+								 <tr>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$l_serving</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$get_number_energy_serving</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$get_number_fat_serving</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$get_number_carbohydrates_serving</span>
+								  </td>
+								  <td style=\"text-align: center;\">
+									<span class=\"nutritional_number\">$get_number_proteins_serving</span>
+								  </td>
+								 </tr>
+								";
+							}
+
+							echo"
+								 <tr>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$l_calories_abbr_lowercase</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$l_fat_abbr_lowercase</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$l_carbohydrates_abbr_lowercase</span>
+								  </td>
+								  <td style=\"text-align: center;\">
+									<span class=\"nutritional_number\">$l_proteins_abbr_lowercase</span>
+								  </td>
+								 </tr>
+								</table>
+								";
+							}
+							echo"
+					<!-- //Numbers -->
 
 
-
-			</div>
+				</div> <!-- //left_center_center_right_right -->
 			";
 
 			// Count recipes
@@ -373,12 +407,13 @@ else{
 	}
 	elseif($x == "1"){
 		echo"
-		</div> <!-- //left_center_center_left_right_center -->
 		<div class=\"left_center_center_right_right_center\">
 		</div> <!-- //left_center_center_right_right_center -->
 
 		<div class=\"left_center_center_right_right\">
 		</div> <!-- //left_center_center_right_right -->
+			
+		<div class=\"clear\"></div>
 		";
 	}
 	elseif($x == "2"){
