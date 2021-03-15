@@ -100,10 +100,10 @@ else{
 		if($get_recipe_user_id == "$my_user_id" OR $get_user_rank == "admin"){
 
 	// Get number of servings
-	$query = "SELECT number_servings, number_total_calories, number_total_proteins, number_total_fat, number_total_carbs FROM $t_recipes_numbers WHERE number_recipe_id=$recipe_id_mysql";
+	$query = "SELECT number_id, number_recipe_id, number_servings, number_energy_metric, number_fat_metric, number_saturated_fat_metric, number_monounsaturated_fat_metric, number_polyunsaturated_fat_metric, number_cholesterol_metric, number_carbohydrates_metric, number_carbohydrates_of_which_sugars_metric, number_dietary_fiber_metric, number_proteins_metric, number_salt_metric, number_sodium_metric, number_energy_serving, number_fat_serving, number_saturated_fat_serving, number_monounsaturated_fat_serving, number_polyunsaturated_fat_serving, number_cholesterol_serving, number_carbohydrates_serving, number_carbohydrates_of_which_sugars_serving, number_dietary_fiber_serving, number_proteins_serving, number_salt_serving, number_sodium_serving, number_energy_total, number_fat_total, number_saturated_fat_total, number_monounsaturated_fat_total, number_polyunsaturated_fat_total, number_cholesterol_total, number_carbohydrates_total, number_carbohydrates_of_which_sugars_total, number_dietary_fiber_total, number_proteins_total, number_salt_total, number_sodium_total FROM $t_recipes_numbers WHERE number_recipe_id=$recipe_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_number_servings, $get_number_total_calories, $get_number_total_proteins, $get_number_total_fat, $get_number_total_carbs) = $row;
+	list($get_number_id, $get_number_recipe_id, $get_number_servings, $get_number_energy_metric, $get_number_fat_metric, $get_number_saturated_fat_metric, $get_number_monounsaturated_fat_metric, $get_number_polyunsaturated_fat_metric, $get_number_cholesterol_metric, $get_number_carbohydrates_metric, $get_number_carbohydrates_of_which_sugars_metric, $get_number_dietary_fiber_metric, $get_number_proteins_metric, $get_number_salt_metric, $get_number_sodium_metric, $get_number_energy_serving, $get_number_fat_serving, $get_number_saturated_fat_serving, $get_number_monounsaturated_fat_serving, $get_number_polyunsaturated_fat_serving, $get_number_cholesterol_serving, $get_number_carbohydrates_serving, $get_number_carbohydrates_of_which_sugars_serving, $get_number_dietary_fiber_serving, $get_number_proteins_serving, $get_number_salt_serving, $get_number_sodium_serving, $get_number_energy_total, $get_number_fat_total, $get_number_saturated_fat_total, $get_number_monounsaturated_fat_total, $get_number_polyunsaturated_fat_total, $get_number_cholesterol_total, $get_number_carbohydrates_total, $get_number_carbohydrates_of_which_sugars_total, $get_number_dietary_fiber_total, $get_number_proteins_total, $get_number_salt_total, $get_number_sodium_total) = $row;
 
 	if($process == 1){
 		
@@ -121,21 +121,61 @@ else{
 		if($inp_number_servings != "$get_number_servings"){
 			// Update the rest of the numbers
 			
-					
-			$inp_number_serving_calories = round($get_number_total_calories/$inp_number_servings);
-			$inp_number_serving_proteins = round($get_number_total_proteins/$inp_number_servings);
-			$inp_number_serving_fat      = round($get_number_total_fat/$inp_number_servings);
-			$inp_number_serving_carbs    = round($get_number_total_carbs/$inp_number_servings);
-	
-			$inp_number_serving_calories_mysql = quote_smart($link, $inp_number_serving_calories);
-			$inp_number_serving_proteins_mysql = quote_smart($link, $inp_number_serving_proteins);
-			$inp_number_serving_fat_mysql      = quote_smart($link, $inp_number_serving_fat);
-			$inp_number_serving_carbs_mysql    = quote_smart($link, $inp_number_serving_carbs);
+			$inp_number_energy_serving	 = round($get_number_energy_total/$inp_number_servings);
+			$inp_number_energy_serving_mysql = quote_smart($link, $inp_number_energy_serving);
+
+			$inp_number_fat_serving	 = round($get_number_fat_total/$inp_number_servings);
+			$inp_number_fat_serving_mysql = quote_smart($link, $inp_number_fat_serving);
+
+			$inp_number_saturated_fat_serving	 = round($get_number_saturated_fat_total/$inp_number_servings);
+			$inp_number_saturated_fat_serving_mysql = quote_smart($link, $inp_number_saturated_fat_serving);
+
+			$inp_number_monounsaturated_fat_serving	 = round($get_number_monounsaturated_fat_total/$inp_number_servings);
+			$inp_number_monounsaturated_fat_serving_mysql = quote_smart($link, $inp_number_monounsaturated_fat_serving);
+
+			$inp_number_polyunsaturated_fat_serving	 = round($get_number_polyunsaturated_fat_total/$inp_number_servings);
+			$inp_number_polyunsaturated_fat_serving_mysql = quote_smart($link, $inp_number_polyunsaturated_fat_serving);
+
+			$inp_number_cholesterol_serving	 = round($get_number_cholesterol_total/$inp_number_servings);
+			$inp_number_cholesterol_serving_mysql = quote_smart($link, $inp_number_cholesterol_serving);
+
+			$inp_number_carbohydrates_serving	 = round($get_number_carbohydrates_total/$inp_number_servings);
+			$inp_number_carbohydrates_serving_mysql = quote_smart($link, $inp_number_carbohydrates_serving);
+
+			$inp_number_carbohydrates_of_which_sugars_serving	 = round($get_number_carbohydrates_of_which_sugars_total/$inp_number_servings);
+			$inp_number_carbohydrates_of_which_sugars_serving_mysql = quote_smart($link, $inp_number_carbohydrates_of_which_sugars_serving);
+
+			$inp_number_dietary_fiber_serving	 = round($get_number_dietary_fiber_total/$inp_number_servings);
+			$inp_number_dietary_fiber_serving_mysql = quote_smart($link, $inp_number_dietary_fiber_serving);
+
+			$inp_number_proteins_serving	 = round($get_number_proteins_total/$inp_number_servings);
+			$inp_number_proteins_serving_mysql = quote_smart($link, $inp_number_proteins_serving);
+
+			$inp_number_salt_serving	 = round($get_number_salt_total/$inp_number_servings);
+			$inp_number_salt_serving_mysql = quote_smart($link, $inp_number_salt_serving);
+
+			$inp_number_sodium_serving	 = round($get_number_sodium_total/$inp_number_servings);
+			$inp_number_sodium_serving_mysql = quote_smart($link, $inp_number_sodium_serving);
+
+
 
 
 
 			// Update
-			$result = mysqli_query($link, "UPDATE $t_recipes_numbers SET number_servings=$inp_number_servings_mysql, number_serving_calories=$inp_number_serving_calories_mysql, number_serving_proteins=$inp_number_serving_proteins_mysql, number_serving_fat=$inp_number_serving_fat_mysql, number_serving_carbs=$inp_number_serving_carbs_mysql WHERE number_recipe_id=$recipe_id_mysql");
+			$result = mysqli_query($link, "UPDATE $t_recipes_numbers SET 
+							number_servings=$inp_number_servings_mysql,
+							number_energy_serving=$inp_number_energy_serving_mysql, 
+							number_fat_serving=$inp_number_fat_serving_mysql, 
+							number_saturated_fat_serving=$inp_number_saturated_fat_serving_mysql, 
+							number_monounsaturated_fat_serving=$inp_number_monounsaturated_fat_serving_mysql, 
+							number_polyunsaturated_fat_serving=$inp_number_polyunsaturated_fat_serving_mysql, 
+							number_cholesterol_serving=$inp_number_cholesterol_serving_mysql, 
+							number_carbohydrates_serving=$inp_number_carbohydrates_serving_mysql, 
+							number_carbohydrates_of_which_sugars_serving=$inp_number_carbohydrates_of_which_sugars_serving_mysql, 
+							number_dietary_fiber_serving=$inp_number_dietary_fiber_serving_mysql, 
+							number_proteins_serving=$inp_number_proteins_serving_mysql, 
+							number_salt_serving=$inp_number_salt_serving_mysql
+							 WHERE number_recipe_id=$recipe_id_mysql")  or die(mysqli_error($link));
 			
 
 
@@ -216,8 +256,8 @@ else{
 		
 
 
-				// Search engine
-				include("edit_recipe_include_update_search_engine.php");
+		// Search engine
+		include("edit_recipe_include_update_search_engine.php");
 
 
 

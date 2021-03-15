@@ -20,7 +20,7 @@ $l_all_time = "All time";
 $l_order_by = "Order by";
 $l_asc = "Asc";
 $l_desc = "Desc";
-$l_hundred = "Hundred";
+$l_hundred = "100";
 $l_serving = "Serving";
 $l_calories = "Calories";
 $l_calories_abbr_lowercase = "cal";
@@ -32,12 +32,14 @@ $l_proteins = "Proteins";
 $l_proteins_abbr_lowercase = "pro";
 $l_per_hundred = "Per hundred";
 $l_per_serving = "Per serving";
-$l_per_hundred_abbr_short_lowercase = "h";
-$l_per_serving_abbr_short_lowercase = "s";
-$l_per_hundred_abbr_short = "H";
-$l_per_serving_abbr_short = "S";
+
 $l_calories_abbr_short_lowercase = "cal";
-$l_carbs_abbr_short_lowercase = "car";
 $l_fat_abbr_short_lowercase = "fat";
+$l_carbohydrates_abbr_short_lowercase = "car";
 $l_proteins_abbr_short_lowercase = "pro";
+
+$l_pcs_g = "Pcs g";
+$l_eight = "8";
+$l_pcs_oz = "Pcs oz";
+
 ?>

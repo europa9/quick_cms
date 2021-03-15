@@ -99,28 +99,23 @@ else{
 		// Access to recipe edit
 		if($get_recipe_user_id == "$my_user_id" OR $get_user_rank == "admin"){
 
-	// Get number of servings
-	$query = "SELECT number_servings, number_total_calories, number_total_proteins, number_total_fat, number_total_carbs FROM $t_recipes_numbers WHERE number_recipe_id=$recipe_id_mysql";
-	$result = mysqli_query($link, $query);
-	$row = mysqli_fetch_row($result);
-	list($get_number_servings, $get_number_total_calories, $get_number_total_proteins, $get_number_total_fat, $get_number_total_carbs) = $row;
 
-	if($process == 1){
-		// Delete all old tags
-		$result = mysqli_query($link, "DELETE FROM $t_recipes_tags WHERE tag_recipe_id=$get_recipe_id");
+			if($process == 1){
+				// Delete all old tags
+				$result = mysqli_query($link, "DELETE FROM $t_recipes_tags WHERE tag_recipe_id=$get_recipe_id");
 				
-		// Lang
-		$inp_tag_language_mysql = quote_smart($link, $get_recipe_language);
+				// Lang
+				$inp_tag_language_mysql = quote_smart($link, $get_recipe_language);
 
-		$inp_tag_a = $_POST['inp_tag_a'];
-		$inp_tag_a = output_html($inp_tag_a);
-		$inp_tag_a_mysql = quote_smart($link, $inp_tag_a);
+				$inp_tag_a = $_POST['inp_tag_a'];
+				$inp_tag_a = output_html($inp_tag_a);
+				$inp_tag_a_mysql = quote_smart($link, $inp_tag_a);
 
-		$inp_tag_a_clean = clean($inp_tag_a);
-		$inp_tag_a_clean = strtolower($inp_tag_a);
-		$inp_tag_a_clean_mysql = quote_smart($link, $inp_tag_a_clean);
+				$inp_tag_a_clean = clean($inp_tag_a);
+				$inp_tag_a_clean = strtolower($inp_tag_a);
+				$inp_tag_a_clean_mysql = quote_smart($link, $inp_tag_a_clean);
 
-		if($inp_tag_a != ""){
+				if($inp_tag_a != ""){
 			// Insert
 			mysqli_query($link, "INSERT INTO $t_recipes_tags 
 			(tag_id, tag_language, tag_recipe_id, tag_title, tag_title_clean, tag_user_id) 
@@ -181,6 +176,16 @@ else{
 	echo"
 	<h1>$get_recipe_title</h1>
 
+	<!-- You are here -->
+			<p>
+			<b>$l_you_are_here:</b><br />
+			<a href=\"my_recipes.php?l=$l#recipe_id=$recipe_id\">$l_my_recipes</a>
+			&gt;
+			<a href=\"view_recipe.php?recipe_id=$recipe_id&amp;l=$l\">$get_recipe_title</a>
+			&gt;
+			<a href=\"edit_recipe_tags.php?recipe_id=$recipe_id&amp;l=$l\">$l_tags</a>
+			</p>
+	<!-- //You are here -->
 
 	<!-- Menu -->
 		<div class=\"tabs\">
@@ -197,16 +202,6 @@ else{
 	<!-- //Menu -->
 
 	
-	<!-- You are here -->
-			<p>
-			<b>$l_you_are_here:</b><br />
-			<a href=\"my_recipes.php?l=$l#recipe_id=$recipe_id\">$l_my_recipes</a>
-			&gt;
-			<a href=\"view_recipe.php?recipe_id=$recipe_id&amp;l=$l\">$get_recipe_title</a>
-			&gt;
-			<a href=\"edit_recipe_tags.php?recipe_id=$recipe_id&amp;l=$l\">$l_tags</a>
-			</p>
-	<!-- //You are here -->
 
 	<!-- Feedback -->
 	";

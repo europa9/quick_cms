@@ -49,7 +49,7 @@ else{
 if(isset($_GET['referer'])) {
 	$referer = $_GET['referer'];
 	$referer = strip_tags(stripslashes($referer));
-	if($referer != "index" && $referer != "categories_browse" && $referer != "edit_recipe_ingredients"){
+	if($referer != "index" && $referer != "categories_browse" && $referer != "edit_recipe_ingredients" && $referer != "browse_recipes_newest" && $referer != "browse_recipes_rating" && $referer != "browse_recipes_views" && $referer != "browse_recipes_comments"){
 		echo"Unknown referer";
 		die;
 	}
@@ -215,12 +215,7 @@ mysqli_query($link, "DELETE FROM $t_recipes_user_adapted_view WHERE view_year=$t
 
 
 // Header
-if($referer == "index"){
-	$url = "index.php?l=$l&ft=info&fm=$fm";
-	header("Location: $url");
-	exit;
-}
-elseif($referer == "categories_browse"){
+if($referer == "categories_browse"){
 	$url = "categories_browse.php?category_id=$category_id&l=$l&ft=info&fm=$fm";
 	header("Location: $url");
 	exit;
@@ -231,8 +226,9 @@ elseif($referer == "edit_recipe_ingredients"){
 	exit;
 }
 else{
-	echo"?";
-	die;
+	$url = "$referer.php?l=$l&ft=info&fm=$fm";
+	header("Location: $url");
+	exit;
 }
 
 ?>
