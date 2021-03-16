@@ -74,5 +74,11 @@ $l_dietary_fiber_lowercase = "dietary fiber";
 $l_sugar_lowercase = "sugar";
 $l_salt_lowercase = "salt";
 $l_sodium_lowercase = "sodium";
-
+$l_hundred = "100";
+$l_pcs_g = "Pcs g";
+$l_eight = "8";
+$l_pcs_oz = "Pcs oz";
+$l_dash_saturated_fat = "- saturated fat";
+$l_dash_monounsaturated_fat = "- monounsaturated fat";
+$l_dash_polyunsaturated_fat = "- polyunsaturated fat";
 ?>

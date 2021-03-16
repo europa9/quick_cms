@@ -149,12 +149,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 							// Check that file is big enough
-							if($width < 1919){
+							if($width < 1279){
 								$url = "submit_recipe_step_4_images.php?recipe_id=$recipe_id&l=$l&ft=error&fm=width_have_to_be_bigger&width=$width&height=$height";
 								header("Location: $url");
 								exit;
 							}
-							if($height < 1079){
+							if($height < 719){
 								$url = "submit_recipe_step_4_images.php?recipe_id=$recipe_id&l=$l&ft=error&fm=height_have_to_be_bigger&width=$width&height=$height";
 								header("Location: $url");
 								exit;
@@ -193,8 +193,14 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 							// Rezie image to 1920x1080
-							$newwidth=1920;
-							$newheight=($height/$width)*$newwidth; // 1080
+							if($width < 1920){
+								$newwidth=1920;
+								$newheight=($height/$width)*$newwidth; // 1080
+							}
+							else{
+								$newwidth=1270;
+								$newheight=($height/$width)*$newwidth; // 720
+							}
 							$tmp=imagecreatetruecolor($newwidth,$newheight);
 						
 							if($file_type == "jpg" || $file_type == "jpeg" ){
@@ -334,7 +340,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			<form method=\"post\" action=\"submit_recipe_step_4_images.php?recipe_id=$get_recipe_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 			
-			<p><b>$l_new_image (1920x1080 jpg):</b><br />
+			<p><b>$l_new_image (1280x720 $l_or_lowercase 1920x1080 jpg):</b><br />
 			<input type=\"file\" name=\"inp_image\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 			</p>
 

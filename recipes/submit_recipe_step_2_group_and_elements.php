@@ -94,15 +94,15 @@ if($get_recipe_id == ""){
 }
 else{
 	// Get numbers
-	$query = "SELECT number_id, number_recipe_id, number_hundred_calories, number_hundred_proteins, number_hundred_fat, number_hundred_fat_of_which_saturated_fatty_acids, number_hundred_carbs, number_hundred_carbs_of_which_dietary_fiber, number_hundred_carbs_of_which_sugars, number_serving_calories, number_serving_proteins, number_serving_fat, number_serving_fat_of_which_saturated_fatty_acids, number_serving_carbs, number_serving_carbs_of_which_dietary_fiber, number_serving_carbs_of_which_sugars, number_serving_salt, number_total_weight, number_total_calories, number_total_proteins, number_total_fat, number_total_fat_of_which_saturated_fatty_acids, number_total_carbs, number_total_carbs_of_which_dietary_fiber, number_total_carbs_of_which_sugars, number_total_salt, number_servings FROM $t_recipes_numbers WHERE number_recipe_id=$recipe_id_mysql";
+	$query = "SELECT number_id, number_recipe_id, number_servings, number_energy_metric, number_fat_metric, number_saturated_fat_metric, number_monounsaturated_fat_metric, number_polyunsaturated_fat_metric, number_cholesterol_metric, number_carbohydrates_metric, number_carbohydrates_of_which_sugars_metric, number_dietary_fiber_metric, number_proteins_metric, number_salt_metric, number_sodium_metric, number_energy_serving, number_fat_serving, number_saturated_fat_serving, number_monounsaturated_fat_serving, number_polyunsaturated_fat_serving, number_cholesterol_serving, number_carbohydrates_serving, number_carbohydrates_of_which_sugars_serving, number_dietary_fiber_serving, number_proteins_serving, number_salt_serving, number_sodium_serving, number_energy_total, number_fat_total, number_saturated_fat_total, number_monounsaturated_fat_total, number_polyunsaturated_fat_total, number_cholesterol_total, number_carbohydrates_total, number_carbohydrates_of_which_sugars_total, number_dietary_fiber_total, number_proteins_total, number_salt_total, number_sodium_total FROM $t_recipes_numbers WHERE number_recipe_id=$recipe_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_number_id, $get_number_recipe_id, $get_number_hundred_calories, $get_number_hundred_proteins, $get_number_hundred_fat, $get_number_hundred_fat_of_which_saturated_fatty_acids, $get_number_hundred_carbs, $get_number_hundred_carbs_of_which_dietary_fiber, $get_number_hundred_carbs_of_which_sugars, $get_number_serving_calories, $get_number_serving_proteins, $get_number_serving_fat, $get_number_serving_fat_of_which_saturated_fatty_acids, $get_number_serving_carbs, $get_number_serving_carbs_of_which_dietary_fiber, $get_number_serving_carbs_of_which_sugars, $get_number_serving_salt, $get_number_total_weight, $get_number_total_calories, $get_number_total_proteins, $get_number_total_fat, $get_number_total_fat_of_which_saturated_fatty_acids, $get_number_total_carbs, $get_number_total_carbs_of_which_dietary_fiber, $get_number_total_carbs_of_which_sugars, $get_number_total_salt, $get_number_servings) = $row;
+	list($get_number_id, $get_number_recipe_id, $get_number_servings, $get_number_energy_metric, $get_number_fat_metric, $get_number_saturated_fat_metric, $get_number_monounsaturated_fat_metric, $get_number_polyunsaturated_fat_metric, $get_number_cholesterol_metric, $get_number_carbohydrates_metric, $get_number_carbohydrates_of_which_sugars_metric, $get_number_dietary_fiber_metric, $get_number_proteins_metric, $get_number_salt_metric, $get_number_sodium_metric, $get_number_energy_serving, $get_number_fat_serving, $get_number_saturated_fat_serving, $get_number_monounsaturated_fat_serving, $get_number_polyunsaturated_fat_serving, $get_number_cholesterol_serving, $get_number_carbohydrates_serving, $get_number_carbohydrates_of_which_sugars_serving, $get_number_dietary_fiber_serving, $get_number_proteins_serving, $get_number_salt_serving, $get_number_sodium_serving, $get_number_energy_total, $get_number_fat_total, $get_number_saturated_fat_total, $get_number_monounsaturated_fat_total, $get_number_polyunsaturated_fat_total, $get_number_cholesterol_total, $get_number_carbohydrates_total, $get_number_carbohydrates_of_which_sugars_total, $get_number_dietary_fiber_total, $get_number_proteins_total, $get_number_salt_total, $get_number_sodium_total) = $row;
 	if($get_number_id == ""){
 		mysqli_query($link, "INSERT INTO $t_recipes_numbers
-		(number_id, number_recipe_id, number_hundred_calories, number_hundred_proteins, number_hundred_fat, number_hundred_carbs, number_serving_calories, number_serving_proteins, number_serving_fat, number_serving_carbs, number_total_weight, number_total_calories, number_total_proteins, number_total_fat, number_total_carbs, number_servings) 
+		(number_id, number_recipe_id, number_servings) 
 		VALUES 
-		(NULL, '$get_recipe_id', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '4')")
+		(NULL, '$get_recipe_id', '1')")
 		or die(mysqli_error($link));
 	}
 
@@ -282,26 +282,27 @@ else{
 				}
 				$inp_item_food_id_mysql = quote_smart($link, $inp_item_food_id);
 
-				// Calories per hundred
-				if(isset($_POST['inp_item_calories_per_hundred'])){
-					$inp_item_calories_per_hundred = $_POST['inp_item_calories_per_hundred'];
+
+				// Calories
+				if(isset($_POST['inp_item_calories_metric'])){
+					$inp_item_calories_metric = $_POST['inp_item_calories_metric'];
 				}
 				else{
-					$inp_item_calories_per_hundred = "0";
+					$inp_item_calories_metric = "0";
 				}
-				$inp_item_calories_per_hundred = output_html($inp_item_calories_per_hundred);
-				$inp_item_calories_per_hundred = str_replace(",", ".", $inp_item_calories_per_hundred);
-				if(empty($inp_item_calories_per_hundred)){
-					$inp_item_calories_per_hundred = "0";
+				$inp_item_calories_metric = output_html($inp_item_calories_metric);
+				$inp_item_calories_metric = str_replace(",", ".", $inp_item_calories_metric);
+				if(empty($inp_item_calories_metric)){
+					$inp_item_calories_metric = "0";
 				}
 				else{
-					if(!(is_numeric($inp_item_calories_per_hundred))){
+					if(!(is_numeric($inp_item_calories_metric))){
 						$ft = "error";
 						$fm = "calories_have_to_be_a_number";
 					}
 				}
-				$inp_item_calories_per_hundred = round($inp_item_calories_per_hundred, 0);
-				$inp_item_calories_per_hundred_mysql = quote_smart($link, $inp_item_calories_per_hundred);
+				$inp_item_calories_metric = round($inp_item_calories_metric, 0);
+				$inp_item_calories_metric_mysql = quote_smart($link, $inp_item_calories_metric);
 
 
 				$inp_item_calories_calculated = $_POST['inp_item_calories_calculated'];
@@ -319,26 +320,26 @@ else{
 				$inp_item_calories_calculated = round($inp_item_calories_calculated, 0);
 				$inp_item_calories_calculated_mysql = quote_smart($link, $inp_item_calories_calculated);
 
-				// Fat per hundred
-				if(isset($_POST['inp_item_fat_per_hundred'])){
-					$inp_item_fat_per_hundred = $_POST['inp_item_fat_per_hundred'];
+				// Fat
+				if(isset($_POST['inp_item_fat_metric'])){
+					$inp_item_fat_metric = $_POST['inp_item_fat_metric'];
 				}
 				else{
-					$inp_item_fat_per_hundred = "0";
+					$inp_item_fat_metric = "0";
 				}
-				$inp_item_fat_per_hundred = output_html($inp_item_fat_per_hundred);
-				$inp_item_fat_per_hundred = str_replace(",", ".", $inp_item_fat_per_hundred);
-				if(empty($inp_item_fat_per_hundred)){
-					$inp_item_fat_per_hundred = "0";
+				$inp_item_fat_metric = output_html($inp_item_fat_metric);
+				$inp_item_fat_metric = str_replace(",", ".", $inp_item_fat_metric);
+				if(empty($inp_item_fat_metric)){
+					$inp_item_fat_metric = "0";
 				}
 				else{
-					if(!(is_numeric($inp_item_calories_per_hundred))){
+					if(!(is_numeric($inp_item_calories_metric))){
 						$ft = "error";
 						$fm = "fat_have_to_be_a_number";
 					}
 				}
-				$inp_item_fat_per_hundred = round($inp_item_fat_per_hundred, 0);
-				$inp_item_fat_per_hundred_mysql = quote_smart($link, $inp_item_fat_per_hundred);
+				$inp_item_fat_metric = round($inp_item_fat_metric, 0);
+				$inp_item_fat_metric_mysql = quote_smart($link, $inp_item_fat_metric);
 
 				$inp_item_fat_calculated = $_POST['inp_item_fat_calculated'];
 				$inp_item_fat_calculated = output_html($inp_item_fat_calculated);
@@ -356,185 +357,258 @@ else{
 				$inp_item_fat_calculated_mysql = quote_smart($link, $inp_item_fat_calculated);
 
 
-				// Fat saturated fatty acids
-				if(isset($_POST['inp_item_fat_per_hundred'])){
-					$inp_item_fat_of_which_saturated_fatty_acids_per_hundred = $_POST['inp_item_fat_of_which_saturated_fatty_acids_per_hundred'];
+				// Saturated fat
+				if(isset($_POST['inp_item_saturated_fat_metric'])){
+					$inp_item_saturated_fat_metric = $_POST['inp_item_saturated_fat_metric'];
 				}
 				else{
-					$inp_item_fat_of_which_saturated_fatty_acids_per_hundred = "0";
+					$inp_item_saturated_fat_metric = "0";
 				}
-				$inp_item_fat_of_which_saturated_fatty_acids_per_hundred = output_html($inp_item_fat_of_which_saturated_fatty_acids_per_hundred);
-				$inp_item_fat_of_which_saturated_fatty_acids_per_hundred = str_replace(",", ".", $inp_item_fat_of_which_saturated_fatty_acids_per_hundred);
-				if(empty($inp_item_fat_of_which_saturated_fatty_acids_per_hundred)){
-					$inp_item_fat_of_which_saturated_fatty_acids_per_hundred = "0";
+				$inp_item_saturated_fat_metric = output_html($inp_item_saturated_fat_metric);
+				$inp_item_saturated_fat_metric = str_replace(",", ".", $inp_item_saturated_fat_metric);
+				if(empty($inp_item_saturated_fat_metric)){
+					$inp_item_saturated_fat_metric = "0";
 				}
 				else{
-					if(!(is_numeric($inp_item_fat_of_which_saturated_fatty_acids_per_hundred))){
+					if(!(is_numeric($inp_item_saturated_fat_metric))){
 						$ft = "error";
-						$fm = "fat_of_which_saturated_fatty_acids_per_hundred_have_to_be_a_number";
+						$fm = "saturated_fat_metric_have_to_be_a_number";
 					}
 				}
-				$inp_item_fat_of_which_saturated_fatty_acids_per_hundred = round($inp_item_fat_of_which_saturated_fatty_acids_per_hundred, 0);
-				$inp_item_fat_of_which_saturated_fatty_acids_per_hundred_mysql = quote_smart($link, $inp_item_fat_of_which_saturated_fatty_acids_per_hundred);
+				$inp_item_saturated_fat_metric = round($inp_item_saturated_fat_metric, 0);
+				$inp_item_saturated_fat_metric_mysql = quote_smart($link, $inp_item_saturated_fat_metric);
 
-				// Fat saturated fatty acids calculated
-				$inp_item_fat_of_which_saturated_fatty_acids_calculated = $_POST['inp_item_fat_of_which_saturated_fatty_acids_calculated'];
-				$inp_item_fat_of_which_saturated_fatty_acids_calculated = output_html($inp_item_fat_of_which_saturated_fatty_acids_calculated);
-				$inp_item_fat_of_which_saturated_fatty_acids_calculated = str_replace(",", ".", $inp_item_fat_of_which_saturated_fatty_acids_calculated);
-				if(empty($inp_item_fat_of_which_saturated_fatty_acids_calculated)){
-					$inp_item_fat_of_which_saturated_fatty_acids_calculated = "0";
+
+				$inp_item_saturated_fat_calculated = $_POST['inp_item_saturated_fat_calculated'];
+				$inp_item_saturated_fat_calculated = output_html($inp_item_saturated_fat_calculated);
+				$inp_item_saturated_fat_calculated = str_replace(",", ".", $inp_item_saturated_fat_calculated);
+				if(empty($inp_item_saturated_fat_calculated)){
+					$inp_item_saturated_fat_calculated = "0";
 				}
 				else{
-					if(!(is_numeric($inp_item_fat_of_which_saturated_fatty_acids_calculated))){
+					if(!(is_numeric($inp_item_saturated_fat_calculated))){
 						$ft = "error";
 						$fm = "fat_of_which_saturated_fatty_acids_calculated_have_to_be_a_number";
 					}
 				}
-				$inp_item_fat_of_which_saturated_fatty_acids_calculated = round($inp_item_fat_of_which_saturated_fatty_acids_calculated, 0);
-				$inp_item_fat_of_which_saturated_fatty_acids_calculated_mysql = quote_smart($link, $inp_item_fat_of_which_saturated_fatty_acids_calculated);
+				$inp_item_saturated_fat_calculated = round($inp_item_saturated_fat_calculated, 0);
+				$inp_item_saturated_fat_calculated_mysql = quote_smart($link, $inp_item_saturated_fat_calculated);
 
-				// Carbs per hundred
-				if(isset($_POST['inp_item_carbs_per_hundred'])){
-					$inp_item_carbs_per_hundred = $_POST['inp_item_carbs_per_hundred'];
+
+				// Monounsaturated fat
+				if(isset($_POST['inp_item_monounsaturated_fat_metric'])){
+					$inp_item_monounsaturated_fat_metric = $_POST['inp_item_monounsaturated_fat_metric'];
 				}
 				else{
-					$inp_item_carbs_per_hundred = "0";
-				}				
-				$inp_item_carbs_per_hundred = output_html($inp_item_carbs_per_hundred);
-				$inp_item_carbs_per_hundred = str_replace(",", ".", $inp_item_carbs_per_hundred);
-				if(empty($inp_item_carbs_per_hundred)){
-					$inp_item_carbs_per_hundred = "0";
+					$inp_item_monounsaturated_fat_metric = "0";
+				}
+				$inp_item_monounsaturated_fat_metric = output_html($inp_item_monounsaturated_fat_metric);
+				$inp_item_monounsaturated_fat_metric = str_replace(",", ".", $inp_item_monounsaturated_fat_metric);
+				if(empty($inp_item_monounsaturated_fat_metric)){
+					$inp_item_monounsaturated_fat_metric = "0";
 				}
 				else{
-					if(!(is_numeric($inp_item_calories_per_hundred))){
+					if(!(is_numeric($inp_item_monounsaturated_fat_metric))){
 						$ft = "error";
-						$fm = "calories_have_to_be_a_number";
+						$fm = "monounsaturated_fat_metric_have_to_be_a_number";
 					}
 				}
-				$inp_item_carbs_per_hundred = round($inp_item_carbs_per_hundred, 0);
-				$inp_item_carbs_per_hundred_mysql = quote_smart($link, $inp_item_carbs_per_hundred);
+				$inp_item_monounsaturated_fat_metric = round($inp_item_monounsaturated_fat_metric, 0);
+				$inp_item_monounsaturated_fat_metric_mysql = quote_smart($link, $inp_item_monounsaturated_fat_metric);
 
-				// Carbs calculated
-				$inp_item_carbs_calculated = $_POST['inp_item_carbs_calculated'];
-				$inp_item_carbs_calculated = output_html($inp_item_carbs_calculated);
-				$inp_item_carbs_calculated = str_replace(",", ".", $inp_item_carbs_calculated);
-				if(empty($inp_item_carbs_calculated)){
-					$inp_item_carbs_calculated = "0";
+
+				$inp_item_monounsaturated_fat_calculated = $_POST['inp_item_monounsaturated_fat_calculated'];
+				$inp_item_monounsaturated_fat_calculated = output_html($inp_item_monounsaturated_fat_calculated);
+				$inp_item_monounsaturated_fat_calculated = str_replace(",", ".", $inp_item_monounsaturated_fat_calculated);
+				if(empty($inp_item_monounsaturated_fat_calculated)){
+					$inp_item_monounsaturated_fat_calculated = "0";
 				}
 				else{
-					if(!(is_numeric($inp_item_calories_calculated))){
+					if(!(is_numeric($inp_item_monounsaturated_fat_calculated))){
 						$ft = "error";
-						$fm = "calories_have_to_be_a_number";
+						$fm = "fat_of_which_monounsaturated_fatty_acids_calculated_have_to_be_a_number";
 					}
 				}
-				$inp_item_carbs_calculated = round($inp_item_carbs_calculated, 0);
-				$inp_item_carbs_calculated_mysql = quote_smart($link, $inp_item_carbs_calculated);
+				$inp_item_monounsaturated_fat_calculated = round($inp_item_monounsaturated_fat_calculated, 0);
+				$inp_item_monounsaturated_fat_calculated_mysql = quote_smart($link, $inp_item_monounsaturated_fat_calculated);
 
 
-				// Fiber per hundred
-				if(isset($_POST['inp_item_carbs_of_which_dietary_fiber_per_hundred'])){
-					$inp_item_carbs_of_which_dietary_fiber_per_hundred = $_POST['inp_item_carbs_of_which_dietary_fiber_per_hundred'];
+				// Saturated fat
+				if(isset($_POST['inp_item_polyunsaturated_fat_metric'])){
+					$inp_item_polyunsaturated_fat_metric = $_POST['inp_item_polyunsaturated_fat_metric'];
 				}
 				else{
-					$inp_item_carbs_of_which_dietary_fiber_per_hundred = "0";
+					$inp_item_polyunsaturated_fat_metric = "0";
 				}
-				$inp_item_carbs_of_which_dietary_fiber_per_hundred = output_html($inp_item_carbs_of_which_dietary_fiber_per_hundred);
-				$inp_item_carbs_of_which_dietary_fiber_per_hundred = str_replace(",", ".", $inp_item_carbs_of_which_dietary_fiber_per_hundred);
-				if(empty($inp_item_carbs_of_which_dietary_fiber_per_hundred)){
-					$inp_item_carbs_of_which_dietary_fiber_per_hundred = "0";
+				$inp_item_polyunsaturated_fat_metric = output_html($inp_item_polyunsaturated_fat_metric);
+				$inp_item_polyunsaturated_fat_metric = str_replace(",", ".", $inp_item_polyunsaturated_fat_metric);
+				if(empty($inp_item_polyunsaturated_fat_metric)){
+					$inp_item_polyunsaturated_fat_metric = "0";
 				}
 				else{
-					if(!(is_numeric($inp_item_carbs_of_which_dietary_fiber_per_hundred))){
+					if(!(is_numeric($inp_item_polyunsaturated_fat_metric))){
 						$ft = "error";
-						$fm = "carbs_of_which_sugars_per_hundred_have_to_be_a_number";
+						$fm = "polyunsaturated_fat_metric_have_to_be_a_number";
 					}
 				}
-				$inp_item_carbs_of_which_dietary_fiber_per_hundred = round($inp_item_carbs_of_which_dietary_fiber_per_hundred, 0);
-				$inp_item_carbs_of_which_dietary_fiber_per_hundred_mysql = quote_smart($link, $inp_item_carbs_of_which_dietary_fiber_per_hundred);
+				$inp_item_polyunsaturated_fat_metric = round($inp_item_polyunsaturated_fat_metric, 0);
+				$inp_item_polyunsaturated_fat_metric_mysql = quote_smart($link, $inp_item_polyunsaturated_fat_metric);
 
-				// Fiber calcualted
-				if(isset($_POST['inp_item_carbs_of_which_dietary_fiber_calculated'])){
-					$inp_item_carbs_of_which_dietary_fiber_calculated = $_POST['inp_item_carbs_of_which_dietary_fiber_calculated'];
+
+				$inp_item_polyunsaturated_fat_calculated = $_POST['inp_item_polyunsaturated_fat_calculated'];
+				$inp_item_polyunsaturated_fat_calculated = output_html($inp_item_polyunsaturated_fat_calculated);
+				$inp_item_polyunsaturated_fat_calculated = str_replace(",", ".", $inp_item_polyunsaturated_fat_calculated);
+				if(empty($inp_item_polyunsaturated_fat_calculated)){
+					$inp_item_polyunsaturated_fat_calculated = "0";
 				}
 				else{
-					$inp_item_carbs_of_which_dietary_fiber_calculated = "0";
-				}
-				$inp_item_carbs_of_which_dietary_fiber_calculated = output_html($inp_item_carbs_of_which_dietary_fiber_calculated);
-				$inp_item_carbs_of_which_dietary_fiber_calculated = str_replace(",", ".", $inp_item_carbs_of_which_dietary_fiber_calculated);
-				if(empty($inp_item_carbs_of_which_dietary_fiber_calculated)){
-					$inp_item_carbs_of_which_dietary_fiber_calculated = "0";
-				}
-				else{
-					if(!(is_numeric($inp_item_carbs_of_which_dietary_fiber_calculated))){
+					if(!(is_numeric($inp_item_polyunsaturated_fat_calculated))){
 						$ft = "error";
-						$fm = "carbs_of_which_sugars_per_hundred_have_to_be_a_number";
+						$fm = "fat_of_which_polyunsaturated_fatty_acids_calculated_have_to_be_a_number";
 					}
 				}
-				$inp_item_carbs_of_which_dietary_fiber_calculated = round($inp_item_carbs_of_which_dietary_fiber_calculated, 0);
-				$inp_item_carbs_of_which_dietary_fiber_calculated_mysql = quote_smart($link, $inp_item_carbs_of_which_dietary_fiber_calculated);
+				$inp_item_polyunsaturated_fat_calculated = round($inp_item_polyunsaturated_fat_calculated, 0);
+				$inp_item_polyunsaturated_fat_calculated_mysql = quote_smart($link, $inp_item_polyunsaturated_fat_calculated);
 
 
-
-				// Carbs of which sugars
-				if(isset($_POST['inp_item_carbs_of_which_sugars_per_hundred'])){
-					$inp_item_carbs_of_which_sugars_per_hundred = $_POST['inp_item_carbs_of_which_sugars_per_hundred'];
+				// Carbohydrates
+				if(isset($_POST['inp_item_carbohydrates_metric'])){
+					$inp_item_carbohydrates_metric = $_POST['inp_item_carbohydrates_metric'];
 				}
 				else{
-					$inp_item_carbs_of_which_sugars_per_hundred = "0";
+					$inp_item_carbohydrates_metric = "0";
 				}
-				$inp_item_carbs_of_which_sugars_per_hundred = output_html($inp_item_carbs_of_which_sugars_per_hundred);
-				$inp_item_carbs_of_which_sugars_per_hundred = str_replace(",", ".", $inp_item_carbs_of_which_sugars_per_hundred);
-				if(empty($inp_item_carbs_of_which_sugars_per_hundred)){
-					$inp_item_carbs_of_which_sugars_per_hundred = "0";
+				$inp_item_carbohydrates_metric = output_html($inp_item_carbohydrates_metric);
+				$inp_item_carbohydrates_metric = str_replace(",", ".", $inp_item_carbohydrates_metric);
+				if(empty($inp_item_carbohydrates_metric)){
+					$inp_item_carbohydrates_metric = "0";
 				}
 				else{
-					if(!(is_numeric($inp_item_carbs_of_which_sugars_per_hundred))){
+					if(!(is_numeric($inp_item_carbohydrates_metric))){
 						$ft = "error";
-						$fm = "carbs_of_which_sugars_per_hundred_have_to_be_a_number";
+						$fm = "carbohydrates_metric_have_to_be_a_number";
 					}
 				}
-				$inp_item_carbs_of_which_sugars_per_hundred = round($inp_item_carbs_of_which_sugars_per_hundred, 0);
-				$inp_item_carbs_of_which_sugars_per_hundred_mysql = quote_smart($link, $inp_item_carbs_of_which_sugars_per_hundred);
+				$inp_item_carbohydrates_metric = round($inp_item_carbohydrates_metric, 0);
+				$inp_item_carbohydrates_metric_mysql = quote_smart($link, $inp_item_carbohydrates_metric);
 
-				// Carbs of which sugars calcualted
-				$inp_item_carbs_of_which_sugars_calculated = $_POST['inp_item_carbs_of_which_sugars_calculated'];
-				$inp_item_carbs_of_which_sugars_calculated = output_html($inp_item_carbs_of_which_sugars_calculated);
-				$inp_item_carbs_of_which_sugars_calculated = str_replace(",", ".", $inp_item_carbs_of_which_sugars_calculated);
-				if(empty($inp_item_carbs_of_which_sugars_calculated)){
-					$inp_item_carbs_of_which_sugars_calculated = "0";
+
+				$inp_item_carbohydrates_calculated = $_POST['inp_item_carbohydrates_calculated'];
+				$inp_item_carbohydrates_calculated = output_html($inp_item_carbohydrates_calculated);
+				$inp_item_carbohydrates_calculated = str_replace(",", ".", $inp_item_carbohydrates_calculated);
+				if(empty($inp_item_carbohydrates_calculated)){
+					$inp_item_carbohydrates_calculated = "0";
 				}
 				else{
-					if(!(is_numeric($inp_item_carbs_of_which_sugars_calculated))){
+					if(!(is_numeric($inp_item_carbohydrates_calculated))){
 						$ft = "error";
-						$fm = "carbs_of_which_sugars_calculated_have_to_be_a_number";
+						$fm = "fat_of_which_carbohydratesty_acids_calculated_have_to_be_a_number";
 					}
 				}
-				$inp_item_carbs_of_which_sugars_calculated = round($inp_item_carbs_of_which_sugars_calculated, 0);
-				$inp_item_carbs_of_which_sugars_calculated_mysql = quote_smart($link, $inp_item_carbs_of_which_sugars_calculated);
+				$inp_item_carbohydrates_calculated = round($inp_item_carbohydrates_calculated, 0);
+				$inp_item_carbohydrates_calculated_mysql = quote_smart($link, $inp_item_carbohydrates_calculated);
+
+
+				// Carbohydrates of which sugars
+				if(isset($_POST['inp_item_carbohydrates_of_which_sugars_metric'])){
+					$inp_item_carbohydrates_of_which_sugars_metric = $_POST['inp_item_carbohydrates_of_which_sugars_metric'];
+				}
+				else{
+					$inp_item_carbohydrates_of_which_sugars_metric = "0";
+				}
+				$inp_item_carbohydrates_of_which_sugars_metric = output_html($inp_item_carbohydrates_of_which_sugars_metric);
+				$inp_item_carbohydrates_of_which_sugars_metric = str_replace(",", ".", $inp_item_carbohydrates_of_which_sugars_metric);
+				if(empty($inp_item_carbohydrates_of_which_sugars_metric)){
+					$inp_item_carbohydrates_of_which_sugars_metric = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_carbohydrates_of_which_sugars_metric))){
+						$ft = "error";
+						$fm = "carbohydrates_of_which_sugars_metric_have_to_be_a_number";
+					}
+				}
+				$inp_item_carbohydrates_of_which_sugars_metric = round($inp_item_carbohydrates_of_which_sugars_metric, 0);
+				$inp_item_carbohydrates_of_which_sugars_metric_mysql = quote_smart($link, $inp_item_carbohydrates_of_which_sugars_metric);
+
+
+				$inp_item_carbohydrates_of_which_sugars_calculated = $_POST['inp_item_carbohydrates_of_which_sugars_calculated'];
+				$inp_item_carbohydrates_of_which_sugars_calculated = output_html($inp_item_carbohydrates_of_which_sugars_calculated);
+				$inp_item_carbohydrates_of_which_sugars_calculated = str_replace(",", ".", $inp_item_carbohydrates_of_which_sugars_calculated);
+				if(empty($inp_item_carbohydrates_of_which_sugars_calculated)){
+					$inp_item_carbohydrates_of_which_sugars_calculated = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_carbohydrates_of_which_sugars_calculated))){
+						$ft = "error";
+						$fm = "fat_of_which_carbohydrates_of_which_sugarsty_acids_calculated_have_to_be_a_number";
+					}
+				}
+				$inp_item_carbohydrates_of_which_sugars_calculated = round($inp_item_carbohydrates_of_which_sugars_calculated, 0);
+				$inp_item_carbohydrates_of_which_sugars_calculated_mysql = quote_smart($link, $inp_item_carbohydrates_of_which_sugars_calculated);
+
+
+
+
+				// Dietary fiber
+				if(isset($_POST['inp_item_dietary_fiber_metric'])){
+					$inp_item_dietary_fiber_metric = $_POST['inp_item_dietary_fiber_metric'];
+				}
+				else{
+					$inp_item_dietary_fiber_metric = "0";
+				}
+				$inp_item_dietary_fiber_metric = output_html($inp_item_dietary_fiber_metric);
+				$inp_item_dietary_fiber_metric = str_replace(",", ".", $inp_item_dietary_fiber_metric);
+				if(empty($inp_item_dietary_fiber_metric)){
+					$inp_item_dietary_fiber_metric = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_dietary_fiber_metric))){
+						$ft = "error";
+						$fm = "dietary_fiber_metric_have_to_be_a_number";
+					}
+				}
+				$inp_item_dietary_fiber_metric = round($inp_item_dietary_fiber_metric, 0);
+				$inp_item_dietary_fiber_metric_mysql = quote_smart($link, $inp_item_dietary_fiber_metric);
+
+
+				$inp_item_dietary_fiber_calculated = $_POST['inp_item_dietary_fiber_calculated'];
+				$inp_item_dietary_fiber_calculated = output_html($inp_item_dietary_fiber_calculated);
+				$inp_item_dietary_fiber_calculated = str_replace(",", ".", $inp_item_dietary_fiber_calculated);
+				if(empty($inp_item_dietary_fiber_calculated)){
+					$inp_item_dietary_fiber_calculated = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_dietary_fiber_calculated))){
+						$ft = "error";
+						$fm = "fat_of_which_dietary_fiberty_acids_calculated_have_to_be_a_number";
+					}
+				}
+				$inp_item_dietary_fiber_calculated = round($inp_item_dietary_fiber_calculated, 0);
+				$inp_item_dietary_fiber_calculated_mysql = quote_smart($link, $inp_item_dietary_fiber_calculated);
 
 
 				// Proteins
-				if(isset($_POST['inp_item_proteins_per_hundred'])){
-					$inp_item_proteins_per_hundred = $_POST['inp_item_proteins_per_hundred'];
+				if(isset($_POST['inp_item_proteins_metric'])){
+					$inp_item_proteins_metric = $_POST['inp_item_proteins_metric'];
 				}
 				else{
-					$inp_item_proteins_per_hundred = "0";
+					$inp_item_proteins_metric = "0";
 				}
-				$inp_item_proteins_per_hundred = output_html($inp_item_proteins_per_hundred);
-				$inp_item_proteins_per_hundred = str_replace(",", ".", $inp_item_proteins_per_hundred);
-				if(empty($inp_item_proteins_per_hundred)){
-					$inp_item_proteins_per_hundred = "0";
+				$inp_item_proteins_metric = output_html($inp_item_proteins_metric);
+				$inp_item_proteins_metric = str_replace(",", ".", $inp_item_proteins_metric);
+				if(empty($inp_item_proteins_metric)){
+					$inp_item_proteins_metric = "0";
 				}
 				else{
-					if(!(is_numeric($inp_item_proteins_per_hundred))){
+					if(!(is_numeric($inp_item_proteins_metric))){
 						$ft = "error";
-						$fm = "proteins_have_to_be_a_number";
+						$fm = "proteins_metric_have_to_be_a_number";
 					}
 				}
-				$inp_item_proteins_per_hundred = round($inp_item_proteins_per_hundred, 0);
-				$inp_item_proteins_per_hundred_mysql = quote_smart($link, $inp_item_proteins_per_hundred);
+				$inp_item_proteins_metric = round($inp_item_proteins_metric, 0);
+				$inp_item_proteins_metric_mysql = quote_smart($link, $inp_item_proteins_metric);
 
-				// Proteins calculated
+
 				$inp_item_proteins_calculated = $_POST['inp_item_proteins_calculated'];
 				$inp_item_proteins_calculated = output_html($inp_item_proteins_calculated);
 				$inp_item_proteins_calculated = str_replace(",", ".", $inp_item_proteins_calculated);
@@ -544,57 +618,37 @@ else{
 				else{
 					if(!(is_numeric($inp_item_proteins_calculated))){
 						$ft = "error";
-						$fm = "proteins_have_to_be_a_number";
+						$fm = "fat_of_which_proteinsty_acids_calculated_have_to_be_a_number";
 					}
 				}
 				$inp_item_proteins_calculated = round($inp_item_proteins_calculated, 0);
 				$inp_item_proteins_calculated_mysql = quote_smart($link, $inp_item_proteins_calculated);
 
-				// Salt per hundred
-				if(isset($_POST['inp_item_salt_per_hundred'])){
-					$inp_item_salt_per_hundred = $_POST['inp_item_salt_per_hundred'];
+
+
+				// Salt
+				if(isset($_POST['inp_item_salt_metric'])){
+					$inp_item_salt_metric = $_POST['inp_item_salt_metric'];
 				}
 				else{
-					$inp_item_salt_per_hundred = "0";
+					$inp_item_salt_metric = "0";
 				}
-				$inp_item_salt_per_hundred = output_html($inp_item_salt_per_hundred);
-				$inp_item_salt_per_hundred = str_replace(",", ".", $inp_item_salt_per_hundred);
-				if(empty($inp_item_salt_per_hundred)){
-					$inp_item_salt_per_hundred = "0";
+				$inp_item_salt_metric = output_html($inp_item_salt_metric);
+				$inp_item_salt_metric = str_replace(",", ".", $inp_item_salt_metric);
+				if(empty($inp_item_salt_metric)){
+					$inp_item_salt_metric = "0";
 				}
 				else{
-					if(!(is_numeric($inp_item_salt_per_hundred))){
+					if(!(is_numeric($inp_item_salt_metric))){
 						$ft = "error";
-						$fm = "salt_have_to_be_a_number";
+						$fm = "salt_metric_have_to_be_a_number";
 					}
 				}
-				$inp_item_salt_per_hundred = round($inp_item_salt_per_hundred, 2);
-				$inp_item_salt_per_hundred_mysql = quote_smart($link, $inp_item_salt_per_hundred);
-
-				// Sodium per hundred
-				if(isset($_POST['inp_item_sodium_per_hundred'])){
-					$inp_item_sodium_per_hundred = $_POST['inp_item_sodium_per_hundred'];
-					$inp_item_sodium_per_hundred = output_html($inp_item_sodium_per_hundred);
-					$inp_item_sodium_per_hundred= str_replace(",", ".", $inp_item_sodium_per_hundred);
-					if($inp_item_sodium_per_hundred == ""){
-						$inp_item_sodium_per_hundred = 0;
-					}
-				}
-				else{
-					$inp_item_sodium_per_hundred = ($inp_item_salt_per_hundred*40)/100; // 40 % of salt
-					$inp_item_sodium_per_hundred = $inp_item_sodium_per_hundred/1000; // mg
-				}
-				$inp_item_sodium_per_hundred_mysql = quote_smart($link, $inp_item_sodium_per_hundred);
+				$inp_item_salt_metric = round($inp_item_salt_metric, 0);
+				$inp_item_salt_metric_mysql = quote_smart($link, $inp_item_salt_metric);
 
 
-				// Salt calculated
-				if(isset($_POST['inp_item_salt_calculated'])){
-					$inp_item_salt_calculated = $_POST['inp_item_salt_calculated'];
-				}
-				else{
-					// Todo: Fix calcualte by sodium
-					$inp_item_salt_calculated = 0;
-				}
+				$inp_item_salt_calculated = $_POST['inp_item_salt_calculated'];
 				$inp_item_salt_calculated = output_html($inp_item_salt_calculated);
 				$inp_item_salt_calculated = str_replace(",", ".", $inp_item_salt_calculated);
 				if(empty($inp_item_salt_calculated)){
@@ -603,28 +657,49 @@ else{
 				else{
 					if(!(is_numeric($inp_item_salt_calculated))){
 						$ft = "error";
-						$fm = "salt_have_to_be_a_number";
+						$fm = "fat_of_which_saltty_acids_calculated_have_to_be_a_number";
 					}
 				}
-				$inp_item_salt_calculated = round($inp_item_salt_calculated, 2);
+				$inp_item_salt_calculated = round($inp_item_salt_calculated, 0);
 				$inp_item_salt_calculated_mysql = quote_smart($link, $inp_item_salt_calculated);
 
-				// Sodium calculated
-				if(isset($_POST['inp_item_sodium_calculated'])){
-					$inp_item_sodium_calculated = $_POST['inp_item_sodium_calculated'];
-					$inp_item_sodium_calculated = output_html($inp_item_sodium_calculated);
-					$inp_item_sodium_calculated = str_replace(",", ".", $inp_item_sodium_calculated);
-					if($inp_item_sodium_calculated == ""){
-						$inp_item_sodium_calculated = 0;
-					}
+
+				// Sodium
+				if(isset($_POST['inp_item_sodium_metric'])){
+					$inp_item_sodium_metric = $_POST['inp_item_sodium_metric'];
 				}
 				else{
-
-					$inp_item_sodium_calculated = ($inp_item_salt_calculated*40)/100; // 40 % of salt
-					$inp_item_sodium_calculated = $inp_item_sodium_calculated/1000; // mg
+					$inp_item_sodium_metric = "0";
 				}
-				$inp_item_sodium_calculated_mysql = quote_smart($link, $inp_item_sodium_calculated);
+				$inp_item_sodium_metric = output_html($inp_item_sodium_metric);
+				$inp_item_sodium_metric = str_replace(",", ".", $inp_item_sodium_metric);
+				if(empty($inp_item_sodium_metric)){
+					$inp_item_sodium_metric = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_sodium_metric))){
+						$ft = "error";
+						$fm = "sodium_metric_have_to_be_a_number";
+					}
+				}
+				$inp_item_sodium_metric = round($inp_item_sodium_metric, 0);
+				$inp_item_sodium_metric_mysql = quote_smart($link, $inp_item_sodium_metric);
 
+
+				$inp_item_sodium_calculated = $_POST['inp_item_sodium_calculated'];
+				$inp_item_sodium_calculated = output_html($inp_item_sodium_calculated);
+				$inp_item_sodium_calculated = str_replace(",", ".", $inp_item_sodium_calculated);
+				if(empty($inp_item_sodium_calculated)){
+					$inp_item_sodium_calculated = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_sodium_calculated))){
+						$ft = "error";
+						$fm = "fat_of_which_sodiumty_acids_calculated_have_to_be_a_number";
+					}
+				}
+				$inp_item_sodium_calculated = round($inp_item_sodium_calculated, 0);
+				$inp_item_sodium_calculated_mysql = quote_smart($link, $inp_item_sodium_calculated);
 
 				if(isset($fm) && $fm != ""){
 					$url = "submit_recipe_step_2_group_and_elements.php?recipe_id=$get_recipe_id&action=add_items&group_id=$get_group_id&l=$l";
@@ -635,12 +710,6 @@ else{
 					header("Location: $url");
 					exit;
 				}
-
-				// Calculate
-				//$inp_item_calories_per_hundred = $inp_item_calories_calculated/
-				//$item_proteins_per_hundred, item_fat_per_hundred, item_carbs_per_hundred
-
-
 
 				// Have I already this item?
 				$query = "SELECT item_id FROM $t_recipes_items WHERE item_recipe_id=$get_recipe_id AND item_group_id=$get_group_id AND item_grocery=$inp_item_grocery_mysql";
@@ -664,85 +733,107 @@ else{
 				// Insert
 				mysqli_query($link, "INSERT INTO $t_recipes_items
 				(item_id, item_recipe_id, item_group_id, item_amount, item_measurement, 
-				item_grocery, item_grocery_explanation, item_food_id, item_calories_per_hundred, item_fat_per_hundred, 
-
-				item_fat_of_which_saturated_fatty_acids_per_hundred, item_carbs_per_hundred, item_carbs_of_which_dietary_fiber_hundred, item_carbs_of_which_sugars_per_hundred, item_proteins_per_hundred, 
-				item_salt_per_hundred, item_sodium_per_hundred, 
-				item_calories_calculated, item_fat_calculated, item_fat_of_which_saturated_fatty_acids_calculated, item_carbs_calculated, item_carbs_of_which_dietary_fiber_calculated, item_carbs_of_which_sugars_calculated, item_proteins_calculated, item_salt_calculated, item_sodium_calculated) 
+				item_grocery, item_grocery_explanation, item_food_id, item_energy_metric, item_fat_metric, 
+				item_saturated_fat_metric, item_monounsaturated_fat_metric, item_polyunsaturated_fat_metric, item_cholesterol_metric, item_carbohydrates_metric, 
+				item_carbohydrates_of_which_sugars_metric, item_dietary_fiber_metric, item_proteins_metric, item_salt_metric, item_sodium_metric, 
+				item_energy_calculated, item_fat_calculated, item_saturated_fat_calculated, item_monounsaturated_fat_calculated, item_polyunsaturated_fat_calculated, 
+				item_cholesterol_calculated, item_carbohydrates_calculated, item_carbohydrates_of_which_sugars_calculated, item_dietary_fiber_calculated, item_proteins_calculated, 
+				item_salt_calculated, item_sodium_calculated) 
 				VALUES 
-				(NULL, '$get_recipe_id', '$get_group_id', $inp_item_amount_mysql, $inp_item_measurement_mysql, $inp_item_grocery_mysql, '', $inp_item_food_id_mysql, 
-				$inp_item_calories_per_hundred_mysql, $inp_item_fat_per_hundred_mysql, $inp_item_fat_of_which_saturated_fatty_acids_per_hundred_mysql, $inp_item_carbs_per_hundred_mysql, $inp_item_carbs_of_which_dietary_fiber_per_hundred_mysql, $inp_item_carbs_of_which_sugars_per_hundred_mysql, $inp_item_proteins_per_hundred_mysql, $inp_item_salt_per_hundred_mysql, $inp_item_sodium_per_hundred_mysql,
-				$inp_item_calories_calculated_mysql, $inp_item_fat_calculated_mysql, $inp_item_fat_of_which_saturated_fatty_acids_calculated_mysql, $inp_item_carbs_calculated_mysql, $inp_item_carbs_of_which_dietary_fiber_calculated_mysql, $inp_item_carbs_of_which_sugars_calculated_mysql, $inp_item_proteins_calculated_mysql, $inp_item_salt_calculated_mysql, $inp_item_sodium_calculated_mysql)")
+				(NULL, '$get_recipe_id', '$get_group_id', $inp_item_amount_mysql, $inp_item_measurement_mysql, 
+				$inp_item_grocery_mysql, '', $inp_item_food_id_mysql, $inp_item_calories_metric_mysql, $inp_item_fat_metric_mysql, 
+				$inp_item_saturated_fat_metric_mysql, $inp_item_monounsaturated_fat_metric_mysql, $inp_item_polyunsaturated_fat_metric_mysql, 0, $inp_item_carbohydrates_metric_mysql,
+				$inp_item_carbohydrates_of_which_sugars_metric_mysql, $inp_item_dietary_fiber_metric_mysql, $inp_item_proteins_metric_mysql, $inp_item_salt_metric_mysql, $inp_item_sodium_metric_mysql, 
+				$inp_item_calories_calculated_mysql, $inp_item_fat_calculated_mysql, $inp_item_saturated_fat_calculated_mysql, $inp_item_monounsaturated_fat_calculated_mysql, $inp_item_polyunsaturated_fat_calculated_mysql, 
+				0, $inp_item_carbohydrates_calculated_mysql, $inp_item_carbohydrates_of_which_sugars_calculated_mysql, $inp_item_dietary_fiber_calculated_mysql, $inp_item_proteins_calculated_mysql, 
+				$inp_item_salt_calculated_mysql, $inp_item_sodium_calculated_mysql
+				)")
 				or die(mysqli_error($link));
 			
 
 				// Calculating total numbers
+				$inp_number_energy_metric		= 0;
+				$inp_number_fat_metric	 		= 0;
+				$inp_number_saturated_fat_metric	= 0;
+				$inp_number_monounsaturated_fat_metric	= 0;
+				$inp_number_polyunsaturated_fat_metric	= 0;
+				$inp_number_cholesterol_metric	 	= 0;
+				$inp_number_carbohydrates_metric	= 0;
+				$inp_number_carbohydrates_of_which_sugars_metric  = 0;
+				$inp_number_dietary_fiber_metric	= 0;
+				$inp_number_proteins_metric	 	= 0;
+				$inp_number_salt_metric			= 0;
+				$inp_number_sodium_metric		= 0;
 
+				$inp_number_energy_serving		= 0;
+				$inp_number_fat_serving			= 0;
+				$inp_number_saturated_fat_serving	= 0;
+				$inp_number_monounsaturated_fat_serving	= 0;
+				$inp_number_polyunsaturated_fat_serving	= 0;
+				$inp_number_cholesterol_serving		= 0;
+				$inp_number_carbohydrates_serving	= 0;
+				$inp_number_carbohydrates_of_which_sugars_serving	 = 0;
+				$inp_number_dietary_fiber_serving	= 0;
+				$inp_number_proteins_serving	 	= 0;
+				$inp_number_salt_serving		= 0;
+				$inp_number_sodium_serving		= 0;
 
-				$inp_number_hundred_calories = 0;
-				$inp_number_hundred_proteins = 0;
-				$inp_number_hundred_fat = 0;
-				$inp_number_hundred_fat_of_which_saturated_fatty_acids = 0;
-				$inp_number_hundred_carbs = 0;
-				$inp_number_hundred_carbs_of_which_dietary_fiber = 0;
-				$inp_number_hundred_carbs_of_which_sugars = 0;
-				$inp_number_hundred_salt = 0;
-				$inp_number_hundred_sodium = 0;
-					
-				$inp_number_serving_calories = 0;
-				$inp_number_serving_proteins = 0;
-				$inp_number_serving_fat = 0;
-				$inp_number_serving_fat_of_which_saturated_fatty_acids = 0;
-				$inp_number_serving_carbs = 0;
-				$inp_number_serving_carbs_of_which_dietary_fiber = 0;
-				$inp_number_serving_carbs_of_which_sugars = 0;
-				$inp_number_serving_salt = 0;
-				$inp_number_serving_sodium = 0;
-					
-				$inp_number_total_weight = 0;
+				$inp_number_energy_total		= 0;
+				$inp_number_fat_total			= 0;
+				$inp_number_saturated_fat_total	 	= 0;
+				$inp_number_monounsaturated_fat_total	= 0;
+				$inp_number_polyunsaturated_fat_total	= 0;
+				$inp_number_cholesterol_total		= 0;
+				$inp_number_carbohydrates_total		= 0;
+				$inp_number_carbohydrates_of_which_sugars_total = 0;
+				$inp_number_dietary_fiber_total		= 0;
+				$inp_number_proteins_total		= 0;
+				$inp_number_salt_total			= 0;
+				$inp_number_sodium_total		= 0;
 
-				$inp_number_total_calories 				= 0;
-				$inp_number_total_proteins 				= 0;
-				$inp_number_total_fat     				= 0;
-				$inp_number_total_fat_of_which_saturated_fatty_acids 	= 0;
-				$inp_number_total_carbs    				= 0;
-				$inp_number_total_carbs_of_which_dietary_fiber 		= 0;
-				$inp_number_total_carbs_of_which_sugars 		= 0;
-				$inp_number_total_salt 					= 0;
-				$inp_number_total_sodium 				= 0;
 					
 				$query_groups = "SELECT group_id, group_title FROM $t_recipes_groups WHERE group_recipe_id=$get_recipe_id";
 				$result_groups = mysqli_query($link, $query_groups);
 				while($row_groups = mysqli_fetch_row($result_groups)) {
 					list($get_group_id, $get_group_title) = $row_groups;
 
-					$query_items = "SELECT item_id, item_recipe_id, item_group_id, item_amount, item_measurement, item_grocery, item_grocery_explanation, item_food_id, item_calories_per_hundred, item_fat_per_hundred, item_fat_of_which_saturated_fatty_acids_per_hundred, item_carbs_per_hundred, item_carbs_of_which_dietary_fiber_hundred, item_carbs_of_which_sugars_per_hundred, item_proteins_per_hundred, item_salt_per_hundred, item_sodium_per_hundred, item_calories_calculated, item_fat_calculated, item_fat_of_which_saturated_fatty_acids_calculated, item_carbs_calculated, item_carbs_of_which_dietary_fiber_calculated, item_carbs_of_which_sugars_calculated, item_proteins_calculated, item_salt_calculated, item_sodium_calculated FROM $t_recipes_items WHERE item_group_id=$get_group_id";
+					$query_items = "SELECT item_id, item_recipe_id, item_group_id, item_amount, item_measurement, item_grocery, item_grocery_explanation, item_food_id, item_energy_metric, item_fat_metric, item_saturated_fat_metric, item_monounsaturated_fat_metric, item_polyunsaturated_fat_metric, item_cholesterol_metric, item_carbohydrates_metric, item_carbohydrates_of_which_sugars_metric, item_dietary_fiber_metric, item_proteins_metric, item_salt_metric, item_sodium_metric, item_energy_calculated, item_fat_calculated, item_saturated_fat_calculated, item_monounsaturated_fat_calculated, item_polyunsaturated_fat_calculated, item_cholesterol_calculated, item_carbohydrates_calculated, item_carbohydrates_of_which_sugars_calculated, item_dietary_fiber_calculated, item_proteins_calculated, item_salt_calculated, item_sodium_calculated FROM $t_recipes_items WHERE item_group_id=$get_group_id";
 					$result_items = mysqli_query($link, $query_items);
 					$row_cnt = mysqli_num_rows($result_items);
 					while($row_items = mysqli_fetch_row($result_items)) {
-						list($get_item_id, $get_item_recipe_id, $get_item_group_id, $get_item_amount, $get_item_measurement, $get_item_grocery, $get_item_grocery_explanation, $get_item_food_id, $get_item_calories_per_hundred, $get_item_fat_per_hundred, $get_item_fat_of_which_saturated_fatty_acids_per_hundred, $get_item_carbs_per_hundred, $get_item_carbs_of_which_dietary_fiber_hundred, $get_item_carbs_of_which_sugars_per_hundred, $get_item_proteins_per_hundred, $get_item_salt_per_hundred, $get_item_sodium_per_hundred, $get_item_calories_calculated, $get_item_fat_calculated, $get_item_fat_of_which_saturated_fatty_acids_calculated, $get_item_carbs_calculated, $get_item_carbs_of_which_dietary_fiber_calculated, $get_item_carbs_of_which_sugars_calculated, $get_item_proteins_calculated, $get_item_salt_calculated, $get_item_sodium_calculated) = $row_items;
+						list($get_item_id, $get_item_recipe_id, $get_item_group_id, $get_item_amount, $get_item_measurement, $get_item_grocery, $get_item_grocery_explanation, $get_item_food_id, $get_item_energy_metric, $get_item_fat_metric, $get_item_saturated_fat_metric, $get_item_monounsaturated_fat_metric, $get_item_polyunsaturated_fat_metric, $get_item_cholesterol_metric, $get_item_carbohydrates_metric, $get_item_carbohydrates_of_which_sugars_metric, $get_item_dietary_fiber_metric, $get_item_proteins_metric, $get_item_salt_metric, $get_item_sodium_metric, $get_item_energy_calculated, $get_item_fat_calculated, $get_item_saturated_fat_calculated, $get_item_monounsaturated_fat_calculated, $get_item_polyunsaturated_fat_calculated, $get_item_cholesterol_calculated, $get_item_carbohydrates_calculated, $get_item_carbohydrates_of_which_sugars_calculated, $get_item_dietary_fiber_calculated, $get_item_proteins_calculated, $get_item_salt_calculated, $get_item_sodium_calculated) = $row_items;
 
-						$inp_number_hundred_calories 				= $inp_number_hundred_calories+$get_item_calories_per_hundred;
-						$inp_number_hundred_proteins 				= $inp_number_hundred_proteins+$get_item_proteins_per_hundred;
-						$inp_number_hundred_fat      				= $inp_number_hundred_fat+$get_item_fat_per_hundred;
-						$inp_number_hundred_fat_of_which_saturated_fatty_acids 	= $inp_number_hundred_fat_of_which_saturated_fatty_acids+$get_item_fat_of_which_saturated_fatty_acids_per_hundred;
-						$inp_number_hundred_carbs    				= $inp_number_hundred_carbs+$get_item_carbs_per_hundred;
-						$inp_number_hundred_carbs_of_which_dietary_fiber 	= $inp_number_hundred_carbs_of_which_dietary_fiber+$get_item_carbs_of_which_dietary_fiber_hundred;
-						$inp_number_hundred_carbs_of_which_sugars 		= $inp_number_hundred_carbs_of_which_sugars+$get_item_carbs_of_which_sugars_per_hundred;
-						$inp_number_hundred_salt 				= $inp_number_hundred_salt+$get_item_salt_per_hundred;
-						$inp_number_hundred_sodium 				= $inp_number_hundred_sodium+$get_item_sodium_per_hundred;
+
+
+						$inp_number_energy_metric		= $inp_number_energy_metric+$get_item_energy_metric;
+						$inp_number_fat_metric	 		= $inp_number_fat_metric+$get_item_fat_metric;
+						$inp_number_saturated_fat_metric	= $inp_number_saturated_fat_metric+$get_item_saturated_fat_metric;
+						$inp_number_monounsaturated_fat_metric	= $inp_number_monounsaturated_fat_metric+$get_item_monounsaturated_fat_metric;
+						$inp_number_polyunsaturated_fat_metric	= $inp_number_polyunsaturated_fat_metric+$get_item_polyunsaturated_fat_metric;
+						$inp_number_cholesterol_metric	 	= $inp_number_cholesterol_metric+$get_item_cholesterol_metric;
+						$inp_number_carbohydrates_metric	= $inp_number_carbohydrates_metric+$get_item_carbohydrates_metric;
+						$inp_number_carbohydrates_of_which_sugars_metric  = $inp_number_carbohydrates_of_which_sugars_metric+$get_item_carbohydrates_of_which_sugars_metric;
+						$inp_number_dietary_fiber_metric	= $inp_number_dietary_fiber_metric+$get_item_dietary_fiber_metric;
+						$inp_number_proteins_metric	 	= $inp_number_proteins_metric+$get_item_proteins_metric;
+						$inp_number_salt_metric			= $inp_number_salt_metric+$get_item_salt_metric;
+						$inp_number_sodium_metric		= $inp_number_sodium_metric+$get_item_sodium_metric;
+
+						$inp_number_energy_total		= $inp_number_energy_total+$get_item_energy_calculated;
+						$inp_number_fat_total			= $inp_number_fat_total+$get_item_fat_calculated;
+						$inp_number_saturated_fat_total	 	= $inp_number_saturated_fat_total+$get_item_saturated_fat_calculated;
+						$inp_number_monounsaturated_fat_total	= $inp_number_monounsaturated_fat_total+$get_item_monounsaturated_fat_calculated;
+						$inp_number_polyunsaturated_fat_total	= $inp_number_polyunsaturated_fat_total+$get_item_polyunsaturated_fat_calculated;
+						$inp_number_cholesterol_total		= $inp_number_cholesterol_total+$get_item_cholesterol_calculated;
+						$inp_number_carbohydrates_total		= $inp_number_carbohydrates_total+$get_item_carbohydrates_calculated;
+						$inp_number_carbohydrates_of_which_sugars_total = $inp_number_carbohydrates_of_which_sugars_total+$get_item_carbohydrates_of_which_sugars_calculated;
+						$inp_number_dietary_fiber_total		= $inp_number_dietary_fiber_total+$get_item_dietary_fiber_calculated;
+						$inp_number_proteins_total		= $inp_number_proteins_total+$get_item_proteins_calculated;
+						$inp_number_salt_total			= $inp_number_salt_total+$get_item_salt_calculated;
+						$inp_number_sodium_total		= $inp_number_sodium_total+$get_item_sodium_calculated;
+
 					
-						$inp_number_total_weight     = $inp_number_total_weight+$get_item_amount;
 
-						$inp_number_total_calories 				= $inp_number_total_calories+$get_item_calories_calculated;
-						$inp_number_total_proteins 				= $inp_number_total_proteins+$get_item_proteins_calculated;
-						$inp_number_total_fat     				= $inp_number_total_fat+$get_item_fat_calculated;
-						$inp_number_total_fat_of_which_saturated_fatty_acids 	= $inp_number_total_fat_of_which_saturated_fatty_acids+$get_item_fat_of_which_saturated_fatty_acids_calculated;
-						$inp_number_total_carbs    				= $inp_number_total_carbs+$get_item_carbs_calculated;
-						$inp_number_total_carbs_of_which_dietary_fiber 		= $inp_number_total_carbs_of_which_dietary_fiber+$get_item_carbs_of_which_dietary_fiber_calculated;
-						$inp_number_total_carbs_of_which_sugars 		= $inp_number_total_carbs_of_which_sugars+$get_item_carbs_of_which_sugars_calculated;
-						$inp_number_total_salt 					= $inp_number_total_salt+$get_item_salt_calculated;
-						$inp_number_total_sodium				= $inp_number_total_salt+$get_item_sodium_calculated;
+
 	
 					} // items
 				} // groups
@@ -751,91 +842,119 @@ else{
 
 	
 				// Numbers : Per hundred
-				$inp_number_hundred_calories_mysql 				= quote_smart($link, $inp_number_hundred_calories);
-				$inp_number_hundred_proteins_mysql 				= quote_smart($link, $inp_number_hundred_proteins);
-				$inp_number_hundred_fat_mysql      				= quote_smart($link, $inp_number_hundred_fat);
-				$inp_number_hundred_fat_of_which_saturated_fatty_acids_mysql 	= quote_smart($link, $inp_number_hundred_fat_of_which_saturated_fatty_acids);
-				$inp_number_hundred_carbs_mysql   				= quote_smart($link, $inp_number_hundred_carbs);
-				$inp_number_hundred_carbs_of_which_dietary_fiber_mysql 		= quote_smart($link, $inp_number_hundred_carbs_of_which_dietary_fiber);
-				$inp_number_hundred_carbs_of_which_sugars_mysql			= quote_smart($link, $inp_number_hundred_carbs_of_which_sugars);
-				$inp_number_hundred_salt_mysql					= quote_smart($link, $inp_number_hundred_salt);
-				$inp_number_hundred_sodium_mysql				= quote_smart($link, $inp_number_hundred_sodium);
+				$inp_number_energy_metric_mysql			= quote_smart($link, $inp_number_energy_metric);
+				$inp_number_fat_metric_mysql 			= quote_smart($link, $inp_number_fat_metric);
+				$inp_number_saturated_fat_metric_mysql		= quote_smart($link, $inp_number_saturated_fat_metric);
+				$inp_number_monounsaturated_fat_metric_mysql	= quote_smart($link, $inp_number_monounsaturated_fat_metric);
+				$inp_number_polyunsaturated_fat_metric_mysql	= quote_smart($link, $inp_number_polyunsaturated_fat_metric);
+				$inp_number_cholesterol_metric_mysql	 	= quote_smart($link, $inp_number_cholesterol_metric);
+				$inp_number_carbohydrates_metric_mysql		= quote_smart($link, $inp_number_carbohydrates_metric);
+				$inp_number_carbohydrates_of_which_sugars_metric_mysql  = quote_smart($link, $inp_number_carbohydrates_of_which_sugars_metric);
+				$inp_number_dietary_fiber_metric_mysql		= quote_smart($link, $inp_number_dietary_fiber_metric);
+				$inp_number_proteins_metric_mysql	 	= quote_smart($link, $inp_number_proteins_metric);
+				$inp_number_salt_metric_mysql			= quote_smart($link, $inp_number_salt_metric);
+				$inp_number_sodium_metric_mysql			= quote_smart($link, $inp_number_sodium_metric);
+
+
 					
 				// Numbers : Total 
-				$inp_number_total_weight_mysql     = quote_smart($link, $inp_number_total_weight);
+				$inp_number_energy_total_mysql			= quote_smart($link, $inp_number_energy_total);
+				$inp_number_fat_total_mysql			= quote_smart($link, $inp_number_fat_total);
+				$inp_number_saturated_fat_total_mysql	 	= quote_smart($link, $inp_number_saturated_fat_total);
+				$inp_number_monounsaturated_fat_total_mysql	= quote_smart($link, $inp_number_monounsaturated_fat_total);
+				$inp_number_polyunsaturated_fat_total_mysql	= quote_smart($link, $inp_number_polyunsaturated_fat_total);
+				$inp_number_cholesterol_total_mysql		= quote_smart($link, $inp_number_cholesterol_total);
+				$inp_number_carbohydrates_total_mysql		= quote_smart($link, $inp_number_carbohydrates_total);
+				$inp_number_carbohydrates_of_which_sugars_total_mysql = quote_smart($link, $inp_number_carbohydrates_of_which_sugars_total);
+				$inp_number_dietary_fiber_total_mysql		= quote_smart($link, $inp_number_dietary_fiber_total);
+				$inp_number_proteins_total_mysql		= quote_smart($link, $inp_number_proteins_total);
+				$inp_number_salt_total_mysql			= quote_smart($link, $inp_number_salt_total);
+				$inp_number_sodium_total_mysql			= quote_smart($link, $inp_number_sodium_total);
 
-				$inp_number_total_calories_mysql 				= quote_smart($link, $inp_number_total_calories);
-				$inp_number_total_proteins_mysql 				= quote_smart($link, $inp_number_total_proteins);
-				$inp_number_total_fat_mysql      				= quote_smart($link, $inp_number_total_fat);
-				$inp_number_total_fat_of_which_saturated_fatty_acids_mysql	= quote_smart($link, $inp_number_total_fat_of_which_saturated_fatty_acids);
-				$inp_number_total_carbs_mysql    				= quote_smart($link, $inp_number_total_carbs);
-				$inp_number_total_carbs_of_which_dietary_fiber_mysql    	= quote_smart($link, $inp_number_total_carbs_of_which_dietary_fiber);
-				$inp_number_total_carbs_of_which_sugars_mysql    		= quote_smart($link, $inp_number_total_carbs_of_which_sugars);
-				$inp_number_total_salt_mysql    				= quote_smart($link, $inp_number_total_salt);
-				$inp_number_total_sodium_mysql    				= quote_smart($link, $inp_number_total_sodium);
 
 				// Numbers : Per serving
-				$inp_number_serving_calories = round($inp_number_total_calories/$get_number_servings);
-				$inp_number_serving_calories_mysql = quote_smart($link, $inp_number_serving_calories);
+				$inp_number_energy_serving	 = round($inp_number_energy_total/$get_number_servings);
+				$inp_number_energy_serving_mysql = quote_smart($link, $inp_number_energy_serving);
 
-				$inp_number_serving_proteins = round($inp_number_total_proteins/$get_number_servings);
-				$inp_number_serving_proteins_mysql = quote_smart($link, $inp_number_serving_proteins);
+				$inp_number_fat_serving	 = round($inp_number_fat_total/$get_number_servings);
+				$inp_number_fat_serving_mysql = quote_smart($link, $inp_number_fat_serving);
 
-				$inp_number_serving_fat		= round($inp_number_total_fat/$get_number_servings);
-				$inp_number_serving_fat_mysql   = quote_smart($link, $inp_number_serving_fat);
+				$inp_number_saturated_fat_serving	 = round($inp_number_saturated_fat_total/$get_number_servings);
+				$inp_number_saturated_fat_serving_mysql = quote_smart($link, $inp_number_saturated_fat_serving);
 
-				$inp_number_serving_fat_of_which_saturated_fatty_acids		= round($inp_number_hundred_fat_of_which_saturated_fatty_acids/$get_number_servings);
-				$inp_number_serving_fat_of_which_saturated_fatty_acids_mysql 	= quote_smart($link, $inp_number_serving_fat_of_which_saturated_fatty_acids);
+				$inp_number_monounsaturated_fat_serving	 = round($inp_number_monounsaturated_fat_total/$get_number_servings);
+				$inp_number_monounsaturated_fat_serving_mysql = quote_smart($link, $inp_number_monounsaturated_fat_serving);
 
-				$inp_number_serving_carbs    = round($inp_number_total_carbs/$get_number_servings);
-				$inp_number_serving_carbs_mysql    = quote_smart($link, $inp_number_serving_carbs);
+				$inp_number_polyunsaturated_fat_serving	 = round($inp_number_polyunsaturated_fat_total/$get_number_servings);
+				$inp_number_polyunsaturated_fat_serving_mysql = quote_smart($link, $inp_number_polyunsaturated_fat_serving);
 
-				$inp_number_serving_carbs_of_which_dietary_fiber = round($inp_number_serving_carbs_of_which_dietary_fiber/$get_number_servings);
-				$inp_number_serving_carbs_of_which_dietary_fiber_mysql 	= quote_smart($link, $inp_number_serving_carbs_of_which_dietary_fiber); 
+				$inp_number_cholesterol_serving	 = round($inp_number_cholesterol_total/$get_number_servings);
+				$inp_number_cholesterol_serving_mysql = quote_smart($link, $inp_number_cholesterol_serving);
 
-				$inp_number_serving_carbs_of_which_sugars 		= round($inp_number_serving_carbs_of_which_sugars /$get_number_servings);
-				$inp_number_serving_carbs_of_which_sugars_mysql 	= quote_smart($link, $inp_number_serving_carbs_of_which_sugars); 
+				$inp_number_carbohydrates_serving	 = round($inp_number_carbohydrates_total/$get_number_servings);
+				$inp_number_carbohydrates_serving_mysql = quote_smart($link, $inp_number_carbohydrates_serving);
 
-				$inp_number_serving_salt 	= round($inp_number_serving_salt/$get_number_servings);
-				$inp_number_serving_salt_mysql 	= quote_smart($link, $inp_number_serving_salt); 
+				$inp_number_carbohydrates_of_which_sugars_serving	 = round($inp_number_carbohydrates_of_which_sugars_total/$get_number_servings);
+				$inp_number_carbohydrates_of_which_sugars_serving_mysql = quote_smart($link, $inp_number_carbohydrates_of_which_sugars_serving);
 
-				$inp_number_serving_sodium 	 = round($inp_number_serving_sodium/$get_number_servings);
-				$inp_number_serving_sodium_mysql = quote_smart($link, $inp_number_serving_sodium); 
+				$inp_number_dietary_fiber_serving	 = round($inp_number_dietary_fiber_total/$get_number_servings);
+				$inp_number_dietary_fiber_serving_mysql = quote_smart($link, $inp_number_dietary_fiber_serving);
+
+				$inp_number_proteins_serving	 = round($inp_number_proteins_total/$get_number_servings);
+				$inp_number_proteins_serving_mysql = quote_smart($link, $inp_number_proteins_serving);
+
+				$inp_number_salt_serving	 = round($inp_number_salt_total/$get_number_servings);
+				$inp_number_salt_serving_mysql = quote_smart($link, $inp_number_salt_serving);
+
+				$inp_number_sodium_serving	 = round($inp_number_sodium_total/$get_number_servings);
+				$inp_number_sodium_serving_mysql = quote_smart($link, $inp_number_sodium_serving);
 
 
 
 				$result = mysqli_query($link, "UPDATE $t_recipes_numbers SET 
-					number_hundred_calories=$inp_number_hundred_calories_mysql, 
-					number_hundred_proteins=$inp_number_hundred_proteins_mysql, 
-					number_hundred_fat=$inp_number_hundred_fat_mysql, 
-					number_hundred_fat_of_which_saturated_fatty_acids=$inp_number_hundred_fat_of_which_saturated_fatty_acids_mysql,
-					number_hundred_carbs=$inp_number_hundred_carbs_mysql, 
-					number_hundred_carbs_of_which_dietary_fiber=$inp_number_hundred_carbs_of_which_dietary_fiber_mysql,
-					number_hundred_carbs_of_which_sugars=$inp_number_hundred_carbs_of_which_sugars_mysql,
-					number_hundred_salt=$inp_number_hundred_salt_mysql,
-					number_hundred_sodium=$inp_number_hundred_sodium_mysql,
 
-					number_serving_calories=$inp_number_serving_calories_mysql, 
-					number_serving_proteins=$inp_number_serving_proteins_mysql, 
-					number_serving_fat=$inp_number_serving_fat_mysql, 
-					number_serving_fat_of_which_saturated_fatty_acids=$inp_number_serving_fat_of_which_saturated_fatty_acids_mysql,
-					number_serving_carbs=$inp_number_serving_carbs_mysql,
-					number_serving_carbs_of_which_dietary_fiber=$inp_number_serving_carbs_of_which_dietary_fiber_mysql, 
-					number_serving_carbs_of_which_sugars=$inp_number_serving_carbs_of_which_sugars_mysql, 
-					number_serving_salt=$inp_number_serving_salt_mysql,
-					number_serving_sodium=$inp_number_serving_sodium_mysql,
+								number_energy_metric=$inp_number_energy_metric_mysql, 
+								number_fat_metric=$inp_number_fat_metric_mysql, 
+								number_saturated_fat_metric=$inp_number_saturated_fat_metric_mysql, 
+								number_monounsaturated_fat_metric=$inp_number_monounsaturated_fat_metric_mysql, 
+								number_polyunsaturated_fat_metric=$inp_number_polyunsaturated_fat_metric_mysql, 
+								number_cholesterol_metric=$inp_number_cholesterol_metric_mysql, 
+								number_carbohydrates_metric=$inp_number_carbohydrates_metric_mysql, 
+								number_carbohydrates_of_which_sugars_metric=$inp_number_carbohydrates_of_which_sugars_metric_mysql, 
+								number_dietary_fiber_metric=$inp_number_dietary_fiber_metric_mysql, 
+								number_proteins_metric=$inp_number_proteins_metric_mysql, 
+								number_salt_metric=$inp_number_salt_metric_mysql, 
+								number_sodium_metric=$inp_number_sodium_metric_mysql, 
 
-					number_total_weight=$inp_number_total_weight_mysql, 
-					number_total_calories=$inp_number_total_calories_mysql, 
-					number_total_proteins=$inp_number_total_proteins_mysql, 
-					number_total_fat=$inp_number_total_fat_mysql, 
-					number_total_fat_of_which_saturated_fatty_acids=$inp_number_serving_fat_of_which_saturated_fatty_acids_mysql,
-					number_total_carbs=$inp_number_total_carbs_mysql,
-					number_total_carbs_of_which_dietary_fiber=$inp_number_serving_carbs_of_which_dietary_fiber_mysql,
-					number_total_carbs_of_which_sugars=$inp_number_serving_carbs_of_which_sugars_mysql, 
-					number_total_salt=$inp_number_serving_salt_mysql, 
-					number_total_sodium=$inp_number_serving_sodium_mysql
+								number_energy_serving=$inp_number_energy_serving_mysql, 
+								number_fat_serving=$inp_number_fat_serving_mysql, 
+								number_saturated_fat_serving=$inp_number_saturated_fat_serving_mysql, 
+								number_monounsaturated_fat_serving=$inp_number_monounsaturated_fat_serving_mysql, 
+								number_polyunsaturated_fat_serving=$inp_number_polyunsaturated_fat_serving_mysql, 
+								number_cholesterol_serving=$inp_number_cholesterol_serving_mysql, 
+								number_carbohydrates_serving=$inp_number_carbohydrates_serving_mysql, 
+								number_carbohydrates_of_which_sugars_serving=$inp_number_carbohydrates_of_which_sugars_serving_mysql, 
+								number_dietary_fiber_serving=$inp_number_dietary_fiber_serving_mysql, 
+								number_proteins_serving=$inp_number_proteins_serving_mysql, 
+								number_salt_serving=$inp_number_salt_serving_mysql, 
+
+								number_sodium_serving=$inp_number_sodium_serving_mysql, 
+								number_energy_total=$inp_number_energy_total_mysql, 
+								number_fat_total=$inp_number_fat_total_mysql, 
+								number_saturated_fat_total=$inp_number_saturated_fat_total_mysql, 
+								number_monounsaturated_fat_total=$inp_number_monounsaturated_fat_total_mysql, 
+								number_polyunsaturated_fat_total=$inp_number_polyunsaturated_fat_total_mysql, 
+								number_cholesterol_total=$inp_number_cholesterol_total_mysql, 
+								number_carbohydrates_total=$inp_number_carbohydrates_total_mysql, 
+								number_carbohydrates_of_which_sugars_total=$inp_number_carbohydrates_of_which_sugars_total_mysql, 
+								number_dietary_fiber_total=$inp_number_dietary_fiber_total_mysql, 
+								number_proteins_total=$inp_number_proteins_total_mysql, 
+								number_salt_total=$inp_number_salt_total_mysql, 
+								number_sodium_total=$inp_number_sodium_total_mysql
+
 					 WHERE number_recipe_id=$recipe_id_mysql") or die(mysqli_error($link));
+
+
 
 	
 
@@ -962,143 +1081,187 @@ else{
 						$inp_item_grocery = "";
 					}
 
-					if(isset($_GET['calories_per_hundred'])){
-						$inp_item_calories_per_hundred = $_GET['calories_per_hundred'];
-						$inp_item_calories_per_hundred = output_html($inp_item_calories_per_hundred);
+					// Calories
+					if(isset($_GET['calories_metric'])){
+						$inp_item_calories_metric = $_GET['calories_metric'];
+						$inp_item_calories_metric = output_html($inp_item_calories_metric);
 					}
 					else{
-						$inp_item_calories_per_hundred = "";
+						$inp_item_calories_metric = "";
 					}
-
-					if(isset($_GET['proteins_per_hundred'])){
-						$inp_item_proteins_per_hundred = $_GET['proteins_per_hundred'];
-						$inp_item_proteins_per_hundred = output_html($inp_item_proteins_per_hundred);
-					}
-					else{
-						$inp_item_proteins_per_hundred = "";
-					}
-
-					if(isset($_GET['fat_per_hundred'])){
-						$inp_item_fat_per_hundred = $_GET['fat_per_hundred'];
-						$inp_item_fat_per_hundred = output_html($inp_item_fat_per_hundred);
-					}
-					else{
-						$inp_item_fat_per_hundred = "";
-					}
-					if(isset($_GET['fat_of_which_saturated_fatty_acids_per_hundred'])){
-						$inp_item_fat_of_which_saturated_fatty_acids_per_hundred = $_GET['fat_of_which_saturated_fatty_acids_per_hundred'];
-						$inp_item_fat_of_which_saturated_fatty_acids_per_hundred = output_html($inp_item_fat_of_which_saturated_fatty_acids_per_hundred);
-					}
-					else{
-						$inp_item_fat_of_which_saturated_fatty_acids_per_hundred = "";
-					}
-
-					if(isset($_GET['carbs_per_hundred'])){
-						$inp_item_carbs_per_hundred = $_GET['carbs_per_hundred'];
-						$inp_item_carbs_per_hundred = output_html($inp_item_carbs_per_hundred);
-					}
-					else{
-						$inp_item_carbs_per_hundred = "";
-					}
-
-
-
-					if(isset($_GET['carbs_of_which_dietary_fiber_per_hundred'])){
-						$inp_item_carbs_of_which_dietary_fiber_per_hundred = $_GET['carbs_of_which_dietary_fiber_per_hundred'];
-						$inp_item_carbs_of_which_dietary_fiber_per_hundred = output_html($inp_item_carbs_of_which_dietary_fiber_per_hundred);
-					}
-					else{
-						$inp_item_carbs_of_which_dietary_fiber_per_hundred = "";
-					}
-
-					if(isset($_GET['carbs_of_which_dietary_fiber_calculated'])){
-						$inp_item_carbs_of_which_dietary_fiber_calculated = $_GET['carbs_of_which_dietary_fiber_calculated'];
-						$inp_item_carbs_of_which_dietary_fiber_calculated = output_html($inp_item_carbs_of_which_dietary_fiber_calculated);
-					}
-					else{
-						$inp_item_carbs_of_which_dietary_fiber_calculated = "";
-					}
-
-					if(isset($_GET['carbs_of_which_sugars_per_hundred'])){
-						$inp_item_carbs_of_which_sugars_per_hundred = $_GET['carbs_of_which_sugars_per_hundred'];
-						$inp_item_carbs_of_which_sugars_per_hundred = output_html($inp_item_carbs_of_which_sugars_per_hundred);
-					}
-					else{
-						$inp_item_carbs_of_which_sugars_per_hundred = "";
-					}
-
-
-
-					if(isset($_GET['salt_per_hundred'])){
-						$inp_item_salt_per_hundred = $_GET['salt_per_hundred'];
-						$inp_item_salt_per_hundred = output_html($inp_item_salt_per_hundred);
-					}
-					else{
-						$inp_item_salt_per_hundred = "";
-					}
-
-					if(isset($_GET['calories'])){
-						$inp_item_calories_calculated = $_GET['calories'];
+					if(isset($_GET['calories_calculated'])){
+						$inp_item_calories_calculated = $_GET['calories_calculated'];
 						$inp_item_calories_calculated = output_html($inp_item_calories_calculated);
 					}
 					else{
 						$inp_item_calories_calculated = "";
 					}
 
-					if(isset($_GET['proteins'])){
-						$inp_item_proteins_calculated = $_GET['proteins'];
+					// Fat
+					if(isset($_GET['fat_metric'])){
+						$inp_item_fat_metric = $_GET['fat_metric'];
+						$inp_item_fat_metric = output_html($inp_item_fat_metric);
+					}
+					else{
+						$inp_item_fat_metric = "";
+					}
+					if(isset($_GET['fat_calculated'])){
+						$inp_item_fat_calculated = $_GET['fat_calculated'];
+						$inp_item_fat_calculated = output_html($inp_item_fat_calculated);
+					}
+					else{
+						$inp_item_fat_calculated = "";
+					}
+
+
+					// Saturated Fat
+					if(isset($_GET['saturated_fat_metric'])){
+						$inp_item_saturated_fat_metric = $_GET['saturated_fat_metric'];
+						$inp_item_saturated_fat_metric = output_html($inp_item_saturated_fat_metric);
+					}
+					else{
+						$inp_item_saturated_fat_metric = "";
+					}
+					if(isset($_GET['saturated_fat_calculated'])){
+						$inp_item_saturated_fat_calculated = $_GET['saturated_fat_calculated'];
+						$inp_item_saturated_fat_calculated = output_html($inp_item_saturated_fat_calculated);
+					}
+					else{
+						$inp_item_saturated_fat_calculated = "";
+					}
+
+
+
+					// Monounsaturated Fat
+					if(isset($_GET['monounsaturated_fat_metric'])){
+						$inp_item_monounsaturated_fat_metric = $_GET['monounsaturated_fat_metric'];
+						$inp_item_monounsaturated_fat_metric = output_html($inp_item_monounsaturated_fat_metric);
+					}
+					else{
+						$inp_item_monounsaturated_fat_metric = "";
+					}
+					if(isset($_GET['monounsaturated_fat_calculated'])){
+						$inp_item_monounsaturated_fat_calculated = $_GET['monounsaturated_fat_calculated'];
+						$inp_item_monounsaturated_fat_calculated = output_html($inp_item_monounsaturated_fat_calculated);
+					}
+					else{
+						$inp_item_monounsaturated_fat_calculated = "";
+					}
+
+					// Polyunsaturated Fat
+					if(isset($_GET['polyunsaturated_fat_metric'])){
+						$inp_item_polyunsaturated_fat_metric = $_GET['polyunsaturated_fat_metric'];
+						$inp_item_polyunsaturated_fat_metric = output_html($inp_item_polyunsaturated_fat_metric);
+					}
+					else{
+						$inp_item_polyunsaturated_fat_metric = "";
+					}
+					if(isset($_GET['polyunsaturated_fat_calculated'])){
+						$inp_item_polyunsaturated_fat_calculated = $_GET['polyunsaturated_fat_calculated'];
+						$inp_item_polyunsaturated_fat_calculated = output_html($inp_item_polyunsaturated_fat_calculated);
+					}
+					else{
+						$inp_item_polyunsaturated_fat_calculated = "";
+					}
+
+
+
+					// Carbohydrates
+					if(isset($_GET['carbohydrates_metric'])){
+						$inp_item_carbohydrates_metric = $_GET['carbohydrates_metric'];
+						$inp_item_carbohydrates_metric = output_html($inp_item_carbohydrates_metric);
+					}
+					else{
+						$inp_item_carbohydrates_metric = "";
+					}
+					if(isset($_GET['carbohydrates_calculated'])){
+						$inp_item_carbohydrates_calculated = $_GET['carbohydrates_calculated'];
+						$inp_item_carbohydrates_calculated = output_html($inp_item_carbohydrates_calculated);
+					}
+					else{
+						$inp_item_carbohydrates_calculated = "";
+					}
+
+					// Carbohydrates of which sugars
+					if(isset($_GET['carbohydrates_of_which_sugars_metric'])){
+						$inp_item_carbohydrates_of_which_sugars_metric = $_GET['carbohydrates_of_which_sugars_metric'];
+						$inp_item_carbohydrates_of_which_sugars_metric = output_html($inp_item_carbohydrates_of_which_sugars_metric);
+					}
+					else{
+						$inp_item_carbohydrates_of_which_sugars_metric = "";
+					}
+					if(isset($_GET['carbohydrates_of_which_sugars_calculated'])){
+						$inp_item_carbohydrates_of_which_sugars_calculated = $_GET['carbohydrates_of_which_sugars_calculated'];
+						$inp_item_carbohydrates_of_which_sugars_calculated = output_html($inp_item_carbohydrates_of_which_sugars_calculated);
+					}
+					else{
+						$inp_item_carbohydrates_of_which_sugars_calculated = "";
+					}
+
+
+					// Dietary fiber
+					if(isset($_GET['dietary_fiber_metric'])){
+						$inp_item_dietary_fiber_metric = $_GET['dietary_fiber_metric'];
+						$inp_item_dietary_fiber_metric = output_html($inp_item_dietary_fiber_metric);
+					}
+					else{
+						$inp_item_dietary_fiber_metric = "";
+					}
+					if(isset($_GET['dietary_fiber_calculated'])){
+						$inp_item_dietary_fiber_calculated = $_GET['dietary_fiber_calculated'];
+						$inp_item_dietary_fiber_calculated = output_html($inp_item_dietary_fiber_calculated);
+					}
+					else{
+						$inp_item_dietary_fiber_calculated = "";
+					}
+
+					// Proteins
+					if(isset($_GET['proteins_metric'])){
+						$inp_item_proteins_metric = $_GET['proteins_metric'];
+						$inp_item_proteins_metric = output_html($inp_item_proteins_metric);
+					}
+					else{
+						$inp_item_proteins_metric = "";
+					}
+					if(isset($_GET['proteins_calculated'])){
+						$inp_item_proteins_calculated = $_GET['proteins_calculated'];
 						$inp_item_proteins_calculated = output_html($inp_item_proteins_calculated);
 					}
 					else{
 						$inp_item_proteins_calculated = "";
 					}
 
-					if(isset($_GET['fat'])){
-						$inp_item_fat_calculated = $_GET['fat'];
-						$inp_item_fat_calculated = output_html($inp_item_fat_calculated);
+					// Salt
+					if(isset($_GET['salt_metric'])){
+						$inp_item_salt_metric = $_GET['salt_metric'];
+						$inp_item_salt_metric = output_html($inp_item_salt_metric);
 					}
 					else{
-						$inp_item_fat_calculated = "";
+						$inp_item_salt_metric = "";
 					}
-					if(isset($_GET['fat_of_which_saturated_fatty_acids'])){
-						$inp_item_fat_of_which_saturated_fatty_acids_calculated = $_GET['fat_of_which_saturated_fatty_acids'];
-						$inp_item_fat_of_which_saturated_fatty_acids_calculated = output_html($inp_item_fat_of_which_saturated_fatty_acids_calculated);
-					}
-					else{
-						$inp_item_fat_of_which_saturated_fatty_acids_calculated = "";
-					}
-
-					if(isset($_GET['carbs'])){
-						$inp_item_carbs_calculated = $_GET['carbs'];
-						$inp_item_carbs_calculated = output_html($inp_item_carbs_calculated);
-					}
-					else{
-						$inp_item_carbs_calculated = "";
-					}
-
-					if(isset($_GET['carbs_of_which_sugars'])){
-						$inp_item_carbs_of_which_sugars_calculated = $_GET['carbs_of_which_sugars'];
-						$inp_item_carbs_of_which_sugars_calculated = output_html($inp_item_carbs_of_which_sugars_calculated);
-					}
-					else{
-						$inp_item_carbs_of_which_sugars_calculated = "";
-					}
-
-					if(isset($_GET['salt'])){
-						$inp_item_salt_calculated = $_GET['salt'];
+					if(isset($_GET['salt_calculated'])){
+						$inp_item_salt_calculated = $_GET['salt_calculated'];
 						$inp_item_salt_calculated = output_html($inp_item_salt_calculated);
 					}
 					else{
 						$inp_item_salt_calculated = "";
 					}
-					if(isset($_GET['sodium'])){
-						$inp_item_sodium_calculated = $_GET['sodium'];
+
+					// Sodium
+					if(isset($_GET['sodium_metric'])){
+						$inp_item_sodium_metric = $_GET['sodium_metric'];
+						$inp_item_sodium_metric = output_html($inp_item_sodium_metric);
+					}
+					else{
+						$inp_item_sodium_metric = "";
+					}
+					if(isset($_GET['sodium_calculated'])){
+						$inp_item_sodium_calculated = $_GET['sodium_calculated'];
 						$inp_item_sodium_calculated = output_html($inp_item_sodium_calculated);
 					}
 					else{
 						$inp_item_sodium_calculated = "";
 					}
-
  
 					echo"
 				<!-- //Var -->
@@ -1113,7 +1276,7 @@ else{
 				<h2 style=\"padding-bottom:0;margin-bottom:0;\">$l_food</h2>
 				<p>$l_amount<br />
 				<input type=\"text\" name=\"inp_item_amount\" id=\"inp_item_amount\" size=\"3\" value=\"$inp_item_amount\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
-				<input type=\"text\" name=\"inp_item_measurement\" class=\"inp_item_measurement\" size=\"3\" value=\"$inp_item_measurement\" style=\"width:auto;border: #fff 1px solid;border-bottom: #ddd 1px dashed\" />
+				<input type=\"text\" name=\"inp_item_measurement\" class=\"inp_item_measurement\" id=\"inp_item_measurement\" size=\"3\" value=\"$inp_item_measurement\" style=\"width:auto;border: #fff 1px solid;border-bottom: #ddd 1px dashed\" />
 				</p>
 
 				<p>$l_grocery &middot; <a href=\"$root/food/new_food.php?l=$l\" target=\"_blank\">$l_new_food</a><br />
@@ -1207,6 +1370,52 @@ else{
 						</script>
 
 				<!-- //Special character replacer -->
+
+				<!-- User adapted view -->";
+					if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
+						$my_user_id = $_SESSION['user_id'];
+						$my_user_id = output_html($my_user_id);
+						$my_user_id_mysql = quote_smart($link, $my_user_id);
+			
+						$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_recipes_user_adapted_view WHERE view_user_id=$get_my_user_id";
+						$result_t = mysqli_query($link, $query_t);
+						$row_t = mysqli_fetch_row($result_t);
+						list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
+					}
+					else{
+						// IP
+						$my_user_ip = $_SERVER['REMOTE_ADDR'];
+						$my_user_ip = output_html($my_user_ip);
+						$my_user_ip_mysql = quote_smart($link, $my_user_ip);
+			
+						$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_recipes_user_adapted_view WHERE view_ip=$my_user_ip_mysql";
+						$result_t = mysqli_query($link, $query_t);
+						$row_t = mysqli_fetch_row($result_t);
+						list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
+					}
+					if($get_current_view_hundred_metric == ""){
+						$get_current_view_hundred_metric = "1";
+					}
+					echo"
+					<p><a id=\"adapter_view\"></a>
+					<input type=\"checkbox\" name=\"inp_show_hundred_metric\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=hundred_metric&amp;process=1&amp;referer=submit_recipe_step_2_group_and_elements&amp;action=$action&amp;recipe_id=$recipe_id&amp;group_id=$group_id&amp;l=$l\""; if($get_current_view_hundred_metric == "1"){ echo" checked=\"checked\""; } echo" /> $l_hundred
+					<input type=\"checkbox\" name=\"inp_show_pcs_metric\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=pcs_metric&amp;process=1&amp;referer=submit_recipe_step_2_group_and_elements&amp;action=$action&amp;recipe_id=$recipe_id&amp;group_id=$group_id&amp;l=$l\""; if($get_current_view_pcs_metric == "1"){ echo" checked=\"checked\""; } echo" /> $l_pcs_g
+					<input type=\"checkbox\" name=\"inp_show_eight_us\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=eight_us&amp;process=1&amp;referer=submit_recipe_step_2_group_and_elements&amp;action=$action&amp;recipe_id=$recipe_id&amp;group_id=$group_id&amp;l=$l\""; if($get_current_view_eight_us == "1"){ echo" checked=\"checked\""; } echo" /> $l_eight
+					<input type=\"checkbox\" name=\"inp_show_pcs_us\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=pcs_us&amp;process=1&amp;referer=submit_recipe_step_2_group_and_elements&amp;action=$action&amp;recipe_id=$recipe_id&amp;group_id=$group_id&amp;l=$l\""; if($get_current_view_pcs_us == "1"){ echo" checked=\"checked\""; } echo" /> $l_pcs_oz
+					</p>
+
+					<!-- On check go to URL -->
+						<script>
+						\$(function() {
+							\$(\".onclick_go_to_url\").change(function(){
+								var item=\$(this);
+								window.location.href= item.data(\"target\")
+							});
+  						});
+						</script>
+					<!-- //On check go to URL -->
+				<!-- //User adapted view -->
+
 				<div id=\"nettport_search_results\">
 				</div><div class=\"clear\"></div>
 				
@@ -1226,95 +1435,107 @@ else{
 				   </th>
 				  </tr>
 				 </thead>
+
+
 				 <tbody>
 				  <tr>
 				   <td style=\"padding: 8px 4px 6px 8px;\">
 					<span>$l_calories</span>
 				   </td>
 				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-					<span><input type=\"text\" name=\"inp_item_calories_per_hundred\" id=\"inp_item_calories_per_hundred\" size=\"5\" value=\"$inp_item_calories_per_hundred\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
+					<span><input type=\"text\" name=\"inp_item_calories_metric\" id=\"inp_item_calories_metric\" size=\"5\" value=\"$inp_item_calories_metric\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
 				   </td>
 				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
 					<span><input type=\"text\" name=\"inp_item_calories_calculated\" id=\"inp_item_calories_calculated\" size=\"5\" value=\"$inp_item_calories_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
 				   </td>
 				  </tr>
+
 				  <tr>
 				   <td style=\"padding: 8px 4px 6px 8px;\">
 					<p style=\"margin:0;padding: 0px 0px 4px 0px;\">$l_fat</p>
-					<p style=\"margin:0;padding: 0;\">$l_dash_of_which_saturated_fatty_acids</p>
+					<p style=\"margin:0;padding: 0;\">$l_dash_saturated_fat</p>
+					<p style=\"margin:0;padding: 0;\">$l_dash_monounsaturated_fat</p>
+					<p style=\"margin:0;padding: 0;\">$l_dash_polyunsaturated_fat</p>
 				   </td>
 				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-					<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_item_fat_per_hundred\" id=\"inp_item_fat_per_hundred\" size=\"5\" value=\"$inp_item_fat_per_hundred\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
-					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_fat_of_which_saturated_fatty_acids_per_hundred\" id=\"inp_item_fat_of_which_saturated_fatty_acids_per_hundred\" size=\"5\" value=\"$inp_item_fat_of_which_saturated_fatty_acids_per_hundred\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_item_fat_metric\" id=\"inp_item_fat_metric\" size=\"5\" value=\"$inp_item_fat_metric\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_saturated_fat_metric\" id=\"inp_item_saturated_fat_metric\" size=\"5\" value=\"$inp_item_saturated_fat_metric\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_monounsaturated_fat_metric\" id=\"inp_item_monounsaturated_fat_metric\" size=\"5\" value=\"$inp_item_monounsaturated_fat_metric\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_polyunsaturated_fat_metric\" id=\"inp_item_polyunsaturated_fat_metric\" size=\"5\" value=\"$inp_item_polyunsaturated_fat_metric\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
 				   </td>
 				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
 					<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_item_fat_calculated\" id=\"inp_item_fat_calculated\" size=\"5\" value=\"$inp_item_fat_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
-					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_fat_of_which_saturated_fatty_acids_calculated\" id=\"inp_item_fat_of_which_saturated_fatty_acids_calculated\" size=\"5\" value=\"$inp_item_fat_of_which_saturated_fatty_acids_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_saturated_fat_calculated\" id=\"inp_item_saturated_fat_calculated\" size=\"5\" value=\"$inp_item_saturated_fat_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_monounsaturated_fat_calculated\" id=\"inp_item_monounsaturated_fat_calculated\" size=\"5\" value=\"$inp_item_monounsaturated_fat_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_polyunsaturated_fat_calculated\" id=\"inp_item_saturated_fat_calculated\" size=\"5\" value=\"$inp_item_saturated_fat_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
 				   </td>
-				 </tr>
-				 <tr>
-		 		  <td style=\"padding: 8px 4px 6px 8px;\">
+				  </tr>
+
+				  <tr>
+		 		   <td style=\"padding: 8px 4px 6px 8px;\">
 					<p style=\"margin:0;padding: 0px 0px 4px 0px;\">$l_carbs</p>
-					<p style=\"margin:0;padding: 0;\">$l_dash_of_which_sugars</p>
+					<p style=\"margin:0;padding: 0;\">$l_dash_of_which_sugars_calculated</p>
 				   </td>
 				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-					<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_item_carbs_per_hundred\" id=\"inp_item_carbs_per_hundred\" size=\"5\" value=\"$inp_item_carbs_per_hundred\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
-					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_carbs_of_which_sugars_per_hundred\" id=\"inp_item_carbs_of_which_sugars_per_hundred\" size=\"5\" value=\"$inp_item_carbs_of_which_sugars_per_hundred\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_item_carbohydrates_metric\" id=\"inp_item_carbohydrates_metric\" size=\"5\" value=\"$inp_item_carbohydrates_metric\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_carbohydrates_of_which_sugars_metric\" id=\"inp_item_carbohydrates_of_which_sugars_metric\" size=\"5\" value=\"$inp_item_carbohydrates_of_which_sugars_metric\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
 				   </td>
 				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-					<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_item_carbs_calculated\" id=\"inp_item_carbs_calculated\" size=\"5\" value=\"$inp_item_carbs_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
-					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_carbs_of_which_sugars_calculated\" id=\"inp_item_carbs_of_which_sugars_calculated\" size=\"5\" value=\"$inp_item_carbs_of_which_sugars_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_item_carbohydrates_calculated\" id=\"inp_item_carbohydrates_calculated\" size=\"5\" value=\"$inp_item_carbohydrates_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_carbohydrates_of_which_sugars_calculated\" id=\"inp_item_carbohydrates_of_which_sugars_calculated\" size=\"5\" value=\"$inp_item_carbohydrates_of_which_sugars_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
 				   </td>
 				  </tr>
 
 				 <tr>
-		 		  <td style=\"padding: 8px 4px 6px 8px;\">
+	 			  <td style=\"padding: 8px 4px 6px 8px;\">
 					<p style=\"margin:0;padding: 0;\">$l_dietary_fiber</p>
 				   </td>
+				 	  <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+						<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_dietary_fiber_metric\" id=\"inp_item_dietary_fiber_metric\" size=\"5\" value=\"$inp_item_dietary_fiber_metric\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					   </td>
 				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_carbs_of_which_dietary_fiber_per_hundred\" id=\"inp_item_carbs_of_which_dietary_fiber_per_hundred\" size=\"5\" value=\"$inp_item_carbs_of_which_dietary_fiber_per_hundred\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
-				   </td>
-				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_carbs_of_which_dietary_fiber_calculated\" id=\"inp_item_carbs_of_which_dietary_fiber_calculated\" size=\"5\" value=\"$inp_item_carbs_of_which_dietary_fiber_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_dietary_fiber_calculated\" id=\"inp_item_dietary_fiber_calculated\" size=\"5\" value=\"$inp_item_dietary_fiber_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
 				   </td>
 				  </tr>
+
 
 				  <tr>
 				   <td style=\"padding: 8px 4px 6px 8px;\">
 					<span>$l_proteins</span>
 				   </td>
 				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-					<span><input type=\"text\" name=\"inp_item_proteins_per_hundred\" id=\"inp_item_proteins_per_hundred\" size=\"5\" value=\"$inp_item_proteins_per_hundred\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
+					<span><input type=\"text\" name=\"inp_item_proteins_metric\" id=\"inp_item_proteins_metric\" size=\"5\" value=\"$inp_item_proteins_metric\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
 				   </td>
 				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
 					<span><input type=\"text\" name=\"inp_item_proteins_calculated\" id=\"inp_item_proteins_calculated\" size=\"5\" value=\"$inp_item_proteins_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
 				   </td>
 				 </tr>
-					 <tr>
-				 	  <td style=\"padding: 8px 4px 6px 8px;\">
-						<span>$l_salt_in_gram</span>
-				 	  </td>
-				 	  <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-						<span><input type=\"text\" name=\"inp_item_salt_per_hundred\" id=\"inp_item_salt_per_hundred\" value=\"$inp_item_salt_per_hundred\" size=\"5\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
-					   </td>
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-						<span><input type=\"text\" name=\"inp_item_salt_calculated\" id=\"inp_item_salt_calculated\" value=\"$inp_item_salt_calculated\" size=\"5\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
-				 	  </td>
-					  </tr>
-					 <tr>
-				 	  <td style=\"padding: 8px 4px 6px 8px;\">
-						<span>$l_sodium_in_mg</span>
-				 	   </td>
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-						<span><input type=\"text\" name=\"inp_item_sodium_per_hundred\" id=\"inp_item_sodium_per_hundred\" value=\"$inp_item_sodium_per_hundred\" size=\"5\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
-				 	  </td>
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-						<span><input type=\"text\" name=\"inp_item_sodium_calculated\" id=\"inp_item_sodium_calculated\" value=\"$inp_item_sodium_calculated\" size=\"5\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
-				 	  </td>
-					  </tr>
+
+				  <tr>
+				   <td style=\"padding: 8px 4px 6px 8px;\">
+					<span>$l_salt_in_gram</span>
+				   </td>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span><input type=\"text\" name=\"inp_item_salt_metric\" id=\"inp_item_salt_metric\" value=\"$inp_item_salt_metric\" size=\"5\" /></span>
+				   </td>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span><input type=\"text\" name=\"inp_item_salt_calculated\" id=\"inp_item_salt_calculated\" value=\"$inp_item_salt_calculated\" size=\"5\" /></span>
+				   </td>
+				  </tr>
+
+				  <tr>
+				   <td style=\"padding: 8px 4px 6px 8px;\">
+					<span>$l_sodium_in_mg</span>
+				   </td>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span><input type=\"text\" name=\"inp_item_sodium_metric\" id=\"inp_item_sodium_metric\" value=\"$inp_item_sodium_metric\" size=\"5\" /></span>
+				   </td>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span><input type=\"text\" name=\"inp_item_sodium_calculated\" id=\"inp_item_sodium_calculated\" value=\"$inp_item_sodium_calculated\" size=\"5\" /></span>
+				   </td>
+				  </tr>
 				 </tbody>
 				</table>
-
 			
 				<p>
 				<input type=\"submit\" value=\"$l_add_item\" class=\"btn\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
@@ -1363,11 +1584,11 @@ else{
 					";
 
 					$group_id_mysql = quote_smart($link, $group_id);
-					$query_items = "SELECT item_id, item_recipe_id, item_group_id, item_amount, item_measurement, item_grocery, item_grocery_explanation, item_food_id, item_calories_per_hundred, item_proteins_per_hundred, item_fat_per_hundred, item_fat_of_which_saturated_fatty_acids_per_hundred, item_salt_per_hundred, item_sodium_per_hundred, item_carbs_per_hundred, item_carbs_of_which_dietary_fiber_hundred, item_carbs_of_which_sugars_per_hundred, item_calories_calculated, item_proteins_calculated, item_fat_calculated, item_fat_of_which_saturated_fatty_acids_calculated, item_carbs_calculated, item_carbs_of_which_dietary_fiber_calculated, item_carbs_of_which_sugars_calculated, item_salt_calculated, item_sodium_calculated FROM $t_recipes_items WHERE item_group_id=$group_id_mysql";
+					$query_items = "SELECT item_id, item_recipe_id, item_group_id, item_amount, item_measurement, item_grocery, item_grocery_explanation, item_food_id, item_energy_metric, item_fat_metric, item_saturated_fat_metric, item_monounsaturated_fat_metric, item_polyunsaturated_fat_metric, item_cholesterol_metric, item_carbohydrates_metric, item_carbohydrates_of_which_sugars_metric, item_dietary_fiber_metric, item_proteins_metric, item_salt_metric, item_sodium_metric, item_energy_calculated, item_fat_calculated, item_saturated_fat_calculated, item_monounsaturated_fat_calculated, item_polyunsaturated_fat_calculated, item_cholesterol_calculated, item_carbohydrates_calculated, item_carbohydrates_of_which_sugars_calculated, item_dietary_fiber_calculated, item_proteins_calculated, item_salt_calculated, item_sodium_calculated FROM $t_recipes_items WHERE item_group_id=$group_id_mysql";
 					$result_items = mysqli_query($link, $query_items);
 					$row_cnt = mysqli_num_rows($result_items);
 					while($row_items = mysqli_fetch_row($result_items)) {
-						list($get_item_id, $get_item_recipe_id, $get_item_group_id, $get_item_amount, $get_item_measurement, $get_item_grocery, $get_item_grocery_explanation, $get_item_food_id, $get_item_calories_per_hundred, $get_item_proteins_per_hundred, $get_item_fat_per_hundred, $get_item_fat_of_which_saturated_fatty_acids_per_hundred, $get_item_salt_per_hundred, $get_item_sodium_per_hundred, $get_item_carbs_per_hundred, $get_item_carbs_of_which_dietary_fiber_hundred, $get_item_carbs_of_which_sugars_per_hundred, $get_item_calories_calculated, $get_item_proteins_calculated, $get_item_fat_calculated, $get_item_fat_of_which_saturated_fatty_acids_calculated, $get_item_carbs_calculated, $get_item_carbs_of_which_dietary_fiber_calculated, $get_item_carbs_of_which_sugars_calculated, $get_item_salt_calculated, $get_item_sodium_calculated) = $row_items;
+						list($get_item_id, $get_item_recipe_id, $get_item_group_id, $get_item_amount, $get_item_measurement, $get_item_grocery, $get_item_grocery_explanation, $get_item_food_id, $get_item_energy_metric, $get_item_fat_metric, $get_item_saturated_fat_metric, $get_item_monounsaturated_fat_metric, $get_item_polyunsaturated_fat_metric, $get_item_cholesterol_metric, $get_item_carbohydrates_metric, $get_item_carbohydrates_of_which_sugars_metric, $get_item_dietary_fiber_metric, $get_item_proteins_metric, $get_item_salt_metric, $get_item_sodium_metric, $get_item_energy_calculated, $get_item_fat_calculated, $get_item_saturated_fat_calculated, $get_item_monounsaturated_fat_calculated, $get_item_polyunsaturated_fat_calculated, $get_item_cholesterol_calculated, $get_item_carbohydrates_calculated, $get_item_carbohydrates_of_which_sugars_calculated, $get_item_dietary_fiber_calculated, $get_item_proteins_calculated, $get_item_salt_calculated, $get_item_sodium_calculated) = $row_items;
 						echo"					";
 						echo"<li><span>$get_item_amount $get_item_measurement $get_item_grocery</span>
 						<span>
@@ -1377,13 +1598,13 @@ else{
 						<br /></span>
 
 						<span class=\"grey_small\">$get_item_amount $get_item_measurement:
-						$get_item_calories_calculated $l_cal_lowercase,
-						$get_item_proteins_calculated $l_proteins_lowercase, 
+						$get_item_energy_calculated $l_cal_lowercase,
 						$get_item_fat_calculated $l_fat_lowercase, 
-						$get_item_fat_of_which_saturated_fatty_acids_calculated $l_saturated_fatty_acids_lowercase, 
-						$get_item_carbs_calculated $l_carbs_lowercase, 
-						$get_item_carbs_of_which_dietary_fiber_calculated $l_dietary_fiber_lowercase, 
-						$get_item_carbs_of_which_sugars_calculated $l_sugar_lowercase, 
+						$get_item_saturated_fat_calculated $l_saturated_fatty_acids_lowercase, 
+						$get_item_carbohydrates_calculated $l_carbs_lowercase, 
+						$get_item_carbohydrates_of_which_sugars_calculated $l_sugar_lowercase, 
+						$get_item_dietary_fiber_calculated $l_dietary_fiber_lowercase, 
+						$get_item_proteins_calculated $l_proteins_lowercase, 
 						$get_item_salt_calculated $l_salt_lowercase, 
 						$get_item_sodium_calculated $l_sodium_lowercase<br /><br />
 						</span>
@@ -1626,81 +1847,209 @@ else{
 
 				
 				// Calculating total numbers
-				$inp_number_hundred_calories = 0;
-				$inp_number_hundred_proteins = 0;
-				$inp_number_hundred_fat = 0;
-				$inp_number_hundred_carbs = 0;
-					
-				$inp_number_serving_calories = 0;
-				$inp_number_serving_proteins = 0;
-				$inp_number_serving_fat = 0;
-				$inp_number_serving_carbs = 0;
-					
-				$inp_number_total_weight = 0;
 
-				$inp_number_total_calories = 0;
-				$inp_number_total_proteins = 0;
-				$inp_number_total_fat = 0;
+				// Calculating total numbers
+				$inp_number_energy_metric		= 0;
+				$inp_number_fat_metric	 		= 0;
+				$inp_number_saturated_fat_metric	= 0;
+				$inp_number_monounsaturated_fat_metric	= 0;
+				$inp_number_polyunsaturated_fat_metric	= 0;
+				$inp_number_cholesterol_metric	 	= 0;
+				$inp_number_carbohydrates_metric	= 0;
+				$inp_number_carbohydrates_of_which_sugars_metric  = 0;
+				$inp_number_dietary_fiber_metric	= 0;
+				$inp_number_proteins_metric	 	= 0;
+				$inp_number_salt_metric			= 0;
+				$inp_number_sodium_metric		= 0;
 
-				$inp_number_total_carbs = 0;
+				$inp_number_energy_serving		= 0;
+				$inp_number_fat_serving			= 0;
+				$inp_number_saturated_fat_serving	= 0;
+				$inp_number_monounsaturated_fat_serving	= 0;
+				$inp_number_polyunsaturated_fat_serving	= 0;
+				$inp_number_cholesterol_serving		= 0;
+				$inp_number_carbohydrates_serving	= 0;
+				$inp_number_carbohydrates_of_which_sugars_serving	 = 0;
+				$inp_number_dietary_fiber_serving	= 0;
+				$inp_number_proteins_serving	 	= 0;
+				$inp_number_salt_serving		= 0;
+				$inp_number_sodium_serving		= 0;
+
+				$inp_number_energy_total		= 0;
+				$inp_number_fat_total			= 0;
+				$inp_number_saturated_fat_total	 	= 0;
+				$inp_number_monounsaturated_fat_total	= 0;
+				$inp_number_polyunsaturated_fat_total	= 0;
+				$inp_number_cholesterol_total		= 0;
+				$inp_number_carbohydrates_total		= 0;
+				$inp_number_carbohydrates_of_which_sugars_total = 0;
+				$inp_number_dietary_fiber_total		= 0;
+				$inp_number_proteins_total		= 0;
+				$inp_number_salt_total			= 0;
+				$inp_number_sodium_total		= 0;
+
 					
 				$query_groups = "SELECT group_id, group_title FROM $t_recipes_groups WHERE group_recipe_id=$get_recipe_id";
 				$result_groups = mysqli_query($link, $query_groups);
 				while($row_groups = mysqli_fetch_row($result_groups)) {
 					list($get_group_id, $get_group_title) = $row_groups;
 
-					$query_items = "SELECT item_id, item_amount, item_calories_per_hundred, item_proteins_per_hundred, item_fat_per_hundred, item_carbs_per_hundred, item_calories_calculated, item_proteins_calculated, item_fat_calculated, item_carbs_calculated FROM $t_recipes_items WHERE item_group_id=$get_group_id";
+					$query_items = "SELECT item_id, item_recipe_id, item_group_id, item_amount, item_measurement, item_grocery, item_grocery_explanation, item_food_id, item_energy_metric, item_fat_metric, item_saturated_fat_metric, item_monounsaturated_fat_metric, item_polyunsaturated_fat_metric, item_cholesterol_metric, item_carbohydrates_metric, item_carbohydrates_of_which_sugars_metric, item_dietary_fiber_metric, item_proteins_metric, item_salt_metric, item_sodium_metric, item_energy_calculated, item_fat_calculated, item_saturated_fat_calculated, item_monounsaturated_fat_calculated, item_polyunsaturated_fat_calculated, item_cholesterol_calculated, item_carbohydrates_calculated, item_carbohydrates_of_which_sugars_calculated, item_dietary_fiber_calculated, item_proteins_calculated, item_salt_calculated, item_sodium_calculated FROM $t_recipes_items WHERE item_group_id=$get_group_id";
 					$result_items = mysqli_query($link, $query_items);
 					$row_cnt = mysqli_num_rows($result_items);
 					while($row_items = mysqli_fetch_row($result_items)) {
-						list($get_item_id, $get_item_amount, $get_item_calories_per_hundred, $get_item_proteins_per_hundred, $get_item_fat_per_hundred, $get_item_carbs_per_hundred, $get_item_calories_calculated, $get_item_proteins_calculated, $get_item_fat_calculated, $get_item_carbs_calculated) = $row_items;
+						list($get_item_id, $get_item_recipe_id, $get_item_group_id, $get_item_amount, $get_item_measurement, $get_item_grocery, $get_item_grocery_explanation, $get_item_food_id, $get_item_energy_metric, $get_item_fat_metric, $get_item_saturated_fat_metric, $get_item_monounsaturated_fat_metric, $get_item_polyunsaturated_fat_metric, $get_item_cholesterol_metric, $get_item_carbohydrates_metric, $get_item_carbohydrates_of_which_sugars_metric, $get_item_dietary_fiber_metric, $get_item_proteins_metric, $get_item_salt_metric, $get_item_sodium_metric, $get_item_energy_calculated, $get_item_fat_calculated, $get_item_saturated_fat_calculated, $get_item_monounsaturated_fat_calculated, $get_item_polyunsaturated_fat_calculated, $get_item_cholesterol_calculated, $get_item_carbohydrates_calculated, $get_item_carbohydrates_of_which_sugars_calculated, $get_item_dietary_fiber_calculated, $get_item_proteins_calculated, $get_item_salt_calculated, $get_item_sodium_calculated) = $row_items;
 
-						$inp_number_hundred_calories = $inp_number_hundred_calories+$get_item_calories_per_hundred;
-						$inp_number_hundred_proteins = $inp_number_hundred_proteins+$get_item_proteins_per_hundred;
-						$inp_number_hundred_fat      = $inp_number_hundred_fat+$get_item_fat_per_hundred;
-						$inp_number_hundred_carbs    = $inp_number_hundred_carbs+$get_item_carbs_per_hundred;
+
+
+						$inp_number_energy_metric		= $inp_number_energy_metric+$get_item_energy_metric;
+						$inp_number_fat_metric	 		= $inp_number_fat_metric+$get_item_fat_metric;
+						$inp_number_saturated_fat_metric	= $inp_number_saturated_fat_metric+$get_item_saturated_fat_metric;
+						$inp_number_monounsaturated_fat_metric	= $inp_number_monounsaturated_fat_metric+$get_item_monounsaturated_fat_metric;
+						$inp_number_polyunsaturated_fat_metric	= $inp_number_polyunsaturated_fat_metric+$get_item_polyunsaturated_fat_metric;
+						$inp_number_cholesterol_metric	 	= $inp_number_cholesterol_metric+$get_item_cholesterol_metric;
+						$inp_number_carbohydrates_metric	= $inp_number_carbohydrates_metric+$get_item_carbohydrates_metric;
+						$inp_number_carbohydrates_of_which_sugars_metric  = $inp_number_carbohydrates_of_which_sugars_metric+$get_item_carbohydrates_of_which_sugars_metric;
+						$inp_number_dietary_fiber_metric	= $inp_number_dietary_fiber_metric+$get_item_dietary_fiber_metric;
+						$inp_number_proteins_metric	 	= $inp_number_proteins_metric+$get_item_proteins_metric;
+						$inp_number_salt_metric			= $inp_number_salt_metric+$get_item_salt_metric;
+						$inp_number_sodium_metric		= $inp_number_sodium_metric+$get_item_sodium_metric;
+
+						$inp_number_energy_total		= $inp_number_energy_total+$get_item_energy_calculated;
+						$inp_number_fat_total			= $inp_number_fat_total+$get_item_fat_calculated;
+						$inp_number_saturated_fat_total	 	= $inp_number_saturated_fat_total+$get_item_saturated_fat_calculated;
+						$inp_number_monounsaturated_fat_total	= $inp_number_monounsaturated_fat_total+$get_item_monounsaturated_fat_calculated;
+						$inp_number_polyunsaturated_fat_total	= $inp_number_polyunsaturated_fat_total+$get_item_polyunsaturated_fat_calculated;
+						$inp_number_cholesterol_total		= $inp_number_cholesterol_total+$get_item_cholesterol_calculated;
+						$inp_number_carbohydrates_total		= $inp_number_carbohydrates_total+$get_item_carbohydrates_calculated;
+						$inp_number_carbohydrates_of_which_sugars_total = $inp_number_carbohydrates_of_which_sugars_total+$get_item_carbohydrates_of_which_sugars_calculated;
+						$inp_number_dietary_fiber_total		= $inp_number_dietary_fiber_total+$get_item_dietary_fiber_calculated;
+						$inp_number_proteins_total		= $inp_number_proteins_total+$get_item_proteins_calculated;
+						$inp_number_salt_total			= $inp_number_salt_total+$get_item_salt_calculated;
+						$inp_number_sodium_total		= $inp_number_sodium_total+$get_item_sodium_calculated;
+
 					
-						$inp_number_total_weight     = $inp_number_total_weight+$get_item_amount;
 
-						$inp_number_total_calories = $inp_number_total_calories+$get_item_calories_calculated;
-						$inp_number_total_proteins = $inp_number_total_proteins+$get_item_proteins_calculated;
-						$inp_number_total_fat      = $inp_number_total_fat+$get_item_fat_calculated;
-						$inp_number_total_carbs    = $inp_number_total_carbs+$get_item_carbs_calculated;
+
 	
 					} // items
 				} // groups
 					
-				$inp_number_serving_calories = round($inp_number_total_calories/$get_number_servings);
-				$inp_number_serving_proteins = round($inp_number_total_proteins/$get_number_servings);
-				$inp_number_serving_fat      = round($inp_number_total_fat/$get_number_servings);
-				$inp_number_serving_carbs    = round($inp_number_total_carbs/$get_number_servings);
+				
 
 	
-				// Ready numbers for MySQL
-				$inp_number_hundred_calories_mysql = quote_smart($link, $inp_number_hundred_calories);
-				$inp_number_hundred_proteins_mysql = quote_smart($link, $inp_number_hundred_proteins);
-				$inp_number_hundred_fat_mysql      = quote_smart($link, $inp_number_hundred_fat);
-				$inp_number_hundred_carbs_mysql    = quote_smart($link, $inp_number_hundred_carbs);
+				// Numbers : Per hundred
+				$inp_number_energy_metric_mysql			= quote_smart($link, $inp_number_energy_metric);
+				$inp_number_fat_metric_mysql 			= quote_smart($link, $inp_number_fat_metric);
+				$inp_number_saturated_fat_metric_mysql		= quote_smart($link, $inp_number_saturated_fat_metric);
+				$inp_number_monounsaturated_fat_metric_mysql	= quote_smart($link, $inp_number_monounsaturated_fat_metric);
+				$inp_number_polyunsaturated_fat_metric_mysql	= quote_smart($link, $inp_number_polyunsaturated_fat_metric);
+				$inp_number_cholesterol_metric_mysql	 	= quote_smart($link, $inp_number_cholesterol_metric);
+				$inp_number_carbohydrates_metric_mysql		= quote_smart($link, $inp_number_carbohydrates_metric);
+				$inp_number_carbohydrates_of_which_sugars_metric_mysql  = quote_smart($link, $inp_number_carbohydrates_of_which_sugars_metric);
+				$inp_number_dietary_fiber_metric_mysql		= quote_smart($link, $inp_number_dietary_fiber_metric);
+				$inp_number_proteins_metric_mysql	 	= quote_smart($link, $inp_number_proteins_metric);
+				$inp_number_salt_metric_mysql			= quote_smart($link, $inp_number_salt_metric);
+				$inp_number_sodium_metric_mysql			= quote_smart($link, $inp_number_sodium_metric);
+
+
 					
-				$inp_number_total_weight_mysql     = quote_smart($link, $inp_number_total_weight);
-
-				$inp_number_total_calories_mysql = quote_smart($link, $inp_number_total_calories);
-				$inp_number_total_proteins_mysql = quote_smart($link, $inp_number_total_proteins);
-				$inp_number_total_fat_mysql      = quote_smart($link, $inp_number_total_fat);
-				$inp_number_total_carbs_mysql    = quote_smart($link, $inp_number_total_carbs);
-
-					
-				$inp_number_serving_calories_mysql = quote_smart($link, $inp_number_serving_calories);
-				$inp_number_serving_proteins_mysql = quote_smart($link, $inp_number_serving_proteins);
-				$inp_number_serving_fat_mysql      = quote_smart($link, $inp_number_serving_fat);
-				$inp_number_serving_carbs_mysql    = quote_smart($link, $inp_number_serving_carbs);
-
-				$result = mysqli_query($link, "UPDATE $t_recipes_numbers SET number_hundred_calories=$inp_number_hundred_calories_mysql, number_hundred_proteins=$inp_number_hundred_proteins_mysql, number_hundred_fat=$inp_number_hundred_fat_mysql, number_hundred_carbs=$inp_number_hundred_carbs_mysql, 
-								number_serving_calories=$inp_number_serving_calories_mysql, number_serving_proteins=$inp_number_serving_proteins_mysql, number_serving_fat=$inp_number_serving_fat_mysql, number_serving_carbs=$inp_number_serving_carbs_mysql,
-								number_total_weight=$inp_number_total_weight_mysql, 
-								number_total_calories=$inp_number_total_calories_mysql, number_total_proteins=$inp_number_total_proteins_mysql, number_total_fat=$inp_number_total_fat_mysql, number_total_carbs=$inp_number_total_carbs_mysql WHERE number_recipe_id=$recipe_id_mysql") OR die(mysqli_error($link));
+				// Numbers : Total 
+				$inp_number_energy_total_mysql			= quote_smart($link, $inp_number_energy_total);
+				$inp_number_fat_total_mysql			= quote_smart($link, $inp_number_fat_total);
+				$inp_number_saturated_fat_total_mysql	 	= quote_smart($link, $inp_number_saturated_fat_total);
+				$inp_number_monounsaturated_fat_total_mysql	= quote_smart($link, $inp_number_monounsaturated_fat_total);
+				$inp_number_polyunsaturated_fat_total_mysql	= quote_smart($link, $inp_number_polyunsaturated_fat_total);
+				$inp_number_cholesterol_total_mysql		= quote_smart($link, $inp_number_cholesterol_total);
+				$inp_number_carbohydrates_total_mysql		= quote_smart($link, $inp_number_carbohydrates_total);
+				$inp_number_carbohydrates_of_which_sugars_total_mysql = quote_smart($link, $inp_number_carbohydrates_of_which_sugars_total);
+				$inp_number_dietary_fiber_total_mysql		= quote_smart($link, $inp_number_dietary_fiber_total);
+				$inp_number_proteins_total_mysql		= quote_smart($link, $inp_number_proteins_total);
+				$inp_number_salt_total_mysql			= quote_smart($link, $inp_number_salt_total);
+				$inp_number_sodium_total_mysql			= quote_smart($link, $inp_number_sodium_total);
 
 
+				// Numbers : Per serving
+				$inp_number_energy_serving	 = round($inp_number_energy_total/$get_number_servings);
+				$inp_number_energy_serving_mysql = quote_smart($link, $inp_number_energy_serving);
+
+				$inp_number_fat_serving	 = round($inp_number_fat_total/$get_number_servings);
+				$inp_number_fat_serving_mysql = quote_smart($link, $inp_number_fat_serving);
+
+				$inp_number_saturated_fat_serving	 = round($inp_number_saturated_fat_total/$get_number_servings);
+				$inp_number_saturated_fat_serving_mysql = quote_smart($link, $inp_number_saturated_fat_serving);
+
+				$inp_number_monounsaturated_fat_serving	 = round($inp_number_monounsaturated_fat_total/$get_number_servings);
+				$inp_number_monounsaturated_fat_serving_mysql = quote_smart($link, $inp_number_monounsaturated_fat_serving);
+
+				$inp_number_polyunsaturated_fat_serving	 = round($inp_number_polyunsaturated_fat_total/$get_number_servings);
+				$inp_number_polyunsaturated_fat_serving_mysql = quote_smart($link, $inp_number_polyunsaturated_fat_serving);
+
+				$inp_number_cholesterol_serving	 = round($inp_number_cholesterol_total/$get_number_servings);
+				$inp_number_cholesterol_serving_mysql = quote_smart($link, $inp_number_cholesterol_serving);
+
+				$inp_number_carbohydrates_serving	 = round($inp_number_carbohydrates_total/$get_number_servings);
+				$inp_number_carbohydrates_serving_mysql = quote_smart($link, $inp_number_carbohydrates_serving);
+
+				$inp_number_carbohydrates_of_which_sugars_serving	 = round($inp_number_carbohydrates_of_which_sugars_total/$get_number_servings);
+				$inp_number_carbohydrates_of_which_sugars_serving_mysql = quote_smart($link, $inp_number_carbohydrates_of_which_sugars_serving);
+
+				$inp_number_dietary_fiber_serving	 = round($inp_number_dietary_fiber_total/$get_number_servings);
+				$inp_number_dietary_fiber_serving_mysql = quote_smart($link, $inp_number_dietary_fiber_serving);
+
+				$inp_number_proteins_serving	 = round($inp_number_proteins_total/$get_number_servings);
+				$inp_number_proteins_serving_mysql = quote_smart($link, $inp_number_proteins_serving);
+
+				$inp_number_salt_serving	 = round($inp_number_salt_total/$get_number_servings);
+				$inp_number_salt_serving_mysql = quote_smart($link, $inp_number_salt_serving);
+
+				$inp_number_sodium_serving	 = round($inp_number_sodium_total/$get_number_servings);
+				$inp_number_sodium_serving_mysql = quote_smart($link, $inp_number_sodium_serving);
+
+
+
+				$result = mysqli_query($link, "UPDATE $t_recipes_numbers SET 
+
+								number_energy_metric=$inp_number_energy_metric_mysql, 
+								number_fat_metric=$inp_number_fat_metric_mysql, 
+								number_saturated_fat_metric=$inp_number_saturated_fat_metric_mysql, 
+								number_monounsaturated_fat_metric=$inp_number_monounsaturated_fat_metric_mysql, 
+								number_polyunsaturated_fat_metric=$inp_number_polyunsaturated_fat_metric_mysql, 
+								number_cholesterol_metric=$inp_number_cholesterol_metric_mysql, 
+								number_carbohydrates_metric=$inp_number_carbohydrates_metric_mysql, 
+								number_carbohydrates_of_which_sugars_metric=$inp_number_carbohydrates_of_which_sugars_metric_mysql, 
+								number_dietary_fiber_metric=$inp_number_dietary_fiber_metric_mysql, 
+								number_proteins_metric=$inp_number_proteins_metric_mysql, 
+								number_salt_metric=$inp_number_salt_metric_mysql, 
+								number_sodium_metric=$inp_number_sodium_metric_mysql, 
+
+								number_energy_serving=$inp_number_energy_serving_mysql, 
+								number_fat_serving=$inp_number_fat_serving_mysql, 
+								number_saturated_fat_serving=$inp_number_saturated_fat_serving_mysql, 
+								number_monounsaturated_fat_serving=$inp_number_monounsaturated_fat_serving_mysql, 
+								number_polyunsaturated_fat_serving=$inp_number_polyunsaturated_fat_serving_mysql, 
+								number_cholesterol_serving=$inp_number_cholesterol_serving_mysql, 
+								number_carbohydrates_serving=$inp_number_carbohydrates_serving_mysql, 
+								number_carbohydrates_of_which_sugars_serving=$inp_number_carbohydrates_of_which_sugars_serving_mysql, 
+								number_dietary_fiber_serving=$inp_number_dietary_fiber_serving_mysql, 
+								number_proteins_serving=$inp_number_proteins_serving_mysql, 
+								number_salt_serving=$inp_number_salt_serving_mysql, 
+
+								number_sodium_serving=$inp_number_sodium_serving_mysql, 
+								number_energy_total=$inp_number_energy_total_mysql, 
+								number_fat_total=$inp_number_fat_total_mysql, 
+								number_saturated_fat_total=$inp_number_saturated_fat_total_mysql, 
+								number_monounsaturated_fat_total=$inp_number_monounsaturated_fat_total_mysql, 
+								number_polyunsaturated_fat_total=$inp_number_polyunsaturated_fat_total_mysql, 
+								number_cholesterol_total=$inp_number_cholesterol_total_mysql, 
+								number_carbohydrates_total=$inp_number_carbohydrates_total_mysql, 
+								number_carbohydrates_of_which_sugars_total=$inp_number_carbohydrates_of_which_sugars_total_mysql, 
+								number_dietary_fiber_total=$inp_number_dietary_fiber_total_mysql, 
+								number_proteins_total=$inp_number_proteins_total_mysql, 
+								number_salt_total=$inp_number_salt_total_mysql, 
+								number_sodium_total=$inp_number_sodium_total_mysql
+
+					 WHERE number_recipe_id=$recipe_id_mysql") or die(mysqli_error($link));
 
 				// Header
 				$ft = "success";
@@ -1784,10 +2133,10 @@ else{
 		else{
 			// Get item
 			$item_id_mysql = quote_smart($link, $item_id);
-			$query = "SELECT item_id, item_recipe_id, item_group_id, item_amount, item_measurement, item_grocery, item_grocery_explanation, item_food_id, item_calories_per_hundred, item_fat_per_hundred, item_fat_of_which_saturated_fatty_acids_per_hundred, item_carbs_per_hundred, item_carbs_of_which_dietary_fiber_hundred, item_carbs_of_which_sugars_per_hundred, item_proteins_per_hundred, item_salt_per_hundred, item_sodium_per_hundred, item_calories_calculated, item_fat_calculated, item_fat_of_which_saturated_fatty_acids_calculated, item_carbs_calculated, item_carbs_of_which_dietary_fiber_calculated, item_carbs_of_which_sugars_calculated, item_proteins_calculated, item_salt_calculated, item_sodium_calculated FROM $t_recipes_items WHERE item_id=$item_id_mysql AND item_recipe_id=$get_recipe_id AND item_group_id=$get_group_id";
+			$query = "SELECT item_id, item_recipe_id, item_group_id, item_amount, item_measurement, item_grocery, item_grocery_explanation, item_food_id, item_energy_metric, item_fat_metric, item_saturated_fat_metric, item_monounsaturated_fat_metric, item_polyunsaturated_fat_metric, item_cholesterol_metric, item_carbohydrates_metric, item_carbohydrates_of_which_sugars_metric, item_dietary_fiber_metric, item_proteins_metric, item_salt_metric, item_sodium_metric, item_energy_calculated, item_fat_calculated, item_saturated_fat_calculated, item_monounsaturated_fat_calculated, item_polyunsaturated_fat_calculated, item_cholesterol_calculated, item_carbohydrates_calculated, item_carbohydrates_of_which_sugars_calculated, item_dietary_fiber_calculated, item_proteins_calculated, item_salt_calculated, item_sodium_calculated FROM $t_recipes_items WHERE item_id=$item_id_mysql AND item_recipe_id=$get_recipe_id AND item_group_id=$get_group_id";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
-			list($get_item_id, $get_item_recipe_id, $get_item_group_id, $get_item_amount, $get_item_measurement, $get_item_grocery, $get_item_grocery_explanation, $get_item_food_id, $get_item_calories_per_hundred, $get_item_fat_per_hundred, $get_item_fat_of_which_saturated_fatty_acids_per_hundred, $get_item_carbs_per_hundred, $get_item_carbs_of_which_dietary_fiber_hundred, $get_item_carbs_of_which_sugars_per_hundred, $get_item_proteins_per_hundred, $get_item_salt_per_hundred, $get_item_sodium_per_hundred, $get_item_calories_calculated, $get_item_fat_calculated, $get_item_fat_of_which_saturated_fatty_acids_calculated, $get_item_carbs_calculated, $get_item_carbs_of_which_dietary_fiber_calculated, $get_item_carbs_of_which_sugars_calculated, $get_item_proteins_calculated, $get_item_salt_calculated, $get_item_sodium_calculated) = $row;
+			list($get_item_id, $get_item_recipe_id, $get_item_group_id, $get_item_amount, $get_item_measurement, $get_item_grocery, $get_item_grocery_explanation, $get_item_food_id, $get_item_energy_metric, $get_item_fat_metric, $get_item_saturated_fat_metric, $get_item_monounsaturated_fat_metric, $get_item_polyunsaturated_fat_metric, $get_item_cholesterol_metric, $get_item_carbohydrates_metric, $get_item_carbohydrates_of_which_sugars_metric, $get_item_dietary_fiber_metric, $get_item_proteins_metric, $get_item_salt_metric, $get_item_sodium_metric, $get_item_energy_calculated, $get_item_fat_calculated, $get_item_saturated_fat_calculated, $get_item_monounsaturated_fat_calculated, $get_item_polyunsaturated_fat_calculated, $get_item_cholesterol_calculated, $get_item_carbohydrates_calculated, $get_item_carbohydrates_of_which_sugars_calculated, $get_item_dietary_fiber_calculated, $get_item_proteins_calculated, $get_item_salt_calculated, $get_item_sodium_calculated) = $row;
 
 
 
@@ -1859,445 +2208,549 @@ else{
 					$inp_item_food_id_mysql = quote_smart($link, $inp_item_food_id);
 
 
-
-					// Calories per hundred
-					if(isset($_POST['inp_item_calories_per_hundred'])){
-						$inp_item_calories_per_hundred = $_POST['inp_item_calories_per_hundred'];
+				// Calories
+				if(isset($_POST['inp_item_calories_metric'])){
+					$inp_item_calories_metric = $_POST['inp_item_calories_metric'];
+				}
+				else{
+					$inp_item_calories_metric = "0";
+				}
+				$inp_item_calories_metric = output_html($inp_item_calories_metric);
+				$inp_item_calories_metric = str_replace(",", ".", $inp_item_calories_metric);
+				if(empty($inp_item_calories_metric)){
+					$inp_item_calories_metric = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_calories_metric))){
+						$ft = "error";
+						$fm = "calories_have_to_be_a_number";
 					}
-					else{
-						$inp_item_calories_per_hundred = "0";
-					}
-					$inp_item_calories_per_hundred = output_html($inp_item_calories_per_hundred);
-					$inp_item_calories_per_hundred = str_replace(",", ".", $inp_item_calories_per_hundred);
-					if(empty($inp_item_calories_per_hundred)){
-						$inp_item_calories_per_hundred = "0";
-					}
-					else{
-						if(!(is_numeric($inp_item_calories_per_hundred))){
-							$ft = "error";
-							$fm = "calories_have_to_be_a_number";
-						}
-					}
-					$inp_item_calories_per_hundred = round($inp_item_calories_per_hundred, 0);
-					$inp_item_calories_per_hundred_mysql = quote_smart($link, $inp_item_calories_per_hundred);
-
-
-					$inp_item_calories_calculated = $_POST['inp_item_calories_calculated'];
-					$inp_item_calories_calculated = output_html($inp_item_calories_calculated);
-					$inp_item_calories_calculated = str_replace(",", ".", $inp_item_calories_calculated);
-					if(empty($inp_item_calories_calculated)){
-						$inp_item_calories_calculated = "0";
-					}
-					else{
-						if(!(is_numeric($inp_item_calories_calculated))){
-							$ft = "error";
-							$fm = "calories_have_to_be_a_number";
-						}
-					}
-					$inp_item_calories_calculated = round($inp_item_calories_calculated, 0);
-					$inp_item_calories_calculated_mysql = quote_smart($link, $inp_item_calories_calculated);
-
-					// Fat per hundred
-					if(isset($_POST['inp_item_fat_per_hundred'])){
-						$inp_item_fat_per_hundred = $_POST['inp_item_fat_per_hundred'];
-					}
-					else{
-						$inp_item_fat_per_hundred = "0";
-					}
-					$inp_item_fat_per_hundred = output_html($inp_item_fat_per_hundred);
-					$inp_item_fat_per_hundred = str_replace(",", ".", $inp_item_fat_per_hundred);
-					if(empty($inp_item_fat_per_hundred)){
-						$inp_item_fat_per_hundred = "0";
-					}
-					else{
-						if(!(is_numeric($inp_item_calories_per_hundred))){
-							$ft = "error";
-							$fm = "fat_have_to_be_a_number";
-						}
-					}
-					$inp_item_fat_per_hundred = round($inp_item_fat_per_hundred, 0);
-					$inp_item_fat_per_hundred_mysql = quote_smart($link, $inp_item_fat_per_hundred);
-
-					$inp_item_fat_calculated = $_POST['inp_item_fat_calculated'];
-					$inp_item_fat_calculated = output_html($inp_item_fat_calculated);
-					$inp_item_fat_calculated = str_replace(",", ".", $inp_item_fat_calculated);
-					if(empty($inp_item_fat_calculated)){
-						$inp_item_fat_calculated = "0";
-					}
-					else{
-						if(!(is_numeric($inp_item_calories_calculated))){
-							$ft = "error";
-							$fm = "fat_have_to_be_a_number";
-						}
-					}
-					$inp_item_fat_calculated = round($inp_item_fat_calculated, 0);
-					$inp_item_fat_calculated_mysql = quote_smart($link, $inp_item_fat_calculated);
+				}
+				$inp_item_calories_metric = round($inp_item_calories_metric, 0);
+				$inp_item_calories_metric_mysql = quote_smart($link, $inp_item_calories_metric);
 
 
-					// Fat saturated fatty acids
-					if(isset($_POST['inp_item_fat_per_hundred'])){
-						$inp_item_fat_of_which_saturated_fatty_acids_per_hundred = $_POST['inp_item_fat_of_which_saturated_fatty_acids_per_hundred'];
+				$inp_item_calories_calculated = $_POST['inp_item_calories_calculated'];
+				$inp_item_calories_calculated = output_html($inp_item_calories_calculated);
+				$inp_item_calories_calculated = str_replace(",", ".", $inp_item_calories_calculated);
+				if(empty($inp_item_calories_calculated)){
+					$inp_item_calories_calculated = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_calories_calculated))){
+						$ft = "error";
+						$fm = "calories_have_to_be_a_number";
 					}
-					else{
-						$inp_item_fat_of_which_saturated_fatty_acids_per_hundred = "0";
-					}
-					$inp_item_fat_of_which_saturated_fatty_acids_per_hundred = output_html($inp_item_fat_of_which_saturated_fatty_acids_per_hundred);
-					$inp_item_fat_of_which_saturated_fatty_acids_per_hundred = str_replace(",", ".", $inp_item_fat_of_which_saturated_fatty_acids_per_hundred);
-					if(empty($inp_item_fat_of_which_saturated_fatty_acids_per_hundred)){
-						$inp_item_fat_of_which_saturated_fatty_acids_per_hundred = "0";
-					}
-					else{
-						if(!(is_numeric($inp_item_fat_of_which_saturated_fatty_acids_per_hundred))){
-							$ft = "error";
-							$fm = "fat_of_which_saturated_fatty_acids_per_hundred_have_to_be_a_number";
-						}
-					}
-					$inp_item_fat_of_which_saturated_fatty_acids_per_hundred = round($inp_item_fat_of_which_saturated_fatty_acids_per_hundred, 0);
-					$inp_item_fat_of_which_saturated_fatty_acids_per_hundred_mysql = quote_smart($link, $inp_item_fat_of_which_saturated_fatty_acids_per_hundred);
+				}
+				$inp_item_calories_calculated = round($inp_item_calories_calculated, 0);
+				$inp_item_calories_calculated_mysql = quote_smart($link, $inp_item_calories_calculated);
 
-					// Fat saturated fatty acids calculated
-					$inp_item_fat_of_which_saturated_fatty_acids_calculated = $_POST['inp_item_fat_of_which_saturated_fatty_acids_calculated'];
-					$inp_item_fat_of_which_saturated_fatty_acids_calculated = output_html($inp_item_fat_of_which_saturated_fatty_acids_calculated);
-					$inp_item_fat_of_which_saturated_fatty_acids_calculated = str_replace(",", ".", $inp_item_fat_of_which_saturated_fatty_acids_calculated);
-					if(empty($inp_item_fat_of_which_saturated_fatty_acids_calculated)){
-						$inp_item_fat_of_which_saturated_fatty_acids_calculated = "0";
+				// Fat
+				if(isset($_POST['inp_item_fat_metric'])){
+					$inp_item_fat_metric = $_POST['inp_item_fat_metric'];
+				}
+				else{
+					$inp_item_fat_metric = "0";
+				}
+				$inp_item_fat_metric = output_html($inp_item_fat_metric);
+				$inp_item_fat_metric = str_replace(",", ".", $inp_item_fat_metric);
+				if(empty($inp_item_fat_metric)){
+					$inp_item_fat_metric = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_calories_metric))){
+						$ft = "error";
+						$fm = "fat_have_to_be_a_number";
 					}
-					else{
-						if(!(is_numeric($inp_item_fat_of_which_saturated_fatty_acids_calculated))){
-							$ft = "error";
-							$fm = "fat_of_which_saturated_fatty_acids_calculated_have_to_be_a_number";
-						}
-					}
-					$inp_item_fat_of_which_saturated_fatty_acids_calculated = round($inp_item_fat_of_which_saturated_fatty_acids_calculated, 0);
-					$inp_item_fat_of_which_saturated_fatty_acids_calculated_mysql = quote_smart($link, $inp_item_fat_of_which_saturated_fatty_acids_calculated);
+				}
+				$inp_item_fat_metric = round($inp_item_fat_metric, 0);
+				$inp_item_fat_metric_mysql = quote_smart($link, $inp_item_fat_metric);
 
-					// Carbs per hundred
-					if(isset($_POST['inp_item_carbs_per_hundred'])){
-						$inp_item_carbs_per_hundred = $_POST['inp_item_carbs_per_hundred'];
+				$inp_item_fat_calculated = $_POST['inp_item_fat_calculated'];
+				$inp_item_fat_calculated = output_html($inp_item_fat_calculated);
+				$inp_item_fat_calculated = str_replace(",", ".", $inp_item_fat_calculated);
+				if(empty($inp_item_fat_calculated)){
+					$inp_item_fat_calculated = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_calories_calculated))){
+						$ft = "error";
+						$fm = "fat_have_to_be_a_number";
 					}
-					else{
-						$inp_item_carbs_per_hundred = "0";
-					}				
-					$inp_item_carbs_per_hundred = output_html($inp_item_carbs_per_hundred);
-					$inp_item_carbs_per_hundred = str_replace(",", ".", $inp_item_carbs_per_hundred);
-					if(empty($inp_item_carbs_per_hundred)){
-						$inp_item_carbs_per_hundred = "0";
-					}
-					else{
-						if(!(is_numeric($inp_item_calories_per_hundred))){
-							$ft = "error";
-							$fm = "calories_have_to_be_a_number";
-						}
-					}
-					$inp_item_carbs_per_hundred = round($inp_item_carbs_per_hundred, 0);
-					$inp_item_carbs_per_hundred_mysql = quote_smart($link, $inp_item_carbs_per_hundred);
-
-					// Carbs calculated
-					$inp_item_carbs_calculated = $_POST['inp_item_carbs_calculated'];
-					$inp_item_carbs_calculated = output_html($inp_item_carbs_calculated);
-					$inp_item_carbs_calculated = str_replace(",", ".", $inp_item_carbs_calculated);
-					if(empty($inp_item_carbs_calculated)){
-						$inp_item_carbs_calculated = "0";
-					}
-					else{
-						if(!(is_numeric($inp_item_calories_calculated))){
-							$ft = "error";
-							$fm = "calories_have_to_be_a_number";
-						}
-					}
-					$inp_item_carbs_calculated = round($inp_item_carbs_calculated, 0);
-					$inp_item_carbs_calculated_mysql = quote_smart($link, $inp_item_carbs_calculated);
+				}
+				$inp_item_fat_calculated = round($inp_item_fat_calculated, 0);
+				$inp_item_fat_calculated_mysql = quote_smart($link, $inp_item_fat_calculated);
 
 
-					// Fiber per hundred
-					if(isset($_POST['inp_item_carbs_of_which_dietary_fiber_per_hundred'])){
-						$inp_item_carbs_of_which_dietary_fiber_per_hundred = $_POST['inp_item_carbs_of_which_dietary_fiber_per_hundred'];
+				// Saturated fat
+				if(isset($_POST['inp_item_saturated_fat_metric'])){
+					$inp_item_saturated_fat_metric = $_POST['inp_item_saturated_fat_metric'];
+				}
+				else{
+					$inp_item_saturated_fat_metric = "0";
+				}
+				$inp_item_saturated_fat_metric = output_html($inp_item_saturated_fat_metric);
+				$inp_item_saturated_fat_metric = str_replace(",", ".", $inp_item_saturated_fat_metric);
+				if(empty($inp_item_saturated_fat_metric)){
+					$inp_item_saturated_fat_metric = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_saturated_fat_metric))){
+						$ft = "error";
+						$fm = "saturated_fat_metric_have_to_be_a_number";
 					}
-					else{
-						$inp_item_carbs_of_which_dietary_fiber_per_hundred = "0";
-					}
-					$inp_item_carbs_of_which_dietary_fiber_per_hundred = output_html($inp_item_carbs_of_which_dietary_fiber_per_hundred);
-					$inp_item_carbs_of_which_dietary_fiber_per_hundred = str_replace(",", ".", $inp_item_carbs_of_which_dietary_fiber_per_hundred);
-					if(empty($inp_item_carbs_of_which_dietary_fiber_per_hundred)){
-						$inp_item_carbs_of_which_dietary_fiber_per_hundred = "0";
-					}
-					else{
-						if(!(is_numeric($inp_item_carbs_of_which_dietary_fiber_per_hundred))){
-							$ft = "error";
-							$fm = "carbs_of_which_sugars_per_hundred_have_to_be_a_number";
-						}
-					}
-					$inp_item_carbs_of_which_dietary_fiber_per_hundred = round($inp_item_carbs_of_which_dietary_fiber_per_hundred, 0);
-					$inp_item_carbs_of_which_dietary_fiber_per_hundred_mysql = quote_smart($link, $inp_item_carbs_of_which_dietary_fiber_per_hundred);
-
-					// Fiber calcualted
-					if(isset($_POST['inp_item_carbs_of_which_dietary_fiber_calculated'])){
-						$inp_item_carbs_of_which_dietary_fiber_calculated = $_POST['inp_item_carbs_of_which_dietary_fiber_calculated'];
-					}
-					else{
-						$inp_item_carbs_of_which_dietary_fiber_calculated = "0";
-					}
-					$inp_item_carbs_of_which_dietary_fiber_calculated = output_html($inp_item_carbs_of_which_dietary_fiber_calculated);
-					$inp_item_carbs_of_which_dietary_fiber_calculated = str_replace(",", ".", $inp_item_carbs_of_which_dietary_fiber_calculated);
-					if(empty($inp_item_carbs_of_which_dietary_fiber_calculated)){
-						$inp_item_carbs_of_which_dietary_fiber_calculated = "0";
-					}
-					else{
-						if(!(is_numeric($inp_item_carbs_of_which_dietary_fiber_calculated))){
-							$ft = "error";
-							$fm = "carbs_of_which_sugars_per_hundred_have_to_be_a_number";
-						}
-					}
-					$inp_item_carbs_of_which_dietary_fiber_calculated = round($inp_item_carbs_of_which_dietary_fiber_calculated, 0);
-					$inp_item_carbs_of_which_dietary_fiber_calculated_mysql = quote_smart($link, $inp_item_carbs_of_which_dietary_fiber_calculated);
+				}
+				$inp_item_saturated_fat_metric = round($inp_item_saturated_fat_metric, 0);
+				$inp_item_saturated_fat_metric_mysql = quote_smart($link, $inp_item_saturated_fat_metric);
 
 
-					// Carbs of which sugars
-					if(isset($_POST['inp_item_carbs_of_which_sugars_per_hundred'])){
-						$inp_item_carbs_of_which_sugars_per_hundred = $_POST['inp_item_carbs_of_which_sugars_per_hundred'];
+				$inp_item_saturated_fat_calculated = $_POST['inp_item_saturated_fat_calculated'];
+				$inp_item_saturated_fat_calculated = output_html($inp_item_saturated_fat_calculated);
+				$inp_item_saturated_fat_calculated = str_replace(",", ".", $inp_item_saturated_fat_calculated);
+				if(empty($inp_item_saturated_fat_calculated)){
+					$inp_item_saturated_fat_calculated = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_saturated_fat_calculated))){
+						$ft = "error";
+						$fm = "fat_of_which_saturated_fatty_acids_calculated_have_to_be_a_number";
 					}
-					else{
-						$inp_item_carbs_of_which_sugars_per_hundred = "0";
-					}
-					$inp_item_carbs_of_which_sugars_per_hundred = output_html($inp_item_carbs_of_which_sugars_per_hundred);
-					$inp_item_carbs_of_which_sugars_per_hundred = str_replace(",", ".", $inp_item_carbs_of_which_sugars_per_hundred);
-					if(empty($inp_item_carbs_of_which_sugars_per_hundred)){
-						$inp_item_carbs_of_which_sugars_per_hundred = "0";
-					}
-					else{
-						if(!(is_numeric($inp_item_carbs_of_which_sugars_per_hundred))){
-							$ft = "error";
-							$fm = "carbs_of_which_sugars_per_hundred_have_to_be_a_number";
-						}
-					}
-					$inp_item_carbs_of_which_sugars_per_hundred = round($inp_item_carbs_of_which_sugars_per_hundred, 0);
-					$inp_item_carbs_of_which_sugars_per_hundred_mysql = quote_smart($link, $inp_item_carbs_of_which_sugars_per_hundred);
-
-					// Carbs of which sugars calcualted
-					$inp_item_carbs_of_which_sugars_calculated = $_POST['inp_item_carbs_of_which_sugars_calculated'];
-					$inp_item_carbs_of_which_sugars_calculated = output_html($inp_item_carbs_of_which_sugars_calculated);
-					$inp_item_carbs_of_which_sugars_calculated = str_replace(",", ".", $inp_item_carbs_of_which_sugars_calculated);
-					if(empty($inp_item_carbs_of_which_sugars_calculated)){
-						$inp_item_carbs_of_which_sugars_calculated = "0";
-					}
-					else{
-						if(!(is_numeric($inp_item_carbs_of_which_sugars_calculated))){
-							$ft = "error";
-							$fm = "carbs_of_which_sugars_calculated_have_to_be_a_number";
-						}
-					}
-					$inp_item_carbs_of_which_sugars_calculated = round($inp_item_carbs_of_which_sugars_calculated, 0);
-					$inp_item_carbs_of_which_sugars_calculated_mysql = quote_smart($link, $inp_item_carbs_of_which_sugars_calculated);
+				}
+				$inp_item_saturated_fat_calculated = round($inp_item_saturated_fat_calculated, 0);
+				$inp_item_saturated_fat_calculated_mysql = quote_smart($link, $inp_item_saturated_fat_calculated);
 
 
-					// Proteins
-					if(isset($_POST['inp_item_proteins_per_hundred'])){
-						$inp_item_proteins_per_hundred = $_POST['inp_item_proteins_per_hundred'];
+				// Monounsaturated fat
+				if(isset($_POST['inp_item_monounsaturated_fat_metric'])){
+					$inp_item_monounsaturated_fat_metric = $_POST['inp_item_monounsaturated_fat_metric'];
+				}
+				else{
+					$inp_item_monounsaturated_fat_metric = "0";
+				}
+				$inp_item_monounsaturated_fat_metric = output_html($inp_item_monounsaturated_fat_metric);
+				$inp_item_monounsaturated_fat_metric = str_replace(",", ".", $inp_item_monounsaturated_fat_metric);
+				if(empty($inp_item_monounsaturated_fat_metric)){
+					$inp_item_monounsaturated_fat_metric = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_monounsaturated_fat_metric))){
+						$ft = "error";
+						$fm = "monounsaturated_fat_metric_have_to_be_a_number";
 					}
-					else{
-						$inp_item_proteins_per_hundred = "0";
-					}
-					$inp_item_proteins_per_hundred = output_html($inp_item_proteins_per_hundred);
-					$inp_item_proteins_per_hundred = str_replace(",", ".", $inp_item_proteins_per_hundred);
-					if(empty($inp_item_proteins_per_hundred)){
-						$inp_item_proteins_per_hundred = "0";
-					}
-					else{
-						if(!(is_numeric($inp_item_proteins_per_hundred))){
-							$ft = "error";
-							$fm = "proteins_have_to_be_a_number";
-						}
-					}
-					$inp_item_proteins_per_hundred = round($inp_item_proteins_per_hundred, 0);
-					$inp_item_proteins_per_hundred_mysql = quote_smart($link, $inp_item_proteins_per_hundred);
-
-					// Proteins calculated
-					$inp_item_proteins_calculated = $_POST['inp_item_proteins_calculated'];
-					$inp_item_proteins_calculated = output_html($inp_item_proteins_calculated);
-					$inp_item_proteins_calculated = str_replace(",", ".", $inp_item_proteins_calculated);
-					if(empty($inp_item_proteins_calculated)){
-						$inp_item_proteins_calculated = "0";
-					}
-					else{
-						if(!(is_numeric($inp_item_proteins_calculated))){
-							$ft = "error";
-							$fm = "proteins_have_to_be_a_number";
-						}
-					}
-					$inp_item_proteins_calculated = round($inp_item_proteins_calculated, 0);
-					$inp_item_proteins_calculated_mysql = quote_smart($link, $inp_item_proteins_calculated);
-
-					// Salt per hundred
-					if(isset($_POST['inp_item_salt_per_hundred'])){
-						$inp_item_salt_per_hundred = $_POST['inp_item_salt_per_hundred'];
-					}
-					else{
-						$inp_item_salt_per_hundred = "0";
-					}
-					$inp_item_salt_per_hundred = output_html($inp_item_salt_per_hundred);
-					$inp_item_salt_per_hundred = str_replace(",", ".", $inp_item_salt_per_hundred);
-					if(empty($inp_item_salt_per_hundred)){
-						$inp_item_salt_per_hundred = "0";
-					}
-					else{
-						if(!(is_numeric($inp_item_salt_per_hundred))){
-							$ft = "error";
-							$fm = "salt_have_to_be_a_number";
-						}
-					}
-					$inp_item_salt_per_hundred = round($inp_item_salt_per_hundred, 2);
-					$inp_item_salt_per_hundred_mysql = quote_smart($link, $inp_item_salt_per_hundred);
-
-					// Sodium per hundred
-					if(isset($_POST['inp_item_sodium_per_hundred'])){
-						$inp_item_sodium_per_hundred = $_POST['inp_item_sodium_per_hundred'];
-						$inp_item_sodium_per_hundred = output_html($inp_item_sodium_per_hundred);
-						$inp_item_sodium_per_hundred = str_replace(",", ".", $inp_item_sodium_per_hundred);
-					}
-					else{
-						$inp_item_sodium_per_hundred = ($inp_item_salt_per_hundred*40)/100; // 40 % of salt
-						$inp_item_sodium_per_hundred = $inp_item_sodium_per_hundred/1000; // mg
-					}
-					$inp_item_sodium_per_hundred_mysql = quote_smart($link, $inp_item_sodium_per_hundred);
+				}
+				$inp_item_monounsaturated_fat_metric = round($inp_item_monounsaturated_fat_metric, 0);
+				$inp_item_monounsaturated_fat_metric_mysql = quote_smart($link, $inp_item_monounsaturated_fat_metric);
 
 
-					// Salt calculated
-					$inp_item_salt_calculated = $_POST['inp_item_salt_calculated'];
-					$inp_item_salt_calculated = output_html($inp_item_salt_calculated);
-					$inp_item_salt_calculated = str_replace(",", ".", $inp_item_salt_calculated);
-					if(empty($inp_item_salt_calculated)){
-						$inp_item_salt_calculated = "0";
+				$inp_item_monounsaturated_fat_calculated = $_POST['inp_item_monounsaturated_fat_calculated'];
+				$inp_item_monounsaturated_fat_calculated = output_html($inp_item_monounsaturated_fat_calculated);
+				$inp_item_monounsaturated_fat_calculated = str_replace(",", ".", $inp_item_monounsaturated_fat_calculated);
+				if(empty($inp_item_monounsaturated_fat_calculated)){
+					$inp_item_monounsaturated_fat_calculated = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_monounsaturated_fat_calculated))){
+						$ft = "error";
+						$fm = "fat_of_which_monounsaturated_fatty_acids_calculated_have_to_be_a_number";
 					}
-					else{
-						if(!(is_numeric($inp_item_salt_calculated))){
-							$ft = "error";
-							$fm = "salt_have_to_be_a_number";
-						}
-					}
-					$inp_item_salt_calculated = round($inp_item_salt_calculated, 2);
-					$inp_item_salt_calculated_mysql = quote_smart($link, $inp_item_salt_calculated);
+				}
+				$inp_item_monounsaturated_fat_calculated = round($inp_item_monounsaturated_fat_calculated, 0);
+				$inp_item_monounsaturated_fat_calculated_mysql = quote_smart($link, $inp_item_monounsaturated_fat_calculated);
 
 
-					// Sodium calculated
-					if(isset($_POST['inp_item_sodium_calculated'])){
-						$inp_item_sodium_calculated = $_POST['inp_item_sodium_calculated'];
-						$inp_item_sodium_calculated = output_html($inp_item_sodium_calculated);
-						$inp_item_sodium_calculated = str_replace(",", ".", $inp_item_sodium_calculated);
+				// Saturated fat
+				if(isset($_POST['inp_item_polyunsaturated_fat_metric'])){
+					$inp_item_polyunsaturated_fat_metric = $_POST['inp_item_polyunsaturated_fat_metric'];
+				}
+				else{
+					$inp_item_polyunsaturated_fat_metric = "0";
+				}
+				$inp_item_polyunsaturated_fat_metric = output_html($inp_item_polyunsaturated_fat_metric);
+				$inp_item_polyunsaturated_fat_metric = str_replace(",", ".", $inp_item_polyunsaturated_fat_metric);
+				if(empty($inp_item_polyunsaturated_fat_metric)){
+					$inp_item_polyunsaturated_fat_metric = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_polyunsaturated_fat_metric))){
+						$ft = "error";
+						$fm = "polyunsaturated_fat_metric_have_to_be_a_number";
 					}
-					else{
-						$inp_item_sodium_calculated = ($inp_item_salt_calculated*40)/100; // 40 % of salt
-						$inp_item_sodium_calculated = $inp_item_sodium_calculated/1000; // mg
+				}
+				$inp_item_polyunsaturated_fat_metric = round($inp_item_polyunsaturated_fat_metric, 0);
+				$inp_item_polyunsaturated_fat_metric_mysql = quote_smart($link, $inp_item_polyunsaturated_fat_metric);
+
+
+				$inp_item_polyunsaturated_fat_calculated = $_POST['inp_item_polyunsaturated_fat_calculated'];
+				$inp_item_polyunsaturated_fat_calculated = output_html($inp_item_polyunsaturated_fat_calculated);
+				$inp_item_polyunsaturated_fat_calculated = str_replace(",", ".", $inp_item_polyunsaturated_fat_calculated);
+				if(empty($inp_item_polyunsaturated_fat_calculated)){
+					$inp_item_polyunsaturated_fat_calculated = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_polyunsaturated_fat_calculated))){
+						$ft = "error";
+						$fm = "fat_of_which_polyunsaturated_fatty_acids_calculated_have_to_be_a_number";
 					}
-					$inp_item_sodium_calculated_mysql = quote_smart($link, $inp_item_sodium_calculated);
+				}
+				$inp_item_polyunsaturated_fat_calculated = round($inp_item_polyunsaturated_fat_calculated, 0);
+				$inp_item_polyunsaturated_fat_calculated_mysql = quote_smart($link, $inp_item_polyunsaturated_fat_calculated);
 
-					if(isset($fm) && $fm != ""){
-						$url = "submit_recipe_step_2_group_and_elements.php?action=edit_item&recipe_id=$get_recipe_id&group_id=$get_group_id&item_id=$get_item_id&l=$l";
-						$url = $url . "&ft=$ft&fm=$fm";
 
-						header("Location: $url");
-						exit;
+				// Carbohydrates
+				if(isset($_POST['inp_item_carbohydrates_metric'])){
+					$inp_item_carbohydrates_metric = $_POST['inp_item_carbohydrates_metric'];
+				}
+				else{
+					$inp_item_carbohydrates_metric = "0";
+				}
+				$inp_item_carbohydrates_metric = output_html($inp_item_carbohydrates_metric);
+				$inp_item_carbohydrates_metric = str_replace(",", ".", $inp_item_carbohydrates_metric);
+				if(empty($inp_item_carbohydrates_metric)){
+					$inp_item_carbohydrates_metric = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_carbohydrates_metric))){
+						$ft = "error";
+						$fm = "carbohydrates_metric_have_to_be_a_number";
 					}
+				}
+				$inp_item_carbohydrates_metric = round($inp_item_carbohydrates_metric, 0);
+				$inp_item_carbohydrates_metric_mysql = quote_smart($link, $inp_item_carbohydrates_metric);
 
-					// Calculate
-					//$inp_item_calories_per_hundred = $inp_item_calories_calculated/
-					//$item_proteins_per_hundred, item_fat_per_hundred, item_carbs_per_hundred
+
+				$inp_item_carbohydrates_calculated = $_POST['inp_item_carbohydrates_calculated'];
+				$inp_item_carbohydrates_calculated = output_html($inp_item_carbohydrates_calculated);
+				$inp_item_carbohydrates_calculated = str_replace(",", ".", $inp_item_carbohydrates_calculated);
+				if(empty($inp_item_carbohydrates_calculated)){
+					$inp_item_carbohydrates_calculated = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_carbohydrates_calculated))){
+						$ft = "error";
+						$fm = "fat_of_which_carbohydratesty_acids_calculated_have_to_be_a_number";
+					}
+				}
+				$inp_item_carbohydrates_calculated = round($inp_item_carbohydrates_calculated, 0);
+				$inp_item_carbohydrates_calculated_mysql = quote_smart($link, $inp_item_carbohydrates_calculated);
+
+
+				// Carbohydrates of which sugars
+				if(isset($_POST['inp_item_carbohydrates_of_which_sugars_metric'])){
+					$inp_item_carbohydrates_of_which_sugars_metric = $_POST['inp_item_carbohydrates_of_which_sugars_metric'];
+				}
+				else{
+					$inp_item_carbohydrates_of_which_sugars_metric = "0";
+				}
+				$inp_item_carbohydrates_of_which_sugars_metric = output_html($inp_item_carbohydrates_of_which_sugars_metric);
+				$inp_item_carbohydrates_of_which_sugars_metric = str_replace(",", ".", $inp_item_carbohydrates_of_which_sugars_metric);
+				if(empty($inp_item_carbohydrates_of_which_sugars_metric)){
+					$inp_item_carbohydrates_of_which_sugars_metric = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_carbohydrates_of_which_sugars_metric))){
+						$ft = "error";
+						$fm = "carbohydrates_of_which_sugars_metric_have_to_be_a_number";
+					}
+				}
+				$inp_item_carbohydrates_of_which_sugars_metric = round($inp_item_carbohydrates_of_which_sugars_metric, 0);
+				$inp_item_carbohydrates_of_which_sugars_metric_mysql = quote_smart($link, $inp_item_carbohydrates_of_which_sugars_metric);
+
+
+				$inp_item_carbohydrates_of_which_sugars_calculated = $_POST['inp_item_carbohydrates_of_which_sugars_calculated'];
+				$inp_item_carbohydrates_of_which_sugars_calculated = output_html($inp_item_carbohydrates_of_which_sugars_calculated);
+				$inp_item_carbohydrates_of_which_sugars_calculated = str_replace(",", ".", $inp_item_carbohydrates_of_which_sugars_calculated);
+				if(empty($inp_item_carbohydrates_of_which_sugars_calculated)){
+					$inp_item_carbohydrates_of_which_sugars_calculated = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_carbohydrates_of_which_sugars_calculated))){
+						$ft = "error";
+						$fm = "fat_of_which_carbohydrates_of_which_sugarsty_acids_calculated_have_to_be_a_number";
+					}
+				}
+				$inp_item_carbohydrates_of_which_sugars_calculated = round($inp_item_carbohydrates_of_which_sugars_calculated, 0);
+				$inp_item_carbohydrates_of_which_sugars_calculated_mysql = quote_smart($link, $inp_item_carbohydrates_of_which_sugars_calculated);
 
 
 
-				
+
+				// Dietary fiber
+				if(isset($_POST['inp_item_dietary_fiber_metric'])){
+					$inp_item_dietary_fiber_metric = $_POST['inp_item_dietary_fiber_metric'];
+				}
+				else{
+					$inp_item_dietary_fiber_metric = "0";
+				}
+				$inp_item_dietary_fiber_metric = output_html($inp_item_dietary_fiber_metric);
+				$inp_item_dietary_fiber_metric = str_replace(",", ".", $inp_item_dietary_fiber_metric);
+				if(empty($inp_item_dietary_fiber_metric)){
+					$inp_item_dietary_fiber_metric = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_dietary_fiber_metric))){
+						$ft = "error";
+						$fm = "dietary_fiber_metric_have_to_be_a_number";
+					}
+				}
+				$inp_item_dietary_fiber_metric = round($inp_item_dietary_fiber_metric, 0);
+				$inp_item_dietary_fiber_metric_mysql = quote_smart($link, $inp_item_dietary_fiber_metric);
+
+
+				$inp_item_dietary_fiber_calculated = $_POST['inp_item_dietary_fiber_calculated'];
+				$inp_item_dietary_fiber_calculated = output_html($inp_item_dietary_fiber_calculated);
+				$inp_item_dietary_fiber_calculated = str_replace(",", ".", $inp_item_dietary_fiber_calculated);
+				if(empty($inp_item_dietary_fiber_calculated)){
+					$inp_item_dietary_fiber_calculated = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_dietary_fiber_calculated))){
+						$ft = "error";
+						$fm = "fat_of_which_dietary_fiberty_acids_calculated_have_to_be_a_number";
+					}
+				}
+				$inp_item_dietary_fiber_calculated = round($inp_item_dietary_fiber_calculated, 0);
+				$inp_item_dietary_fiber_calculated_mysql = quote_smart($link, $inp_item_dietary_fiber_calculated);
+
+
+				// Proteins
+				if(isset($_POST['inp_item_proteins_metric'])){
+					$inp_item_proteins_metric = $_POST['inp_item_proteins_metric'];
+				}
+				else{
+					$inp_item_proteins_metric = "0";
+				}
+				$inp_item_proteins_metric = output_html($inp_item_proteins_metric);
+				$inp_item_proteins_metric = str_replace(",", ".", $inp_item_proteins_metric);
+				if(empty($inp_item_proteins_metric)){
+					$inp_item_proteins_metric = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_proteins_metric))){
+						$ft = "error";
+						$fm = "proteins_metric_have_to_be_a_number";
+					}
+				}
+				$inp_item_proteins_metric = round($inp_item_proteins_metric, 0);
+				$inp_item_proteins_metric_mysql = quote_smart($link, $inp_item_proteins_metric);
+
+
+				$inp_item_proteins_calculated = $_POST['inp_item_proteins_calculated'];
+				$inp_item_proteins_calculated = output_html($inp_item_proteins_calculated);
+				$inp_item_proteins_calculated = str_replace(",", ".", $inp_item_proteins_calculated);
+				if(empty($inp_item_proteins_calculated)){
+					$inp_item_proteins_calculated = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_proteins_calculated))){
+						$ft = "error";
+						$fm = "fat_of_which_proteinsty_acids_calculated_have_to_be_a_number";
+					}
+				}
+				$inp_item_proteins_calculated = round($inp_item_proteins_calculated, 0);
+				$inp_item_proteins_calculated_mysql = quote_smart($link, $inp_item_proteins_calculated);
+
+
+
+				// Salt
+				if(isset($_POST['inp_item_salt_metric'])){
+					$inp_item_salt_metric = $_POST['inp_item_salt_metric'];
+				}
+				else{
+					$inp_item_salt_metric = "0";
+				}
+				$inp_item_salt_metric = output_html($inp_item_salt_metric);
+				$inp_item_salt_metric = str_replace(",", ".", $inp_item_salt_metric);
+				if(empty($inp_item_salt_metric)){
+					$inp_item_salt_metric = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_salt_metric))){
+						$ft = "error";
+						$fm = "salt_metric_have_to_be_a_number";
+					}
+				}
+				$inp_item_salt_metric = round($inp_item_salt_metric, 0);
+				$inp_item_salt_metric_mysql = quote_smart($link, $inp_item_salt_metric);
+
+
+				$inp_item_salt_calculated = $_POST['inp_item_salt_calculated'];
+				$inp_item_salt_calculated = output_html($inp_item_salt_calculated);
+				$inp_item_salt_calculated = str_replace(",", ".", $inp_item_salt_calculated);
+				if(empty($inp_item_salt_calculated)){
+					$inp_item_salt_calculated = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_salt_calculated))){
+						$ft = "error";
+						$fm = "fat_of_which_saltty_acids_calculated_have_to_be_a_number";
+					}
+				}
+				$inp_item_salt_calculated = round($inp_item_salt_calculated, 0);
+				$inp_item_salt_calculated_mysql = quote_smart($link, $inp_item_salt_calculated);
+
+
+				// Sodium
+				if(isset($_POST['inp_item_sodium_metric'])){
+					$inp_item_sodium_metric = $_POST['inp_item_sodium_metric'];
+				}
+				else{
+					$inp_item_sodium_metric = "0";
+				}
+				$inp_item_sodium_metric = output_html($inp_item_sodium_metric);
+				$inp_item_sodium_metric = str_replace(",", ".", $inp_item_sodium_metric);
+				if(empty($inp_item_sodium_metric)){
+					$inp_item_sodium_metric = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_sodium_metric))){
+						$ft = "error";
+						$fm = "sodium_metric_have_to_be_a_number";
+					}
+				}
+				$inp_item_sodium_metric = round($inp_item_sodium_metric, 0);
+				$inp_item_sodium_metric_mysql = quote_smart($link, $inp_item_sodium_metric);
+
+
+				$inp_item_sodium_calculated = $_POST['inp_item_sodium_calculated'];
+				$inp_item_sodium_calculated = output_html($inp_item_sodium_calculated);
+				$inp_item_sodium_calculated = str_replace(",", ".", $inp_item_sodium_calculated);
+				if(empty($inp_item_sodium_calculated)){
+					$inp_item_sodium_calculated = "0";
+				}
+				else{
+					if(!(is_numeric($inp_item_sodium_calculated))){
+						$ft = "error";
+						$fm = "fat_of_which_sodiumty_acids_calculated_have_to_be_a_number";
+					}
+				}
+				$inp_item_sodium_calculated = round($inp_item_sodium_calculated, 0);
+				$inp_item_sodium_calculated_mysql = quote_smart($link, $inp_item_sodium_calculated);
+
+
+
 
 					// Update
-					$result = mysqli_query($link, "UPDATE $t_recipes_items SET item_amount=$inp_item_amount_mysql, item_measurement=$inp_item_measurement_mysql, 
-						item_grocery=$inp_item_grocery_mysql, 
-						item_calories_per_hundred=$inp_item_calories_per_hundred_mysql,
-						item_fat_per_hundred=$inp_item_fat_per_hundred_mysql,
-						item_fat_of_which_saturated_fatty_acids_per_hundred=$inp_item_fat_of_which_saturated_fatty_acids_per_hundred_mysql,
-						item_carbs_per_hundred=$inp_item_carbs_per_hundred_mysql, 
-						item_carbs_of_which_sugars_per_hundred=$inp_item_carbs_of_which_sugars_per_hundred_mysql,
-						item_carbs_of_which_dietary_fiber_hundred=$inp_item_carbs_of_which_dietary_fiber_per_hundred_mysql, 
-						item_proteins_per_hundred=$inp_item_proteins_per_hundred_mysql,
-						item_salt_per_hundred=$inp_item_salt_per_hundred_mysql,
-						item_sodium_per_hundred=$inp_item_sodium_per_hundred_mysql,
+					$result = mysqli_query($link, "UPDATE $t_recipes_items SET 
+								item_amount=$inp_item_amount_mysql, 
+								item_measurement=$inp_item_measurement_mysql, 
+								item_grocery=$inp_item_grocery_mysql, 
+								item_food_id=$inp_item_food_id_mysql, 
 
-						item_calories_calculated=$inp_item_calories_calculated_mysql, 
-						item_fat_calculated=$inp_item_fat_calculated_mysql, 
-						item_fat_of_which_saturated_fatty_acids_calculated=$inp_item_fat_of_which_saturated_fatty_acids_calculated_mysql,  
-						item_carbs_calculated=$inp_item_carbs_calculated_mysql,
-						item_carbs_of_which_dietary_fiber_calculated=$inp_item_carbs_of_which_dietary_fiber_calculated_mysql, 
-						item_carbs_of_which_sugars_calculated=$inp_item_carbs_of_which_sugars_calculated_mysql, 
-						item_proteins_calculated=$inp_item_proteins_calculated_mysql, 
-						item_salt_calculated=$inp_item_salt_calculated_mysql, 
-						item_sodium_calculated=$inp_item_sodium_calculated_mysql
-						 WHERE item_id=$get_item_id") or die(mysqli_error($link));
+
+								item_energy_metric=$inp_item_calories_metric_mysql, 
+								item_fat_metric=$inp_item_fat_metric_mysql,  
+								item_saturated_fat_metric=$inp_item_saturated_fat_metric_mysql, 
+								item_monounsaturated_fat_metric=$inp_item_monounsaturated_fat_metric_mysql, 
+								item_polyunsaturated_fat_metric=$inp_item_polyunsaturated_fat_metric_mysql, 
+								item_cholesterol_metric=0,
+								item_carbohydrates_metric=$inp_item_carbohydrates_metric_mysql, 
+								item_carbohydrates_of_which_sugars_metric=$inp_item_carbohydrates_of_which_sugars_metric_mysql,  
+								item_dietary_fiber_metric=$inp_item_dietary_fiber_metric_mysql, 
+								item_proteins_metric=$inp_item_proteins_metric_mysql, 
+								item_salt_metric=$inp_item_salt_metric_mysql, 
+								item_sodium_metric=$inp_item_sodium_metric_mysql, 
+
+								item_energy_calculated=$inp_item_calories_calculated_mysql, 
+								item_fat_calculated=$inp_item_fat_calculated_mysql,  
+								item_saturated_fat_calculated=$inp_item_saturated_fat_calculated_mysql, 
+								item_monounsaturated_fat_calculated=$inp_item_monounsaturated_fat_calculated_mysql, 
+								item_polyunsaturated_fat_calculated=$inp_item_polyunsaturated_fat_calculated_mysql, 
+								item_cholesterol_calculated=0,
+								item_carbohydrates_calculated=$inp_item_carbohydrates_calculated_mysql, 
+								item_carbohydrates_of_which_sugars_calculated=$inp_item_carbohydrates_of_which_sugars_calculated_mysql,  
+								item_dietary_fiber_calculated=$inp_item_dietary_fiber_calculated_mysql, 
+								item_proteins_calculated=$inp_item_proteins_calculated_mysql, 
+								item_salt_calculated=$inp_item_salt_calculated_mysql, 
+								item_sodium_calculated=$inp_item_sodium_calculated_mysql
+								 WHERE item_id=$get_item_id") or die(mysqli_error($link));
 
 
 				
 			
 
-				$inp_number_hundred_calories = 0;
-				$inp_number_hundred_proteins = 0;
-				$inp_number_hundred_fat = 0;
-				$inp_number_hundred_fat_of_which_saturated_fatty_acids = 0;
-				$inp_number_hundred_carbs = 0;
-				$inp_number_hundred_carbs_of_which_dietary_fiber = 0;
-				$inp_number_hundred_carbs_of_which_sugars = 0;
-				$inp_number_hundred_salt = 0;
-				$inp_number_hundred_sodium = 0;
-					
-				$inp_number_serving_calories = 0;
-				$inp_number_serving_proteins = 0;
-				$inp_number_serving_fat = 0;
-				$inp_number_serving_fat_of_which_saturated_fatty_acids = 0;
-				$inp_number_serving_carbs = 0;
-				$inp_number_serving_carbs_of_which_dietary_fiber = 0;
-				$inp_number_serving_carbs_of_which_sugars = 0;
-				$inp_number_serving_salt = 0;
-				$inp_number_serving_sodium = 0;
-					
-				$inp_number_total_weight = 0;
+				// Calculating total numbers
+				$inp_number_energy_metric		= 0;
+				$inp_number_fat_metric	 		= 0;
+				$inp_number_saturated_fat_metric	= 0;
+				$inp_number_monounsaturated_fat_metric	= 0;
+				$inp_number_polyunsaturated_fat_metric	= 0;
+				$inp_number_cholesterol_metric	 	= 0;
+				$inp_number_carbohydrates_metric	= 0;
+				$inp_number_carbohydrates_of_which_sugars_metric  = 0;
+				$inp_number_dietary_fiber_metric	= 0;
+				$inp_number_proteins_metric	 	= 0;
+				$inp_number_salt_metric			= 0;
+				$inp_number_sodium_metric		= 0;
 
-				$inp_number_total_calories 				= 0;
-				$inp_number_total_proteins 				= 0;
-				$inp_number_total_fat     				= 0;
-				$inp_number_total_fat_of_which_saturated_fatty_acids 	= 0;
-				$inp_number_total_carbs    				= 0;
-				$inp_number_total_carbs_of_which_dietary_fiber 		= 0;
-				$inp_number_total_carbs_of_which_sugars 		= 0;
-				$inp_number_total_salt 					= 0;
-				$inp_number_total_sodium 				= 0;
+				$inp_number_energy_serving		= 0;
+				$inp_number_fat_serving			= 0;
+				$inp_number_saturated_fat_serving	= 0;
+				$inp_number_monounsaturated_fat_serving	= 0;
+				$inp_number_polyunsaturated_fat_serving	= 0;
+				$inp_number_cholesterol_serving		= 0;
+				$inp_number_carbohydrates_serving	= 0;
+				$inp_number_carbohydrates_of_which_sugars_serving	 = 0;
+				$inp_number_dietary_fiber_serving	= 0;
+				$inp_number_proteins_serving	 	= 0;
+				$inp_number_salt_serving		= 0;
+				$inp_number_sodium_serving		= 0;
+
+				$inp_number_energy_total		= 0;
+				$inp_number_fat_total			= 0;
+				$inp_number_saturated_fat_total	 	= 0;
+				$inp_number_monounsaturated_fat_total	= 0;
+				$inp_number_polyunsaturated_fat_total	= 0;
+				$inp_number_cholesterol_total		= 0;
+				$inp_number_carbohydrates_total		= 0;
+				$inp_number_carbohydrates_of_which_sugars_total = 0;
+				$inp_number_dietary_fiber_total		= 0;
+				$inp_number_proteins_total		= 0;
+				$inp_number_salt_total			= 0;
+				$inp_number_sodium_total		= 0;
+
 					
 				$query_groups = "SELECT group_id, group_title FROM $t_recipes_groups WHERE group_recipe_id=$get_recipe_id";
 				$result_groups = mysqli_query($link, $query_groups);
 				while($row_groups = mysqli_fetch_row($result_groups)) {
 					list($get_group_id, $get_group_title) = $row_groups;
 
-					$query_items = "SELECT item_id, item_recipe_id, item_group_id, item_amount, item_measurement, item_grocery, item_grocery_explanation, item_food_id, item_calories_per_hundred, item_fat_per_hundred, item_fat_of_which_saturated_fatty_acids_per_hundred, item_carbs_per_hundred, item_carbs_of_which_dietary_fiber_hundred, item_carbs_of_which_sugars_per_hundred, item_proteins_per_hundred, item_salt_per_hundred, item_sodium_per_hundred, item_calories_calculated, item_fat_calculated, item_fat_of_which_saturated_fatty_acids_calculated, item_carbs_calculated, item_carbs_of_which_dietary_fiber_calculated, item_carbs_of_which_sugars_calculated, item_proteins_calculated, item_salt_calculated, item_sodium_calculated FROM $t_recipes_items WHERE item_group_id=$get_group_id";
+					$query_items = "SELECT item_id, item_recipe_id, item_group_id, item_amount, item_measurement, item_grocery, item_grocery_explanation, item_food_id, item_energy_metric, item_fat_metric, item_saturated_fat_metric, item_monounsaturated_fat_metric, item_polyunsaturated_fat_metric, item_cholesterol_metric, item_carbohydrates_metric, item_carbohydrates_of_which_sugars_metric, item_dietary_fiber_metric, item_proteins_metric, item_salt_metric, item_sodium_metric, item_energy_calculated, item_fat_calculated, item_saturated_fat_calculated, item_monounsaturated_fat_calculated, item_polyunsaturated_fat_calculated, item_cholesterol_calculated, item_carbohydrates_calculated, item_carbohydrates_of_which_sugars_calculated, item_dietary_fiber_calculated, item_proteins_calculated, item_salt_calculated, item_sodium_calculated FROM $t_recipes_items WHERE item_group_id=$get_group_id";
 					$result_items = mysqli_query($link, $query_items);
 					$row_cnt = mysqli_num_rows($result_items);
 					while($row_items = mysqli_fetch_row($result_items)) {
-						list($get_temp_item_id, $get_temp_item_recipe_id, $get_temp_item_group_id, $get_temp_item_amount, $get_temp_item_measurement, $get_temp_item_grocery, $get_temp_item_grocery_explanation, $get_temp_item_food_id, $get_temp_item_calories_per_hundred, $get_temp_item_fat_per_hundred, $get_temp_item_fat_of_which_saturated_fatty_acids_per_hundred, $get_temp_item_carbs_per_hundred, $get_temp_item_carbs_of_which_dietary_fiber_hundred, $get_temp_item_carbs_of_which_sugars_per_hundred, $get_temp_item_proteins_per_hundred, $get_temp_item_salt_per_hundred, $get_temp_item_sodium_per_hundred, $get_temp_item_calories_calculated, $get_temp_item_fat_calculated, $get_temp_item_fat_of_which_saturated_fatty_acids_calculated, $get_temp_item_carbs_calculated, $get_temp_item_carbs_of_which_dietary_fiber_calculated, $get_temp_item_carbs_of_which_sugars_calculated, $get_temp_item_proteins_calculated, $get_temp_item_salt_calculated, $get_temp_item_sodium_calculated) = $row_items;
+						list($get_item_id, $get_item_recipe_id, $get_item_group_id, $get_item_amount, $get_item_measurement, $get_item_grocery, $get_item_grocery_explanation, $get_item_food_id, $get_item_energy_metric, $get_item_fat_metric, $get_item_saturated_fat_metric, $get_item_monounsaturated_fat_metric, $get_item_polyunsaturated_fat_metric, $get_item_cholesterol_metric, $get_item_carbohydrates_metric, $get_item_carbohydrates_of_which_sugars_metric, $get_item_dietary_fiber_metric, $get_item_proteins_metric, $get_item_salt_metric, $get_item_sodium_metric, $get_item_energy_calculated, $get_item_fat_calculated, $get_item_saturated_fat_calculated, $get_item_monounsaturated_fat_calculated, $get_item_polyunsaturated_fat_calculated, $get_item_cholesterol_calculated, $get_item_carbohydrates_calculated, $get_item_carbohydrates_of_which_sugars_calculated, $get_item_dietary_fiber_calculated, $get_item_proteins_calculated, $get_item_salt_calculated, $get_item_sodium_calculated) = $row_items;
 
-						$inp_number_hundred_calories 				= $inp_number_hundred_calories+$get_temp_item_calories_per_hundred;
-						$inp_number_hundred_proteins 				= $inp_number_hundred_proteins+$get_temp_item_proteins_per_hundred;
-						$inp_number_hundred_fat      				= $inp_number_hundred_fat+$get_temp_item_fat_per_hundred;
-						$inp_number_hundred_fat_of_which_saturated_fatty_acids 	= $inp_number_hundred_fat_of_which_saturated_fatty_acids+$get_temp_item_fat_of_which_saturated_fatty_acids_per_hundred;
-						$inp_number_hundred_carbs    				= $inp_number_hundred_carbs+$get_temp_item_carbs_per_hundred;
-						$inp_number_hundred_carbs_of_which_dietary_fiber 	= $inp_number_hundred_carbs_of_which_dietary_fiber+$get_temp_item_carbs_of_which_dietary_fiber_hundred;
-						$inp_number_hundred_carbs_of_which_sugars 		= $inp_number_hundred_carbs_of_which_sugars+$get_temp_item_carbs_of_which_sugars_per_hundred;
-						$inp_number_hundred_salt 				= $inp_number_hundred_salt+$get_temp_item_salt_per_hundred;
-						$inp_number_hundred_sodium 				= $inp_number_hundred_sodium+$get_temp_item_sodium_per_hundred;
+
+
+						$inp_number_energy_metric		= $inp_number_energy_metric+$get_item_energy_metric;
+						$inp_number_fat_metric	 		= $inp_number_fat_metric+$get_item_fat_metric;
+						$inp_number_saturated_fat_metric	= $inp_number_saturated_fat_metric+$get_item_saturated_fat_metric;
+						$inp_number_monounsaturated_fat_metric	= $inp_number_monounsaturated_fat_metric+$get_item_monounsaturated_fat_metric;
+						$inp_number_polyunsaturated_fat_metric	= $inp_number_polyunsaturated_fat_metric+$get_item_polyunsaturated_fat_metric;
+						$inp_number_cholesterol_metric	 	= $inp_number_cholesterol_metric+$get_item_cholesterol_metric;
+						$inp_number_carbohydrates_metric	= $inp_number_carbohydrates_metric+$get_item_carbohydrates_metric;
+						$inp_number_carbohydrates_of_which_sugars_metric  = $inp_number_carbohydrates_of_which_sugars_metric+$get_item_carbohydrates_of_which_sugars_metric;
+						$inp_number_dietary_fiber_metric	= $inp_number_dietary_fiber_metric+$get_item_dietary_fiber_metric;
+						$inp_number_proteins_metric	 	= $inp_number_proteins_metric+$get_item_proteins_metric;
+						$inp_number_salt_metric			= $inp_number_salt_metric+$get_item_salt_metric;
+						$inp_number_sodium_metric		= $inp_number_sodium_metric+$get_item_sodium_metric;
+
+						$inp_number_energy_total		= $inp_number_energy_total+$get_item_energy_calculated;
+						$inp_number_fat_total			= $inp_number_fat_total+$get_item_fat_calculated;
+						$inp_number_saturated_fat_total	 	= $inp_number_saturated_fat_total+$get_item_saturated_fat_calculated;
+						$inp_number_monounsaturated_fat_total	= $inp_number_monounsaturated_fat_total+$get_item_monounsaturated_fat_calculated;
+						$inp_number_polyunsaturated_fat_total	= $inp_number_polyunsaturated_fat_total+$get_item_polyunsaturated_fat_calculated;
+						$inp_number_cholesterol_total		= $inp_number_cholesterol_total+$get_item_cholesterol_calculated;
+						$inp_number_carbohydrates_total		= $inp_number_carbohydrates_total+$get_item_carbohydrates_calculated;
+						$inp_number_carbohydrates_of_which_sugars_total = $inp_number_carbohydrates_of_which_sugars_total+$get_item_carbohydrates_of_which_sugars_calculated;
+						$inp_number_dietary_fiber_total		= $inp_number_dietary_fiber_total+$get_item_dietary_fiber_calculated;
+						$inp_number_proteins_total		= $inp_number_proteins_total+$get_item_proteins_calculated;
+						$inp_number_salt_total			= $inp_number_salt_total+$get_item_salt_calculated;
+						$inp_number_sodium_total		= $inp_number_sodium_total+$get_item_sodium_calculated;
+
 					
-						$inp_number_total_weight     = $inp_number_total_weight+$get_temp_item_amount;
 
-						$inp_number_total_calories 				= $inp_number_total_calories+$get_temp_item_calories_calculated;
-						$inp_number_total_proteins 				= $inp_number_total_proteins+$get_temp_item_proteins_calculated;
-						$inp_number_total_fat     				= $inp_number_total_fat+$get_temp_item_fat_calculated;
-						$inp_number_total_fat_of_which_saturated_fatty_acids 	= $inp_number_total_fat_of_which_saturated_fatty_acids+$get_temp_item_fat_of_which_saturated_fatty_acids_calculated;
-						$inp_number_total_carbs    				= $inp_number_total_carbs+$get_temp_item_carbs_calculated;
-						$inp_number_total_carbs_of_which_dietary_fiber 		= $inp_number_total_carbs_of_which_dietary_fiber+$get_temp_item_carbs_of_which_dietary_fiber_calculated;
-						$inp_number_total_carbs_of_which_sugars 		= $inp_number_total_carbs_of_which_sugars+$get_temp_item_carbs_of_which_sugars_calculated;
-						$inp_number_total_salt 					= $inp_number_total_salt+$get_temp_item_salt_calculated;
-						$inp_number_total_sodium				= $inp_number_total_salt+$get_temp_item_sodium_calculated;
+
 	
 					} // items
 				} // groups
@@ -2306,92 +2759,117 @@ else{
 
 	
 				// Numbers : Per hundred
-				$inp_number_hundred_calories_mysql 				= quote_smart($link, $inp_number_hundred_calories);
-				$inp_number_hundred_proteins_mysql 				= quote_smart($link, $inp_number_hundred_proteins);
-				$inp_number_hundred_fat_mysql      				= quote_smart($link, $inp_number_hundred_fat);
-				$inp_number_hundred_fat_of_which_saturated_fatty_acids_mysql 	= quote_smart($link, $inp_number_hundred_fat_of_which_saturated_fatty_acids);
-				$inp_number_hundred_carbs_mysql   				= quote_smart($link, $inp_number_hundred_carbs);
-				$inp_number_hundred_carbs_of_which_dietary_fiber_mysql 		= quote_smart($link, $inp_number_hundred_carbs_of_which_dietary_fiber);
-				$inp_number_hundred_carbs_of_which_sugars_mysql			= quote_smart($link, $inp_number_hundred_carbs_of_which_sugars);
-				$inp_number_hundred_salt_mysql					= quote_smart($link, $inp_number_hundred_salt);
-				$inp_number_hundred_sodium_mysql				= quote_smart($link, $inp_number_hundred_sodium);
+				$inp_number_energy_metric_mysql			= quote_smart($link, $inp_number_energy_metric);
+				$inp_number_fat_metric_mysql 			= quote_smart($link, $inp_number_fat_metric);
+				$inp_number_saturated_fat_metric_mysql		= quote_smart($link, $inp_number_saturated_fat_metric);
+				$inp_number_monounsaturated_fat_metric_mysql	= quote_smart($link, $inp_number_monounsaturated_fat_metric);
+				$inp_number_polyunsaturated_fat_metric_mysql	= quote_smart($link, $inp_number_polyunsaturated_fat_metric);
+				$inp_number_cholesterol_metric_mysql	 	= quote_smart($link, $inp_number_cholesterol_metric);
+				$inp_number_carbohydrates_metric_mysql		= quote_smart($link, $inp_number_carbohydrates_metric);
+				$inp_number_carbohydrates_of_which_sugars_metric_mysql  = quote_smart($link, $inp_number_carbohydrates_of_which_sugars_metric);
+				$inp_number_dietary_fiber_metric_mysql		= quote_smart($link, $inp_number_dietary_fiber_metric);
+				$inp_number_proteins_metric_mysql	 	= quote_smart($link, $inp_number_proteins_metric);
+				$inp_number_salt_metric_mysql			= quote_smart($link, $inp_number_salt_metric);
+				$inp_number_sodium_metric_mysql			= quote_smart($link, $inp_number_sodium_metric);
+
+
 					
 				// Numbers : Total 
-				$inp_number_total_weight_mysql     = quote_smart($link, $inp_number_total_weight);
+				$inp_number_energy_total_mysql			= quote_smart($link, $inp_number_energy_total);
+				$inp_number_fat_total_mysql			= quote_smart($link, $inp_number_fat_total);
+				$inp_number_saturated_fat_total_mysql	 	= quote_smart($link, $inp_number_saturated_fat_total);
+				$inp_number_monounsaturated_fat_total_mysql	= quote_smart($link, $inp_number_monounsaturated_fat_total);
+				$inp_number_polyunsaturated_fat_total_mysql	= quote_smart($link, $inp_number_polyunsaturated_fat_total);
+				$inp_number_cholesterol_total_mysql		= quote_smart($link, $inp_number_cholesterol_total);
+				$inp_number_carbohydrates_total_mysql		= quote_smart($link, $inp_number_carbohydrates_total);
+				$inp_number_carbohydrates_of_which_sugars_total_mysql = quote_smart($link, $inp_number_carbohydrates_of_which_sugars_total);
+				$inp_number_dietary_fiber_total_mysql		= quote_smart($link, $inp_number_dietary_fiber_total);
+				$inp_number_proteins_total_mysql		= quote_smart($link, $inp_number_proteins_total);
+				$inp_number_salt_total_mysql			= quote_smart($link, $inp_number_salt_total);
+				$inp_number_sodium_total_mysql			= quote_smart($link, $inp_number_sodium_total);
 
-				$inp_number_total_calories_mysql 				= quote_smart($link, $inp_number_total_calories);
-				$inp_number_total_proteins_mysql 				= quote_smart($link, $inp_number_total_proteins);
-				$inp_number_total_fat_mysql      				= quote_smart($link, $inp_number_total_fat);
-				$inp_number_total_fat_of_which_saturated_fatty_acids_mysql	= quote_smart($link, $inp_number_total_fat_of_which_saturated_fatty_acids);
-				$inp_number_total_carbs_mysql    				= quote_smart($link, $inp_number_total_carbs);
-				$inp_number_total_carbs_of_which_dietary_fiber_mysql    	= quote_smart($link, $inp_number_total_carbs_of_which_dietary_fiber);
-				$inp_number_total_carbs_of_which_sugars_mysql    		= quote_smart($link, $inp_number_total_carbs_of_which_sugars);
-				$inp_number_total_salt_mysql    				= quote_smart($link, $inp_number_total_salt);
-				$inp_number_total_sodium_mysql    				= quote_smart($link, $inp_number_total_sodium);
 
 				// Numbers : Per serving
-				$inp_number_serving_calories = round($inp_number_total_calories/$get_number_servings);
-				$inp_number_serving_calories_mysql = quote_smart($link, $inp_number_serving_calories);
+				$inp_number_energy_serving	 = round($inp_number_energy_total/$get_number_servings);
+				$inp_number_energy_serving_mysql = quote_smart($link, $inp_number_energy_serving);
 
-				$inp_number_serving_proteins = round($inp_number_total_proteins/$get_number_servings);
-				$inp_number_serving_proteins_mysql = quote_smart($link, $inp_number_serving_proteins);
+				$inp_number_fat_serving	 = round($inp_number_fat_total/$get_number_servings);
+				$inp_number_fat_serving_mysql = quote_smart($link, $inp_number_fat_serving);
 
-				$inp_number_serving_fat		= round($inp_number_total_fat/$get_number_servings);
-				$inp_number_serving_fat_mysql   = quote_smart($link, $inp_number_serving_fat);
+				$inp_number_saturated_fat_serving	 = round($inp_number_saturated_fat_total/$get_number_servings);
+				$inp_number_saturated_fat_serving_mysql = quote_smart($link, $inp_number_saturated_fat_serving);
 
-				$inp_number_serving_fat_of_which_saturated_fatty_acids		= round($inp_number_hundred_fat_of_which_saturated_fatty_acids/$get_number_servings);
-				$inp_number_serving_fat_of_which_saturated_fatty_acids_mysql 	= quote_smart($link, $inp_number_serving_fat_of_which_saturated_fatty_acids);
+				$inp_number_monounsaturated_fat_serving	 = round($inp_number_monounsaturated_fat_total/$get_number_servings);
+				$inp_number_monounsaturated_fat_serving_mysql = quote_smart($link, $inp_number_monounsaturated_fat_serving);
 
-				$inp_number_serving_carbs    = round($inp_number_total_carbs/$get_number_servings);
-				$inp_number_serving_carbs_mysql    = quote_smart($link, $inp_number_serving_carbs);
+				$inp_number_polyunsaturated_fat_serving	 = round($inp_number_polyunsaturated_fat_total/$get_number_servings);
+				$inp_number_polyunsaturated_fat_serving_mysql = quote_smart($link, $inp_number_polyunsaturated_fat_serving);
 
-				$inp_number_serving_carbs_of_which_dietary_fiber = round($inp_number_serving_carbs_of_which_dietary_fiber/$get_number_servings);
-				$inp_number_serving_carbs_of_which_dietary_fiber_mysql 	= quote_smart($link, $inp_number_serving_carbs_of_which_dietary_fiber); 
+				$inp_number_cholesterol_serving	 = round($inp_number_cholesterol_total/$get_number_servings);
+				$inp_number_cholesterol_serving_mysql = quote_smart($link, $inp_number_cholesterol_serving);
 
-				$inp_number_serving_carbs_of_which_sugars 		= round($inp_number_serving_carbs_of_which_sugars /$get_number_servings);
-				$inp_number_serving_carbs_of_which_sugars_mysql 	= quote_smart($link, $inp_number_serving_carbs_of_which_sugars); 
+				$inp_number_carbohydrates_serving	 = round($inp_number_carbohydrates_total/$get_number_servings);
+				$inp_number_carbohydrates_serving_mysql = quote_smart($link, $inp_number_carbohydrates_serving);
 
-				$inp_number_serving_salt 	= round($inp_number_serving_salt/$get_number_servings);
-				$inp_number_serving_salt_mysql 	= quote_smart($link, $inp_number_serving_salt); 
+				$inp_number_carbohydrates_of_which_sugars_serving	 = round($inp_number_carbohydrates_of_which_sugars_total/$get_number_servings);
+				$inp_number_carbohydrates_of_which_sugars_serving_mysql = quote_smart($link, $inp_number_carbohydrates_of_which_sugars_serving);
 
-				$inp_number_serving_sodium 	 = round($inp_number_serving_sodium/$get_number_servings);
-				$inp_number_serving_sodium_mysql = quote_smart($link, $inp_number_serving_sodium); 
+				$inp_number_dietary_fiber_serving	 = round($inp_number_dietary_fiber_total/$get_number_servings);
+				$inp_number_dietary_fiber_serving_mysql = quote_smart($link, $inp_number_dietary_fiber_serving);
+
+				$inp_number_proteins_serving	 = round($inp_number_proteins_total/$get_number_servings);
+				$inp_number_proteins_serving_mysql = quote_smart($link, $inp_number_proteins_serving);
+
+				$inp_number_salt_serving	 = round($inp_number_salt_total/$get_number_servings);
+				$inp_number_salt_serving_mysql = quote_smart($link, $inp_number_salt_serving);
+
+				$inp_number_sodium_serving	 = round($inp_number_sodium_total/$get_number_servings);
+				$inp_number_sodium_serving_mysql = quote_smart($link, $inp_number_sodium_serving);
 
 
 
 				$result = mysqli_query($link, "UPDATE $t_recipes_numbers SET 
-					number_hundred_calories=$inp_number_hundred_calories_mysql, 
-					number_hundred_proteins=$inp_number_hundred_proteins_mysql, 
-					number_hundred_fat=$inp_number_hundred_fat_mysql, 
-					number_hundred_fat_of_which_saturated_fatty_acids=$inp_number_hundred_fat_of_which_saturated_fatty_acids_mysql,
-					number_hundred_carbs=$inp_number_hundred_carbs_mysql, 
-					number_hundred_carbs_of_which_dietary_fiber=$inp_number_hundred_carbs_of_which_dietary_fiber_mysql,
-					number_hundred_carbs_of_which_sugars=$inp_number_hundred_carbs_of_which_sugars_mysql,
-					number_hundred_salt=$inp_number_hundred_salt_mysql,
-					number_hundred_sodium=$inp_number_hundred_sodium_mysql,
 
-					number_serving_calories=$inp_number_serving_calories_mysql, 
-					number_serving_proteins=$inp_number_serving_proteins_mysql, 
-					number_serving_fat=$inp_number_serving_fat_mysql, 
-					number_serving_fat_of_which_saturated_fatty_acids=$inp_number_serving_fat_of_which_saturated_fatty_acids_mysql,
-					number_serving_carbs=$inp_number_serving_carbs_mysql,
-					number_serving_carbs_of_which_dietary_fiber=$inp_number_serving_carbs_of_which_dietary_fiber_mysql, 
-					number_serving_carbs_of_which_sugars=$inp_number_serving_carbs_of_which_sugars_mysql, 
-					number_serving_salt=$inp_number_serving_salt_mysql,
-					number_serving_sodium=$inp_number_serving_sodium_mysql,
+								number_energy_metric=$inp_number_energy_metric_mysql, 
+								number_fat_metric=$inp_number_fat_metric_mysql, 
+								number_saturated_fat_metric=$inp_number_saturated_fat_metric_mysql, 
+								number_monounsaturated_fat_metric=$inp_number_monounsaturated_fat_metric_mysql, 
+								number_polyunsaturated_fat_metric=$inp_number_polyunsaturated_fat_metric_mysql, 
+								number_cholesterol_metric=$inp_number_cholesterol_metric_mysql, 
+								number_carbohydrates_metric=$inp_number_carbohydrates_metric_mysql, 
+								number_carbohydrates_of_which_sugars_metric=$inp_number_carbohydrates_of_which_sugars_metric_mysql, 
+								number_dietary_fiber_metric=$inp_number_dietary_fiber_metric_mysql, 
+								number_proteins_metric=$inp_number_proteins_metric_mysql, 
+								number_salt_metric=$inp_number_salt_metric_mysql, 
+								number_sodium_metric=$inp_number_sodium_metric_mysql, 
 
-					number_total_weight=$inp_number_total_weight_mysql, 
-					number_total_calories=$inp_number_total_calories_mysql, 
-					number_total_proteins=$inp_number_total_proteins_mysql, 
-					number_total_fat=$inp_number_total_fat_mysql, 
-					number_total_fat_of_which_saturated_fatty_acids=$inp_number_serving_fat_of_which_saturated_fatty_acids_mysql,
-					number_total_carbs=$inp_number_total_carbs_mysql,
-					number_total_carbs_of_which_dietary_fiber=$inp_number_serving_carbs_of_which_dietary_fiber_mysql,
-					number_total_carbs_of_which_sugars=$inp_number_serving_carbs_of_which_sugars_mysql, 
-					number_total_salt=$inp_number_serving_salt_mysql, 
-					number_total_sodium=$inp_number_serving_sodium_mysql
+								number_energy_serving=$inp_number_energy_serving_mysql, 
+								number_fat_serving=$inp_number_fat_serving_mysql, 
+								number_saturated_fat_serving=$inp_number_saturated_fat_serving_mysql, 
+								number_monounsaturated_fat_serving=$inp_number_monounsaturated_fat_serving_mysql, 
+								number_polyunsaturated_fat_serving=$inp_number_polyunsaturated_fat_serving_mysql, 
+								number_cholesterol_serving=$inp_number_cholesterol_serving_mysql, 
+								number_carbohydrates_serving=$inp_number_carbohydrates_serving_mysql, 
+								number_carbohydrates_of_which_sugars_serving=$inp_number_carbohydrates_of_which_sugars_serving_mysql, 
+								number_dietary_fiber_serving=$inp_number_dietary_fiber_serving_mysql, 
+								number_proteins_serving=$inp_number_proteins_serving_mysql, 
+								number_salt_serving=$inp_number_salt_serving_mysql, 
+
+								number_sodium_serving=$inp_number_sodium_serving_mysql, 
+								number_energy_total=$inp_number_energy_total_mysql, 
+								number_fat_total=$inp_number_fat_total_mysql, 
+								number_saturated_fat_total=$inp_number_saturated_fat_total_mysql, 
+								number_monounsaturated_fat_total=$inp_number_monounsaturated_fat_total_mysql, 
+								number_polyunsaturated_fat_total=$inp_number_polyunsaturated_fat_total_mysql, 
+								number_cholesterol_total=$inp_number_cholesterol_total_mysql, 
+								number_carbohydrates_total=$inp_number_carbohydrates_total_mysql, 
+								number_carbohydrates_of_which_sugars_total=$inp_number_carbohydrates_of_which_sugars_total_mysql, 
+								number_dietary_fiber_total=$inp_number_dietary_fiber_total_mysql, 
+								number_proteins_total=$inp_number_proteins_total_mysql, 
+								number_salt_total=$inp_number_salt_total_mysql, 
+								number_sodium_total=$inp_number_sodium_total_mysql
+
 					 WHERE number_recipe_id=$recipe_id_mysql") or die(mysqli_error($link));
-
 
 
 
@@ -2603,92 +3081,105 @@ else{
 					   </th>
 					  </tr>
 					 </thead>
-					 <tbody>
-					  <tr>
-					   <td style=\"padding: 8px 4px 6px 8px;\">
-						<span>$l_calories</span>
-					   </td>
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-							<span><input type=\"text\" name=\"inp_item_calories_per_hundred\" id=\"inp_item_calories_per_hundred\" size=\"5\" value=\"$get_item_calories_per_hundred\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
-					   </td>
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-						<span><input type=\"text\" name=\"inp_item_calories_calculated\" id=\"inp_item_calories_calculated\" size=\"5\" value=\"$get_item_calories_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
-					   </td>
-					  </tr>
-					  <tr>
-					   <td style=\"padding: 8px 4px 6px 8px;\">
-						<p style=\"margin:0;padding: 0px 0px 4px 0px;\">$l_fat</p>
-						<p style=\"margin:0;padding: 0;\">$l_dash_of_which_saturated_fatty_acids</p>
-					   </td>
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-							<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_item_fat_per_hundred\" id=\"inp_item_fat_per_hundred\" size=\"5\" value=\"$get_item_fat_per_hundred\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
-							<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_fat_of_which_saturated_fatty_acids_per_hundred\" id=\"inp_item_fat_of_which_saturated_fatty_acids_per_hundred\" size=\"5\" value=\"$get_item_fat_of_which_saturated_fatty_acids_per_hundred\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
-					   </td>
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-						<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_item_fat_calculated\" id=\"inp_item_fat_calculated\" size=\"5\" value=\"$get_item_fat_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
-						<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_fat_of_which_saturated_fatty_acids_calculated\" id=\"inp_item_fat_of_which_saturated_fatty_acids_calculated\" size=\"5\" value=\"$get_item_fat_of_which_saturated_fatty_acids_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
-					   </td>
-					  </tr>
-					 <tr>
-		 			  <td style=\"padding: 8px 4px 6px 8px;\">
-						<p style=\"margin:0;padding: 0px 0px 4px 0px;\">$l_carbs</p>
-						<p style=\"margin:0;padding: 0;\">$l_dash_of_which_sugars</p>
-					   </td>
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-							<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_item_carbs_per_hundred\" id=\"inp_item_carbs_per_hundred\" size=\"5\" value=\"$get_item_carbs_per_hundred\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
-							<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_carbs_of_which_sugars_per_hundred\" id=\"inp_item_carbs_of_which_sugars_per_hundred\" size=\"5\" value=\"$get_item_carbs_of_which_sugars_per_hundred\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
-					   </td>
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-						<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_item_carbs_calculated\" id=\"inp_item_carbs_calculated\" size=\"5\" value=\"$get_item_carbs_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
-						<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_carbs_of_which_sugars_calculated\" id=\"inp_item_carbs_of_which_sugars_calculated\" size=\"5\" value=\"$get_item_carbs_of_which_sugars_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
-					   </td>
-					  </tr>
 
-					 <tr>
-		 			  <td style=\"padding: 8px 4px 6px 8px;\">
-						<p style=\"margin:0;padding: 0;\">$l_dietary_fiber</p>
+				 <tbody>
+				  <tr>
+				   <td style=\"padding: 8px 4px 6px 8px;\">
+					<span>$l_calories</span>
+				   </td>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span><input type=\"text\" name=\"inp_item_calories_metric\" id=\"inp_item_calories_metric\" size=\"5\" value=\"$get_item_energy_metric\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
+				   </td>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span><input type=\"text\" name=\"inp_item_calories_calculated\" id=\"inp_item_calories_calculated\" size=\"5\" value=\"$get_item_energy_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
+				   </td>
+				  </tr>
+
+				  <tr>
+				   <td style=\"padding: 8px 4px 6px 8px;\">
+					<p style=\"margin:0;padding: 0px 0px 4px 0px;\">$l_fat</p>
+					<p style=\"margin:0;padding: 0;\">$l_dash_saturated_fat</p>
+					<p style=\"margin:0;padding: 0;\">$l_dash_monounsaturated_fat</p>
+					<p style=\"margin:0;padding: 0;\">$l_dash_polyunsaturated_fat</p>
+				   </td>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_item_fat_metric\" id=\"inp_item_fat_metric\" size=\"5\" value=\"$get_item_fat_metric\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_saturated_fat_metric\" id=\"inp_item_saturated_fat_metric\" size=\"5\" value=\"$get_item_saturated_fat_metric\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_monounsaturated_fat_metric\" id=\"inp_item_monounsaturated_fat_metric\" size=\"5\" value=\"$get_item_monounsaturated_fat_metric\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_polyunsaturated_fat_metric\" id=\"inp_item_polyunsaturated_fat_metric\" size=\"5\" value=\"$get_item_polyunsaturated_fat_metric\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+				   </td>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_item_fat_calculated\" id=\"inp_item_fat_calculated\" size=\"5\" value=\"$get_item_fat_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_saturated_fat_calculated\" id=\"inp_item_saturated_fat_calculated\" size=\"5\" value=\"$get_item_saturated_fat_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_monounsaturated_fat_calculated\" id=\"inp_item_monounsaturated_fat_calculated\" size=\"5\" value=\"$get_item_monounsaturated_fat_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_polyunsaturated_fat_calculated\" id=\"inp_item_saturated_fat_calculated\" size=\"5\" value=\"$get_item_saturated_fat_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+				   </td>
+				  </tr>
+
+				  <tr>
+		 		   <td style=\"padding: 8px 4px 6px 8px;\">
+					<p style=\"margin:0;padding: 0px 0px 4px 0px;\">$l_carbs</p>
+					<p style=\"margin:0;padding: 0;\">$l_dash_of_which_sugars_calculated</p>
+				   </td>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_item_carbohydrates_metric\" id=\"inp_item_carbohydrates_metric\" size=\"5\" value=\"$get_item_carbohydrates_metric\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_carbohydrates_of_which_sugars_metric\" id=\"inp_item_carbohydrates_of_which_sugars_metric\" size=\"5\" value=\"$get_item_carbohydrates_of_which_sugars_metric\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+				   </td>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<p style=\"margin:0;padding: 0px 0px 4px 0px;\"><input type=\"text\" name=\"inp_item_carbohydrates_calculated\" id=\"inp_item_carbohydrates_calculated\" size=\"5\" value=\"$get_item_carbohydrates_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_carbohydrates_of_which_sugars_calculated\" id=\"inp_item_carbohydrates_of_which_sugars_calculated\" size=\"5\" value=\"$get_item_carbohydrates_of_which_sugars_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+				   </td>
+				  </tr>
+
+				 <tr>
+	 			  <td style=\"padding: 8px 4px 6px 8px;\">
+					<p style=\"margin:0;padding: 0;\">$l_dietary_fiber</p>
+				   </td>
+				 	  <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+						<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_dietary_fiber_metric\" id=\"inp_item_dietary_fiber_metric\" size=\"5\" value=\"$get_item_dietary_fiber_metric\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
 					   </td>
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-							<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_carbs_of_which_dietary_fiber_per_hundred\" id=\"inp_item_carbs_of_which_dietary_fiber_per_hundred\" size=\"5\" value=\"$get_item_carbs_of_which_dietary_fiber_hundred\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
-					   </td>
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-						<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_carbs_of_which_dietary_fiber_calculated\" id=\"inp_item_carbs_of_which_dietary_fiber_calculated\" size=\"5\" value=\"$get_item_carbs_of_which_dietary_fiber_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
-					   </td>
-					  </tr>
-					  <tr>
-					   <td style=\"padding: 8px 4px 6px 8px;\">
-						<span>$l_proteins</span>
-					   </td>
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-							<span><input type=\"text\" name=\"inp_item_proteins_per_hundred\" id=\"inp_item_proteins_per_hundred\" size=\"5\" value=\"$get_item_proteins_per_hundred\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
-					   </td>
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-						<span><input type=\"text\" name=\"inp_item_proteins_calculated\" id=\"inp_item_proteins_calculated\" size=\"5\" value=\"$get_item_proteins_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
-					   </td>
-					  </tr>
-					  <tr>
-					   <td style=\"padding: 8px 4px 6px 8px;\">
-						<span>$l_salt_in_gram</span>
-						  </td>
-						  <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-						<span><input type=\"text\" name=\"inp_item_salt_per_hundred\" id=\"inp_item_salt_per_hundred\" value=\"$get_item_salt_per_hundred\" size=\"5\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
-					   </td>
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-						<span><input type=\"text\" name=\"inp_item_salt_calculated\" id=\"inp_item_salt_calculated\" value=\"$get_item_salt_calculated\" size=\"5\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
-					  </td>
-					  </tr>
-					  <tr>
-					   <td style=\"padding: 8px 4px 6px 8px;\">
-						<span>$l_sodium_in_mg</span>
-					   </td>
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-						<span><input type=\"text\" name=\"inp_item_sodium_per_hundred\" id=\"inp_item_sodium_per_hundred\" value=\"$get_item_sodium_per_hundred\" size=\"5\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
-					   </td>
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-						<span><input type=\"text\" name=\"inp_item_sodium_calculated\" id=\"inp_item_sodium_calculated\" value=\"$get_item_sodium_calculated\" size=\"5\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
-					   </td>
-					  </tr>
-					 </tbody>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<p style=\"margin:0;padding: 0;\"><input type=\"text\" name=\"inp_item_dietary_fiber_calculated\" id=\"inp_item_dietary_fiber_calculated\" size=\"5\" value=\"$get_item_dietary_fiber_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
+				   </td>
+				  </tr>
+
+
+				  <tr>
+				   <td style=\"padding: 8px 4px 6px 8px;\">
+					<span>$l_proteins</span>
+				   </td>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span><input type=\"text\" name=\"inp_item_proteins_metric\" id=\"inp_item_proteins_metric\" size=\"5\" value=\"$get_item_proteins_metric\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
+				   </td>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span><input type=\"text\" name=\"inp_item_proteins_calculated\" id=\"inp_item_proteins_calculated\" size=\"5\" value=\"$get_item_proteins_calculated\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></span>
+				   </td>
+				 </tr>
+
+				  <tr>
+				   <td style=\"padding: 8px 4px 6px 8px;\">
+					<span>$l_salt_in_gram</span>
+				   </td>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span><input type=\"text\" name=\"inp_item_salt_metric\" id=\"inp_item_salt_metric\" value=\"$get_item_salt_metric\" size=\"5\" /></span>
+				   </td>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span><input type=\"text\" name=\"inp_item_salt_calculated\" id=\"inp_item_salt_calculated\" value=\"$get_item_salt_calculated\" size=\"5\" /></span>
+				   </td>
+				  </tr>
+
+				  <tr>
+				   <td style=\"padding: 8px 4px 6px 8px;\">
+					<span>$l_sodium_in_mg</span>
+				   </td>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span><input type=\"text\" name=\"inp_item_sodium_metric\" id=\"inp_item_sodium_metric\" value=\"$get_item_sodium_metric\" size=\"5\" /></span>
+				   </td>
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span><input type=\"text\" name=\"inp_item_sodium_calculated\" id=\"inp_item_sodium_calculated\" value=\"$get_item_sodium_calculated\" size=\"5\" /></span>
+				   </td>
+				  </tr>
+				 </tbody>
 					</table>
 
 					<p>

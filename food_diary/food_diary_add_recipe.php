@@ -2,9 +2,9 @@
 /**
 *
 * File: food_diary/food_diary_add_recipe.php
-* Version 1.0.0.
-* Date 12:42 21.01.2018
-* Copyright (c) 2008-2018 Sindre Andre Ditlefsen
+* Version 2
+* Date 20:30 16.03.2021
+* Copyright (c) 2021 Sindre Andre Ditlefsen
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -116,9 +116,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<p><b>$l_you_are_here</b><br />
 			<a href=\"index.php?l=$l\">$l_food_diary</a>
 			&gt;
-			<a href=\"food_diary_add.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_new_entry</a>
+			<a href=\"food_diary_add.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_new_entry</a>
 			&gt;
-			<a href=\"food_diary_add_recipe.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_recipes</a>
+			<a href=\"food_diary_add_recipe.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_recipes</a>
 			</p>
 		<!-- //You are here -->
 
@@ -126,10 +126,15 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		<!-- Recipe search -->
 				
 			<!-- Search engines Autocomplete -->
-				<script>
-				\$(document).ready(function(){
-					\$('[name=\"inp_entry_recipe_query\"]').focus();
-				});
+				<script>";
+				if(!(isset($_GET['focus']))){
+					echo"
+					\$(document).ready(function(){
+						\$('[name=\"inp_entry_food_query\"]').focus();
+					});
+					";
+				}
+				echo"
 				\$(document).ready(function () {
 					\$('[name=\"inp_entry_recipe_query\"]').keyup(function () {
 
@@ -137,7 +142,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
         					// getting the value that user typed
         					var searchString    = $(\"#inp_entry_recipe_query\").val();
         					// forming the queryString
-       						var data            = 'l=$l&date=$date&meal_id=$meal_id&q='+ searchString;
+       						var data            = 'l=$l&date=$date&hour_name=$hour_name&q='+ searchString;
          
         					// if searchString is not empty
         					if(searchString) {
@@ -166,7 +171,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					<input type=\"text\" name=\"inp_entry_recipe_query\" id=\"inp_entry_recipe_query\" value=\"";if(isset($_GET['inp_entry_recipe_query'])){ echo"$inp_entry_recipe_query"; } echo"\" size=\"5\" />
 					<input type=\"hidden\" name=\"action\" value=\"recipe_search\" />
 					<input type=\"hidden\" name=\"date\" value=\"$date\" />
-					<input type=\"hidden\" name=\"meal_id\" value=\"$meal_id\" />
+					<input type=\"hidden\" name=\"hour_name\" value=\"$hour_name\" />
 					<input type=\"submit\" value=\"$l_search\" class=\"btn_default\" />
 					<a href=\"$root/recipes/submit_recipe.php?l=$l\" class=\"btn_default\" title=\"$l_new_recipe\">$l_new_recipe</a>
 					</p>
@@ -177,9 +182,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		<!-- Menu -->
 			<div class=\"tabs\">
 				<ul>
-					<li><a href=\"food_diary_add.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_recent</a></li>
-					<li><a href=\"food_diary_add_food.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\">$l_food</a></li>
-					<li><a href=\"food_diary_add_recipe.php?date=$date&amp;meal_id=$meal_id&amp;l=$l\" class=\"selected\">$l_recipes</a></li>
+					<li><a href=\"food_diary_add.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_recent</a></li>
+					<li><a href=\"food_diary_add_food.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\">$l_food</a></li>
+					<li><a href=\"food_diary_add_recipe.php?date=$date&amp;hour_name=$hour_name&amp;l=$l\" class=\"selected\">$l_recipes</a></li>
 				</ul>
 			</div>
 			<div class=\"clear\" style=\"height: 20px;\"></div>
@@ -202,7 +207,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					list($get_category_translation_id, $get_category_translation_value) = $row_t;
 
 					echo"		";
-					echo"<li><a href=\"food_diary_add_recipe.php?action=open_recipe_category&amp;date=$date&amp;meal_id=$meal_id&amp;recipe_category_id=$get_category_id&amp;l=$l\""; if($recipe_category_id == "$get_category_id"){ echo" style=\"font-weight: bold;\"";}echo">$get_category_translation_value</a></li>\n";
+					echo"<li><a href=\"food_diary_add_recipe.php?action=open_recipe_category&amp;date=$date&amp;hour_name=$hour_name&amp;recipe_category_id=$get_category_id&amp;l=$l\""; if($recipe_category_id == "$get_category_id"){ echo" style=\"font-weight: bold;\"";}echo">$get_category_translation_value</a></li>\n";
 				}
 				echo"
 		
@@ -210,6 +215,31 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			</div>
 		<!-- //Recipes Categories -->
 
+
+		<!-- Adapter view -->";
+			
+			$query_t = "SELECT view_id, view_user_id, view_system, view_hundred_metric, view_serving, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_food_diary_user_adapted_view WHERE view_user_id=$get_my_user_id";
+			$result_t = mysqli_query($link, $query_t);
+			$row_t = mysqli_fetch_row($result_t);
+			list($get_current_view_id, $get_current_view_user_id, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
+			echo"
+			<p><a id=\"adapter_view\"></a>
+			<b>$l_show_per:</b>
+			<input type=\"checkbox\" name=\"inp_show_hundred_metric\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=hundred_metric&amp;process=1&amp;referer=food_diary_add_recipe&amp;date=$date&amp;hour_name=$hour_name&amp;l=$l\""; if($get_current_view_hundred_metric == "1"){ echo" checked=\"checked\""; } echo" /> $l_hundred
+			<input type=\"checkbox\" name=\"inp_show_serving\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=serving&amp;process=1&amp;referer=food_diary_add_recipe&amp;date=$date&amp;hour_name=$hour_name&amp;l=$l\""; if($get_current_view_serving == "1"){ echo" checked=\"checked\""; } echo" /> $l_serving
+			</p>
+
+			<!-- On check go to URL -->
+				<script>
+				\$(function() {
+					\$(\".onclick_go_to_url\").change(function(){
+						var item=\$(this);
+						window.location.href= item.data(\"target\")
+					});
+   				});
+				</script>
+			<!-- //On check go to URL -->
+		<!-- //Adapter view -->
 
 		<!-- All recipes list -->
 			<!-- Select list go to URL -->
@@ -250,13 +280,26 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					list($get_recipe_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156) = $row;
 		
 					// Select Nutrients
-					$query_n = "SELECT number_id, number_recipe_id, number_hundred_calories, number_hundred_proteins, number_hundred_fat, number_hundred_carbs, number_serving_calories, number_serving_proteins, number_serving_fat, number_serving_carbs, number_total_weight, number_total_calories, number_total_proteins, number_total_fat, number_total_carbs, number_servings FROM $t_recipes_numbers WHERE number_recipe_id=$get_recipe_id";
+					$query_n = "SELECT number_id, number_recipe_id, number_servings, number_energy_metric, number_fat_metric, number_saturated_fat_metric, number_monounsaturated_fat_metric, number_polyunsaturated_fat_metric, number_cholesterol_metric, number_carbohydrates_metric, number_carbohydrates_of_which_sugars_metric, number_dietary_fiber_metric, number_proteins_metric, number_salt_metric, number_sodium_metric, number_energy_serving, number_fat_serving, number_saturated_fat_serving, number_monounsaturated_fat_serving, number_polyunsaturated_fat_serving, number_cholesterol_serving, number_carbohydrates_serving, number_carbohydrates_of_which_sugars_serving, number_dietary_fiber_serving, number_proteins_serving, number_salt_serving, number_sodium_serving, number_energy_total, number_fat_total, number_saturated_fat_total, number_monounsaturated_fat_total, number_polyunsaturated_fat_total, number_cholesterol_total, number_carbohydrates_total, number_carbohydrates_of_which_sugars_total, number_dietary_fiber_total, number_proteins_total, number_salt_total, number_sodium_total FROM $t_recipes_numbers WHERE number_recipe_id=$get_recipe_id";
 					$result_n = mysqli_query($link, $query_n);
 					$row_n = mysqli_fetch_row($result_n);
-					list($get_number_id, $get_number_recipe_id, $get_number_hundred_calories, $get_number_hundred_proteins, $get_number_hundred_fat, $get_number_hundred_carbs, $get_number_serving_calories, $get_number_serving_proteins, $get_number_serving_fat, $get_number_serving_carbs, $get_number_total_weight, $get_number_total_calories, $get_number_total_proteins, $get_number_total_fat, $get_number_total_carbs, $get_number_servings) = $row_n;
+					list($get_number_id, $get_number_recipe_id, $get_number_servings, $get_number_energy_metric, $get_number_fat_metric, $get_number_saturated_fat_metric, $get_number_monounsaturated_fat_metric, $get_number_polyunsaturated_fat_metric, $get_number_cholesterol_metric, $get_number_carbohydrates_metric, $get_number_carbohydrates_of_which_sugars_metric, $get_number_dietary_fiber_metric, $get_number_proteins_metric, $get_number_salt_metric, $get_number_sodium_metric, $get_number_energy_serving, $get_number_fat_serving, $get_number_saturated_fat_serving, $get_number_monounsaturated_fat_serving, $get_number_polyunsaturated_fat_serving, $get_number_cholesterol_serving, $get_number_carbohydrates_serving, $get_number_carbohydrates_of_which_sugars_serving, $get_number_dietary_fiber_serving, $get_number_proteins_serving, $get_number_salt_serving, $get_number_sodium_serving, $get_number_energy_total, $get_number_fat_total, $get_number_saturated_fat_total, $get_number_monounsaturated_fat_total, $get_number_polyunsaturated_fat_total, $get_number_cholesterol_total, $get_number_carbohydrates_total, $get_number_carbohydrates_of_which_sugars_total, $get_number_dietary_fiber_total, $get_number_proteins_total, $get_number_salt_total, $get_number_sodium_total) = $row_n;
 
 
+					if($get_recipe_image != "" && file_exists("$root/$get_recipe_image_path/$get_recipe_image")){
 
+						// Thumb
+						if(!(file_exists("$root/$get_recipe_image_path/$get_recipe_thumb_278x156"))){
+							if($get_recipe_thumb_278x156 == ""){
+								echo"<div class=\"info\">Thumb 278x156 is blank</div>";
+								die;
+							}
+							$inp_new_x = 278;
+							$inp_new_y = 156;
+							resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_recipe_image_path/$get_recipe_image", "$root/$get_recipe_image_path/$get_recipe_thumb_278x156");
+						}
+
+						// Layout
 						if($x == 0){
 							echo"
 							<div class=\"clear\"></div>
@@ -279,75 +322,112 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							";
 						}
 
-					echo"
+						echo"
 						<p style=\"padding-bottom:5px;\">
-						<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\"><img src=\"";
-						if($get_recipe_image != "" && file_exists("../$get_recipe_image_path/$get_recipe_image")){
-							echo"$root/$get_recipe_image_path/$get_recipe_thumb_278x156";
-						}
-						else{
-							echo"_gfx/no_thumb.png";
-						}
-						echo"\" alt=\"$get_recipe_image\" style=\"margin-bottom: 5px;\" /></a><br />
+						<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\"><img src=\"$root/$get_recipe_image_path/$get_recipe_thumb_278x156\" alt=\"$get_recipe_image\" style=\"margin-bottom: 5px;\" /></a><br />
 						<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\" style=\"font-weight: bold;color: #444444;\">$get_recipe_title</a><br />
 						</p>
 
-						<table style=\"margin: 0px auto;\">
-						 <tr>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_smal\">$get_number_serving_calories</span>
-						  </td>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_smal\">$get_number_serving_fat</span>
-						  </td>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_smal\">$get_number_serving_carbs</span>
-						  </td>
-						  <td style=\"text-align: center;\">
-							<span class=\"grey_smal\">$get_number_serving_proteins</span>
-						  </td>
-						 </tr>
-						 <tr>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_smal\">$l_cal_lowercase</span>
-						  </td>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_smal\">$l_fat_lowercase</span>
-						  </td>
-						  <td style=\"padding-right: 10px;text-align: center;\">
-							<span class=\"grey_smal\">$l_carb_lowercase</span>
-						  </td>
-						  <td style=\"text-align: center;\">
-							<span class=\"grey_smal\">$l_proteins_lowercase</span>
-						  </td>
-						 </tr>
-						</table>
-						<!-- Add Recipe -->
+
+						<!-- Recipe numbers -->
+							";
+							if($get_current_view_hundred_metric == "1" OR $get_current_view_serving == "1"){
+				
+								echo"
+								<table style=\"margin: 0px auto;\">
+								";
+								if($get_current_view_hundred_metric == "1"){
+									echo"
+									 <tr>
+									  <td style=\"padding-right: 6px;text-align: center;\">
+										<span class=\"nutritional_number\">$l_hundred</span>
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;\">
+										<span class=\"nutritional_number\">$get_number_energy_metric</span>
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;\">
+										<span class=\"nutritional_number\">$get_number_fat_metric</span>
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;\">
+										<span class=\"nutritional_number\">$get_number_carbohydrates_metric</span>
+									  </td>
+									  <td style=\"text-align: center;\">
+										<span class=\"nutritional_number\">$get_number_proteins_metric</span>
+									  </td>
+									 </tr>
+									";
+								}
+								if($get_current_view_serving == "1"){
+									echo"
+									 <tr>
+									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\">$l_serving</span>
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\">$get_number_energy_serving</span>
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\">$get_number_fat_serving</span>
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\">$get_number_carbohydrates_serving</span>
+									  </td>
+									  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\">$get_number_proteins_serving</span>
+									  </td>
+									 </tr>
+									";
+								}
+								echo"
+									 <tr>
+									  <td style=\"padding-right: 6px;text-align: center;\">
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;\">
+										<span class=\"nutritional_number\">$l_calories_abbr_short_lowercase</span>
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;\">
+										<span class=\"nutritional_number\">$l_fat_abbr_short_lowercase</span>
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;\">
+										<span class=\"nutritional_number\">$l_carbohydrates_abbr_short_lowercase</span>
+									  </td>
+									  <td style=\"text-align: center;\">
+										<span class=\"nutritional_number\">$l_proteins_abbr_short_lowercase</span>
+									  </td>
+									 </tr>
+									</table>
+								";
+							} // show numbers
+							echo"
+							<!-- //Recipe numbers -->
+							<!-- Add Recipe -->
 							<form>
 							<p>
 							<select classs=\"inp_amount_select\">
-								<option value=\"1\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=1&amp;l=$l&amp;process=1\">1</option>
-								<option value=\"2\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=2&amp;l=$l&amp;process=1\">2</option>
-								<option value=\"3\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=3&amp;l=$l&amp;process=1\">3</option>
-								<option value=\"4\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=4&amp;l=$l&amp;process=1\">4</option>
-								<option value=\"5\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=5&amp;l=$l&amp;process=1\">5</option>
-								<option value=\"6\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=6&amp;l=$l&amp;process=1\">6</option>
-								<option value=\"7\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=7&amp;l=$l&amp;process=1\">7</option>
-								<option value=\"8\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=8&amp;l=$l&amp;process=1\">8</option>
+								<option value=\"1\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;hour_name=$hour_name&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=1&amp;l=$l&amp;process=1\">1</option>
+								<option value=\"2\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;hour_name=$hour_name&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=2&amp;l=$l&amp;process=1\">2</option>
+								<option value=\"3\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;hour_name=$hour_name&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=3&amp;l=$l&amp;process=1\">3</option>
+								<option value=\"4\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;hour_name=$hour_name&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=4&amp;l=$l&amp;process=1\">4</option>
+								<option value=\"5\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;hour_name=$hour_name&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=5&amp;l=$l&amp;process=1\">5</option>
+								<option value=\"6\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;hour_name=$hour_name&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=6&amp;l=$l&amp;process=1\">6</option>
+								<option value=\"7\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;hour_name=$hour_name&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=7&amp;l=$l&amp;process=1\">7</option>
+								<option value=\"8\" href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;hour_name=$hour_name&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=8&amp;l=$l&amp;process=1\">8</option>
 							</select>
-							<a href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=1&amp;l=$l&amp;process=1\" class=\"btn btn_default\">$l_add</a>
+							<a href=\"food_diary_add_recipe.php?action=add_recipe_to_diary&amp;date=$date&amp;hour_name=$hour_name&amp;recipe_id=$get_recipe_id&amp;entry_serving_size=1&amp;l=$l&amp;process=1\" class=\"btn btn_default\">$l_add</a>
 							</p>
 							</form>
-						<!-- //Add Recipe -->
-					</div>
-					";
-					// Increment
-					$x++;
-		
-					// Reset
-					if($x == 4){
-						$x = 0;
-					}
+							<!-- //Add Recipe -->
+
+						</div>
+						";
+						// Increment
+						$x++;
+			
+						// Reset
+						if($x == 4){
+							$x = 0;
+						}
+					} // has image
 				} // while
 				echo"
 			</div> <!-- //nettport_search_results -->

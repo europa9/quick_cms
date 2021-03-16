@@ -37,7 +37,7 @@ $l_mysql = quote_smart($link, $l);
 if(isset($_GET['set'])) {
 	$set = $_GET['set'];
 	$set = strip_tags(stripslashes($set));
-	if($set != "system" && $set != "hundred_metric" && $set != "pcs_metric" && $set != "eight_us" && $set != "pcs_us"){
+	if($set != "system" && $set != "hundred_metric" && $set != "serving" && $set != "pcs_metric" && $set != "eight_us" && $set != "pcs_us"){
 		echo"Unknown set";
 		die;
 	}
@@ -49,7 +49,7 @@ else{
 if(isset($_GET['referer'])) {
 	$referer = $_GET['referer'];
 	$referer = strip_tags(stripslashes($referer));
-	if($referer != "food_diary_add_food" && $referer != "food_diary_add"){
+	if($referer != "food_diary_add_food" && $referer != "food_diary_add" && $referer != "food_diary_add_recipe"){
 		echo"Unknown referer";
 		die;
 	}
@@ -125,10 +125,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	$my_user_id = output_html($my_user_id);
 	$my_user_id_mysql = quote_smart($link, $my_user_id);
 	
-	$query_t = "SELECT view_id, view_user_id, view_system, view_hundred_metric, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_food_diary_user_adapted_view WHERE view_user_id=$my_user_id_mysql";
+	$query_t = "SELECT view_id, view_user_id, view_system, view_hundred_metric, view_serving, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_food_diary_user_adapted_view WHERE view_user_id=$my_user_id_mysql";
 	$result_t = mysqli_query($link, $query_t);
 	$row_t = mysqli_fetch_row($result_t);
-	list($get_current_view_id, $get_current_view_user_id, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
+	list($get_current_view_id, $get_current_view_user_id, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
 
 	if($get_current_view_id == ""){
 		// Create default
@@ -141,10 +141,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				or die(mysqli_error($link));
 
 
-		$query_t = "SELECT view_id, view_user_id, view_system, view_hundred_metric, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_food_diary_user_adapted_view WHERE view_user_id=$my_user_id_mysql";
+		$query_t = "SELECT view_id, view_user_id, view_system, view_hundred_metric, view_serving, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_food_diary_user_adapted_view WHERE view_user_id=$my_user_id_mysql";
 		$result_t = mysqli_query($link, $query_t);
 		$row_t = mysqli_fetch_row($result_t);
-		list($get_current_view_id, $get_current_view_user_id, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
+		list($get_current_view_id, $get_current_view_user_id, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
 	}
 
 
@@ -172,6 +172,16 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		else{
 			mysqli_query($link, "UPDATE $t_food_diary_user_adapted_view SET view_hundred_metric=1 WHERE view_id=$get_current_view_id") or die(mysqli_error($link));
 			$fm = "deactivated_hundred_metric";
+		}
+	}
+	elseif($set == "serving"){
+		if($get_current_view_serving == "1"){
+			mysqli_query($link, "UPDATE $t_food_diary_user_adapted_view SET view_serving=0 WHERE view_id=$get_current_view_id") or die(mysqli_error($link));
+			$fm = "deactivated_serving";
+		}
+		else{
+			mysqli_query($link, "UPDATE $t_food_diary_user_adapted_view SET view_serving=1 WHERE view_id=$get_current_view_id") or die(mysqli_error($link));
+			$fm = "activated_serving";
 		}
 	}
 	elseif($set == "pcs_metric"){
@@ -244,8 +254,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		header("Location: $url");
 		exit;
 	}
+	elseif($referer == "food_diary_add_recipe"){
+		$url = "$referer.php?date=$date&hour_name=$hour_name&l=$l&ft=info&fm=$fm&focus=null#adapter_view";
+		header("Location: $url");
+		exit;
+	}
 	else{
-		echo"?";
+		echo"Unknown refererer...";
 		die;
 	}
 

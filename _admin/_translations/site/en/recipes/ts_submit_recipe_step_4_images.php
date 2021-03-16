@@ -14,4 +14,5 @@ $l_continue = "Continue";
 $l_rotate = "Rotate";
 $l_image_rotated = "Image rotated";
 $l_image_not_found = "Image not found";
+$l_or_lowercase = "or";
 ?>

@@ -216,29 +216,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			// recipes_numbers
 			mysqli_query($link, "INSERT INTO $t_recipes_numbers
-			(number_id, number_recipe_id, number_hundred_calories, 
-			number_hundred_proteins, number_hundred_fat, number_hundred_fat_of_which_saturated_fatty_acids, 
-			number_hundred_carbs, number_hundred_carbs_of_which_dietary_fiber, number_hundred_carbs_of_which_sugars, 
-			number_hundred_salt, number_hundred_sodium, number_serving_calories, 
-			number_serving_proteins, number_serving_fat, number_serving_fat_of_which_saturated_fatty_acids, 
-			number_serving_carbs, number_serving_carbs_of_which_dietary_fiber, number_serving_carbs_of_which_sugars, 
-			number_serving_salt, number_serving_sodium, number_total_weight, 
-			number_total_calories, number_total_proteins, number_total_fat, 
-			number_total_fat_of_which_saturated_fatty_acids, number_total_carbs, number_total_carbs_of_which_dietary_fiber, 
-			number_total_carbs_of_which_sugars, number_total_salt, number_total_sodium, 
-			number_servings) 
+			(number_id, number_recipe_id, number_servings) 
 			VALUES 
-			(NULL, '$get_recipe_id', '0', 
-			'0', '0', '0',
-			'0', '0', '0',
-			'0', '0', '0',
-			'0', '0', '0',
-			'0', '0', '0',
-			'0', '0', '0',
-			'0', '0', '0',
-			'0', '0', '0',
-			'0', '0', '0',
-			$inp_number_servings_mysql)")
+			(NULL, '$get_recipe_id', $inp_number_servings_mysql)")
 			or die(mysqli_error($link));
 
 			// recipes_rating
