@@ -486,7 +486,7 @@ echo"
 				// Thumb
 				if($get_recipe_thumb_278x156 == "" OR !(file_exists("$root/$get_recipe_image_path/$get_recipe_thumb_278x156"))){
 					if(!(file_exists("$root/$get_recipe_image_path/$get_recipe_image\">$root/$get_recipe_image_path/$get_recipe_image"))){
-						echo"<div class=\"error\"><p>Recipe image doesnt exists.</p></div>
+						echo"<div class=\"error\"><p>Recipe image doesnt exists. Please wait! The script will go trough all recipes to check if there are more missing images!</p></div>
 						<meta http-equiv=\"refresh\" content=\"1;url=index.php?l=$l\">\n";
 
 						mysqli_query($link, "UPDATE $t_recipes SET recipe_image='' WHERE recipe_id=$get_recipe_id") or die(mysqli_error($link));
