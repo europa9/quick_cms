@@ -14,7 +14,7 @@ if(!(isset($define_access_to_control_panel))){
 	die;
 }
 
-mysqli_query($link, "DROP TABLE $t_recipes_numbers") or die(mysqli_error());
+mysqli_query($link, "DROP TABLE IF EXISTS $t_recipes_numbers") or die(mysqli_error());
 
 
 echo"
