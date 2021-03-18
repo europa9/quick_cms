@@ -397,10 +397,10 @@ header{
 		background: url("../../_uploads/pages/navigation/no/oppskrifter_18x18_inactive.png") no-repeat 10px center;
 	}
 	a.nav_aacd8b1788fd3ab955695f1d9179049f:hover{
-		background: url("../../_uploads/pages/navigation/no/oppskrifter_18x18_active.png") no-repeat 10px center;
+		background: #213147 url("../../_uploads/pages/navigation/no/oppskrifter_18x18_active.png") no-repeat 10px center;
 	}
 	a.nav_aacd8b1788fd3ab955695f1d9179049f:active{
-		background: url("../../_uploads/pages/navigation/no/oppskrifter_18x18_active.png") no-repeat 10px center;
+		background: #213147 url("../../_uploads/pages/navigation/no/oppskrifter_18x18_active.png") no-repeat 10px center;
 	}
 
 	/* Food */

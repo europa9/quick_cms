@@ -609,22 +609,22 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				<p>
 				$l_the_page_is_smart_so_it_will_remember_what_you_usually_have_for_your ";
-				if($meal_id == "0"){
+				if($hour_name == "breakfast"){
 					echo"$l_breakfast_lowercase";
 				}
-				elseif($meal_id == "1"){
+				elseif($hour_name == "lunch"){
 					echo"$l_lunch_lowercase";
 				}
-				elseif($meal_id == "2"){
+				elseif($hour_name == "before_training"){
 					echo"$l_before_training_lowercase";
 				}
-				elseif($meal_id == "3"){
+				elseif($hour_name == "after_training"){
 					echo"$l_after_training_lowercase";
 				}
-				elseif($meal_id == "4"){
+				elseif($hour_name == "dinner"){
 					echo"$l_dinner_lowercase";
 				}
-				elseif($meal_id == "5"){
+				elseif($hour_name == "snacks"){
 					echo"$l_snacks_lowercase";
 				}
 				else{

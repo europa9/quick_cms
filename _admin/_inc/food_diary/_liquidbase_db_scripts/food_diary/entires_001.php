@@ -40,6 +40,7 @@ echo"
 	 	  PRIMARY KEY(entry_id), 
 	  	   entry_user_id INT,
 	  	   entry_date DATE,
+	  	   entry_date_saying VARCHAR(50),
 	  	   entry_hour_name VARCHAR(20),
 	  	   entry_food_id INT,
 	  	   entry_recipe_id INT,
