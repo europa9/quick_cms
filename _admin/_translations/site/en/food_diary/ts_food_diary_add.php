@@ -39,4 +39,5 @@ $l_calories_abbr_lowercase = "cal";
 $l_fat_abbr_lowercase = "fat";
 $l_carbohydrates_abbr_lowercase = "car";
 $l_proteins_abbr_lowercase = "pro";
+$l_serving = "Serving";
 ?>

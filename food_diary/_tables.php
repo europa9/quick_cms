@@ -16,8 +16,7 @@ $t_food_diary_goals 	  		= $mysqlPrefixSav . "food_diary_goals";
 $t_food_diary_entires	  		= $mysqlPrefixSav . "food_diary_entires";
 $t_food_diary_consumed_days  		= $mysqlPrefixSav . "food_diary_consumed_days";
 $t_food_diary_consumed_hours  		= $mysqlPrefixSav . "food_diary_consumed_hours";
-$t_food_diary_last_used_food  		= $mysqlPrefixSav . "food_diary_last_used_food";
-$t_food_diary_last_used_recipes 	= $mysqlPrefixSav . "food_diary_last_used_recipes";
+$t_food_diary_last_used  		= $mysqlPrefixSav . "food_diary_last_used";
 $t_food_diary_user_adapted_view		= $mysqlPrefixSav . "food_diary_user_adapted_view";
 
 

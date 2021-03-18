@@ -29,6 +29,7 @@ $l_proteins_lowercase = "proteiner";
 $l_recent = "Nylig";
 $l_recipes = "Oppskrifter";
 $l_saturdays_lowercase = "l&oslash;rdager";
+$l_serving = "Servering";
 $l_show_per = "Vis per";
 $l_snacks_lowercase = "snacks";
 $l_sundays_lowercase = "s&oslash;ndager";

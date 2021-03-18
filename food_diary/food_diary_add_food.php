@@ -1970,52 +1970,45 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 
-			$query = "SELECT last_used_id, last_used_times FROM $t_food_diary_last_used_food WHERE last_used_user_id=$my_user_id_mysql AND last_used_hour_name=$inp_entry_hour_name_mysql AND last_used_food_id=$inp_entry_food_id_mysql";
+			$query = "SELECT last_used_id, last_used_times FROM $t_food_diary_last_used WHERE last_used_user_id=$my_user_id_mysql AND last_used_hour_name=$inp_entry_hour_name_mysql AND last_used_food_id=$inp_entry_food_id_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
 			list($get_last_used_id, $get_last_used_times) = $row;
 			if($get_last_used_id == ""){
 				// First time used this food
-				mysqli_query($link, "INSERT INTO $t_food_diary_last_used_food
-				(last_used_id, last_used_user_id, last_used_hour_name, last_used_food_id, last_used_times, 
-				last_used_datetime, last_used_name, last_used_manufacturer, last_used_image_path, last_used_image_thumb_132x132, 
-				last_used_food_main_category_id, last_used_food_sub_category_id, last_used_metric_or_us, last_used_selected_serving_size, last_used_selected_measurement, 
-
-last_used_serving_size_metric, last_used_serving_size_measurement_metric, last_used_serving_size_us, last_used_serving_size_measurement_us, last_used_serving_size_pcs, 
-last_used_serving_size_pcs_measurement, 
-
-
-				last_used_energy_metric, 
-				last_used_fat_metric, last_used_saturated_fat_metric, last_used_monounsaturated_fat_metric, last_used_polyunsaturated_fat_metric, last_used_cholesterol_metric, 
-				last_used_carbohydrates_metric, last_used_carbohydrates_of_which_sugars_metric, last_used_dietary_fiber_metric, last_used_proteins_metric, last_used_salt_metric, 
-				last_used_sodium_metric, last_used_energy_us, last_used_fat_us, last_used_saturated_fat_us, last_used_monounsaturated_fat_us, 
-				last_used_polyunsaturated_fat_us, last_used_cholesterol_us, last_used_carbohydrates_us, last_used_carbohydrates_of_which_sugars_us, last_used_dietary_fiber_us, 
-				last_used_proteins_us, last_used_salt_us, last_used_sodium_us, last_used_energy_serving, last_used_fat_serving, 
-				last_used_saturated_fat_serving, last_used_monounsaturated_fat_serving, last_used_polyunsaturated_fat_serving, last_used_cholesterol_serving, last_used_carbohydrates_serving, 
-				last_used_carbohydrates_of_which_sugars_serving, last_used_dietary_fiber_serving, last_used_proteins_serving, last_used_salt_serving, last_used_sodium_serving) 
+				mysqli_query($link, "INSERT INTO $t_food_diary_last_used
+				(last_used_id, last_used_user_id, last_used_hour_name, last_used_food_id, last_used_recipe_id, 
+				last_used_meal_id, last_used_times, last_used_datetime, last_used_name, last_used_manufacturer, 
+				last_used_image_path, last_used_image_thumb_132x132, last_used_main_category_id, last_used_sub_category_id, last_used_metric_or_us, 
+				last_used_selected_serving_size, last_used_selected_measurement, last_used_serving_size_metric, last_used_serving_size_measurement_metric, last_used_serving_size_us, 
+				last_used_serving_size_measurement_us, last_used_serving_size_pcs, last_used_serving_size_pcs_measurement, last_used_energy_metric, last_used_fat_metric, 
+				last_used_saturated_fat_metric, last_used_monounsaturated_fat_metric, last_used_polyunsaturated_fat_metric, last_used_cholesterol_metric, last_used_carbohydrates_metric, 
+				last_used_carbohydrates_of_which_sugars_metric, last_used_dietary_fiber_metric, last_used_proteins_metric, last_used_salt_metric, last_used_sodium_metric, 
+				last_used_energy_us, last_used_fat_us, last_used_saturated_fat_us, last_used_monounsaturated_fat_us, last_used_polyunsaturated_fat_us, 
+				last_used_cholesterol_us, last_used_carbohydrates_us, last_used_carbohydrates_of_which_sugars_us, last_used_dietary_fiber_us, last_used_proteins_us, 
+				last_used_salt_us, last_used_sodium_us, last_used_energy_serving, last_used_fat_serving, last_used_saturated_fat_serving, 
+				last_used_monounsaturated_fat_serving, last_used_polyunsaturated_fat_serving, last_used_cholesterol_serving, last_used_carbohydrates_serving, last_used_carbohydrates_of_which_sugars_serving, 
+				last_used_dietary_fiber_serving, last_used_proteins_serving, last_used_salt_serving, last_used_sodium_serving) 
 				VALUES 
-				(NULL, '$get_my_user_id', $inp_entry_hour_name_mysql, $inp_entry_food_id_mysql, 1, 
-				'$datetime', $inp_last_used_name_mysql, $inp_last_used_manufacturer, $inp_last_used_image_path, $inp_last_used_image_thumb_132x132,
-				$get_food_main_category_id, $get_food_sub_category_id, 	$inp_last_used_metric_or_us_mysql, $inp_last_used_selected_serving_size_mysql, $inp_last_used_selected_measurement_mysql, 
-
-$inp_last_used_serving_size_metric_mysql, $inp_last_used_serving_size_measurement_metric_mysql, $inp_last_used_serving_size_us_mysql, $inp_last_used_serving_size_measurement_us_mysql, $inp_last_used_serving_size_pcs_mysql, 
-$inp_last_used_serving_size_pcs_measurement_mysql, 
-$inp_last_used_energy_metric_mysql,
-$inp_last_used_fat_metric_mysql, $inp_last_used_saturated_fat_metric_mysql, $inp_last_used_monounsaturated_fat_metric_mysql, $inp_last_used_polyunsaturated_fat_metric_mysql, $inp_last_used_cholesterol_metric_mysql,
-			$inp_last_used_carbohydrates_metric_mysql, $inp_last_used_carbohydrates_of_which_sugars_metric_mysql, $inp_last_used_dietary_fiber_metric_mysql, $inp_last_used_proteins_metric_mysql, $inp_last_used_salt_metric_mysql, $inp_last_used_sodium_metric_mysql,
-
-			$inp_last_used_energy_us_mysql,	$inp_last_used_fat_us_mysql, $inp_last_used_saturated_fat_us_mysql, $inp_last_used_monounsaturated_fat_us_mysql, $inp_last_used_polyunsaturated_fat_us_mysql,
-			$inp_last_used_cholesterol_us_mysql, $inp_last_used_carbohydrates_us_mysql, $inp_last_used_carbohydrates_of_which_sugars_us_mysql, $inp_last_used_dietary_fiber_us_mysql, $inp_last_used_proteins_us_mysql, 
-			$inp_last_used_salt_us_mysql, $inp_last_used_sodium_us_mysql, $inp_entry_food_energy_per_entry_mysql, $inp_entry_food_fat_per_entry_mysql, $inp_entry_food_saturated_fat_per_entry_mysql, 
-$inp_entry_food_monounsaturated_fat_per_entry_mysql, $inp_entry_food_polyunsaturated_fat_per_entry_mysql, $inp_entry_food_cholesterol_per_entry_mysql, $inp_entry_food_carb_per_entry_mysql, $inp_entry_food_carbohydrates_of_which_sugars_per_entry_mysql, 
-$inp_entry_food_dietary_fiber_per_entry_mysql, $inp_entry_food_protein_per_entry_mysql, $inp_entry_food_salt_per_entry_mysql, $inp_entry_food_sodium_per_entry_mysql)")
+				(NULL, '$get_my_user_id', $inp_entry_hour_name_mysql, $inp_entry_food_id_mysql, 0, 
+				0, 1, '$datetime', $inp_last_used_name_mysql, $inp_last_used_manufacturer, $inp_last_used_image_path, 
+				$inp_last_used_image_thumb_132x132, $get_food_main_category_id, $get_food_sub_category_id, $inp_last_used_metric_or_us_mysql, $inp_last_used_selected_serving_size_mysql, 
+				$inp_last_used_selected_measurement_mysql, $inp_last_used_serving_size_metric_mysql, $inp_last_used_serving_size_measurement_metric_mysql, $inp_last_used_serving_size_us_mysql, $inp_last_used_serving_size_measurement_us_mysql,
+				$inp_last_used_serving_size_pcs_mysql, $inp_last_used_serving_size_pcs_measurement_mysql, $inp_last_used_energy_metric_mysql, $inp_last_used_fat_metric_mysql, $inp_last_used_saturated_fat_metric_mysql, 
+				$inp_last_used_monounsaturated_fat_metric_mysql, $inp_last_used_polyunsaturated_fat_metric_mysql, $inp_last_used_cholesterol_metric_mysql, $inp_last_used_carbohydrates_metric_mysql, $inp_last_used_carbohydrates_of_which_sugars_metric_mysql, 
+				$inp_last_used_dietary_fiber_metric_mysql, $inp_last_used_proteins_metric_mysql, $inp_last_used_salt_metric_mysql, $inp_last_used_sodium_metric_mysql, $inp_last_used_energy_us_mysql,	
+				$inp_last_used_fat_us_mysql, $inp_last_used_saturated_fat_us_mysql, $inp_last_used_monounsaturated_fat_us_mysql, $inp_last_used_polyunsaturated_fat_us_mysql, $inp_last_used_cholesterol_us_mysql, 
+				$inp_last_used_carbohydrates_us_mysql, $inp_last_used_carbohydrates_of_which_sugars_us_mysql, $inp_last_used_dietary_fiber_us_mysql, $inp_last_used_proteins_us_mysql, $inp_last_used_salt_us_mysql, 
+				$inp_last_used_sodium_us_mysql, $inp_entry_food_energy_per_entry_mysql, $inp_entry_food_fat_per_entry_mysql, $inp_entry_food_saturated_fat_per_entry_mysql, $inp_entry_food_monounsaturated_fat_per_entry_mysql, 
+				$inp_entry_food_polyunsaturated_fat_per_entry_mysql, $inp_entry_food_cholesterol_per_entry_mysql, $inp_entry_food_carb_per_entry_mysql, $inp_entry_food_carbohydrates_of_which_sugars_per_entry_mysql, $inp_entry_food_dietary_fiber_per_entry_mysql, 
+				$inp_entry_food_protein_per_entry_mysql, $inp_entry_food_salt_per_entry_mysql, $inp_entry_food_sodium_per_entry_mysql)")
 				or die(mysqli_error($link));
 			}
 			else{
 				// Update counter and date
 				$inp_last_used_times = $get_last_used_times + 1;
 
-				$result = mysqli_query($link, "UPDATE $t_food_diary_last_used_food SET 
+				$result = mysqli_query($link, "UPDATE $t_food_diary_last_used SET 
 								last_used_times='$inp_last_used_times', 
 								last_used_datetime='$datetime', 
 								last_used_selected_serving_size=$inp_entry_food_serving_size_mysql
