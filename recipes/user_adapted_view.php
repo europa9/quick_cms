@@ -49,7 +49,7 @@ else{
 if(isset($_GET['referer'])) {
 	$referer = $_GET['referer'];
 	$referer = strip_tags(stripslashes($referer));
-	if($referer != "index" && $referer != "categories_browse" && $referer != "edit_recipe_ingredients" && $referer != "browse_recipes_newest" && $referer != "browse_recipes_rating" && $referer != "browse_recipes_views" && $referer != "browse_recipes_comments" && $referer != "submit_recipe_step_2_group_and_elements"){
+	if($referer != "index" && $referer != "categories_browse" && $referer != "edit_recipe_ingredients" && $referer != "browse_recipes_newest" && $referer != "browse_recipes_rating" && $referer != "browse_recipes_views" && $referer != "browse_recipes_comments" && $referer != "submit_recipe_step_2_group_and_elements" && $referer != "view_tag"){
 		echo"Unknown referer";
 		die;
 	}
@@ -229,6 +229,19 @@ elseif($referer == "submit_recipe_step_2_group_and_elements"){
 	$url = "$referer.php?action=$action&recipe_id=$recipe_id&group_id=$group_id&l=$l&ft=info&fm=$fm";
 	header("Location: $url");
 	exit;
+}
+elseif($referer == "view_tag"){
+	if(isset($_GET['tag'])){
+		$tag = $_GET['tag'];
+		$tag = output_html($tag);
+		$url = "$referer.php?action=$action&tag=$tag&l=$l&ft=info&fm=$fm";
+		header("Location: $url");
+		exit;
+	}
+	else{
+		echo"No tag";
+		die;
+	}
 }
 else{
 	$url = "$referer.php?l=$l&ft=info&fm=$fm";
