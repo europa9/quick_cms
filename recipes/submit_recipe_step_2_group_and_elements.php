@@ -1551,7 +1551,7 @@ else{
        							// getting the value that user typed
        							var searchString    = $(\"#inp_item_grocery\").val();
  							// forming the queryString
-      							var data            = 'l=$l&recipe_id=$recipe_id&q='+ searchString;
+      							var data            = 'l=$l&recipe_id=$recipe_id&view_id=$get_current_view_id&q='+ searchString;
          
         						// if searchString is not empty
         						if(searchString) {
@@ -3196,7 +3196,7 @@ else{
        							// getting the value that user typed
        							var searchString    = $(\"#inp_item_grocery\").val();
  							// forming the queryString
-      							var data            = 'l=$l&recipe_id=$recipe_id&q='+ searchString;
+      							var data            = 'l=$l&recipe_id=$recipe_id&view_id=$get_current_view_id&q='+ searchString;
          
         						// if searchString is not empty
         						if(searchString) {

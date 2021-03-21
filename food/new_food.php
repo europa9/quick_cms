@@ -86,7 +86,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			exit;
 		}
 		else{
-			$url = "new_food.php?food_id=$get_food_id&l=$l&ft=error&fm=we_already_have_that_food";
+			$url = "new_food.php?food_id=$get_food_id&l=$l&ft=error&fm=we_already_have_that_food&food_id=$get_food_id";
 			header("Location: $url");
 			exit;
 		}		
@@ -113,8 +113,23 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$fm = "$l_changes_saved";
 				}
 				else{
-					$fm = str_replace("_", " ", $fm);
-					$fm = ucfirst($fm);
+					if($fm == "we_already_have_that_food"){
+						// Find the food
+						$food_id = $_GET['food_id'];
+						$food_id = output_html($food_id);
+						$food_id_mysql = quote_smart($link, $food_id);
+						$query_t = "SELECT food_id, food_name, food_manufacturer_name, food_main_category_id, food_sub_category_id FROM $t_food_index WHERE food_id=$food_id_mysql";
+						$result_t = mysqli_query($link, $query_t);
+						$row_t = mysqli_fetch_row($result_t);
+						list($get_food_id, $get_food_name, $get_food_manufacturer_name, $get_food_main_category_id, $get_food_sub_category_id) = $row_t;
+						if($get_food_id != ""){
+							$fm = "$l_we_already_have_that_food. $l_view_it: <a href=\"view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\">$get_food_manufacturer_name $get_food_name</a>.";
+						}
+					}
+					else{
+						$fm = str_replace("_", " ", $fm);
+						$fm = ucfirst($fm);
+					}
 				}
 				echo"<div class=\"$ft\"><span>$fm</span></div>";
 			}

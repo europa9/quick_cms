@@ -62,6 +62,8 @@ $l_upload_inspiration_image = "Last opp inspirasjonsbilde";
 $l_upload_other_image = "Last opp annet bilde";
 $l_upload_product_image = "Last opp produktbilde";
 $l_view_food = "Vis mat";
+$l_view_it = "Vis den";
+$l_we_already_have_that_food = "Vi har allrede matvaren";
 $l_what_is_the_serving_for_container_for = "Hva er serveringen for stk til";
 $l_yes = "Ja";
 ?>

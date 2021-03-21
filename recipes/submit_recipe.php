@@ -249,6 +249,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			list($get_photo_id, $get_photo_user_id, $get_photo_destination, $get_photo_thumb_50, $get_photo_thumb_60, $get_photo_thumb_200) = $rowb;
 	
 
+			// Make sure I have a view
+			$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_recipes_user_adapted_view WHERE view_user_id=$inp_recipe_user_id_mysql";
+			$result_t = mysqli_query($link, $query_t);
+			$row_t = mysqli_fetch_row($result_t);
+			list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
+			if($get_current_view_id == ""){
+				$year = date("Y");
+				mysqli_query($link, "INSERT INTO $t_recipes_user_adapted_view 
+				(view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_eight_us) 
+				VALUES 
+				(NULL, $inp_recipe_user_id_mysql, 0, $year, 'metric', 1, 1, 0)")
+				or die(mysqli_error($link));
+			}
 
 
 			echo"

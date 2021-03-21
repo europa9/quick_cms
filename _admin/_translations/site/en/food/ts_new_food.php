@@ -76,4 +76,6 @@ $l_yes = "Yes";
 $l_no = "No";
 $l_example_alcohol = "Example alcohol";
 $l_continue_without_barcode = "Continue without barcode";
+$l_we_already_have_that_food = "We already have that food";
+$l_view_it = "View it";
 ?>

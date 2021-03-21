@@ -37,7 +37,7 @@ else{
 
 if($action == ""){
 	echo"
-	<h1>Tasks projects</h1>
+	<h1>Tasks statuses</h1>
 
 	<!-- Where am I? -->
 		<p><b>You are here:</b><br />
@@ -83,6 +83,9 @@ if($action == ""){
 			<span><b>Show on board</b></span>
 		   </td>
 		   <th scope=\"col\">
+			<span><b>Task is assigned</b></span>
+		   </td>
+		   <th scope=\"col\">
 			<span><b>Actions</b></span>
 		   </td>
 		  </tr>
@@ -90,10 +93,10 @@ if($action == ""){
 		 <tbody>
 			";
 			$y=1;
-			$query = "SELECT status_code_id, status_code_title, status_code_text_color, status_code_weight, status_code_show_on_board FROM $t_tasks_status_codes ORDER BY status_code_weight ASC";
+			$query = "SELECT status_code_id, status_code_title, status_code_text_color, status_code_bg_color, status_code_border_color, status_code_weight, status_code_show_on_board, status_code_task_is_assigned, status_code_on_status_close_task, status_code_count_tasks FROM $t_tasks_status_codes ORDER BY status_code_weight ASC";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
-				list($get_status_code_id, $get_status_code_title, $get_status_code_text_color, $get_status_code_weight, $get_status_code_show_on_board) = $row;
+				list($get_status_code_id, $get_status_code_title, $get_status_code_text_color, $get_status_code_bg_color, $get_status_code_border_color, $get_status_code_weight, $get_status_code_show_on_board, $get_status_code_task_is_assigned, $get_status_code_on_status_close_task, $get_status_code_count_tasks) = $row;
 				// Style
 				if(isset($style) && $style == ""){
 					$style = "odd";
@@ -125,7 +128,18 @@ if($action == ""){
 					<span>$get_status_code_show_on_board</span>
 				  </td>
 				  <td class=\"$style\">
-					<span>
+					<span>$get_status_code_task_is_assigned</span>
+				  </td>
+				  <td class=\"$style\">
+					<span>";
+					if($y != "1"){
+						// Move up
+						echo"
+						<a href=\"index.php?open=$open&amp;page=$page&amp;action=move_up&amp;status_code_id=$get_status_code_id&amp;l=$l&amp;process=1\">Up</a> |
+						";
+					}
+	
+					echo"
 					<a href=\"index.php?open=$open&amp;page=$page&amp;action=edit&amp;status_code_id=$get_status_code_id&amp;l=$l\">Edit</a>
 					|
 					<a href=\"index.php?open=$open&amp;page=$page&amp;action=delete&amp;status_code_id=$get_status_code_id&amp;l=$l\">Delete</a>
@@ -157,11 +171,15 @@ elseif($action == "new"){
 		$inp_show_on_board = output_html($inp_show_on_board);
 		$inp_show_on_board_mysql = quote_smart($link, $inp_show_on_board);
 
+		$inp_task_is_assigned = $_POST['inp_task_is_assigned'];
+		$inp_task_is_assigned = output_html($inp_task_is_assigned);
+		$inp_task_is_assigned_mysql = quote_smart($link, $inp_task_is_assigned);
+
 		// Insert
 		mysqli_query($link, "INSERT INTO $t_tasks_status_codes 
-		(status_code_id, status_code_title, status_code_text_color, status_code_weight, status_code_show_on_board, status_code_count_tasks) 
+		(status_code_id, status_code_title, status_code_text_color, status_code_weight, status_code_show_on_board, status_code_task_is_assigned, status_code_count_tasks) 
 		VALUES 
-		(NULL, $inp_title_mysql, $inp_text_color_mysql, 999, $inp_show_on_board_mysql, 0)")
+		(NULL, $inp_title_mysql, $inp_text_color_mysql, 999, $inp_show_on_board_mysql, $inp_task_is_assigned_mysql, 0)")
 		or die(mysqli_error($link));
 
 		// Get ID
@@ -226,6 +244,13 @@ elseif($action == "new"){
 		<input type=\"radio\" name=\"inp_show_on_board\" value=\"0\" /> No
 		</p>
 
+		<p>Task is assigned:<br />
+		<span class=\"smal\">The task have to be assigned to a user when it has this status</span>
+		<br />
+		<input type=\"radio\" name=\"inp_task_is_assigned\" value=\"1\" checked=\"checked\" /> Yes
+		<input type=\"radio\" name=\"inp_task_is_assigned\" value=\"0\" /> No
+		</p>
+
 
 		<p><input type=\"submit\" value=\"Create\" class=\"btn_default\" /></p>
 
@@ -237,10 +262,10 @@ elseif($action == "new"){
 elseif($action == "edit"){
 	// Get ID
 	$status_code_id_mysql = quote_smart($link, $status_code_id);
-	$query = "SELECT status_code_id, status_code_title, status_code_text_color, status_code_weight, status_code_show_on_board, status_code_count_tasks FROM $t_tasks_status_codes WHERE status_code_id=$status_code_id_mysql";
+	$query = "SELECT status_code_id, status_code_title, status_code_text_color, status_code_bg_color, status_code_border_color, status_code_weight, status_code_show_on_board, status_code_task_is_assigned, status_code_on_status_close_task, status_code_count_tasks FROM $t_tasks_status_codes WHERE status_code_id=$status_code_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_status_code_id, $get_current_status_code_title, $get_current_status_code_text_color, $get_current_status_code_weight, $get_current_status_code_show_on_board, $get_current_status_code_count_tasks) = $row;
+	list($get_current_status_code_id, $get_current_status_code_title, $get_current_status_code_text_color, $get_current_status_code_bg_color, $get_current_status_code_border_color, $get_current_status_code_weight, $get_current_status_code_show_on_board, $get_current_status_code_task_is_assigned, $get_current_status_code_on_status_close_task, $get_current_status_code_count_tasks) = $row;
 
 	if($get_current_status_code_id == ""){
 		echo"<p>404 server error</p>";
@@ -256,15 +281,19 @@ elseif($action == "edit"){
 			$inp_text_color = output_html($inp_text_color);
 			$inp_text_color_mysql = quote_smart($link, $inp_text_color);
 
-
 			$inp_show_on_board = $_POST['inp_show_on_board'];
 			$inp_show_on_board = output_html($inp_show_on_board);
 			$inp_show_on_board_mysql = quote_smart($link, $inp_show_on_board);
 
+			$inp_task_is_assigned = $_POST['inp_task_is_assigned'];
+			$inp_task_is_assigned = output_html($inp_task_is_assigned);
+			$inp_task_is_assigned_mysql = quote_smart($link, $inp_task_is_assigned);
+
 			$result = mysqli_query($link, "UPDATE $t_tasks_status_codes SET
 					status_code_title=$inp_title_mysql, 
 					status_code_text_color=$inp_text_color_mysql, 
-					status_code_show_on_board=$inp_show_on_board_mysql
+					status_code_show_on_board=$inp_show_on_board_mysql, 
+					status_code_task_is_assigned=$inp_task_is_assigned_mysql
 					WHERE status_code_id=$get_current_status_code_id") or die(mysqli_error($link));
 
 
@@ -319,6 +348,13 @@ elseif($action == "edit"){
 			<p>Show on board:<br />
 			<input type=\"radio\" name=\"inp_show_on_board\" value=\"1\""; if($get_current_status_code_show_on_board == "1"){ echo" checked=\"checked\""; } echo" /> Yes
 			<input type=\"radio\" name=\"inp_show_on_board\" value=\"0\""; if($get_current_status_code_show_on_board == "0"){ echo" checked=\"checked\""; } echo" /> No
+			</p>
+
+			<p>Task is assigned:<br />
+			<span class=\"smal\">The task have to be assigned to a user when it has this status</span>
+			<br />
+			<input type=\"radio\" name=\"inp_task_is_assigned\" value=\"1\""; if($get_current_status_code_task_is_assigned == "1"){ echo" checked=\"checked\""; } echo" /> Yes
+			<input type=\"radio\" name=\"inp_task_is_assigned\" value=\"0\""; if($get_current_status_code_task_is_assigned == "0"){ echo" checked=\"checked\""; } echo" /> No
 			</p>
 
 
@@ -391,4 +427,35 @@ elseif($action == "delete"){
 		";
 	}
 } // delete
+elseif($action == "move_up"){
+	// Get ID
+	$status_code_id_mysql = quote_smart($link, $status_code_id);
+	$query = "SELECT status_code_id, status_code_title, status_code_text_color, status_code_bg_color, status_code_border_color, status_code_weight, status_code_show_on_board, status_code_task_is_assigned, status_code_on_status_close_task, status_code_count_tasks FROM $t_tasks_status_codes WHERE status_code_id=$status_code_id_mysql";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_current_status_code_id, $get_current_status_code_title, $get_current_status_code_text_color, $get_current_status_code_bg_color, $get_current_status_code_border_color, $get_current_status_code_weight, $get_current_status_code_show_on_board, $get_current_status_code_task_is_assigned, $get_current_status_code_on_status_close_task, $get_current_status_code_count_tasks) = $row;
+
+	if($get_current_status_code_id == ""){
+		echo"<p>404 server error</p>";
+	}
+	else{
+		$new_weight = $get_current_status_code_weight-1;
+
+		// Find changer
+		$query = "SELECT status_code_id, status_code_weight FROM $t_tasks_status_codes WHERE status_code_weight=$new_weight";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_change_status_code_id, $get_change_status_code_weight) = $row;
+
+		// Update me
+		$result = mysqli_query($link, "UPDATE $t_tasks_status_codes SET status_code_weight=$new_weight WHERE status_code_id=$get_current_status_code_id") or die(mysqli_error($link));
+
+		// Update other
+		$result = mysqli_query($link, "UPDATE $t_tasks_status_codes SET status_code_weight=$get_current_status_code_weight WHERE status_code_id=$get_change_status_code_id") or die(mysqli_error($link));
+		
+
+		header("Location: index.php?open=dashboard&page=$page&ft=success&fm=updated_weight");
+		exit;
+	} // found
+} // move up
 ?>

@@ -1762,7 +1762,7 @@ else{
        							// getting the value that user typed
        							var searchString    = $(\"#inp_item_grocery\").val();
  							// forming the queryString
-      							var data            = 'l=$l&recipe_id=$recipe_id&q='+ searchString;
+      							var data            = 'l=$l&recipe_id=$recipe_id&view_id=$get_current_view_id&q='+ searchString;
 
         						// if searchString is not empty
         						if(searchString) {
@@ -3170,6 +3170,52 @@ else{
 					<input type=\"text\" name=\"inp_item_grocery\" class=\"inp_item_grocery\" id=\"inp_item_grocery\" size=\"25\" value=\"$get_item_grocery\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 					<input type=\"hidden\" name=\"inp_item_food_id\" id=\"inp_item_food_id\" /></p>
 
+
+					<!-- User adapted view -->";
+					if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
+						$my_user_id = $_SESSION['user_id'];
+						$my_user_id = output_html($my_user_id);
+						$my_user_id_mysql = quote_smart($link, $my_user_id);
+			
+						$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_recipes_user_adapted_view WHERE view_user_id=$get_my_user_id";
+						$result_t = mysqli_query($link, $query_t);
+						$row_t = mysqli_fetch_row($result_t);
+						list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
+					}
+					else{
+						// IP
+						$my_user_ip = $_SERVER['REMOTE_ADDR'];
+						$my_user_ip = output_html($my_user_ip);
+						$my_user_ip_mysql = quote_smart($link, $my_user_ip);
+			
+						$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_recipes_user_adapted_view WHERE view_ip=$my_user_ip_mysql";
+						$result_t = mysqli_query($link, $query_t);
+						$row_t = mysqli_fetch_row($result_t);
+						list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
+					}
+					if($get_current_view_hundred_metric == ""){
+						$get_current_view_hundred_metric = "1";
+					}
+					echo"
+					<p><a id=\"adapter_view\"></a>
+					<input type=\"checkbox\" name=\"inp_show_hundred_metric\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=hundred_metric&amp;process=1&amp;referer=edit_recipe_ingredients&amp;action=$action&amp;recipe_id=$recipe_id&amp;group_id=$group_id&amp;item_id=$item_id&amp;l=$l\""; if($get_current_view_hundred_metric == "1"){ echo" checked=\"checked\""; } echo" /> $l_hundred
+					<input type=\"checkbox\" name=\"inp_show_pcs_metric\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=pcs_metric&amp;process=1&amp;referer=edit_recipe_ingredients&amp;action=$action&amp;recipe_id=$recipe_id&amp;group_id=$group_id&amp;item_id=$item_id&amp;&amp;l=$l\""; if($get_current_view_pcs_metric == "1"){ echo" checked=\"checked\""; } echo" /> $l_pcs_g
+					<input type=\"checkbox\" name=\"inp_show_eight_us\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=eight_us&amp;process=1&amp;referer=edit_recipe_ingredients&amp;action=$action&amp;recipe_id=$recipe_id&amp;group_id=$group_id&amp;item_id=$item_id&amp;&amp;l=$l\""; if($get_current_view_eight_us == "1"){ echo" checked=\"checked\""; } echo" /> $l_eight
+					<input type=\"checkbox\" name=\"inp_show_pcs_us\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=pcs_us&amp;process=1&amp;referer=edit_recipe_ingredients&amp;action=$action&amp;recipe_id=$recipe_id&amp;group_id=$group_id&amp;item_id=$item_id&amp;&amp;l=$l\""; if($get_current_view_pcs_us == "1"){ echo" checked=\"checked\""; } echo" /> $l_pcs_oz
+					</p>
+
+					<!-- On check go to URL -->
+						<script>
+						\$(function() {
+							\$(\".onclick_go_to_url\").change(function(){
+								var item=\$(this);
+								window.location.href= item.data(\"target\")
+							});
+  						});
+						</script>
+					<!-- //On check go to URL -->
+					<!-- //User adapted view -->
+
 					<div id=\"nettport_search_results\">
 					</div><div class=\"clear\"></div></span>
 
@@ -3391,7 +3437,7 @@ else{
        							// getting the value that user typed
        							var searchString    = $(\"#inp_item_grocery\").val();
  							// forming the queryString
-      							var data            = 'l=$l&recipe_id=$recipe_id&q='+ searchString;
+      							var data            = 'l=$l&recipe_id=$recipe_id&view_id=$get_current_view_id&q='+ searchString;
 
         						// if searchString is not empty
         						if(searchString) {
@@ -5224,7 +5270,7 @@ else{
        							// getting the value that user typed
        							var searchString    = $(\"#nettport_inp_search_query\").val();
  							// forming the queryString
-      							var data            = 'l=$l&q='+ searchString;
+      							var data            = 'l=$l&view_id=$get_current_view_id&q='+ searchString;
          
         						// if searchString is not empty
         						if(searchString) {

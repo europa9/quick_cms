@@ -84,10 +84,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	$inp_recipe_user_id_mysql = quote_smart($link, $inp_recipe_user_id);
 
 
-	$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb_278x156, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_user_ip, recipe_notes, recipe_password, recipe_last_viewed FROM $t_recipes WHERE recipe_id=$recipe_id_mysql AND recipe_user_id=$inp_recipe_user_id_mysql";
+	$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_country, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb_278x156, recipe_video, recipe_date, recipe_date_saying, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_comments, recipe_times_favorited, recipe_user_ip, recipe_notes, recipe_password, recipe_last_viewed, recipe_age_restriction, recipe_published FROM $t_recipes WHERE recipe_id=$recipe_id_mysql AND recipe_user_id=$inp_recipe_user_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156, $get_recipe_video, $get_recipe_date, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password, $get_recipe_last_viewed) = $row;
+	list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_country, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156, $get_recipe_video, $get_recipe_date, $get_recipe_date_saying, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_comments, $get_recipe_times_favorited, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password, $get_recipe_last_viewed, $get_recipe_age_restriction, $get_recipe_published) = $row;
 
 	if($get_recipe_id == ""){
 		echo"
@@ -334,8 +334,140 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			or die(mysqli_error($link));
 		}
 
+		// Feed
+		$inp_feed_title_mysql = quote_smart($link, $get_recipe_title);
+		$inp_feed_text_mysql = quote_smart($link, "");
+		$inp_feed_image_path_mysql = quote_smart($link, $get_recipe_image_path);
+		$inp_feed_image_file_mysql = quote_smart($link, $get_recipe_image);
+
+		// Feed Thumb 300x169
+		$ext = get_extension($get_recipe_image);
+		$img_name = str_replace(".$ext", "", $get_recipe_image);
+		$inp_feed_image_thumb_a = $img_name . "_thumb_300x169." . $ext;
+		$inp_feed_image_thumb_a_mysql = quote_smart($link, $inp_feed_image_thumb_a);
+
+		// Feed Thumb 540x304
+		$inp_feed_image_thumb_b = $img_name . "_thumb_540x304." . $ext;
+		$inp_feed_image_thumb_b_mysql = quote_smart($link, $inp_feed_image_thumb_b);
+
+		$inp_feed_link_url = "recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l";
+		$inp_feed_link_url_mysql = quote_smart($link, $inp_feed_link_url);
+
+		$inp_feed_link_name_mysql = quote_smart($link, "$l_view");
+
+		// Feed category name
+		$query = "SELECT category_translation_value FROM $t_recipes_categories_translations WHERE category_id=$get_recipe_category_id AND category_translation_language=$l_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_category_translation_value) = $row;
+		$inp_feed_category_name_mysql = quote_smart($link, $get_category_translation_value);
+
+		// Feed user
+		$my_user_id = $_SESSION['user_id'];
+		$my_user_id = output_html($my_user_id);
+		$my_user_id_mysql = quote_smart($link, $my_user_id);
+
+		// Feed Get current user
+		$query = "SELECT user_id, user_email, user_name, user_alias, user_rank FROM $t_users WHERE user_id=$my_user_id_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_my_user_id, $get_my_user_email, $get_my_user_name, $get_my_user_alias, $get_my_user_rank) = $row;
+
+		// Feed Author image
+		$query = "SELECT photo_id, photo_destination, photo_thumb_40, photo_thumb_50, photo_thumb_60, photo_thumb_200 FROM $t_users_profile_photo WHERE photo_user_id='$get_my_user_id' AND photo_profile_image='1'";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_my_photo_id, $get_my_photo_destination, $get_my_photo_thumb_40, $get_my_photo_thumb_50, $get_my_photo_thumb_60, $get_my_photo_thumb_200) = $row;
+
+
+		$inp_feed_user_email_mysql = quote_smart($link, $get_my_user_email);
+		$inp_feed_user_name_mysql = quote_smart($link, $get_my_user_name);
+		$inp_feed_user_alias_mysql = quote_smart($link, $get_my_user_alias);
+		$inp_feed_user_photo_file_mysql = quote_smart($link, $get_my_photo_destination);
+		$inp_feed_user_photo_thumb_40_mysql = quote_smart($link, $get_my_photo_thumb_40);
+		$inp_feed_user_photo_thumb_50_mysql = quote_smart($link, $get_my_photo_thumb_50);
+		$inp_feed_user_photo_thumb_60_mysql = quote_smart($link, $get_my_photo_thumb_60);
+		$inp_feed_user_photo_thumb_200_mysql = quote_smart($link, $get_my_photo_thumb_200);
+
+
+		// Feed My IP
+		$inp_my_ip = $_SERVER['REMOTE_ADDR'];
+		$inp_my_ip = output_html($inp_my_ip);
+		$inp_my_ip_mysql = quote_smart($link, $inp_my_ip);
+
+		// Feed My hostname
+		$inp_my_hostname = "$inp_ip";
+		if($configSiteUseGethostbyaddrSav == "1"){
+			$inp_my_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']); // Some servers in local network cant use getostbyaddr because of nameserver missing
+		}
+		$inp_my_hostname = output_html($inp_my_hostname);
+		$inp_my_hostname_mysql = quote_smart($link, $inp_my_hostname);
+					
+		// Feed Lang
+		$inp_feed_language = output_html($l);
+		$inp_feed_language_mysql = quote_smart($link, $inp_feed_language);
+
+
+		// Feed Subscribe
+		$query = "SELECT es_id, es_user_id, es_type, es_on_off FROM $t_users_email_subscriptions WHERE es_user_id='$get_my_user_id' AND es_type='users_feed'";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_es_id, $get_es_user_id, $get_es_type, $get_es_on_off) = $row;
+		if($get_es_id == ""){
+			// Dont know
+			mysqli_query($link, "INSERT INTO $t_users_email_subscriptions 
+			(es_id, es_user_id, es_type, es_on_off) 
+			VALUES 
+			(NULL, $get_my_user_id, 'users_feed', 0)") or die(mysqli_error($link));
+			$get_es_on_off = 0;
+		}
+
+		// Feed dates
+		$year = date("Y");
+		$date_saying = date("j M Y");
+
+
+		$query = "SELECT feed_id FROM $t_users_feeds_index WHERE feed_module_name='recipes' AND feed_module_part_name='recipe' AND feed_module_part_id=$get_recipe_id AND feed_user_id=$get_recipe_user_id";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_current_feed_id) = $row;
+		if($get_current_feed_id == ""){
+			// Insert feed
+			mysqli_query($link, "INSERT INTO $t_users_feeds_index
+			(feed_id, feed_title, feed_text, feed_image_path, feed_image_file, 
+			feed_image_thumb_300x169, feed_image_thumb_540x304, feed_link_url, feed_link_name, feed_module_name, 
+			feed_module_part_name, feed_module_part_id, feed_main_category_id, feed_main_category_name, 
+			feed_user_id, feed_user_email, feed_user_name, feed_user_alias, 
+			feed_user_photo_file, feed_user_photo_thumb_40, feed_user_photo_thumb_50, feed_user_photo_thumb_60, feed_user_photo_thumb_200, 
+			feed_user_subscribe, feed_user_ip, feed_user_hostname, feed_language, feed_created_datetime, 
+			feed_created_year, feed_created_time, feed_created_date_saying, feed_likes, feed_dislikes, feed_comments) 
+			VALUES 
+			(NULL, $inp_feed_title_mysql, $inp_feed_text_mysql, $inp_feed_image_path_mysql, $inp_feed_image_file_mysql, 
+			$inp_feed_image_thumb_a_mysql, $inp_feed_image_thumb_b_mysql, $inp_feed_link_url_mysql, $inp_feed_link_name_mysql, 'recipes', 
+			'recipe', $get_recipe_id, $get_recipe_category_id, $inp_feed_category_name_mysql, 
+			$get_my_user_id, $inp_feed_user_email_mysql, $inp_feed_user_name_mysql, $inp_feed_user_alias_mysql, 
+			$inp_feed_user_photo_file_mysql, $inp_feed_user_photo_thumb_40_mysql, $inp_feed_user_photo_thumb_50_mysql, $inp_feed_user_photo_thumb_60_mysql, $inp_feed_user_photo_thumb_200_mysql, 
+			$get_es_on_off, $inp_my_ip_mysql, $inp_my_hostname_mysql, $inp_feed_language_mysql, '$datetime',
+			'$year', '$time', '$date_saying', 0, 0, 0)")
+			or die(mysqli_error($link));
+						
+		} // Create feed
+		else{
+			// Update feed
+			mysqli_query($link, "UPDATE $t_users_feeds_index SET
+						feed_title=$inp_feed_title_mysql, 
+						feed_text=$inp_feed_text_mysql, 
+						feed_image_path=$inp_feed_image_path_mysql, 
+						feed_image_file=$inp_feed_image_file_mysql, 
+						feed_image_thumb_300x169=$inp_feed_image_thumb_a_mysql, 
+						feed_image_thumb_540x304=$inp_feed_image_thumb_b_mysql, 
+						feed_modified_datetime='$datetime'
+						WHERE feed_id=$get_current_feed_id")
+						or die(mysqli_error($link));
+		} // Update feed
+
+
 		// Location
-		
 		echo"
 		<h1>
 		<img src=\"_gfx/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
