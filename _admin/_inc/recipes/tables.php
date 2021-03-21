@@ -240,24 +240,27 @@ elseif($action == "delete"){
 
 			mysqli_query($link, "DELETE FROM $t_recipes_liquidbase WHERE liquidbase_id=$get_liquidbase_id") or die(mysqli_error($link));
 
-			$url = "index.php?open=$open&page=$page&ft=success&fm=deleted";
-			header("Location: $url");
-			exit;
+			echo"
+			<h1>Deleting...</h1>
+			<meta http-equiv=\"refresh\" content=\"1;url=index.php?open=$open&amp;page=$page&amp;ft=success&amp;fm=deleted\">
+			";
+			
 		}
+		else{
+			echo"
+			<h1>Delete_liquidbase $get_liquidbase_file</h1>
 
-		echo"
-		<h1>Delete_liquidbase $get_liquidbase_file</h1>
 
+			<p>
+			Are you sure you want to dlete the liquidbase script run? 
+			This will cause the script to run again after deletion. 
+			</p>
 
-		<p>
-		Are you sure you want to dlete the liquidbase script run? 
-		This will cause the script to run again after deletion. 
-		</p>
-
-		<p>
-		<a href=\"index.php?open=$open&amp;page=$page&amp;action=delete&amp;liquidbase_id=$get_liquidbase_id&amp;editor_language=$editor_language&amp;process=1\" class=\"btn_warning\">Confirm delete</a>
-		</p>
-		";
+			<p>
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=delete&amp;liquidbase_id=$get_liquidbase_id&amp;editor_language=$editor_language&amp;process=1\" class=\"btn_warning\">Confirm delete</a>
+			</p>
+			";
+		}
 	}
 }
 

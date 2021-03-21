@@ -1,5 +1,8 @@
-<?php 
-header("Content-Type: text/html;charset=ISO-8859-1");
+<?php
+error_reporting(E_ALL & ~E_STRICT);
+@session_start();
+ini_set('arg_separator.output', '&amp;');
+
 /**
 *
 * File: food_diary/food_diary_add_query.php
@@ -53,6 +56,7 @@ $t_food_index	 	= $mysqlPrefixSav . "food_index";
 $t_food_index_queries 	= $mysqlPrefixSav . "food_index_queries";
 
 /*- Variables ------------------------------------------------------------------------- */
+$root = "../";
 if(isset($_GET['l']) OR isset($_POST['l'])) {
 	if(isset($_GET['l'])){
 		$l = $_GET['l'];
@@ -107,8 +111,13 @@ else{
 	echo"Missing meal plan id";
 	die;
 }
-if(isset($_GET['hour_name'])) {
-	$hour_name = $_GET['hour_name'];
+if(isset($_GET['hour_name']) OR isset($_POST['hour_name'])) {
+	if(isset($_GET['hour_name'])){
+		$hour_name = $_GET['hour_name'];
+	}
+	else{
+		$hour_name = $_POST['hour_name'];
+	}
 	$hour_name = stripslashes(strip_tags($hour_name));
 	if($hour_name != "breakfast" && $hour_name != "lunch" && $hour_name != "before_training" && $hour_name != "after_training" && $hour_name != "dinner" && $hour_name != "snacks" && $hour_name != "supper"){
 		echo"Unknown hour name";
@@ -143,6 +152,38 @@ else{
 	 or die(mysql_error());
 }
 
+/*- Adapter view -------------------------------------------------------------------- */
+
+if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
+	$my_user_id = $_SESSION['user_id'];
+	$my_user_id = output_html($my_user_id);
+	$my_user_id_mysql = quote_smart($link, $my_user_id);
+	
+	$query_t = "SELECT view_id, view_user_id, view_system, view_hundred_metric, view_serving, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_food_diary_user_adapted_view WHERE view_user_id=$my_user_id_mysql";
+	$result_t = mysqli_query($link, $query_t);
+	$row_t = mysqli_fetch_row($result_t);
+	list($get_current_view_id, $get_current_view_user_id, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
+
+	if($get_current_view_id == ""){
+		mysqli_query($link, "INSERT INTO $t_food_diary_user_adapted_view 
+				(view_id, view_user_id, view_system, view_hundred_metric, view_pcs_metric, 
+				view_eight_us, view_pcs_us) 
+				VALUES 
+				(NULL, $my_user_id_mysql,  'metric', 1, 1,
+				0, 0)")
+				or die(mysqli_error($link));
+
+		$query_t = "SELECT view_id, view_user_id, view_system, view_hundred_metric, view_serving, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_food_diary_user_adapted_view WHERE view_user_id=$my_user_id_mysql";
+		$result_t = mysqli_query($link, $query_t);
+		$row_t = mysqli_fetch_row($result_t);
+		list($get_current_view_id, $get_current_view_user_id, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
+
+	}
+}
+else{
+	echo"Error: Your not logged in.";
+	die;
+}
 
 
 /*- Query --------------------------------------------------------------------------- */
@@ -163,11 +204,10 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 
 
 	if($q != ""){
-		$query = "SELECT query_name, query_times FROM $t_food_index_queries WHERE query_name=$q_mysql";
-		$res = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($res);
-		$get_query_name = $row[0];
-		$get_query_times = $row[1];
+		$query_t = "SELECT query_name, query_times FROM $t_food_index_queries WHERE query_name=$q_mysql";
+		$result_t = mysqli_query($link, $query_t);
+		$row_t = mysqli_fetch_row($result_t);
+		list($get_query_name, $get_query_times) = $row_t;
 
 		if($get_query_name == ""){
 			// Insert
@@ -188,7 +228,7 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 
 
 		// Ready for MySQL search
-		$q = "%" . $q . "%";
+		$q = "" . $q . "%";
 		$q_mysql = quote_smart($link, $q);
 
 
@@ -223,124 +263,204 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 			list($get_food_id, $get_food_user_id, $get_food_name, $get_food_clean_name, $get_food_manufacturer_name, $get_food_manufacturer_name_and_food_name, $get_food_description, $get_food_country, $get_food_net_content_metric, $get_food_net_content_measurement_metric, $get_food_net_content_us, $get_food_net_content_measurement_us, $get_food_net_content_added_measurement, $get_food_serving_size_metric, $get_food_serving_size_measurement_metric, $get_food_serving_size_us, $get_food_serving_size_measurement_us, $get_food_serving_size_added_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy_metric, $get_food_fat_metric, $get_food_saturated_fat_metric, $get_food_monounsaturated_fat_metric, $get_food_polyunsaturated_fat_metric, $get_food_cholesterol_metric, $get_food_carbohydrates_metric, $get_food_carbohydrates_of_which_sugars_metric, $get_food_dietary_fiber_metric, $get_food_proteins_metric, $get_food_salt_metric, $get_food_sodium_metric, $get_food_energy_us, $get_food_fat_us, $get_food_saturated_fat_us, $get_food_monounsaturated_fat_us, $get_food_polyunsaturated_fat_us, $get_food_cholesterol_us, $get_food_carbohydrates_us, $get_food_carbohydrates_of_which_sugars_us, $get_food_dietary_fiber_us, $get_food_proteins_us, $get_food_salt_us, $get_food_sodium_us, $get_food_score, $get_food_energy_calculated_metric, $get_food_fat_calculated_metric, $get_food_saturated_fat_calculated_metric, $get_food_monounsaturated_fat_calculated_metric, $get_food_polyunsaturated_fat_calculated_metric, $get_food_cholesterol_calculated_metric, $get_food_carbohydrates_calculated_metric, $get_food_carbohydrates_of_which_sugars_calculated_metric, $get_food_dietary_fiber_calculated_metric, $get_food_proteins_calculated_metric, $get_food_salt_calculated_metric, $get_food_sodium_calculated_metric, $get_food_energy_calculated_us, $get_food_fat_calculated_us, $get_food_saturated_fat_calculated_us, $get_food_monounsaturated_fat_calculated_us, $get_food_polyunsaturated_fat_calculated_us, $get_food_cholesterol_calculated_us, $get_food_carbohydrates_calculated_us, $get_food_carbohydrates_of_which_sugars_calculated_us, $get_food_dietary_fiber_calculated_us, $get_food_proteins_calculated_us, $get_food_salt_calculated_us, $get_food_sodium_calculated_us, $get_food_barcode, $get_food_main_category_id, $get_food_sub_category_id, $get_food_image_path, $get_food_image_a, $get_food_thumb_a_small, $get_food_thumb_a_medium, $get_food_thumb_a_large, $get_food_image_b, $get_food_thumb_b_small, $get_food_thumb_b_medium, $get_food_thumb_b_large, $get_food_image_c, $get_food_thumb_c_small, $get_food_thumb_c_medium, $get_food_thumb_c_large, $get_food_image_d, $get_food_thumb_d_small, $get_food_thumb_d_medium, $get_food_thumb_d_large, $get_food_image_e, $get_food_thumb_e_small, $get_food_thumb_e_medium, $get_food_thumb_e_large, $get_food_last_used, $get_food_language, $get_food_synchronized, $get_food_accepted_as_master, $get_food_notes, $get_food_unique_hits, $get_food_unique_hits_ip_block, $get_food_comments, $get_food_likes, $get_food_dislikes, $get_food_likes_ip_block, $get_food_user_ip, $get_food_created_date, $get_food_last_viewed, $get_food_age_restriction) = $row;
 
 
-				
 			// Name saying
-			$title = "$get_food_manufacturer_name $get_food_name";
-			$check = strlen($title);
-			if($check > 35){
-				$title = substr($title, 0, 35);
-				$title = $title . "...";
-			}
-
-
-			if($x == 0){
-				echo"
-				<div class=\"clear\"></div>
-				<div class=\"left_center_center_right_left\" style=\"text-align: center;padding-bottom: 20px;\">
-				";
-			}
-			elseif($x == 1){
-				echo"
-				<div class=\"left_center_center_left_right_center\" style=\"text-align: center;padding-bottom: 20px;\">
-				";
-			}
-			elseif($x == 2){
-				echo"
-				<div class=\"left_center_center_right_right_center\" style=\"text-align: center;padding-bottom: 20px;\">
-				";
-			}
-			elseif($x == 3){
-				echo"
-				<div class=\"left_center_center_right_right\" style=\"text-align: center;padding-bottom: 20px;\">
-				";
-			}
-
-
-			// Thumb
-			if($get_food_image_a != "" && file_exists("../$get_food_image_path/$get_food_image_a")){
-				$thumb = "../$get_food_image_path/$get_food_thumb_a_small";
-			}
-			else{
-				$thumb = "_gfx/no_thumb.png";
-			}
+						$title = "$get_food_manufacturer_name $get_food_name";
+						$check = strlen($title);
+						if($check > 35){
+							$title = substr($title, 0, 35);
+							$title = $title . "...";
+						}
 
 
 
+						if($x == 0){
+							echo"
+							<div class=\"clear\"></div>
+							<div class=\"left_center_center_right_left\" style=\"text-align: center;padding-bottom: 20px;\">
+							";
+						}
+						elseif($x == 1){
+							echo"
+							<div class=\"left_center_center_left_right_center\" style=\"text-align: center;padding-bottom: 20px;\">
+							";
+						}
+						elseif($x == 2){
+							echo"
+							<div class=\"left_center_center_right_right_center\" style=\"text-align: center;padding-bottom: 20px;\">
+							";
+						}
+						elseif($x == 3){
+							echo"
+							<div class=\"left_center_center_right_right\" style=\"text-align: center;padding-bottom: 20px;\">
+							";
+						}
+
+						// Thumb
+						if($get_food_image_a != "" && file_exists("../$get_food_image_path/$get_food_image_a")){
+							$thumb = "../$get_food_image_path/$get_food_thumb_a_small";
+						}
+						else{
+							$thumb = "_gfx/no_thumb.png";
+						}
 
 
-			echo"
-				<p style=\"padding-bottom:5px;\">
-				<a href=\"../food/view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\"><img src=\"$thumb\" alt=\"$get_food_image_a\" style=\"margin-bottom: 5px;\" /></a><br />
-					
-				<a href=\"../food/view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\" style=\"font-weight: bold;color: #444444;\">$title</a><br />
-				";
-				echo"
-				</p>
+						echo"
+						<p style=\"padding-bottom:5px;\">
+						<a href=\"$root/food/view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\"><img src=\"$thumb\" alt=\"$get_food_image_a\" style=\"margin-bottom: 5px;\" /></a><br />
+						<a href=\"$root/food/view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\" style=\"font-weight: bold;color: #444444;\">$title</a><br />
+						</p>";
 
-				<table style=\"margin: 0px auto;\">
-				 <tr>
-				  <td style=\"padding-right: 10px;text-align: center;\">
-					<span class=\"grey_smal\">$get_food_energy_metric</span>
-				  </td>
-				  <td style=\"padding-right: 10px;text-align: center;\">
-					<span class=\"grey_smal\">$get_food_fat_metric</span>
-				  </td>
-				  <td style=\"padding-right: 10px;text-align: center;\">
-					<span class=\"grey_smal\">$get_food_carbohydrates_metric</span>
-				  </td>
-				  <td style=\"text-align: center;\">
-					<span class=\"grey_smal\">$get_food_proteins_metric</span>
-				  </td>
-				 </tr>
-				 <tr>
-				  <td style=\"padding-right: 10px;text-align: center;\">
-					<span class=\"grey_smal\">$l_cal_lowercase</span>
-				  </td>
-				  <td style=\"padding-right: 10px;text-align: center;\">
-					<span class=\"grey_smal\">$l_fat_lowercase</span>
-				  </td>
-				  <td style=\"padding-right: 10px;text-align: center;\">
-					<span class=\"grey_smal\">$l_carb_lowercase</span>
-				  </td>
-				  <td style=\"text-align: center;\">
-					<span class=\"grey_smal\">$l_proteins_lowercase</span>
-				  </td>
-				 </tr>
-				</table>
-
-
-				<!-- Add food -->
-					<form method=\"post\" action=\"food_diary_add_food.php?action=add_food_to_diary&amp;date=$date&amp;meal_id=$meal_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
-					<p>
-					<input type=\"hidden\" name=\"inp_entry_food_id\" value=\"$get_food_id\" />
+						if($get_current_view_hundred_metric == "1" OR $get_current_view_pcs_metric == "1" OR $get_current_view_eight_us == "1" OR $get_current_view_pcs_us == "1"){
+				
+							echo"
+							<table style=\"margin: 0px auto;\">
+							";
+							if($get_current_view_hundred_metric == "1"){
+								echo"
+								 <tr>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$l_hundred</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$get_food_energy_metric</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$get_food_fat_metric</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$get_food_carbohydrates_metric</span>
+								  </td>
+								  <td style=\"text-align: center;\">
+									<span class=\"nutritional_number\">$get_food_proteins_metric</span>
+								  </td>
+								 </tr>
+								";
+							}
+							if($get_current_view_pcs_metric == "1"){
+								echo"
+								 <tr>
+								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+									<span class=\"nutritional_number\" title=\"$get_food_serving_size_metric $get_food_serving_size_measurement_metric\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+									<span class=\"nutritional_number\">$get_food_energy_calculated_metric</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+									<span class=\"nutritional_number\">$get_food_fat_calculated_metric</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+									<span class=\"nutritional_number\">$get_food_carbohydrates_calculated_metric</span>
+								  </td>
+								  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+									<span class=\"nutritional_number\">$get_food_proteins_calculated_metric</span>
+								  </td>
+								 </tr>
+								";
+							}
+							if($get_current_view_eight_us == "1"){
+								echo"
+								 <tr>
+								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+									<span class=\"nutritional_number\">$l_per_eight_abbr_lowercase</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+									<span class=\"nutritional_number\">$get_food_energy_us</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+									<span class=\"nutritional_number\">$get_food_fat_us</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+									<span class=\"nutritional_number\">$get_food_carbohydrates_us</span>
+								  </td>
+								  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+									<span class=\"nutritional_number\">$get_food_proteins_us</span>
+								  </td>
+								 </tr>
+								";
+							}
+							if($get_current_view_pcs_us == "1"){
+								echo"
+								 <tr>
+								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+									<span class=\"nutritional_number\" title=\"$get_food_serving_size_us $get_food_serving_size_measurement_us\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+									<span class=\"nutritional_number\">$get_food_energy_calculated_us</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\">$get_food_fat_calculated_us</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+									<span class=\"nutritional_number\">$get_food_carbohydrates_calculated_us</span>
+								  </td>
+								  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+									<span class=\"nutritional_number\">$get_food_proteins_calculated_us</span>
+								  </td>
+								 </tr>
+								";
+							}
+							echo"
+								 <tr>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$l_calories_abbr_lowercase</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$l_fat_abbr_lowercase</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$l_carbohydrates_abbr_lowercase</span>
+								  </td>
+								  <td style=\"text-align: center;\">
+									<span class=\"nutritional_number\">$l_proteins_abbr_lowercase</span>
+								  </td>
+								 </tr>
+								</table>
+							";
+						} // get_current_view_hundred_metric
+						echo"
+						<!-- Add food -->
+							<form method=\"post\" action=\"food_diary_add_food.php?action=add_food_to_diary&amp;date=$date&amp;hour_name=$hour_name&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+							<p>
+							<input type=\"hidden\" name=\"inp_entry_food_id\" value=\"$get_food_id\" />
+							";
+							if($get_current_view_hundred_metric == "1" OR $get_current_view_pcs_metric == "1"){
+								if($get_food_serving_size_pcs_measurement == "g"){
+									echo"
+									<input type=\"text\" name=\"inp_entry_food_serving_size\" size=\"2\" value=\"$get_food_serving_size_metric\" />
+									<input type=\"submit\" name=\"inp_submit_metric\" value=\"$get_food_serving_size_measurement_metric\" class=\"btn btn_default\" />
+									";
+								}
+								else{
+									echo"
+									<input type=\"text\" name=\"inp_entry_food_serving_size\" size=\"2\" value=\"$get_food_serving_size_pcs\" />
+									<input type=\"submit\" name=\"inp_submit_metric\" value=\"$get_food_serving_size_measurement_metric\" class=\"btn btn_default\" />
+									<input type=\"submit\" name=\"inp_submit_pcs\" value=\"$get_food_serving_size_pcs_measurement\" class=\"btn btn_default\" />
+									";
+								}
+							} // metric
+							if($get_current_view_eight_us == "1" OR $get_current_view_pcs_us == "1"){
+								echo"
+								<input type=\"text\" name=\"inp_entry_food_serving_size\" size=\"2\" value=\"$get_food_serving_size_pcs\" />
+								<input type=\"submit\" name=\"inp_submit_us\" value=\"$get_food_serving_size_measurement_metric\" class=\"btn btn_default\" />
+								<input type=\"submit\" name=\"inp_submit_pcs\" value=\"$get_food_serving_size_pcs_measurement\" class=\"btn btn_default\" />
+								";
+							} // us
+							echo"
+							</p>
+							</form>
+						<!-- //Add food -->
+					</div>
 					";
-					if($get_food_serving_size_pcs_measurement == "g"){
-						echo"
-						<input type=\"text\" name=\"inp_entry_food_serving_size\" size=\"2\" value=\"$get_food_serving_size_metric\" />
-						<input type=\"submit\" name=\"inp_submit_gram\" value=\"$get_food_serving_size_measurement_metric\" class=\"btn btn_default\" />";
-					}
-					else {
-						echo"
-						<input type=\"text\" name=\"inp_entry_food_serving_size\" size=\"2\" value=\"$get_food_serving_size_pcs\" />
-						<input type=\"submit\" name=\"inp_submit_gram\" value=\"$get_food_serving_size_measurement_metric\" class=\"btn btn_default\" />
-						<input type=\"submit\" name=\"inp_submit_pcs\" value=\"$get_food_serving_size_pcs_measurement\" class=\"btn btn_default\" />";
-					}
-					echo"
-					</p>
-					</form>
-				<!-- //Add food -->
-			</div>
-			";
-
-			// Increment
-			$x++;
+					// Increment
+					$x++;
 		
-			// Reset
-			if($x == 4){
-				$x = 0;
-			}
-		
-		}
+					// Reset
+					if($x == 4){
+						$x = 0;
+					}
+		} // while
 
 		if($x == "2"){
 			echo"

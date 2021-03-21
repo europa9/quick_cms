@@ -104,6 +104,17 @@ while($row = mysqli_fetch_row($result)) {
 		$x++;
 	} // has image
 } // while
+if($x == "1"){
+	echo"
+				<div class=\"blog_flex_column_b_left_item\">
+					
+				</div>
+			</div>
+			<div class=\"blog_flex_column_b_right\">
+				
+			</div>
+	";
+}
 
 echo"
 </div> <!-- //blog_flex_row_b -->

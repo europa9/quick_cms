@@ -26,4 +26,9 @@ $l_query = "Query";
 $l_advanced = "Advanced";
 $l_method = "Method";
 $l_score = "Score";
+$l_hundred = "100";
+$l_calories_abbr_lowercase = "cal";
+$l_fat_abbr_lowercase  = "fat";
+$l_carbohydrates_abbr_lowercase = "car";
+$l_proteins_abbr_lowercase = "pro";
 ?>

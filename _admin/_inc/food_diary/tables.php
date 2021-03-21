@@ -35,6 +35,9 @@ $t_food_diary_consumed_hours  	= $mysqlPrefixSav . "food_diary_consumed_hours";
 $t_food_diary_last_used 	= $mysqlPrefixSav . "food_diary_last_used";
 $t_food_diary_user_adapted_view = $mysqlPrefixSav . "food_diary_user_adapted_view";
 
+$t_food_diary_meals_index	= $mysqlPrefixSav . "food_diary_meals_index";
+$t_food_diary_meals_items	= $mysqlPrefixSav . "food_diary_meals_items";
+
 if($action == ""){
 	echo"
 	<h1>Tables</h1>
