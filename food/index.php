@@ -643,11 +643,6 @@ echo"
 				<div class=\"clear\"></div>
 		";
 	}
-	else{
-		echo"
-		<span style=\"color: brown\">$x</span>
-		";
-	}
 	echo"
 	</div>
 
