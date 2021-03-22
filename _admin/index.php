@@ -400,9 +400,11 @@ echo"<!DOCTYPE html>
 	<meta name=\"viewport\" content=\"width=device-width; initial-scale=1.0;\"/>
 
 
-	<!-- CSS -->
-	<link rel=\"stylesheet\" href=\"_design/reset.css\" type=\"text/css\" />
-	<link rel=\"stylesheet\" href=\"_design/admin.css\" type=\"text/css\" />
+	<!-- CSS -->";
+	$rand = date("ymdhis");
+	echo"
+	<link rel=\"stylesheet\" href=\"_design/reset.css?rand=$rand\" type=\"text/css\" />
+	<link rel=\"stylesheet\" href=\"_design/admin.css?rand=$rand\" type=\"text/css\" />
 	<!-- //CSS -->
 
 	<!-- Special CSS -->
@@ -414,7 +416,7 @@ echo"<!DOCTYPE html>
 			$special_css = "_inc/$open/_stylesheets/default.css";
 		}
 		if(file_exists("$special_css")){
-			echo"<link rel=\"stylesheet\" type=\"text/css\" href=\"$special_css\" />";
+			echo"<link rel=\"stylesheet\" type=\"text/css\" href=\"$special_css?rand=$rand\" />";
 		}
 		else{
 			echo"<!-- $special_css doesnt exists -->";

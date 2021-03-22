@@ -512,30 +512,31 @@ if($action == ""){
 			<!-- New Tasks / Unassigned -->
 				<div class=\"flex_col_white_bg\">";
 
+			$time = time();
+
 			$query_t = "SELECT status_code_id, status_code_title, status_code_text_color, status_code_bg_color, status_code_border_color, status_code_weight, status_code_show_on_board, status_code_on_status_close_task, status_code_count_tasks FROM $t_tasks_status_codes WHERE status_code_show_on_board=1 AND status_code_task_is_assigned=0 ORDER BY status_code_weight ASC LIMIT 0,1";
 			$result_t = mysqli_query($link, $query_t);
 			$row_t = mysqli_fetch_row($result_t);
 			list($get_status_code_id, $get_status_code_title, $get_status_code_text_color, $get_status_code_bg_color, $get_status_code_border_color, $get_status_code_weight, $get_status_code_show_on_board, $get_status_code_on_status_close_task, $get_status_code_count_tasks) = $row_t;	
 
 					echo"
-					<div class=\"flex_col_white_bg_headline_left\">
-						<h2>$get_status_code_title</h2>
+					<div class=\"task_status_headline\">
+						<div class=\"task_status_headline_left\">
+							<h2>$get_status_code_title</h2>
+						</div>
+						<div class=\"task_status_headline_right\">
+							<p>
+							<a href=\"index.php?open=dashboard&amp;page=tasks&amp;action=new_task&amp;status_code_id=$get_status_code_id&amp;l=$l\">+</a>
+							</p>
+						</div>
 					</div>
-					<div class=\"flex_col_white_bg_headline_right\">
-						<p>
-						<a href=\"index.php?open=dashboard&amp;page=tasks&amp;status_code_id=$get_status_code_id&amp;l=$l\">Open</a>	
-						&middot;	
-						<a href=\"index.php?open=dashboard&amp;page=tasks&amp;action=new_task&amp;status_code_id=$get_status_code_id&amp;l=$l\">New task</a>
-						</p>
-					</div>
+					<div class=\"clear\"></div>";
 
-					<div class=\"vertical\">
-						<ul>";
-						$query = "SELECT task_id, task_system_task_abbr, task_system_incremented_number, task_project_task_abbr, task_project_incremented_number, task_title, task_text, task_status_code_id, task_priority_id, task_created_datetime, task_created_by_user_id, task_created_by_user_alias, task_created_by_user_image, task_created_by_user_email, task_updated_datetime, task_due_datetime, task_due_time, task_due_translated, task_assigned_to_user_id, task_assigned_to_user_alias, task_assigned_to_user_image, task_assigned_to_user_thumb_40, task_assigned_to_user_email, task_qa_datetime, task_qa_by_user_id, task_qa_by_user_alias, task_qa_by_user_image, task_qa_by_user_email, task_finished_datetime, task_finished_by_user_id, task_finished_by_user_alias, task_finished_by_user_image, task_finished_by_user_email, task_is_archived, task_comments, task_project_id, task_project_part_id, task_system_id, task_system_part_id FROM $t_tasks_index ";
+						$query = "SELECT task_id, task_system_task_abbr, task_system_incremented_number, task_project_task_abbr, task_project_incremented_number, task_title, task_text, task_status_code_id, task_priority_id, task_priority_weight, task_created_datetime, task_created_by_user_id, task_created_by_user_alias, task_created_by_user_image, task_created_by_user_email, task_updated_datetime, task_due_datetime, task_due_time, task_due_translated, task_assigned_to_user_id, task_assigned_to_user_alias, task_assigned_to_user_image, task_assigned_to_user_thumb_40, task_assigned_to_user_email, task_qa_datetime, task_qa_by_user_id, task_qa_by_user_alias, task_qa_by_user_image, task_qa_by_user_email, task_finished_datetime, task_finished_by_user_id, task_finished_by_user_alias, task_finished_by_user_image, task_finished_by_user_email, task_is_archived, task_comments, task_project_id, task_project_part_id, task_system_id, task_system_part_id FROM $t_tasks_index ";
 						$query = $query . "WHERE task_status_code_id=$get_status_code_id AND task_is_archived='0' ORDER BY task_priority_id, task_id ASC";
 						$result = mysqli_query($link, $query);
 						while($row = mysqli_fetch_row($result)) {
-							list($get_task_id, $get_task_system_task_abbr, $get_task_system_incremented_number, $get_task_project_task_abbr, $get_task_project_incremented_number, $get_task_title, $get_task_text, $get_task_status_code_id, $get_task_priority_id, $get_task_created_datetime, $get_task_created_by_user_id, $get_task_created_by_user_alias, $get_task_created_by_user_image, $get_task_created_by_user_email, $get_task_updated_datetime, $get_task_due_datetime, $get_task_due_time, $get_task_due_translated, $get_task_assigned_to_user_id, $get_task_assigned_to_user_alias, $get_task_assigned_to_user_image, $get_task_assigned_to_user_thumb_40, $get_task_assigned_to_user_email, $get_task_qa_datetime, $get_task_qa_by_user_id, $get_task_qa_by_user_alias, $get_task_qa_by_user_image, $get_task_qa_by_user_email, $get_task_finished_datetime, $get_task_finished_by_user_id, $get_task_finished_by_user_alias, $get_task_finished_by_user_image, $get_task_finished_by_user_email, $get_task_is_archived, $get_task_comments, $get_task_project_id, $get_task_project_part_id, $get_task_system_id, $get_task_system_part_id) = $row;
+							list($get_task_id, $get_task_system_task_abbr, $get_task_system_incremented_number, $get_task_project_task_abbr, $get_task_project_incremented_number, $get_task_title, $get_task_text, $get_task_status_code_id, $get_task_priority_id, $get_task_priority_weight, $get_task_created_datetime, $get_task_created_by_user_id, $get_task_created_by_user_alias, $get_task_created_by_user_image, $get_task_created_by_user_email, $get_task_updated_datetime, $get_task_due_datetime, $get_task_due_time, $get_task_due_translated, $get_task_assigned_to_user_id, $get_task_assigned_to_user_alias, $get_task_assigned_to_user_image, $get_task_assigned_to_user_thumb_40, $get_task_assigned_to_user_email, $get_task_qa_datetime, $get_task_qa_by_user_id, $get_task_qa_by_user_alias, $get_task_qa_by_user_image, $get_task_qa_by_user_email, $get_task_finished_datetime, $get_task_finished_by_user_id, $get_task_finished_by_user_alias, $get_task_finished_by_user_image, $get_task_finished_by_user_email, $get_task_is_archived, $get_task_comments, $get_task_project_id, $get_task_project_part_id, $get_task_system_id, $get_task_system_part_id) = $row;
 
 							// Number
 							$number = "";
@@ -559,7 +560,10 @@ if($action == ""){
 
 					
 							echo"
-							<li><a href=\"index.php?open=$open&amp;page=tasks&amp;action=open_task&amp;task_id=$get_task_id&amp;l=$l&amp;editor_language=$editor_language\""; if($get_read_id == ""){ echo" style=\"font-weight: bold;\""; } echo">";
+							<div class=\"task_content_priority_$get_task_priority_weight\">
+
+								<p>
+								<a href=\"index.php?open=$open&amp;page=tasks&amp;action=open_task&amp;task_id=$get_task_id&amp;l=$l&amp;editor_language=$editor_language\""; if($get_read_id == ""){ echo" style=\"font-weight: bold;\""; } echo">";
 
 							// Assigned to image
 							if($get_task_assigned_to_user_id == "" OR $get_task_assigned_to_user_id == "0"){
@@ -579,12 +583,12 @@ if($action == ""){
 
 							}
 							echo"
-							$number  $get_task_title</a></li>
+								$number  $get_task_title</a>
+								</p>
+							</div> <!-- //task_priority_x -->
 							";
 						}
 						echo"
-						</ul>
-					</div> <!-- //vertical -->
 				</div> <!-- //flex_col_white_bg -->
 			<!-- //New Tasks / Unassigned -->
 
@@ -604,37 +608,32 @@ if($action == ""){
 
 					echo"
 					<div class=\"flex_col_white_bg\">
-
-						<div class=\"flex_col_white_bg_headline_left\">
-							<table>
-							 <tr>
-							  <td style=\"vertical-align:top;padding:0px 5px 0px 0px;\">
-								<p>";
-								// Assigned to image
-								if($get_photo_thumb_40 != "" && file_exists("../_uploads/users/images/$get_user_id/$get_photo_thumb_40")){
-									echo"
-									<img src=\"../_uploads/users/images/$get_user_id/$get_photo_thumb_40\" alt=\"$get_photo_thumb_40\" width=\"20\" height=\"20\" />
-									";
-								}
-								else{
-									echo"
-									<img src=\"_inc/dashboard/_img/avatar_blank_40.png\" alt=\"avatar_blank_40.png\" width=\"20\" height=\"20\" />
-									";
-								}
-								echo"</p>
-							  </td>
-							  <td style=\"vertical-align:top;\">
-								<h2 style=\"padding: 8px 0px 8px 0px;\">$get_user_name</h2>
-							  </td>
-							 </tr>
-							</table>
-						</div>
-						<div class=\"flex_col_white_bg_headline_right\">
-							<p>
-							<a href=\"index.php?open=dashboard&amp;page=tasks&amp;user_id=$get_user_id&amp;l=$l\">Open</a>	
-							&middot;	
-							<a href=\"index.php?open=dashboard&amp;page=tasks&amp;action=new_task&amp;l=$l\">New task</a>
-							</p>
+						<div class=\"task_status_headline\">
+							<div class=\"task_status_headline_left\">
+								
+								
+									<p>";
+									// Assigned to image
+									if($get_photo_thumb_40 != "" && file_exists("../_uploads/users/images/$get_user_id/$get_photo_thumb_40")){
+										echo"
+										<img src=\"../_uploads/users/images/$get_user_id/$get_photo_thumb_40\" alt=\"$get_photo_thumb_40\" width=\"20\" height=\"20\" />
+										";
+									}
+									else{
+										echo"
+										<img src=\"_inc/dashboard/_img/avatar_blank_40.png\" alt=\"avatar_blank_40.png\" width=\"20\" height=\"20\" />
+										";
+									}
+									echo"</p>
+								
+									<h2 style=\"padding: 8px 0px 8px 0px;\">$get_user_name</h2>
+								
+							</div>
+							<div class=\"task_status_headline_right\">
+								<p>
+								<a href=\"index.php?open=dashboard&amp;page=tasks&amp;action=new_task&amp;status_code_id=$get_status_code_id&amp;inp_assigned_to_user_alias=$get_user_name&amp;l=$l\">+</a>
+								</p>
+							</div>
 						</div>
 						<div class=\"clear\"></div>
 						";
@@ -647,43 +646,53 @@ if($action == ""){
 
 							echo"
 							<h3>$get_status_code_title</h3>
-							
-							<div class=\"vertical\">
-								<ul>";
-								$query = "SELECT task_id, task_system_task_abbr, task_system_incremented_number, task_project_task_abbr, task_project_incremented_number, task_title, task_text, task_status_code_id, task_priority_id, task_created_datetime, task_created_by_user_id, task_created_by_user_alias, task_created_by_user_image, task_created_by_user_email, task_updated_datetime, task_due_datetime, task_due_time, task_due_translated, task_assigned_to_user_id, task_assigned_to_user_alias, task_assigned_to_user_image, task_assigned_to_user_thumb_40, task_assigned_to_user_email, task_qa_datetime, task_qa_by_user_id, task_qa_by_user_alias, task_qa_by_user_image, task_qa_by_user_email, task_finished_datetime, task_finished_by_user_id, task_finished_by_user_alias, task_finished_by_user_image, task_finished_by_user_email, task_is_archived, task_comments, task_project_id, task_project_part_id, task_system_id, task_system_part_id FROM $t_tasks_index ";
-								$query = $query . "WHERE task_status_code_id=$get_status_code_id AND task_assigned_to_user_id=$get_user_id AND task_is_archived='0' ORDER BY task_priority_id, task_id ASC";
-								$result = mysqli_query($link, $query);
-								while($row = mysqli_fetch_row($result)) {
-									list($get_task_id, $get_task_system_task_abbr, $get_task_system_incremented_number, $get_task_project_task_abbr, $get_task_project_incremented_number, $get_task_title, $get_task_text, $get_task_status_code_id, $get_task_priority_id, $get_task_created_datetime, $get_task_created_by_user_id, $get_task_created_by_user_alias, $get_task_created_by_user_image, $get_task_created_by_user_email, $get_task_updated_datetime, $get_task_due_datetime, $get_task_due_time, $get_task_due_translated, $get_task_assigned_to_user_id, $get_task_assigned_to_user_alias, $get_task_assigned_to_user_image, $get_task_assigned_to_user_thumb_40, $get_task_assigned_to_user_email, $get_task_qa_datetime, $get_task_qa_by_user_id, $get_task_qa_by_user_alias, $get_task_qa_by_user_image, $get_task_qa_by_user_email, $get_task_finished_datetime, $get_task_finished_by_user_id, $get_task_finished_by_user_alias, $get_task_finished_by_user_image, $get_task_finished_by_user_email, $get_task_is_archived, $get_task_comments, $get_task_project_id, $get_task_project_part_id, $get_task_system_id, $get_task_system_part_id) = $row;
+							";
+
+							// Tasks
+							$query = "SELECT task_id, task_system_task_abbr, task_system_incremented_number, task_project_task_abbr, task_project_incremented_number, task_title, task_text, task_status_code_id, task_priority_id, task_priority_weight, task_created_datetime, task_created_by_user_id, task_created_by_user_alias, task_created_by_user_image, task_created_by_user_email, task_updated_datetime, task_due_datetime, task_due_time, task_due_translated, task_assigned_to_user_id, task_assigned_to_user_alias, task_assigned_to_user_image, task_assigned_to_user_thumb_40, task_assigned_to_user_email, task_qa_datetime, task_qa_by_user_id, task_qa_by_user_alias, task_qa_by_user_image, task_qa_by_user_email, task_finished_datetime, task_finished_by_user_id, task_finished_by_user_alias, task_finished_by_user_image, task_finished_by_user_email, task_is_archived, task_comments, task_project_id, task_project_part_id, task_system_id, task_system_part_id FROM $t_tasks_index ";
+							$query = $query . "WHERE task_status_code_id=$get_status_code_id AND task_assigned_to_user_id=$get_user_id AND task_is_archived='0' ORDER BY task_priority_id, task_id ASC";
+							$result = mysqli_query($link, $query);
+							while($row = mysqli_fetch_row($result)) {
+								list($get_task_id, $get_task_system_task_abbr, $get_task_system_incremented_number, $get_task_project_task_abbr, $get_task_project_incremented_number, $get_task_title, $get_task_text, $get_task_status_code_id, $get_task_priority_id, $get_task_priority_weight, $get_task_created_datetime, $get_task_created_by_user_id, $get_task_created_by_user_alias, $get_task_created_by_user_image, $get_task_created_by_user_email, $get_task_updated_datetime, $get_task_due_datetime, $get_task_due_time, $get_task_due_translated, $get_task_assigned_to_user_id, $get_task_assigned_to_user_alias, $get_task_assigned_to_user_image, $get_task_assigned_to_user_thumb_40, $get_task_assigned_to_user_email, $get_task_qa_datetime, $get_task_qa_by_user_id, $get_task_qa_by_user_alias, $get_task_qa_by_user_image, $get_task_qa_by_user_email, $get_task_finished_datetime, $get_task_finished_by_user_id, $get_task_finished_by_user_alias, $get_task_finished_by_user_image, $get_task_finished_by_user_email, $get_task_is_archived, $get_task_comments, $get_task_project_id, $get_task_project_part_id, $get_task_system_id, $get_task_system_part_id) = $row;
 			
-									// Number
-									$number = "";
-									if($get_task_project_incremented_number == "0" OR $get_task_project_incremented_number == ""){
-										if($get_task_system_incremented_number == "0" OR $get_task_system_incremented_number == ""){
-											$number = "$get_task_id";
-										}
-										else{
-											$number = "$get_task_system_task_abbr-$get_task_system_incremented_number";
-										}
+								// Number
+								$number = "";
+								if($get_task_project_incremented_number == "0" OR $get_task_project_incremented_number == ""){
+									if($get_task_system_incremented_number == "0" OR $get_task_system_incremented_number == ""){
+										$number = "$get_task_id";
 									}
 									else{
-										$number = "$get_task_project_task_abbr-$get_task_project_incremented_number";
+										$number = "$get_task_system_task_abbr-$get_task_system_incremented_number";
 									}
-
-									// Read?
-									$query_r = "SELECT read_id FROM $t_tasks_read WHERE read_task_id=$get_task_id AND read_user_id=$my_user_id_mysql";
-									$result_r = mysqli_query($link, $query_r);
-									$row_r = mysqli_fetch_row($result_r);
-									list($get_read_id) = $row_r;	
-
-					
-									echo"
-									<li><a href=\"index.php?open=$open&amp;page=tasks&amp;action=open_task&amp;task_id=$get_task_id&amp;l=$l&amp;editor_language=$editor_language\""; if($get_read_id == ""){ echo" style=\"font-weight: bold;\""; } echo">$number  $get_task_title</a></li>
-									";
 								}
+								else{
+									$number = "$get_task_project_task_abbr-$get_task_project_incremented_number";
+								}
+
+								// Read?
+								$query_r = "SELECT read_id FROM $t_tasks_read WHERE read_task_id=$get_task_id AND read_user_id=$my_user_id_mysql";
+								$result_r = mysqli_query($link, $query_r);
+								$row_r = mysqli_fetch_row($result_r);
+								list($get_read_id) = $row_r;	
+
+									
+								echo"
+								<div class=\"task_content_priority_$get_task_priority_weight\">
+ 									<!-- Due -->";
+										if($time > $get_task_due_time){
+											echo"<div class=\"task_content_info\">
+												<p>$get_task_due_translated</p>
+											</div>\n";
+										}
+										echo"
+ 									<!-- //Due -->
+									<p>
+									<a href=\"index.php?open=$open&amp;page=tasks&amp;action=open_task&amp;task_id=$get_task_id&amp;l=$l&amp;editor_language=$editor_language\""; if($get_read_id == ""){ echo" style=\"font-weight: bold;\""; } echo">$number $get_task_title</a>
+									</p>
+								</div>
+								";
+							} // tasks (for this admin)
 							echo"
-								</ul>
-							</div> <!-- //vertical -->
 							";
 						} // statuses
 
@@ -695,6 +704,9 @@ if($action == ""){
 
 			<!-- //Tasks per admin -->
 		</div>
+		";
+		include("_inc/dashboard/tasks_include_send_monthly_newsletter.php");
+		echo"
 	<!-- //Row 3 -->
 	";
 }

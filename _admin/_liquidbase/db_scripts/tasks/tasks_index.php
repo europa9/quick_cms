@@ -27,6 +27,7 @@ else{
 	   task_status_code_id INT,
 	   task_status_code_title VARCHAR(200),
 	   task_priority_id INT,
+	   task_priority_weight INT,
 	   task_created_datetime DATETIME,
 	   task_created_translated VARCHAR(200),
 	   task_created_by_user_id INT,

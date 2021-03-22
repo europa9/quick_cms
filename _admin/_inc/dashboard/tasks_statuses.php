@@ -122,7 +122,12 @@ if($action == ""){
 					<span>$get_status_code_title</span>
 				  </td>
 				  <td class=\"$style\">
-					<span style=\"background: $get_status_code_text_color;\">$get_status_code_text_color</span>	
+					<div style=\"float: left;background: $get_status_code_bg_color;border: $get_status_code_border_color 1px solid;padding:4px;margin-right: 6px;\">
+						<span style=\"color: $get_status_code_text_color;\">$get_status_code_text_color</span>
+					</div>
+					<div style=\"float: left;background: $get_status_code_bg_color;border: #eeeeee 1px solid;border-top: $get_status_code_border_color 4px solid;padding:4px;\">
+						<span style=\"color: $get_status_code_text_color;\">$get_status_code_text_color</span>
+					</div>
 				  </td>
 				  <td class=\"$style\">
 					<span>$get_status_code_show_on_board</span>
@@ -167,6 +172,15 @@ elseif($action == "new"){
 		$inp_text_color = output_html($inp_text_color);
 		$inp_text_color_mysql = quote_smart($link, $inp_text_color);
 
+		$inp_bg_color = $_POST['inp_bg_color'];
+		$inp_bg_color = output_html($inp_bg_color);
+		$inp_bg_color_mysql = quote_smart($link, $inp_bg_color);
+
+		$inp_border_color = $_POST['inp_border_color'];
+		$inp_border_color = output_html($inp_border_color);
+		$inp_border_color_mysql = quote_smart($link, $inp_border_color);
+
+
 		$inp_show_on_board = $_POST['inp_show_on_board'];
 		$inp_show_on_board = output_html($inp_show_on_board);
 		$inp_show_on_board_mysql = quote_smart($link, $inp_show_on_board);
@@ -177,9 +191,9 @@ elseif($action == "new"){
 
 		// Insert
 		mysqli_query($link, "INSERT INTO $t_tasks_status_codes 
-		(status_code_id, status_code_title, status_code_text_color, status_code_weight, status_code_show_on_board, status_code_task_is_assigned, status_code_count_tasks) 
+		(status_code_id, status_code_title, status_code_text_color, status_code_bg_color, status_code_border_color, status_code_weight, status_code_show_on_board, status_code_task_is_assigned, status_code_count_tasks) 
 		VALUES 
-		(NULL, $inp_title_mysql, $inp_text_color_mysql, 999, $inp_show_on_board_mysql, $inp_task_is_assigned_mysql, 0)")
+		(NULL, $inp_title_mysql, $inp_text_color_mysql, $inp_bg_color_mysql, $inp_border_color_mysql, 999, $inp_show_on_board_mysql, $inp_task_is_assigned_mysql, 0)")
 		or die(mysqli_error($link));
 
 		// Get ID
@@ -239,6 +253,14 @@ elseif($action == "new"){
 		<input type=\"text\" name=\"inp_text_color\" value=\"\" size=\"25\" />
 		</p>
 
+		<p>Bg color:<br />
+		<input type=\"text\" name=\"inp_bg_color\" value=\"\" size=\"25\" />
+		</p>
+
+		<p>Border color:<br />
+		<input type=\"text\" name=\"inp_border_color\" value=\"\" size=\"25\" />
+		</p>
+
 		<p>Show on board:<br />
 		<input type=\"radio\" name=\"inp_show_on_board\" value=\"1\" checked=\"checked\" /> Yes
 		<input type=\"radio\" name=\"inp_show_on_board\" value=\"0\" /> No
@@ -281,6 +303,14 @@ elseif($action == "edit"){
 			$inp_text_color = output_html($inp_text_color);
 			$inp_text_color_mysql = quote_smart($link, $inp_text_color);
 
+			$inp_bg_color = $_POST['inp_bg_color'];
+			$inp_bg_color = output_html($inp_bg_color);
+			$inp_bg_color_mysql = quote_smart($link, $inp_bg_color);
+
+			$inp_border_color = $_POST['inp_border_color'];
+			$inp_border_color = output_html($inp_border_color);
+			$inp_border_color_mysql = quote_smart($link, $inp_border_color);
+
 			$inp_show_on_board = $_POST['inp_show_on_board'];
 			$inp_show_on_board = output_html($inp_show_on_board);
 			$inp_show_on_board_mysql = quote_smart($link, $inp_show_on_board);
@@ -292,6 +322,8 @@ elseif($action == "edit"){
 			$result = mysqli_query($link, "UPDATE $t_tasks_status_codes SET
 					status_code_title=$inp_title_mysql, 
 					status_code_text_color=$inp_text_color_mysql, 
+					status_code_bg_color=$inp_bg_color_mysql, 
+					status_code_border_color=$inp_border_color_mysql, 
 					status_code_show_on_board=$inp_show_on_board_mysql, 
 					status_code_task_is_assigned=$inp_task_is_assigned_mysql
 					WHERE status_code_id=$get_current_status_code_id") or die(mysqli_error($link));
@@ -341,8 +373,16 @@ elseif($action == "edit"){
 			<input type=\"text\" name=\"inp_title\" value=\"$get_current_status_code_title\" size=\"25\" />
 			</p>
 
-			<p>Color:<br />
+			<p>Text color:<br />
 			<input type=\"text\" name=\"inp_text_color\" value=\"$get_current_status_code_text_color\" size=\"25\" />
+			</p>
+
+			<p>Bg color:<br />
+			<input type=\"text\" name=\"inp_bg_color\" value=\"$get_current_status_code_bg_color\" size=\"25\" />
+			</p>
+
+			<p>Border color:<br />
+			<input type=\"text\" name=\"inp_border_color\" value=\"$get_current_status_code_border_color\" size=\"25\" />
 			</p>
 
 			<p>Show on board:<br />

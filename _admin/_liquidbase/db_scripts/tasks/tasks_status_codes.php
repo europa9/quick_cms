@@ -34,14 +34,13 @@ else{
 	// Quality assurance: Pink #efb3e6
 	// Finished: Green #15c377
 	mysqli_query($link, "INSERT INTO $t_tasks_status_codes
-	(`status_code_id`, `status_code_title`, `status_code_text_color`, `status_code_bg_color`, `status_code_border_color`, `status_code_weight`, `status_code_show_on_board`, `status_code_task_is_assigned`, `status_code_on_status_close_task`, `status_code_count_tasks`) 
-	VALUES 
-	(NULL, 'Tasks', '#b2def7', NULL, NULL, 1, 1, 0, 0, 16),
-	(NULL, 'Waiting', '#274f9f', NULL, NULL, 2, 1, 1, NULL, 0),
-	(NULL, 'Ongoing', '#faa64b', NULL, NULL, 3, 1, 1, 0, 1),
-	(NULL, 'Quality assurance', '#efb3e6', NULL, NULL, 4, 1, 1, 0, 0),
-	(NULL, 'Blocked', '#f96868', NULL, NULL, 5, 1, 1, 0, 0),
-	(NULL, 'Finished', '#15c377', NULL, NULL, 6, 0, 0, 1, 0)
+	(`status_code_id`, `status_code_title`, `status_code_text_color`, `status_code_bg_color`, `status_code_border_color`, `status_code_weight`, `status_code_show_on_board`, `status_code_task_is_assigned`, `status_code_on_status_close_task`, `status_code_count_tasks`) VALUES
+	(1, 'Tasks', '#000000', '#ffffff', '#b731ff', 1, 1, 0, 0, 16),
+	(2, 'Waiting', '#000000', '#ffffff', '#5b8df4', 2, 1, 1, NULL, 1),
+	(3, 'Ongoing', '#000000', '#ffffff', '#32b53c', 3, 1, 1, 0, 0),
+	(4, 'Quality assurance', '#000000', '#ffffff', '#ffcc00', 4, 1, 1, 0, 1),
+	(5, 'Blocked', '#000000', '#ffffff', '#ff7d48', 5, 1, 1, 0, 58),
+	(6, 'Finished', '#000000', '#ffffff', '#ef3030', 6, 0, 0, 1, 0)
 	")
 	or die(mysqli_error($link));
 }
