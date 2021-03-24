@@ -14,11 +14,41 @@ if(!(isset($define_access_to_control_panel))){
 }
 
 
+/*- Check if setup is run ------------------------------------------------------------- */
+$t_downloads_liquidbase				= $mysqlPrefixSav . "downloads_liquidbase";
+$query = "SELECT * FROM $t_downloads_liquidbase LIMIT 1";
+$result = mysqli_query($link, $query);
+if($result !== FALSE){
+
+}
+else{
+	echo"
+	<div class=\"info\"><p><img src=\"_design/gfx/loading_22.gif\" alt=\"loading_22.gif\" /> Running setup</p></div>
+	<meta http-equiv=\"refresh\" content=\"1;url=index.php?open=$open&amp;page=tables&amp;refererer=default&amp;editor_language=$editor_language&amp;l=$l\" />
+	";
+} // setup has not runned
 
 /*- Scriptstart ---------------------------------------------------------------------- */
 echo"
 
 <h1>Downloads</h1>
+
+<!-- Downloads menu buttons -->
+	<p>";
+
+	// Navigation
+	$query = "SELECT navigation_id FROM $t_pages_navigation WHERE navigation_url_path='downloads/index.php'";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_navigation_id) = $row;
+	if($get_navigation_id == ""){
+		echo"
+		<a href=\"index.php?open=pages&amp;page=navigation&amp;action=new_auto_insert&amp;module=downloads&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\" class=\"btn_default\">Create navigation</a>
+		";
+	}
+	echo"
+	</p>
+<!-- //Downloads menu buttons -->
 
 <div class=\"vertical\">
 	<ul>

@@ -33,10 +33,6 @@ echo"
 		";
 	}
 	else{
-		echo"
-		";
-
-
 		mysqli_query($link, "CREATE TABLE $t_food_diary_meals_index(
 	  	 meal_id INT NOT NULL AUTO_INCREMENT,
 	 	  PRIMARY KEY(meal_id), 

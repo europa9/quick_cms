@@ -33,65 +33,6 @@ echo"
 		";
 	}
 	else{
-		echo"
-		<table>
-		 <tr> 
-		  <td style=\"padding-right: 6px;\">
-			<p>
-			<img src=\"_design/gfx/loading_22.gif\" alt=\"Loading\" />
-			</p>
-		  </td>
-		  <td>
-			<h1>Loading...</h1>
-		  </td>
-		 </tr>
-		</table>
-
-		
-		<meta http-equiv=\"refresh\" content=\"2;url=index.php?open=$open&amp;page=tables\">
-		<pre>CREATE TABLE $t_food_diary_goals(
-	  	 goal_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(goal_id), 
-	  	   goal_user_id INT,
-	  	   goal_kg_feet_inches VARCHAR(50),
-	  	   goal_current_weight INT,
-	  	   goal_current_fat_percentage INT,
-	  	   goal_target_weight INT,
-	  	   goal_target_fat_percentage INT,
-	  	   goal_i_want_to VARCHAR(50),
-	  	   goal_weekly_goal VARCHAR(50),
-	  	   goal_date DATE,
-	  	   goal_activity_level DOUBLE,
-	  	   goal_current_bmi INT,
-	  	   goal_target_bmi INT,
-	  	   goal_current_bmr_calories INT,
-	  	   goal_current_bmr_fat INT,
-	  	   goal_current_bmr_carbs INT,
-	  	   goal_current_bmr_proteins INT,
-	  	   goal_current_sedentary_calories INT,
-	  	   goal_current_sedentary_fat INT,
-	  	   goal_current_sedentary_carbs INT,
-	  	   goal_current_sedentary_proteins INT,
-	  	   goal_current_with_activity_calories INT,
-	  	   goal_current_with_activity_fat INT,
-	  	   goal_current_with_activity_carbs INT,
-	  	   goal_current_with_activity_proteins INT,
-	  	   goal_target_bmr_calories INT,
-	  	   goal_target_bmr_fat INT,
-	  	   goal_target_bmr_carbs INT,
-	  	   goal_target_bmr_proteins INT,
-	  	   goal_target_sedentary_calories INT,
-	  	   goal_target_sedentary_fat INT,
-	  	   goal_target_sedentary_carbs INT,
-	  	   goal_target_sedentary_proteins INT,
-	  	   goal_target_with_activity_calories INT,
-	  	   goal_target_with_activity_fat INT,
-	  	   goal_target_with_activity_carbs INT,
-	  	   goal_target_with_activity_proteins INT,
-	  	   goal_updated DATETIME,
-	  	   goal_synchronized VARCHAR(50),
-	  	   goal_notes VARCHAR(50))</pre>";
-
 
 		mysqli_query($link, "CREATE TABLE $t_food_diary_goals(
 	  	 goal_id INT NOT NULL AUTO_INCREMENT,

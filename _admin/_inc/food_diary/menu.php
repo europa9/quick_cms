@@ -27,8 +27,6 @@ if($page == "menu"){
 
 
 echo"
-			<li><a href=\"index.php?open=$open&amp;page=food_diary&amp;editor_language=$editor_language\""; if($page == "food_diary"){ echo" class=\"selected\""; } echo">Food diary</a></li>
-			<li><a href=\"index.php?open=$open&amp;page=not_logged_in&amp;editor_language=$editor_language\""; if($page == "not_logged_in"){ echo" class=\"selected\""; } echo">Not logged in</a></li>
 			<li><a href=\"index.php?open=$open&amp;page=tables&amp;editor_language=$editor_language\""; if($page == "tables"){ echo" class=\"selected\""; } echo">Tables</a></li>
 		
 ";

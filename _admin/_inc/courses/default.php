@@ -50,23 +50,27 @@ else {
 	$where = "comment_approved != '-1'";
 }
 
-if($action == ""){
+
+/*- Check if setup is run ------------------------------------------------------------- */
+$query = "SELECT * FROM $t_courses_liquidbase LIMIT 1";
+$result = mysqli_query($link, $query);
+if($result !== FALSE){
 	echo"
 	<h1>Courses</h1>
 				
 
 	<!-- Feedback -->
-	";
-	if($ft != ""){
-		if($fm == "changes_saved"){
-			$fm = "$l_changes_saved";
+		";
+		if($ft != ""){
+			if($fm == "changes_saved"){
+				$fm = "$l_changes_saved";
+			}
+			else{
+				$fm = ucfirst($fm);
+			}
+			echo"<div class=\"$ft\"><span>$fm</span></div>";
 		}
-		else{
-			$fm = ucfirst($fm);
-		}
-		echo"<div class=\"$ft\"><span>$fm</span></div>";
-	}
-	echo"	
+		echo"	
 	<!-- //Feedback -->
 
 
@@ -83,6 +87,18 @@ if($action == ""){
 		 <tr>
 		  <td style=\"vertical-align:top;padding-right: 20px;\">
 			<p>
+			";
+			// Navigation
+			$query = "SELECT navigation_id FROM $t_pages_navigation WHERE navigation_url_path='courses/index.php'";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_navigation_id) = $row;
+			if($get_navigation_id == ""){
+				echo"
+				<a href=\"index.php?open=pages&amp;page=navigation&amp;action=new_auto_insert&amp;module=courses&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\" class=\"btn_default\">Create navigation</a>
+				";
+			}
+			echo"
 			<a href=\"index.php?open=courses&amp;page=courses_new&amp;editor_language=$editor_language&amp;l=$l\" class=\"btn_default\">New course</a>
 			</p>
 		  </td>
@@ -201,4 +217,12 @@ if($action == ""){
 	
 	";
 }
+else{
+	// Setup not runned
+	echo"
+	<div class=\"info\"><p><img src=\"_design/gfx/loading_22.gif\" alt=\"loading_22.gif\" /> Running setup</p></div>
+	<meta http-equiv=\"refresh\" content=\"1;url=index.php?open=$open&amp;page=tables&amp;refererer=default&amp;editor_language=$editor_language&amp;l=$l\" />
+	";
+}
+
 ?>

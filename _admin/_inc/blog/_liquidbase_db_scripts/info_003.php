@@ -33,23 +33,6 @@ echo"
 		";
 	}
 	else{
-		echo"
-		<table>
-		 <tr> 
-		  <td style=\"padding-right: 6px;\">
-			<p>
-			<img src=\"_design/gfx/loading_22.gif\" alt=\"Loading\" />
-			</p>
-		  </td>
-		  <td>
-			<h1>Loading...</h1>
-		  </td>
-		 </tr>
-		</table>
-
-		
-		<meta http-equiv=\"refresh\" content=\"2;url=index.php?open=$open&amp;page=tables\">
-		";
 
 
 		mysqli_query($link, "CREATE TABLE $t_blog_info(

@@ -214,7 +214,15 @@ echo"<!DOCTYPE html>
 				while($row_nav_main = mysqli_fetch_row($result_nav_main)) {
 					list($get_a_navigation_id, $get_a_navigation_a_id, $get_a_navigation_title, $get_a_navigation_title_clean, $get_a_navigation_url, $get_a_navigation_url_path, $get_a_navigation_url_query, $get_a_navigation_internal_or_external, $get_a_navigation_icon_path, $get_a_navigation_icon_18x18_inactive, $get_a_navigation_icon_18x18_hover, $get_a_navigation_icon_18x18_active) = $row_nav_main;
 					echo"				";
-					echo"<p>$get_a_navigation_title</p>
+					echo"<p>";
+					if($get_a_navigation_url != ""){
+						echo"<a href=\"$root/$get_a_navigation_url_path$get_a_navigation_url_query\">$get_a_navigation_title</a>";
+					}
+					else{
+						echo"$get_a_navigation_title";
+					}
+					echo"</p>
+
 					<ul class=\"main_navigation\">\n";
 
 

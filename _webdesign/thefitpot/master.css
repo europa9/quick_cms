@@ -369,6 +369,12 @@ header{
 		letter-spacing: 1px;
 		padding: 20px 0px 5px 12px;
 	}
+	nav p > a{
+		color: #c5c5c5;
+	}
+	nav p > a:hover{
+		color: #ffffff;
+	}
 	ul.main_navigation{
 		list-style:none;
 		margin: 0px 0px 0px 0px;

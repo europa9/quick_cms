@@ -25,10 +25,9 @@ else{ $root = "../../.."; }
 /*- Website config --------------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
-/*- Tables ------------------------------------------------------------------------------------ */
-$t_stats_comments_per_year	= $mysqlPrefixSav . "stats_comments_per_year";
-$t_stats_comments_per_month	= $mysqlPrefixSav . "stats_comments_per_month";
-$t_downloads_comments 		= $mysqlPrefixSav . "downloads_comments";
+/*- Tables ---------------------------------------------------------------------------- */
+include("_tables_downloads.php");
+
 
 /*- Translation ------------------------------------------------------------------------------ */
 

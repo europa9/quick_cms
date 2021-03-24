@@ -37,7 +37,18 @@ if(!(file_exists("_data/blog.php"))){
 	fwrite($fh, $update_file);
 	fclose($fh);
 }
-
+/*- Check if setup is run ------------------------------------------------------------- */
+$t_blog_liquidbase			= $mysqlPrefixSav . "blog_liquidbase";
+$query = "SELECT * FROM $t_blog_liquidbase LIMIT 1";
+$result = mysqli_query($link, $query);
+if($result !== FALSE){
+}
+else{
+	echo"
+	<div class=\"info\"><p><img src=\"_design/gfx/loading_22.gif\" alt=\"loading_22.gif\" /> Running setup</p></div>
+	<meta http-equiv=\"refresh\" content=\"1;url=index.php?open=blog&amp;page=tables&amp;refererer=default&amp;editor_language=$editor_language&amp;l=$l\" />
+	";
+}
 
 /*- Variables ------------------------------------------------------------------------ */
 $tabindex = 0;
@@ -114,13 +125,32 @@ if($ft != ""){
 		$fm = "$l_changes_saved";
 	}
 	else{
-		$fm = ucfirst($ft);
+		$fm = ucfirst($fm);
+		$fm = str_replace("_", " ", $fm);
 	}
 	echo"<div class=\"$ft\"><span>$fm</span></div>";
 }
 echo"	
 <!-- //Feedback -->
 
+
+<!-- Blog module menu buttons -->
+	";
+
+	// Navigation
+	$query = "SELECT navigation_id FROM $t_pages_navigation WHERE navigation_url_path='blog/index.php'";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_navigation_id) = $row;
+	if($get_navigation_id == ""){
+		echo"
+		<p>
+		<a href=\"index.php?open=pages&amp;page=navigation&amp;action=new_auto_insert&amp;module=blog&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\" class=\"btn_default\">Create navigation</a>
+		</p>
+		";
+	}
+	echo"
+<!-- //Blog module menu buttons -->
 
 <form method=\"post\" action=\"index.php?open=$open&amp;page=default&amp;process=1\" enctype=\"multipart/form-data\">
 

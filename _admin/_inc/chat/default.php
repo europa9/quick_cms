@@ -61,6 +61,22 @@ if(!(file_exists("_data/chat.php"))){
 }
 include("_data/chat.php");
 
+
+
+/*- Check if setup has runned -------------------------------------------------------- */
+$t_chat_liquidbase = $mysqlPrefixSav . "chat_liquidbase";
+$query = "SELECT * FROM $t_chat_liquidbase LIMIT 1";
+$result = mysqli_query($link, $query);
+if($result !== FALSE){
+}
+else{
+	echo"
+	<div class=\"info\"><p><img src=\"_design/gfx/loading_22.gif\" alt=\"loading_22.gif\" /> Running setup</p></div>
+	<meta http-equiv=\"refresh\" content=\"1;url=index.php?open=$open&amp;page=tables&amp;refererer=default&amp;editor_language=$editor_language&amp;l=$l\" />
+	";
+}
+
+
 /*- Variables ------------------------------------------------------------------------ */
 $tabindex = 0;
 
@@ -137,6 +153,7 @@ if($action == ""){
 		}
 		else{
 			$fm = ucfirst($fm);
+			$fm = str_replace("_", " ", $fm);
 		}
 		echo"<div class=\"$ft\"><span>$fm</span></div>";
 		}
@@ -145,13 +162,31 @@ if($action == ""){
 
 
 		<!-- Where am I? -->
-		<p><b>You are here:</b><br />
-		<a href=\"index.php?open=chat&amp;page=menu&amp;editor_language=$editor_language&amp;l=$l\">Chat</a>
-		&gt;
-		<a href=\"index.php?open=chat&amp;page=default&amp;editor_language=$editor_language&amp;l=$l\">Default</a>
-		</p>
+			<p><b>You are here:</b><br />
+			<a href=\"index.php?open=chat&amp;page=menu&amp;editor_language=$editor_language&amp;l=$l\">Chat</a>
+			&gt;
+			<a href=\"index.php?open=chat&amp;page=default&amp;editor_language=$editor_language&amp;l=$l\">Default</a>
+			</p>
 		<!-- //Where am I? -->
 
+		
+		<!-- Chat module menu buttons -->
+			";
+
+			// Navigation
+			$query = "SELECT navigation_id FROM $t_pages_navigation WHERE navigation_url_path='chat/index.php'";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_navigation_id) = $row;
+			if($get_navigation_id == ""){
+				echo"
+				<p>
+				<a href=\"index.php?open=pages&amp;page=navigation&amp;action=new_auto_insert&amp;module=chat&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\" class=\"btn_default\">Create navigation</a>
+				</p>
+				";
+			}
+			echo"
+		<!-- //Chat module menu buttons -->
 
 		<!-- Focus -->
 			<script>

@@ -26,6 +26,7 @@ function fix_local($value){
         return $value;
 }
 /*- Tables ---------------------------------------------------------------------------- */
+$t_downloads_liquidbase				= $mysqlPrefixSav . "downloads_liquidbase";
 $t_downloads_index 				= $mysqlPrefixSav . "downloads_index";
 $t_downloads_comments				= $mysqlPrefixSav . "downloads_comments";
 
@@ -37,213 +38,225 @@ $t_downloads_sub_categories_translations 	= $mysqlPrefixSav . "downloads_sub_cat
 
 
 
-echo"
-<h1>Tables</h1>
+
+if($action == ""){
+	echo"
+	<h1>Tables</h1>
 
 
 
-	<!-- downloads_main_categories -->
+	<!-- Where am I? -->
+		<p><b>You are here:</b><br />
+		<a href=\"index.php?open=$open&amp;page=menu&amp;editor_language=$editor_language&amp;l=$l\">Downloads</a>
+		&gt;
+		<a href=\"index.php?open=$open&amp;page=tables&amp;editor_language=$editor_language&amp;l=$l\">Tables</a>
+		</p>
+	<!-- //Where am I? -->
+
+
+
+	<!-- liquidbase-->
 	";
-	$query = "SELECT * FROM $t_downloads_main_categories";
+	$query = "SELECT * FROM $t_downloads_liquidbase LIMIT 1";
 	$result = mysqli_query($link, $query);
 	if($result !== FALSE){
 		// Count rows
 		$row_cnt = mysqli_num_rows($result);
 		echo"
-		<p>$t_downloads_main_categories: $row_cnt</p>
+		<p>$t_downloads_liquidbase: $row_cnt</p>
 		";
 	}
 	else{
-		mysqli_query($link, "CREATE TABLE $t_downloads_main_categories(
-	  	 main_category_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(main_category_id), 
-	  	   main_category_title VARCHAR(200),
-	  	   main_category_title_clean VARCHAR(200),
-	  	   main_category_icon_path VARCHAR(100),
-	  	   main_category_icon_file VARCHAR(100),
-	  	   main_category_created DATETIME)");
+		mysqli_query($link, "CREATE TABLE $t_downloads_liquidbase(
+		  liquidbase_id INT NOT NULL AUTO_INCREMENT,
+		  PRIMARY KEY(liquidbase_id), 
+		   liquidbase_dir VARCHAR(200), 
+		   liquidbase_file VARCHAR(200), 
+		   liquidbase_run_datetime DATETIME, 
+		   liquidbase_run_saying VARCHAR(200))")
+	  	 or die(mysqli_error());
 
+		// If refererer then refresh to that page
+		if(isset($_GET['refererer'])) {
+			$refererer = $_GET['refererer'];
+			$refererer = strip_tags(stripslashes($refererer));
 
-		$datetime = date("Y-m-d H:i:s");
-		mysqli_query($link, "INSERT INTO $t_downloads_main_categories
-		(`main_category_id`, `main_category_title`, `main_category_title_clean`, `main_category_icon_path`, `main_category_icon_file`, `main_category_created`)
-		VALUES
-		(NULL, 'Downloads', 'downloads', '_uploads/downloads/_icons', '1.png', '$datetime')");
+			echo"
+			<table>
+			 <tr> 
+			  <td style=\"padding-right: 6px;\">
+				<p>
+				<img src=\"_design/gfx/loading_22.gif\" alt=\"Loading\" />
+				</p>
+			  </td>
+			  <td>
+				<h1>Loading...</h1>
+			  </td>
+			 </tr>
+			</table>
+
+		
+			<meta http-equiv=\"refresh\" content=\"2;url=index.php?open=$open&amp;page=$refererer&amp;editor_language=$editor_language&amp;l=$l&amp;ft=success&amp;fm=blog_module_installed\">
+			";
+		}
 	}
 	echo"
-	<!-- //downloads_main_categories -->
+	<!-- liquidbase-->
 
-	<!-- downloads_main_categories_translations -->
-	";
-	$query = "SELECT * FROM $t_downloads_main_categories_translations";
-	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
+
+	<!-- Feedback -->
+		";
+		if($ft != "" && $fm != ""){
+			if($fm == "changes_saved"){
+				$fm = "$l_changes_saved";
+			}
+			else{
+				$fm = ucfirst($fm);
+			}
+			echo"<div class=\"$ft\"><p>$fm</p></div>";
+		}
 		echo"
-		<p>$t_downloads_main_categories_translations: $row_cnt</p>
+	<!-- //Feedback -->
+
+	<!-- Run -->
 		";
-	}
-	else{
-		mysqli_query($link, "CREATE TABLE $t_downloads_main_categories_translations(
-	  	 main_category_translation_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(main_category_translation_id), 
-	  	   main_category_id INT,
-	  	   main_category_translation_language VARCHAR(20),
-	  	   main_category_translation_value VARCHAR(200))");
-	}
-	echo"
-	<!-- //downloads_main_categories_translations -->
+
+		// Open that year folder
+		$path = "_inc/downloads/_liquidbase_db_scripts";
+		if ($handle = opendir($path)) {
+			while (false !== ($liquidbase_name = readdir($handle))) {
+				if ($liquidbase_name === '.') continue;
+				if ($liquidbase_name === '..') continue;
+				
+				if(!(is_dir("_inc/downloads/_liquidbase_db_scripts/$liquidbase_name"))){
+
+					// Has it been executed?
+					$inp_liquidbase_module_mysql = quote_smart($link, "");
+					$inp_liquidbase_name_mysql = quote_smart($link, $liquidbase_name);
+					
+					$query = "SELECT liquidbase_id FROM $t_downloads_liquidbase WHERE liquidbase_dir=$inp_liquidbase_module_mysql AND liquidbase_file=$inp_liquidbase_name_mysql";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_liquidbase_id) = $row;
+					if($get_liquidbase_id == ""){
+						// Date
+						$datetime = date("Y-m-d H:i:s");
+						$run_saying = date("j M Y H:i");
 
 
-	<!-- downloads_sub_categories -->
-	";
-	$query = "SELECT * FROM $t_downloads_sub_categories";
-	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
+						// Insert
+						mysqli_query($link, "INSERT INTO $t_downloads_liquidbase
+						(liquidbase_id, liquidbase_dir, liquidbase_file, liquidbase_run_datetime, liquidbase_run_saying) 
+						VALUES 
+						(NULL, $inp_liquidbase_module_mysql, $inp_liquidbase_name_mysql, '$datetime', '$run_saying')")
+						or die(mysqli_error($link));
+
+						// Run code
+						include("_inc/downloads/_liquidbase_db_scripts/$liquidbase_name");
+					} // not runned before
+				} // is dir
+			} // whule open files
+		} // handle modules
 		echo"
-		<p>$t_downloads_sub_categories: $row_cnt</p>
-		";
-	}
-	else{
-		mysqli_query($link, "CREATE TABLE $t_downloads_sub_categories(
-	  	 sub_category_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(sub_category_id), 
-	  	   sub_category_parent_id INT,
-	  	   sub_category_title VARCHAR(200),
-	  	   sub_category_title_clean VARCHAR(200),
-	  	   sub_category_icon_path VARCHAR(100),
-	  	   sub_category_icon_file VARCHAR(100),
-	  	   sub_category_created DATETIME)");
+	<!-- //Run -->
 
-		$datetime = date("Y-m-d H:i:s");
-
-	}
-	echo"
-	<!-- //downloads_sub_categories -->
-
-	<!-- downloads_sub_categories_translations -->
+	<!-- liquidbase scripts -->
+		<table class=\"hor-zebra\">
+		 <thead>
+		  <tr>
+		   <th scope=\"col\">
+			<span>Directory</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>File</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Run date</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Actions</span>
+		   </th>
+		  </tr>
+		</thead>
+		<tbody>
 	";
-	$query = "SELECT * FROM $t_downloads_sub_categories_translations";
-	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
-		echo"
-		<p>$t_downloads_sub_categories_translations: $row_cnt</p>
-		";
-	}
-	else{
-		mysqli_query($link, "CREATE TABLE $t_downloads_sub_categories_translations(
-	  	 sub_category_translation_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(sub_category_translation_id), 
-	  	   sub_category_id INT,
-	  	   sub_category_translation_language VARCHAR(20),
-	  	   sub_category_translation_value VARCHAR(200))");
-	}
-	echo"
-	<!-- //downloads_sub_categories_translations -->
 
-	<!-- downloads_index -->
-	";
-	$query = "SELECT * FROM $t_downloads_index";
+	$query = "SELECT liquidbase_id, liquidbase_dir, liquidbase_file, liquidbase_run_datetime, liquidbase_run_saying FROM $t_downloads_liquidbase ORDER BY liquidbase_id DESC";
 	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
-		echo"
-		<p>$t_downloads_index: $row_cnt</p>
-		";
-	}
-	else{
-		mysqli_query($link, "CREATE TABLE $t_downloads_index(
-	  	 download_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(download_id), 
-	  	   download_title VARCHAR(200),
-	  	   download_title_short VARCHAR(200),
-	  	   download_title_length INT,
-	  	   download_language VARCHAR(200),
-	  	   download_introduction VARCHAR(200),
-	  	   download_description TEXT,
-	  	   download_video VARCHAR(200),
-	  	   download_image_path VARCHAR(200),
-	  	   download_image_store VARCHAR(200),
-	  	   download_image_store_thumb VARCHAR(200),
-	  	   download_image_thumb_a VARCHAR(200),
-	  	   download_image_thumb_b VARCHAR(200),
-	  	   download_image_thumb_c VARCHAR(200),
-	  	   download_image_thumb_d VARCHAR(200),
-	  	   download_image_file_a VARCHAR(200),
-	  	   download_image_file_b VARCHAR(200),
-	  	   download_image_file_c VARCHAR(200),
-	  	   download_image_file_d VARCHAR(200),
-	  	   download_read_more_url VARCHAR(200),
-	  	   download_main_category_id INT,
-	  	   download_sub_category_id INT,
-	  	   download_dir VARCHAR(50),
-	  	   download_file VARCHAR(250),
-	  	   download_type VARCHAR(4),
-	  	   download_version VARCHAR(20),
-	  	   download_file_size VARCHAR(50),
-	  	   download_file_date DATE,
-	  	   download_file_date_print VARCHAR(50),
-	  	   download_last_download DATE,
-	  	   download_hits INT,
-	  	   download_unique_hits INT,
-	  	   download_ip_block TEXT,
-	  	   download_tag_a VARCHAR(100),
-	  	   download_tag_b VARCHAR(100),
-	  	   download_tag_c VARCHAR(100),
-	  	   download_created_datetime DATETIME,
-	  	   download_updated_datetime DATETIME,
-	  	   download_updated_print VARCHAR(50),
-	  	   download_have_to_be_logged_in_to_download INT)");
-	}
-	echo"
-	<!-- //downloads_index -->
+	while($row = mysqli_fetch_row($result)) {
+		list($get_liquidbase_id, $get_liquidbase_dir, $get_liquidbase_file, $get_liquidbase_run_datetime, $get_liquidbase_run_saying) = $row;
 
+		// Style
+		if(isset($style) && $style == ""){
+			$style = "odd";
+		}
+		else{
+			$style = "";
+		}
 	
-	<!-- downloads_comments -->
-	";
-	$query = "SELECT * FROM $t_downloads_comments";
-	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
 		echo"
-		<p>$t_downloads_comments: $row_cnt</p>
+		 <tr>
+		  <td class=\"$style\">
+			<span>$get_liquidbase_dir</span>
+		  </td>
+		  <td class=\"$style\">
+			<span>$get_liquidbase_file</span>
+		  </td>
+		  <td class=\"$style\">
+			<span>$get_liquidbase_run_saying</span>
+		  </td>
+		  <td class=\"$style\">
+			<span>
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=delete&amp;liquidbase_id=$get_liquidbase_id&amp;editor_language=$editor_language\">$l_delete</a></span>
+		  </td>
+		 </tr>
 		";
-	}
-	else{
-		mysqli_query($link, "CREATE TABLE $t_downloads_comments(
-	  	 comment_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(comment_id), 
-	  	   comment_download_id INT,
-	  	   comment_text TEXT,
-	  	   comment_by_user_id INT,
-	  	   comment_by_user_name VARCHAR(50),
-	  	   comment_by_user_image_path VARCHAR(250),
-	  	   comment_by_user_image_file VARCHAR(50),
-	  	   comment_by_user_image_thumb_60 VARCHAR(50),
-	  	   comment_by_user_ip VARCHAR(200),
-	  	   comment_created DATETIME,
-	  	   comment_created_saying VARCHAR(50),
-	  	   comment_created_timestamp VARCHAR(50),
-	  	   comment_updated DATETIME,
-	  	   comment_updated_saying VARCHAR(50),
-	  	   comment_likes INT,
-	  	   comment_dislikes INT,
-	  	   comment_number_of_replies INT,
-	  	   comment_read_blog_owner INT,
-	  	   comment_reported INT,
-	  	   comment_reported_by_user_id INT,
-	  	   comment_reported_reason TEXT,
-	  	   comment_reported_checked INT)")
-		   or die(mysqli_error());
+
 	}
 	echo"
-	<!-- //downloads_comments -->
+		 </tbody>
+		</table>
+
+	<!-- //liquidbase scripts -->
 	";
+}
+elseif($action == "delete"){
+	if(isset($_GET['liquidbase_id'])) {
+		$liquidbase_id = $_GET['liquidbase_id'];
+		$liquidbase_id  = strip_tags(stripslashes($liquidbase_id));
+	}
+	else{
+		$liquidbase_id = "";
+	}
+	$liquidbase_id_mysql = quote_smart($link, $liquidbase_id);
+	$query = "SELECT liquidbase_id, liquidbase_file, liquidbase_run_datetime FROM $t_downloads_liquidbase WHERE liquidbase_id=$liquidbase_id_mysql";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_liquidbase_id, $get_liquidbase_file, $get_liquidbase_run_datetime) = $row;
+
+	if($get_liquidbase_id != ""){
+		if($process == "1"){
+
+			mysqli_query($link, "DELETE FROM $t_downloads_liquidbase WHERE liquidbase_id=$get_liquidbase_id") or die(mysqli_error($link));
+
+			$url = "index.php?open=$open&page=$page&ft=success&fm=deleted";
+			header("Location: $url");
+			exit;
+		}
+
+		echo"
+		<h1>Delete_liquidbase $get_liquidbase_file</h1>
+
+
+		<p>
+		Are you sure you want to dlete the liquidbase script run? 
+		This will cause the script to run again after deletion. 
+		</p>
+
+		<p>
+		<a href=\"index.php?open=$open&amp;page=$page&amp;action=delete&amp;liquidbase_id=$get_liquidbase_id&amp;editor_language=$editor_language&amp;process=1\" class=\"btn_warning\">Confirm delete</a>
+		</p>
+		";
+	}
+}
 ?>

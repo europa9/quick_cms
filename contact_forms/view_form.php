@@ -29,13 +29,15 @@ include("$root/_admin/website_config.php");
 include("$root/_admin/_translations/site/$l/blog/ts_blog.php");
 include("$root/_admin/_translations/site/$l/blog/ts_my_blog.php");
 
-/*- Variables ------------------------------------------------------------------------- */
-$tabindex = 0;
-$l_mysql = quote_smart($link, $l);
+
+/*- Tables ---------------------------------------------------------------------------- */
+include("_tables_contact_forms.php");
 
 
 
 /*- Variables ------------------------------------------------------------------------ */
+$tabindex = 0;
+$l_mysql = quote_smart($link, $l);
 if(isset($_GET['form_id'])){
 	$form_id = $_GET['form_id'];
 	$form_id = output_html($form_id);

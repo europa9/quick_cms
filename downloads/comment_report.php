@@ -26,16 +26,8 @@ else{ $root = "../../.."; }
 include("$root/_admin/website_config.php");
 
 
-
 /*- Tables ---------------------------------------------------------------------------- */
-$t_downloads_index 				= $mysqlPrefixSav . "downloads_index";
-$t_downloads_comments				= $mysqlPrefixSav . "downloads_comments";
-
-$t_downloads_main_categories 			= $mysqlPrefixSav . "downloads_main_categories";
-$t_downloads_main_categories_translations 	= $mysqlPrefixSav . "downloads_main_categories_translations";
-
-$t_downloads_sub_categories 			= $mysqlPrefixSav . "downloads_sub_categories";
-$t_downloads_sub_categories_translations 	= $mysqlPrefixSav . "downloads_sub_categories_translations";
+include("_tables_downloads.php");
 
 /*- Translation ------------------------------------------------------------------------ */
 
