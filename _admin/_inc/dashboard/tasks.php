@@ -28,6 +28,7 @@ $t_tasks_read				= $mysqlPrefixSav . "tasks_read";
 $t_tasks_user_subscription_selections	= $mysqlPrefixSav . "tasks_user_subscription_selections";
 $t_tasks_history		 	= $mysqlPrefixSav . "tasks_history";
 $t_tasks_priorities		 	= $mysqlPrefixSav . "tasks_priorities";
+$t_tasks_templates		 	= $mysqlPrefixSav . "tasks_templates";
 
 $t_tasks_last_used_systems	= $mysqlPrefixSav . "tasks_last_used_systems";
 $t_tasks_last_used_projects	= $mysqlPrefixSav . "tasks_last_used_projects";
@@ -85,6 +86,7 @@ if($action == ""){
 		<a href=\"index.php?open=dashboard&amp;page=tasks&status_code_id=$status_code_id&amp;assigned_to_user_id=$assigned_to_user_id&amp;show_archive="; if($show_archive == "1"){ echo"0"; } else{ echo"1"; } echo"&amp;l=$l&amp;editor_language=$editor_language\""; if($show_archive == "1"){ echo" style=\"font-weight: bold;\""; } echo" class=\"btn_default\">"; if($show_archive == "1"){ echo"Hide"; } else{ echo"Show"; } echo" archive</a>
 		<a href=\"index.php?open=dashboard&amp;page=tasks_subscriptions&amp;l=$l&amp;editor_language=$editor_language\" class=\"btn_default\">Subscriptions</a>
 		<a href=\"index.php?open=dashboard&amp;page=tasks_statuses&amp;l=$l&amp;editor_language=$editor_language\" class=\"btn_default\">Statuses</a>
+		<a href=\"index.php?open=dashboard&amp;page=tasks_templates&amp;l=$l&amp;editor_language=$editor_language\" class=\"btn_default\">Templates</a>
 		</p>
 	<!-- Menu -->
 
@@ -915,15 +917,24 @@ elseif($action == "new_task"){
 				</script>
 	<!-- //TinyMCE -->
 
-	<!-- Edit task form -->
+	<!-- Edit task form -->";
+		// Look for a template to use 
+		$query = "SELECT template_id, template_language, template_title, template_text, template_active, template_created_by_user_id, template_created_datetime, template_updated_by_user_id, template_updated_datetime FROM $t_tasks_templates WHERE template_active=1 LIMIT 0,1";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_template_id, $get_template_language, $get_template_title, $get_template_text, $get_template_active, $get_template_created_by_user_id, $get_template_created_datetime, $get_template_updated_by_user_id, $get_template_updated_datetime) = $row;
+
+
+
+		echo"
 		<form method=\"post\" action=\"index.php?open=dashboard&amp;page=$page&amp;action=$action&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 		<p>Title:<br />
-			<input type=\"text\" name=\"inp_title\" value=\"\" size=\"25\" style=\"width: 99%;\" />
+		<input type=\"text\" name=\"inp_title\" value=\"\" size=\"25\" style=\"width: 99%;\" />
 		</p>
 
 
-		<p>Text:<br /><textarea name=\"inp_text\" rows=\"10\" cols=\"80\" class=\"editor\"></textarea><br />
-			</p>
+		<p>Text:<br /><textarea name=\"inp_text\" rows=\"10\" cols=\"80\" class=\"editor\">$get_template_text</textarea>
+		</p>
 
 
 		<p>Status:<br />
@@ -1488,8 +1499,28 @@ elseif($action == "edit_task"){
 			$inp_history_new_title_mysql = quote_smart($link, $inp_history_new_title);
 				
 		
+			
 			$inp_text = $_POST['inp_text'];
 
+			// Text Look for changes
+			$my_user_id = $_SESSION['user_id'];
+			$my_user_id = output_html($my_user_id);
+			$my_user_id_mysql = quote_smart($link, $my_user_id);
+			$query = "SELECT user_id, user_email, user_name, user_alias, user_rank FROM $t_users WHERE user_id=$my_user_id_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_my_user_id, $get_my_user_email, $get_my_user_name, $get_my_user_alias, $get_my_user_rank) = $row;
+			$date_saying = date("j M Y");
+			$text_look_for_changes="$get_current_task_text
+<p><br /><br /><b>$date_saying $get_my_user_name</b><br />-</p>";
+
+			$inp_text_look_for_changes = strip_tags($inp_text);
+			$text_look_for_changes = strip_tags($text_look_for_changes);
+			if($inp_text_look_for_changes == "$text_look_for_changes"){
+				// Same, use the old text
+				$inp_text = "$get_current_task_text";
+			}
+			
 			$inp_history_new_text = "";
 			if($get_current_task_text != "$inp_text"){
 				$inp_history_new_text = output_html($inp_text);
