@@ -58,7 +58,30 @@ if($action == ""){
 		   liquidbase_file VARCHAR(200), 
 		   liquidbase_run_datetime DATETIME, 
 		   liquidbase_run_saying VARCHAR(200))")
-	  	 or die(mysqli_error());	
+	  	 or die(mysqli_error());
+
+		// If refererer then refresh to that page
+		if(isset($_GET['refererer'])) {
+			$refererer = $_GET['refererer'];
+			$refererer = strip_tags(stripslashes($refererer));
+
+			echo"
+			<table>
+			 <tr> 
+			  <td style=\"padding-right: 6px;\">
+				<p>
+				<img src=\"_design/gfx/loading_22.gif\" alt=\"Loading\" />
+				</p>
+			  </td>
+			  <td>
+				<h1>Loading...</h1>
+			  </td>
+			 </tr>
+			</table>
+		
+			<meta http-equiv=\"refresh\" content=\"2;url=index.php?open=$open&amp;page=$refererer&amp;editor_language=$editor_language&amp;l=$l&amp;ft=success&amp;fm=module_installed\">
+			";
+		}
 	}
 	echo"
 	<!-- references_liquidbase-->

@@ -26,6 +26,7 @@ function fix_local($value){
         return $value;
 }
 /*- Tables ---------------------------------------------------------------------------- */
+$t_workout_plans_liquidbase		= $mysqlPrefixSav . "workout_plans_liquidbase";
 $t_workout_plans_yearly  		= $mysqlPrefixSav . "workout_plans_yearly";
 $t_workout_plans_period  		= $mysqlPrefixSav . "workout_plans_period";
 $t_workout_plans_weekly  		= $mysqlPrefixSav . "workout_plans_weekly";
@@ -35,317 +36,222 @@ $t_workout_plans_sessions 		= $mysqlPrefixSav . "workout_plans_sessions";
 $t_workout_plans_sessions_main 		= $mysqlPrefixSav . "workout_plans_sessions_main";
 $t_workout_plans_favorites 		= $mysqlPrefixSav . "workout_plans_favorites";
 
+if($action == ""){
+	echo"
+	<h1>Tables</h1>
 
-echo"
-<h1>Tables</h1>
+
+	<!-- Where am I? -->
+	<p><b>You are here:</b><br />
+	<a href=\"index.php?open=workout_plans&amp;page=menu&amp;editor_language=$editor_language&amp;l=$l\">Workout plans</a>
+	&gt;
+	<a href=\"index.php?open=workout_plans&amp;page=tables&amp;editor_language=$editor_language&amp;l=$l\">Tables</a>
+	</p>
+	<!-- //Where am I? -->
 
 
 
-	<!-- $t_workout_plans_yearly -->
+	<!-- edb_liquidbase-->
 	";
-	$query = "SELECT * FROM $t_workout_plans_yearly";
+	$query = "SELECT * FROM $t_workout_plans_liquidbase LIMIT 1";
 	$result = mysqli_query($link, $query);
 	if($result !== FALSE){
 		// Count rows
 		$row_cnt = mysqli_num_rows($result);
 		echo"
-		<p>$t_workout_plans_yearly: $row_cnt</p>
+		<p>$t_workout_plans_liquidbase: $row_cnt</p>
 		";
 	}
 	else{
-		mysqli_query($link, "CREATE TABLE $t_workout_plans_yearly(
-	  	 workout_yearly_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(workout_yearly_id), 
-	  	   workout_yearly_user_id INT,
-	  	   workout_yearly_weight INT,
-		   workout_yearly_language VARCHAR(20),
-	  	   workout_yearly_title VARCHAR(250),
-	  	   workout_yearly_title_clean VARCHAR(250),
-	  	   workout_yearly_introduction TEXT,
-	  	   workout_yearly_goal TEXT,
-	  	   workout_yearly_text TEXT,
-	  	   workout_yearly_year INT,
-	  	   workout_yearly_image_path VARCHAR(250),
-	  	   workout_yearly_image_file VARCHAR(250),
-	  	   workout_yearly_created DATETIME,
-	  	   workout_yearly_updated DATETIME,
-	  	   workout_yearly_unique_hits INT,
-	  	   workout_yearly_unique_hits_ip_block TEXT,
-	  	   workout_yearly_comments INT,
-	  	   workout_yearly_likes INT,
-	  	   workout_yearly_dislikes INT,
-	  	   workout_yearly_rating INT,
-	  	   workout_yearly_ip_block TEXT,
-		   workout_yearly_user_ip VARCHAR(250),
-	  	   workout_yearly_notes TEXT)")
-		   or die(mysqli_error());
+		mysqli_query($link, "CREATE TABLE $t_workout_plans_liquidbase(
+		  liquidbase_id INT NOT NULL AUTO_INCREMENT,
+		  PRIMARY KEY(liquidbase_id), 
+		   liquidbase_file VARCHAR(200), 
+		   liquidbase_run_datetime DATETIME, 
+		   liquidbase_run_saying VARCHAR(200))")
+	  	 or die(mysqli_error());
+
+		// If refererer then refresh to that page
+		if(isset($_GET['refererer'])) {
+			$refererer = $_GET['refererer'];
+			$refererer = strip_tags(stripslashes($refererer));
+
+			echo"
+			<table>
+			 <tr> 
+			  <td style=\"padding-right: 6px;\">
+				<p>
+				<img src=\"_design/gfx/loading_22.gif\" alt=\"Loading\" />
+				</p>
+			  </td>
+			  <td>
+				<h1>Loading...</h1>
+			  </td>
+			 </tr>
+			</table>
+		
+			<meta http-equiv=\"refresh\" content=\"2;url=index.php?open=$open&amp;page=$refererer&amp;editor_language=$editor_language&amp;l=$l&amp;ft=success&amp;fm=module_installed\">
+			";
+		}
 	}
 	echo"
-	<!-- //$t_workout_plans_yearly -->
+	<!-- edb_liquidbase-->
 
-	<!-- $t_workout_plans_period -->
-	";
-	$query = "SELECT * FROM $t_workout_plans_period";
-	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
-		echo"
-		<p>$t_workout_plans_period: $row_cnt</p>
-		";
-	}
-	else{
-		mysqli_query($link, "CREATE TABLE $t_workout_plans_period(
-	  	 workout_period_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(workout_period_id), 
-	  	   workout_period_user_id INT,
-	  	   workout_period_yearly_id INT,
-	  	   workout_period_weight INT,
-		   workout_period_language VARCHAR(20),
-	  	   workout_period_title VARCHAR(250),
-	  	   workout_period_title_clean VARCHAR(250),
-	  	   workout_period_introduction TEXT,
-	  	   workout_period_goal TEXT,
-	  	   workout_period_text TEXT,
-	  	   workout_period_from VARCHAR(200),
-	  	   workout_period_to VARCHAR(200),
-	  	   workout_period_image_path VARCHAR(250),
-	  	   workout_period_image_file VARCHAR(250),
-	  	   workout_period_created DATETIME,
-	  	   workout_period_updated DATETIME,
-	  	   workout_period_unique_hits INT,
-	  	   workout_period_unique_hits_ip_block TEXT,
-	  	   workout_period_comments INT,
-	  	   workout_period_likes INT,
-	  	   workout_period_dislikes INT,
-	  	   workout_period_rating INT,
-	  	   workout_period_ip_block TEXT,
-		   workout_period_user_ip VARCHAR(250),
-	  	   workout_period_notes TEXT)")
-		   or die(mysqli_error());
-	}
-	echo"
-	<!-- //$t_workout_plans_period -->
 
-	<!-- workout_weekly_plans -->
-	";
-	$query = "SELECT * FROM $t_workout_plans_weekly";
-	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
-		echo"
-		<p>$t_workout_plans_weekly: $row_cnt</p>
+	<!-- Feedback -->
 		";
-	}
-	else{
+		if($ft != "" && $fm != ""){
+			if($fm == "changes_saved"){
+				$fm = "$l_changes_saved";
+			}
+			else{
+				$fm = ucfirst($fm);
+			}
+			echo"<div class=\"$ft\"><p>$fm</p></div>";
+		}
 		echo"
-		<table>
-		 <tr> 
-		  <td style=\"padding-right: 6px;\">
-			<p>
-			<img src=\"_design/gfx/loading_22.gif\" alt=\"Loading\" />
-			</p>
+	<!-- //Feedback -->
+
+	<!-- Run -->
+		";
+		$path = "_inc/workout_plans/_liquidbase_db_scripts";
+		if(!(is_dir("$path"))){
+			echo"$path doesnt exists";
+			die;
+		}
+		if ($handle = opendir($path)) {
+			$scripts = array();   
+			while (false !== ($script = readdir($handle))) {
+				if ($script === '.') continue;
+				if ($script === '..') continue;
+				array_push($scripts, $script);
+			}
+	
+			sort($scripts);
+			foreach ($scripts as $liquidbase_file){
+				
+				// Has it been executed?
+				$inp_liquidbase_file_mysql = quote_smart($link, $liquidbase_file);
+					
+				$query = "SELECT liquidbase_id FROM $t_workout_plans_liquidbase WHERE liquidbase_file=$inp_liquidbase_file_mysql";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_liquidbase_id) = $row;
+				if($get_liquidbase_id == ""){
+					// Date
+					$datetime = date("Y-m-d H:i:s");
+					$run_saying = date("j M Y H:i");
+
+
+					// Insert
+					mysqli_query($link, "INSERT INTO $t_workout_plans_liquidbase 
+					(liquidbase_id, liquidbase_file, liquidbase_run_datetime, liquidbase_run_saying) 
+					VALUES 
+					(NULL, $inp_liquidbase_file_mysql, '$datetime', '$run_saying')")
+					or die(mysqli_error($link));
+
+					// Run code
+					include("_inc/workout_plans/_liquidbase_db_scripts/$liquidbase_file");
+				} // not runned before
+			} // foreach files
+		} // handle opendir path
+		echo"
+	<!-- //Run -->
+
+	<!-- liquidbase scripts -->
+		<table class=\"hor-zebra\">
+		 <thead>
+		  <tr>
+		   <th scope=\"col\">
+			<span>File</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Run date</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Actions</span>
+		   </th>
+		  </tr>
+		</thead>
+		<tbody>
+	";
+
+	$query = "SELECT liquidbase_id, liquidbase_file, liquidbase_run_datetime, liquidbase_run_saying FROM $t_workout_plans_liquidbase ORDER BY liquidbase_id DESC";
+	$result = mysqli_query($link, $query);
+	while($row = mysqli_fetch_row($result)) {
+		list($get_liquidbase_id, $get_liquidbase_file, $get_liquidbase_run_datetime, $get_liquidbase_run_saying) = $row;
+
+		// Style
+		if(isset($style) && $style == ""){
+			$style = "odd";
+		}
+		else{
+			$style = "";
+		}
+	
+		echo"
+		 <tr>
+		  <td class=\"$style\">
+			<span>$get_liquidbase_file</span>
 		  </td>
-		  <td>
-			<h1>Loading...</h1>
+		  <td class=\"$style\">
+			<span>$get_liquidbase_run_saying</span>
+		  </td>
+		  <td class=\"$style\">
+			<span>
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=delete&amp;liquidbase_id=$get_liquidbase_id&amp;editor_language=$editor_language\">$l_delete</a></span>
 		  </td>
 		 </tr>
+		";
+
+	}
+	echo"
+		 </tbody>
 		</table>
 
-		
-		<meta http-equiv=\"refresh\" content=\"2;url=index.php?open=$open&amp;page=tables\">
-		";
-
-		mysqli_query($link, "CREATE TABLE $t_workout_plans_weekly(
-	  	 workout_weekly_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(workout_weekly_id), 
-	  	   workout_weekly_user_id INT,
-	  	   workout_weekly_period_id INT,
-	  	   workout_weekly_weight INT,
-		   workout_weekly_language VARCHAR(20),
-	  	   workout_weekly_title VARCHAR(250),
-	  	   workout_weekly_title_clean VARCHAR(250),
-	  	   workout_weekly_introduction TEXT,
-	  	   workout_weekly_goal TEXT,
-	  	   workout_weekly_image_path VARCHAR(250),
-	  	   workout_weekly_image_thumb_medium VARCHAR(250),
-	  	   workout_weekly_image_thumb_big VARCHAR(250),
-	  	   workout_weekly_image_file VARCHAR(250),
-	  	   workout_weekly_created DATETIME,
-	  	   workout_weekly_updated DATETIME,
-	  	   workout_weekly_unique_hits INT,
-	  	   workout_weekly_unique_hits_ip_block TEXT,
-	  	   workout_weekly_comments INT,
-	  	   workout_weekly_likes INT,
-	  	   workout_weekly_dislikes INT,
-	  	   workout_weekly_rating INT,
-	  	   workout_weekly_ip_block TEXT,
-		   workout_weekly_user_ip VARCHAR(250),
-	  	   workout_weekly_notes TEXT,
-	  	   workout_weekly_number_of_sessions INT)")
-		   or die(mysqli_error());
-
-		$date = date("Y-m-d");
-		$datetime = date("Y-m-d H:i:s");
-		mysqli_query($link, "INSERT INTO $t_workout_plans_weekly
-		(workout_weekly_id, workout_weekly_user_id, workout_weekly_language, workout_weekly_title, workout_weekly_introduction, workout_weekly_goal, workout_weekly_created, workout_weekly_updated, workout_weekly_unique_hits, workout_weekly_unique_hits_ip_block, workout_weekly_comments, workout_weekly_likes, workout_weekly_dislikes, workout_weekly_rating, workout_weekly_ip_block, workout_weekly_user_ip, workout_weekly_notes) 
-		VALUES 
-		(NULL, '1', 'en', '7 days strenght training', 'Here is a 7 day strenght training plan to increase muscle strenght', 'Increase muscle strenght', '$datetime', '$datetime', '0', '', '0', '0', '0', '0', '', '', '')")
-		or die(mysqli_error($link));
-	}
-	echo"
-	<!-- //workout_weekly -->
-
-
-
-
-	<!-- workout_plans_weekly_tags -->
+	<!-- //liquidbase scripts -->
 	";
-	$query = "SELECT * FROM $t_workout_plans_weekly_tags";
-	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
-		echo"
-		<p>$t_workout_plans_weekly_tags: $row_cnt</p>
-		";
+}
+elseif($action == "delete"){
+	if(isset($_GET['liquidbase_id'])) {
+		$liquidbase_id = $_GET['liquidbase_id'];
+		$liquidbase_id  = strip_tags(stripslashes($liquidbase_id));
 	}
 	else{
-		mysqli_query($link, "CREATE TABLE $t_workout_plans_weekly_tags(
-	  	 tag_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(tag_id), 
-	  	   tag_weekly_id INT,
-		   tag_language VARCHAR(250),
-	  	   tag_title VARCHAR(250),
-	  	   tag_title_clean VARCHAR(250),
-	  	   tag_user_id INT)")
-		   or die(mysqli_error());
+		$liquidbase_id = "";
 	}
-	echo"
-	<!-- //workout_plans_weekly_tags -->
-
-	<!-- workout_plans_weekly_tags_unique -->
-	";
-	$query = "SELECT * FROM $t_workout_plans_weekly_tags_unique";
+	$liquidbase_id_mysql = quote_smart($link, $liquidbase_id);
+	$query = "SELECT liquidbase_id, liquidbase_file, liquidbase_run_datetime FROM $t_workout_plans_liquidbase WHERE liquidbase_id=$liquidbase_id_mysql";
 	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
-		echo"
-		<p>$t_workout_plans_weekly_tags_unique: $row_cnt</p>
-		";
-	}
-	else{
-		mysqli_query($link, "CREATE TABLE $t_workout_plans_weekly_tags_unique(
-	  	 tag_unique_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(tag_unique_id), 
-		   tag_unique_language VARCHAR(250),
-	  	   tag_unique_title VARCHAR(250),
-	  	   tag_unique_title_clean VARCHAR(250),
-	  	   tag_unique_no_of_workout_plans INT,
-	  	   tag_unique_hits INT,
-	  	   tag_unique_hits_ipblock TEXT)")
-		   or die(mysqli_error());
-	}
-	echo"
-	<!-- //workout_plans_weekly_tags_unique -->
+	$row = mysqli_fetch_row($result);
+	list($get_liquidbase_id, $get_liquidbase_file, $get_liquidbase_run_datetime) = $row;
+
+	if($get_liquidbase_id != ""){
+		if($process == "1"){
+
+			mysqli_query($link, "DELETE FROM $t_workout_plans_liquidbase WHERE liquidbase_id=$get_liquidbase_id") or die(mysqli_error($link));
+
+			echo"
+			<h1>Deleting...</h1>
+			<meta http-equiv=\"refresh\" content=\"1;url=index.php?open=$open&amp;page=$page&amp;ft=success&amp;fm=deleted\">
+			";
+			
+		}
+		else{
+			echo"
+			<h1>Delete_liquidbase $get_liquidbase_file</h1>
 
 
-	<!-- session_plans -->
-	";
-	$query = "SELECT * FROM $t_workout_plans_sessions";
-	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
-		echo"
-		<p>$t_workout_plans_sessions: $row_cnt</p>
-		";
-	}
-	else{
-		mysqli_query($link, "CREATE TABLE $t_workout_plans_sessions(
-	  	 workout_session_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(workout_session_id), 
-	  	   workout_session_user_id INT,
-		   workout_session_weekly_id INT,
-	  	   workout_session_weight INT,
-	  	   workout_session_title VARCHAR(250),
-	  	   workout_session_title_clean VARCHAR(250),
-	  	   workout_session_duration VARCHAR(250),
-	  	   workout_session_intensity VARCHAR(250),
-	  	   workout_session_goal TEXT,
-	  	   workout_session_warmup TEXT,
-	  	   workout_session_end TEXT)")
-		   or die(mysqli_error());
-	}
-	echo"
-	<!-- //session_plans -->
+			<p>
+			Are you sure you want to dlete the liquidbase script run? 
+			This will cause the script to run again after deletion. 
+			</p>
 
-	<!-- workout_plans_sessions_main -->
-	";
-	$query = "SELECT * FROM $t_workout_plans_sessions_main";
-	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
-		echo"
-		<p>$t_workout_plans_sessions_main: $row_cnt</p>
-		";
+			<p>
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=delete&amp;liquidbase_id=$get_liquidbase_id&amp;editor_language=$editor_language&amp;process=1\" class=\"btn_warning\">Confirm delete</a>
+			</p>
+			";
+		}
 	}
-	else{
-		mysqli_query($link, "CREATE TABLE $t_workout_plans_sessions_main(
-	  	 workout_session_main_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(workout_session_main_id), 
-	  	   workout_session_main_user_id INT,
-		   workout_session_main_session_id INT,
-	  	   workout_session_main_weight INT,
-	  	   workout_session_main_exercise_id INT,
-	  	   workout_session_main_exercise_title VARCHAR(250),
-	  	   workout_session_main_reps INT,
-	  	   workout_session_main_sets INT,
-	  	   workout_session_main_velocity_a double,
-	  	   workout_session_main_velocity_b double,
-	  	   workout_session_main_distance INT,
-	  	   workout_session_main_duration INT,
-	  	   workout_session_main_intensity INT,
-	  	   workout_session_main_text TEXT)")
-		   or die(mysqli_error());
-	}
-	echo"
-	<!-- //workout_plans_sessions_main -->
-
-
-
-	<!-- workout_plans_favorites -->
-	";
-	$query = "SELECT * FROM $t_workout_plans_favorites";
-	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
-		echo"
-		<p>$t_workout_plans_favorites: $row_cnt</p>
-		";
-	}
-	else{
-		mysqli_query($link, "CREATE TABLE $t_workout_plans_favorites(
-	  	 workout_plan_favorite_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(workout_plan_favorite_id), 
-	  	   workout_plan_favorite_user_id INT,
-		   workout_plan_favorite_weight INT,
-	  	   workout_plan_favorite_period_id INT,
-	  	   workout_plan_favorite_session_id INT,
-	  	   workout_plan_favorite_weekly_id INT,
-	  	   workout_plan_favorite_yearly_id INT,
-	  	   workout_plan_favorite_title VARCHAR(200),
-	  	   workout_plan_favorite_date DATE,
-	  	   workout_plan_favorite_notes TEXT)")
-		   or die(mysqli_error());
-	}
-	echo"
-	<!-- //workout_plans_favorites -->
-
-
-	";
+}
 ?>

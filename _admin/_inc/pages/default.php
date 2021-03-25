@@ -45,7 +45,8 @@ if($action == ""){
 			$fm = "$l_changes_saved";
 		}
 		else{
-			$fm = ucfirst($ft);
+			$fm = str_replace("_", " ", $fm);
+			$fm = ucfirst($fm);
 		}
 		echo"<div class=\"$ft\"><span>$fm</span></div>";
 	}

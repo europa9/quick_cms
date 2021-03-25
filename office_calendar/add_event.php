@@ -30,10 +30,9 @@ include("$root/_admin/website_config.php");
 include("$root/_admin/_translations/site/$l/office_calendar/ts_office_calendar.php");
 include("$root/_admin/_translations/site/$l/users/ts_users.php");
 
-
 /*- Tables ---------------------------------------------------------------------------- */
-$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
-$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
+include("tables_office_calendar.php");
+
 
 /*- Variables -------------------------------------------------------------------------- */
 $tabindex = 0;

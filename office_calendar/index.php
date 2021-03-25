@@ -29,6 +29,9 @@ include("$root/_admin/website_config.php");
 /*- Language --------------------------------------------------------------------------- */
 include("$root/_admin/_translations/site/$l/users/ts_users.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+include("tables_office_calendar.php");
+
 /*- Variables -------------------------------------------------------------------------- */
 if(isset($_GET['year'])){
 	$year = $_GET['year'];

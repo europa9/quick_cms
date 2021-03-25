@@ -16,7 +16,7 @@ if(!(isset($define_access_to_control_panel))){
 
 /*- Tables ---------------------------------------------------------------------------- */
 
-$result = mysqli_query($link, "DROP TABLE IF EXISTS $t_exercise_index") or die(mysqli_error($link)); 
+$result = mysqli_query($link, "DROP TABLE IF EXISTS $t_exercise_index_videos") or die(mysqli_error($link)); 
 
 
 echo"

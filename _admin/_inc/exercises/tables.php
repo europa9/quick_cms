@@ -227,6 +227,12 @@ if($action == ""){
 		</table>
 
 	<!-- //liquidbase scripts -->
+
+	<!-- Also include muscles -->
+		<h2>Muscles</h2>
+		<p><a href=\"index.php?open=muscles&amp;page=tables&amp;editor_language=$editor_language&amp;l=$l\" class=\"btn_default\">Muscles tables</a></p>
+		<iframe src=\"index.php?open=muscles&amp;page=tables&amp;editor_language=$editor_language&amp;l=$l\" width=\"300\" height=\"20\"></iframe>
+	<!-- //Also include muscles -->
 	";
 }
 elseif($action == "delete"){

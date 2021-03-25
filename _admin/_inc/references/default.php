@@ -14,6 +14,7 @@ if(!(isset($define_access_to_control_panel))){
 	die;
 }
 /*- Tables ---------------------------------------------------------------------------- */
+$t_references_liquidbase 	 = $mysqlPrefixSav . "references_liquidbase";
 $t_references_title_translations = $mysqlPrefixSav . "references_title_translations";
 $t_references_categories_main	 = $mysqlPrefixSav . "references_categories_main";
 $t_references_categories_sub 	 = $mysqlPrefixSav . "references_categories_sub";
@@ -32,7 +33,11 @@ else {
 	$where = "comment_approved != '-1'";
 }
 
-if($action == ""){
+
+/*- Check if setup is run ------------------------------------------------------------- */
+$query = "SELECT * FROM $t_references_liquidbase LIMIT 1";
+$result = mysqli_query($link, $query);
+if($result !== FALSE){
 	echo"
 	<h1>References</h1>
 				
@@ -65,6 +70,18 @@ if($action == ""){
 		 <tr>
 		  <td style=\"vertical-align:top;padding-right: 20px;\">
 			<p>
+			";
+			// Navigation
+			$query = "SELECT navigation_id FROM $t_pages_navigation WHERE navigation_url_path='references/index.php'";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_navigation_id) = $row;
+			if($get_navigation_id == ""){
+				echo"
+				<a href=\"index.php?open=pages&amp;page=navigation&amp;action=new_auto_insert&amp;module=references&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\" class=\"btn_default\">Create navigation</a>
+				";
+			}
+			echo"
 			<a href=\"index.php?open=references&amp;page=references_new&amp;editor_language=$editor_language&amp;l=$l\" class=\"btn_default\">New references</a>
 			</p>
 		  </td>
@@ -166,4 +183,10 @@ if($action == ""){
 	
 	";
 }
+else{
+	echo"
+	<div class=\"info\"><p><img src=\"_design/gfx/loading_22.gif\" alt=\"loading_22.gif\" /> Running setup</p></div>
+	<meta http-equiv=\"refresh\" content=\"1;url=index.php?open=$open&amp;page=tables&amp;refererer=default&amp;editor_language=$editor_language&amp;l=$l\" />
+	";
+} // setup has not runned
 ?>

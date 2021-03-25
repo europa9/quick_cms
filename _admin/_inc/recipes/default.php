@@ -40,6 +40,14 @@ $t_recipes_occasions	= $mysqlPrefixSav . "recipes_occasions";
 
 
 
+/*- Check if setup is run ------------------------------------------------------------- */
+$t_recipes_liquidbase	= $mysqlPrefixSav . "recipes_liquidbase";
+$query = "SELECT * FROM $t_recipes_liquidbase LIMIT 1";
+$result = mysqli_query($link, $query);
+if($result !== FALSE){
+
+
+
 	echo"
 	<h1>$l_recipes</h1>
 
@@ -104,6 +112,21 @@ $t_recipes_occasions	= $mysqlPrefixSav . "recipes_occasions";
 
 	
 
+	<!-- Recipes buttons -->";
+		// Navigation
+		$query = "SELECT navigation_id FROM $t_pages_navigation WHERE navigation_url_path='recipes/index.php'";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_navigation_id) = $row;
+		if($get_navigation_id == ""){
+			echo"
+			<p>
+			<a href=\"index.php?open=pages&amp;page=navigation&amp;action=new_auto_insert&amp;module=recipes&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\" class=\"btn_default\">Create navigation</a>
+			</p>
+			";
+		}
+		echo"
+	<!-- //Recipes buttons -->
 
 	<!-- Views -->
 		<div class=\"tabs\">
@@ -149,7 +172,7 @@ $t_recipes_occasions	= $mysqlPrefixSav . "recipes_occasions";
 
 			// Thumb
 			if($get_recipe_image != ""){
-				if($get_recipe_thumb_278x156 == "" OR !(file_exists("../$get_recipe_image_path/$get_recipe_thumb_278x156"))){
+				if($get_recipe_thumb_278x156 == "" OR !(file_exists("../$get_recipe_image_path/$get_recipe_thumb_278x156")) && file_exists("../$get_recipe_image_path/$get_recipe_image")){
 					$inp_new_x = 278; // 278x156
 					$inp_new_y = 156;
 
@@ -247,5 +270,13 @@ $t_recipes_occasions	= $mysqlPrefixSav . "recipes_occasions";
 		echo"
 		
 	<!-- //List all recipes -->
-";
+	";
+
+}
+else{
+	echo"
+	<div class=\"info\"><p><img src=\"_design/gfx/loading_22.gif\" alt=\"loading_22.gif\" /> Running setup</p></div>
+	<meta http-equiv=\"refresh\" content=\"1;url=index.php?open=$open&amp;page=tables&amp;refererer=default&amp;editor_language=$editor_language&amp;l=$l\" />
+	";
+} // setup has not runned
 ?>
