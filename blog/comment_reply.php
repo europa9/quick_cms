@@ -164,6 +164,11 @@ else{
 
 
 				// Stats :: Comments :: Year
+				$year = date("Y");
+				$month = date("m");
+				$month_full = date("F");
+				$month_short = date("M");
+
 				$query = "SELECT stats_comments_id, stats_comments_comments_written FROM $t_stats_comments_per_year WHERE stats_comments_year='$year'";
 				$result = mysqli_query($link, $query);
 				$row = mysqli_fetch_row($result);

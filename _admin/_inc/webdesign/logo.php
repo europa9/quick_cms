@@ -15,6 +15,13 @@ if(!(isset($define_access_to_control_panel))){
 }
 
 /*- Variables -------------------------------------------------------------------------- */
+if(isset($_GET['mode'])) {
+	$mode = $_GET['mode'];
+	$mode = strip_tags(stripslashes($mode));
+}
+else{
+	$mode = "";
+}
 if(isset($_GET['type'])) {
 	$type = $_GET['type'];
 	$type = strip_tags(stripslashes($type));
@@ -79,7 +86,7 @@ elseif($action == "new_logo"){
 	}
 
 
-	if($process == "1"){
+	if($mode == "upload"){
 		// Get type
 		$inp_type = $_POST['inp_type'];
 		$inp_type = output_html($inp_type);
@@ -103,7 +110,8 @@ elseif($action == "new_logo"){
 
 
 		// Sett variabler
-		$new_name = $configWebsiteTitleCleanSav . "_" . $inp_type . ".png";
+		$random = rand(0, 100);
+		$new_name = $configWebsiteTitleCleanSav . "_" . $inp_type . "_" . $random . ".png";
 
 		$target_path = $upload_path . "/" . $new_name;
 
@@ -162,80 +170,89 @@ elseif($action == "new_logo"){
 					fwrite($fh, $input_logo_file);
 					fclose($fh);
 
-					$url = "index.php?open=$open&page=$page&editor_language=$editor_language&ft=success&fm=image_uploaded";
-					header("Location: $url");
-					exit;
+
+					$ft = "success";
+					$fm = "logo_uploaded";
+					$mode = "";
+					//echo"
+					//<meta http-equiv=refresh content=\"3; url=index.php?open=$open&amp;page=$page&amp;editor_language=$editor_language&amp;ft=success&amp;fm=image_uploaded\">
+					//";
+					// $url = "index.php?open=$open&page=$page&editor_language=$editor_language&ft=success&fm=image_uploaded";
+					// header("Location: $url");
+					// exit;
 					
 				}
 				else{
 					// Dette er en fil som har fått byttet filendelse...
 					unlink("$target_path");
 
-					$url = "index.php?open=$open&page=$page&action=$action&editor_language=$editor_language&ft=error&fm=file_is_not_an_image";
-					header("Location: $url");
-					exit;
+					$ft = "error";
+					$fm = "file_is_not_an_image";
+					$mode = "";
 				}
 			}
 			else{
    				switch ($_FILES['inp_image'] ['error']){
 				case 1:
-					$url = "index.php?open=$open&page=$page&action=$action&editor_language=$editor_language&ft=error&fm=to_big_file";
-					header("Location: $url");
-					exit;
+					$ft = "error";
+					$fm = "to_big_file";
+					$mode = "";
 					break;
 				case 2:
-					$url = "index.php?open=$open&page=$page&action=$action&editor_language=$editor_language&ft=error&fm=to_big_file";
-					header("Location: $url");
-					exit;
+					$ft = "error";
+					$fm = "to_big_file";
+					$mode = "";
 					break;
 				case 3:
-					$url = "index.php?open=$open&page=$page&action=$action&editor_language=$editor_language&ft=error&fm=only_parts_uploaded";
-					header("Location: $url");
-					exit;
+					$ft = "error";
+					$fm = "only_parts_uploaded";
+					$mode = "";
 					break;
 				case 4:
-					$url = "index.php?open=$open&page=$page&action=$action&editor_language=$editor_language&ft=error&fm=no_file_uploaded";
-					header("Location: $url");
-					exit;
+					$ft = "error";
+					$fm = "no_file_uploaded";
+					$mode = "";
 					break;
 				}
 			} // if(move_uploaded_file($_FILES['file']['tmp_name'], $target_path)) {
 		}
 		else{
-			$url = "index.php?open=$open&page=$page&action=$action&editor_language=$editor_language&ft=error&fm=invalid_file_type&file_type=$file_type";
-			header("Location: $url");
-			exit;
+			$ft = "error";
+			$fm = "invalid_file_type";
+			$mode = "";
 		}
 	}
-	echo"
-	<h1>$l_new_logo</h1>
+	if($mode == ""){
+		echo"
+		<h1>$l_new_logo</h1>
 
-	<!-- You are here -->
-		<p>
-		<b>$l_you_are_here:</b><br />
-		<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_logo&amp;editor_language=$editor_language&amp;l=$l\">$l_logo</a>
-		&gt;
-		<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_logo&amp;editor_language=$editor_language&amp;l=$l\">$l_new_logo</a>
-		</p>
-	<!-- //You are here -->
+		<!-- You are here -->
+			<p>
+			<b>$l_you_are_here:</b><br />
+			<a href=\"index.php?open=$open&amp;page=$page&amp;editor_language=$editor_language&amp;l=$l\">$l_logo</a>
+			&gt;
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=new_logo&amp;editor_language=$editor_language&amp;l=$l\">$l_new_logo</a>
+			</p>
+		<!-- //You are here -->
 
-	<!-- Feedback -->
-	";
-	if($ft != ""){
-		if($fm == "changes_saved"){
-			$fm = "$l_changes_saved";
+		<!-- Feedback -->
+		";
+		if($ft != ""){
+			if($fm == "changes_saved"){
+				$fm = "$l_changes_saved";
+			}
+			else{
+				$fm = str_replace("_", " ", $fm);
+				$fm = ucfirst($fm);
+			}
+			echo"<div class=\"$ft\"><span>$fm</span></div>";
 		}
-		else{
-			$fm = ucfirst($ft);
-		}
-		echo"<div class=\"$ft\"><span>$fm</span></div>";
-	}
-	echo"	
-	<!-- //Feedback -->
+		echo"	
+		<!-- //Feedback -->
 
 
-	<!-- Form -->
-		<form method=\"post\" action=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;editor_language=$editor_language&amp;process=1\" enctype=\"multipart/form-data\">
+		<!-- Form -->
+		<form method=\"post\" action=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;editor_language=$editor_language&amp;mode=upload&amp;l=$l\" enctype=\"multipart/form-data\">
 	
 
 		<p><b>$l_new_image:</b><br />
@@ -259,7 +276,8 @@ elseif($action == "new_logo"){
 			
 		</form>
 
-	<!-- //Form -->
-	";
-}
+		<!-- //Form -->
+		";
+	} // mode == upload
+} // action == "new logo
 ?>

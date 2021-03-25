@@ -706,7 +706,7 @@ elseif($action == "new_task"){
 
 		task_updated_translated, task_due_datetime, task_due_time, task_due_translated, task_due_warning_sent, 
 		task_assigned_to_user_id, task_assigned_to_user_name, task_assigned_to_user_alias, task_assigned_to_user_image, task_assigned_to_user_thumb_40, 
-		task_assigned_to_user_thumb_50, task_assigned_to_user_email, task_hours_planned, task_is_archived) 
+		task_assigned_to_user_thumb_50, task_assigned_to_user_email, task_hours_planned, task_finished_is_finished, task_is_archived) 
 		VALUES 
 		(NULL, $inp_system_task_abbr_mysql, $inp_system_increment_tasks_counter_mysql, $inp_project_task_abbr_mysql, $inp_project_increment_tasks_counter_mysql, 
 		$inp_title_mysql, '', $inp_status_code_id_mysql, 
@@ -716,7 +716,7 @@ elseif($action == "new_task"){
 		$inp_project_id_mysql, $inp_project_title_mysql, 0, '', '$datetime',
 		$inp_created_translated_mysql, $inp_due_datetime_mysql, $inp_due_time_mysql, $inp_due_translated_mysql, 0,
 		$inp_assigned_to_user_id_mysql, $inp_assigned_to_user_name_mysql, $inp_assigned_to_user_alias_mysql, $inp_assigned_to_user_image_mysql, $inp_assigned_to_user_thumb_a_mysql, 
-		$inp_assigned_to_user_thumb_b_mysql, $inp_assigned_to_user_email_mysql, $inp_hours_planned_mysql, 0)")
+		$inp_assigned_to_user_thumb_b_mysql, $inp_assigned_to_user_email_mysql, $inp_hours_planned_mysql, 0, 0)")
 		or die(mysqli_error($link));
 
 
@@ -2740,7 +2740,12 @@ elseif($action == "edit_task_assigned_to"){
 			$inp_datetime_saying = date("d. M. Y H:i");	
 			
 			// History summary
-			$inp_history_summary = "Assigned to $inp_assigned_to_user_name by $inp_updated_by_user_name";
+			if($inp_assigned_to_user_name == ""){
+				$inp_history_summary = "Unassigned";
+			}
+			else{
+				$inp_history_summary = "Assigned to $inp_assigned_to_user_name by $inp_updated_by_user_name";
+			}
 			$inp_history_summary_mysql = quote_smart($link, $inp_history_summary); 	
 
 			$inp_history_summary_mysql = quote_smart($link, $inp_history_summary);

@@ -451,8 +451,13 @@ else{
 	<!-- //Humans vs bots unique -->
 
 	<!-- Comments per month -->
-		<h2 style=\"margin-top: 20px;\">Comments per month</h2>
-
+		<a id=\"comments_per_month\"></a>
+		<h2 style=\"margin-top: 20px;\">Comments per month <a href=\"#comments_per_month\" class=\"toggle\" data-divid=\"comments_per_month_information\"><img src=\"_design/gfx/icons/16x16/information.png\" alt=\"information.png\" /></a></h2>
+		<div class=\"comments_per_month_information\">
+			<p>
+			Comments per month is from the following modules: blog
+			</p>
+		</div>
 
 
 		<script>
@@ -488,8 +493,8 @@ else{
 			var series1 = chart.series.push(new am4charts.LineSeries());
 			series1.dataFields.valueY = \"value\";
 			series1.dataFields.categoryX = \"x\";
-			series1.name = \"Unique visits\";
-			series1.tooltipText = \"Unique visits: {valueY}\";
+			series1.name = \"Comments\";
+			series1.tooltipText = \"Comments: {valueY}\";
 			series1.fill = am4core.color(\"#99e4dc\");
 			series1.stroke = am4core.color(\"#66d5c9\");
 			series1.strokeWidth = 1;

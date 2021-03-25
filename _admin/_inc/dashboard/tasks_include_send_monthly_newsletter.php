@@ -20,7 +20,7 @@ $t_tasks_user_subscription_selections	= $mysqlPrefixSav . "tasks_user_subscripti
 
 /*- Variables  ---------------------------------------------------- */
 $month = date("m");
-
+$year = date("Y");
 $month_year_saying = date("M Y");
 $time = time();
 $datetime = date("Y-m-d H:i:s");
@@ -32,6 +32,42 @@ $row = mysqli_fetch_row($result);
 list($get_selection_id, $get_selection_user_id, $get_selection_user_email, $get_selection_subscribe_to_new_tasks, $get_selection_subscribe_to_monthly_newsletter, $get_selection_unsubscribe_code, $get_selection_last_sendt_monthly_newsletter_month, $get_selection_last_sendt_datetime, $get_selection_last_sendt_time) = $row;
 
 if($get_selection_id != ""){
+	// Last month and year
+	$last_month = $month -1;
+	$last_year = $year;
+	if($last_month == "-1"){
+		$last_month = "12";
+		$last_year = $year-1;
+	}
+	
+	// Between
+	$between_datetime_from = "$last_year-$last_month-01 00:00:00";
+	$between_datetime_from_mysql = quote_smart($link, $between_datetime_from);
+
+	$days_in_month = cal_days_in_month(CAL_GREGORIAN, $last_month, $last_year); // 31
+	$between_datetime_to = "$last_year-$last_month-$days_in_month 00:00:00";
+	$between_datetime_to_mysql = quote_smart($link, $between_datetime_to);
+
+	// Count :: Number of open tasks
+	$query = "SELECT count(task_id) FROM $t_tasks_index WHERE task_finished_is_finished=0 AND task_is_archived=0";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_count_number_of_open_tasks) = $row;
+
+	// Count :: Number of solved tasks last month
+	$query = "SELECT count(task_id) FROM $t_tasks_index WHERE task_finished_is_finished=1 AND task_finished_year=$last_year AND task_finished_month=$last_month";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_count_number_of_tasks_solved_last_month) = $row;
+
+	// Count :: Number of created tasks last month
+	$query = "SELECT count(task_id) FROM $t_tasks_index WHERE task_created_datetime > $between_datetime_from_mysql AND task_created_datetime < $between_datetime_to_mysql AND task_finished_is_finished=0 AND task_is_archived=0";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_count_number_of_tasks_created_last_month) = $row;
+
+	// Logo
+	include("_data/logo.php");
 
 	$subject = "Monthly task newsletter for $month_year_saying | $configWebsiteTitleSav";
 	
@@ -40,6 +76,11 @@ if($get_selection_id != ""){
 	$message = $message. "  <title>$subject</title>\n";
 
 	$message = $message. "  <style type=\"text/css\">\n";
+	$message = $message. "/*- Head ------------------------------------------------ */\n";
+	$message = $message. "  div.logo {\n";
+	$message = $message. "   text-align: center;\n";
+	$message = $message. "  }\n";
+	$message = $message. "/*- Hor zebra ------------------------------------------------ */\n";
 	$message = $message. "  table.hor-zebra {\n";
 	$message = $message. "    width: 100%;\n";
 	$message = $message. "    text-align: left;\n";
@@ -92,12 +133,59 @@ if($get_selection_id != ""){
 	$message = $message. "  	font-weight: bold;\n";
 	$message = $message. "  }\n";
 
+	$message = $message. "/*- Flex ------------------------------------------------ */\n";
+	$message = $message. "div.flex_row {\n";
+	$message = $message. "	display: flex;\n";
+	$message = $message. "}\n";
+	$message = $message. "div.flex_row > div.flex_col {\n";
+	$message = $message. "	flex: 1;\n";
+	$message = $message. "	background: #fff;\n";
+	$message = $message. "	border-radius: 5px;\n";
+	$message = $message. "	border: #eaeef2 1px solid;\n";
+	$message = $message. "	box-shadow: 0 2px 3px rgba(0,0,0,0.03);\n";
+	$message = $message. "	padding: 10px 10px 10px 10px;\n";
+	$message = $message. "	margin: 0px 20px 20px 20px;\n";
+	$message = $message. "	text-align: center;\n";
+	$message = $message. "}\n";
+	$message = $message. "div.flex_row > div.flex_col > h2{\n";
+	$message = $message. "	font-size: 22px;\n";
+	$message = $message. "	padding: 0px 0px 0px 0px;\n";
+	$message = $message. "	margin: 0px 0px 0px 0px;\n";
+	$message = $message. "}\n";
+
+	$message = $message. "div.flex_row > div.flex_col > p{\n";
+	$message = $message. "	font-size: 14px;\n";
+	$message = $message. "	padding: 0px 0px 0px 0px;\n";
+	$message = $message. "	margin: 0px 0px 0px 0px;\n";
+	$message = $message. "}\n";
 
 	$message = $message. "  </style>\n";
 
 	$message = $message. " </head>\n";
 	$message = $message. "<body>\n";
-	$message = $message. "<p>This e-mail contains tasks that are assigned to you.</p>\n";
+
+	$message = $message. "<div class=\"logo\">\n";
+	$message = $message. "	<a href=\"$configSiteURLSav\"><img src=\"$configSiteURLSav/$logoPathEmailSav/$logoFileEmailSav\" alt=\"$logoFileEmailSav\" /></a>\n";
+	$message = $message. "</div>\n";
+	$message = $message. "<h2>Quick Facts</h2>\n";
+	$message = $message. "<div class=\"flex_row\">\n";
+	$message = $message. "	<div class=\"flex_col\">\n";
+	$message = $message. "		<h2>$get_count_number_of_open_tasks</h2>\n";
+	$message = $message. "		<p>tasks open now</p>\n";
+	$message = $message. "	</div>\n";
+	$message = $message. "	<div class=\"flex_col\">\n";
+	$message = $message. "		<h2>$get_count_number_of_tasks_created_last_month</h2>\n";
+	$message = $message. "		<p>created last month</p>\n";
+	$message = $message. "	</div>\n";
+	$message = $message. "	<div class=\"flex_col\">\n";
+	$message = $message. "		<h2>$get_count_number_of_tasks_solved_last_month</h2>\n";
+	$message = $message. "		<p>solved last month</p>\n";
+	$message = $message. "	</div>\n";
+	$message = $message. "</div>\n";
+
+
+	$message = $message. "<h2>Your Tasks</h2>\n";
+	$message = $message. "<p>Here are a list of tasks that are assigned to you.</p>\n";
 	$message = $message. "<table class=\"hor-zebra\">\n";
 	$message = $message. " <thead>\n";
 	$message = $message. "  <tr>\n";

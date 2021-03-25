@@ -175,6 +175,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				} // $get_current_blog_new_comments_email_warning == 1
 
 				// Stats :: Comments :: Year
+				$year = date("Y");
+				$month = date("m");
+				$month_full = date("F");
+				$month_short = date("M");
+
 				$query = "SELECT stats_comments_id, stats_comments_comments_written FROM $t_stats_comments_per_year WHERE stats_comments_year='$year'";
 				$result = mysqli_query($link, $query);
 				$row = mysqli_fetch_row($result);
@@ -214,7 +219,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								or die(mysqli_error($link));
 				}
 
-				
 				// Refresh site
 				$url = "view_post.php?post_id=$get_current_blog_post_id&l=$l&ft_comment=success&fm_comment=comment_saved#comment$get_current_comment_id";
 				header("Location: $url");
