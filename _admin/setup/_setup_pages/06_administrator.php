@@ -14,13 +14,10 @@ if($process == "1"){
 	// Administrator
 	$inp_user_email = $_POST['inp_user_email'];
 	$inp_user_email = output_html($inp_user_email);
-	$inp_user_email_mysql = quote_smart($link, $inp_user_email);
-
-	$inp_user_name = "Administrator";
-	$inp_user_name_mysql = quote_smart($link, $inp_user_name);
 
 	$inp_user_password = $_POST['inp_user_password'];
 	$inp_user_password = output_html($inp_user_password);
+	$inp_user_password = sha1($inp_user_password);
 
 		
 	if(empty($inp_user_email)){
@@ -39,89 +36,63 @@ if($process == "1"){
 	}
 
 
-	// Create salt
-	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    	$charactersLength = strlen($characters);
-    	$salt = '';
-    	for ($i = 0; $i < 6; $i++) {
-        	$salt .= $characters[rand(0, $charactersLength - 1)];
-    	}
-	$inp_user_salt_mysql = quote_smart($link, $salt);
-
-	// Password
-	$inp_user_password_encrypted =  sha1($inp_user_password);
-	$inp_user_password_mysql = quote_smart($link, $inp_user_password_encrypted);
-
-	// Security
-	$year = date("Y");
-	$pin = rand(0,9999);
-	$inp_user_security = $year . $pin;
-
-	// Language
-	$inp_user_language = output_html($language);
-	$inp_user_language_mysql = quote_smart($link, $inp_user_language);
-
-	// Registered
-	$datetime = date("Y-m-d H:i:s");
-	$time = time();
-
-	// Date format
-	if($language == "no"){
-		$inp_user_date_format = "l d. f Y";
-	}
-	else{
-		$inp_user_date_format = "l jS \of F Y";
-	}
-	$inp_user_date_format_mysql = quote_smart($link, $inp_user_date_format);
+	// Write file
+	$update_file="<?php
+// Database
+\$mysqlHostSav   	= \"$mysqlHostSav\";
+\$mysqlUserNameSav   	= \"$mysqlUserNameSav\";
+\$mysqlPasswordSav	= \"$mysqlPasswordSav\";
+\$mysqlDatabaseNameSav 	= \"$mysqlDatabaseNameSav\";
+\$mysqlPrefixSav 	= \"$mysqlPrefixSav\";
 
 
+// General
+\$configWebsiteTitleSav		 = \"$inp_site_title\";
+\$configWebsiteTitleCleanSav	 = \"$inp_site_title_clean\";
+\$configWebsiteCopyrightSav	 = \"$configWebsiteCopyrightSav\";
+\$configFromEmailSav 		 = \"$configFromEmailSav\";
+\$configFromNameSav 		 = \"$configFromNameSav\";
 
-	// Mesurment
-	if($language == "en"){
-		$inp_profile_mesurment = "imperial"; // imperial
-	}
-	else{
-		$inp_profile_mesurment = "metric"; // metric
-	}
+\$configWebsiteVersionSav	= \"$configWebsiteVersionSav\";
+\$configMailSendActiveSav	= \"$configMailSendActiveSav\";
 
-	// Insert user
-	mysqli_query($link, "INSERT INTO $t_users
-	(user_id, user_email, user_name, user_alias, user_password, user_salt, user_security, user_language, user_measurement, user_date_format, user_registered, user_registered_time, user_last_online, user_last_online_time, user_rank, user_points, user_points_rank, user_likes, user_dislikes, user_verified_by_moderator, user_marked_as_spammer) 
-	VALUES 
-	(NULL, $inp_user_email_mysql, $inp_user_name_mysql, $inp_user_name_mysql, $inp_user_password_mysql, $inp_user_salt_mysql, '$inp_user_security', $inp_user_language_mysql, '$inp_profile_mesurment', $inp_user_date_format_mysql, '$datetime', '$time', '$datetime', '$time', 'admin', '0', 'Newbie', '0', '0', '1', 0)")
-	or die(mysqli_error($link));
+// Webmaster
+\$configWebsiteWebmasterSav	 = \"$configWebsiteWebmasterSav\";
+\$configWebsiteWebmasterEmailSav = \"$configWebsiteWebmasterEmailSav\";
 
+// URLs
+\$configSiteURLSav 		= \"$configSiteURLSav\";
+\$configSiteURLLenSav 		= \"$configSiteURLLenSav\";
+\$configSiteURLSchemeSav	= \"$configSiteURLSchemeSav\";
+\$configSiteURLHostSav		= \"$configSiteURLHostSav\";
+\$configSiteURLPortSav		= \"$configSiteURLPortSav\";
+\$configSiteURLPathSav		= \"$configSiteURLPathSav\";
 
-	// Get user id
-	$query = "SELECT user_id FROM $t_users WHERE user_email=$inp_user_email_mysql";
-	$result = mysqli_query($link, $query);
-	$row = mysqli_fetch_row($result);
-	list($get_user_id) = $row;
+\$configControlPanelURLSav 		= \"$configControlPanelURLSav\";
+\$configControlPanelURLLenSav 		= \"$configControlPanelURLLenSav\";
+\$configControlPanelURLSchemeSav	= \"$configControlPanelURLSchemeSav\";
+\$configControlPanelURLHostSav		= \"$configControlPanelURLHostSav\";
+\$configControlPanelURLPortSav		= \"$configControlPanelURLPortSav\";
+\$configControlPanelURLPathSav		= \"$configControlPanelURLPathSav\";
 
+// Statisics
+\$configSiteUseGethostbyaddrSav = \"$configSiteUseGethostbyaddrSav\";
+\$configSiteDaysToKeepPageVisitsSav = \"$configSiteDaysToKeepPageVisitsSav\";
 
-	// Insert profile
-	mysqli_query($link, "INSERT INTO $t_users_profile
-	(profile_id, profile_user_id, profile_privacy) 
-	VALUES 
-	(NULL, '$get_user_id', 'public')")
-	or die(mysqli_error($link));
+// Test
+\$configSiteIsTestSav = \"$configSiteIsTestSav\";
 
+// Admin
+\$adminEmailSav = \"$inp_user_email\";
+\$adminPasswordSav = \"$inp_user_password\";
 
-	// Setup email notifications
-	$inp_es_user_id = quote_smart($link, $get_user_id);
-	mysqli_query($link, "INSERT INTO $t_users_email_subscriptions
-	(es_id, es_user_id, es_type, es_on_off) 
-	VALUES 
-	(NULL, $inp_es_user_id, 'friend_request', '1'),
-	(NULL, $inp_es_user_id, 'status_comments', '1')")
-	or die(mysqli_error($link));
+// Webdesign
+\$webdesignSav = \"$webdesignSav\";
 
-
-	// Login user
-	$_SESSION['user_id'] = "$get_user_id";
-	$_SESSION['security'] = "$inp_user_security";
-	$_SESSION['admin_user_id']  = "$get_user_id";
-	$_SESSION['admin_security'] = "$inp_user_security";
+?>";
+	$fh = fopen("../../_cache/setup_data.php", "w+") or die("can not open file");
+	fwrite($fh, $update_file);
+	fclose($fh);
 
 
 	// Move to admin-panel
@@ -153,18 +124,8 @@ echo"
 		";
 		if(isset($ft) && isset($fm)){
 			if($ft != ""){
-				if($fm == "please_enter_your_user_name"){
-					$fm = "$l_please_enter_your_user_name";
-				}
-				elseif($fm == "please_enter_your_email_address"){
-					$fm = "$l_please_enter_your_email";
-				}
-				elseif($fm == "please_enter_your_password"){
-					$fm = "$l_please_enter_your_password";
-				}
-				else{
-					$fm = ucfirst($fm);
-				}	
+				$fm = str_replace("_", " ", $fm);
+				$fm = ucfirst($fm);
 				echo"<div class=\"$ft\"><span>$fm</span></div>";
 			}
 		}

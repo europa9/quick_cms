@@ -9,8 +9,6 @@ if(file_exists("../_data/$setup_finished_file")){
 	die;
 }
 
-/*- Config -------------------------------------------------------------------------- */
-include("../_data/webdesign.php");
 
 /*- Variables ----------------------------------------------------------------------- */
 if(isset($_GET['action'])) {
@@ -140,24 +138,66 @@ elseif($action == "switch_to_webdesign"){
 	}
 	if(is_dir("../../_webdesign/$webdesign_name") && file_exists("../../_webdesign/$webdesign_name/webdesign_preview_$webdesign_name.jpg")){
 		
-
+	// Write file
 	$update_file="<?php
-\$webdesignSav 	 = \"$webdesign_name\";
-?>";
+// Database
+\$mysqlHostSav   	= \"$mysqlHostSav\";
+\$mysqlUserNameSav   	= \"$mysqlUserNameSav\";
+\$mysqlPasswordSav	= \"$mysqlPasswordSav\";
+\$mysqlDatabaseNameSav 	= \"$mysqlDatabaseNameSav\";
+\$mysqlPrefixSav 	= \"$mysqlPrefixSav\";
 
-		$fh = fopen("../_data/webdesign.php", "w+") or die("can not open file");
+
+// General
+\$configWebsiteTitleSav		 = \"$inp_site_title\";
+\$configWebsiteTitleCleanSav	 = \"$inp_site_title_clean\";
+\$configWebsiteCopyrightSav	 = \"$configWebsiteCopyrightSav\";
+\$configFromEmailSav 		 = \"$configFromEmailSav\";
+\$configFromNameSav 		 = \"$configFromNameSav\";
+
+\$configWebsiteVersionSav	= \"$configWebsiteVersionSav\";
+\$configMailSendActiveSav	= \"$configMailSendActiveSav\";
+
+// Webmaster
+\$configWebsiteWebmasterSav	 = \"$configWebsiteWebmasterSav\";
+\$configWebsiteWebmasterEmailSav = \"$configWebsiteWebmasterEmailSav\";
+
+// URLs
+\$configSiteURLSav 		= \"$configSiteURLSav\";
+\$configSiteURLLenSav 		= \"$configSiteURLLenSav\";
+\$configSiteURLSchemeSav	= \"$configSiteURLSchemeSav\";
+\$configSiteURLHostSav		= \"$configSiteURLHostSav\";
+\$configSiteURLPortSav		= \"$configSiteURLPortSav\";
+\$configSiteURLPathSav		= \"$configSiteURLPathSav\";
+
+\$configControlPanelURLSav 		= \"$configControlPanelURLSav\";
+\$configControlPanelURLLenSav 		= \"$configControlPanelURLLenSav\";
+\$configControlPanelURLSchemeSav	= \"$configControlPanelURLSchemeSav\";
+\$configControlPanelURLHostSav		= \"$configControlPanelURLHostSav\";
+\$configControlPanelURLPortSav		= \"$configControlPanelURLPortSav\";
+\$configControlPanelURLPathSav		= \"$configControlPanelURLPathSav\";
+
+// Statisics
+\$configSiteUseGethostbyaddrSav = \"$configSiteUseGethostbyaddrSav\";
+\$configSiteDaysToKeepPageVisitsSav = \"$configSiteDaysToKeepPageVisitsSav\";
+
+// Test
+\$configSiteIsTestSav = \"$configSiteIsTestSav\";
+
+// Admin
+\$adminEmailSav = \"$adminEmailSav\";
+\$adminPasswordSav = \"$adminPasswordSav\";
+
+// Webdesign
+\$webdesignSav = \"$webdesign_name\";
+
+?>";
+		$fh = fopen("../../_cache/setup_data.php", "w+") or die("can not open file");
 		fwrite($fh, $update_file);
 		fclose($fh);
 
-
-		// Setup finished
-		$fh = fopen("../_data/$setup_finished_file", "w+") or die("can not open file");
-		fwrite($fh, "$cmsVersionSav");
-		fclose($fh);
-
-
-		// Move to liquidbase
-		header("Location: ../_liquidbase/liquidbase.php");
+		// Move to write to file
+		header("Location: index.php?page=08_write_to_file&language=$language&process=1");
 		exit;
 	}
 }

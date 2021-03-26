@@ -89,6 +89,13 @@ if($action == "test_connection"){
 // Test
 \$configSiteIsTestSav = \"$configSiteIsTestSav\";
 
+// Admin
+\$adminEmailSav = \"$adminEmailSav\";
+\$adminPasswordSav = \"$adminPasswordSav\";
+
+// Webdesign
+\$webdesignSav = \"$webdesignSav\";
+
 ?>";
 		$fh = fopen("../../_cache/setup_data.php", "w+") or die("can not open file");
 		fwrite($fh, $update_file);

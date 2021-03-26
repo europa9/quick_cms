@@ -202,7 +202,7 @@ echo"<!DOCTYPE html>
 						<li><span"; if($page == "" OR $page == "01_select_language"){ echo" class=\"active\" "; } echo">1. Language</span></li>
 						<li><span"; if($page == "02_licence"){ echo" class=\"active\" "; } echo">2. Licence</span></li>
 						<li><span"; if($page == "03_chmod"){ echo" class=\"active\" "; } echo">3. Chmod</span></li>
-						<li><span"; if($page == "04_a_database"){ echo" class=\"active\" "; } echo">4. Database</span></li>
+						<li><span"; if($page == "04_database"){ echo" class=\"active\" "; } echo">4. Database</span></li>
 						<li><span"; if($page == "05_site"){ echo" class=\"active\" "; } echo">5. Site</span></li>
 						<li><span"; if($page == "06_administrator"){ echo" class=\"active\" "; } echo">6. Administrator</span></li>
 						<li><span"; if($page == "07_web_design"){ echo" class=\"active\" "; } echo">7. Web design</span></li>

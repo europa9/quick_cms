@@ -16,7 +16,56 @@ if(!(file_exists("$mysql_config_file"))){
 	die;
 }
 
-// Create tables
+/*- MySQL Tables -------------------------------------------------- */
+$t_admin_liquidbase = $mysqlPrefixSav . "admin_liquidbase";
+	$t_users 	 		= $mysqlPrefixSav . "users";
+	$t_users_profile 		= $mysqlPrefixSav . "users_profile";
+	$t_users_friends 		= $mysqlPrefixSav . "users_friends";
+	$t_users_friends_requests 	= $mysqlPrefixSav . "users_friends_requests";
+	$t_users_profile		= $mysqlPrefixSav . "users_profile";
+	$t_users_profile_photo 		= $mysqlPrefixSav . "users_profile_photo";
+	$t_users_status 		= $mysqlPrefixSav . "users_status";
+	$t_users_status_subscriptions	= $mysqlPrefixSav . "users_status_subscriptions";
+	$t_users_status_replies 	= $mysqlPrefixSav . "users_status_replies";
+	$t_users_status_replies_likes 	= $mysqlPrefixSav . "users_status_replies_likes";
+	$t_users_status_likes 		= $mysqlPrefixSav . "users_status_likes";
+	$t_users_profile 		= $mysqlPrefixSav . "users_profile";
+	$t_users_cover_photos 		= $mysqlPrefixSav . "users_cover_photos";
+	$t_users_email_subscriptions 	= $mysqlPrefixSav . "users_email_subscriptions";
+	$t_users_notifications 		= $mysqlPrefixSav . "users_notifications";
+	$t_users_moderator_of_the_week	= $mysqlPrefixSav . "users_moderator_of_the_week";
+	$t_users_api_sessions 		= $mysqlPrefixSav . "users_api_sessions";
+
+	$t_users_antispam_questions	= $mysqlPrefixSav . "users_antispam_questions";
+	$t_users_antispam_answers	= $mysqlPrefixSav . "users_antispam_answers";
+	
+	$t_pages 			= $mysqlPrefixSav . "pages";
+	$t_pages_comments		= $mysqlPrefixSav . "pages_comments";
+	$t_pages_navigation 		= $mysqlPrefixSav . "pages_navigation";
+	$t_images 			= $mysqlPrefixSav . "images";
+	$t_images_paths 		= $mysqlPrefixSav . "images_paths";
+
+	$t_languages 			= $mysqlPrefixSav . "languages";
+	$t_languages_active 		= $mysqlPrefixSav . "languages_active";
+	
+	$t_site_translations_directories = $mysqlPrefixSav . "site_translations_directories";
+	$t_site_translations_files       = $mysqlPrefixSav . "site_translations_files";
+	$t_site_translations_strings	 = $mysqlPrefixSav . "site_translations_strings";
+
+	$t_admin_translations_directories = $mysqlPrefixSav . "admin_translations_directories";
+	$t_admin_translations_files       = $mysqlPrefixSav . "admin_translations_files";
+	$t_admin_translations_strings     = $mysqlPrefixSav . "admin_translations_strings";
+
+	$t_admin_navigation		= $mysqlPrefixSav . "admin_navigation";
+	$t_admin_messages_inbox     = $mysqlPrefixSav . "admin_messages_inbox";
+
+	$t_social_media 	= $mysqlPrefixSav . "social_media";
+
+	$t_analytics 		= $mysqlPrefixSav . "analytics";
+
+	$t_banned_hostnames  = $mysqlPrefixSav . "banned_hostnames";
+	$t_banned_ips  = $mysqlPrefixSav . "banned_ips";
+	$t_banned_user_agents  = $mysqlPrefixSav . "banned_user_agents";
 
 // Liquidbase
 $query = "SELECT * FROM $t_admin_liquidbase LIMIT 1";
@@ -729,10 +778,6 @@ else{
 }
 
 
-
-// Header
-header("Location: index.php?page=04_c_database_insert_into_tables_languages&process=1&language=$language");
-exit;
 
 
 ?>

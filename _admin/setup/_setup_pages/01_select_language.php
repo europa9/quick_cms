@@ -73,6 +73,8 @@ if(!(file_exists("../../_cache/setup_data.php"))){
 	$inp_site_title = "$server_name_ucfirst";
 	$inp_site_title_clean = clean($inp_site_title);
 
+	//
+
 	$update_file="<?php
 // Database
 \$mysqlHostSav   	= \"$inp_mysql_host\";
@@ -118,6 +120,12 @@ if(!(file_exists("../../_cache/setup_data.php"))){
 // Test
 \$configSiteIsTestSav = \"0\";
 
+// Admin
+\$adminEmailSav = \"\";
+\$adminPasswordSav = \"\";
+
+// Webdesign
+\$webdesignSav = \"\";
 ?>";
 	$fh = fopen("../../_cache/setup_data.php", "w+") or die("can not open file");
 	fwrite($fh, $update_file);
