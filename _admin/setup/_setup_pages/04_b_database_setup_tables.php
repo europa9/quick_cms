@@ -461,47 +461,10 @@ else{
 	   or die(mysqli_error($link));
 }
 
-// Languages
-$query = "SELECT * FROM $t_languages LIMIT 1";
-$result = mysqli_query($link, $query);
-
-if($result !== FALSE){
-}
-else{
-	mysqli_query($link, "CREATE TABLE $t_languages(
-	   language_id INT NOT NULL AUTO_INCREMENT,
-	   PRIMARY KEY(language_id), 
-	   language_name VARCHAR(250),
-	   language_slug VARCHAR(250),
-	   language_native_name VARCHAR(250),
-	   language_iso_two VARCHAR(250),
-	   language_iso_three VARCHAR(250),
-	   language_flag VARCHAR(250),
-	   language_charset VARCHAR(250))")
-	   or die(mysqli_error($link));
-}
 
 
-// Languages :: Active
-$query = "SELECT * FROM $t_languages_active LIMIT 1";
-$result = mysqli_query($link, $query);
 
-if($result !== FALSE){
-}
-else{
-	mysqli_query($link, "CREATE TABLE $t_languages_active(
-	   language_active_id INT NOT NULL AUTO_INCREMENT,
-	   PRIMARY KEY(language_active_id), 
-	   language_active_name VARCHAR(250),
-	   language_active_slug VARCHAR(250),
-	   language_active_native_name VARCHAR(250),
-	   language_active_iso_two VARCHAR(250),
-	   language_active_iso_three VARCHAR(250),
-	   language_active_flag VARCHAR(250),
-	   language_active_charset VARCHAR(250),
-	   language_active_default INT)")
-	   or die(mysqli_error($link));
-}
+
 
 
 // Site translations :: Directories

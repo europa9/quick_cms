@@ -36,7 +36,7 @@ if($action == "test_connection"){
 		$error = mysqli_connect_error();
 		$error_no = mysqli_connect_error() . PHP_EOL;
 		$error_or = mysqli_connect_error() . PHP_EOL;
-		$url = "index.php?page=04_a_database&language=$language&inp_mysql_host=$inp_mysql_host&inp_mysql_user_name=$inp_mysql_user_name&inp_mysql_database_name=$inp_mysql_database_name&inp_mysql_prefix=$inp_mysql_prefix&ft=error&fm=$error&error_no=$error_no&error_or=$error_or";
+		$url = "index.php?page=04_database&language=$language&inp_mysql_host=$inp_mysql_host&inp_mysql_user_name=$inp_mysql_user_name&inp_mysql_database_name=$inp_mysql_database_name&inp_mysql_prefix=$inp_mysql_prefix&ft=error&fm=$error&error_no=$error_no&error_or=$error_or";
 		echo"
 		<h1>MySQL Connection failed</h1>
 		<meta http-equiv=refresh content=\"1; url=$url\">";
@@ -45,17 +45,56 @@ if($action == "test_connection"){
 	else{
 		// Write DB file
 		$update_file="<?php
+// Database
 \$mysqlHostSav   	= \"$inp_mysql_host\";
 \$mysqlUserNameSav   	= \"$inp_mysql_user_name\";
 \$mysqlPasswordSav	= \"$inp_mysql_password\";
 \$mysqlDatabaseNameSav 	= \"$inp_mysql_database_name\";
 \$mysqlPrefixSav 	= \"$inp_mysql_prefix\";
+
+
+// General
+\$configWebsiteTitleSav		 = \"$configWebsiteTitleSav\";
+\$configWebsiteTitleCleanSav	 = \"$configWebsiteTitleCleanSav\";
+\$configWebsiteCopyrightSav	 = \"$configWebsiteCopyrightSav\";
+\$configFromEmailSav 		 = \"$configFromEmailSav\";
+\$configFromNameSav 		 = \"$configFromNameSav\";
+
+\$configWebsiteVersionSav	= \"$configWebsiteVersionSav\";
+\$configMailSendActiveSav	= \"$configMailSendActiveSav\";
+
+// Webmaster
+\$configWebsiteWebmasterSav	 = \"$configWebsiteWebmasterSav\";
+\$configWebsiteWebmasterEmailSav = \"$configWebsiteWebmasterEmailSav\";
+
+// URLs
+\$configSiteURLSav 		= \"$configSiteURLSav\";
+\$configSiteURLLenSav 		= \"$configSiteURLLenSav\";
+\$configSiteURLSchemeSav	= \"$configSiteURLSchemeSav\";
+\$configSiteURLHostSav		= \"$configSiteURLHostSav\";
+\$configSiteURLPortSav		= \"$configSiteURLPortSav\";
+\$configSiteURLPathSav		= \"$configSiteURLPathSav\";
+
+\$configControlPanelURLSav 		= \"$configControlPanelURLSav\";
+\$configControlPanelURLLenSav 		= \"$configControlPanelURLLenSav\";
+\$configControlPanelURLSchemeSav	= \"$configControlPanelURLSchemeSav\";
+\$configControlPanelURLHostSav		= \"$configControlPanelURLHostSav\";
+\$configControlPanelURLPortSav		= \"$configControlPanelURLPortSav\";
+\$configControlPanelURLPathSav		= \"$configControlPanelURLPathSav\";
+
+// Statisics
+\$configSiteUseGethostbyaddrSav = \"$configSiteUseGethostbyaddrSav\";
+\$configSiteDaysToKeepPageVisitsSav = \"$configSiteDaysToKeepPageVisitsSav\";
+
+// Test
+\$configSiteIsTestSav = \"$configSiteIsTestSav\";
+
 ?>";
-		$fh = fopen($mysql_config_file, "w+") or die("can not open file");
+		$fh = fopen("../../_cache/setup_data.php", "w+") or die("can not open file");
 		fwrite($fh, $update_file);
 		fclose($fh);
 	
-		$url = "index.php?page=04_b_database_setup_tables&language=$language&process=1";
+		$url = "index.php?page=05_site&language=$language";
 		header("Location: $url");
 		exit;
 	}
@@ -77,30 +116,9 @@ echo"
 <!-- Database form -->
 ";
 if($action == ""){
-	// Get variables
-	if(isset($_GET['inp_mysql_host'])){
-		$inp_mysql_host = $_GET['inp_mysql_host'];
-		$inp_mysql_host = output_html($inp_mysql_host);
-	}
-	if(isset($_GET['inp_mysql_user_name'])){
-		$inp_mysql_user_name = $_GET['inp_mysql_user_name'];
-		$inp_mysql_user_name = output_html($inp_mysql_user_name);
-	}
-	if(isset($_GET['inp_mysql_password'])){
-		$inp_mysql_password = $_GET['inp_mysql_password'];
-		$inp_mysql_password = output_html($inp_mysql_password);
-	}
-	if(isset($_GET['inp_mysql_database_name'])){
-		$inp_mysql_database_name = $_GET['inp_mysql_database_name'];
-		$inp_mysql_database_name = output_html($inp_mysql_database_name);
-	}
-	if(isset($_GET['inp_mysql_prefix'])){
-		$inp_mysql_prefix = $_GET['inp_mysql_prefix'];
-		$inp_mysql_prefix = output_html($inp_mysql_prefix);
-	}
-	
+	// Check file 
 	echo"
-	<form method=\"post\" action=\"index.php?page=04_a_database&amp;language=$language&amp;action=test_connection&amp;process=1\" enctype=\"multipart/form-data\">
+	<form method=\"post\" action=\"index.php?page=04_database&amp;language=$language&amp;action=test_connection&amp;process=1\" enctype=\"multipart/form-data\">
 
 	<!-- Error -->
 		";
@@ -122,37 +140,19 @@ if($action == ""){
 	<!-- //Error -->
 
 	<p><b>$l_host:</b><br />
-	<input type=\"text\" name=\"inp_mysql_host\" value=\""; if(isset($inp_mysql_host)){ echo"$inp_mysql_host"; } 
-	else{ 
-		$server_name = $_SERVER['HTTP_HOST'];
-		$server_name = output_html($server_name);
-		echo"$server_name"; 
-	} 
-	echo"\" size=\"35\" tabindex=\"1\" /></p>
+	<input type=\"text\" name=\"inp_mysql_host\" value=\"$mysqlHostSav\" size=\"35\" tabindex=\"1\" /></p>
 
 	<p><b>$l_username:</b><br />
-	<input type=\"text\" name=\"inp_mysql_user_name\" value=\""; if(isset($inp_mysql_user_name)){ echo"$inp_mysql_user_name"; } 
-	else{
-		if($server_name == "localhost"){
-			echo"root";
-		}
-	}
-	echo"\" size=\"35\" tabindex=\"2\" /></p>
+	<input type=\"text\" name=\"inp_mysql_user_name\" value=\"$mysqlUserNameSav\" size=\"35\" tabindex=\"2\" /></p>
 
 	<p><b>$l_password:</b><br />
-	<input type=\"text\" name=\"inp_mysql_password\" value=\""; if(isset($inp_mysql_password)){ echo"$inp_mysql_password"; } else{ echo""; } echo"\" size=\"35\" tabindex=\"3\" /></p>
+	<input type=\"text\" name=\"inp_mysql_password\" value=\"$mysqlPasswordSav\" size=\"35\" tabindex=\"3\" /></p>
 
 	<p><b>$l_database_name:</b><br />
-	<input type=\"text\" name=\"inp_mysql_database_name\" value=\""; if(isset($inp_mysql_database_name)){ echo"$inp_mysql_database_name"; }
-	else{
-		if($server_name == "localhost"){
-			echo"quick_cms";
-		}
-	}
-	echo"\" size=\"35\" tabindex=\"4\" /></p>
+	<input type=\"text\" name=\"inp_mysql_database_name\" value=\"$mysqlDatabaseNameSav\" size=\"35\" tabindex=\"4\" /></p>
 
 	<p><b>$l_prefix:</b><br />
-	<input type=\"text\" name=\"inp_mysql_prefix\" value=\""; if(isset($inp_mysql_prefix)){ echo"$inp_mysql_prefix"; } else{ echo"quick_"; } echo"\" size=\"35\" tabindex=\"5\" /></p>
+	<input type=\"text\" name=\"inp_mysql_prefix\" value=\"$mysqlPrefixSav\" size=\"35\" tabindex=\"5\" /></p>
 
 	
 	<p>

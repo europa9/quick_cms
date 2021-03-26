@@ -64,7 +64,7 @@ if(isset($_GET['refererer_page'])) {
 }
 else{
 	$refererer_page = "";
-}	
+}
 if(isset($_GET['counter'])) {
 	$counter = $_GET['counter'];
 	$counter = strip_tags(stripslashes($counter));
@@ -72,6 +72,43 @@ if(isset($_GET['counter'])) {
 else{
 	$counter = "1";
 }
+
+/*- Select language ------------------------------------------------------------------ */
+if(isset($_GET['l'])) {
+	$l = $_GET['l'];
+
+	if(file_exists("../_translations/admin/$l/login/t_login.php")){
+		$_SESSION['l'] = $l;
+	}
+	else{
+		echo"
+		<div class=\"warning\"><p>Missing <a href=\"_translations/admin/$l/login/t_login.php\">_translations/admin/$l/login/login.php</a></div>
+		";
+		$_SESSION['l'] = "en";
+	}
+}
+if(isset($_SESSION['l'])){
+	$l = $_SESSION['l'];
+}
+else{
+	if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
+		$accept_language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+		$accept_language = output_html($accept_language);
+		$accept_language = strtolower($accept_language);
+		$accept_language_prefered = substr("$accept_language", 0,2);
+
+		if(file_exists("../_translations/admin/$accept_language_prefered/cp/cp.php")){
+			$l = "$accept_language_prefered";
+		}
+		else{
+			$l = "en";
+		}
+	}
+	else{
+		$l = "en";
+	}
+}
+
 
 /*- Start --------------------------------------------------------------------------- */
 // Loop trough years
@@ -145,7 +182,7 @@ if ($handle = opendir($path)) {
 	<!-- Main -->
 	<div id=\"main\">
 		<h1><img src=\"_gfx/loading_22.gif\" alt=\"loading_22.gif\" /> $module &middot; $liquidbase_name</h1>
-		<p><a href=\"liquidbase.php?counter=$counter&amp;refererer_open=$refererer_open&amp;refererer_page=$refererer_page&amp;datetime=$datetime\">Liquidbase is loading</a></p>";
+		<p><a href=\"liquidbase.php?counter=$counter&amp;refererer_open=$refererer_open&amp;refererer_page=$refererer_page&amp;datetime=$datetime&amp;l=$l\">Liquidbase is loading</a></p>";
 
 
 						// Insert
@@ -161,7 +198,7 @@ if ($handle = opendir($path)) {
 						// Refresh and load again
 						$refresh_after = rand(0,1);
 						echo"
-	<meta http-equiv=refresh content=\"$refresh_after; url=liquidbase.php?counter=$counter&amp;refererer_open=$refererer_open&amp;refererer_page=$refererer_page&amp;last_module=$module&amp;last_name=$liquidbase_name&amp;last_datetime=$datetime\">
+	<meta http-equiv=refresh content=\"$refresh_after; url=liquidbase.php?counter=$counter&amp;refererer_open=$refererer_open&amp;refererer_page=$refererer_page&amp;last_module=$module&amp;last_name=$liquidbase_name&amp;last_datetime=$datetime&amp;l=$l\">
 	</div>
 	<!-- //Main -->
 
@@ -192,7 +229,7 @@ if($refererer_open == "" && $refererer_page == ""){
 	exit;
 }
 else{
-	header("Location: ../index.php?open=$refererer_open&page=$refererer_page&ft=success&fm=Liquidbase_run");
+	header("Location: ../index.php?open=$refererer_open&page=$refererer_page&ft=success&fm=Liquidbase_run&l=$l");
 	exit;
 }
 ?>

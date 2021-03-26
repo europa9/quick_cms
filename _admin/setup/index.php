@@ -59,84 +59,10 @@ if(file_exists("../_data/$setup_finished_file")){
 	die;
 }
 
-// Mysql Setup
-$mysql_config_file = "../_data/mysql_" . $server_name . ".php";
-if(file_exists("$mysql_config_file")){
-	include("$mysql_config_file");
-	$link = mysqli_connect($mysqlHostSav, $mysqlUserNameSav, $mysqlPasswordSav, $mysqlDatabaseNameSav);
-	if (!$link) {
-		echo "
-		<div class=\"alert alert-danger\"><span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span><strong>MySQL connection error</strong>"; 
-		echo PHP_EOL;
-   		echo "<br />Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
-    		echo "<br />Debugging error: " . mysqli_connect_error() . PHP_EOL;
-    		echo"
-		</div>
-		";
-		die;
-	}
-
-	/*- MySQL Tables -------------------------------------------------- */
-	$t_users 	 		= $mysqlPrefixSav . "users";
-	$t_users_profile 		= $mysqlPrefixSav . "users_profile";
-	$t_users_friends 		= $mysqlPrefixSav . "users_friends";
-	$t_users_friends_requests 	= $mysqlPrefixSav . "users_friends_requests";
-	$t_users_profile		= $mysqlPrefixSav . "users_profile";
-	$t_users_profile_photo 		= $mysqlPrefixSav . "users_profile_photo";
-	$t_users_status 		= $mysqlPrefixSav . "users_status";
-	$t_users_status_likes 		= $mysqlPrefixSav . "users_status_likes";
-	$t_users_profile 		= $mysqlPrefixSav . "users_profile";
-	$t_users_profile_views 		= $mysqlPrefixSav . "users_profile_views";
-	$t_users_cover_photos 		= $mysqlPrefixSav . "users_cover_photos";
-	$t_users_email_subscriptions 	= $mysqlPrefixSav . "users_email_subscriptions";
-	$t_users_notifications 		= $mysqlPrefixSav . "users_notifications";
-	$t_users_moderator_of_the_week	= $mysqlPrefixSav . "users_moderator_of_the_week";
-
-	$t_users_antispam_questions	= $mysqlPrefixSav . "users_antispam_questions";
-	$t_users_antispam_answers	= $mysqlPrefixSav . "users_antispam_answers";
-	$t_users_api_sessions		= $mysqlPrefixSav . "users_api_sessions";
-
-	$t_stats_bot_ipblock 		= $mysqlPrefixSav . "stats_bot_ipblock";
-	$t_stats_human_ipblock 		= $mysqlPrefixSav . "stats_human_ipblock";
-	$t_stats_human_online_records	= $mysqlPrefixSav . "stats_human_online_records";
-	$t_stats_user_agents 		= $mysqlPrefixSav . "stats_user_agents";
-	$t_stats_dayli 			= $mysqlPrefixSav . "stats_dayli";
-	$t_stats_monthly		= $mysqlPrefixSav . "stats_monthly";
-	$t_stats_browsers 		= $mysqlPrefixSav . "stats_browsers";
-	$t_stats_os	 		= $mysqlPrefixSav . "stats_os";
-	$t_stats_bots			= $mysqlPrefixSav . "stats_bots";
-	$t_stats_accepted_languages	= $mysqlPrefixSav . "stats_accepted_languages";
-	$t_stats_referers		= $mysqlPrefixSav . "stats_referers";
-	$t_stats_users_registered_weekly = $mysqlPrefixSav . "stats_users_registered_weekly";
-	$t_stats_users_registered_monthly = $mysqlPrefixSav . "stats_users_registered_monthly";
-	$t_stats_users_registered_yearly = $mysqlPrefixSav . "stats_users_registered_yearly";
-
-	$t_pages 		= $mysqlPrefixSav . "pages";
-	$t_navigation 		= $mysqlPrefixSav . "navigation";
-
-	$t_images		= $mysqlPrefixSav . "images";
-	$t_images_paths		= $mysqlPrefixSav . "images_paths";
-	
-	$t_languages        	= $mysqlPrefixSav . "languages";
-	$t_languages_active 	= $mysqlPrefixSav . "languages_active";
-	
-	$t_site_translations_directories = $mysqlPrefixSav . "site_translations_directories";
-	$t_site_translations_files       = $mysqlPrefixSav . "site_translations_files";
-	$t_site_translations_strings	 = $mysqlPrefixSav . "site_translations_strings";
-	
-	$t_admin_translations_directories = $mysqlPrefixSav . "admin_translations_directories";
-	$t_admin_translations_files       = $mysqlPrefixSav . "admin_translations_files";
-	$t_admin_translations_strings     = $mysqlPrefixSav . "admin_translations_strings";
-
-	$t_admin_messages_inbox		= $mysqlPrefixSav . "admin_messages_inbox";
-
-	$t_admin_liquidbase		  = $mysqlPrefixSav . "admin_liquidbase";
-
-	$t_banned_hostnames	= $mysqlPrefixSav . "banned_hostnames";
-	$t_banned_ips	 	= $mysqlPrefixSav . "banned_ips";
-	$t_banned_user_agents	= $mysqlPrefixSav . "banned_user_agents";
-
-	$t_analytics	= $mysqlPrefixSav . "analytics";
+// Config file ------------------------------------------------------------------------ */
+// (temporary)
+if(file_exists("../../_cache/setup_data.php")){
+	include("../../_cache/setup_data.php");
 }
 
 /*- Variables ------------------------------------------------------------------------ */
@@ -244,7 +170,7 @@ echo"<!DOCTYPE html>
 
 
 	<!-- jQuery -->
-	<script type=\"text/javascript\" src=\"../_javascripts/jquery/jquery-3.4.0.min.js\"></script>
+	<script type=\"text/javascript\" src=\"../_javascripts/jquery/jquery-3.5.1.min.js\"></script>
 	<!-- //jQuery -->
 
 </head>

@@ -40,7 +40,7 @@ if($action == ""){
 	<!-- //Feedback -->
 
 	<p>
-	<a href=\"_liquidbase/liquidbase.php?refererer_open=settings&amp;refererer_page=liquidbase\" class=\"btn_default\">Run</a>
+	<a href=\"_liquidbase/liquidbase.php?refererer_open=settings&amp;refererer_page=liquidbase&amp;l=$l\" class=\"btn_default\">Run</a>
 	</p>
 
 	<!-- Liquidbase scripts -->

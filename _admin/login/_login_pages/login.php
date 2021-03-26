@@ -11,7 +11,7 @@ if($process == "1"){
 		$inp_email = output_html($inp_email);
 		$inp_email = strtolower($inp_email);
 		if(empty($inp_email)){
-			header("Location: index.php?ft=error&fm=please_enter_your_email");
+			header("Location: index.php?ft=error&fm=please_enter_your_email&l=$l");
 			exit;
 		}
 		$inp_email_mysql = quote_smart($link, $inp_email);
@@ -23,19 +23,19 @@ if($process == "1"){
 		// }
 	}
 	else{
-		header("Location: index.php?ft=error&fm=please_enter_your_email");
+		header("Location: index.php?ft=error&fm=please_enter_your_email&l=$l");
 		exit;
 	}
 	if(isset($_POST['inp_password'])) {
 		$inp_password = $_POST['inp_password'];
 		$inp_password = output_html($inp_password);
 		if(empty($inp_password)){
-			header("Location: index.php?ft=error&fm=please_enter_your_password");
+			header("Location: index.php?ft=error&fm=please_enter_your_password&l=$l");
 			exit;
 		}
 	}
 	else{
-		header("Location: index.php?ft=error&fm=please_enter_your_password");
+		header("Location: index.php?ft=error&fm=please_enter_your_password&l=$l");
 		exit;
 	}
 
@@ -47,7 +47,7 @@ if($process == "1"){
 	list($get_user_id, $get_user_password, $get_user_salt, $get_user_security, $get_user_language, $get_user_last_online, $get_user_rank, $get_user_login_tries) = $row;
 
 	if($get_user_id == ""){
-		header("Location: index.php?ft=error&fm=unknown_email_address");
+		header("Location: index.php?ft=error&fm=unknown_email_address&l=$l");
 		exit;
 	}
 	
@@ -60,7 +60,7 @@ if($process == "1"){
 		$hour  = $time[0];
 		$now   = date("H");
 		if($hour == "$now"){
-			header("Location: index.php?ft=warning&fm=account_temporarily_banned_please_wait_one_hour_before_trying_again&inp_mail=$inp_mail");
+			header("Location: index.php?ft=warning&fm=account_temporarily_banned_please_wait_one_hour_before_trying_again&inp_mail=$inp_mail&l=$l");
 			exit;
 		}
 		
@@ -76,7 +76,7 @@ if($process == "1"){
 		$input_registered_time 	= time();
 
 		// Header
-		header("Location: index.php?ft=error&fm=wrong_password_please_enter_your_password&inp_mail=$inp_mail");
+		header("Location: index.php?ft=error&fm=wrong_password_please_enter_your_password&inp_mail=$inp_mail&l=$l");
 		exit;
 	}
 
@@ -85,7 +85,7 @@ if($process == "1"){
 		// Access OK!
 	}
 	else{
-		header("Location: index.php?ft=warning&fm=access_denied_please_contact_administrator&inp_mail=$inp_mail");
+		header("Location: index.php?ft=warning&fm=access_denied_please_contact_administrator&inp_mail=$inp_mail&l=$l");
 		exit;
 	}
 				
@@ -109,7 +109,7 @@ if($process == "1"){
 
 
 	// Move to admin-panel
-	header("Location: ../_liquidbase/liquidbase.php");
+	header("Location: ../_liquidbase/liquidbase.php?l=$l");
 	exit;
 
 }
@@ -122,7 +122,7 @@ echo"
 
 <!-- Administrator form -->
 
-	<form method=\"post\" action=\"index.php?page=login&amp;process=1\" enctype=\"multipart/form-data\">
+	<form method=\"post\" action=\"index.php?page=login&amp;process=1&amp;l=$l\" enctype=\"multipart/form-data\">
 
 	<!-- Error -->
 		";
