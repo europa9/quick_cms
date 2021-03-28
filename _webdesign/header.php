@@ -11,5 +11,8 @@
 if(!(isset($webdesignSav))){
 	include("$root/_admin/website_config.php");
 }
+if($webdesignSav == ""){
+	echo"<a href=\"_admin/index.php?open=webdesign&amp;editor_language=en&amp;l=en\">Critical error. Webdesign not selected</a>"; die;
+}
 include("$root/_webdesign/$webdesignSav/header.php");
 ?>

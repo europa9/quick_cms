@@ -33,6 +33,21 @@ echo"
 
 <h1>Downloads</h1>
 
+<!-- Feedback -->
+	";
+	if($ft != ""){
+		if($fm == "changes_saved"){
+			$fm = "$l_changes_saved";
+		}
+		else{
+			$fm = ucfirst($fm);
+			$fm = str_replace("_", " ", $fm);
+		}
+		echo"<div class=\"$ft\"><span>$fm</span></div>";
+	}
+	echo"	
+<!-- //Feedback -->
+
 <!-- Downloads menu buttons -->
 	<p>";
 

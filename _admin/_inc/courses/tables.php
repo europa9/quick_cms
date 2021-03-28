@@ -24,9 +24,11 @@ $t_courses_users_enrolled 	 = $mysqlPrefixSav . "courses_users_enrolled";
 $t_courses_categories_main	 = $mysqlPrefixSav . "courses_categories_main";
 $t_courses_categories_sub 	 = $mysqlPrefixSav . "courses_categories_sub";
 $t_courses_modules		 = $mysqlPrefixSav . "courses_modules";
+$t_courses_modules_images	 = $mysqlPrefixSav . "courses_modules_images";
 $t_courses_modules_read		 = $mysqlPrefixSav . "courses_modules_read";
 
 $t_courses_lessons 	 	= $mysqlPrefixSav . "courses_lessons";
+$t_courses_lessons_images	= $mysqlPrefixSav . "courses_lessons_images";
 $t_courses_lessons_read 	= $mysqlPrefixSav . "courses_lessons_read";
 $t_courses_lessons_comments	= $mysqlPrefixSav . "courses_lessons_comments";
 

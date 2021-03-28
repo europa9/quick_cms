@@ -198,7 +198,7 @@ else{
 					<span><b>$get_module_number</b></span>
 				   </td>
 				   <td>
-					<span><b>$get_module_title</b></span>
+					<span><a href=\"index.php?open=courses&amp;page=open_module&amp;course_id=$course_id&amp;module_id=$get_module_id&amp;editor_language=$editor_language&amp;l=$l\" style=\"font-weight: bold;\">$get_module_title</a></span>
 				   </td>
 				   <td>
 					<span><b>
@@ -232,7 +232,7 @@ else{
 						<span>$get_lesson_number</span>
 					  </td>
 					  <td class=\"odd\">
-						<span>$get_lesson_title</span>
+						<span><a href=\"index.php?open=courses&amp;page=open_lesson&amp;course_id=$course_id&amp;module_id=$get_module_id&amp;lesson_id=$get_lesson_id&amp;editor_language=$editor_language&amp;l=$l\">$get_lesson_title</a></span>
 					  </td>
 					  <td class=\"odd\">
 						<span>

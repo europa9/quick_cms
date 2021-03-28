@@ -232,7 +232,13 @@ $_SESSION['security'] = "$inp_user_security";
 $_SESSION['admin_user_id']  = "$get_user_id";
 $_SESSION['admin_security'] = "$inp_user_security";
 
-// 10. Move to liquidbase
+// 10. Write setup finished
+$fh = fopen("../_data/$setup_finished_file", "w+") or die("can not open file");
+fwrite($fh, "$cmsVersionSav");
+fclose($fh);
+
+
+// 11. Move to liquidbase
 header("Location: ../_liquidbase/liquidbase.php?l=$language");
 exit;
 ?>

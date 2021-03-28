@@ -88,11 +88,12 @@ if($action == ""){
 		<p><b>Editor language:</b><br />
 		";
 		$found_editor_language = "";
-		$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+		$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_path_16x16, language_active_flag_16x16, language_active_default FROM $t_languages_active";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
-			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
-			echo"	<a href=\"index.php?open=$open&amp;page=$page&amp;editor_language=$get_language_active_iso_two&amp;l=$l\"><img src=\"_design/gfx/flags/16x16/$get_language_active_flag"; echo"_16x16.png\" alt=\"$get_language_active_flag\" /></a>\n";
+			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_path_16x16, $get_language_active_flag_16x16, $get_language_active_default) = $row;
+				
+			echo"	<a href=\"index.php?open=$open&amp;page=$page&amp;editor_language=$get_language_active_iso_two&amp;l=$l\"><img src=\"../$get_language_active_flag_path_16x16/$get_language_active_flag_16x16\" alt=\"$get_language_active_flag_16x16\" /></a>\n";
 			if($editor_language == "$get_language_active_iso_two"){
 				$found_editor_language = "1";
 			}
@@ -112,7 +113,7 @@ if($action == ""){
 	<!-- //Language -->
 
 	<!-- New course form -->
-		<p><b>Please select main category:</b></p>
+		<p><b>Please select main category ($editor_language):</b></p>
 
 		<div class=\"vertical\">
 			<ul>\n";

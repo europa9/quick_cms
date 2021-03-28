@@ -75,7 +75,10 @@ else{
 
 	if($action == ""){
 		if($process == "1"){
-			
+			// Mkdir
+			if(!(is_dir("../$get_current_course_title_clean"))){
+				mkdir("../$get_current_course_title_clean");
+			}
 
 			// Create file
 			$datetime_print = date("j M Y H:i");

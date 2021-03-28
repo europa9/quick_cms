@@ -14,7 +14,8 @@
 // Usage:
 // include("$root/courses/_includes/content_after_content.php");
 
-
+/*- Tables ------------------------------------------------------------------------------ */
+include("$root/courses/_tables_courses.php");
 
 /*- Translation ------------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/courses/ts_courses.php");
@@ -286,7 +287,6 @@ if($lesson_id != ""){
 	} // Content found
 } // lesson
 else{
-
 	if($course_id != "" && $module_id != ""){
 		// Search for module
 		$course_id_mysql = quote_smart($link, $course_id);

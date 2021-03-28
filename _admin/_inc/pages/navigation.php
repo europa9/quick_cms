@@ -78,10 +78,10 @@ if($action == ""){
 		<div style=\"float: right;\">
 			<p>
 			<select id=\"inp_l\">\n";
-			$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+			$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
-				list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
+				list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_16x16, $get_language_active_default) = $row;
 
 	
 				// No language selected?
@@ -502,12 +502,12 @@ elseif($action == "new"){
 	<p><b>$l_language</b>*<br />
 	<select name=\"inp_language\" tabindex=\"";$tabindex=0; $tabindex=$tabindex+1;echo"$tabindex\" />";
 		
-	$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+	$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
-		list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
+		list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_16x16, $get_language_active_default) = $row;
 
-		$flag_path 	= "_design/gfx/flags/16x16/$get_language_active_flag" . "_16x16.png";
+		$flag_path 	= "_design/gfx/flags/16x16/$get_language_active_flag_16x16" . "_16x16.png";
 
 
 		echo"	<option value=\"$get_language_active_iso_two\" style=\"background: url('$flag_path') no-repeat;padding-left: 20px;\"";if($editor_language == "$get_language_active_iso_two"){ echo" selected=\"selected\"";}echo">$get_language_active_name</option>\n";
@@ -604,10 +604,10 @@ elseif($action == "new_auto_insert"){
 	$module = output_html($module);
 	if($module == "blog"){
 		// Fetch all languages
-		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";
 		$result_l = mysqli_query($link, $query_l);
 		while($row_l = mysqli_fetch_row($result_l)) {
-			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row_l;
+			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_16x16, $get_language_active_default) = $row_l;
 
 			// Blog titles
 			$t_blog_titles 		= $mysqlPrefixSav . "blog_titles";
@@ -713,10 +713,10 @@ elseif($action == "new_auto_insert"){
 	} // module = blog
 	elseif($module == "food_diary"){
 		// Fetch all languages
-		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";
 		$result_l = mysqli_query($link, $query_l);
 		while($row_l = mysqli_fetch_row($result_l)) {
-			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row_l;
+			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_16x16, $get_language_active_default) = $row_l;
 
 			// Food diary title
 			include("_translations/site/$get_language_active_iso_two/food_diary/ts_food_diary.php");
@@ -810,10 +810,10 @@ elseif($action == "new_auto_insert"){
 		include("_data/chat.php");
 
 		// Fetch all languages
-		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";
 		$result_l = mysqli_query($link, $query_l);
 		while($row_l = mysqli_fetch_row($result_l)) {
-			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row_l;
+			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_16x16, $get_language_active_default) = $row_l;
 
 			$inp_title = "$chatTitleSav";
 			$inp_title = output_html($inp_title);
@@ -905,10 +905,10 @@ elseif($action == "new_auto_insert"){
 
 
 		// Fetch all languages
-		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";
 		$result_l = mysqli_query($link, $query_l);
 		while($row_l = mysqli_fetch_row($result_l)) {
-			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row_l;
+			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_16x16, $get_language_active_default) = $row_l;
 
 			// Fetch all forms
 			$l_mysql = quote_smart($link, $get_language_active_iso_two);
@@ -1005,10 +1005,10 @@ elseif($action == "new_auto_insert"){
 	} // module = contact_forms
 	elseif($module == "courses"){
 		// Fetch all languages
-		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";
 		$result_l = mysqli_query($link, $query_l);
 		while($row_l = mysqli_fetch_row($result_l)) {
-			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row_l;
+			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_16x16, $get_language_active_default) = $row_l;
 
 			// Food diary title
 			include("_translations/site/$get_language_active_iso_two/courses/ts_courses.php");
@@ -1099,10 +1099,10 @@ elseif($action == "new_auto_insert"){
 	} // module = courses
 	elseif($module == "downloads"){
 		// Fetch all languages
-		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";
 		$result_l = mysqli_query($link, $query_l);
 		while($row_l = mysqli_fetch_row($result_l)) {
-			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row_l;
+			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_16x16, $get_language_active_default) = $row_l;
 
 			// Food diary title
 			include("_translations/site/$get_language_active_iso_two/downloads/ts_downloads.php");
@@ -1186,17 +1186,17 @@ elseif($action == "new_auto_insert"){
 
 		} // while languages
 
-		$url = "index.php?open=$module&editor_language=$editor_language&l=$l&ft=success&fm=inserted_to_navigation";
+		$url = "index.php?open=$module&editor_language=$editor_language&l=$l&ft=success&fm=inserted_downloads_to_navigation";
 		header("Location: $url");
 		exit;
 	
 	} // module = downloads
 	elseif($module == "exercises"){
 		// Fetch all languages
-		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";
 		$result_l = mysqli_query($link, $query_l);
 		while($row_l = mysqli_fetch_row($result_l)) {
-			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row_l;
+			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_16x16, $get_language_active_default) = $row_l;
 
 			// Food diary title
 			include("_translations/site/$get_language_active_iso_two/exercises/ts_exercises.php");
@@ -1287,10 +1287,10 @@ elseif($action == "new_auto_insert"){
 	} // module = exercises
 	elseif($module == "muscles"){
 		// Fetch all languages
-		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";
 		$result_l = mysqli_query($link, $query_l);
 		while($row_l = mysqli_fetch_row($result_l)) {
-			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row_l;
+			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_16x16, $get_language_active_default) = $row_l;
 
 			// Food diary title
 			include("_translations/site/$get_language_active_iso_two/muscles/ts_muscles.php");
@@ -1381,10 +1381,10 @@ elseif($action == "new_auto_insert"){
 	} // module = muscles
 	elseif($module == "office_calendar"){
 		// Fetch all languages
-		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";
 		$result_l = mysqli_query($link, $query_l);
 		while($row_l = mysqli_fetch_row($result_l)) {
-			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row_l;
+			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_16x16, $get_language_active_default) = $row_l;
 
 			// Food diary title
 			include("_translations/site/$get_language_active_iso_two/office_calendar/ts_office_calendar.php");
@@ -1475,10 +1475,10 @@ elseif($action == "new_auto_insert"){
 	} // module = office_calendar
 	elseif($module == "recipes"){
 		// Fetch all languages
-		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";
 		$result_l = mysqli_query($link, $query_l);
 		while($row_l = mysqli_fetch_row($result_l)) {
-			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row_l;
+			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_16x16, $get_language_active_default) = $row_l;
 
 			// Food diary title
 			include("_translations/site/$get_language_active_iso_two/recipes/ts_recipes.php");
@@ -1569,10 +1569,10 @@ elseif($action == "new_auto_insert"){
 	} // module = recipes
 	elseif($module == "references"){
 		// Fetch all languages
-		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";
 		$result_l = mysqli_query($link, $query_l);
 		while($row_l = mysqli_fetch_row($result_l)) {
-			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row_l;
+			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_16x16, $get_language_active_default) = $row_l;
 
 			// Food diary title
 			include("_translations/site/$get_language_active_iso_two/references/ts_references.php");
@@ -1663,10 +1663,10 @@ elseif($action == "new_auto_insert"){
 	} // module = references
 	elseif($module == "workout_diary"){
 		// Fetch all languages
-		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";
 		$result_l = mysqli_query($link, $query_l);
 		while($row_l = mysqli_fetch_row($result_l)) {
-			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row_l;
+			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_16x16, $get_language_active_default) = $row_l;
 
 			// Food diary title
 			include("_translations/site/$get_language_active_iso_two/workout_diary/ts_workout_diary.php");
@@ -1757,10 +1757,10 @@ elseif($action == "new_auto_insert"){
 	} // module = workout_diary
 	elseif($module == "workout_plans"){
 		// Fetch all languages
-		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";
 		$result_l = mysqli_query($link, $query_l);
 		while($row_l = mysqli_fetch_row($result_l)) {
-			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row_l;
+			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_16x16, $get_language_active_default) = $row_l;
 
 			// Food diary title
 			include("_translations/site/$get_language_active_iso_two/workout_plans/ts_workout_plans.php");
@@ -2091,12 +2091,12 @@ elseif($action == "edit"){
 
 		<p><b>$l_language</b>*<br />
 		<select name=\"inp_language\" tabindex=\"";$tabindex=0; $tabindex=$tabindex+1;echo"$tabindex\" />";
-		$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+		$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
-			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
+			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_16x16, $get_language_active_default) = $row;
 
-			$flag_path 	= "_design/gfx/flags/16x16/$get_language_active_flag" . "_16x16.png";
+			$flag_path 	= "_design/gfx/flags/16x16/$get_language_active_flag_16x16" . "_16x16.png";
 			echo"	<option value=\"$get_language_active_iso_two\" style=\"background: url('$flag_path') no-repeat;padding-left: 20px;\"";if($get_navigation_language == "$get_language_active_iso_two"){ echo" selected=\"selected\"";}echo">$get_language_active_name</option>\n";
 		}
 		echo"
