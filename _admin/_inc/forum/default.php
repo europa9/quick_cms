@@ -48,6 +48,23 @@ $result = mysqli_query($link, $query);
 if($result !== FALSE){
 	echo"
 	<h1>Forum</h1>
+
+	<!-- Forum buttons -->";
+		// Navigation
+		$query = "SELECT navigation_id FROM $t_pages_navigation WHERE navigation_url_path='forum/index.php'";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_navigation_id) = $row;
+		if($get_navigation_id == ""){
+			echo"
+			<p>
+			<a href=\"index.php?open=pages&amp;page=navigation&amp;action=new_auto_insert&amp;module=forum&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\" class=\"btn_default\">Create navigation</a>
+			</p>
+			";
+		}
+	echo"
+	<!-- //Forum buttons -->
+
 	<div class=\"vertical\">
 		<ul>
 		";

@@ -24,7 +24,7 @@ else{ $root = "../../.."; }
 
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
-include("$root/_admin/_data/discuss.php");
+include("$root/_admin/_data/forum.php");
 
 /*- Functions ------------------------------------------------------------------------- */
 include("$root/_admin/_functions/encode_national_letters.php");
@@ -712,7 +712,7 @@ div.topics_chat_view_text {
 			$inp_title = output_html($inp_title);
 			echo"$inp_title";
 		}
-		echo"\" size=\"25\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+		echo"\" size=\"25\" style=\"width: 99%;\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 		</p>
 
 		<p><b>$l_tags</b><br />
@@ -722,7 +722,7 @@ div.topics_chat_view_text {
 			$inp_tags = output_html($inp_tags);
 			echo"$inp_tags";
 		}
-		echo"\" size=\"25\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+		echo"\" size=\"25\" style=\"width: 99%;\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 		</p>
 
 		<p><b>$l_post:</b><br />

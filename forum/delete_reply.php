@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: discuss/delete_reply.php
+* File: forum/delete_reply.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -86,7 +86,7 @@ else{
 	}
 	else{
 		/*- Headers ---------------------------------------------------------------------------------- */
-		$website_title = "$l_discuss - $get_current_topic_title - $l_delete_reply";
+		$website_title = "$l_forum - $get_current_topic_title - $l_delete_reply";
 		if(file_exists("./favicon.ico")){ $root = "."; }
 		elseif(file_exists("../favicon.ico")){ $root = ".."; }
 		elseif(file_exists("../../favicon.ico")){ $root = "../.."; }

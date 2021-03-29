@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: discuss/reply.php
+* File: forum/reply.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -24,7 +24,7 @@ else{ $root = "../../.."; }
 
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
-include("$root/_admin/_data/discuss.php");
+include("$root/_admin/_data/forum.php");
 
 /*- Functions ------------------------------------------------------------------------- */
 include("$root/_admin/_functions/encode_national_letters.php");
