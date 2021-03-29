@@ -1703,6 +1703,103 @@ elseif($action == "new_auto_insert"){
 		header("Location: $url");
 		exit;
 	} // module=forum
+	elseif($module == "meal_plans"){
+		
+		// Fetch all languages
+		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";
+		$result_l = mysqli_query($link, $query_l);
+		while($row_l = mysqli_fetch_row($result_l)) {
+			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_16x16, $get_language_active_default) = $row_l;
+
+			// Forum title
+			include("_translations/site/$get_language_active_iso_two/meal_plans/ts_meal_plans.php");
+			$inp_title = "$l_meal_plans";
+			$inp_title = output_html($inp_title);
+			$inp_title_mysql = quote_smart($link, $inp_title);
+
+			$inp_slug = clean($inp_title);
+			$inp_slug = output_html($inp_slug);
+			$inp_slug_mysql = quote_smart($link, $inp_slug);
+			
+			$inp_url = "meal_plans/index.php?l=$get_language_active_iso_two";
+			$inp_url = output_html($inp_url);
+			$inp_url_mysql = quote_smart($link, $inp_url);
+
+			$inp_url_parsed = parse_url($inp_url);
+			$inp_url_scheme = "";
+			$inp_url_host = "";
+			if(isset($inp_url_parsed['scheme']) && isset($inp_url_parsed['host'])){
+				$inp_url_scheme = $inp_url_parsed['scheme'];
+				$inp_url_host = $inp_url_parsed['host'];
+			}
+			$inp_url_path = $inp_url_parsed['path'];
+			if(isset($inp_url_parsed['query'])){
+				$inp_url_query = $inp_url_parsed['query'];
+			}
+			else{
+				$inp_url_query = "";
+			}
+				
+			if($inp_url_query != ""){
+				$inp_url_query = "?" . $inp_url_query;
+			}
+		
+			if($inp_url_scheme == "http" OR $inp_url_scheme == "https"){
+				$inp_url_path = "$inp_url_scheme://$inp_url_host$inp_url_path";
+				$inp_url_query = "$inp_url_query";
+				$inp_internal_or_external = "external";
+			}
+			else{
+				$inp_internal_or_external = "internal";
+			}
+			$inp_url_path = output_html($inp_url_path);
+			$inp_url_path_mysql = quote_smart($link, $inp_url_path);
+
+			$inp_url_path_md5 = md5($inp_url_path);
+			$inp_url_path_md5_mysql = quote_smart($link, $inp_url_path_md5);
+
+			$inp_url_query = output_html($inp_url_query);
+			$inp_url_query_mysql = quote_smart($link, $inp_url_query);
+
+			$inp_parent = 0;
+			$inp_parent = output_html($inp_parent);
+			$inp_parent_mysql = quote_smart($link, $inp_parent);
+
+			$datetime = date("Y-m-d H:i:s");
+
+			$inp_created_by_user_id = $_SESSION['admin_user_id'];
+			$inp_created_by_user_id = output_html($inp_created_by_user_id);
+			$inp_created_by_user_id_mysql = quote_smart($link, $inp_created_by_user_id);
+
+			// Get weight
+			$language_mysql = quote_smart($link, $get_language_active_iso_two);
+			$query = "SELECT count(*) FROM $t_pages_navigation WHERE navigation_parent_id=$inp_parent_mysql AND navigation_language=$language_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_count_rows) = $row;
+
+			// Insert
+			mysqli_query($link, "INSERT INTO $t_pages_navigation 
+			(navigation_id, navigation_parent_id, navigation_title, navigation_title_clean, navigation_url, 
+			navigation_url_path, navigation_url_path_md5, navigation_url_query, navigation_language, navigation_internal_or_external, 
+			navigation_weight, navigation_created_datetime, navigation_created_by_user_id) 
+			VALUES 
+			(NULL, $inp_parent_mysql, $inp_title_mysql, $inp_slug_mysql, $inp_url_mysql, 
+			$inp_url_path_mysql, $inp_url_path_md5_mysql, $inp_url_query_mysql, $language_mysql, '$inp_internal_or_external', 
+			'$get_count_rows', '$datetime', $inp_created_by_user_id_mysql)")
+			or die(mysqli_error($link));
+			
+			// Get ID
+			$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_language FROM $t_pages_navigation WHERE navigation_url=$inp_url_mysql AND navigation_language=$language_mysql AND navigation_created_datetime='$datetime'";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_navigation_id, $get_navigation_parent_id, $get_navigation_title, $get_navigation_url_path, $get_navigation_url_query, $get_navigation_language) = $row;
+		} // languages
+
+		$url = "index.php?open=$module&editor_language=$editor_language&l=$l&ft=success&fm=inserted_to_navigation";
+		header("Location: $url");
+		exit;
+	} // module=meal_plans
 	elseif($module == "muscles"){
 		// Fetch all languages
 		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";

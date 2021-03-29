@@ -1609,7 +1609,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	elseif($action == "add_food_to_diary"){
 		if($process == 1){
 			$datetime = date("Y-m-d H:i:s");
-			
 
 			$inp_entry_date = output_html($date);
 			$inp_entry_date_mysql = quote_smart($link, $inp_entry_date);

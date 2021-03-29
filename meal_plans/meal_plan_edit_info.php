@@ -25,6 +25,9 @@ else{ $root = "../../.."; }
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+include("_tables_meal_plans.php");
+
 
 /*- Tables ---------------------------------------------------------------------------- */
 $t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";

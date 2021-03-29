@@ -25,6 +25,9 @@ else{ $root = "../../.."; }
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
 
+/*- Tables ---------------------------------------------------------------------------- */
+include("_tables_meal_plans.php");
+
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/meal_plans/ts_new_meal_plan.php");
 include("$root/_admin/_translations/site/$l/meal_plans/ts_meal_plan_view_1.php");

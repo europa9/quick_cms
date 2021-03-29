@@ -1,6 +1,4 @@
 <?php
-$l_new_food = "New food";
-$l_meal_plan = "Meal plan";
 $l_show_per = "Show per";
 $l_hundred = "100";
 $l_pcs_g = "Pcs g";

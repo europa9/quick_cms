@@ -26,202 +26,234 @@ function fix_local($value){
         return $value;
 }
 /*- Tables ---------------------------------------------------------------------------- */
-$t_meal_plans 		= $mysqlPrefixSav . "meal_plans";
-$t_meal_plans_days	= $mysqlPrefixSav . "meal_plans_days";
-$t_meal_plans_meals	= $mysqlPrefixSav . "meal_plans_meals";
-$t_meal_plans_entries	= $mysqlPrefixSav . "meal_plans_entries";
+$t_meal_plans_liquidbase 	= $mysqlPrefixSav . "meal_plans_liquidbase";
+$t_meal_plans 			= $mysqlPrefixSav . "meal_plans";
+$t_meal_plans_days		= $mysqlPrefixSav . "meal_plans_days";
+$t_meal_plans_meals		= $mysqlPrefixSav . "meal_plans_meals";
+$t_meal_plans_entries		= $mysqlPrefixSav . "meal_plans_entries";
+$t_meal_plans_user_adapted_view	= $mysqlPrefixSav . "meal_plans_user_adapted_view";
 
-echo"
-<h1>Tables</h1>
 
 
-	<!-- meal_plans -->
+
+if($action == ""){
+	echo"
+	<h1>Tables</h1>
+
+
+
+	<!-- Where am I? -->
+		<p><b>You are here:</b><br />
+		<a href=\"index.php?open=$open&amp;page=menu&amp;editor_language=$editor_language&amp;l=$l\">Downloads</a>
+		&gt;
+		<a href=\"index.php?open=$open&amp;page=tables&amp;editor_language=$editor_language&amp;l=$l\">Tables</a>
+		</p>
+	<!-- //Where am I? -->
+
+
+
+	<!-- liquidbase-->
 	";
-	$query = "SELECT * FROM $t_meal_plans";
+	$query = "SELECT * FROM $t_meal_plans_liquidbase LIMIT 1";
 	$result = mysqli_query($link, $query);
 	if($result !== FALSE){
 		// Count rows
 		$row_cnt = mysqli_num_rows($result);
 		echo"
-		<p>$t_meal_plans: $row_cnt</p>
+		<p>$t_meal_plans_liquidbase: $row_cnt</p>
 		";
 	}
 	else{
-		echo"
-		<table>
-		 <tr> 
-		  <td style=\"padding-right: 6px;\">
-			<p>
-			<img src=\"_design/gfx/loading_22.gif\" alt=\"Loading\" />
-			</p>
-		  </td>
-		  <td>
-			<h1>Loading...</h1>
-		  </td>
-		 </tr>
-		</table>
+		mysqli_query($link, "CREATE TABLE $t_meal_plans_liquidbase(
+		  liquidbase_id INT NOT NULL AUTO_INCREMENT,
+		  PRIMARY KEY(liquidbase_id), 
+		   liquidbase_dir VARCHAR(200), 
+		   liquidbase_file VARCHAR(200), 
+		   liquidbase_run_datetime DATETIME, 
+		   liquidbase_run_saying VARCHAR(200))")
+	  	 or die(mysqli_error());
+
+		// If refererer then refresh to that page
+		if(isset($_GET['refererer'])) {
+			$refererer = $_GET['refererer'];
+			$refererer = strip_tags(stripslashes($refererer));
+
+			echo"
+			<table>
+			 <tr> 
+			  <td style=\"padding-right: 6px;\">
+				<p>
+				<img src=\"_design/gfx/loading_22.gif\" alt=\"Loading\" />
+				</p>
+			  </td>
+			  <td>
+				<h1>Loading...</h1>
+			  </td>
+			 </tr>
+			</table>
 
 		
-		<meta http-equiv=\"refresh\" content=\"2;url=index.php?open=$open&amp;page=tables\">
+			<meta http-equiv=\"refresh\" content=\"2;url=index.php?open=$open&amp;page=$refererer&amp;editor_language=$editor_language&amp;l=$l&amp;ft=success&amp;fm=blog_module_installed\">
+			";
+		}
+	}
+	echo"
+	<!-- liquidbase-->
+
+
+	<!-- Feedback -->
+		";
+		if($ft != "" && $fm != ""){
+			if($fm == "changes_saved"){
+				$fm = "$l_changes_saved";
+			}
+			else{
+				$fm = ucfirst($fm);
+			}
+			echo"<div class=\"$ft\"><p>$fm</p></div>";
+		}
+		echo"
+	<!-- //Feedback -->
+
+	<!-- Run -->
 		";
 
+		// Open that year folder
+		$path = "_inc/meal_plans/_liquidbase_db_scripts";
+		if ($handle = opendir($path)) {
+			while (false !== ($liquidbase_name = readdir($handle))) {
+				if ($liquidbase_name === '.') continue;
+				if ($liquidbase_name === '..') continue;
+				
+				if(!(is_dir("_inc/meal_plans/_liquidbase_db_scripts/$liquidbase_name"))){
 
-		mysqli_query($link, "CREATE TABLE $t_meal_plans(
-	  	 meal_plan_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(meal_plan_id), 
-	  	   meal_plan_user_id INT,
-	  	   meal_plan_language VARCHAR(50),
-	  	   meal_plan_title VARCHAR(250),
-	  	   meal_plan_title_clean VARCHAR(250),
-	  	   meal_plan_number_of_days INT,
-	  	   meal_plan_introduction TEXT,
+					// Has it been executed?
+					$inp_liquidbase_module_mysql = quote_smart($link, "");
+					$inp_liquidbase_name_mysql = quote_smart($link, $liquidbase_name);
+					
+					$query = "SELECT liquidbase_id FROM $t_meal_plans_liquidbase WHERE liquidbase_dir=$inp_liquidbase_module_mysql AND liquidbase_file=$inp_liquidbase_name_mysql";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_liquidbase_id) = $row;
+					if($get_liquidbase_id == ""){
+						// Date
+						$datetime = date("Y-m-d H:i:s");
+						$run_saying = date("j M Y H:i");
 
-	  	   meal_plan_total_energy_without_training INT,
-	  	   meal_plan_total_fat_without_training INT,
-	  	   meal_plan_total_carb_without_training INT,
-	  	   meal_plan_total_protein_without_training INT,
 
-	  	   meal_plan_total_energy_with_training INT,
-	  	   meal_plan_total_fat_with_training INT,
-	  	   meal_plan_total_carb_with_training INT,
-	  	   meal_plan_total_protein_with_training INT,
+						// Insert
+						mysqli_query($link, "INSERT INTO $t_meal_plans_liquidbase
+						(liquidbase_id, liquidbase_dir, liquidbase_file, liquidbase_run_datetime, liquidbase_run_saying) 
+						VALUES 
+						(NULL, $inp_liquidbase_module_mysql, $inp_liquidbase_name_mysql, '$datetime', '$run_saying')")
+						or die(mysqli_error($link));
 
-	  	   meal_plan_average_kcal_without_training INT,
-	  	   meal_plan_average_fat_without_training INT,
-	  	   meal_plan_average_carb_without_training INT,
-	  	   meal_plan_average_protein_without_training INT,
+						// Run code
+						include("_inc/meal_plans/_liquidbase_db_scripts/$liquidbase_name");
+					} // not runned before
+				} // is dir
+			} // whule open files
+		} // handle modules
+		echo"
+	<!-- //Run -->
 
-	  	   meal_plan_average_kcal_with_training INT,
-	  	   meal_plan_average_fat_with_training INT,
-	  	   meal_plan_average_carb_with_training INT,
-	  	   meal_plan_average_protein_with_training INT,
+	<!-- liquidbase scripts -->
+		<table class=\"hor-zebra\">
+		 <thead>
+		  <tr>
+		   <th scope=\"col\">
+			<span>Directory</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>File</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Run date</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Actions</span>
+		   </th>
+		  </tr>
+		</thead>
+		<tbody>
+	";
 
-	  	   meal_plan_created DATETIME,
-	  	   meal_plan_updated DATETIME,
-	  	   meal_plan_user_ip VARCHAR(250),
-	  	   meal_plan_image_path VARCHAR(250),
-	  	   meal_plan_image_thumb VARCHAR(250),
-	  	   meal_plan_image_file VARCHAR(250),
-	  	   meal_plan_views INT,
-	  	   meal_plan_views_ip_block TEXT,
-	  	   meal_plan_likes INT,
-	  	   meal_plan_dislikes INT,
-	  	   meal_plan_rating INT,
-	  	   meal_plan_rating_ip_block TEXT,
-	  	   meal_plan_comments INT)")
-		   or die(mysqli_error());
+	$query = "SELECT liquidbase_id, liquidbase_dir, liquidbase_file, liquidbase_run_datetime, liquidbase_run_saying FROM $t_meal_plans_liquidbase ORDER BY liquidbase_id DESC";
+	$result = mysqli_query($link, $query);
+	while($row = mysqli_fetch_row($result)) {
+		list($get_liquidbase_id, $get_liquidbase_dir, $get_liquidbase_file, $get_liquidbase_run_datetime, $get_liquidbase_run_saying) = $row;
+
+		// Style
+		if(isset($style) && $style == ""){
+			$style = "odd";
+		}
+		else{
+			$style = "";
+		}
+	
+		echo"
+		 <tr>
+		  <td class=\"$style\">
+			<span>$get_liquidbase_dir</span>
+		  </td>
+		  <td class=\"$style\">
+			<span>$get_liquidbase_file</span>
+		  </td>
+		  <td class=\"$style\">
+			<span>$get_liquidbase_run_saying</span>
+		  </td>
+		  <td class=\"$style\">
+			<span>
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=delete&amp;liquidbase_id=$get_liquidbase_id&amp;editor_language=$editor_language\">$l_delete</a></span>
+		  </td>
+		 </tr>
+		";
 
 	}
 	echo"
-	<!-- //meal_plans -->
+		 </tbody>
+		</table>
 
-	<!-- meal_plans_days -->
+	<!-- //liquidbase scripts -->
 	";
-	$query = "SELECT * FROM $t_meal_plans_days";
-	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
-		echo"
-		<p>$t_meal_plans_days: $row_cnt</p>
-		";
+}
+elseif($action == "delete"){
+	if(isset($_GET['liquidbase_id'])) {
+		$liquidbase_id = $_GET['liquidbase_id'];
+		$liquidbase_id  = strip_tags(stripslashes($liquidbase_id));
 	}
 	else{
-		mysqli_query($link, "CREATE TABLE $t_meal_plans_days(
-	  	 day_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(day_id), 
-	  	   day_meal_plan_id INT,
-	  	   day_number INT,
-
-	  	   day_energy_without_training DOUBLE,
-	  	   day_fat_without_training DOUBLE,
-	  	   day_carb_without_training DOUBLE,
-	  	   day_protein_without_training DOUBLE,
-
-	  	   day_sum_without_training DOUBLE,
-	  	   day_fat_without_training_percentage INT,
-	  	   day_carb_without_training_percentage INT,
-	  	   day_protein_without_training_percentage INT,
-
-	  	   day_energy_with_training DOUBLE,
-	  	   day_fat_with_training DOUBLE,
-	  	   day_carb_with_training DOUBLE,
-	  	   day_protein_with_training DOUBLE,
-
-	  	   day_sum_with_training DOUBLE,
-	  	   day_fat_with_training_percentage INT,
-	  	   day_carb_with_training_percentage INT,
-	  	   day_protein_with_training_percentage INT)")
-		   or die(mysqli_error());
-
+		$liquidbase_id = "";
 	}
-	echo"
-	<!-- //meal_plans_days -->
-
-	<!-- meal_plans_meals -->
-	";
-	$query = "SELECT * FROM $t_meal_plans_meals";
+	$liquidbase_id_mysql = quote_smart($link, $liquidbase_id);
+	$query = "SELECT liquidbase_id, liquidbase_file, liquidbase_run_datetime FROM $t_meal_plans_liquidbase WHERE liquidbase_id=$liquidbase_id_mysql";
 	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
+	$row = mysqli_fetch_row($result);
+	list($get_liquidbase_id, $get_liquidbase_file, $get_liquidbase_run_datetime) = $row;
+
+	if($get_liquidbase_id != ""){
+		if($process == "1"){
+
+			mysqli_query($link, "DELETE FROM $t_meal_plans_liquidbase WHERE liquidbase_id=$get_liquidbase_id") or die(mysqli_error($link));
+
+			$url = "index.php?open=$open&page=$page&ft=success&fm=deleted";
+			header("Location: $url");
+			exit;
+		}
+
 		echo"
-		<p>$t_meal_plans_meals: $row_cnt</p>
+		<h1>Delete_liquidbase $get_liquidbase_file</h1>
+
+
+		<p>
+		Are you sure you want to dlete the liquidbase script run? 
+		This will cause the script to run again after deletion. 
+		</p>
+
+		<p>
+		<a href=\"index.php?open=$open&amp;page=$page&amp;action=delete&amp;liquidbase_id=$get_liquidbase_id&amp;editor_language=$editor_language&amp;process=1\" class=\"btn_warning\">Confirm delete</a>
+		</p>
 		";
 	}
-	else{
-		mysqli_query($link, "CREATE TABLE $t_meal_plans_meals(
-	  	 meal_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(meal_id), 
-	  	   meal_meal_plan_id INT,
-	  	   meal_day_number INT,
-	  	   meal_number INT,
-	  	   meal_energy DOUBLE,
-	  	   meal_fat DOUBLE,
-	  	   meal_carb DOUBLE,
-	  	   meal_protein DOUBLE)")
-		   or die(mysqli_error());
-
-	}
-	echo"
-	<!-- //meal_plans_days -->
-
-
-	<!-- meal_plans_entries -->
-	";
-	$query = "SELECT * FROM $t_meal_plans_entries";
-	$result = mysqli_query($link, $query);
-	if($result !== FALSE){
-		// Count rows
-		$row_cnt = mysqli_num_rows($result);
-		echo"
-		<p>$t_meal_plans_entries: $row_cnt</p>
-		";
-	}
-	else{
-		mysqli_query($link, "CREATE TABLE $t_meal_plans_entries(
-	  	 entry_id INT NOT NULL AUTO_INCREMENT,
-	 	  PRIMARY KEY(entry_id), 
-	  	   entry_meal_plan_id INT,
-	  	   entry_day_number INT,
-	  	   entry_meal_number INT,
-	  	   entry_weight INT,
-	  	   entry_food_id INT,
-	  	   entry_recipe_id INT,
-	  	   entry_name VARCHAR(250),
-	  	   entry_manufacturer_name VARCHAR(250),
-	  	   entry_serving_size DOUBLE,
-	  	   entry_serving_size_measurement VARCHAR(250),
-	  	   entry_energy_per_entry DOUBLE,
-	  	   entry_fat_per_entry DOUBLE,
-	  	   entry_carb_per_entry DOUBLE,
-	  	   entry_protein_per_entry DOUBLE,
-	  	   entry_text TEXT)")
-		   or die(mysqli_error());
-
-	}
-	echo"
-	<!-- //meal_plans_entries -->
-
-	";
+}
 ?>
