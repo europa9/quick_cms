@@ -71,7 +71,10 @@ if(isset($_GET['page'])) {
 	$page = strip_tags(stripslashes($page));
 }
 else{
-	$page = "";
+	// Go to start
+	$url = "index.php?page=00_start&language=en&process=1";
+	header("Location: $url");
+	exit;
 }
 if(isset($_GET['process'])) {
 	$process = $_GET['process'];

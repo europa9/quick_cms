@@ -144,12 +144,20 @@ fclose($fh);
 
 
 // 7. Webdesign
-$update_file="<?php
-\$webdesignSav 	 = \"$webdesignSav\";
+if(isset($_GET['webdesign_name'])) {
+	$webdesign_name = $_GET['webdesign_name'];
+	$webdesign_name = strip_tags(stripslashes($webdesign_name));
+	$webdesign_name = output_html($webdesign_name);
+}
+else{
+	$webdesign_name = "$webdesignSav";
+}
+$webdesign_file="<?php
+\$webdesignSav 	 = \"$webdesign_name\";
 ?>";
 
 $fh = fopen("../_data/webdesign.php", "w+") or die("can not open file");
-fwrite($fh, $update_file);
+fwrite($fh, $webdesign_file);
 fclose($fh);
 
 // 8. Insert user

@@ -109,12 +109,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<p>
 
 			<select name=\"inp_language_select\" id=\"inp_language_select\">
-				<option value=\"my_exercises.php?main_muscle_group_id=$main_muscle_group_id&amp;type_id=$get_type_id&amp;l=$l\">- $l_language -</option>\n";
+				<option value=\"my_exercises.php?main_muscle_group_id=$main_muscle_group_id&amp;type_id=$type_id&amp;l=$l\">- $l_language -</option>\n";
 
-				$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+				$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_default FROM $t_languages_active";
 				$result = mysqli_query($link, $query);
 				while($row = mysqli_fetch_row($result)) {
-					list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
+					list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_default) = $row;
 
 
 

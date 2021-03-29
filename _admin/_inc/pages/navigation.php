@@ -234,16 +234,13 @@ if($action == ""){
 
 				echo"
 				 <tr>
-       				  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 30px;\">
-					<span>$get_c_navigation_id</span>
-       				  </td>
-       				  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 30px;\">
+       				  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 40px;\">
           				<span>$get_c_navigation_title</span>
 				  </td>
-       				  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 30px;\">
+       				  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 40px;\">
 					<span><a href=\"../$get_c_navigation_url\">$get_c_navigation_url</a></span>
 			   	 </td>
-       				  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 30px;\">
+       				  <td "; if($odd == true){ echo" class=\"odd\""; } echo" style=\"padding-left: 40px;\">
 					<script type=\"text/javascript\">
 					function confirmDelete$get_c_navigation_id() {
 						if (confirm(\"$l_are_your_sure_you_want_to_delete_the_item\")) {
@@ -1192,6 +1189,11 @@ elseif($action == "new_auto_insert"){
 	
 	} // module = downloads
 	elseif($module == "exercises"){
+		$t_exercise_types	       = $mysqlPrefixSav . "exercise_types";
+		$t_exercise_types_translations = $mysqlPrefixSav . "exercise_types_translations";
+		$t_muscle_groups 			= $mysqlPrefixSav . "muscle_groups";
+		$t_muscle_groups_translations	 	= $mysqlPrefixSav . "muscle_groups_translations";
+
 		// Fetch all languages
 		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";
 		$result_l = mysqli_query($link, $query_l);
@@ -1277,14 +1279,328 @@ elseif($action == "new_auto_insert"){
 			'$get_count_rows', '$datetime', $inp_created_by_user_id_mysql)")
 			or die(mysqli_error($link));
 			
+			// Get ID
+			$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_language FROM $t_pages_navigation WHERE navigation_url=$inp_url_mysql AND navigation_language=$language_mysql AND navigation_created_datetime='$datetime'";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_navigation_id, $get_navigation_parent_id, $get_navigation_title, $get_navigation_url_path, $get_navigation_url_query, $get_navigation_language) = $row;
+
+
+			// Insert sub menus :. Types
+			$query_sub = "SELECT type_id, type_title FROM $t_exercise_types ORDER BY type_title ASC";
+			$result_sub = mysqli_query($link, $query_sub);
+			while($row_sub = mysqli_fetch_row($result_sub)) {
+				list($get_type_id, $get_type_title) = $row_sub;
+
+				// Translation
+				$query_translation = "SELECT type_translation_id, type_translation_value FROM $t_exercise_types_translations WHERE type_id='$get_type_id' AND type_translation_language=$language_mysql";
+				$result_translation = mysqli_query($link, $query_translation);
+				$row_translation = mysqli_fetch_row($result_translation);
+				list($get_type_translation_id, $get_type_translation_value) = $row_translation;
+
+
+				$inp_title = "$get_type_translation_value";
+				$inp_title_mysql = quote_smart($link, $inp_title);
+
+				$inp_url = "exercises/view_type.php?type_id=$get_type_id&amp;l=$get_language_active_iso_two";
+				$inp_url = output_html($inp_url);
+				$inp_url_mysql = quote_smart($link, $inp_url);
+
+				$inp_url_parsed = parse_url($inp_url);
+				$inp_url_scheme = "";
+				$inp_url_host = "";
+				if(isset($inp_url_parsed['scheme']) && isset($inp_url_parsed['host'])){
+					$inp_url_scheme = $inp_url_parsed['scheme'];
+					$inp_url_host = $inp_url_parsed['host'];
+				}
+				$inp_url_path = $inp_url_parsed['path'];
+				if(isset($inp_url_parsed['query'])){
+					$inp_url_query = $inp_url_parsed['query'];
+				}
+				else	{
+				$inp_url_query = "";
+				}
+				
+				if($inp_url_query != ""){
+					$inp_url_query = "?" . $inp_url_query;
+				}
+		
+				if($inp_url_scheme == "http" OR $inp_url_scheme == "https"){
+					$inp_url_path = "$inp_url_scheme://$inp_url_host$inp_url_path";
+					$inp_url_query = "$inp_url_query";
+					$inp_internal_or_external = "external";
+				}
+				else{
+					$inp_internal_or_external = "internal";
+				}
+				$inp_url_path = output_html($inp_url_path);
+				$inp_url_path_mysql = quote_smart($link, $inp_url_path);
+
+				$inp_url_path_md5 = md5($inp_url_path);
+				$inp_url_path_md5_mysql = quote_smart($link, $inp_url_path_md5);
+
+				$inp_url_query = output_html($inp_url_query);
+				$inp_url_query_mysql = quote_smart($link, $inp_url_query);
+
+				mysqli_query($link, "INSERT INTO $t_pages_navigation 
+				(navigation_id, navigation_parent_id, navigation_title, navigation_title_clean, navigation_url, 
+				navigation_url_path, navigation_url_path_md5, navigation_url_query, navigation_language, navigation_internal_or_external, 
+				navigation_weight, navigation_created_datetime, navigation_created_by_user_id) 
+				VALUES 
+				(NULL, $get_navigation_id, $inp_title_mysql, $inp_slug_mysql, $inp_url_mysql, 
+				$inp_url_path_mysql, $inp_url_path_md5_mysql, $inp_url_query_mysql, $language_mysql, '$inp_internal_or_external', 
+				'$get_count_rows', '$datetime', $inp_created_by_user_id_mysql)")
+				or die(mysqli_error($link));
+
+
+				// Get ID of type
+				$query_nt = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_language FROM $t_pages_navigation WHERE navigation_url=$inp_url_mysql AND navigation_language=$language_mysql AND navigation_created_datetime='$datetime'";
+				$result_nt = mysqli_query($link, $query_nt);
+				$row_nt = mysqli_fetch_row($result_nt);
+				list($get_type_navigation_id, $get_type_navigation_parent_id, $get_type_navigation_title, $get_type_navigation_url_path, $get_type_navigation_url_query, $get_type_navigation_language) = $row_nt;
+
+
+				// Get sub categories
+				$query_mg = "SELECT muscle_group_id, muscle_group_name, muscle_group_name_clean, muscle_group_parent_id, muscle_group_image_path, muscle_group_image_file FROM $t_muscle_groups WHERE muscle_group_parent_id='0'";
+				$result_mg = mysqli_query($link, $query_mg);
+				while($row_mg = mysqli_fetch_row($result_mg)) {
+					list($get_main_muscle_group_id, $get_main_muscle_group_name, $get_main_muscle_group_name_clean, $get_main_muscle_group_parent_id, $get_main_muscle_group_image_path, $get_main_muscle_group_image_file) = $row_mg;
+
+					// Translation
+					$query_translation = "SELECT muscle_group_translation_id,muscle_group_translation_name FROM $t_muscle_groups_translations WHERE muscle_group_translation_muscle_group_id=$get_main_muscle_group_id AND muscle_group_translation_language=$language_mysql";
+					$result_translation = mysqli_query($link, $query_translation);
+					$row_translation = mysqli_fetch_row($result_translation);
+					list($get_main_muscle_group_translation_id, $get_main_muscle_group_translation_name) = $row_translation;
+
+
+					$inp_title = "$get_main_muscle_group_translation_name";
+					$inp_title_mysql = quote_smart($link, $inp_title);
+
+					$inp_url = "exercises/view_muscle_group.php?main_muscle_group_id=$get_main_muscle_group_id&amp;type_id=$get_type_id&amp;l=$get_language_active_iso_two";
+					$inp_url = output_html($inp_url);
+					$inp_url_mysql = quote_smart($link, $inp_url);
+
+					$inp_url_parsed = parse_url($inp_url);
+					$inp_url_scheme = "";
+					$inp_url_host = "";
+					if(isset($inp_url_parsed['scheme']) && isset($inp_url_parsed['host'])){
+						$inp_url_scheme = $inp_url_parsed['scheme'];
+						$inp_url_host = $inp_url_parsed['host'];
+					}
+					$inp_url_path = $inp_url_parsed['path'];
+					if(isset($inp_url_parsed['query'])){
+						$inp_url_query = $inp_url_parsed['query'];
+					}
+					else	{
+						$inp_url_query = "";
+					}
+				
+					if($inp_url_query != ""){
+						$inp_url_query = "?" . $inp_url_query;
+					}
+		
+					if($inp_url_scheme == "http" OR $inp_url_scheme == "https"){
+						$inp_url_path = "$inp_url_scheme://$inp_url_host$inp_url_path";
+						$inp_url_query = "$inp_url_query";
+						$inp_internal_or_external = "external";
+					}
+					else{
+						$inp_internal_or_external = "internal";
+					}
+					$inp_url_path = output_html($inp_url_path);
+					$inp_url_path_mysql = quote_smart($link, $inp_url_path);
+
+					$inp_url_path_md5 = md5($inp_url_path);
+					$inp_url_path_md5_mysql = quote_smart($link, $inp_url_path_md5);
+
+					$inp_url_query = output_html($inp_url_query);
+					$inp_url_query_mysql = quote_smart($link, $inp_url_query);
+
+					mysqli_query($link, "INSERT INTO $t_pages_navigation 
+					(navigation_id, navigation_parent_id, navigation_title, navigation_title_clean, navigation_url, 
+					navigation_url_path, navigation_url_path_md5, navigation_url_query, navigation_language, navigation_internal_or_external, 
+					navigation_weight, navigation_created_datetime, navigation_created_by_user_id) 
+					VALUES 
+					(NULL, $get_type_navigation_id, $inp_title_mysql, $inp_slug_mysql, $inp_url_mysql, 
+					$inp_url_path_mysql, $inp_url_path_md5_mysql, $inp_url_query_mysql, $language_mysql, '$inp_internal_or_external', 
+					'$get_count_rows', '$datetime', $inp_created_by_user_id_mysql)")
+					or die(mysqli_error($link));
+
+
+
+				} // muscle groups
+
+
+			} // types (cardio, strenght etc)
+
+			// Insert sub menus :: User pages
+
+			$inp_title = "$l_user_pages";
+			$inp_title_mysql = quote_smart($link, $inp_title);
+
+			$inp_url = "exercises/user_pages.php?l=$get_language_active_iso_two";
+			$inp_url = output_html($inp_url);
+			$inp_url_mysql = quote_smart($link, $inp_url);
+
+			$inp_url_parsed = parse_url($inp_url);
+			$inp_url_scheme = "";
+			$inp_url_host = "";
+			if(isset($inp_url_parsed['scheme']) && isset($inp_url_parsed['host'])){
+				$inp_url_scheme = $inp_url_parsed['scheme'];
+				$inp_url_host = $inp_url_parsed['host'];
+			}
+			$inp_url_path = $inp_url_parsed['path'];
+			if(isset($inp_url_parsed['query'])){
+				$inp_url_query = $inp_url_parsed['query'];
+			}
+			else	{
+				$inp_url_query = "";
+			}
+				
+			if($inp_url_query != ""){
+				$inp_url_query = "?" . $inp_url_query;
+			}
+		
+			if($inp_url_scheme == "http" OR $inp_url_scheme == "https"){
+				$inp_url_path = "$inp_url_scheme://$inp_url_host$inp_url_path";
+				$inp_url_query = "$inp_url_query";
+				$inp_internal_or_external = "external";
+			}
+			else{
+				$inp_internal_or_external = "internal";
+			}
+			$inp_url_path = output_html($inp_url_path);
+			$inp_url_path_mysql = quote_smart($link, $inp_url_path);
+
+			$inp_url_path_md5 = md5($inp_url_path);
+			$inp_url_path_md5_mysql = quote_smart($link, $inp_url_path_md5);
+
+			$inp_url_query = output_html($inp_url_query);
+			$inp_url_query_mysql = quote_smart($link, $inp_url_query);
+
+			mysqli_query($link, "INSERT INTO $t_pages_navigation 
+			(navigation_id, navigation_parent_id, navigation_title, navigation_title_clean, navigation_url, 
+			navigation_url_path, navigation_url_path_md5, navigation_url_query, navigation_language, navigation_internal_or_external, 
+			navigation_weight, navigation_created_datetime, navigation_created_by_user_id) 
+			VALUES 
+			(NULL, $get_navigation_id, $inp_title_mysql, $inp_slug_mysql, $inp_url_mysql, 
+			$inp_url_path_mysql, $inp_url_path_md5_mysql, $inp_url_query_mysql, $language_mysql, '$inp_internal_or_external', 
+			'$get_count_rows', '$datetime', $inp_created_by_user_id_mysql)")
+			or die(mysqli_error($link));
+
+
+			/*
+			<li class=\"header_up\"><a href=\"$root/exercises/user_pages.php?l=$l\""; if($minus_one == "index.php" && $minus_two == "android"){ echo" class=\"navigation_active\"";}echo">$l_user_pages</a></li>
+						<li><a href=\"$root/exercises/new_exercise.php?l=$l\""; if($minus_one == "new_exercise.php"){ echo" class=\"navigation_active\"";}echo">$l_new_exercise</a></li>
+						<li><a href=\"$root/exercises/my_exercises.php?l=$l\""; if($minus_one == "my_exercises.php"){ echo" class=\"navigation_active\"";}echo">$l_my_exercises</a></li>
+						<li><a href=\"$root/exercises/new_equipment.php?l=$l\""; if($minus_one == "new_equipment.php"){ echo" class=\"navigation_active\"";}echo">$l_new_equipment</a></li>
+						<li><a href=\"$root/exercises/my_equipment.php?l=$l\""; if($minus_one == "my_equipment.php"){ echo" class=\"navigation_active\"";}echo">$l_my_equipment</a></li>
+
+			*/
+
 
 		} // while languages
-
 		$url = "index.php?open=$module&editor_language=$editor_language&l=$l&ft=success&fm=inserted_to_navigation";
 		header("Location: $url");
 		exit;
 	
 	} // module = exercises
+	elseif($module == "food"){
+		// Fetch all languages
+		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";
+		$result_l = mysqli_query($link, $query_l);
+		while($row_l = mysqli_fetch_row($result_l)) {
+			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_16x16, $get_language_active_default) = $row_l;
+
+			// Food diary title
+			include("_translations/site/$get_language_active_iso_two/food/ts_food.php");
+			$inp_title = "$l_food";
+			$inp_title = output_html($inp_title);
+			$inp_title_mysql = quote_smart($link, $inp_title);
+
+			$inp_slug = clean($inp_title);
+			$inp_slug = output_html($inp_slug);
+			$inp_slug_mysql = quote_smart($link, $inp_slug);
+			
+			$inp_url = "food/index.php?l=$get_language_active_iso_two";
+			$inp_url = output_html($inp_url);
+			$inp_url_mysql = quote_smart($link, $inp_url);
+
+			$inp_url_parsed = parse_url($inp_url);
+			$inp_url_scheme = "";
+			$inp_url_host = "";
+			if(isset($inp_url_parsed['scheme']) && isset($inp_url_parsed['host'])){
+				$inp_url_scheme = $inp_url_parsed['scheme'];
+				$inp_url_host = $inp_url_parsed['host'];
+			}
+			$inp_url_path = $inp_url_parsed['path'];
+			if(isset($inp_url_parsed['query'])){
+				$inp_url_query = $inp_url_parsed['query'];
+			}
+			else{
+				$inp_url_query = "";
+			}
+				
+			if($inp_url_query != ""){
+				$inp_url_query = "?" . $inp_url_query;
+			}
+		
+			if($inp_url_scheme == "http" OR $inp_url_scheme == "https"){
+				$inp_url_path = "$inp_url_scheme://$inp_url_host$inp_url_path";
+				$inp_url_query = "$inp_url_query";
+				$inp_internal_or_external = "external";
+			}
+			else{
+				$inp_internal_or_external = "internal";
+			}
+			$inp_url_path = output_html($inp_url_path);
+			$inp_url_path_mysql = quote_smart($link, $inp_url_path);
+
+			$inp_url_path_md5 = md5($inp_url_path);
+			$inp_url_path_md5_mysql = quote_smart($link, $inp_url_path_md5);
+
+			$inp_url_query = output_html($inp_url_query);
+			$inp_url_query_mysql = quote_smart($link, $inp_url_query);
+
+			$inp_parent = 0;
+			$inp_parent = output_html($inp_parent);
+			$inp_parent_mysql = quote_smart($link, $inp_parent);
+
+			$datetime = date("Y-m-d H:i:s");
+
+			$inp_created_by_user_id = $_SESSION['admin_user_id'];
+			$inp_created_by_user_id = output_html($inp_created_by_user_id);
+			$inp_created_by_user_id_mysql = quote_smart($link, $inp_created_by_user_id);
+
+			// Get weight
+			$language_mysql = quote_smart($link, $get_language_active_iso_two);
+			$query = "SELECT count(*) FROM $t_pages_navigation WHERE navigation_parent_id=$inp_parent_mysql AND navigation_language=$language_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_count_rows) = $row;
+
+			// Insert
+			mysqli_query($link, "INSERT INTO $t_pages_navigation 
+			(navigation_id, navigation_parent_id, navigation_title, navigation_title_clean, navigation_url, 
+			navigation_url_path, navigation_url_path_md5, navigation_url_query, navigation_language, navigation_internal_or_external, 
+			navigation_weight, navigation_created_datetime, navigation_created_by_user_id) 
+			VALUES 
+			(NULL, $inp_parent_mysql, $inp_title_mysql, $inp_slug_mysql, $inp_url_mysql, 
+			$inp_url_path_mysql, $inp_url_path_md5_mysql, $inp_url_query_mysql, $language_mysql, '$inp_internal_or_external', 
+			'$get_count_rows', '$datetime', $inp_created_by_user_id_mysql)")
+			or die(mysqli_error($link));
+			
+			// Get ID
+			$query = "SELECT navigation_id, navigation_parent_id, navigation_title, navigation_url_path, navigation_url_query, navigation_language FROM $t_pages_navigation WHERE navigation_url=$inp_url_mysql AND navigation_language=$language_mysql AND navigation_created_datetime='$datetime'";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_navigation_id, $get_navigation_parent_id, $get_navigation_title, $get_navigation_url_path, $get_navigation_url_query, $get_navigation_language) = $row;
+		} // languages
+
+		$url = "index.php?open=$module&editor_language=$editor_language&l=$l&ft=success&fm=inserted_to_navigation";
+		header("Location: $url");
+		exit;
+	} // module=food
 	elseif($module == "muscles"){
 		// Fetch all languages
 		$query_l = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";

@@ -95,6 +95,7 @@ elseif($action == "view_webdesign"){
 	if(isset($_GET['webdesign_name'])) {
 		$webdesign_name = $_GET['webdesign_name'];
 		$webdesign_name = strip_tags(stripslashes($webdesign_name));
+		$webdesign_name = output_html($webdesign_name);
 	}
 	else{
 		$webdesign_name = "";
@@ -140,6 +141,8 @@ elseif($action == "switch_to_webdesign"){
 		
 	// Write file
 	$update_file="<?php
+/* Updated by: 07_webdesign.php 
+*  Datetime: $datetime */
 // Database
 \$mysqlHostSav   	= \"$mysqlHostSav\";
 \$mysqlUserNameSav   	= \"$mysqlUserNameSav\";
@@ -149,8 +152,8 @@ elseif($action == "switch_to_webdesign"){
 
 
 // General
-\$configWebsiteTitleSav		 = \"$inp_site_title\";
-\$configWebsiteTitleCleanSav	 = \"$inp_site_title_clean\";
+\$configWebsiteTitleSav		 = \"$configWebsiteTitleSav\";
+\$configWebsiteTitleCleanSav	 = \"$configWebsiteTitleCleanSav\";
 \$configWebsiteCopyrightSav	 = \"$configWebsiteCopyrightSav\";
 \$configFromEmailSav 		 = \"$configFromEmailSav\";
 \$configFromNameSav 		 = \"$configFromNameSav\";
@@ -197,7 +200,7 @@ elseif($action == "switch_to_webdesign"){
 		fclose($fh);
 
 		// Move to write to file
-		header("Location: index.php?page=08_write_to_file&language=$language&process=1");
+		header("Location: index.php?page=08_write_to_file&language=$language&webdesign_name=$webdesign_name&process=1");
 		exit;
 	}
 }

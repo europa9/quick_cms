@@ -1,10 +1,10 @@
 <?php 
 /**
 *
-* File: food/user_pages.php
+* File: exercises/user_pages.php
 * Version 1.0.0
-* Date 12:05 10.02.2018
-* Copyright (c) 2011-2018 S. A. Ditlefsen
+* Date 12:35 29.03.2021
+* Copyright (c) 2021 S. A. Ditlefsen
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -41,6 +41,9 @@ elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
 elseif(file_exists("../../../favicon.ico")){ $root = "../../.."; }
 include("$root/_webdesign/header.php");
 
+/*- Translation ------------------------------------------------------------------------ */
+include("$root/_admin/_translations/site/$l/exercises/ts_exercises.php");
+
 /*- Content ---------------------------------------------------------------------------------- */
 // Logged in?
 if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
@@ -63,6 +66,16 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	<p>
 	Hello $get_user_name!
 	</p>
+
+	<div class=\"vertical\">
+	<ul>
+		<li><a href=\"$root/exercises/new_exercise.php?l=$l\">$l_new_exercise</a></li>
+		<li><a href=\"$root/exercises/my_exercises.php?l=$l\">$l_my_exercises</a></li>
+		<li><a href=\"$root/exercises/new_equipment.php?l=$l\">$l_new_equipment</a></li>
+		<li><a href=\"$root/exercises/my_equipment.php?l=$l\">$l_my_equipment</a></li>
+
+	</ul>
+	</div>
 	";
 }
 else{

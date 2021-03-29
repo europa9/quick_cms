@@ -79,7 +79,7 @@ echo"
 		  </td>
 		 </tr>
 		</table>
-		<meta http-equiv=\"refresh\" content=\"2;url=index.php?open=$open&amp;page=tables\">
+		<meta http-equiv=\"refresh\" content=\"2;url=index.php?open=$open&amp;page=default\">
 		";
 		mysqli_query($link, "CREATE TABLE $t_forum_topics(
 	  	 topic_id INT NOT NULL AUTO_INCREMENT,

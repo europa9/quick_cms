@@ -455,7 +455,7 @@ else{
 		<h2 style=\"margin-top: 20px;\">Comments per month <a href=\"#comments_per_month\" class=\"toggle\" data-divid=\"comments_per_month_information\"><img src=\"_design/gfx/icons/16x16/information.png\" alt=\"information.png\" /></a></h2>
 		<div class=\"comments_per_month_information\">
 			<p>
-			Comments per month is from the following modules: blog, courses, downloads
+			Comments per month is from the following modules: blog, courses, downloads, exercises, food
 			</p>
 		</div>
 

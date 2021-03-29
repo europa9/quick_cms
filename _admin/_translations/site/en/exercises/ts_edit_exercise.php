@@ -21,4 +21,5 @@ $l_edit_categorization = "Edit categorization";
 $l_tags = "Tags";
 $l_view_exercise = "View exercise";
 $l_alternative_title = "Alternative title";
+$l_my_exercises = "My exercises";
 ?>

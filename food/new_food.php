@@ -162,10 +162,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<select name=\"l\" class=\"on_select_go_to_url\">
 			<option value=\"$l\">- $l_please_select -</option>
 			<option value=\"$l\"></option>\n";
-			$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+			$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_default FROM $t_languages_active";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
-				list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
+				list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_default) = $row;
 				$flag_path 	= "_design/gfx/flags/16x16/$get_language_active_flag" . "_16x16.png";
 	
 				// No language selected?
