@@ -34,6 +34,20 @@ if($result !== FALSE){
 	echo"
 	<h1>Meal plans</h1>
 	
+	<!-- Feedback -->
+	";
+	if($ft != ""){
+		if($fm == "changes_saved"){
+			$fm = "$l_changes_saved";
+		}
+		else{
+			$fm = ucfirst($fm);
+			$fm = str_replace("_", " ", $fm);
+		}
+		echo"<div class=\"$ft\"><span>$fm</span></div>";
+	}
+	echo"	
+	<!-- //Feedback -->
 
 	<!-- Meal plans buttons -->";
 		// Navigation

@@ -48,6 +48,8 @@ echo"
 	  	   entry_recipe_id INT,
 	  	   entry_name VARCHAR(250),
 	  	   entry_manufacturer_name VARCHAR(250),
+	  	   entry_main_category_id INT,
+	  	   entry_sub_category_id INT,
 	  	   entry_serving_size DOUBLE,
 	  	   entry_serving_size_measurement VARCHAR(250),
 	  	   entry_energy_per_entry DOUBLE,

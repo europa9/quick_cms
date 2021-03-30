@@ -486,24 +486,24 @@ echo"
 				// Thumb
 				if($get_recipe_thumb_278x156 == "" OR !(file_exists("$root/$get_recipe_image_path/$get_recipe_thumb_278x156"))){
 					if(!(file_exists("$root/$get_recipe_image_path/$get_recipe_image\">$root/$get_recipe_image_path/$get_recipe_image"))){
-						echo"<div class=\"error\"><p>Recipe image <em>$root/$get_recipe_image_path/$get_recipe_image</em> doesnt exists. Please wait! The script will go trough all recipes to check if there are more missing images!</p></div>
-						<meta http-equiv=\"refresh\" content=\"1;url=index.php?l=$l\">\n";
-
+						echo"<div class=\"error\"><p>Recipe image <em>$root/$get_recipe_image_path/$get_recipe_image</em> doesnt exists.</p></div>\n";
+						
 						mysqli_query($link, "UPDATE $t_recipes SET recipe_image='' WHERE recipe_id=$get_recipe_id") or die(mysqli_error($link));
-						die;
+						
 					}
+					else{
+						$inp_new_x = 278; // 278x156
+						$inp_new_y = 156;
 
-					$inp_new_x = 278; // 278x156
-					$inp_new_y = 156;
+						$ext = get_extension($get_recipe_image);
 
-					$ext = get_extension($get_recipe_image);
+						echo"<div class=\"info\"><p>Creating recipe thumb $inp_new_x x $inp_new_y  px <a href=\"$root/$get_recipe_image_path/$get_recipe_image\">$root/$get_recipe_image_path/$get_recipe_image</a></p></div>";
 
-					echo"<div class=\"info\"><p>Creating recipe thumb $inp_new_x x $inp_new_y  px <a href=\"$root/$get_recipe_image_path/$get_recipe_image\">$root/$get_recipe_image_path/$get_recipe_image</a></p></div>";
-
-					$thumb = $get_recipe_id . "_thumb_" . $inp_new_x . "x" . $inp_new_y . ".$ext";
-					$thumb_mysql = quote_smart($link, $thumb);
-					resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_recipe_image_path/$get_recipe_image", "$root/$get_recipe_image_path/$thumb");
-					mysqli_query($link, "UPDATE $t_recipes SET recipe_thumb_278x156=$thumb_mysql WHERE recipe_id=$get_recipe_id") or die(mysqli_error($link));
+						$thumb = $get_recipe_id . "_thumb_" . $inp_new_x . "x" . $inp_new_y . ".$ext";
+						$thumb_mysql = quote_smart($link, $thumb);
+						resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_recipe_image_path/$get_recipe_image", "$root/$get_recipe_image_path/$thumb");
+						mysqli_query($link, "UPDATE $t_recipes SET recipe_thumb_278x156=$thumb_mysql WHERE recipe_id=$get_recipe_id") or die(mysqli_error($link));
+					}
 				}
 		
 

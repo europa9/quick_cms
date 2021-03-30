@@ -580,11 +580,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					}
 
 				
+					// get recipe
 					$recipe_id_mysql = quote_smart($link, $get_current_entry_recipe_id);
-					$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_user_ip, recipe_notes, recipe_password FROM $t_recipes WHERE recipe_id=$recipe_id_mysql";
+					$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_country, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb_278x156, recipe_video, recipe_date, recipe_date_saying, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_comments, recipe_times_favorited, recipe_user_ip, recipe_notes, recipe_password, recipe_last_viewed, recipe_age_restriction, recipe_published FROM $t_recipes WHERE recipe_id=$recipe_id_mysql";
 					$result = mysqli_query($link, $query);
 					$row = mysqli_fetch_row($result);
-					list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb, $get_recipe_video, $get_recipe_date, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password) = $row;
+					list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_country, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156, $get_recipe_video, $get_recipe_date, $get_recipe_date_saying, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_comments, $get_recipe_times_favorited, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password, $get_recipe_last_viewed, $get_recipe_age_restriction, $get_recipe_published) = $row;
 					if($get_recipe_id == ""){
 						$url = "new_meal_plan_step_2_entries_new_entry_recipe.php?meal_plan_id=$meal_plan_id&entry_day_number=$entry_day_number&entry_meal_number=$entry_meal_number&l=$l&action=new_entry_food";
 						$url = $url . "&ft=error&fm=recipe_specified_not_found";
@@ -593,10 +594,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					}
 
 					// get numbers
-					$query = "SELECT number_id, number_recipe_id, number_hundred_calories, number_hundred_proteins, number_hundred_fat, number_hundred_carbs, number_serving_calories, number_serving_proteins, number_serving_fat, number_serving_carbs, number_total_weight, number_total_calories, number_total_proteins, number_total_fat, number_total_carbs, number_servings FROM $t_recipes_numbers WHERE number_recipe_id=$recipe_id_mysql";
-					$result = mysqli_query($link, $query);
-					$row = mysqli_fetch_row($result);
-					list($get_number_id, $get_number_recipe_id, $get_number_hundred_calories, $get_number_hundred_proteins, $get_number_hundred_fat, $get_number_hundred_carbs, $get_number_serving_calories, $get_number_serving_proteins, $get_number_serving_fat, $get_number_serving_carbs, $get_number_total_weight, $get_number_total_calories, $get_number_total_proteins, $get_number_total_fat, $get_number_total_carbs, $get_number_servings) = $row;
+					$query_n = "SELECT number_id, number_recipe_id, number_servings, number_energy_metric, number_fat_metric, number_saturated_fat_metric, number_monounsaturated_fat_metric, number_polyunsaturated_fat_metric, number_cholesterol_metric, number_carbohydrates_metric, number_carbohydrates_of_which_sugars_metric, number_dietary_fiber_metric, number_proteins_metric, number_salt_metric, number_sodium_metric, number_energy_serving, number_fat_serving, number_saturated_fat_serving, number_monounsaturated_fat_serving, number_polyunsaturated_fat_serving, number_cholesterol_serving, number_carbohydrates_serving, number_carbohydrates_of_which_sugars_serving, number_dietary_fiber_serving, number_proteins_serving, number_salt_serving, number_sodium_serving, number_energy_total, number_fat_total, number_saturated_fat_total, number_monounsaturated_fat_total, number_polyunsaturated_fat_total, number_cholesterol_total, number_carbohydrates_total, number_carbohydrates_of_which_sugars_total, number_dietary_fiber_total, number_proteins_total, number_salt_total, number_sodium_total FROM $t_recipes_numbers WHERE number_recipe_id=$get_recipe_id";
+					$result_n = mysqli_query($link, $query_n);
+					$row_n = mysqli_fetch_row($result_n);
+					list($get_number_id, $get_number_recipe_id, $get_number_servings, $get_number_energy_metric, $get_number_fat_metric, $get_number_saturated_fat_metric, $get_number_monounsaturated_fat_metric, $get_number_polyunsaturated_fat_metric, $get_number_cholesterol_metric, $get_number_carbohydrates_metric, $get_number_carbohydrates_of_which_sugars_metric, $get_number_dietary_fiber_metric, $get_number_proteins_metric, $get_number_salt_metric, $get_number_sodium_metric, $get_number_energy_serving, $get_number_fat_serving, $get_number_saturated_fat_serving, $get_number_monounsaturated_fat_serving, $get_number_polyunsaturated_fat_serving, $get_number_cholesterol_serving, $get_number_carbohydrates_serving, $get_number_carbohydrates_of_which_sugars_serving, $get_number_dietary_fiber_serving, $get_number_proteins_serving, $get_number_salt_serving, $get_number_sodium_serving, $get_number_energy_total, $get_number_fat_total, $get_number_saturated_fat_total, $get_number_monounsaturated_fat_total, $get_number_polyunsaturated_fat_total, $get_number_cholesterol_total, $get_number_carbohydrates_total, $get_number_carbohydrates_of_which_sugars_total, $get_number_dietary_fiber_total, $get_number_proteins_total, $get_number_salt_total, $get_number_sodium_total) = $row_n;
 
 					$inp_entry_name = output_html($get_recipe_title);
 					$inp_entry_name_mysql = quote_smart($link, $inp_entry_name);
@@ -604,7 +605,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$inp_entry_manufacturer_name = output_html("");
 					$inp_entry_manufacturer_name_mysql = quote_smart($link, $inp_entry_manufacturer_name);
 
-					if($entry_serving_size == "1"){
+					if($inp_entry_serving_size == "1"){
 						$inp_entry_serving_size_measurement = output_html(strtolower($l_serving_abbreviation));
 					}
 					else{
@@ -612,26 +613,54 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					}
 					$inp_entry_serving_size_measurement_mysql = quote_smart($link, $inp_entry_serving_size_measurement);
 
-					$inp_entry_energy_per_entry = round($inp_entry_serving_size*$get_number_serving_calories, 1);
+					// Number inputs
+					$inp_entry_energy_per_entry = round($inp_entry_serving_size*$get_number_energy_serving, 1);
 					$inp_entry_energy_per_entry_mysql = quote_smart($link, $inp_entry_energy_per_entry);
 
-					$inp_entry_fat_per_entry = round($inp_entry_serving_size*$get_number_serving_fat, 1);
+					$inp_entry_fat_per_entry = round($inp_entry_serving_size*$get_number_fat_serving, 1);
 					$inp_entry_fat_per_entry_mysql = quote_smart($link, $inp_entry_fat_per_entry);
+	
+					$inp_entry_saturated_fat_per_entry = round($inp_entry_serving_size*$get_number_saturated_fat_serving, 1);
+					$inp_entry_saturated_fat_per_entry_mysql = quote_smart($link, $inp_entry_saturated_fat_per_entry);
 
-					$inp_entry_carb_per_entry = round($inp_entry_serving_size*$get_number_serving_carbs, 1);
-					$inp_entry_carb_per_entry_mysql = quote_smart($link, $inp_entry_carb_per_entry);
+					$inp_entry_monounsaturated_fat_per_entry = round($inp_entry_serving_size*$get_number_monounsaturated_fat_serving, 1);
+					$inp_entry_monounsaturated_fat_per_entry_mysql = quote_smart($link, $inp_entry_monounsaturated_fat_per_entry);
 
-					$inp_entry_protein_per_entry = round($inp_entry_serving_size*$get_number_serving_proteins, 1);
-					$inp_entry_protein_per_entry_mysql = quote_smart($link, $inp_entry_protein_per_entry);
+					$inp_entry_polyunsaturated_fat_per_entry = round($inp_entry_serving_size*$get_number_polyunsaturated_fat_serving, 1);
+					$inp_entry_polyunsaturated_fat_per_entry_mysql = quote_smart($link, $inp_entry_polyunsaturated_fat_per_entry);
 
+					$inp_entry_cholesterol_per_entry = round($inp_entry_serving_size*$get_number_cholesterol_serving, 1);
+					$inp_entry_cholesterol_per_entry_mysql = quote_smart($link, $inp_entry_cholesterol_per_entry);
 
+					$inp_entry_carbohydrates_per_entry = round($inp_entry_serving_size*$get_number_carbohydrates_serving, 1);
+					$inp_entry_carbohydrates_per_entry_mysql = quote_smart($link, $inp_entry_carbohydrates_per_entry);
+
+					$inp_entry_carbohydrates_of_which_sugars_per_entry = round($inp_entry_serving_size*$get_number_carbohydrates_of_which_sugars_serving, 1);
+					$inp_entry_carbohydrates_of_which_sugars_per_entry_mysql = quote_smart($link, $inp_entry_carbohydrates_of_which_sugars_per_entry);
+
+					$inp_entry_dietary_fiber_per_entry = round($inp_entry_serving_size*$get_number_dietary_fiber_serving, 1);
+					$inp_entry_dietary_fiber_per_entry_mysql = quote_smart($link, $inp_entry_dietary_fiber_per_entry);
+
+					$inp_entry_proteins_per_entry = round($inp_entry_serving_size*$get_number_proteins_serving, 1);
+					$inp_entry_proteins_per_entry_mysql = quote_smart($link, $inp_entry_proteins_per_entry);
+
+					$inp_entry_salt_per_entry = round($inp_entry_serving_size*$get_number_salt_serving, 1);
+					$inp_entry_salt_per_entry_mysql = quote_smart($link, $inp_entry_salt_per_entry);
+
+					$inp_entry_sodium_per_entry = round($inp_entry_serving_size*$get_number_sodium_serving, 1);
+					$inp_entry_sodium_per_entry_mysql = quote_smart($link, $inp_entry_sodium_per_entry);
 
 					// Update
-					$result = mysqli_query($link, "UPDATE $t_meal_plans_entries SET entry_name=$inp_entry_name_mysql, entry_manufacturer_name=$inp_entry_manufacturer_name_mysql, 
-									entry_serving_size=$inp_entry_serving_size_mysql, entry_serving_size_measurement=$inp_entry_serving_size_measurement_mysql, 
-									entry_energy_per_entry=$inp_entry_energy_per_entry_mysql, entry_fat_per_entry=$inp_entry_fat_per_entry_mysql, 
-									entry_carb_per_entry=$inp_entry_carb_per_entry_mysql, entry_protein_per_entry=$inp_entry_protein_per_entry_mysql 
-									WHERE entry_id='$get_current_entry_id'");
+					$result = mysqli_query($link, "UPDATE $t_meal_plans_entries SET 
+									entry_name=$inp_entry_name_mysql, 
+									entry_manufacturer_name=$inp_entry_manufacturer_name_mysql, 
+									entry_serving_size=$inp_entry_serving_size_mysql, 
+									entry_serving_size_measurement=$inp_entry_serving_size_measurement_mysql, 
+									entry_energy_per_entry=$inp_entry_energy_per_entry_mysql, 
+									entry_fat_per_entry=$inp_entry_fat_per_entry_mysql, 
+									entry_carb_per_entry=$inp_entry_carbohydrates_per_entry_mysql, 
+									entry_protein_per_entry=$inp_entry_proteins_per_entry_mysql 
+									WHERE entry_id='$get_current_entry_id'") or die(mysqli_error($link));
  
 				
 
@@ -688,68 +717,146 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					<!-- //Feedback -->
 
 
+					<!-- User adaptet view -->";
+						if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
+							$my_user_id = $_SESSION['user_id'];
+							$my_user_id = output_html($my_user_id);
+							$my_user_id_mysql = quote_smart($link, $my_user_id);
+	
+							$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_meal_plans_user_adapted_view WHERE view_user_id=$my_user_id_mysql";
+							$result_t = mysqli_query($link, $query_t);
+							$row_t = mysqli_fetch_row($result_t);
+							list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
+						}
+						else{
+							// IP
+							$my_user_ip = $_SERVER['REMOTE_ADDR'];
+							$my_user_ip = output_html($my_user_ip);
+							$my_user_ip_mysql = quote_smart($link, $my_user_ip);
+	
+							$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_meal_plans_user_adapted_view WHERE view_ip=$my_user_ip_mysql";
+							$result_t = mysqli_query($link, $query_t);
+							$row_t = mysqli_fetch_row($result_t);
+							list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
+
+						}
+						if($get_current_view_id == ""){
+							$get_current_view_system = "metric";
+							$get_current_view_hundred_metric = 1;
+							$get_current_view_pcs_metric = 1;
+						}
+						$r = "new_meal_plan_step_2_entries_edit_entry.php?meal_plan_id=$meal_plan_id" . "amp;entry_day_number=$entry_day_number" . "amp;entry_meal_number=$entry_meal_number" . "amp;entry_id=$entry_id";
+						echo"
+						<p><a id=\"adapter_view\"></a>
+						<b>$l_show_per:</b>
+						<input type=\"checkbox\" name=\"inp_show_hundred_metric\" class=\"onclick_go_to_url\"  data-target=\"user_adapted_view.php?set=hundred_metric&amp;value=0&amp;process=1&amp;referer=$r&amp;l=$l\""; if($get_current_view_hundred_metric == "1"){ echo" checked=\"checked\""; } echo" /> $l_hundred
+						<input type=\"checkbox\" name=\"inp_show_serving\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=serving&amp;value=0&amp;process=1&amp;referer=$r&amp;l=$l\""; if($get_current_view_serving == "1"){ echo" checked=\"checked\""; } echo" /> $l_serving
+						<input type=\"checkbox\" name=\"inp_show_eight_us\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=eight_us&amp;value=0&amp;process=1&amp;referer=$r&amp;l=$l\""; if($get_current_view_eight_us == "1"){ echo" checked=\"checked\""; } echo" /> $l_eight
+						</p>
+
+						<!-- On check go to URL -->
+							<script>
+							\$(function() {
+								\$(\".onclick_go_to_url\").change(function(){
+									var item=\$(this);
+									window.location.href= item.data(\"target\")
+								});
+   							});
+							</script>
+						<!-- //On check go to URL -->
+
+					<!-- //User adaptet view -->
+
 					
 					<!-- About -->
 						";
 						// get recipe
-						$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb, recipe_video, recipe_date, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_user_ip, recipe_notes, recipe_password FROM $t_recipes WHERE recipe_id=$get_current_entry_recipe_id";
+						$query = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_country, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb_278x156, recipe_video, recipe_date, recipe_date_saying, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_comments, recipe_times_favorited, recipe_user_ip, recipe_notes, recipe_password, recipe_last_viewed, recipe_age_restriction, recipe_published FROM $t_recipes WHERE recipe_id=$get_current_entry_recipe_id";
 						$result = mysqli_query($link, $query);
 						$row = mysqli_fetch_row($result);
-						list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb, $get_recipe_video, $get_recipe_date, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password) = $row;
+						list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_country, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156, $get_recipe_video, $get_recipe_date, $get_recipe_date_saying, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_comments, $get_recipe_times_favorited, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password, $get_recipe_last_viewed, $get_recipe_age_restriction, $get_recipe_published) = $row;
 
 						// get numbers
-						$query = "SELECT number_id, number_recipe_id, number_hundred_calories, number_hundred_proteins, number_hundred_fat, number_hundred_carbs, number_serving_calories, number_serving_proteins, number_serving_fat, number_serving_carbs, number_total_weight, number_total_calories, number_total_proteins, number_total_fat, number_total_carbs, number_servings FROM $t_recipes_numbers WHERE number_recipe_id='$get_recipe_id'";
+						$query = "SELECT number_id, number_recipe_id, number_servings, number_energy_metric, number_fat_metric, number_saturated_fat_metric, number_monounsaturated_fat_metric, number_polyunsaturated_fat_metric, number_cholesterol_metric, number_carbohydrates_metric, number_carbohydrates_of_which_sugars_metric, number_dietary_fiber_metric, number_proteins_metric, number_salt_metric, number_sodium_metric, number_energy_serving, number_fat_serving, number_saturated_fat_serving, number_monounsaturated_fat_serving, number_polyunsaturated_fat_serving, number_cholesterol_serving, number_carbohydrates_serving, number_carbohydrates_of_which_sugars_serving, number_dietary_fiber_serving, number_proteins_serving, number_salt_serving, number_sodium_serving, number_energy_total, number_fat_total, number_saturated_fat_total, number_monounsaturated_fat_total, number_polyunsaturated_fat_total, number_cholesterol_total, number_carbohydrates_total, number_carbohydrates_of_which_sugars_total, number_dietary_fiber_total, number_proteins_total, number_salt_total, number_sodium_total FROM $t_recipes_numbers WHERE number_recipe_id='$get_recipe_id'";
 						$result = mysqli_query($link, $query);
 						$row = mysqli_fetch_row($result);
-						list($get_number_id, $get_number_recipe_id, $get_number_hundred_calories, $get_number_hundred_proteins, $get_number_hundred_fat, $get_number_hundred_carbs, $get_number_serving_calories, $get_number_serving_proteins, $get_number_serving_fat, $get_number_serving_carbs, $get_number_total_weight, $get_number_total_calories, $get_number_total_proteins, $get_number_total_fat, $get_number_total_carbs, $get_number_servings) = $row;
+						list($get_number_id, $get_number_recipe_id, $get_number_servings, $get_number_energy_metric, $get_number_fat_metric, $get_number_saturated_fat_metric, $get_number_monounsaturated_fat_metric, $get_number_polyunsaturated_fat_metric, $get_number_cholesterol_metric, $get_number_carbohydrates_metric, $get_number_carbohydrates_of_which_sugars_metric, $get_number_dietary_fiber_metric, $get_number_proteins_metric, $get_number_salt_metric, $get_number_sodium_metric, $get_number_energy_serving, $get_number_fat_serving, $get_number_saturated_fat_serving, $get_number_monounsaturated_fat_serving, $get_number_polyunsaturated_fat_serving, $get_number_cholesterol_serving, $get_number_carbohydrates_serving, $get_number_carbohydrates_of_which_sugars_serving, $get_number_dietary_fiber_serving, $get_number_proteins_serving, $get_number_salt_serving, $get_number_sodium_serving, $get_number_energy_total, $get_number_fat_total, $get_number_saturated_fat_total, $get_number_monounsaturated_fat_total, $get_number_polyunsaturated_fat_total, $get_number_cholesterol_total, $get_number_carbohydrates_total, $get_number_carbohydrates_of_which_sugars_total, $get_number_dietary_fiber_total, $get_number_proteins_total, $get_number_salt_total, $get_number_sodium_total) = $row;
 
 						echo"
 
 						<div style=\"float: left;\">
 							<h2>$get_recipe_title</h2>
 
-							<!-- Numbers -->
-
-							<table style=\"width: 350px\">
-							 <thead>
-							  <tr>
-							   <th scope=\"col\">
-							   </th>
-							   <th scope=\"col\" style=\"text-align: center;padding: 8px 4px 8px 4px;\">
-								<span style=\"font-weight: normal;\">$l_energy</span>
-							   </th>
-							   <th scope=\"col\" style=\"text-align: center;padding: 6px 4px 6px 4px;\">
-								<span style=\"font-weight: normal;\">$l_proteins</span>
-							   </th>
-							   <th scope=\"col\" style=\"text-align: center;padding: 6px 4px 6px 4px;\">
-								<span style=\"font-weight: normal;\">$l_carbs</span>
-							   </th>
-							   <th scope=\"col\" style=\"text-align: center;padding: 6px 4px 6px 4px;\">
-								<span style=\"font-weight: normal;\">$l_fat</span>
-							   </th>
-							  </tr>
-							 </thead>
-							 <tbody>
-							  <tr>
-							   <td style=\"text-align: right;padding: 8px 4px 6px 8px;\">
-								<span>$l_serving:</span>
-							   </td>
-							   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-								<span>$get_number_serving_calories</span>
-							   </td>
-							   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-								<span>$get_number_serving_proteins</span>
-							   </td>
-							   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-								<span>$get_number_serving_carbs</span>
-							   </td>
-							   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-								<span>$get_number_serving_fat</span>
-							   </td>
-							  </tr>
-							 </tbody>
-							</table>
-							<!-- //Numbers -->
+							<!-- Recipe numbers -->
+								";
+								if($get_current_view_hundred_metric == "1" OR $get_current_view_serving == "1"){
+									echo"
+									<table style=\"margin: 0px auto;\">
+									";
+									if($get_current_view_hundred_metric == "1"){
+										echo"
+											 <tr>
+											  <td style=\"padding-right: 6px;text-align: center;\">
+												<span class=\"nutritional_number\">$l_hundred</span>
+											  </td>
+											  <td style=\"padding-right: 6px;text-align: center;\">
+												<span class=\"nutritional_number\">$get_number_energy_metric</span>
+											  </td>
+											  <td style=\"padding-right: 6px;text-align: center;\">
+												<span class=\"nutritional_number\">$get_number_fat_metric</span>
+											  </td>
+											  <td style=\"padding-right: 6px;text-align: center;\">
+												<span class=\"nutritional_number\">$get_number_carbohydrates_metric</span>
+											  </td>
+											  <td style=\"text-align: center;\">
+												<span class=\"nutritional_number\">$get_number_proteins_metric</span>
+											  </td>
+											 </tr>
+											";
+										}
+										if($get_current_view_serving == "1"){
+											echo"
+											 <tr>
+											  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+												<span class=\"nutritional_number\">$l_serving</span>
+											  </td>
+											  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+												<span class=\"nutritional_number\">$get_number_energy_serving</span>
+											  </td>
+											  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+												<span class=\"nutritional_number\">$get_number_fat_serving</span>
+											  </td>
+											  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+												<span class=\"nutritional_number\">$get_number_carbohydrates_serving</span>
+											  </td>
+											  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+												<span class=\"nutritional_number\">$get_number_proteins_serving</span>
+											  </td>
+											 </tr>
+											";
+										}
+										echo"
+											 <tr>
+											  <td style=\"padding-right: 6px;text-align: center;\">
+											  </td>
+											  <td style=\"padding-right: 6px;text-align: center;\">
+												<span class=\"nutritional_number\">$l_calories_abbr_short_lowercase</span>
+											  </td>
+											  <td style=\"padding-right: 6px;text-align: center;\">
+												<span class=\"nutritional_number\">$l_fat_abbr_short_lowercase</span>
+											  </td>
+											  <td style=\"padding-right: 6px;text-align: center;\">
+												<span class=\"nutritional_number\">$l_carbohydrates_abbr_short_lowercase</span>
+											  </td>
+											  <td style=\"text-align: center;\">
+												<span class=\"nutritional_number\">$l_proteins_abbr_short_lowercase</span>
+											  </td>
+											 </tr>
+											</table>
+											";
+								} // show numbers
+								echo"
+							<!-- //Recipe numbers -->
 
 						</div>
 						";
@@ -759,7 +866,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				
 								echo"
 								<div style=\"float: left;padding-left: 15px;\">
-									<img src=\"$root/image.php?width=200&height=200&image=/$get_recipe_image_path/$get_recipe_image\" alt=\"$get_recipe_image_path/$get_recipe_image\" />
+									<img src=\"$root/$get_recipe_image_path/$get_recipe_thumb_278x156\" alt=\"$get_recipe_image\" />
 								</div>";
 							}
 						}
@@ -820,6 +927,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				}
 				echo"
 				</div>
+				<div class=\"clear\"></div>
 				<!-- //Current day -->
 				";
 

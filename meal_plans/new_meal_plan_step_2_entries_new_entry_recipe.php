@@ -212,11 +212,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			// Insert
 			mysqli_query($link, "INSERT INTO $t_meal_plans_entries
 			(entry_id, entry_meal_plan_id, entry_day_number, entry_meal_number, entry_weight, entry_food_id, entry_recipe_id, 
-			entry_name, entry_manufacturer_name, entry_serving_size, entry_serving_size_measurement, 
+			entry_name, entry_manufacturer_name, entry_main_category_id, entry_serving_size, entry_serving_size_measurement, 
 			entry_energy_per_entry, entry_fat_per_entry, entry_carb_per_entry, entry_protein_per_entry) 
 			VALUES 
 			(NULL, '$get_current_meal_plan_id', $inp_entry_day_number_mysql, $inp_entry_meal_number_mysql, '0', '0', '$get_recipe_id', 
-			$inp_entry_name_mysql, $inp_entry_manufacturer_name_mysql, $inp_entry_serving_size_mysql, $inp_entry_serving_size_measurement_mysql, 
+			$inp_entry_name_mysql, $inp_entry_manufacturer_name_mysql, $get_recipe_category_id, $inp_entry_serving_size_mysql, $inp_entry_serving_size_measurement_mysql, 
 			$inp_entry_energy_per_entry_mysql, $inp_entry_fat_per_entry_mysql, $inp_entry_carbohydrates_per_entry_mysql, $inp_entry_proteins_per_entry_mysql)")
 			or die(mysqli_error($link));
 

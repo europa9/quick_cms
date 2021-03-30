@@ -271,10 +271,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						$inp_meal_fat = 0;
 						$inp_meal_carbs = 0;
 						$inp_meal_proteins = 0;
-						$query_e = "SELECT entry_id, entry_food_id, entry_weight, entry_food_id, entry_name, entry_manufacturer_name, entry_serving_size, entry_serving_size_measurement, entry_energy_per_entry, entry_fat_per_entry, entry_carb_per_entry, entry_protein_per_entry, entry_text FROM $t_meal_plans_entries WHERE entry_meal_plan_id='$get_current_meal_plan_id' AND entry_day_number=$entry_day_number_mysql AND entry_meal_number=$x ORDER BY entry_weight ASC";
+						$query_e = "SELECT entry_id, entry_food_id, entry_weight, entry_food_id, entry_recipe_id, entry_name, entry_manufacturer_name, entry_main_category_id, entry_sub_category_id, entry_serving_size, entry_serving_size_measurement, entry_energy_per_entry, entry_fat_per_entry, entry_carb_per_entry, entry_protein_per_entry, entry_text FROM $t_meal_plans_entries WHERE entry_meal_plan_id='$get_current_meal_plan_id' AND entry_day_number=$entry_day_number_mysql AND entry_meal_number=$x ORDER BY entry_weight ASC";
 						$result_e = mysqli_query($link, $query_e);
 						while($row_e = mysqli_fetch_row($result_e)) {
-							list($get_entry_id, $get_entry_food_id, $get_entry_weight, $get_entry_food_id, $get_entry_food_name, $get_entry_food_manufacturer_name, $get_entry_food_serving_size, $get_entry_food_serving_size_measurement, $get_entry_food_energy_per_entry, $get_entry_food_fat_per_entry, $get_entry_food_carb_per_entry, $get_entry_food_protein_per_entry, $get_entry_food_text) = $row_e;
+							list($get_entry_id, $get_entry_food_id, $get_entry_weight, $get_entry_food_id, $get_entry_recipe_id, $get_entry_food_name, $get_entry_food_manufacturer_name, $get_entry_main_category_id, $get_entry_sub_category_id, $get_entry_food_serving_size, $get_entry_food_serving_size_measurement, $get_entry_food_energy_per_entry, $get_entry_food_fat_per_entry, $get_entry_food_carb_per_entry, $get_entry_food_protein_per_entry, $get_entry_food_text) = $row_e;
 							echo"
 							  <tr>
 							   <td>
@@ -283,8 +283,18 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								  <td class=\"odd\" style=\"text-align: right;width: 9%;padding-right: 1%;\">
 									<span>$get_entry_food_serving_size $get_entry_food_serving_size_measurement</span>
 							   	 </td>
-								  <td style=\"width: 26%;\">
-									<span><a href=\"$root/food/view_food.php?food_id=$get_entry_food_id&amp;l=$l\">$get_entry_food_manufacturer_name $get_entry_food_name</a></span>
+								  <td style=\"width: 26%;\">";
+									if($get_entry_food_id != "0"){
+										echo"
+										<span><a href=\"$root/food/view_food.php?view_food.php?main_category_id=$get_entry_main_category_id&amp;sub_category_id=$get_entry_sub_category_id&amp;food_id=$get_entry_food_id&amp;l=$l\">$get_entry_food_manufacturer_name $get_entry_food_name</a></span>
+										";
+									}
+									else{
+										echo"
+										<span><a href=\"$root/recipes/view_recipe.php?recipe_id=$get_entry_recipe_id&amp;l=$l\">$get_entry_food_name</a></span>
+										";
+									}
+									echo"
 								  </td>
 								  <td style=\"width: 10%;text-align: right;padding-right: 1%;\">
 									<span>$get_entry_food_energy_per_entry</span>

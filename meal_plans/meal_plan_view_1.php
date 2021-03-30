@@ -108,6 +108,13 @@ else{
 	echo"
 	<h1>$get_current_meal_plan_title</h1>
 	
+	<!-- Where am I ? -->
+		<p><b>$l_you_are_here</b><br />
+		<a href=\"index.php?l=$l\">$l_meal_plans</a>
+		&gt;
+		<a href=\"meal_plan_view_1.php?meal_plan_id=$get_current_meal_plan_id&amp;l=$l\">$get_current_meal_plan_title</a>
+		</p>
+	<!-- //Where am I ? -->
 
 	<!-- Image and info -->
 		<p>
@@ -176,10 +183,10 @@ else{
 			  </td>
 			 </tr>";
 			
-			$query_e = "SELECT entry_id, entry_food_id, entry_recipe_id, entry_weight, entry_name, entry_manufacturer_name, entry_serving_size, entry_serving_size_measurement, entry_energy_per_entry, entry_fat_per_entry, entry_carb_per_entry, entry_protein_per_entry, entry_text FROM $t_meal_plans_entries WHERE entry_meal_plan_id='$get_current_meal_plan_id' AND entry_day_number=1 AND entry_meal_number=$meal_number ORDER BY entry_weight ASC";
+			$query_e = "SELECT entry_id, entry_food_id, entry_recipe_id, entry_weight, entry_name, entry_manufacturer_name, entry_main_category_id, entry_sub_category_id, entry_serving_size, entry_serving_size_measurement, entry_energy_per_entry, entry_fat_per_entry, entry_carb_per_entry, entry_protein_per_entry, entry_text FROM $t_meal_plans_entries WHERE entry_meal_plan_id='$get_current_meal_plan_id' AND entry_day_number=1 AND entry_meal_number=$meal_number ORDER BY entry_weight ASC";
 			$result_e = mysqli_query($link, $query_e);
 			while($row_e = mysqli_fetch_row($result_e)) {
-				list($get_entry_id, $get_entry_food_id, $get_entry_recipe_id, $get_entry_weight, $get_entry_food_name, $get_entry_food_manufacturer_name, $get_entry_food_serving_size, $get_entry_food_serving_size_measurement, $get_entry_food_energy_per_entry, $get_entry_food_fat_per_entry, $get_entry_food_carb_per_entry, $get_entry_food_protein_per_entry, $get_entry_food_text) = $row_e;
+				list($get_entry_id, $get_entry_food_id, $get_entry_recipe_id, $get_entry_weight, $get_entry_food_name, $get_entry_food_manufacturer_name, $get_entry_main_category_id, $get_entry_sub_category_id, $get_entry_food_serving_size, $get_entry_food_serving_size_measurement, $get_entry_food_energy_per_entry, $get_entry_food_fat_per_entry, $get_entry_food_carb_per_entry, $get_entry_food_protein_per_entry, $get_entry_food_text) = $row_e;
 	
 				
 
@@ -188,11 +195,11 @@ else{
 				  <td style=\"background: #f2f2f2;border-top: #fbfbfb 1px solid;border-right: #fbfbfb 1px solid;padding: 8px;\">
 					<span>$get_entry_food_serving_size $get_entry_food_serving_size_measurement</span>
 					<span>";
-					if($get_entry_food_id != ""){
-						echo"<a href=\"$root/food/view_food.php?food_id=$get_entry_food_id&amp;l=$l\" style=\"color: #000\">";
+					if($get_entry_food_id != "0"){
+						echo"<a href=\"$root/food/view_food.php?main_category_id=$get_entry_main_category_id&amp;sub_category_id=$get_entry_sub_category_id&amp;food_id=$get_entry_food_id&amp;l=$l\" style=\"color: #000\">";
 					}
 					else{
-						echo"<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id_id&amp;l=$l\" style=\"color: #000\">";
+						echo"<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_entry_recipe_id&amp;l=$l\" style=\"color: #000\">";
 					}
 					echo"$get_entry_food_name $get_entry_food_manufacturer_name</a></span>
 				  </td>
