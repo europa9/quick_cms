@@ -66,11 +66,11 @@ if($action == ""){
 		<p><b>Editor language:</b><br />
 		";
 		$found_editor_language = "";
-		$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
-		$result = mysqli_query($link, $query);
-		while($row = mysqli_fetch_row($result)) {
-			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
-			echo"	<a href=\"index.php?open=$open&amp;page=$page&amp;editor_language=$get_language_active_iso_two&amp;l=$l\"><img src=\"_design/gfx/flags/16x16/$get_language_active_flag"; echo"_16x16.png\" alt=\"$get_language_active_flag\" /></a>\n";
+			$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_path_16x16, language_active_flag_16x16, language_active_default FROM $t_languages_active";
+			$result = mysqli_query($link, $query);
+			while($row = mysqli_fetch_row($result)) {
+				list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_path_16x16, $get_language_active_flag_16x16, $get_language_active_default) = $row;
+			echo"	<a href=\"index.php?open=$open&amp;page=$page&amp;editor_language=$get_language_active_iso_two&amp;l=$l\"><img src=\"../$get_language_active_flag_path_16x16/$get_language_active_flag_16x16\" alt=\"$get_language_active_flag_16x16\" /></a>\n";
 			if($editor_language == "$get_language_active_iso_two"){
 				$found_editor_language = "1";
 			}
@@ -288,14 +288,110 @@ elseif($action == "step_3_info"){
 				or die(mysqli_error($link));
 
 				// Get ID
-				$query = "SELECT reference_id FROM $t_references_index WHERE reference_created='$datetime'";
+				$query = "SELECT reference_id, reference_title, reference_title_clean, reference_title_short, reference_title_length, reference_is_active, reference_front_page_intro, reference_description, reference_language, reference_main_category_id, reference_main_category_title, reference_sub_category_id, reference_sub_category_title, reference_image_file, reference_image_thumb, reference_icon_16, reference_icon_32, reference_icon_48, reference_icon_64, reference_icon_96, reference_icon_260, reference_groups_count, reference_guides_count, reference_read_times, reference_read_times_ip_block, reference_created, reference_updated FROM $t_references_index WHERE reference_created='$datetime'";
 				$result = mysqli_query($link, $query);
 				$row = mysqli_fetch_row($result);
-				list($get_current_reference_id) = $row;
+				list($get_current_reference_id, $get_current_reference_title, $get_current_reference_title_clean, $get_current_reference_title_short, $get_current_reference_title_length, $get_current_reference_is_active, $get_current_reference_front_page_intro, $get_current_reference_description, $get_current_reference_language, $get_current_reference_main_category_id, $get_current_reference_main_category_title, $get_current_reference_sub_category_id, $get_current_reference_sub_category_title, $get_current_reference_image_file, $get_current_reference_image_thumb, $get_current_reference_icon_16, $get_current_reference_icon_32, $get_current_reference_icon_48, $get_current_reference_icon_64, $get_current_reference_icon_96, $get_current_reference_icon_260, $get_current_reference_groups_count, $get_current_reference_guides_count, $get_current_reference_read_times, $get_current_reference_read_times_ip_block, $get_current_reference_created, $get_current_reference_updated) = $row;
 
 				// Title
 				include("_translations/site/$inp_language/references/ts_references.php");
 
+				// Make dir
+				if(!(is_dir("../$inp_title_clean"))){
+					mkdir("../$inp_title_clean");
+				}
+
+
+				// Create file
+				$datetime = date("Y-m-d H:i:s");
+				$datetime_print = date("j M Y H:i");
+				$year = date("Y");
+				$page_id = date("ymdhis");
+				if(!(file_exists("../$get_current_reference_title_clean/index.php"))){
+			$input="<?php
+/**
+*
+* File: $get_current_reference_title_clean/index.php
+* Version 3.0.0
+* Date $datetime_print
+* Copyright (c) 2009-$year Sindre Andre Ditlefsen
+* License: http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+*/
+
+/*- Configuration ---------------------------------------------------------------------------- */
+\$pageIdSav            = \"$page_id\";
+\$pageNoColumnSav      = \"2\";
+\$pageAllowCommentsSav = \"0\";
+
+/*- Root dir --------------------------------------------------------------------------------- */
+// This determine where we are
+if(file_exists(\"favicon.ico\")){ \$root = \".\"; }
+elseif(file_exists(\"../favicon.ico\")){ \$root = \"..\"; }
+elseif(file_exists(\"../../favicon.ico\")){ \$root = \"../..\"; }
+elseif(file_exists(\"../../../favicon.ico\")){ \$root = \"../../..\"; }
+elseif(file_exists(\"../../../../favicon.ico\")){ \$root = \"../../../..\"; }
+else{ \$root = \"../../..\"; }
+
+/*- Website config --------------------------------------------------------------------------- */
+include(\"\$root/_admin/website_config.php\");
+
+/*- Translation ------------------------------------------------------------------------------ */
+include(\"\$root/_admin/_translations/site/\$l/references/ts_references.php\");
+
+/*- Headers ---------------------------------------------------------------------------------- */
+\$website_title = \"$inp_title\";
+if(file_exists(\"./favicon.ico\")){ \$root = \".\"; }
+elseif(file_exists(\"../favicon.ico\")){ \$root = \"..\"; }
+elseif(file_exists(\"../../favicon.ico\")){ \$root = \"../..\"; }
+elseif(file_exists(\"../../../favicon.ico\")){ \$root = \"../../..\"; }
+include(\"\$root/_webdesign/header.php\");
+
+/* Course header ---------------------------------------------------------------------------- */
+\$referenceTitleSav = \"$inp_title\";
+
+include(\"\$root/references/_includes/reference.php\");
+
+/*- Footer ---------------------------------------------------------------------------------- */
+include(\"\$root/_webdesign/\$webdesignSav/footer.php\");
+?>";
+					$fh = fopen("../$get_current_reference_title_clean/index.php", "w+") or die("can not open file");
+					fwrite($fh, $input);
+					fclose($fh);
+
+				} // index.php
+
+
+
+				// _reference.php
+				if(!(file_exists("../$get_current_reference_title_clean/index.php"))){
+
+			$input_reference_txt ="<?php
+\$reference_txt_file_generated_datetime	= \"$datetime\";
+
+\$reference_title_sav 			= \"$inp_title\";
+\$reference_title_clean_sav 		= \"$inp_title_clean\";
+\$reference_is_active_sav		= \"$get_current_reference_is_active\";
+\$reference_front_page_intro_sav	= \"$get_current_reference_front_page_intro\";
+\$reference_description_sav   		= \"$get_current_reference_description\";
+\$reference_language_sav		= \"$get_current_reference_language\";
+\$reference_main_category_title_sav  	= \"$get_current_reference_main_category_title\";
+\$reference_sub_category_title_sav	= \"$get_current_reference_sub_category_title\";
+\$reference_image_file_sav		= \"$get_current_reference_image_file\";
+\$reference_image_thumb_sav  		= \"$get_current_reference_image_thumb\";
+\$reference_icon_a_sav			= \"$get_current_reference_icon_16\"; // 16x16
+\$reference_icon_b_sav			= \"$get_current_reference_icon_32\"; // 32x32
+\$reference_icon_c_sav			= \"$get_current_reference_icon_48\"; // 48x48
+\$reference_icon_d_sav			= \"$get_current_reference_icon_64\"; // 64x64
+\$reference_icon_e_sav			= \"$get_current_reference_icon_96\"; // 96x96
+\$reference_icon_f_sav			= \"$get_current_reference_icon_260\"; // 260x260
+?>";
+
+					$fh = fopen("../$inp_title_clean/_reference.php", "w+") or die("can not open file");
+					fwrite($fh, $input_reference_txt);
+					fclose($fh);
+
+				} // _reference.php
 
 				// Search engine
 				$inp_index_title = "$inp_title | $l_references";

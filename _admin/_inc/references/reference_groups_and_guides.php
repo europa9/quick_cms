@@ -244,12 +244,13 @@ else{
 			or die(mysqli_error($link));
 
 			// Get ID
-			$query = "SELECT group_id FROM $t_references_index_groups WHERE group_created_datetime='$datetime'";
+			$query = "SELECT group_id, group_title, group_title_clean, group_title_short, group_title_length, group_number, group_reference_id, group_reference_title, group_read_times, group_read_times_ip_block, group_created_datetime, group_updated_datetime, group_updated_formatted, group_last_read, group_last_read_formatted FROM $t_references_index_groups WHERE group_created_datetime='$datetime'";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
-			list($get_current_group_id) = $row;
+			list($get_current_group_id, $get_current_group_title, $get_current_group_title_clean, $get_current_group_title_short, $get_current_group_title_length, $get_current_group_number, $get_current_group_reference_id, $get_current_group_reference_title, $get_current_group_read_times, $get_current_group_read_times_ip_block, $get_current_group_created_datetime, $get_current_group_updated_datetime, $get_current_group_updated_formatted, $get_current_group_last_read, $get_current_group_last_read_formatted) = $row;
 
-			
+			// Make file
+			include("_inc/references/reference_write_to_file_include.php");
 
 			// Search engine
 			$inp_index_title = "$inp_title | $get_current_reference_title | $l_references";
@@ -467,6 +468,8 @@ else{
 
 
 
+				// Make file
+				include("_inc/references/reference_write_to_file_include.php");
 
 				$url = "index.php?open=$open&page=$page&reference_id=$reference_id&action=$action&group_id=$get_current_group_id&editor_language=$editor_language&ft=success&fm=changes_saved";
 				header("Location: $url");
@@ -839,6 +842,8 @@ else{
 	
 
 
+				// Make file
+				include("_inc/references/reference_write_to_file_include.php");
 
 				$url = "index.php?open=$open&page=$page&reference_id=$reference_id&action=$action&group_id=$get_current_group_id&editor_language=$editor_language&ft=success&fm=guide_created";
 				header("Location: $url");
@@ -1103,6 +1108,8 @@ else{
 							WHERE index_id=$get_index_id") or die(mysqli_error($link));
 			
 
+				// Make file
+				include("_inc/references/reference_write_to_file_include.php");
 
 				$url = "index.php?open=$open&page=$page&reference_id=$reference_id&action=$action&guide_id=$get_current_guide_id&editor_language=$editor_language&ft=success&fm=changes_saved";
 				header("Location: $url");

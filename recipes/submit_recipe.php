@@ -384,13 +384,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	
 			<p><b>$l_language</b><br />
 			<select name=\"inp_recipe_language\">\n";
-			$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+			$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_default FROM $t_languages_active";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
-				list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
+				list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_default) = $row;
 	
-				$flag_path 	= "$root/_webdesign/images/footer/flag_$get_language_active_flag" . "_16x16.png";
-
 				echo"						";
 				echo"<option value=\"$get_language_active_iso_two\""; if($inp_recipe_language == "$get_language_active_iso_two"){ echo" selected=\"selected\""; } echo">$get_language_active_name</option>\n";
 			}
@@ -420,18 +418,16 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			echo"
 			<select name=\"inp_recipe_country\">";
-			$query = "SELECT language_flag FROM $t_languages ORDER BY language_flag ASC";
+			$query = "SELECT geoname_country_name FROM $t_stats_ip_to_country_geonames ORDER BY geoname_country_name ASC";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
-				list($get_language_flag) = $row;
+				list($get_geoname_country_name) = $row;
 
-				$country = str_replace("_", " ", $get_language_flag);
-				$country = ucwords($country);
-				if($country != "$prev_country"){
+				if($get_geoname_country_name != "$prev_country"){
 					echo"			";
-					echo"<option value=\"$country\""; if($inp_recipe_country == "$country"){ echo" selected=\"selected\""; } echo">$country</option>\n";
+					echo"<option value=\"$get_geoname_country_name\""; if($inp_recipe_country == "$get_geoname_country_name"){ echo" selected=\"selected\""; } echo">$get_geoname_country_name</option>\n";
 				}
-				$prev_country = "$country";
+				$prev_country = "$get_geoname_country_name";
 			}
 			echo"
 			</select>

@@ -327,11 +327,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						$message = $message . "View: $configSiteURLSav/discuss/open_tag.php?tag=$inp_tag_clean&l=$l\n";
 						$message = $message . "Admin: $configControlPanelURLSav/index.php?open=discuss&page=tags&action=open_tag&tag_id=$get_tag_id&editor_language=$l\n\n";
 						$message = $message . "Best regards\n$configWebsiteTitleSav\n$configSiteURLSav";
-						$headers = "From: $discussFromEmailSav" . "\r\n" .
-						    "Reply-To: $discussFromEmailSav" . "\r\n" .
+						$headers = "From: $forumFromEmailSav" . "\r\n" .
+						    "Reply-To: $forumFromEmailSav" . "\r\n" .
 						    'X-Mailer: PHP/' . phpversion();
 
-						if($discussEmailSendingOnOffSav == "on"){
+						if($forumEmailSendingOnOffSav == "on"){
 							mail($get_mod_user_email, $subject, $message, $headers);
 						}
 					}

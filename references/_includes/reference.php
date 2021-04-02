@@ -74,5 +74,7 @@ if($get_current_reference_id != ""){
 
 	} // action == ""
 } // course found
-
+else{
+	echo"<p>Reference not found</p>";
+}
 ?>
