@@ -30,7 +30,6 @@ echo"
 			<li><a href=\"./?open=dashboard&amp;page=inbox&amp;editor_language=$editor_language\"";if($page == "inbox"){echo" class=\"selected\"";}echo">Inbox</a></li>
 			<li><a href=\"./?open=dashboard&amp;page=banned&amp;editor_language=$editor_language\"";if($page == "banned"){echo" class=\"selected\"";}echo">Banned</a></li>
 			<li><a href=\"./?open=dashboard&amp;page=backup&amp;editor_language=$editor_language\"";if($page == "backup"){echo" class=\"selected\"";}echo">Backup</a></li>
-			<li><a href=\"./?open=dashboard&amp;page=notepad&amp;editor_language=$editor_language\"";if($page == "notepad"){echo" class=\"selected\"";}echo">Notepad</a></li>
 			<li><a href=\"./?open=dashboard&amp;page=notes&amp;editor_language=$editor_language\"";if($page == "notes"){echo" class=\"selected\"";}echo">Notes</a></li>
 			<li><a href=\"./?open=dashboard&amp;page=tasks&amp;editor_language=$editor_language\"";if($page == "tasks"){echo" class=\"selected\"";}echo">Tasks</a></li>
 			<li><a href=\"./?open=dashboard&amp;page=moderator_of_the_week&amp;editor_language=$editor_language\"";if($page == "moderator_of_the_week"){echo" class=\"selected\"";}echo">Moderator ofw</a></li>
