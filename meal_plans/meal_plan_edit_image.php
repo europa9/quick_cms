@@ -105,10 +105,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 	// Get meal_plan
 	$meal_plan_id_mysql = quote_smart($link, $meal_plan_id);
-	$query = "SELECT meal_plan_id, meal_plan_user_id, meal_plan_language, meal_plan_title, meal_plan_title_clean, meal_plan_number_of_days, meal_plan_introduction, meal_plan_total_energy_without_training, meal_plan_total_fat_without_training, meal_plan_total_carb_without_training, meal_plan_total_protein_without_training, meal_plan_total_energy_with_training, meal_plan_total_fat_with_training, meal_plan_total_carb_with_training, meal_plan_total_protein_with_training, meal_plan_average_kcal_without_training, meal_plan_average_fat_without_training, meal_plan_average_carb_without_training, meal_plan_average_protein_without_training, meal_plan_average_kcal_with_training, meal_plan_average_fat_with_training, meal_plan_average_carb_with_training, meal_plan_average_protein_with_training, meal_plan_created, meal_plan_updated, meal_plan_user_ip, meal_plan_image_path, meal_plan_image_file, meal_plan_views, meal_plan_views_ip_block, meal_plan_likes, meal_plan_dislikes, meal_plan_rating, meal_plan_rating_ip_block, meal_plan_comments FROM $t_meal_plans WHERE meal_plan_id=$meal_plan_id_mysql AND meal_plan_user_id=$my_user_id_mysql";
+	$query = "SELECT meal_plan_id, meal_plan_user_id, meal_plan_language, meal_plan_title, meal_plan_title_clean, meal_plan_number_of_days, meal_plan_introduction, meal_plan_total_energy_without_training, meal_plan_total_fat_without_training, meal_plan_total_carb_without_training, meal_plan_total_protein_without_training, meal_plan_total_energy_with_training, meal_plan_total_fat_with_training, meal_plan_total_carb_with_training, meal_plan_total_protein_with_training, meal_plan_average_kcal_without_training, meal_plan_average_fat_without_training, meal_plan_average_carb_without_training, meal_plan_average_protein_without_training, meal_plan_average_kcal_with_training, meal_plan_average_fat_with_training, meal_plan_average_carb_with_training, meal_plan_average_protein_with_training, meal_plan_created, meal_plan_updated, meal_plan_user_ip, meal_plan_image_path, meal_plan_image_thumb_74x50, meal_plan_image_thumb_400x269, meal_plan_image_file, meal_plan_views, meal_plan_views_ip_block, meal_plan_likes, meal_plan_dislikes, meal_plan_rating, meal_plan_rating_ip_block, meal_plan_comments FROM $t_meal_plans WHERE meal_plan_id=$meal_plan_id_mysql AND meal_plan_user_id=$my_user_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_meal_plan_id, $get_current_meal_plan_user_id, $get_current_meal_plan_language, $get_current_meal_plan_title, $get_current_meal_plan_title_clean, $get_current_meal_plan_number_of_days, $get_current_meal_plan_introduction, $get_current_meal_plan_total_energy_without_training, $get_current_meal_plan_total_fat_without_training, $get_current_meal_plan_total_carb_without_training, $get_current_meal_plan_total_protein_without_training, $get_current_meal_plan_total_energy_with_training, $get_current_meal_plan_total_fat_with_training, $get_current_meal_plan_total_carb_with_training, $get_current_meal_plan_total_protein_with_training, $get_current_meal_plan_average_kcal_without_training, $get_current_meal_plan_average_fat_without_training, $get_current_meal_plan_average_carb_without_training, $get_current_meal_plan_average_protein_without_training, $get_current_meal_plan_average_kcal_with_training, $get_current_meal_plan_average_fat_with_training, $get_current_meal_plan_average_carb_with_training, $get_current_meal_plan_average_protein_with_training, $get_current_meal_plan_created, $get_current_meal_plan_updated, $get_current_meal_plan_user_ip, $get_current_meal_plan_image_path, $get_current_meal_plan_image_file, $get_current_meal_plan_views, $get_current_meal_plan_views_ip_block, $get_current_meal_plan_likes, $get_current_meal_plan_dislikes, $get_current_meal_plan_rating, $get_current_meal_plan_rating_ip_block, $get_current_meal_plan_comments) = $row;
+	list($get_current_meal_plan_id, $get_current_meal_plan_user_id, $get_current_meal_plan_language, $get_current_meal_plan_title, $get_current_meal_plan_title_clean, $get_current_meal_plan_number_of_days, $get_current_meal_plan_introduction, $get_current_meal_plan_total_energy_without_training, $get_current_meal_plan_total_fat_without_training, $get_current_meal_plan_total_carb_without_training, $get_current_meal_plan_total_protein_without_training, $get_current_meal_plan_total_energy_with_training, $get_current_meal_plan_total_fat_with_training, $get_current_meal_plan_total_carb_with_training, $get_current_meal_plan_total_protein_with_training, $get_current_meal_plan_average_kcal_without_training, $get_current_meal_plan_average_fat_without_training, $get_current_meal_plan_average_carb_without_training, $get_current_meal_plan_average_protein_without_training, $get_current_meal_plan_average_kcal_with_training, $get_current_meal_plan_average_fat_with_training, $get_current_meal_plan_average_carb_with_training, $get_current_meal_plan_average_protein_with_training, $get_current_meal_plan_created, $get_current_meal_plan_updated, $get_current_meal_plan_user_ip, $get_current_meal_plan_image_path, $get_current_meal_plan_image_thumb_74x50, $get_current_meal_plan_image_thumb_400x269, $get_current_meal_plan_image_file, $get_current_meal_plan_views, $get_current_meal_plan_views_ip_block, $get_current_meal_plan_likes, $get_current_meal_plan_dislikes, $get_current_meal_plan_rating, $get_current_meal_plan_rating_ip_block, $get_current_meal_plan_comments) = $row;
 	
 	
 
@@ -184,6 +184,14 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 						// Dette bildet er OK
 
+						// Delete old thumbs
+						if(file_exists("$root/$get_current_meal_plan_image_path/$get_current_meal_plan_image_thumb_400x269") && $get_current_meal_plan_image_thumb_400x269 != ""){
+							unlink("../$get_current_meal_plan_image_path/$get_current_meal_plan_image_thumb_400x269");
+						}
+						if(file_exists("$root/$get_current_meal_plan_image_path/$get_current_meal_plan_image_thumb_74x50") && $get_current_meal_plan_image_thumb_74x50 != ""){
+							unlink("../$get_current_meal_plan_image_path/$get_current_meal_plan_image_thumb_74x50");
+						}
+
 
 
 						// image path							
@@ -200,9 +208,24 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						$inp_new_y = 640;
 						resize_crop_image($inp_new_x, $inp_new_y, "$root/$inp_image_path/$inp_image_file", "$root/$inp_image_path/$inp_image_file");
 					
+
+						// Thumb a
+						$inp_image_thumb_a = $get_current_meal_plan_title_clean . "_" . $get_current_meal_plan_id . "_thumb_74x50" . $file_type;
+						$inp_image_thumb_a_mysql = quote_smart($link, $inp_image_thumb_a);
+
+
+						// Thumb b
+						$inp_image_thumb_b = $get_current_meal_plan_title_clean . "_" . $get_current_meal_plan_id . "_thumb_400x269" . $file_type;
+						$inp_image_thumb_b_mysql = quote_smart($link, $inp_image_thumb_b);
+
+
 						// Update MySQL
-						$result = mysqli_query($link, "UPDATE $t_meal_plans SET meal_plan_image_path=$inp_image_path_mysql,
-						meal_plan_image_file=$inp_image_file_mysql WHERE meal_plan_id=$meal_plan_id_mysql");
+						$result = mysqli_query($link, "UPDATE $t_meal_plans SET
+										meal_plan_image_path=$inp_image_path_mysql,
+										meal_plan_image_file=$inp_image_file_mysql, 
+										meal_plan_image_thumb_74x50=$inp_image_thumb_a_mysql, 
+										meal_plan_image_thumb_400x269=$inp_image_thumb_b_mysql 
+										WHERE meal_plan_id=$meal_plan_id_mysql") or die(mysqli_error($link));
 
 
 						// Header
@@ -325,9 +348,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			if($get_current_meal_plan_image_file != "" && file_exists("$root/$get_current_meal_plan_image_path/$get_current_meal_plan_image_file")){
 				// 950 x 640
+				
+				// Thumb
+				// Image original image size = 950 x 640
+				if(!(file_exists("$root/$get_current_meal_plan_image_path/$get_current_meal_plan_image_thumb_400x269")) && $get_current_meal_plan_image_thumb_400x269 != ""){
+					$inp_new_x = 400;
+					$inp_new_y = 269;
+					echo"<div class=\"info\"><p>Create thumb <a href=\"$root/$get_current_meal_plan_image_path/$get_current_meal_plan_image_thumb_400x269\">$root/$get_current_meal_plan_image_path/$get_current_meal_plan_image_thumb_400x269</a></p></div>\n";
+					resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_current_meal_plan_image_path/$get_current_meal_plan_image_file", "$root/$get_current_meal_plan_image_path/$get_current_meal_plan_image_thumb_400x269");
+				}
+				
 				echo"
 				<p>
-				<img src=\"$root/image.php?width=250&amp;height=168&amp;image=/$get_current_meal_plan_image_path/$get_current_meal_plan_image_file\" alt=\"img\" /></a><br />
+				<img src=\"$root/$get_current_meal_plan_image_path/$get_current_meal_plan_image_thumb_400x269\" alt=\"img\" /></a><br />
 				<a href=\"meal_plan_edit_image_rotate.php?meal_plan_id=$meal_plan_id&amp;l=$l&amp;process=1\">$l_rotate</a>
 
 				</p>";

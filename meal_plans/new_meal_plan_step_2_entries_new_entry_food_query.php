@@ -1,5 +1,4 @@
 <?php 
-header("Content-Type: text/html;charset=ISO-8859-1");
 /**
 *
 * File: meal_plans/meal_plan_edit_new_entry_food.php

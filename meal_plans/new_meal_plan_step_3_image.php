@@ -128,7 +128,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$file_type = strtolower("$file_type");
 
 			// Finnes mappen?
-			$inp_type_title_clean = clean($get_type_title);
 			$upload_path = "$root/_uploads/meal_plans/$l/$get_current_meal_plan_title_clean";
 
 			if(!(is_dir("$root/_uploads"))){
@@ -191,6 +190,15 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						$inp_image_file = $new_name;
 						$inp_image_file_mysql = quote_smart($link, $inp_image_file);
 
+						// Thumb a
+						$inp_image_thumb_a = $get_current_meal_plan_title_clean . "_" . $get_current_meal_plan_id . "_thumb_74x50" . $file_type;
+						$inp_image_thumb_a_mysql = quote_smart($link, $inp_image_thumb_a);
+
+
+						// Thumb b
+						$inp_image_thumb_b = $get_current_meal_plan_title_clean . "_" . $get_current_meal_plan_id . "_thumb_400x269" . $file_type;
+						$inp_image_thumb_b_mysql = quote_smart($link, $inp_image_thumb_b);
+
 						// Dette bildet er OK
 						// Resize it
 						$inp_new_x = 950;
@@ -198,8 +206,139 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						resize_crop_image($inp_new_x, $inp_new_y, "$root/$inp_image_path/$inp_image_file", "$root/$inp_image_path/$inp_image_file");
 					
 						// Update MySQL
-						$result = mysqli_query($link, "UPDATE $t_meal_plans SET meal_plan_image_path=$inp_image_path_mysql,
-						meal_plan_image_file=$inp_image_file_mysql WHERE meal_plan_id=$meal_plan_id_mysql");
+						$result = mysqli_query($link, "UPDATE $t_meal_plans SET
+										meal_plan_image_path=$inp_image_path_mysql,
+										meal_plan_image_file=$inp_image_file_mysql, 
+										meal_plan_image_thumb_74x50=$inp_image_thumb_a_mysql, 
+										meal_plan_image_thumb_400x269=$inp_image_thumb_b_mysql 
+										WHERE meal_plan_id=$meal_plan_id_mysql") or die(mysqli_error($link));
+
+
+						
+						// Feed
+						$inp_feed_title_mysql = quote_smart($link, $get_current_meal_plan_title);
+						$inp_feed_text_mysql = quote_smart($link, "");
+						$inp_feed_image_path_mysql = quote_smart($link, $inp_image_path);
+						$inp_feed_image_file_mysql = quote_smart($link, $inp_image_file);
+
+						// Feed Thumb 300x169
+						$ext = get_extension($inp_image_file);
+						$img_name = str_replace(".$ext", "", $inp_image_file);
+						$inp_feed_image_thumb_a = $img_name . "_thumb_300x169." . $ext;
+						$inp_feed_image_thumb_a_mysql = quote_smart($link, $inp_feed_image_thumb_a);
+
+						// Feed Thumb 540x304
+						$inp_feed_image_thumb_b = $img_name . "_thumb_540x304." . $ext;
+						$inp_feed_image_thumb_b_mysql = quote_smart($link, $inp_feed_image_thumb_b);
+
+						$inp_feed_link_url = "meal_plans/meal_plan_view_1.php?meal_plan_id=$meal_plan_id&amp;l=$l";
+						$inp_feed_link_url_mysql = quote_smart($link, $inp_feed_link_url);
+
+						$inp_feed_link_name_mysql = quote_smart($link, "$l_view");
+
+						// Feed category name
+						$inp_feed_category_name_mysql = quote_smart($link, "");
+
+
+						// Feed Get current user
+						$query = "SELECT user_id, user_email, user_name, user_alias, user_rank FROM $t_users WHERE user_id=$my_user_id_mysql";
+						$result = mysqli_query($link, $query);
+						$row = mysqli_fetch_row($result);
+						list($get_my_user_id, $get_my_user_email, $get_my_user_name, $get_my_user_alias, $get_my_user_rank) = $row;
+
+						// Feed Author image
+						$query = "SELECT photo_id, photo_destination, photo_thumb_40, photo_thumb_50, photo_thumb_60, photo_thumb_200 FROM $t_users_profile_photo WHERE photo_user_id='$get_my_user_id' AND photo_profile_image='1'";
+						$result = mysqli_query($link, $query);
+						$row = mysqli_fetch_row($result);
+						list($get_my_photo_id, $get_my_photo_destination, $get_my_photo_thumb_40, $get_my_photo_thumb_50, $get_my_photo_thumb_60, $get_my_photo_thumb_200) = $row;
+
+
+						$inp_feed_user_email_mysql = quote_smart($link, $get_my_user_email);
+						$inp_feed_user_name_mysql = quote_smart($link, $get_my_user_name);
+						$inp_feed_user_alias_mysql = quote_smart($link, $get_my_user_alias);
+						$inp_feed_user_photo_file_mysql = quote_smart($link, $get_my_photo_destination);
+						$inp_feed_user_photo_thumb_40_mysql = quote_smart($link, $get_my_photo_thumb_40);
+						$inp_feed_user_photo_thumb_50_mysql = quote_smart($link, $get_my_photo_thumb_50);
+						$inp_feed_user_photo_thumb_60_mysql = quote_smart($link, $get_my_photo_thumb_60);
+						$inp_feed_user_photo_thumb_200_mysql = quote_smart($link, $get_my_photo_thumb_200);
+
+
+						// Feed My IP
+						$inp_my_ip = $_SERVER['REMOTE_ADDR'];
+						$inp_my_ip = output_html($inp_my_ip);
+						$inp_my_ip_mysql = quote_smart($link, $inp_my_ip);
+
+						// Feed My hostname
+						$inp_my_hostname = "$inp_ip";
+						if($configSiteUseGethostbyaddrSav == "1"){
+							$inp_my_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']); // Some servers in local network cant use getostbyaddr because of nameserver missing
+						}
+						$inp_my_hostname = output_html($inp_my_hostname);
+						$inp_my_hostname_mysql = quote_smart($link, $inp_my_hostname);
+					
+						// Feed Lang
+						$inp_feed_language = output_html($l);
+						$inp_feed_language_mysql = quote_smart($link, $inp_feed_language);
+
+
+						// Feed Subscribe
+						$query = "SELECT es_id, es_user_id, es_type, es_on_off FROM $t_users_email_subscriptions WHERE es_user_id='$get_my_user_id' AND es_type='users_feed'";
+						$result = mysqli_query($link, $query);
+						$row = mysqli_fetch_row($result);
+						list($get_es_id, $get_es_user_id, $get_es_type, $get_es_on_off) = $row;
+						if($get_es_id == ""){
+							// Dont know
+							mysqli_query($link, "INSERT INTO $t_users_email_subscriptions 
+							(es_id, es_user_id, es_type, es_on_off) 
+							VALUES 
+							(NULL, $get_my_user_id, 'users_feed', 0)") or die(mysqli_error($link));
+							$get_es_on_off = 0;
+						}
+
+						// Feed dates
+						$year = date("Y");
+						$date_saying = date("j M Y");
+
+				
+						$query = "SELECT feed_id FROM $t_users_feeds_index WHERE feed_module_name='meal_plans' AND feed_module_part_id=$get_current_meal_plan_id AND feed_user_id=$get_my_user_id";
+						$result = mysqli_query($link, $query);
+						$row = mysqli_fetch_row($result);
+						list($get_current_feed_id) = $row;
+						if($get_current_feed_id == ""){
+							// Insert feed
+							mysqli_query($link, "INSERT INTO $t_users_feeds_index
+							(feed_id, feed_title, feed_text, feed_image_path, feed_image_file, 
+							feed_image_thumb_300x169, feed_image_thumb_540x304, feed_link_url, feed_link_name, feed_module_name, 
+							feed_module_part_name, feed_module_part_id, feed_main_category_id, feed_main_category_name, 
+							feed_user_id, feed_user_email, feed_user_name, feed_user_alias, 
+							feed_user_photo_file, feed_user_photo_thumb_40, feed_user_photo_thumb_50, feed_user_photo_thumb_60, feed_user_photo_thumb_200, 
+							feed_user_subscribe, feed_user_ip, feed_user_hostname, feed_language, feed_created_datetime, 
+							feed_created_year, feed_created_time, feed_created_date_saying, feed_likes, feed_dislikes, feed_comments) 
+							VALUES 
+							(NULL, $inp_feed_title_mysql, $inp_feed_text_mysql, $inp_feed_image_path_mysql, $inp_feed_image_file_mysql, 
+							$inp_feed_image_thumb_a_mysql, $inp_feed_image_thumb_b_mysql, $inp_feed_link_url_mysql, $inp_feed_link_name_mysql, 'meal_plans', 
+							'', $get_current_meal_plan_id, 0, $inp_feed_category_name_mysql, 
+							$get_my_user_id, $inp_feed_user_email_mysql, $inp_feed_user_name_mysql, $inp_feed_user_alias_mysql, 
+							$inp_feed_user_photo_file_mysql, $inp_feed_user_photo_thumb_40_mysql, $inp_feed_user_photo_thumb_50_mysql, $inp_feed_user_photo_thumb_60_mysql, $inp_feed_user_photo_thumb_200_mysql, 
+							$get_es_on_off, $inp_my_ip_mysql, $inp_my_hostname_mysql, $inp_feed_language_mysql, '$datetime',
+							'$year', '$time', '$date_saying', 0, 0, 0)")
+							or die(mysqli_error($link));
+						
+						} // Create feed
+						else{
+							// Update feed
+							mysqli_query($link, "UPDATE $t_users_feeds_index SET
+										feed_title=$inp_feed_title_mysql, 
+										feed_text=$inp_feed_text_mysql, 
+										feed_image_path=$inp_feed_image_path_mysql, 
+										feed_image_file=$inp_feed_image_file_mysql, 
+										feed_image_thumb_300x169=$inp_feed_image_thumb_a_mysql, 
+										feed_image_thumb_540x304=$inp_feed_image_thumb_b_mysql, 
+										feed_modified_datetime='$datetime'
+										WHERE feed_id=$get_current_feed_id")
+										or die(mysqli_error($link));
+						} // Update feed
+
 
 
 						// Header

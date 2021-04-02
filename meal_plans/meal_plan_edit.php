@@ -98,10 +98,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		<h1>$get_current_meal_plan_title</h1>
 	
 		<!-- Where am I ? -->
-			<p><b>$l_you_are_here:</b><br />
+			<p><b>$l_you_are_here</b><br />
 			<a href=\"my_meal_plans.php?l=$l\">$l_my_meal_plans</a>
 			&gt;
-			<a href=\"meal_plan_edit.php?meal_plan_id=$meal_plan_id&amp;entry_day_number=$entry_day_number&amp;entry_meal_number=$entry_meal_number&amp;l=$l\">$l_meal_plan</a>
+			<a href=\"meal_plan_edit.php?meal_plan_id=$meal_plan_id&amp;entry_day_number=$entry_day_number&amp;entry_meal_number=$entry_meal_number&amp;l=$l\">$get_current_meal_plan_title</a>
 			</p>
 		<!-- //Where am I ? -->
 

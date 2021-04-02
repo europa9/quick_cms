@@ -372,108 +372,108 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								<table style=\"margin: 0px auto;\">
 								";
 								if($get_current_view_hundred_metric == "1"){
-								echo"
-								 <tr>
-								  <td style=\"padding-right: 6px;text-align: center;\">
-									<span class=\"nutritional_number\">$l_hundred</span>
-								  </td>
-								  <td style=\"padding-right: 6px;text-align: center;\">
-									<span class=\"nutritional_number\">$get_food_energy_metric</span>
-								  </td>
-								  <td style=\"padding-right: 6px;text-align: center;\">
-									<span class=\"nutritional_number\">$get_food_fat_metric</span>
-								  </td>
-								  <td style=\"padding-right: 6px;text-align: center;\">
-									<span class=\"nutritional_number\">$get_food_carbohydrates_metric</span>
-								  </td>
-								  <td style=\"text-align: center;\">
-									<span class=\"nutritional_number\">$get_food_proteins_metric</span>
-								  </td>
-								 </tr>
-								";
+									echo"
+									 <tr>
+									  <td style=\"padding-right: 6px;text-align: center;\">
+										<span class=\"nutritional_number\">$l_hundred</span>
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;\">
+										<span class=\"nutritional_number\">$get_food_energy_metric</span>
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;\">
+										<span class=\"nutritional_number\">$get_food_fat_metric</span>
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;\">
+										<span class=\"nutritional_number\">$get_food_carbohydrates_metric</span>
+									  </td>
+									  <td style=\"text-align: center;\">
+										<span class=\"nutritional_number\">$get_food_proteins_metric</span>
+									  </td>
+									 </tr>
+									";
 								}
 								if($get_current_view_pcs_metric == "1"){
-								echo"
-								 <tr>
-								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-									<span class=\"nutritional_number\" title=\"$get_food_serving_size_metric $get_food_serving_size_measurement_metric\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement</span>
-								  </td>
-								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-									<span class=\"nutritional_number\">$get_food_energy_calculated_metric</span>
-								  </td>
-								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-									<span class=\"nutritional_number\">$get_food_fat_calculated_metric</span>
-								  </td>
-								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-									<span class=\"nutritional_number\">$get_food_carbohydrates_calculated_metric</span>
-								  </td>
-								  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-									<span class=\"nutritional_number\">$get_food_proteins_calculated_metric</span>
-								  </td>
-								 </tr>
-								";
+									echo"
+									 <tr>
+									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\" title=\"$get_food_serving_size_metric $get_food_serving_size_measurement_metric\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement</span>
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\">$get_food_energy_calculated_metric</span>
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\">$get_food_fat_calculated_metric</span>
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\">$get_food_carbohydrates_calculated_metric</span>
+									  </td>
+									  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\">$get_food_proteins_calculated_metric</span>
+									  </td>
+									 </tr>
+									";
 								}
 								if($get_current_view_eight_us == "1"){
-								echo"
-								 <tr>
-								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-									<span class=\"nutritional_number\">$l_per_eight_abbr_lowercase</span>
-								  </td>
-								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-									<span class=\"nutritional_number\">$get_food_energy_us</span>
-								  </td>
-								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-									<span class=\"nutritional_number\">$get_food_fat_us</span>
-								  </td>
-								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-									<span class=\"nutritional_number\">$get_food_carbohydrates_us</span>
-								  </td>
-								  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-									<span class=\"nutritional_number\">$get_food_proteins_us</span>
-								  </td>
-								 </tr>
-								";
+									echo"
+									 <tr>
+									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\">$l_per_eight_abbr_lowercase</span>
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\">$get_food_energy_us</span>
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\">$get_food_fat_us</span>
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\">$get_food_carbohydrates_us</span>
+									  </td>
+									  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\">$get_food_proteins_us</span>
+								 	 </td>
+									 </tr>
+									";
 								}
 								if($get_current_view_pcs_us == "1"){
-								echo"
-								 <tr>
-								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-									<span class=\"nutritional_number\" title=\"$get_food_serving_size_us $get_food_serving_size_measurement_us\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement</span>
-								  </td>
-								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-									<span class=\"nutritional_number\">$get_food_energy_calculated_us</span>
-								  </td>
-								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-									<span class=\"nutritional_number\">$get_food_fat_calculated_us</span>
-								  </td>
-								  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-									<span class=\"nutritional_number\">$get_food_carbohydrates_calculated_us</span>
-								  </td>
-								  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-									<span class=\"nutritional_number\">$get_food_proteins_calculated_us</span>
-								  </td>
-								 </tr>
-								";
+									echo"
+									 <tr>
+									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\" title=\"$get_food_serving_size_us $get_food_serving_size_measurement_us\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement</span>
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\">$get_food_energy_calculated_us</span>
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\">$get_food_fat_calculated_us</span>
+									  </td>
+									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\">$get_food_carbohydrates_calculated_us</span>
+									  </td>
+									  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
+										<span class=\"nutritional_number\">$get_food_proteins_calculated_us</span>
+									  </td>
+									 </tr>
+									";
 								}
 								echo"
-							 <tr>
-							  <td style=\"padding-right: 6px;text-align: center;\">
-							  </td>
-							  <td style=\"padding-right: 6px;text-align: center;\">
-								<span class=\"nutritional_number\">$l_calories_abbr_short_lowercase</span>
-							  </td>
-							  <td style=\"padding-right: 6px;text-align: center;\">
-								<span class=\"nutritional_number\">$l_fat_abbr_short_lowercase</span>
-							  </td>
-							  <td style=\"padding-right: 6px;text-align: center;\">
-								<span class=\"nutritional_number\">$l_carbohydrates_abbr_short_lowercase</span>
-							  </td>
-							  <td style=\"text-align: center;\">
-								<span class=\"nutritional_number\">$l_proteins_abbr_short_lowercase</span>
-							  </td>
-							 </tr>
-							</table>
-							";
+								 <tr>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$l_calories_abbr_short_lowercase</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$l_fat_abbr_short_lowercase</span>
+								  </td>
+								  <td style=\"padding-right: 6px;text-align: center;\">
+									<span class=\"nutritional_number\">$l_carbohydrates_abbr_short_lowercase</span>
+								  </td>
+								  <td style=\"text-align: center;\">
+									<span class=\"nutritional_number\">$l_proteins_abbr_short_lowercase</span>
+								  </td>
+								 </tr>
+								</table>
+								";
 							} // get_current_view_hundred_metric
 
 							echo"
@@ -676,7 +676,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 				<!-- Current day -->
-				<div class=\"right\" style=\"width: 82%;\">
 				";
 				if($entry_day_number > 0 && $entry_day_number < 8){
 					if($entry_day_number == "1"){
@@ -784,7 +783,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 						echo"
 
-						<div style=\"float: left;\">
 							<h2>$get_recipe_title</h2>
 
 							<!-- Recipe numbers -->
@@ -858,7 +856,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								echo"
 							<!-- //Recipe numbers -->
 
-						</div>
 						";
 						if($get_recipe_image != ""){
 							// 845/4 = 211
@@ -875,7 +872,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 					<!-- Edit form Recipe -->
-						<div class=\"clear\"></div>
 						<script>
 						\$(document).ready(function(){
 							\$('[name=\"inp_entry_serving_size\"]').focus();
@@ -926,8 +922,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				}
 				echo"
-				</div>
-				<div class=\"clear\"></div>
 				<!-- //Current day -->
 				";
 

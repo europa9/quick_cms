@@ -78,10 +78,10 @@ echo"
 	//  
 	$x = 0;
 
-	$query_w = "SELECT meal_plan_id, meal_plan_user_id, meal_plan_title, meal_plan_number_of_days, meal_plan_introduction, meal_plan_image_path, meal_plan_image_thumb, meal_plan_image_file FROM $t_meal_plans WHERE meal_plan_language=$l_mysql ORDER BY meal_plan_views DESC";
+	$query_w = "SELECT meal_plan_id, meal_plan_user_id, meal_plan_title, meal_plan_number_of_days, meal_plan_introduction, meal_plan_image_path, meal_plan_image_thumb_74x50, meal_plan_image_thumb_400x269, meal_plan_image_file FROM $t_meal_plans WHERE meal_plan_language=$l_mysql ORDER BY meal_plan_views DESC";
 	$result_w = mysqli_query($link, $query_w);
 	while($row_w = mysqli_fetch_row($result_w)) {
-		list($get_meal_plan_id, $get_meal_plan_user_id, $get_meal_plan_title, $get_meal_plan_number_of_days, $get_meal_plan_introduction, $get_meal_plan_image_path, $get_meal_plan_image_thumb, $get_meal_plan_image_file) = $row_w;
+		list($get_meal_plan_id, $get_meal_plan_user_id, $get_meal_plan_title, $get_meal_plan_number_of_days, $get_meal_plan_introduction, $get_meal_plan_image_path, $get_meal_plan_image_thumb_74x50, $get_meal_plan_image_thumb_400x269, $get_meal_plan_image_file) = $row_w;
 
 		if($get_meal_plan_image_file != ""){
 			// User
@@ -119,24 +119,17 @@ echo"
 
 						// Thumb
 						// Image original image size = 950 x 640
+						if(!(file_exists("$root/$get_meal_plan_image_path/$get_meal_plan_image_thumb_400x269")) && $get_meal_plan_image_thumb_400x269 != ""){
 						$inp_new_x = 400;
 						$inp_new_y = 269;
-						$thumb = "meal_plan_" . $get_meal_plan_id . "-" . $inp_new_x . "x" . $inp_new_y . "_thumb.png";
-						if(!(file_exists("$root/$get_meal_plan_image_path/$thumb"))){
-							resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_meal_plan_image_path/$get_meal_plan_image_file", "$root/$get_meal_plan_image_path/$thumb");
-							
-							$result_update = mysqli_query($link, "UPDATE $t_meal_plans SET meal_plan_image_thumb='$thumb' WHERE meal_plan_id=$get_meal_plan_id");
-
-
-
+							echo"<div class=\"info\"><p>Create thumb <a href=\"$root/$get_meal_plan_image_path/$get_meal_plan_image_thumb_400x269\">$root/$get_meal_plan_image_path/$get_meal_plan_image_thumb_400x269</a></p></div>\n";
+							resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_meal_plan_image_path/$get_meal_plan_image_file", "$root/$get_meal_plan_image_path/$get_meal_plan_image_thumb_400x269");
 						}
-
-
 
 						echo"
 						<a href=\"meal_plan_view_$get_meal_plan_number_of_days";
 						if($get_stats_user_agent_type == "mobile" && $get_meal_plan_number_of_days == "1"){ 
-							echo"_mobile"; } echo".php?meal_plan_id=$get_meal_plan_id&amp;l=$l\"><img src=\"$root/$get_meal_plan_image_path/$thumb\" alt=\"$get_meal_plan_image_path/$get_meal_plan_image_file\" /></a>
+							echo"_mobile"; } echo".php?meal_plan_id=$get_meal_plan_id&amp;l=$l\"><img src=\"$root/$get_meal_plan_image_path/$get_meal_plan_image_thumb_400x269\" alt=\"$get_meal_plan_image_thumb_400x269\" /></a>
 						\n";
 					}
 					echo"<br />

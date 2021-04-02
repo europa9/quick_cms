@@ -405,7 +405,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					</form>
 
 
-					<!-- Food list -->
+					<!-- Recipe list -->
 						";
 	
 						// Set layout
@@ -572,7 +572,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 						echo"
 
-					<!-- //Food list -->
+					<!-- //Recipe list -->
 					
 					";
 				}

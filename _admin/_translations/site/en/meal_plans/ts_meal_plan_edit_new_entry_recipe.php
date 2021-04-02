@@ -1,11 +1,10 @@
 <?php
+$l_my_meal_plans = "My meal plans";
 $l_meal_plan = "Meal plan";
-$l_new_food = "New food";
 $l_show_per = "Show per";
 $l_hundred = "100";
-$l_pcs_g = "Pcs g";
+$l_serving = "Serving";
 $l_eight = "8";
-$l_pcs_oz = "Pcs oz";
 
 $l_calories_abbr_short_lowercase = "cal";
 $l_fat_abbr_short_lowercase = "fat";

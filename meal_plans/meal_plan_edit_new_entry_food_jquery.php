@@ -1,5 +1,4 @@
-<?php 
-header("Content-Type: text/html;charset=ISO-8859-1");
+<?php
 /**
 *
 * File: meal_plans/meal_plan_edit_new_entry_food.php
@@ -135,7 +134,7 @@ else{
 include("../_admin/_translations/site/$l/food/ts_food.php");
 include("../_admin/_translations/site/$l/meal_plans/ts_new_meal_plan.php");
 include("../_admin/_translations/site/$l/meal_plans/ts_meal_plan_edit.php");
-
+include("../_admin/_translations/site/$l/meal_plans/ts_new_meal_plan_step_2_entries_new_entry_food.php");
 
 
 /*- Table exists? -------------------------------------------------------------------- */
@@ -184,6 +183,7 @@ if($get_current_view_id == ""){
 	$get_current_view_hundred_metric = 1;
 	$get_current_view_pcs_metric = 1;
 }
+
 
 
 /*- Query --------------------------------------------------------------------------- */
@@ -289,8 +289,8 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 
 						echo"
 						<p style=\"padding-bottom:5px;\">
-						<a href=\"$root/food/view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\"><img src=\"$thumb\" alt=\"$get_food_image_a\" style=\"margin-bottom: 5px;\" /></a><br />
-						<a href=\"$root/food/view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\" style=\"font-weight: bold;color: #444444;\">$title</a><br />
+						<a href=\"food/view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\"><img src=\"$thumb\" alt=\"$get_food_image_a\" style=\"margin-bottom: 5px;\" /></a><br />
+						<a href=\"food/view_food.php?main_category_id=$get_food_main_category_id&amp;sub_category_id=$get_food_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\" style=\"font-weight: bold;color: #444444;\">$title</a><br />
 						</p>";
 
 						if($get_current_view_hundred_metric == "1" OR $get_current_view_pcs_metric == "1" OR $get_current_view_eight_us == "1" OR $get_current_view_pcs_us == "1"){
@@ -404,7 +404,7 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 						} // get_current_view_hundred_metric
 						echo"
 						<!-- Add food to  -->
-							<form method=\"post\" action=\"new_meal_plan_step_2_entries_new_entry_food.php?action=do_add_food&amp;meal_plan_id=$meal_plan_id&amp;entry_day_number=$entry_day_number&amp;entry_meal_number=$entry_meal_number&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+							<form method=\"post\" action=\"meal_plan_edit_new_entry_food.php?action=do_add_entry_to_meal_plan&amp;meal_plan_id=$meal_plan_id&amp;entry_day_number=$entry_day_number&amp;entry_meal_number=$entry_meal_number&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 							<p>
 							<input type=\"hidden\" name=\"inp_entry_food_id\" value=\"$get_food_id\" />
 							";
@@ -443,7 +443,9 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 						if($x == 4){
 							$x = 0;
 						}
-					} // while
+		} // while
+
+
 	}
 	else{
 		echo"Q is blank";
