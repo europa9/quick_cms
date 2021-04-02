@@ -1439,6 +1439,15 @@ else{
 				$x = $x+1;
 			} // thumb
 		} // while
+			if($x == "1"){
+				echo"
+					<div class=\"left_center_center_left_right_center\"></div>
+					<div class=\"left_center_center_right_right_center\"></div>
+					<div class=\"left_center_center_right_right\"></div>
+					<div class=\"clear\"></div>
+				";
+
+			}
 		echo"
 		<!-- //This months most popular recipes -->
 		";
