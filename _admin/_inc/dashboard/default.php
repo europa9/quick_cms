@@ -250,24 +250,42 @@ if($action == ""){
 							});
 						</script>
 					  </td>
-					  <td style=\"vertical-align:top;\">
-                  				<p class=\"flex_col_white_bg_text_right_headline\">Comments&nbsp;in&nbsp;week&nbsp;$comments_week</p>
-                  				<p class=\"flex_col_white_bg_text_right_content\">";
-						if($comments_comments_written_diff_from_last_week == 0){
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_flat_no_change.png\" alt=\"ti_angle_up_no_change.png\" title=\"Same amount of comments as last week ($comments_comments_written_diff_from_last_week comments)\" />";
-						}
-						elseif($comments_comments_written_diff_from_last_week < 0){
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_down_warning.png\" alt=\"ti_angle_up_warning.png\" title=\"Decrease by $comments_comments_written_diff_from_last_week comments from last week\" />";
-						}
+					  <td style=\"vertical-align:top;\">";
+						if($comments_week == "0" OR $comments_week != "$week"){
+							echo"
+							<p class=\"flex_col_white_bg_text_right_headline\">Comments&nbsp;in&nbsp;week&nbsp;$week</p>
+							<p class=\"flex_col_white_bg_text_right_content\"><span>0</span>
+            						</p>";
+                  				}
 						else{
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_up_success.png\" alt=\"ti_angle_up_success.png\" title=\"Increas by $comments_comments_written_diff_from_last_week comments from last week\" />";
+							echo"
+							<p class=\"flex_col_white_bg_text_right_headline\">Comments&nbsp;in&nbsp;week&nbsp;$comments_week</p>
+                  					<p class=\"flex_col_white_bg_text_right_content\">";
+							if($comments_comments_written_diff_from_last_week == 0){
+								echo"<img src=\"_inc/dashboard/_img/ti_angle_flat_no_change.png\" alt=\"ti_angle_up_no_change.png\" title=\"Same amount of comments as last week ($comments_comments_written_diff_from_last_week comments)\" />";
+							}
+							elseif($comments_comments_written_diff_from_last_week < 0){
+								echo"<img src=\"_inc/dashboard/_img/ti_angle_down_warning.png\" alt=\"ti_angle_up_warning.png\" title=\"Decrease by $comments_comments_written_diff_from_last_week comments from last week\" />";
+							}
+							else{
+								echo"<img src=\"_inc/dashboard/_img/ti_angle_up_success.png\" alt=\"ti_angle_up_success.png\" title=\"Increas by $comments_comments_written_diff_from_last_week comments from last week\" />";
+							}
+                    					echo"
+							<span>$comments_comments_written</span>
+            						</p>";
 						}
-                    				echo"
-						<span>$comments_comments_written</span>
-            					</p>
+						echo"
 			                  </td>
 					 </tr>
-					</table>
+					</table>";
+					if($comments_week == "0" OR $comments_week != "$week"){
+						mysqli_query($link, "INSERT INTO $t_stats_comments_per_week 
+						(stats_comments_id, stats_comments_week, stats_comments_month, stats_comments_year, stats_comments_comments_written) 
+						VALUES 
+						(NULL, $week, $month, $year, 0)")
+						or die(mysqli_error($link));
+					}
+					echo"
 				</div> <!-- //flex_col_white_bg -->
 			<!-- //1.2 Comments per week -->
 
@@ -321,24 +339,43 @@ if($action == ""){
 							height:'40px' });
 						</script>
 					  </td>
-					  <td style=\"vertical-align:top;\">
-                  				<p class=\"flex_col_white_bg_text_right_headline\">Users&nbsp;in&nbsp;week&nbsp;$registered_week</p>
-                  				<p class=\"flex_col_white_bg_text_right_content\">";
-						if($registered_users_registed_diff_from_last_week == 0){
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_flat_no_change.png\" alt=\"ti_angle_up_no_change.png\" title=\"Same users as last week ($registered_users_registed_diff_from_last_week)\" />";
-						}
-						elseif($registered_users_registed_diff_from_last_week < 0){
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_down_warning.png\" alt=\"ti_angle_up_warning.png\" title=\"Decrease in users registered by $registered_users_registed_diff_from_last_week\" />";
+					  <td style=\"vertical-align:top;\">";
+						if($registered_week == "0" OR $registered_week != "$week"){
+							echo"
+                  					<p class=\"flex_col_white_bg_text_right_headline\">Users&nbsp;in&nbsp;week&nbsp;$week</p>
+                  					<p class=\"flex_col_white_bg_text_right_content\"><span>0</span></p>
+							";
 						}
 						else{
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_up_success.png\" alt=\"ti_angle_up_success.png\" title=\"Increase in users registered by $registered_users_registed_diff_from_last_week\" />";
+							echo"
+                  					<p class=\"flex_col_white_bg_text_right_headline\">Users&nbsp;in&nbsp;week&nbsp;$registered_week</p>
+                  					<p class=\"flex_col_white_bg_text_right_content\">";
+							if($registered_users_registed_diff_from_last_week == 0){
+								echo"<img src=\"_inc/dashboard/_img/ti_angle_flat_no_change.png\" alt=\"ti_angle_up_no_change.png\" title=\"Same users as last week ($registered_users_registed_diff_from_last_week)\" />";
+							}
+							elseif($registered_users_registed_diff_from_last_week < 0){
+								echo"<img src=\"_inc/dashboard/_img/ti_angle_down_warning.png\" alt=\"ti_angle_up_warning.png\" title=\"Decrease in users registered by $registered_users_registed_diff_from_last_week\" />";
+							}
+							else{
+								echo"<img src=\"_inc/dashboard/_img/ti_angle_up_success.png\" alt=\"ti_angle_up_success.png\" title=\"Increase in users registered by $registered_users_registed_diff_from_last_week\" />";
+							}
+                    					echo"
+							<span>$registered_users_registed</span>
+            						</p>
+							";
 						}
-                    				echo"
-						<span>$registered_users_registed</span>
-            					</p>
+						echo"
 			                  </td>
 					 </tr>
-					</table>
+					</table>";
+					if($registered_week == "0" OR $registered_week != "$week"){
+						mysqli_query($link, "INSERT INTO $t_stats_users_registered_per_week 
+						(stats_registered_id, stats_registered_week, stats_registered_year, stats_registered_users_registed, stats_registered_users_registed_diff_from_last_week) 
+						VALUES 
+						(NULL, $week, $year, 0, 0)")
+						or die(mysqli_error($link));
+					}
+					echo"
 				</div> <!-- //flex_col_white_bg -->
 			<!-- //1.3 Users per week -->
 
