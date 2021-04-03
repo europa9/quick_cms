@@ -56,71 +56,11 @@ else{
 
 	if($action == ""){
 		if($process == "1"){
-			$inp_title = $_POST['inp_title'];
-			$inp_title = output_html($inp_title);
-			$inp_title_mysql = quote_smart($link, $inp_title);
-	
-			$inp_title_clean = clean($inp_title);
-			$inp_title_clean_mysql = quote_smart($link, $inp_title_clean);
-
-			$inp_front_page_intro = $_POST['inp_front_page_intro'];
-			$inp_front_page_intro = output_html($inp_front_page_intro);
-			$inp_front_page_intro_mysql = quote_smart($link, $inp_front_page_intro);
-
-			$inp_description = $_POST['inp_description'];
-			$inp_description = output_html($inp_description);
-			$inp_description_mysql = quote_smart($link, $inp_description);
-
-			$inp_language = $_POST['inp_language'];
-			$inp_language = output_html($inp_language);
-			$inp_language_mysql = quote_smart($link, $inp_language);
-
-
-			$datetime = date("Y-m-d H:i:s");
-
-
-			$result = mysqli_query($link, "UPDATE $t_references_index SET 
-							reference_title=$inp_title_mysql,
-							reference_title_clean=$inp_title_clean_mysql,
-							reference_front_page_intro=$inp_front_page_intro_mysql,
-							reference_description=$inp_description_mysql,
-							reference_language=$inp_language_mysql,
-							reference_updated='$datetime'
-							WHERE reference_id=$get_current_reference_id") or die(mysqli_error($link));
-			// Category
-			$inp_category_id = $_POST['inp_category_id'];
-			$inp_category_id = output_html($inp_category_id);
-			$inp_category_id_mysql = quote_smart($link, $inp_category_id);
-			if($inp_category_id != "0" && $inp_category_id != "$get_current_course_sub_category_id"){
-				// Find this new sub category
-				$query = "SELECT sub_category_id, sub_category_title, sub_category_main_category_id FROM $t_references_categories_sub WHERE sub_category_id=$inp_category_id_mysql";
-				$result = mysqli_query($link, $query);
-				$row = mysqli_fetch_row($result);
-				list($get_new_sub_category_id, $get_new_sub_category_title, $get_new_sub_category_main_category_id) = $row;
-
-				if($get_new_sub_category_id != ""){
-					// Find new main category
-					$query = "SELECT main_category_id, main_category_title FROM $t_references_categories_main WHERE main_category_id=$get_new_sub_category_main_category_id";
-					$result = mysqli_query($link, $query);
-					$row = mysqli_fetch_row($result);
-					list($get_new_main_category_id, $get_new_main_category_title) = $row;
-
-					$inp_sub_category_id_mysql = quote_smart($link, $get_new_sub_category_id);
-					$inp_sub_category_title_mysql = quote_smart($link, $get_new_sub_category_title);
-
-					$inp_main_category_id_mysql = quote_smart($link, $get_new_main_category_id);
-					$inp_main_category_title_mysql = quote_smart($link, $get_new_main_category_title);
-
-					$result = mysqli_query($link, "UPDATE $t_references_index SET 
-								reference_main_category_id=$inp_main_category_id_mysql, 
-								reference_main_category_title=$inp_main_category_title_mysql,
-								reference_sub_category_id=$inp_sub_category_id_mysql, 
-								reference_sub_category_title=$inp_sub_category_title_mysql
-							WHERE reference_id=$get_current_reference_id") or die(mysqli_error($link));
-				}
-			} // new category
+			// Delete
+			$result = mysqli_query($link, "DELETE FROM $t_references_index WHERE reference_id=$get_current_reference_id") or die(mysqli_error($link));
 			
-			$url = "index.php?open=$open&page=$page&reference_id=$get_current_reference_id&editor_language=$editor_language&l=$l&ft=success&fm=changes_saved";
+			// Header
+			$url = "index.php?open=$open&page=open_main_category&main_category_id=$get_current_main_category_id&editor_language=$editor_language&l=$l&ft=success&fm=reference_deleted";
 			header("Location: $url");
 			exit;
 		} // process
@@ -173,65 +113,11 @@ else{
 
 
 		<!-- Form -->
-		
-			<script>
-			\$(document).ready(function(){
-				\$('[name=\"inp_title\"]').focus();
-			});
-			</script>
-			
-			<form method=\"post\" action=\"index.php?open=references&amp;page=reference_open&amp;reference_id=$get_current_reference_id&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+			<p>Are you sure you want to delete the reference?</p>
 
-			<p><b>Title:</b><br />
-			<input type=\"text\" name=\"inp_title\" value=\"$get_current_reference_title\" size=\"25\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+			<p>
+			<a href=\"index.php?open=references&amp;page=$page&amp;reference_id=$get_current_reference_id&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\" class=\"btn_danger\">Confirm</a>
 			</p>
-
-			<p><b>Front page intro:</b><br />
-			<textarea name=\"inp_front_page_intro\" rows=\"8\" cols=\"60\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">";
-			$get_current_reference_front_page_intro = str_replace("<br />", "\n", $get_current_reference_front_page_intro);
-			echo"$get_current_reference_front_page_intro</textarea>
-			</p>
-
-			<p><b>Description:</b><br />
-			<textarea name=\"inp_description\" rows=\"8\" cols=\"60\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">";
-			$get_current_reference_description = str_replace("<br />", "\n", $get_current_reference_description);
-			echo"$get_current_reference_description</textarea>
-			</p>
-
-			<p><b>Language:</b><br />
-			<select name=\"inp_language\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">\n";
-			$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
-			$result = mysqli_query($link, $query);
-			while($row = mysqli_fetch_row($result)) {
-				list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
-				echo"	<option value=\"$get_language_active_iso_two\""; if($get_language_active_iso_two == "$get_current_reference_language"){ echo" selected=\"selected\""; } echo">$get_language_active_name</option>\n";
-			}
-			echo"
-			</select>
-
-			<p><b>Category:</b><br />
-			<select name=\"inp_category_id\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">\n";
-			$query = "SELECT main_category_id, main_category_title FROM $t_references_categories_main ORDER BY main_category_title ASC";
-			$result = mysqli_query($link, $query);
-			while($row = mysqli_fetch_row($result)) {
-				list($get_main_category_id, $get_main_category_title) = $row;
-
-				echo"	<option value=\"0\">$get_main_category_title</option>\n";
-
-				$query_sub = "SELECT sub_category_id, sub_category_title FROM $t_references_categories_sub WHERE sub_category_main_category_id=$get_main_category_id ORDER BY sub_category_title ASC";
-				$result_sub = mysqli_query($link, $query_sub);
-				while($row_sub = mysqli_fetch_row($result_sub)) {
-					list($get_sub_category_id, $get_sub_category_title) = $row_sub;
-
-					echo"	<option value=\"$get_sub_category_id\""; if($get_sub_category_id == "$get_current_reference_sub_category_id"){ echo" selected=\"selected\""; } echo">&nbsp; &nbsp; $get_sub_category_title</option>\n";
-				}
-			}
-			echo"
-			</select>
-
-			<p><input type=\"submit\" value=\"Save changes\" class=\"btn_default\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
-
-			</form>
 		<!-- //Form -->
 		";
 	} // action ==""

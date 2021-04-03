@@ -465,6 +465,11 @@ $l_web: $configWebsiteTitleSav
 				$month = date("m");
 				$month_full = date("F");
 				$month_short = date("M");
+				$year = date("Y");
+				$month = date("m");
+				$month_full = date("F");
+				$month_short = date("M");
+				$week = date("W");
 				
 				$query = "SELECT stats_chef_of_the_month_id, stats_chef_of_the_month_recipes_posted_count, stats_chef_of_the_month_recipes_posted_points, stats_chef_of_the_month_got_visits_count, stats_chef_of_the_month_got_visits_points, stats_chef_of_the_month_got_favorites_count, stats_chef_of_the_month_got_favorites_points, stats_chef_of_the_month_got_comments_count, stats_chef_of_the_month_got_comments_points, stats_chef_of_the_month_total_points FROM $t_recipes_stats_chef_of_the_month WHERE stats_chef_of_the_month_month=$month AND stats_chef_of_the_month_year=$year AND stats_chef_of_the_month_user_id=$get_recipe_user_id";
 				$result = mysqli_query($link, $query);
@@ -505,10 +510,6 @@ $l_web: $configWebsiteTitleSav
 
 
 				// Recipes Stats Comments per Month
-				$year = date("Y");
-				$month = date("m");
-				$month_full = date("F");
-				$month_short = date("M");
 				$inp_recipe_title_mysql = quote_smart($link, $get_recipe_title);
 				$inp_recipe_image_path_mysql = quote_smart($link, $get_recipe_image_path);
 				$inp_recipe_thumb_278x156_mysql = quote_smart($link, $get_recipe_thumb_278x156);
@@ -601,6 +602,25 @@ $l_web: $configWebsiteTitleSav
 								or die(mysqli_error($link));
 				}
 
+				// Stats :: Comments :: Week
+				$query = "SELECT stats_comments_id, stats_comments_comments_written FROM $t_stats_comments_per_week WHERE stats_comments_week='$week' AND stats_comments_year='$year'";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_stats_comments_id, $get_stats_comments_comments_written) = $row;
+				if($get_stats_comments_id == ""){
+					mysqli_query($link, "INSERT INTO $t_stats_comments_per_week 
+					(stats_comments_id, stats_comments_week, stats_comments_month, stats_comments_year, stats_comments_comments_written) 
+					VALUES 
+					(NULL, $week, $month, $year, 1)")
+					or die(mysqli_error($link));
+				}
+				else{
+					$inp_counter = $get_stats_comments_comments_written+1;
+					mysqli_query($link, "UPDATE $t_stats_comments_per_week
+							SET stats_comments_comments_written=$inp_counter
+							WHERE stats_comments_id=$get_stats_comments_id")
+							or die(mysqli_error($link));
+				}
 
 
 				$url = "view_recipe.php?recipe_id=$get_recipe_id&l=$l&ft=success&fm=comment_saved#comment$get_comment_id";

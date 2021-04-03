@@ -170,7 +170,7 @@ else{
 
 		<form method=\"post\" action=\"index.php?open=$open&amp;page=$page&amp;page_id=$get_current_page_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 		<p>Title:<br />
-		<input type=\"text\" name=\"inp_title\" value=\"$get_current_category_title\" size=\"25\" style=\"width: 99%;\" />
+		<input type=\"text\" name=\"inp_title\" value=\"$get_current_page_title\" size=\"25\" style=\"width: 99%;\" />
 		</p>
 
 		<p>

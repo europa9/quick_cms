@@ -61,9 +61,43 @@ if($action == ""){
 	<!-- //Where am I? -->
 
 	<!-- Menu -->
+		<form method=\"get\" enctype=\"multipart/form-data\">
 		<p>
 		<a href=\"index.php?open=references&amp;page=categories_main_new&amp;editor_language=$editor_language&amp;l=$l\" class=\"btn_default\">New category</a>
+		<!-- Select language -->
+			<script>
+			\$(function(){
+				// bind change event to select
+				\$('#inp_l').on('change', function () {
+					var url = \$(this).val(); // get selected value
+					if (url) { // require a URL
+ 						window.location = url; // redirect
+					}
+					return false;
+				});
+			});
+			</script>
+
+			<select id=\"inp_l\">
+				<option value=\"index.php?open=$open&amp;page=$page&amp;editor_language=$editor_language&amp;l=$l\">$l_editor_language</option>
+				<option value=\"index.php?open=$open&amp;page=$page&amp;editor_language=$editor_language&amp;l=$l\">-</option>\n";
+
+				$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_default FROM $t_languages_active";
+				$result = mysqli_query($link, $query);
+				while($row = mysqli_fetch_row($result)) {
+					list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_default) = $row;
+
+					// No language selected?
+					if($editor_language == ""){
+							$editor_language = "$get_language_active_iso_two";
+					}
+					echo"	<option value=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;editor_language=$get_language_active_iso_two&amp;l=$l\"";if($editor_language == "$get_language_active_iso_two"){ echo" selected=\"selected\"";}echo">$get_language_active_name</option>\n";
+				}
+			echo"
+			</select>
+		<!-- //Select language -->
 		</p>
+		</form>
 	<!-- //Menu -->
 
 	<!-- List all categories -->
@@ -86,7 +120,7 @@ if($action == ""){
 
 
 		$editor_language_mysql = quote_smart($link, $editor_language);
-		$query = "SELECT main_category_id, main_category_title FROM $t_references_categories_main ORDER BY main_category_title ASC";
+		$query = "SELECT main_category_id, main_category_title FROM $t_references_categories_main WHERE main_category_language=$editor_language_mysql ORDER BY main_category_title ASC";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
 			list($get_main_category_id, $get_main_category_title) = $row;

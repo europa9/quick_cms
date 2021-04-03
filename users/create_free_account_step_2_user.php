@@ -32,7 +32,8 @@ $t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
 $t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
 
 $t_stats_users_registered_per_month = $mysqlPrefixSav . "stats_users_registered_per_month";
-$t_stats_users_registered_per_year = $mysqlPrefixSav . "stats_users_registered_per_year";
+$t_stats_users_registered_per_year  = $mysqlPrefixSav . "stats_users_registered_per_year";
+$t_stats_users_registered_per_week  = $mysqlPrefixSav . "stats_users_registered_per_week";
 
 /*- Translation ------------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/users/ts_users.php");
@@ -310,6 +311,7 @@ if(!(isset($_SESSION['user_id']))){
 				$month_saying = date("M");
 				$week = date("W");
 				$year = date("Y");
+				$week = date("W");
 
 				// User registered :: Year
 				$query = "SELECT stats_registered_id, stats_registered_users_registed FROM $t_stats_users_registered_per_year WHERE stats_registered_year=$year";
@@ -345,6 +347,24 @@ if(!(isset($_SESSION['user_id']))){
 					$inp_counter = $get_stats_registered_users_registed+1;
 
 					$result = mysqli_query($link, "UPDATE $t_stats_users_registered_per_month SET stats_registered_users_registed=$inp_counter WHERE stats_registered_id=$get_stats_registered_id") or die(mysqli_error($link));
+				}
+
+				// User registered :: Week
+				$query = "SELECT stats_registered_id, stats_registered_users_registed FROM $t_stats_users_registered_per_week WHERE stats_registered_week=$week AND stats_registered_year=$year";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_stats_registered_id, $get_stats_registered_users_registed) = $row;
+				if($get_stats_registered_id == ""){
+					mysqli_query($link, "INSERT INTO $t_stats_users_registered_per_week 
+					(stats_registered_id, stats_registered_week, stats_registered_year, stats_registered_users_registed, stats_registered_users_registed_diff_from_last_week) 
+					VALUES 
+					(NULL, $week, $year, 1, 1)")
+					or die(mysqli_error($link));
+				}
+				else{
+					$inp_counter = $get_stats_registered_users_registed+1;
+
+					$result = mysqli_query($link, "UPDATE $t_stats_users_registered_per_week SET stats_registered_users_registed=$inp_counter WHERE stats_registered_id=$get_stats_registered_id") or die(mysqli_error($link));
 				}
 
 
@@ -598,18 +618,16 @@ if(!(isset($_SESSION['user_id']))){
 				list($inp_country) = $row;
 			}
 			$prev_country = "";
-			$query = "SELECT language_flag FROM $t_languages ORDER BY language_flag ASC";
+			$query = "SELECT geoname_country_name FROM $t_stats_ip_to_country_geonames ORDER BY geoname_country_name ASC";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
-				list($get_language_flag) = $row;
+				list($get_geoname_country_name) = $row;
 
-				$country = str_replace("_", " ", $get_language_flag);
-				$country = ucwords($country);
-				if($country != "$prev_country"){
+				if($get_geoname_country_name != "$prev_country"){
 					echo"			";
-					echo"<option value=\"$country\""; if(isset($inp_country) && $inp_country == "$country"){ echo" selected=\"selected\""; } echo">$country</option>\n";
+					echo"<option value=\"$get_geoname_country_name\""; if(isset($inp_country) && $inp_country == "$get_geoname_country_name"){ echo" selected=\"selected\""; } echo">$get_geoname_country_name</option>\n";
 				}
-				$prev_country = "$country";
+				$prev_country = "$get_geoname_country_name";
 			}
 			echo"
 			</select>

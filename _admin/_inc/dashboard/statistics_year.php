@@ -35,6 +35,9 @@ $t_stats_ip_to_country_geonames 	= $mysqlPrefixSav . "stats_ip_to_country_geonam
 $t_stats_os_per_month = $mysqlPrefixSav . "stats_os_per_month";
 $t_stats_os_per_year = $mysqlPrefixSav . "stats_os_per_year";
 
+$t_stats_languages_per_year	= $mysqlPrefixSav . "stats_languages_per_year";
+$t_stats_languages_per_month	= $mysqlPrefixSav . "stats_languages_per_month";
+
 $t_stats_referers_per_year  = $mysqlPrefixSav . "stats_referers_per_year";
 $t_stats_referers_per_month = $mysqlPrefixSav . "stats_referers_per_month";
 
@@ -56,6 +59,9 @@ $t_stats_visists_per_year 	= $mysqlPrefixSav . "stats_visists_per_year";
 $t_stats_visists_per_year_ips 	= $mysqlPrefixSav . "stats_visists_per_year_ips";
 
 $t_search_engine_searches = $mysqlPrefixSav . "search_engine_searches";
+
+$t_stats_tracker_index = $mysqlPrefixSav . "stats_tracker_index";
+$t_stats_tracker_urls  = $mysqlPrefixSav . "stats_tracker_urls";
 
 /*- Translation ----------------------------------------------------------------------- */
 include("_translations/admin/$l/dashboard/t_default.php");
@@ -114,7 +120,6 @@ else{
 		</p>
 	<!-- //Where am I? -->
 
-	
 
 	<!-- Charts javascript -->
 		<script src=\"_javascripts/amcharts4/core.js\"></script>
@@ -303,33 +308,41 @@ else{
 		</div>
 	<!-- //Accepted languages -->
 
-	<!-- Mobile vs desktop -->
+	<!-- Language used -->
 		<div class=\"left_right_right\">
-						<h2 style=\"margin-top: 20px;\">Mobile vs desktop</h2>
+			<h2 style=\"margin-top: 20px;\">Language used</h2>
 
 			<script>
 			am4core.ready(function() {
-				var chart = am4core.create(\"chartdiv_mobile_vs_desktop\", am4charts.PieChart);
-				chart.data = [
-					{
-					\"x\": \"Desktop\",
-					\"value\": $get_current_stats_visit_per_year_unique_desktop
-					},
-					{
-					\"x\": \"Mobile\",
-					\"value\": $get_current_stats_visit_per_year_unique_mobile
+				var chart = am4core.create(\"chartdiv_languages_per_year\", am4charts.PieChart);
+				chart.data = [";
+				$x = 0;
+				$query = "SELECT stats_language_id, stats_language_year, stats_language_name, stats_language_iso_two, stats_language_flag_path_16x16, stats_language_flag_16x16, stats_language_unique, stats_language_hits FROM $t_stats_languages_per_year WHERE stats_language_year=$get_current_stats_visit_per_year_year ORDER BY stats_language_unique ASC LIMIT 0,12";
+				$result = mysqli_query($link, $query);
+				while($row = mysqli_fetch_row($result)) {
+					list($get_stats_language_id, $get_stats_language_year, $get_stats_language_name, $get_stats_language_iso_two, $get_stats_language_flag_path_16x16, $get_stats_language_flag_16x16, $get_stats_language_unique, $get_stats_language_hits) = $row;
+						
+					if($x > 0){
+						echo",";
 					}
+					echo"
+					{
+						\"x\": \"$get_stats_language_name\",
+						\"value\": $get_stats_language_unique
+					}";
+					$x++;
+				} // while
 
-            			];
+				echo"];
 				var series = chart.series.push(new am4charts.PieSeries());
 				series.dataFields.value = \"value\";
 				series.dataFields.category = \"x\";
 			}); // end am4core.ready()
        			</script>
-       			<div id=\"chartdiv_mobile_vs_desktop\" style=\"max-height: 250px;margin-top:10px;\"></div>
+       			<div id=\"chartdiv_languages_per_year\" style=\"max-height: 250px;margin-top:10px;\"></div>
 		</div>
 		<div class=\"clear\"></div>
-	<!-- //Mobile vs desktop -->
+	<!-- //Language used -->
 
 
 	<!-- Os -->
@@ -371,9 +384,41 @@ else{
 	<!-- //Os -->
 
 
+	<!-- Mobile vs desktop -->
+		<div class=\"left_right_right\">
+
+
+
+						<h2 style=\"margin-top: 20px;\">Mobile vs desktop</h2>
+
+			<script>
+			am4core.ready(function() {
+				var chart = am4core.create(\"chartdiv_mobile_vs_desktop\", am4charts.PieChart);
+				chart.data = [
+					{
+					\"x\": \"Desktop\",
+					\"value\": $get_current_stats_visit_per_year_unique_desktop
+					},
+					{
+					\"x\": \"Mobile\",
+					\"value\": $get_current_stats_visit_per_year_unique_mobile
+					}
+
+            			];
+				var series = chart.series.push(new am4charts.PieSeries());
+				series.dataFields.value = \"value\";
+				series.dataFields.category = \"x\";
+			}); // end am4core.ready()
+       			</script>
+       			<div id=\"chartdiv_mobile_vs_desktop\" style=\"max-height: 250px;margin-top:10px;\"></div>
+		</div>
+		<div class=\"clear\"></div>
+	<!-- //Mobile vs desktop -->
+
+
 
 	<!-- Browsers -->
-		<div class=\"left_right_right\">
+		<div class=\"left_right_left\">
 			<h2 style=\"margin-top: 20px;\">$l_browsers</h2>
 
 			<script>
@@ -408,21 +453,11 @@ else{
        			<div id=\"chartdiv_browsers_year\" style=\"max-height: 250px;margin-top:10px;\"></div>
 
 		</div>
-		<div class=\"clear\"></div>
 	<!-- //Browsers -->
 
 
-	<!-- x -->
-		<div class=\"left_right_left\">
-
-
-		</div>
-	<!-- //uy -->
-
-		
-
 	<!-- Humans vs bots unique -->
-		<div class=\"left_right_right\">
+		<div class=\"left_right_left\">
 			<h2 style=\"margin-top: 20px;\">Human vs bots unique</h2>
 
 			<script>
@@ -455,7 +490,7 @@ else{
 		<h2 style=\"margin-top: 20px;\">Comments per month <a href=\"#comments_per_month\" class=\"toggle\" data-divid=\"comments_per_month_information\"><img src=\"_design/gfx/icons/16x16/information.png\" alt=\"information.png\" /></a></h2>
 		<div class=\"comments_per_month_information\">
 			<p>
-			Comments per month is from the following modules: blog, courses, downloads, exercises, food, recipes
+			Comments per month is from the following modules: blog, courses, downloads, exercises, food, recipes and references
 			</p>
 		</div>
 
@@ -742,7 +777,6 @@ else{
 			list($get_stats_referer_id, $get_stats_referer_year, $get_stats_referer_from_url, $get_stats_referer_to_url, $get_stats_referer_unique, $get_stats_referer_hits) = $row;
 			
 
-
 			echo"
 			 <tr>
 			  <td>
@@ -764,6 +798,106 @@ else{
 		 </tbody>
 		</table>
 	<!-- //Referers-->
+
+	<!-- Trackers -->
+		<a id=\"trackers\"></a>
+		<h2>Trackers</h2>
+		<p>Trackers log the last visitors and how they use your site.</p>
+		<!-- Select language -->
+			<script>
+			\$(function(){
+				// bind change event to select
+				\$('#inp_l').on('change', function () {
+					var url = \$(this).val(); // get selected value
+					if (url) { // require a URL
+ 						window.location = url; // redirect
+					}
+					return false;
+				});
+			});
+			</script>
+
+			<select id=\"inp_l\">
+				<option value=\"index.php?open=dashboard&amp;page=statistics_year&amp;stats_year=$stats_year&amp;editor_language=$editor_language&amp;l=$l\">$l_editor_language</option>
+				<option value=\"index.php?open=dashboard&amp;page=statistics_year&amp;stats_year=$stats_year&amp;editor_language=$editor_language&amp;l=$l\">-</option>\n";
+
+				$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_default FROM $t_languages_active";
+				$result = mysqli_query($link, $query);
+				while($row = mysqli_fetch_row($result)) {
+					list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_default) = $row;
+
+					// No language selected?
+					if($editor_language == ""){
+							$editor_language = "$get_language_active_iso_two";
+					}
+					echo"	<option value=\"index.php?open=dashboard&amp;page=statistics_year&amp;stats_year=$stats_year&amp;editor_language=$get_language_active_iso_two&amp;l=$l#trackers\"";if($editor_language == "$get_language_active_iso_two"){ echo" selected=\"selected\"";}echo">$get_language_active_name</option>\n";
+				}
+			echo"
+			</select>
+			</p>
+			</form>
+		<!-- //Select language -->
+
+		<table class=\"hor-zebra\">
+		 <thead>
+		  <tr>
+		   <th scope=\"col\">
+			<span>ID</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Type</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>OS</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Browser</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Minutes spent</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Hits</span>
+		   </th>
+		  </tr>
+		 </thead>
+		 <tbody>
+		";
+		$editor_language_mysql = quote_smart($link, $editor_language);
+		$query = "SELECT tracker_id, tracker_ip, tracker_month, tracker_month_short, tracker_year, tracker_time_start, tracker_hour_minute_start, tracker_time_end, tracker_hour_minute_end, tracker_minutes_spent, tracker_os, tracker_browser, tracker_type, tracker_language, tracker_hits FROM $t_stats_tracker_index WHERE tracker_language=$editor_language_mysql ORDER BY tracker_id DESC LIMIT 0,300";
+		$result = mysqli_query($link, $query);
+		while($row = mysqli_fetch_row($result)) {
+			list($get_tracker_id, $get_tracker_ip, $get_tracker_month, $get_tracker_month_short, $get_tracker_year, $get_tracker_time_start, $get_tracker_hour_minute_start, $get_tracker_time_end, $get_tracker_hour_minute_end, $get_tracker_minutes_spent, $get_tracker_os, $get_tracker_browser, $get_tracker_type, $get_tracker_language, $get_tracker_hits) = $row;
+			
+			echo"
+			 <tr>
+			  <td>
+				<span><a href=\"index.php?open=dashboard&amp;page=statistics_tracker&amp;tracker_id=$get_tracker_id&amp;editor_language=$editor_language&amp;l=$l\">$get_tracker_id</a></span>
+			  </td>
+			  <td>
+				<span>$get_tracker_type</span>
+			  </td>
+			  <td>
+				<span>$get_tracker_os</span>
+			  </td>
+			  <td>
+				<span>$get_tracker_browser</span>
+			  </td>
+			  <td>
+				<span>$get_tracker_minutes_spent</span>
+			  </td>
+			  <td>
+				<span>$get_tracker_hits</span>
+			  </td>
+			 </tr>
+			";
+
+		}
+		echo"
+		 </tbody>
+		</table>
+	<!-- //Trackers -->
+
 	";
 	
 } // year found

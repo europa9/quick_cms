@@ -19,11 +19,13 @@ $t_references_liquidbase 	 = $mysqlPrefixSav . "references_liquidbase";
 $t_references_title_translations 	= $mysqlPrefixSav . "references_title_translations";
 $t_references_categories_main	 	= $mysqlPrefixSav . "references_categories_main";
 $t_references_categories_sub 	 	= $mysqlPrefixSav . "references_categories_sub";
+
 $t_references_index		 	= $mysqlPrefixSav . "references_index";
 $t_references_index_groups	 	= $mysqlPrefixSav . "references_index_groups";
+$t_references_index_groups_images 	= $mysqlPrefixSav . "references_index_groups_images";
 $t_references_index_guides	 	= $mysqlPrefixSav . "references_index_guides";
 $t_references_index_guides_comments	= $mysqlPrefixSav . "references_index_guides_comments";
-
+$t_references_index_guides_images	= $mysqlPrefixSav . "references_index_guides_images";
 
 
 if($action == ""){

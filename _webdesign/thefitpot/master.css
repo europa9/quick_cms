@@ -498,6 +498,29 @@ header{
 		background: #213147 url("../../_uploads/pages/navigation/no/forum_18x18_active.png") no-repeat 10px center;
 	}
 
+	/* Workout plans */
+	a.nav_266eb038dbb21a9363231fd5500efe9c{
+		background: url("../../_uploads/pages/navigation/no/treningsplaner_18x18_inactive.png") no-repeat 10px center;
+	}
+	a.nav_266eb038dbb21a9363231fd5500efe9c:hover{
+		background: #213147 url("../../_uploads/pages/navigation/no/treningsplaner_18x18_hover.png") no-repeat 10px center;
+	}
+	a.nav_266eb038dbb21a9363231fd5500efe9c:active{
+		background: #213147 url("../../_uploads/pages/navigation/no/treningsplaner_18x18_active.png") no-repeat 10px center;
+	}
+
+
+	/* Meal Plans */
+	a.nav_4e7eebb1985f5debacf4bc970e46777d{
+		background: url("../../_uploads/pages/navigation/no/maltidsplaner_18x18_inactive.png") no-repeat 10px center;
+	}
+	a.nav_4e7eebb1985f5debacf4bc970e46777d:hover{
+		background: #213147 url("../../_uploads/pages/navigation/no/maltidsplaner_18x18_hover.png") no-repeat 10px center;
+	}
+	a.nav_4e7eebb1985f5debacf4bc970e46777d:active{
+		background: #213147 url("../../_uploads/pages/navigation/no/maltidsplaner_18x18_active.png") no-repeat 10px center;
+	}
+
 	/*- Header Search --------------------------------------------------------- */
 	div.site_search{
 		padding: 10px 10px 0px 12px;

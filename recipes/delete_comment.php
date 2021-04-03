@@ -137,19 +137,13 @@ if(isset($_SESSION['user_id'])){
 				
 				$positive = $get_comment_rating_stars_4+$get_comment_rating_stars_5;
 				$negative = $get_comment_rating_stars_1+$get_comment_rating_stars_2;
-				$total    = $positive+$negative;
-				if($total == "0"){
-					$inp_rating_popularity  = 0;
-				}
-				else{
-					$inp_rating_popularity  = round(($positive/$total*100));
-				}					
+				$total    = $positive+$negative;		
 				$result = mysqli_query($link, "UPDATE $t_recipes_rating SET rating_1=$get_comment_rating_stars_1, 
-rating_2=$get_comment_rating_stars_2, 
-rating_3=$get_comment_rating_stars_3, 
-rating_4=$get_comment_rating_stars_4, 
-rating_5=$get_comment_rating_stars_5,
- rating_total_votes=$inp_rating_total_votes, rating_average=$inp_rating_average , rating_popularity=$inp_rating_popularity, rating_ip_block='' WHERE rating_recipe_id=$get_current_comment_recipe_id") or die(mysqli_error($link));
+								rating_2=$get_comment_rating_stars_2, 
+								rating_3=$get_comment_rating_stars_3, 
+								rating_4=$get_comment_rating_stars_4, 
+								rating_5=$get_comment_rating_stars_5,
+								 rating_total_votes=$inp_rating_total_votes, rating_average=$inp_rating_average, rating_ip_block='' WHERE rating_recipe_id=$get_current_comment_recipe_id") or die(mysqli_error($link));
 					
 
 				$url = "view_recipe.php?recipe_id=$get_current_recipe_id&l=$l&ft=success&fm=comment_deletedd#comments";

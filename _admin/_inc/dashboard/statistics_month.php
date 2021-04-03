@@ -32,6 +32,9 @@ $t_stats_ip_to_country_ipv4 		= $mysqlPrefixSav . "stats_ip_to_country_ipv4";
 $t_stats_ip_to_country_ipv6 		= $mysqlPrefixSav . "stats_ip_to_country_ipv6";
 $t_stats_ip_to_country_geonames 	= $mysqlPrefixSav . "stats_ip_to_country_geonames";
 
+$t_stats_languages_per_year	= $mysqlPrefixSav . "stats_languages_per_year";
+$t_stats_languages_per_month	= $mysqlPrefixSav . "stats_languages_per_month";
+
 $t_stats_os_per_month = $mysqlPrefixSav . "stats_os_per_month";
 $t_stats_os_per_year = $mysqlPrefixSav . "stats_os_per_year";
 
@@ -292,33 +295,42 @@ else{
 		</div>
 	<!-- //Accepted languages -->
 
-	<!-- Mobile vs desktop -->
+
+	<!-- Language used -->
 		<div class=\"left_right_right\">
-			<h2 style=\"margin-top: 20px;\">Mobile vs desktop</h2>
+			<h2 style=\"margin-top: 20px;\">Language used</h2>
 
 			<script>
 			am4core.ready(function() {
-				var chart = am4core.create(\"chartdiv_mobile_vs_desktop\", am4charts.PieChart);
-				chart.data = [
-					{
-					\"x\": \"Desktop\",
-					\"value\": $get_current_stats_visit_per_month_unique_desktop
-					},
-					{
-					\"x\": \"Mobile\",
-					\"value\": $get_current_stats_visit_per_month_unique_mobile
+				var chart = am4core.create(\"chartdiv_languages_per_month\", am4charts.PieChart);
+				chart.data = [";
+				$x = 0;
+				$query = "SELECT stats_language_id, stats_language_name, stats_language_iso_two, stats_language_flag_path_16x16, stats_language_flag_16x16, stats_language_unique, stats_language_hits FROM $t_stats_languages_per_month WHERE stats_language_month=$get_current_stats_visit_per_month_month AND stats_language_year=$get_current_stats_visit_per_month_year ORDER BY stats_language_unique ASC LIMIT 0,12";
+				$result = mysqli_query($link, $query);
+				while($row = mysqli_fetch_row($result)) {
+					list($get_stats_language_id, $get_stats_language_name, $get_stats_language_iso_two, $get_stats_language_flag_path_16x16, $get_stats_language_flag_16x16, $get_stats_language_unique, $get_stats_language_hits) = $row;
+						
+					if($x > 0){
+						echo",";
 					}
+					echo"
+					{
+						\"x\": \"$get_stats_language_name\",
+						\"value\": $get_stats_language_unique
+					}";
+					$x++;
+				} // while
 
-            			];
+				echo"];
 				var series = chart.series.push(new am4charts.PieSeries());
 				series.dataFields.value = \"value\";
 				series.dataFields.category = \"x\";
 			}); // end am4core.ready()
        			</script>
-       			<div id=\"chartdiv_mobile_vs_desktop\" style=\"max-height: 250px;margin-top:10px;\"></div>
+       			<div id=\"chartdiv_languages_per_month\" style=\"max-height: 250px;margin-top:10px;\"></div>
 		</div>
 		<div class=\"clear\"></div>
-	<!-- //Mobile vs desktop -->
+	<!-- //Language used -->
 
 
 	<!-- Os -->
@@ -360,9 +372,39 @@ else{
 	<!-- //Os -->
 
 
+	<!-- Mobile vs desktop -->
+		<div class=\"left_right_right\">
+			<h2 style=\"margin-top: 20px;\">Mobile vs desktop</h2>
+
+			<script>
+			am4core.ready(function() {
+				var chart = am4core.create(\"chartdiv_mobile_vs_desktop\", am4charts.PieChart);
+				chart.data = [
+					{
+					\"x\": \"Desktop\",
+					\"value\": $get_current_stats_visit_per_month_unique_desktop
+					},
+					{
+					\"x\": \"Mobile\",
+					\"value\": $get_current_stats_visit_per_month_unique_mobile
+					}
+
+            			];
+				var series = chart.series.push(new am4charts.PieSeries());
+				series.dataFields.value = \"value\";
+				series.dataFields.category = \"x\";
+			}); // end am4core.ready()
+       			</script>
+       			<div id=\"chartdiv_mobile_vs_desktop\" style=\"max-height: 250px;margin-top:10px;\"></div>
+		</div>
+		<div class=\"clear\"></div>
+	<!-- //Mobile vs desktop -->
+
+
+
 
 	<!-- Browsers -->
-		<div class=\"left_right_right\">
+		<div class=\"left_right_left\">
 			<h2 style=\"margin-top: 20px;\">$l_browsers</h2>
 
 			<script>
@@ -397,14 +439,13 @@ else{
        			<div id=\"chartdiv_browsers_year\" style=\"max-height: 250px;margin-top:10px;\"></div>
 
 		</div>
-		<div class=\"clear\"></div>
 	<!-- //Browsers -->
 
 
 
 
 	<!-- Humans vs bots unique -->
-		<div class=\"left_right_left\">
+		<div class=\"left_right_right\">
 			<h2 style=\"margin-top: 20px;\">Human vs bots unique</h2>
 
 			<script>
@@ -428,17 +469,10 @@ else{
        			</script>
        			<div id=\"chartdiv_humans_vs_bots_unique\" style=\"max-height: 250px;margin-top:10px;\"></div>
 		</div>
+		<div class=\"clear\"></div>
 	<!-- //Humans vs bots unique -->
 
 		
-
-	<!-- xyz -->
-		<div class=\"left_right_right\">
-
-		</div>
-		<div class=\"clear\"></div>
-	<!-- //xyz -->
-
 	<!-- Bots -->
 		<h2>$l_bots</h2>
 		<table class=\"hor-zebra\">

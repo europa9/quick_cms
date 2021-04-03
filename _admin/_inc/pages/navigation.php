@@ -58,24 +58,9 @@ if($action == ""){
 			});
 		});
 		</script>
-
-		<div style=\"float: left\">
-			<table>
-			 <tr>
-			  <td style=\"padding-right: 4px;\">
-				<p>
-				<a href=\"index.php?open=$open&amp;page=navigation&amp;action=new&amp;editor_language=$editor_language\"><img src=\"_design/gfx/icons/16x16/list-add.png\" alt=\"\" /></a>
-				</p>
-			  </td>
-			  <td>
-				<p>
-				<a href=\"index.php?open=$open&amp;page=navigation&amp;action=new&amp;editor_language=$editor_language\">$l_new_menu_item</a>
-				</p>
-			  </td>
-			 </tr>
-			</table>
-		</div>
-		<div style=\"float: right;\">
+		<table>
+		 <tr>
+		  <td style=\"padding-right: 10px;\">
 			<p>
 			<select id=\"inp_l\">\n";
 			$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_16x16, language_active_default FROM $t_languages_active";
@@ -94,8 +79,19 @@ if($action == ""){
 			echo"
 			</select>
 			</p>
-		</div>
-		<div class=\"clear\"></div>
+		  </td>
+		  <td style=\"padding-right: 4px;\">
+			<p>
+			<a href=\"index.php?open=$open&amp;page=navigation&amp;action=new&amp;editor_language=$editor_language\"><img src=\"_design/gfx/icons/16x16/list-add.png\" alt=\"\" /></a>
+			</p>
+		  </td>
+		  <td>
+			<p>
+			<a href=\"index.php?open=$open&amp;page=navigation&amp;action=new&amp;editor_language=$editor_language\">$l_new_menu_item</a>
+			</p>
+		  </td>
+		 </tr>
+		</table>
 	<!-- //Menu -->
 		
 	<!-- Navigation list -->

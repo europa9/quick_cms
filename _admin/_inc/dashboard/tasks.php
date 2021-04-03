@@ -2740,6 +2740,10 @@ elseif($action == "edit_task_assigned_to"){
 			$inp_datetime_saying = date("d. M. Y H:i");	
 			
 			// History summary
+			if(!(isset($inp_assigned_to_user_name))){
+				$inp_assigned_to_user_name = "";
+				$inp_assigned_to_user_email = "";
+			}
 			if($inp_assigned_to_user_name == ""){
 				$inp_history_summary = "Unassigned";
 			}

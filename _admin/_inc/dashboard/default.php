@@ -4,7 +4,7 @@
 * File: _admin/_inc/media/default.php
 * Version 2
 * Date 16:12 27.04.2019
-* Copyright (c) 2008-2019 Sindre Andre Ditlefsen
+* Copyright (c) 2021 Sindre Andre Ditlefsen
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -29,9 +29,12 @@ $t_tasks_read			= $mysqlPrefixSav . "tasks_read";
 
 $t_stats_visists_per_year 	   	= $mysqlPrefixSav . "stats_visists_per_year";
 $t_stats_visists_per_month 	   	= $mysqlPrefixSav . "stats_visists_per_month";
+$t_stats_visists_per_week 	   	= $mysqlPrefixSav . "stats_visists_per_week";
 $t_stats_visists_per_day 	   	= $mysqlPrefixSav . "stats_visists_per_day";
 $t_stats_users_registered_per_year 	= $mysqlPrefixSav . "stats_users_registered_per_year";
+$t_stats_users_registered_per_week 	= $mysqlPrefixSav . "stats_users_registered_per_week";
 $t_stats_comments_per_year 		= $mysqlPrefixSav . "stats_comments_per_year";
+$t_stats_comments_per_week		= $mysqlPrefixSav . "stats_comments_per_week";
 
 /*- Notebook -------------------------------------------------------------------------- */
 if(!(file_exists("_data/notepad_common.php"))){
@@ -129,38 +132,39 @@ if($action == ""){
 	<!-- Row 1 -->
 		<div class=\"flex_row\">
 
-			<!-- Visits per year -->
+			<!-- 1.1 Visits per week -->
 				<div class=\"flex_col_white_bg\">
 					<p class=\"flex_col_white_bg_text_left_content\"><span class=\"barsparks_this_year\">";
 
 							$x = 0;
 
-							$visit_per_year_year 					= 0;
-							$visit_per_year_human_unique				= 0;
-							$visit_per_year_human_unique_diff_from_last_year	= 0;
+							$visit_per_week_week 					= 0;
+							$visit_per_week_human_unique				= 0;
+							$visit_per_week_human_unique_diff_from_last_week	= 0;
 
-							$query = "SELECT stats_visit_per_year_id, stats_visit_per_year_year, stats_visit_per_year_human_unique, stats_visit_per_year_human_unique_diff_from_last_year, stats_visit_per_year_human_average_duration, stats_visit_per_year_human_new_visitor_unique, stats_visit_per_year_human_returning_visitor_unique, stats_visit_per_year_unique_desktop, stats_visit_per_year_unique_mobile, stats_visit_per_year_unique_bots, stats_visit_per_year_hits_total, stats_visit_per_year_hits_human, stats_visit_per_year_hits_desktop, stats_visit_per_year_hits_mobile, stats_visit_per_year_hits_bots FROM $t_stats_visists_per_year ORDER BY stats_visit_per_year_id ASC LIMIT 0,12";
+							$query = "SELECT stats_visit_per_week_id, stats_visit_per_week_week, stats_visit_per_week_year, stats_visit_per_week_human_unique, stats_visit_per_week_human_unique_diff_from_last_week FROM $t_stats_visists_per_week ORDER BY stats_visit_per_week_id ASC LIMIT 0,12";
 							$result = mysqli_query($link, $query);
 							while($row = mysqli_fetch_row($result)) {
-								list($get_stats_visit_per_year_id, $get_stats_visit_per_year_year, $get_stats_visit_per_year_human_unique, $get_stats_visit_per_year_human_unique_diff_from_last_year, $get_stats_visit_per_year_human_average_duration, $get_stats_visit_per_year_human_new_visitor_unique, $get_stats_visit_per_year_human_returning_visitor_unique, $get_stats_visit_per_year_unique_desktop, $get_stats_visit_per_year_unique_mobile, $get_stats_visit_per_year_unique_bots, $get_stats_visit_per_year_hits_total, $get_stats_visit_per_year_hits_human, $get_stats_visit_per_year_hits_desktop, $get_stats_visit_per_year_hits_mobile, $get_stats_visit_per_year_hits_bots) = $row;
+								list($get_stats_visit_per_week_id, $get_stats_visit_per_week_week, $get_stats_visit_per_week_year, $get_stats_visit_per_week_human_unique, $get_stats_visit_per_week_human_unique_diff_from_last_week) = $row;
 	
 
 								if($x > 0){
 									echo",";
 								}
-								echo"$get_stats_visit_per_year_human_unique";
+								echo"$get_stats_visit_per_week_human_unique";
 								
 								// Check that diff is ok
-								$diff = $get_stats_visit_per_year_human_unique-$visit_per_year_human_unique;
-								if($diff != "$get_stats_visit_per_year_human_unique_diff_from_last_year"){
-									$res_update = mysqli_query($link, "UPDATE $t_stats_visists_per_year SET stats_visit_per_year_human_unique_diff_from_last_year=$diff WHERE stats_visit_per_year_id=$get_stats_visit_per_year_id") or die(mysqli_error($link));
+								$diff = $get_stats_visit_per_week_human_unique-$visit_per_week_human_unique;
+								if($diff != "$get_stats_visit_per_week_human_unique_diff_from_last_week"){
+									$res_update = mysqli_query($link, "UPDATE $t_stats_visists_per_week SET stats_visit_per_week_human_unique_diff_from_last_week=$diff WHERE stats_visit_per_week_id=$get_stats_visit_per_week_id") or die(mysqli_error($link));
 								
 								}
 
 								// Transfer last year for print
-								$visit_per_year_year				 = $get_stats_visit_per_year_year;
-								$visit_per_year_human_unique			 = $get_stats_visit_per_year_human_unique;
-								$visit_per_year_human_unique_diff_from_last_year = $get_stats_visit_per_year_human_unique_diff_from_last_year;
+								$visit_per_week_week				 = $get_stats_visit_per_week_week;
+								$visit_per_week_year				 = $get_stats_visit_per_week_year;
+								$visit_per_week_human_unique			 = $get_stats_visit_per_week_human_unique;
+								$visit_per_week_human_unique_diff_from_last_week = $get_stats_visit_per_week_human_unique_diff_from_last_week;
 
 
 								// xx
@@ -177,67 +181,67 @@ if($action == ""){
 					</script>
 
                 			<div class=\"flex_col_white_bg_text_right\">
-						<p class=\"flex_col_white_bg_text_right_headline\" title=\"$visit_per_year_year unique visits\">$visit_per_year_year&nbsp;unique&nbsp;visits</p>
+						<p class=\"flex_col_white_bg_text_right_headline\">$visit_per_week_human_unique&nbsp;unique&nbsp;visits&nbsp;in&nbsp;week&nbsp;$visit_per_week_week</p>
                   				<p class=\"flex_col_white_bg_text_right_content\">";
-						if($visit_per_year_human_unique_diff_from_last_year == 0){
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_flat_no_change.png\" alt=\"ti_angle_up_no_change.png\" title=\"Same as last year ($visit_per_year_human_unique_diff_from_last_year unique human visits diff)\" />";
+						if($visit_per_week_human_unique_diff_from_last_week == 0){
+							echo"<img src=\"_inc/dashboard/_img/ti_angle_flat_no_change.png\" alt=\"ti_angle_up_no_change.png\" title=\"Same as last week ($visit_per_week_human_unique_diff_from_last_week unique human visits diff)\" />";
 						}
-						elseif($visit_per_year_human_unique_diff_from_last_year < 0){
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_down_warning.png\" alt=\"ti_angle_up_warning.png\" title=\"Decreased with $visit_per_year_human_unique_diff_from_last_year unique humans from last year\" />";
+						elseif($visit_per_week_human_unique_diff_from_last_week < 0){
+							echo"<img src=\"_inc/dashboard/_img/ti_angle_down_warning.png\" alt=\"ti_angle_up_warning.png\" title=\"Decreased with $visit_per_week_human_unique_diff_from_last_week unique humans from last week\" />";
 						}
 						else{
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_up_success.png\" alt=\"ti_angle_up_success.png\" title=\"Increasted with $visit_per_year_human_unique_diff_from_last_year unique humans from last year\" />";
+							echo"<img src=\"_inc/dashboard/_img/ti_angle_up_success.png\" alt=\"ti_angle_up_success.png\" title=\"Increasted with $visit_per_week_human_unique_diff_from_last_week unique humans from last week\" />";
 						}
                     				echo"
-						<span>$visit_per_year_human_unique</span>
+						<span>$visit_per_week_human_unique</span>
             					</p>
 					</div>
 				</div> <!-- //flex_col_white_bg -->
-			<!-- //Visits per year -->
+			<!-- //1.1 Visits per week -->
 
 
-			<!-- Users per year -->
+			<!-- 1.2 Comments per week -->
 				<div class=\"flex_col_white_bg\">
 					<table style=\"width: 100%;\">
 					 <tr>
 					  <td style=\"vertical-align:top;\">
-						<span class=\"barsparks_user_registered\">";
+						<span class=\"barsparks_comments_written\">";
 
 						$x = 0;
 
-						$registered_year 				= 0;
-						$registered_users_registed			= 0;
-						$registered_users_registed_diff_from_last_year = 0;
+						$comments_week					= 0;
+						$comments_comments_written			= 0;
+						$comments_comments_written_diff_from_last_week 	= 0;
 
-						$query = "SELECT stats_registered_id, stats_registered_year, stats_registered_users_registed, stats_registered_users_registed_diff_from_last_year, stats_registered_last_updated, stats_registered_last_updated_day, stats_registered_last_updated_month, stats_registered_last_updated_year FROM $t_stats_users_registered_per_year ORDER BY stats_registered_year ASC LIMIT 0,12";
+						$query = "SELECT stats_comments_id, stats_comments_week, stats_comments_month, stats_comments_year, stats_comments_comments_written, stats_comments_comments_written_diff_from_last_week FROM $t_stats_comments_per_week ORDER BY stats_comments_id ASC LIMIT 0,12";
 						$result = mysqli_query($link, $query);
 						while($row = mysqli_fetch_row($result)) {
-							list($get_stats_registered_id, $get_stats_registered_year, $get_stats_registered_users_registed, $get_stats_registered_users_registed_diff_from_last_year, $get_stats_registered_last_updated, $get_stats_registered_last_updated_day, $get_stats_registered_last_updated_month, $get_stats_registered_last_updated_year) = $row;
+							list($get_stats_comments_id, $get_stats_comments_week, $get_stats_comments_month, $get_stats_comments_year, $get_stats_comments_comments_written, $get_stats_comments_comments_written_diff_from_last_week) = $row;
 	
 
 								if($x > 0){
 									echo",";
 								}
-								echo"$get_stats_registered_users_registed";
+								echo"$get_stats_comments_comments_written";
 								
 								// Check that diff is ok
-								$diff = $get_stats_registered_users_registed-$registered_users_registed;
-								if($diff  != "$get_stats_registered_users_registed_diff_from_last_year"){
-									$res_update = mysqli_query($link, "UPDATE $t_stats_users_registered_per_year SET stats_registered_users_registed_diff_from_last_year=$diff WHERE stats_registered_id=$get_stats_registered_id") or die(mysqli_error($link));
+								$diff = $get_stats_comments_comments_written-$comments_comments_written;
+								if($diff != "$get_stats_comments_comments_written_diff_from_last_week"){
+									$res_update = mysqli_query($link, "UPDATE $t_stats_comments_per_week SET stats_comments_comments_written_diff_from_last_week=$diff WHERE stats_comments_id=$get_stats_comments_id") or die(mysqli_error($link));
 								
 								}
 
-								// Transfer last year for print
-								$registered_year 		= $get_stats_registered_year;
-								$registered_users_registed	= $get_stats_registered_users_registed;
-								$registered_users_registed_diff_from_last_year = $get_stats_registered_users_registed_diff_from_last_year;
+								// Transfer last week for print
+								$comments_week					= $get_stats_comments_week;
+								$comments_comments_written			= $get_stats_comments_comments_written;
+								$comments_comments_written_diff_from_last_week 	= $get_stats_comments_comments_written_diff_from_last_week;
 
 								// xx
 								$x++;
 						} // while
 						echo"</span>
 						<script>
-						$('.barsparks_user_registered').sparkline('html', { 
+						$('.barsparks_comments_written').sparkline('html', { 
 							lineColor: '#99e4dc', 
 							spotColor: '#33cabb', 
 							minSpotColor: '#33cabb', 
@@ -247,88 +251,16 @@ if($action == ""){
 						</script>
 					  </td>
 					  <td style=\"vertical-align:top;\">
-                  				<p class=\"flex_col_white_bg_text_right_headline\">Users&nbsp;registered&nbsp;in&nbsp;$registered_year</p>
+                  				<p class=\"flex_col_white_bg_text_right_headline\">Comments&nbsp;in&nbsp;week&nbsp;$comments_week</p>
                   				<p class=\"flex_col_white_bg_text_right_content\">";
-						if($registered_users_registed_diff_from_last_year == 0){
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_flat_no_change.png\" alt=\"ti_angle_up_no_change.png\" title=\"$registered_users_registed_diff_from_last_year new users\" />";
+						if($comments_comments_written_diff_from_last_week == 0){
+							echo"<img src=\"_inc/dashboard/_img/ti_angle_flat_no_change.png\" alt=\"ti_angle_up_no_change.png\" title=\"Same amount of comments as last week ($comments_comments_written_diff_from_last_week comments)\" />";
 						}
-						elseif($registered_users_registed_diff_from_last_year < 0){
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_down_warning.png\" alt=\"ti_angle_up_warning.png\" title=\"$registered_users_registed_diff_from_last_year new users\" />";
+						elseif($comments_comments_written_diff_from_last_week < 0){
+							echo"<img src=\"_inc/dashboard/_img/ti_angle_down_warning.png\" alt=\"ti_angle_up_warning.png\" title=\"Decrease by $comments_comments_written_diff_from_last_week comments from last week\" />";
 						}
 						else{
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_up_success.png\" alt=\"ti_angle_up_success.png\" title=\"$registered_users_registed_diff_from_last_year new users\" />";
-						}
-                    				echo"
-						<span>$registered_users_registed</span>
-            					</p>
-			                  </td>
-					 </tr>
-					</table>
-				</div> <!-- //flex_col_white_bg -->
-			<!-- //Users per year -->
-
-
-
-
-			<!-- Comments per year -->
-				<div class=\"flex_col_white_bg\">
-					<table style=\"width: 100%;\">
-					 <tr>
-					  <td style=\"vertical-align:top;\">
-						<span class=\"barsparks_new_comments\">";
-
-						$x = 0;
-
-						$comments_year 					= 0;
-						$comments_comments_written			= 0;
-						$comments_comments_written_diff_from_last_year = 0;
-
-						$query = "SELECT stats_comments_id, stats_comments_year, stats_comments_comments_written, stats_comments_comments_written_diff_from_last_year, stats_comments_last_updated, stats_comments_last_updated_day, stats_comments_last_updated_month, stats_comments_last_updated_year FROM $t_stats_comments_per_year ORDER BY stats_comments_id ASC LIMIT 0,12";
-						$result = mysqli_query($link, $query);
-						while($row = mysqli_fetch_row($result)) {
-							list($get_stats_comments_id, $get_stats_comments_year, $get_stats_comments_comments_written, $get_stats_comments_comments_written_diff_from_last_year, $get_stats_comments_last_updated, $get_stats_comments_last_updated_day, $get_stats_comments_last_updated_month, $get_stats_comments_last_updated_year) = $row;
-	
-
-							if($x > 0){
-								echo",";
-							}
-							echo"$get_stats_comments_comments_written";
-								
-								// Check that diff is ok
-								$diff = $get_stats_comments_comments_written-$comments_comments_written;
-								if($diff  != "$get_stats_comments_comments_written_diff_from_last_year"){
-									$res_update = mysqli_query($link, "UPDATE $t_stats_comments_per_year SET stats_comments_comments_written_diff_from_last_year=$diff WHERE stats_comments_id=$get_stats_comments_id") or die(mysqli_error($link));
-								
-								}
-
-								// Transfer last year for print
-								$comments_year 					= $get_stats_comments_year;
-								$comments_comments_written			= $get_stats_comments_comments_written;
-								$comments_comments_written_diff_from_last_year = $get_stats_comments_comments_written_diff_from_last_year;
-
-								// xx
-								$x++;
-						} // while
-						echo"</span>
-						<script>
-						$('.barsparks_new_comments').sparkline('html', { 
-							type: 'discrete',
-							lineColor: '#926dde', 
-							thresholdColor: '#926dde', 
-							height:'40px' });
-						</script>
-					  </td>
-					  <td style=\"vertical-align:top;\">
-                  				<p class=\"flex_col_white_bg_text_right_headline\">Comments&nbsp;in&nbsp;$comments_year</p>
-                  				<p class=\"flex_col_white_bg_text_right_content\">";
-						if($comments_comments_written_diff_from_last_year == 0){
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_flat_no_change.png\" alt=\"ti_angle_up_no_change.png\" title=\"$comments_comments_written_diff_from_last_year comments this year diff\" />";
-						}
-						elseif($comments_comments_written_diff_from_last_year < 0){
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_down_warning.png\" alt=\"ti_angle_up_warning.png\" title=\"$comments_comments_written_diff_from_last_year comments this year diff\" />";
-						}
-						else{
-							echo"<img src=\"_inc/dashboard/_img/ti_angle_up_success.png\" alt=\"ti_angle_up_success.png\" title=\"$comments_comments_written_diff_from_last_year comments this year diff\" />";
+							echo"<img src=\"_inc/dashboard/_img/ti_angle_up_success.png\" alt=\"ti_angle_up_success.png\" title=\"Increas by $comments_comments_written_diff_from_last_week comments from last week\" />";
 						}
                     				echo"
 						<span>$comments_comments_written</span>
@@ -337,7 +269,78 @@ if($action == ""){
 					 </tr>
 					</table>
 				</div> <!-- //flex_col_white_bg -->
-			<!-- //Comments per year -->
+			<!-- //1.2 Comments per week -->
+
+
+
+
+			<!-- 1.3 Users per week -->
+				<div class=\"flex_col_white_bg\">
+					<table style=\"width: 100%;\">
+					 <tr>
+					  <td style=\"vertical-align:top;\">
+						<span class=\"barsparks_users_registered\">";
+
+						$x = 0;
+
+						$registered_week				= 0;
+						$registered_users_registed			= 0;
+						$registered_users_registed_diff_from_last_week	= 0;
+
+						$query = "SELECT stats_registered_id, stats_registered_week, stats_registered_year, stats_registered_users_registed, stats_registered_users_registed_diff_from_last_week FROM $t_stats_users_registered_per_week ORDER BY stats_registered_id ASC LIMIT 0,12";
+						$result = mysqli_query($link, $query);
+						while($row = mysqli_fetch_row($result)) {
+							list($get_stats_registered_id, $get_stats_registered_week, $get_stats_registered_year, $get_stats_registered_users_registed, $get_stats_registered_users_registed_diff_from_last_week) = $row;
+	
+
+							if($x > 0){
+								echo",";
+							}
+							echo"$get_stats_registered_users_registed";
+								
+							// Check that diff is ok
+							$diff = $get_stats_registered_users_registed-$registered_users_registed;
+							if($diff  != "$get_stats_registered_users_registed_diff_from_last_week"){
+								$res_update = mysqli_query($link, "UPDATE $t_stats_users_registered_per_week SET stats_registered_users_registed_diff_from_last_week=$diff WHERE stats_registered_id=$get_stats_registered_id") or die(mysqli_error($link));
+							}
+
+							// Transfer last year for print
+							$registered_week				= $get_stats_registered_week;
+							$registered_users_registed			= $get_stats_registered_users_registed;
+							$registered_users_registed_diff_from_last_week	= $get_stats_registered_users_registed_diff_from_last_week;
+
+							// xx
+							$x++;
+						} // while
+						echo"</span>
+						<script>
+						$('.barsparks_users_registered').sparkline('html', { 
+							type: 'discrete',
+							lineColor: '#926dde', 
+							thresholdColor: '#926dde', 
+							height:'40px' });
+						</script>
+					  </td>
+					  <td style=\"vertical-align:top;\">
+                  				<p class=\"flex_col_white_bg_text_right_headline\">Users&nbsp;in&nbsp;week&nbsp;$registered_week</p>
+                  				<p class=\"flex_col_white_bg_text_right_content\">";
+						if($registered_users_registed_diff_from_last_week == 0){
+							echo"<img src=\"_inc/dashboard/_img/ti_angle_flat_no_change.png\" alt=\"ti_angle_up_no_change.png\" title=\"Same users as last week ($registered_users_registed_diff_from_last_week)\" />";
+						}
+						elseif($registered_users_registed_diff_from_last_week < 0){
+							echo"<img src=\"_inc/dashboard/_img/ti_angle_down_warning.png\" alt=\"ti_angle_up_warning.png\" title=\"Decrease in users registered by $registered_users_registed_diff_from_last_week\" />";
+						}
+						else{
+							echo"<img src=\"_inc/dashboard/_img/ti_angle_up_success.png\" alt=\"ti_angle_up_success.png\" title=\"Increase in users registered by $registered_users_registed_diff_from_last_week\" />";
+						}
+                    				echo"
+						<span>$registered_users_registed</span>
+            					</p>
+			                  </td>
+					 </tr>
+					</table>
+				</div> <!-- //flex_col_white_bg -->
+			<!-- //1.3 Users per week -->
 
 
 		</div>
@@ -347,7 +350,7 @@ if($action == ""){
 
 	<!-- Row 2 -->
 		<div class=\"flex_row\">
-			<!-- Visits per  month -->
+			<!-- 2.1 Visits per month -->
 				<div class=\"flex_col_white_bg\" style=\"flex:2;margin-right:0px;\">
 					<div class=\"flex_col_white_bg_headline_left\">
 						<h2>$year $l_numbers</h2>

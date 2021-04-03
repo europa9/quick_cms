@@ -40,6 +40,7 @@ else{
 	   guide_title_short VARCHAR(200),
 	   guide_title_length INT,
 	   guide_short_description VARCHAR(200),
+	   guide_content TEXT,
 	   guide_group_id INT, 
 	   guide_group_title VARCHAR(200), 
 	   guide_reference_id INT, 

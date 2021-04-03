@@ -29,6 +29,9 @@ $t_stats_ip_to_country_ipv4 		= $mysqlPrefixSav . "stats_ip_to_country_ipv4";
 $t_stats_ip_to_country_ipv6 		= $mysqlPrefixSav . "stats_ip_to_country_ipv6";
 $t_stats_ip_to_country_geonames 	= $mysqlPrefixSav . "stats_ip_to_country_geonames";
 
+$t_stats_languages_per_year	= $mysqlPrefixSav . "stats_languages_per_year";
+$t_stats_languages_per_month	= $mysqlPrefixSav . "stats_languages_per_month";
+
 $t_stats_os_per_month = $mysqlPrefixSav . "stats_os_per_month";
 $t_stats_os_per_year = $mysqlPrefixSav . "stats_os_per_year";
 
@@ -48,10 +51,15 @@ $t_stats_pages_visits_per_year_ips 	= $mysqlPrefixSav . "stats_pages_visits_per_
 
 $t_stats_visists_per_day 	= $mysqlPrefixSav . "stats_visists_per_day";
 $t_stats_visists_per_day_ips 	= $mysqlPrefixSav . "stats_visists_per_day_ips";
+$t_stats_visists_per_week 	= $mysqlPrefixSav . "stats_visists_per_week";
+$t_stats_visists_per_week_ips 	= $mysqlPrefixSav . "stats_visists_per_week_ips";
 $t_stats_visists_per_month 	= $mysqlPrefixSav . "stats_visists_per_month";
 $t_stats_visists_per_month_ips 	= $mysqlPrefixSav . "stats_visists_per_month_ips";
 $t_stats_visists_per_year 	= $mysqlPrefixSav . "stats_visists_per_year";
 $t_stats_visists_per_year_ips 	= $mysqlPrefixSav . "stats_visists_per_year_ips";
+
+$t_stats_tracker_index = $mysqlPrefixSav . "stats_tracker_index";
+$t_stats_tracker_urls  = $mysqlPrefixSav . "stats_tracker_urls";
 
 /*- Find me based on user ------------------------------------------------------------------- */
 $inp_user_agent = $_SERVER['HTTP_USER_AGENT'];
@@ -147,10 +155,12 @@ else{
 	$inp_day_single = substr($inp_day_short, 0, 1);
 	$inp_date = date("Y-m-d");
 	$inp_time = date("H:i:s");
+	$inp_hour_minute = date("H:i");
 	$inp_month = date("m");
 	$inp_month_full = date("F");
 	$inp_month_short = date("M");
 	$inp_year = date("Y");
+	$inp_week = date("W");
 	$inp_unix_time = time();
 
 
@@ -188,7 +198,7 @@ else{
 	$row = mysqli_fetch_row($result);
 	list($get_stats_visit_per_month_id, $get_stats_visit_per_month_human_unique, $get_stats_visit_per_month_human_unique_diff_from_last_month, $get_stats_visit_per_month_human_average_duration, $get_stats_visit_per_month_human_new_visitor_unique, $get_stats_visit_per_month_human_returning_visitor_unique, $get_stats_visit_per_month_unique_desktop, $get_stats_visit_per_month_unique_mobile, $get_stats_visit_per_month_unique_bots, $get_stats_visit_per_month_hits_total, $get_stats_visit_per_month_hits_human, $get_stats_visit_per_month_hits_desktop, $get_stats_visit_per_month_hits_mobile, $get_stats_visit_per_month_hits_bots) = $row;
 	if($get_stats_visit_per_month_id == ""){
-		// Create new year
+		// Create new month
 		mysqli_query($link, "INSERT INTO $t_stats_visists_per_month
 		(stats_visit_per_month_id, stats_visit_per_month_month, stats_visit_per_month_month_full, stats_visit_per_month_month_short, stats_visit_per_month_year,
 		stats_visit_per_month_human_unique, stats_visit_per_month_human_unique_diff_from_last_month, stats_visit_per_month_human_average_duration, stats_visit_per_month_human_new_visitor_unique, stats_visit_per_month_human_returning_visitor_unique, 
@@ -209,8 +219,38 @@ else{
 
 		// Truncate temp data
 		mysqli_query($link,"TRUNCATE TABLE $t_stats_visists_per_month_ips") or die(mysqli_error());
+		mysqli_query($link,"TRUNCATE TABLE $t_stats_tracker_index") or die(mysqli_error());
+		mysqli_query($link,"TRUNCATE TABLE $t_stats_tracker_urls") or die(mysqli_error());
 	}
 
+
+	// Visits per week
+	$query = "SELECT stats_visit_per_week_id, stats_visit_per_week_human_unique, stats_visit_per_week_human_unique_diff_from_last_week, stats_visit_per_week_human_average_duration, stats_visit_per_week_human_new_visitor_unique, stats_visit_per_week_human_returning_visitor_unique, stats_visit_per_week_unique_desktop, stats_visit_per_week_unique_mobile, stats_visit_per_week_unique_bots, stats_visit_per_week_hits_total, stats_visit_per_week_hits_human, stats_visit_per_week_hits_desktop, stats_visit_per_week_hits_mobile, stats_visit_per_week_hits_bots FROM $t_stats_visists_per_week WHERE stats_visit_per_week_week='$inp_week' AND stats_visit_per_week_year='$inp_year'";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_stats_visit_per_week_id, $get_stats_visit_per_week_human_unique, $get_stats_visit_per_week_human_unique_diff_from_last_week, $get_stats_visit_per_week_human_average_duration, $get_stats_visit_per_week_human_new_visitor_unique, $get_stats_visit_per_week_human_returning_visitor_unique, $get_stats_visit_per_week_unique_desktop, $get_stats_visit_per_week_unique_mobile, $get_stats_visit_per_week_unique_bots, $get_stats_visit_per_week_hits_total, $get_stats_visit_per_week_hits_human, $get_stats_visit_per_week_hits_desktop, $get_stats_visit_per_week_hits_mobile, $get_stats_visit_per_week_hits_bots) = $row;
+	if($get_stats_visit_per_week_id == ""){
+		// Create new week
+		mysqli_query($link, "INSERT INTO $t_stats_visists_per_week
+		(stats_visit_per_week_id, stats_visit_per_week_week, stats_visit_per_week_month, stats_visit_per_week_month_short, stats_visit_per_week_year, 
+		stats_visit_per_week_human_unique, stats_visit_per_week_human_unique_diff_from_last_week, stats_visit_per_week_human_average_duration, stats_visit_per_week_human_new_visitor_unique, stats_visit_per_week_human_returning_visitor_unique, 
+		stats_visit_per_week_unique_desktop, stats_visit_per_week_unique_mobile, stats_visit_per_week_unique_bots, stats_visit_per_week_hits_total, stats_visit_per_week_hits_human, 
+		stats_visit_per_week_hits_desktop, stats_visit_per_week_hits_mobile, stats_visit_per_week_hits_bots) 
+		VALUES
+		(NULL, '$inp_week', '$inp_month', '$inp_month_short',  $inp_year,
+		0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0,
+		0, 0, 0)") or die(mysqli_error($link));
+
+		// Get new ID
+		$query = "SELECT stats_visit_per_week_id, stats_visit_per_week_human_unique, stats_visit_per_week_human_unique_diff_from_last_week, stats_visit_per_week_human_average_duration, stats_visit_per_week_human_new_visitor_unique, stats_visit_per_week_human_returning_visitor_unique, stats_visit_per_week_unique_desktop, stats_visit_per_week_unique_mobile, stats_visit_per_week_unique_bots, stats_visit_per_week_hits_total, stats_visit_per_week_hits_human, stats_visit_per_week_hits_desktop, stats_visit_per_week_hits_mobile, stats_visit_per_week_hits_bots FROM $t_stats_visists_per_week WHERE stats_visit_per_week_week='$inp_week' AND stats_visit_per_week_year='$inp_year'";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_stats_visit_per_week_id, $get_stats_visit_per_week_human_unique, $get_stats_visit_per_week_human_unique_diff_from_last_week, $get_stats_visit_per_week_human_average_duration, $get_stats_visit_per_week_human_new_visitor_unique, $get_stats_visit_per_week_human_returning_visitor_unique, $get_stats_visit_per_week_unique_desktop, $get_stats_visit_per_week_unique_mobile, $get_stats_visit_per_week_unique_bots, $get_stats_visit_per_week_hits_total, $get_stats_visit_per_week_hits_human, $get_stats_visit_per_week_hits_desktop, $get_stats_visit_per_week_hits_mobile, $get_stats_visit_per_week_hits_bots) = $row;
+
+		// Truncate temp data
+		mysqli_query($link,"TRUNCATE TABLE $t_stats_visists_per_week_ips") or die(mysqli_error());
+	}
 
 	// Visits per day
 	$query = "SELECT stats_visit_per_day_id, stats_visit_per_day_human_unique, stats_visit_per_day_human_unique_diff_from_yesterday, stats_visit_per_day_human_average_duration, stats_visit_per_day_human_new_visitor_unique, stats_visit_per_day_human_returning_visitor_unique, stats_visit_per_day_unique_desktop, stats_visit_per_day_unique_mobile, stats_visit_per_day_unique_bots, stats_visit_per_day_hits_total, stats_visit_per_day_hits_human, stats_visit_per_day_hits_desktop, stats_visit_per_day_hits_mobile, stats_visit_per_day_hits_bots FROM $t_stats_visists_per_day WHERE stats_visit_per_day_day='$inp_day' AND stats_visit_per_day_month='$inp_month' AND stats_visit_per_day_year='$inp_year'";
@@ -344,6 +384,41 @@ else{
 							WHERE stats_visit_per_month_id=$get_stats_visit_per_month_id") or die(mysqli_error($link));
 			
 		} // Visits :: Month
+
+		// Visists :: Week :: IPs
+		$query = "SELECT stats_visit_per_week_ip_id, stats_visit_per_week_ip_week, stats_visit_per_week_ip_year, stats_visit_per_week_type, stats_visit_per_week_ip FROM $t_stats_visists_per_week_ips WHERE stats_visit_per_week_ip_week='$inp_week' AND stats_visit_per_week_ip_year='$inp_year' AND stats_visit_per_week_ip=$inp_ip_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_stats_visit_per_week_ip_id, $get_stats_visit_per_week_ip_week, $get_stats_visit_per_week_ip_year, $get_stats_visit_per_week_type, $get_stats_visit_per_week_ip) = $row;
+		if($get_stats_visit_per_week_ip_id == ""){
+			// New visitor this day
+			mysqli_query($link, "INSERT INTO $t_stats_visists_per_week_ips 
+			(stats_visit_per_week_ip_id, stats_visit_per_week_ip_week, stats_visit_per_week_ip_year, stats_visit_per_week_type, stats_visit_per_week_ip) 
+			VALUES
+			(NULL, '$inp_week', '$inp_year', '$get_stats_user_agent_type', $inp_ip_mysql)") or die(mysqli_error($link));
+			
+			// Update unique
+			$inp_visit_per_week_bots_unique = $get_stats_visit_per_week_unique_bots+1;
+			$inp_visit_per_week_hits_bots   = $get_stats_visit_per_week_hits_bots+1;
+			$inp_visit_per_week_hits_total  = $get_stats_visit_per_week_hits_total+1;
+			
+			// Update
+			$result = mysqli_query($link, "UPDATE $t_stats_visists_per_week SET 
+							stats_visit_per_week_unique_bots=$inp_visit_per_week_bots_unique,
+							stats_visit_per_week_hits_total=$inp_visit_per_week_hits_total,
+							stats_visit_per_week_hits_bots=$inp_visit_per_week_hits_bots
+							WHERE stats_visit_per_week_id=$get_stats_visit_per_week_id") or die(mysqli_error($link));
+
+		}
+		else{
+			// Update hits
+			$inp_visit_per_week_hits_bots   = $get_stats_visit_per_week_hits_bots+1;
+			$inp_visit_per_week_hits_total  = $get_stats_visit_per_week_hits_total+1;
+			$result = mysqli_query($link, "UPDATE $t_stats_visists_per_week SET 
+							stats_visit_per_week_hits_total=$inp_visit_per_week_hits_total,
+							stats_visit_per_week_hits_bots=$inp_visit_per_week_hits_bots
+							WHERE stats_visit_per_week_id=$get_stats_visit_per_week_id") or die(mysqli_error($link));
+		} // Visits :: Week
 
 
 
@@ -549,7 +624,6 @@ else{
 			$inp_visit_per_month_hits_human = $get_stats_visit_per_month_hits_human+1;
 			
 			// Update
-
 			$result = mysqli_query($link, "UPDATE $t_stats_visists_per_month SET 
 							stats_visit_per_month_human_unique=$inp_visit_per_month_human_unique,
 							stats_visit_per_month_unique_desktop=$inp_visit_per_month_unique_desktop, 
@@ -569,6 +643,52 @@ else{
 							WHERE stats_visit_per_month_id=$get_stats_visit_per_month_id") or die(mysqli_error($link));
 			
 		} // Visits :: Month
+
+		// Visists :: Week :: IPs
+		$query = "SELECT stats_visit_per_week_ip_id, stats_visit_per_week_ip_week, stats_visit_per_week_ip_month, stats_visit_per_week_ip_year, stats_visit_per_week_type, stats_visit_per_week_ip FROM $t_stats_visists_per_week_ips WHERE stats_visit_per_week_ip_week='$inp_week' AND stats_visit_per_week_ip_year='$inp_year' AND stats_visit_per_week_ip=$inp_ip_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_stats_visit_per_week_ip_id, $get_stats_visit_per_week_ip_week, $get_stats_visit_per_week_ip_month, $get_stats_visit_per_week_ip_year, $get_stats_visit_per_week_type, $get_stats_visit_per_week_ip) = $row;
+		if($get_stats_visit_per_week_ip_id == ""){
+			// New visitor this day
+			mysqli_query($link, "INSERT INTO $t_stats_visists_per_week_ips 
+			(stats_visit_per_week_ip_id, stats_visit_per_week_ip_week, stats_visit_per_week_ip_month, stats_visit_per_week_ip_year, stats_visit_per_week_type, stats_visit_per_week_ip) 
+			VALUES
+			(NULL, '$inp_week', '$inp_month', '$inp_year', '$get_stats_user_agent_type', $inp_ip_mysql)") or die(mysqli_error($link));
+			
+			// Update unique
+			$inp_visit_per_week_human_unique = $get_stats_visit_per_week_human_unique+1;
+			if($get_stats_user_agent_type == "desktop"){
+				$inp_visit_per_week_unique_desktop = $get_stats_visit_per_week_unique_desktop+1;
+				$inp_visit_per_week_unique_mobile  = $get_stats_visit_per_week_unique_mobile;
+			}
+			else{
+				$inp_visit_per_week_unique_desktop = $get_stats_visit_per_week_unique_desktop;
+				$inp_visit_per_week_unique_mobile  = $get_stats_visit_per_week_unique_mobile+1;
+			}
+			$inp_visit_per_week_hits_total = $get_stats_visit_per_week_hits_total+1;
+			$inp_visit_per_week_hits_human = $get_stats_visit_per_week_hits_human+1;
+			
+			// Update
+			$result = mysqli_query($link, "UPDATE $t_stats_visists_per_week SET 
+							stats_visit_per_week_human_unique=$inp_visit_per_week_human_unique,
+							stats_visit_per_week_unique_desktop=$inp_visit_per_week_unique_desktop, 
+							stats_visit_per_week_unique_mobile=$inp_visit_per_week_unique_mobile,
+							stats_visit_per_week_hits_total=$inp_visit_per_week_hits_total,
+							stats_visit_per_week_hits_human=$inp_visit_per_week_hits_human
+							WHERE stats_visit_per_week_id=$get_stats_visit_per_week_id") or die(mysqli_error($link));
+
+		}
+		else{
+			// Update hits
+			$inp_visit_per_week_hits_total = $get_stats_visit_per_week_hits_total+1;
+			$inp_visit_per_week_hits_human = $get_stats_visit_per_week_hits_human+1;
+			$result = mysqli_query($link, "UPDATE $t_stats_visists_per_week SET 
+							stats_visit_per_week_hits_total=$inp_visit_per_week_hits_total,
+							stats_visit_per_week_hits_human=$inp_visit_per_week_hits_human
+							WHERE stats_visit_per_week_id=$get_stats_visit_per_week_id") or die(mysqli_error($link));
+			
+		} // Visits :: Day
 
 		// Visists :: Day :: IPs
 		$query = "SELECT stats_visit_per_day_ip_id, stats_visit_per_day_ip_day, stats_visit_per_day_ip_month, stats_visit_per_day_ip_year, stats_visit_per_day_type, stats_visit_per_day_ip FROM $t_stats_visists_per_day_ips WHERE stats_visit_per_day_ip_day='$inp_day' AND stats_visit_per_day_ip_month='$inp_month' AND stats_visit_per_day_ip_year='$inp_year' AND stats_visit_per_day_ip=$inp_ip_mysql";
@@ -1037,6 +1157,108 @@ else{
 				}
 			}
 		}
+
+		// Language :: Year
+		$query = "SELECT stats_language_id, stats_language_unique, stats_language_hits FROM $t_stats_languages_per_year WHERE stats_language_year='$inp_year' AND stats_language_iso_two='$get_current_language_active_iso_two'";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_stats_language_id, $get_stats_language_unique, $get_stats_language_hits) = $row;
+		if($get_stats_language_id == ""){
+			mysqli_query($link, "INSERT INTO $t_stats_languages_per_year 
+			(stats_language_id, stats_language_year, stats_language_name, stats_language_iso_two, stats_language_flag_path_16x16, stats_language_flag_16x16, stats_language_unique, stats_language_hits) 
+			VALUES
+			(NULL, '$inp_year', '$get_current_language_active_name', '$get_current_language_active_iso_two', '$get_current_language_active_flag_path_16x16', '$get_current_language_active_flag_16x16', 1, 1)") or die(mysqli_error($link));
+		}
+		else{
+			// We have record, if unique
+			if($get_stats_visit_per_year_ip_id == ""){
+				// Unique + hits
+				$inp_unique = $get_stats_language_unique+1;
+				$inp_hits   = $get_stats_language_hits+1;
+				mysqli_query($link, "UPDATE $t_stats_languages_per_year SET stats_language_unique=$inp_unique, stats_language_hits=$inp_hits WHERE stats_language_id=$get_stats_language_id") or die(mysqli_error($link));
+			}
+			else{
+				// Hits
+				$inp_hits = $get_stats_language_hits+1;
+				mysqli_query($link, "UPDATE $t_stats_languages_per_year SET stats_language_hits=$inp_hits WHERE stats_language_id=$get_stats_language_id") or die(mysqli_error($link));
+			}
+		}
+
+		// Language :: Month
+		$query = "SELECT stats_language_id, stats_language_unique, stats_language_hits FROM $t_stats_languages_per_month WHERE stats_language_month='$inp_month' AND stats_language_year='$inp_year' AND stats_language_year='$inp_year' AND stats_language_iso_two='$get_current_language_active_iso_two'";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_stats_language_id, $get_stats_language_unique, $get_stats_language_hits) = $row;
+		if($get_stats_language_id == ""){
+			mysqli_query($link, "INSERT INTO $t_stats_languages_per_month 
+			(stats_language_id, stats_language_month, stats_language_year, stats_language_name, stats_language_iso_two, stats_language_flag_path_16x16, stats_language_flag_16x16, stats_language_unique, stats_language_hits) 
+			VALUES
+			(NULL, '$inp_month', '$inp_year', '$get_current_language_active_name', '$get_current_language_active_iso_two', '$get_current_language_active_flag_path_16x16', '$get_current_language_active_flag_16x16', 1, 1)") or die(mysqli_error($link));
+		}
+		else{
+			// We have record, if unique
+			if($get_stats_visit_per_month_ip_id == ""){
+				// Unique + hits
+				$inp_unique = $get_stats_language_unique+1;
+				$inp_hits   = $get_stats_language_hits+1;
+				mysqli_query($link, "UPDATE $t_stats_languages_per_month SET stats_language_unique=$inp_unique, stats_language_hits=$inp_hits WHERE stats_language_id=$get_stats_language_id") or die(mysqli_error($link));
+			}
+			else{
+				// Hits
+				$inp_hits = $get_stats_language_hits+1;
+				mysqli_query($link, "UPDATE $t_stats_languages_per_month SET stats_language_hits=$inp_hits WHERE stats_language_id=$get_stats_language_id") or die(mysqli_error($link));
+			}
+		}
+
+		// Tracker :: Index
+		$query = "SELECT tracker_id, tracker_time_start, tracker_hits FROM $t_stats_tracker_index WHERE tracker_ip=$inp_ip_mysql AND tracker_month='$inp_month' AND tracker_year='$inp_year'";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_tracker_id, $get_tracker_time_start, $get_tracker_hits) = $row;
+		if($get_tracker_id == ""){
+
+			mysqli_query($link, "INSERT INTO $t_stats_tracker_index 
+			(tracker_id, tracker_ip, tracker_month, tracker_month_short, tracker_year, 
+			tracker_time_start, tracker_hour_minute_start, tracker_time_end, tracker_hour_minute_end, tracker_minutes_spent, 
+			tracker_os, tracker_browser, tracker_type, tracker_language, tracker_hits) 
+			VALUES
+			(NULL, $inp_ip_mysql, '$inp_month', '$inp_month_short', '$inp_year', 
+			'$inp_unix_time', '$inp_hour_minute', '$inp_unix_time', '$inp_hour_minute', 0,
+			$inp_user_agent_os_mysql, $inp_user_agent_browser_mysql, '$get_stats_user_agent_type', '$get_current_language_active_iso_two', 1)") or die(mysqli_error($link));
+
+			$query = "SELECT tracker_id, tracker_hits FROM $t_stats_tracker_index WHERE tracker_ip=$inp_ip_mysql AND tracker_month='$inp_month' AND tracker_year='$inp_year'";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_tracker_id, $get_tracker_hits) = $row;
+
+		}
+		else{
+			// Hits, dates
+			$inp_hits = $get_tracker_hits+1;
+			$inp_minutes_spent = round(($inp_unix_time-$get_tracker_time_start)/60, 0);
+
+			mysqli_query($link, "UPDATE $t_stats_tracker_index SET 
+						tracker_time_end='$inp_unix_time', 
+						tracker_hour_minute_end='$inp_hour_minute', 
+						tracker_minutes_spent='$inp_minutes_spent',
+						tracker_hits=$inp_hits 
+						WHERE tracker_id=$get_tracker_id") or die(mysqli_error($link));
+		}
+
+
+		// Tracker :: URL
+		$inp_url_mysql = quote_smart($link, $page_url);
+		$inp_title_mysql = quote_smart($link, $website_title);
+
+		mysqli_query($link, "INSERT INTO $t_stats_tracker_urls
+			(url_id, url_tracker_id, url_value, url_title, url_title_fetched, url_year, 
+			url_month, url_month_short, url_day, url_time_start, url_hour_minute_start, url_time_end, 
+			url_hour_minute_end, url_minutes_spent) 
+			VALUES
+			(NULL, $get_tracker_id, $inp_url_mysql, $inp_title_mysql, 0, '$inp_year', 
+			'$inp_month', '$inp_month_short', '$inp_day',  '$inp_unix_time', '$inp_hour_minute', '$inp_unix_time', 
+			'$inp_hour_minute', 0)") or die(mysqli_error($link));
+
 	} // End Human
 
 	

@@ -16,4 +16,5 @@ $t_downloads_sub_categories_translations 	= $mysqlPrefixSav . "downloads_sub_cat
 
 $t_stats_comments_per_year	= $mysqlPrefixSav . "stats_comments_per_year";
 $t_stats_comments_per_month	= $mysqlPrefixSav . "stats_comments_per_month";
+$t_stats_comments_per_week	= $mysqlPrefixSav . "stats_comments_per_week";
 ?>

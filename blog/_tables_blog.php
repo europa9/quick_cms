@@ -29,4 +29,10 @@ $t_stats_comments_per_month 		= $mysqlPrefixSav . "stats_comments_per_month";
 
 /*- Tables ads ---------------------------------------------------------------------------- */
 $t_ads_index	= $mysqlPrefixSav . "ads_index";
+
+/*- Tables comments ----------------------------------------------------------------------- */
+$t_stats_comments_per_year 		= $mysqlPrefixSav . "stats_comments_per_year";
+$t_stats_comments_per_month 		= $mysqlPrefixSav . "stats_comments_per_month";
+$t_stats_comments_per_week		= $mysqlPrefixSav . "stats_comments_per_week";
+
 ?>

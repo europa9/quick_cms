@@ -193,28 +193,28 @@ if(isset($_GET['l'])) {
 	$l_mysql = quote_smart($link, $l);
 
 	// Is that language in list of languages?
-	$query = "SELECT language_active_iso_two FROM $t_languages_active WHERE language_active_iso_two=$l_mysql";
+	$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_path_16x16, language_active_flag_16x16 FROM $t_languages_active WHERE language_active_iso_two=$l_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_language_active_iso_two) = $row;
-	if($get_language_active_iso_two  != ""){
+	list($get_current_language_active_id, $get_current_language_active_name, $get_current_language_active_iso_two, $get_current_language_active_flag_path_16x16, $get_current_language_active_flag_16x16) = $row;
+	if($get_current_language_active_iso_two  != ""){
 		
 		$_SESSION['l'] = "$l";
 	
 	}
 	else{
 		// Find the pre defined language
-		$query = "SELECT language_active_iso_two FROM $t_languages_active WHERE language_active_default='1'";
+		$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_path_16x16, language_active_flag_16x16 FROM $t_languages_active WHERE language_active_default='1'";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
-		list($get_language_active_iso_two) = $row;
-		if($get_language_active_iso_two == ""){
+		list($get_current_language_active_id, $get_current_language_active_name, $get_current_language_active_iso_two, $get_current_language_active_flag_path_16x16, $get_current_language_active_flag_16x16) = $row;
+		if($get_current_language_active_iso_two == ""){
 			$l = "en";
 			echo"<div class=\"error\"><a href=\"$root/_admin\">Please select a default language</a></div>"; die;
 		}
 
-		$_SESSION['l'] = "$get_language_active_iso_two";
-		$l = "$get_language_active_iso_two";
+		$_SESSION['l'] = "$get_current_language_active_iso_two";
+		$l = "$get_current_language_active_iso_two";
 	}
 }
 else{
@@ -224,19 +224,19 @@ else{
 
 		// Check if we have that language
 		$l_mysql = quote_smart($link, $l);
-		$query = "SELECT language_active_iso_two FROM $t_languages_active WHERE language_active_iso_two=$l_mysql";
+		$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_path_16x16, language_active_flag_16x16 FROM $t_languages_active WHERE language_active_iso_two=$l_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
-		list($get_language_active_iso_two) = $row;
-		if($get_language_active_iso_two == ""){
+		list($get_current_language_active_id, $get_current_language_active_name, $get_current_language_active_iso_two, $get_current_language_active_flag_path_16x16, $get_current_language_active_flag_16x16) = $row;
+		if($get_current_language_active_iso_two == ""){
 			// That language doesnt exists
 			// Find the pre defined language
-			$query = "SELECT language_active_iso_two FROM $t_languages_active WHERE language_active_default='1'";
+			$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_path_16x16, language_active_flag_16x16 FROM $t_languages_active WHERE language_active_default='1'";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
-			list($get_language_active_iso_two) = $row;
-			if($get_language_active_iso_two != ""){
-				$_SESSION['l'] = "$get_language_active_iso_two";
+			list($get_current_language_active_id, $get_current_language_active_name, $get_current_language_active_iso_two, $get_current_language_active_flag_path_16x16, $get_current_language_active_flag_16x16) = $row;
+			if($get_current_language_active_iso_two != ""){
+				$_SESSION['l'] = "$get_current_language_active_iso_two";
 				$l = $_SESSION['l'];
 			}
 		}	
@@ -257,28 +257,28 @@ else{
 				$language_mysql = quote_smart($link, $language);
 
 				// Check if we have that language
-				$query = "SELECT language_active_iso_two FROM $t_languages_active WHERE language_active_iso_two=$language_mysql";
+				$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_path_16x16, language_active_flag_16x16 FROM $t_languages_active WHERE language_active_iso_two=$language_mysql";
 				$result = mysqli_query($link, $query);
 				$row = mysqli_fetch_row($result);
-				list($get_language_active_iso_two) = $row;
+				list($get_current_language_active_id, $get_current_language_active_name, $get_current_language_active_iso_two, $get_current_language_active_flag_path_16x16, $get_current_language_active_flag_16x16) = $row;
 
-				if($get_language_active_iso_two != ""){
-					$l = $get_language_active_iso_two;
+				if($get_current_language_active_iso_two != ""){
+					$l = $get_current_language_active_iso_two;
 					$_SESSION['l'] = "$l";
 				}
 			}
 
 			if(!(isset($l))) {
 				// Find the pre defined language
-				$query = "SELECT language_active_iso_two FROM $t_languages_active WHERE language_active_default='1'";
+				$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_path_16x16, language_active_flag_16x16 FROM $t_languages_active WHERE language_active_default='1'";
 				$result = mysqli_query($link, $query);
 				$row = mysqli_fetch_row($result);
-				list($get_language_active_iso_two) = $row;
-				if($get_language_active_iso_two == ""){
+				list($get_current_language_active_id, $get_current_language_active_name, $get_current_language_active_iso_two, $get_current_language_active_flag_path_16x16, $get_current_language_active_flag_16x16) = $row;
+				if($get_current_language_active_iso_two == ""){
 					$l = "en";
 				}
 
-				$_SESSION['l'] = "$get_language_active_iso_two";
+				$_SESSION['l'] = "$get_current_language_active_iso_two";
 				$l = $_SESSION['l'];
 			}
 		}

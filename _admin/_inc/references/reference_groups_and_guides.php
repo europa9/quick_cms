@@ -162,7 +162,9 @@ else{
 					<span><b>$get_group_number</b></span>
 				   </td>
 				   <td>
-					<span><b>$get_group_title</b></span>
+					<span><b>
+					<a href=\"index.php?open=$open&amp;page=open_group&amp;group_id=$get_group_id&amp;editor_language=$editor_language&amp;l=$l\">$get_group_title</a>
+					</b></span>
 				   </td>
 				   <td>
 					<span><b>$get_group_read_times</b></span>
@@ -200,7 +202,9 @@ else{
 						<span>$get_guide_number</span>
 					  </td>
 					  <td class=\"odd\">
-						<span>$get_guide_title</span>
+						<span>
+						<a href=\"index.php?open=$open&amp;page=open_guide&amp;guide_id=$get_guide_id&amp;editor_language=$editor_language&amp;l=$l\">$get_guide_title</a>
+						</span>
 					  </td>
 					  <td class=\"odd\">
 						<span>$get_guide_read_times</span>
@@ -274,8 +278,8 @@ else{
 			0)")
 			or die(mysqli_error($link));
 
-
-			$url = "index.php?open=$open&page=$page&reference_id=$reference_id&action=new_group&editor_language=$editor_language&ft=success&fm=group_$inp_title" . "_saved";
+			// Header
+			$url = "index.php?open=$open&page=open_group&group_id=$get_current_group_id&editor_language=$editor_language&ft=success&fm=group_$inp_title" . "_saved";
 			header("Location: $url");
 			exit;
 		}
@@ -841,11 +845,11 @@ else{
 				or die(mysqli_error($link));
 	
 
-
 				// Make file
 				include("_inc/references/reference_write_to_file_include.php");
 
-				$url = "index.php?open=$open&page=$page&reference_id=$reference_id&action=$action&group_id=$get_current_group_id&editor_language=$editor_language&ft=success&fm=guide_created";
+				// Move to open
+				$url = "index.php?open=$open&page=open_guide&reference_id=$reference_id&group_id=$get_current_group_id&guide_id=$get_current_guide_id&editor_language=$editor_language&ft=success&fm=guide_created";
 				header("Location: $url");
 				exit;
 			}

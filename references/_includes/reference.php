@@ -8,7 +8,8 @@
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
-/*- Functions ------------------------------------------------------------------------ */
+/*- Language -------------------------------------------------------------------------- */
+include("$root/_admin/_translations/site/$l/references/ts_references.php");
 
 /*- Tables ---------------------------------------------------------------------------- */
 $t_references_title_translations = $mysqlPrefixSav . "references_title_translations";
@@ -70,6 +71,62 @@ if($get_current_reference_id != ""){
 			<div style=\"height:20px;\"></div>
 		<!-- //About reference -->
 
+		<!-- Groups and guides -->\n";
+			
+			$query = "SELECT group_id, group_title, group_title_clean, group_number, group_read_times FROM $t_references_index_groups WHERE group_reference_id=$get_current_reference_id ORDER BY group_number ASC";
+			$result = mysqli_query($link, $query);
+			while($row = mysqli_fetch_row($result)) {
+				list($get_group_id, $get_group_title, $get_group_title_clean, $get_group_number, $get_group_read_times) = $row;
+
+
+				echo"
+				<h2><a href=\"$root/$get_current_reference_title_clean/$get_group_title_clean/index.php?reference_id=$get_current_reference_id&amp;group_id=$get_group_id&amp;l=$l\" class=\"h2\">$get_group_title</a></h2>
+				
+				<div style=\"height:10px;\"></div>
+
+				<table class=\"hor-zebra\">
+				 <thead>
+				  <tr>
+				   <th scope=\"col\">
+					<span>$l_title</span>
+				   </th>
+				   <th scope=\"col\">
+					<span>$l_description</span>
+				   </th>
+				  </tr>
+				 </thead>
+				 <tbody>";
+				// Get guides
+				$query_lessons = "SELECT guide_id, guide_title, guide_title_clean, guide_title_short, guide_title_length, guide_short_description FROM $t_references_index_guides WHERE guide_group_id=$get_group_id ORDER BY guide_number ASC";
+				$result_lessons = mysqli_query($link, $query_lessons);
+				while($row_lessons = mysqli_fetch_row($result_lessons)) {
+					list($get_guide_id, $get_guide_title, $get_guide_title_clean, $get_guide_title_short, $get_guide_title_length, $get_guide_short_description) = $row_lessons;
+					
+					if(isset($style) && $style == ""){
+						$style = "odd";
+					}
+					else{
+						$style = "";
+					}
+					echo"
+					 <tr>
+					  <td class=\"$style\" style=\"width: 20%;\">
+						<span><a href=\"$root/$get_current_reference_title_clean/$get_group_title_clean/$get_guide_title_clean.php?reference_id=$get_current_reference_id&amp;group_id=$get_group_id&amp;guide_id=$get_guide_id&amp;l=$l\">$get_guide_title</a></span>
+					  </td>
+					  <td class=\"$style\">
+						<span>$get_guide_short_description</span>
+					  </td>
+					 </tr>";
+				} // guides
+				echo"
+				 </tbody>
+				</table>
+				";
+			} // groups
+			echo"
+			
+			<div style=\"height:20px;\"></div>
+		<!-- //Groups and guides -->
 		";
 
 	} // action == ""

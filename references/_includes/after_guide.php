@@ -19,6 +19,17 @@
 /*- Translation ------------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/references/ts_after_guide.php");
 
+/*- Tables ------------------------------------------------------------------------------ */
+$t_references_title_translations 	= $mysqlPrefixSav . "references_title_translations";
+$t_references_categories_main	 	= $mysqlPrefixSav . "references_categories_main";
+$t_references_categories_sub 	 	= $mysqlPrefixSav . "references_categories_sub";
+
+$t_references_index		 	= $mysqlPrefixSav . "references_index";
+$t_references_index_groups	 	= $mysqlPrefixSav . "references_index_groups";
+$t_references_index_groups_images 	= $mysqlPrefixSav . "references_index_groups_images";
+$t_references_index_guides	 	= $mysqlPrefixSav . "references_index_guides";
+$t_references_index_guides_comments	= $mysqlPrefixSav . "references_index_guides_comments";
+$t_references_index_guides_images	= $mysqlPrefixSav . "references_index_guides_images";
 
 /*- Variables ------------------------------------------------------------------------ */
 if(isset($_GET['reference_id'])) {

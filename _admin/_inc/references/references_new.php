@@ -63,29 +63,42 @@ if($action == ""){
 	<!-- //Where am I? -->
 
 	<!-- Language -->
-		<p><b>Editor language:</b><br />
-		";
-		$found_editor_language = "";
-			$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_path_16x16, language_active_flag_16x16, language_active_default FROM $t_languages_active";
-			$result = mysqli_query($link, $query);
-			while($row = mysqli_fetch_row($result)) {
-				list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_path_16x16, $get_language_active_flag_16x16, $get_language_active_default) = $row;
-			echo"	<a href=\"index.php?open=$open&amp;page=$page&amp;editor_language=$get_language_active_iso_two&amp;l=$l\"><img src=\"../$get_language_active_flag_path_16x16/$get_language_active_flag_16x16\" alt=\"$get_language_active_flag_16x16\" /></a>\n";
-			if($editor_language == "$get_language_active_iso_two"){
-				$found_editor_language = "1";
-			}
-		}
-		if($found_editor_language == ""){
-			// Editor language not found
-			if(isset($get_language_active_iso_two)){
-				$editor_language = "$get_language_active_iso_two";
-			}
-			else{
-				echo"<p>Editor language not found</p>";
-			}
-		}
-		echo"
-		</p>
+
+		<form method=\"get\" enctype=\"multipart/form-data\">
+			<script>
+			\$(function(){
+				// bind change event to select
+				\$('#inp_l').on('change', function () {
+					var url = \$(this).val(); // get selected value
+					if (url) { // require a URL
+ 						window.location = url; // redirect
+					}
+					return false;
+				});
+			});
+			</script>
+			<p><b>Editor language:</b><br />
+
+			<select id=\"inp_l\">
+				<option value=\"index.php?open=$open&amp;page=$page&amp;editor_language=$editor_language&amp;l=$l\">$l_editor_language</option>
+				<option value=\"index.php?open=$open&amp;page=$page&amp;editor_language=$editor_language&amp;l=$l\">-</option>\n";
+
+				$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_default FROM $t_languages_active";
+				$result = mysqli_query($link, $query);
+				while($row = mysqli_fetch_row($result)) {
+					list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_default) = $row;
+
+					// No language selected?
+					if($editor_language == ""){
+							$editor_language = "$get_language_active_iso_two";
+					}
+					echo"	<option value=\"index.php?open=$open&amp;page=$page&amp;action=$action&amp;editor_language=$get_language_active_iso_two&amp;l=$l\"";if($editor_language == "$get_language_active_iso_two"){ echo" selected=\"selected\"";}echo">$get_language_active_name</option>\n";
+				}
+			echo"
+			</select>
+			</p>
+			</form>
+		<!-- //Select language -->
 
 	<!-- //Language -->
 

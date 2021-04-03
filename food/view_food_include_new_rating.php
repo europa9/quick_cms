@@ -50,6 +50,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	$month = date("m");
 	$month_full = date("F");
 	$month_short = date("M");
+	$week = date("W");
 
 	// IP Check
 	$my_ip = $_SERVER['REMOTE_ADDR'];
@@ -169,7 +170,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						$message = $message . "<p><b>$l_actions:</b><br />\n";
 						$message = $message . "1. <a href=\"$configSiteURLSav/food/view_food.php?main_category_id=$get_current_main_category_id&amp;sub_category_id=$get_current_sub_category_id&amp;food_id=$get_current_food_id\">$l_view_food</a><br />\n";
 						$message = $message . "2. <a href=\"$configSiteURLSav/food/view_food.php?main_category_id=$get_current_main_category_id&amp;sub_category_id=$get_current_sub_category_id&amp;food_id=$get_current_food_id#rating$get_current_rating_id\">$l_view_rating</a><br />\n";
-						$message = $message . "5. <a href=\"$configSiteURLSav/food/rating_report.php?rating_id=$get_current_comment_id\">$l_report</a><br />\n";
+						$message = $message . "5. <a href=\"$configSiteURLSav/food/rating_report.php?rating_id=$get_current_rating_id\">$l_report</a><br />\n";
 						$message = $message . "</p>\n\n";
 
 			
@@ -229,7 +230,26 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								or die(mysqli_error($link));
 				}
 
-				
+				// Stats :: Comments :: Week
+				$query = "SELECT stats_comments_id, stats_comments_comments_written FROM $t_stats_comments_per_week WHERE stats_comments_week='$week' AND stats_comments_year='$year'";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_stats_comments_id, $get_stats_comments_comments_written) = $row;
+				if($get_stats_comments_id == ""){
+					mysqli_query($link, "INSERT INTO $t_stats_comments_per_week 
+					(stats_comments_id, stats_comments_week, stats_comments_month, stats_comments_year, stats_comments_comments_written) 
+					VALUES 
+					(NULL, $week, $month, $year, 1)")
+					or die(mysqli_error($link));
+				}
+				else{
+					$inp_counter = $get_stats_comments_comments_written+1;
+					mysqli_query($link, "UPDATE $t_stats_comments_per_week
+								SET stats_comments_comments_written=$inp_counter
+								WHERE stats_comments_id=$get_stats_comments_id")
+								or die(mysqli_error($link));
+				}
+
 				// Refresh site
 				$url = "view_food.php?main_category_id=$get_current_main_category_id&sub_category_id=$get_current_sub_category_id&food_id=$get_current_food_id&&l=$l&ft_rating=success&fm_rating=rating_saved#rating$get_current_rating_id";
 				header("Location: $url");

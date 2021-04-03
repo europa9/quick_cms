@@ -364,18 +364,18 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 		// Email to all board subscribers
-		$query_w = "SELECT discuss_subscription_id, discuss_subscription_user_id, discuss_subscription_user_email, discuss_subscription_last_sendt_datetime, discuss_subscription_last_sendt_time FROM $t_forum_subscriptions";
+		$query_w = "SELECT forum_subscription_id, forum_subscription_user_id, forum_subscription_user_email, forum_subscription_last_sendt_datetime, forum_subscription_last_sendt_time FROM $t_forum_subscriptions";
 		$result_w = mysqli_query($link, $query_w);
 		while($row_w = mysqli_fetch_row($result_w)) {
-			list($get_discuss_subscription_id, $get_discuss_subscription_user_id, $get_discuss_subscription_user_email, $get_discuss_subscription_last_sendt_datetime, $get_discuss_subscription_last_sendt_time) = $row_w;
+			list($get_forum_subscription_id, $get_forum_subscription_user_id, $get_forum_subscription_user_email, $get_forum_subscription_last_sendt_datetime, $get_forum_subscription_last_sendt_time) = $row_w;
 
 			// Dont send email to myself
-			if($get_discuss_subscription_user_id != "$my_user_id"){
+			if($get_forum_subscription_user_id != "$my_user_id"){
 
 
 				// Links
-				$view_link = $configSiteURLSav . "/discuss/view_topic.php?topic_id=$get_topic_id";
-				$unsubscribe_link = $configSiteURLSav . "/discuss/unsubscribe_from_discuss.php?subscription_id=$get_discuss_subscription_id&subscription_user_id=$get_discuss_subscription_user_id";
+				$view_link = $configSiteURLSav . "/forum/view_topic.php?topic_id=$get_topic_id";
+				$unsubscribe_link = $configSiteURLSav . "/forum/unsubscribe_from_discuss.php?subscription_id=$get_forum_subscription_id&subscription_user_id=$get_forum_subscription_user_id";
 		
 			
 				// Topic title substr
@@ -401,7 +401,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				
 				}
 				else{
-				$thumb_full_path = "discuss/_gfx/avatar_blank_40.png";
+				$thumb_full_path = "forum/_gfx/avatar_blank_40.png";
 				}
 
 
@@ -477,7 +477,7 @@ div.topics_chat_view_text {
 					<a href=\"$configSiteURLSav/users/view_profile.php?user_id=$my_user_id&amp;l=$l\"><img src=\"$configSiteURLSav/$thumb_full_path\" alt=\"$thumb_full_path\" class=\"topics_chat_view_author_image\" /></a>
 				  </td>
 				  <td class=\"topics_chat_view_img_cell\">
-					<img src=\"$configSiteURLSav/discuss/_gfx/last_topic_text_arrow_left.png\" alt=\"last_topic_text_arrow_left.png\" class=\"topics_chat_view_text_arrow_left\" />
+					<img src=\"$configSiteURLSav/forum/_gfx/last_topic_text_arrow_left.png\" alt=\"last_topic_text_arrow_left.png\" class=\"topics_chat_view_text_arrow_left\" />
 				  </td>
 				  <td class=\"topics_chat_view_text_cell\">
 					<div class=\"topics_chat_view_text\">
@@ -491,7 +491,7 @@ div.topics_chat_view_text {
 								$tag_clean = clean($inp_tags_array[$x]);
 
 								$message = $message . "
-								<a href=\"$configSiteURLSav/discuss/open_tag.php?tag=$tag_clean&amp;l=$l\" class=\"last_topic_text_tag\">#$tag_title</a>
+								<a href=\"$configSiteURLSav/forum/open_tag.php?tag=$tag_clean&amp;l=$l\" class=\"last_topic_text_tag\">#$tag_title</a>
 								";
 							}
 						}
@@ -516,13 +516,13 @@ div.topics_chat_view_text {
 				// Send mail
 				$headers = "MIME-Version: 1.0" . "\r\n" .
 				    "Content-type: text/html; charset=iso-8859-1" . "\r\n" .
-				    "To: $get_discuss_subscription_user_email" . "\r\n" .
-				    "Reply-To: $discussFromEmailSav" . "\r\n" .
-				    "From: $discussFromEmailSav" . "\r\n" .
+				    "To: $get_forum_subscription_user_email" . "\r\n" .
+				    "Reply-To: $forumFromEmailSav" . "\r\n" .
+				    "From: $forumFromEmailSav" . "\r\n" .
 				    'X-Mailer: PHP/' . phpversion();
 
-				if($discussEmailSendingOnOffSav == "on"){
-					mail($get_discuss_subscription_user_email, $subject, $message, $headers);
+				if($forumEmailSendingOnOffSav == "on"){
+					mail($get_forum_subscription_user_email, $subject, $message, $headers);
 				}
 			} // dont send email to myself
 		} // emails
@@ -598,7 +598,7 @@ div.topics_chat_view_text {
 		$inp_index_title = "$inp_title | $get_current_title_value";
 		$inp_index_title_mysql = quote_smart($link, $inp_index_title);
 
-		$inp_index_url = "discuss/view_topic.php?topic_id=$get_topic_id";
+		$inp_index_url = "forum/view_topic.php?topic_id=$get_topic_id";
 		$inp_index_url_mysql = quote_smart($link, $inp_index_url);
 
 		$inp_index_short_description = substr($inp_text, 0, 200);

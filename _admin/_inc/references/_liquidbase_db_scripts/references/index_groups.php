@@ -13,7 +13,7 @@ if(!(isset($define_access_to_control_panel))){
 	echo"<h1>Server error 403</h1>";
 	die;
 }
-mysqli_query($link, "DROP TABLE IF EXISTS $t_references_title_translations")  or die(mysqli_error($link));
+mysqli_query($link, "DROP TABLE IF EXISTS $t_references_index_groups")  or die(mysqli_error($link));
 
 echo"
 
@@ -39,6 +39,7 @@ else{
 	   group_title_short VARCHAR(200),
 	   group_title_length INT,
 	   group_number INT, 
+	   group_content TEXT,
 	   group_reference_id INT, 
 	   group_reference_title VARCHAR(200), 
 	   group_read_times INT,

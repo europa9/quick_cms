@@ -50,6 +50,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	$month = date("m");
 	$month_full = date("F");
 	$month_short = date("M");
+	$week = date("W");
 
 	// IP Check
 	$my_ip = $_SERVER['REMOTE_ADDR'];
@@ -224,6 +225,26 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				else{
 					$inp_counter = $get_stats_comments_comments_written+1;
 					mysqli_query($link, "UPDATE $t_stats_comments_per_month 
+								SET stats_comments_comments_written=$inp_counter
+								WHERE stats_comments_id=$get_stats_comments_id")
+								or die(mysqli_error($link));
+				}
+
+				// Stats :: Comments :: Week
+				$query = "SELECT stats_comments_id, stats_comments_comments_written FROM $t_stats_comments_per_week WHERE stats_comments_week='$week' AND stats_comments_year='$year'";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_stats_comments_id, $get_stats_comments_comments_written) = $row;
+				if($get_stats_comments_id == ""){
+					mysqli_query($link, "INSERT INTO $t_stats_comments_per_week 
+					(stats_comments_id, stats_comments_week, stats_comments_month, stats_comments_year, stats_comments_comments_written) 
+					VALUES 
+					(NULL, $week, $month, $year, 1)")
+					or die(mysqli_error($link));
+				}
+				else{
+					$inp_counter = $get_stats_comments_comments_written+1;
+					mysqli_query($link, "UPDATE $t_stats_comments_per_week
 								SET stats_comments_comments_written=$inp_counter
 								WHERE stats_comments_id=$get_stats_comments_id")
 								or die(mysqli_error($link));
