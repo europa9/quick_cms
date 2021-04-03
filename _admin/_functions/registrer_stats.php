@@ -1211,7 +1211,7 @@ else{
 		}
 
 		// Tracker :: Index
-		$query = "SELECT tracker_id, tracker_time_start, tracker_hits FROM $t_stats_tracker_index WHERE tracker_ip=$inp_ip_mysql AND tracker_month='$inp_month' AND tracker_year='$inp_year'";
+		$query = "SELECT tracker_id, tracker_time_start, tracker_hits FROM $t_stats_tracker_index WHERE tracker_ip=$inp_ip_mysql AND tracker_month='$inp_month' AND tracker_year='$inp_year' AND tracker_os=$inp_user_agent_os_mysql AND tracker_browser=$inp_user_agent_browser_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_tracker_id, $get_tracker_time_start, $get_tracker_hits) = $row;
