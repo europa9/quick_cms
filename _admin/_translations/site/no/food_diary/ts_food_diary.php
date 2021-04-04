@@ -17,6 +17,7 @@ $l_lunch = "Lunsj";
 $l_my_goal = "Mitt m&aring;l";
 $l_my_profile_data = "Min profil";
 $l_over_your_target_lowercase = "over m&aring;let ditt";
+$l_pcs_lowercase = "stk";
 $l_please_set_your_goal = "Vennligst sett ditt m&aring;l";
 $l_proteins = "Proteiner";
 $l_remaining = "Gjenv&aelig;rende";

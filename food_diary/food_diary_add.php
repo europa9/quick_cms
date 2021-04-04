@@ -246,10 +246,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				";
 					// Last used meals
 					$hour_name_mysql = quote_smart($link, $hour_name);
-					$query = "SELECT meal_id, meal_user_id, meal_hour_name, meal_last_used_date, meal_used_times, meal_entries, meal_entries_count, meal_energy_total, meal_fat_total, meal_saturated_total, meal_monounsaturated_fat_total, meal_polyunsaturated_fat_total, meal_cholesterol_total, meal_carbohydrates_total, meal_carbohydrates_of_which_sugars_total, meal_dietary_fiber_total, meal_proteins_total, meal_salt_total, meal_sodium_total FROM $t_food_diary_meals_index WHERE meal_user_id='$get_my_user_id' AND meal_hour_name=$hour_name_mysql ORDER BY meal_last_used_date DESC";
+					$query = "SELECT meal_id, meal_user_id, meal_hour_name, meal_last_used_date, meal_used_times, meal_entries, meal_entries_count, meal_selected_serving_size, meal_selected_measurement, meal_energy_serving, meal_fat_serving, meal_saturated_fat_serving, meal_monounsaturated_fat_serving, meal_polyunsaturated_fat_serving, meal_cholesterol_serving, meal_carbohydrates_serving, meal_carbohydrates_of_which_sugars_serving, meal_dietary_fiber_serving, meal_proteins_serving, meal_salt_serving, meal_sodium_serving, meal_energy_total, meal_fat_total, meal_saturated_total, meal_monounsaturated_fat_total, meal_polyunsaturated_fat_total, meal_cholesterol_total, meal_carbohydrates_total, meal_carbohydrates_of_which_sugars_total, meal_dietary_fiber_total, meal_proteins_total, meal_salt_total, meal_sodium_total FROM $t_food_diary_meals_index WHERE meal_user_id='$get_my_user_id' AND meal_hour_name=$hour_name_mysql ORDER BY meal_last_used_date DESC";
 					$result = mysqli_query($link, $query);
 					while($row = mysqli_fetch_row($result)) {
-						list($get_meal_id, $get_meal_user_id, $get_meal_hour_name, $get_meal_last_used_date, $get_meal_used_times, $get_meal_entries, $get_meal_entries_count, $get_meal_energy_total, $get_meal_fat_total, $get_meal_saturated_total, $get_meal_monounsaturated_fat_total, $get_meal_polyunsaturated_fat_total, $get_meal_cholesterol_total, $get_meal_carbohydrates_total, $get_meal_carbohydrates_of_which_sugars_total, $get_meal_dietary_fiber_total, $get_meal_proteins_total, $get_meal_salt_total, $get_meal_sodium_total) = $row;
+						list($get_meal_id, $get_meal_user_id, $get_meal_hour_name, $get_meal_last_used_date, $get_meal_used_times, $get_meal_entries, $get_meal_entries_count, $get_meal_selected_serving_size, $get_meal_selected_measurement, $get_meal_energy_serving, $get_meal_fat_serving, $get_meal_saturated_fat_serving, $get_meal_monounsaturated_fat_serving, $get_meal_polyunsaturated_fat_serving, $get_meal_cholesterol_serving, $get_meal_carbohydrates_serving, $get_meal_carbohydrates_of_which_sugars_serving, $get_meal_dietary_fiber_serving, $get_meal_proteins_serving, $get_meal_salt_serving, $get_meal_sodium_serving, $get_meal_energy_total, $get_meal_fat_total, $get_meal_saturated_total, $get_meal_monounsaturated_fat_total, $get_meal_polyunsaturated_fat_total, $get_meal_cholesterol_total, $get_meal_carbohydrates_total, $get_meal_carbohydrates_of_which_sugars_total, $get_meal_dietary_fiber_total, $get_meal_proteins_total, $get_meal_salt_total, $get_meal_sodium_total) = $row;
 						// Layout
 						if($x == 0){
 							echo"
@@ -319,65 +319,23 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								echo"
 								<table style=\"margin: 0px auto;\">
 								";
-								if($get_current_view_hundred_metric == "1"){
-									echo"
-									 <tr>
-									  <td style=\"padding-right: 6px;text-align: center;\">
-										<span class=\"nutritional_number\">$l_hundred</span>
-									  </td>
-									  <td style=\"padding-right: 6px;text-align: center;\">
-										<span class=\"nutritional_number\">$get_food_energy_metric</span>
-									  </td>
-									  <td style=\"padding-right: 6px;text-align: center;\">
-										<span class=\"nutritional_number\">$get_food_fat_metric</span>
-									  </td>
-									  <td style=\"padding-right: 6px;text-align: center;\">
-										<span class=\"nutritional_number\">$get_food_carbohydrates_metric</span>
-									  </td>
-									  <td style=\"text-align: center;\">
-												<span class=\"nutritional_number\">$get_food_proteins_metric</span>
-									  </td>
-									 </tr>
-									";
-								}
 								if($get_current_view_pcs_metric == "1"){
 									echo"
 									 <tr>
 									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-										<span class=\"nutritional_number\" title=\"$get_food_serving_size_metric $get_food_serving_size_measurement_metric\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement</span>
+										<span class=\"nutritional_number\">1 $l_pcs_lowercase</span>
 									  </td>
 									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-										<span class=\"nutritional_number\">$get_food_energy_calculated_metric</span>
+										<span class=\"nutritional_number\">$get_meal_energy_serving</span>
 									  </td>
 									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-										<span class=\"nutritional_number\">$get_food_fat_calculated_metric</span>
+										<span class=\"nutritional_number\">$get_meal_fat_serving</span>
 									  </td>
 									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-										<span class=\"nutritional_number\">$get_food_carbohydrates_calculated_metric</span>
+										<span class=\"nutritional_number\">$get_meal_saturated_fat_serving</span>
 									  </td>
 									  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-										<span class=\"nutritional_number\">$get_food_proteins_calculated_metric</span>
-									  </td>
-									 </tr>
-									";
-								}
-								if($get_current_view_eight_us == "1"){
-									echo"
-									 <tr>
-									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-										<span class=\"nutritional_number\">$l_per_eight_abbr_lowercase</span>
-									  </td>
-									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-										<span class=\"nutritional_number\">$get_food_energy_us</span>
-									  </td>
-									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-										<span class=\"nutritional_number\">$get_food_fat_us</span>
-									  </td>
-									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-										<span class=\"nutritional_number\">$get_food_carbohydrates_us</span>
-									  </td>
-									  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-										<span class=\"nutritional_number\">$get_food_proteins_us</span>
+										<span class=\"nutritional_number\">$get_meal_monounsaturated_fat_serving</span>
 									  </td>
 									 </tr>
 									";
@@ -386,19 +344,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 									echo"
 									 <tr>
 									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-										<span class=\"nutritional_number\" title=\"$get_food_serving_size_us $get_food_serving_size_measurement_us\">$get_food_serving_size_pcs $get_food_serving_size_pcs_measurement</span>
+										<span class=\"nutritional_number\">1 $l_pcs_lowercase</span>
 									  </td>
 									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-										<span class=\"nutritional_number\">$get_food_energy_calculated_us</span>
+										<span class=\"nutritional_number\">$get_meal_energy_serving</span>
 									  </td>
 									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-										<span class=\"nutritional_number\">$get_food_fat_calculated_us</span>
+										<span class=\"nutritional_number\">$get_meal_fat_serving</span>
 									  </td>
 									  <td style=\"padding-right: 6px;text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-										<span class=\"nutritional_number\">$get_food_carbohydrates_calculated_us</span>
+										<span class=\"nutritional_number\">$get_meal_saturated_fat_serving</span>
 									  </td>
 									  <td style=\"text-align: center;"; if($get_current_view_hundred_metric == "1"){ echo"padding-top:6px;"; } echo"\">
-										<span class=\"nutritional_number\">$get_food_proteins_calculated_us</span>
+										<span class=\"nutritional_number\">$get_meal_monounsaturated_fat_serving</span>
 									  </td>
 									 </tr>
 									";
@@ -423,7 +381,20 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 									</table>
 									";
 							} // get_current_view_hundred_metric
+							echo"
 
+							<!-- Add meal -->
+								<form method=\"post\" action=\"food_diary_add_food.php?action=add_meal_to_diary&amp;date=$date&amp;hour_name=$hour_name&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+								<p>
+								<input type=\"hidden\" name=\"inp_entry_meal_id\" value=\"$get_meal_id\" />
+							
+								<input type=\"text\" name=\"inp_entry_meal_serving_size\" size=\"2\" value=\"$get_meal_selected_serving_size\" />
+								<input type=\"submit\" name=\"inp_submit_pcs\" value=\"$get_meal_selected_measurement\" class=\"btn btn_default\" />
+							
+								</p>
+								</form>
+							<!-- //Add meal -->";
+		
 
 						// Layout end
 						echo"

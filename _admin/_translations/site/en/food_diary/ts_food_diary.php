@@ -35,4 +35,6 @@ $l_target = "Target";
 $l_food = "Food";
 $l_remaining = "Remaining";
 $l_lifestyle = "Lifestyle";
+$l_pcs_lowercase = "pcs";
+
 ?>

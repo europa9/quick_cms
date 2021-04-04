@@ -38,7 +38,7 @@ if(file_exists("setup/index.php")){
 	if($process == "1"){
 		delete_directory("setup");
 		
-		$url = "index.php?open=$open&page=$page&editor_language=$editor_language&l=$l&ft=success&fm=setup_folder_deleted";
+		$url = "index.php?open=$open&page=default&editor_language=$editor_language&l=$l&ft=success&fm=setup_folder_deleted";
 		header("Location: $url");
 		exit;
 	}
