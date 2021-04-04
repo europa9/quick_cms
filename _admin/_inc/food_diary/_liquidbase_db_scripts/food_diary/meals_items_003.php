@@ -44,7 +44,9 @@ echo"
 	  	   item_name VARCHAR(250),
 	  	   item_manufacturer_name VARCHAR(250),
 	  	   item_image_path VARCHAR(200),
+	  	   item_image_file VARCHAR(200),
 	  	   item_image_thumb_132x132 VARCHAR(200),
+	  	   item_image_thumb_66x132 VARCHAR(200),
 	  	   item_serving_size DOUBLE,
 	  	   item_serving_size_measurement VARCHAR(250),
 

@@ -99,6 +99,10 @@ if($action == ""){
 
 	<!-- //Charts javascript -->
 
+
+			</div> <!-- //main_right_content -->
+			<div class=\"clear_main_right_content\">
+
 	<!-- Feedback -->
 		";
 		if($ft != ""){
@@ -107,26 +111,23 @@ if($action == ""){
 			}
 			else{
 				$fm = ucfirst($fm);
+				$fm = str_replace("_", " ", $fm);
 			}
-			echo"<div class=\"$ft\"><span>$fm</span></div>";
+			echo"
+			<div class=\"$ft\" style=\"margin: 0px 20px 20px 20px;\"><span>$fm</span></div>";
 		}
 		echo"	
 	<!-- //Feedback -->
-
-			</div> <!-- //main_right_content -->
-			<div class=\"clear_main_right_content\">
-
 
 	<!-- Check if setup folder exists -->
 		";
 		if(file_exists("setup/index.php")){
 			echo"
-			<!-- <div class=\"error\"><span>Security issue: </span></div> -->
+			<div class=\"white_bg_box\"><span><b>Security issue:</b> The setup folder exists. Do you want to <a href=\"index.php?open=dashboard&amp;page=delete_setup_folder&amp;editor_language=$editor_language&amp;l=$l\">delete the setup folder</a>?</span></div> 
 			";
 		}
 		echo"
 	<!-- //Check if setup folder exists -->
-
 
 
 	<!-- Row 1 -->
@@ -181,7 +182,7 @@ if($action == ""){
 					</script>
 
                 			<div class=\"flex_col_white_bg_text_right\">
-						<p class=\"flex_col_white_bg_text_right_headline\">$visit_per_week_human_unique&nbsp;unique&nbsp;visits&nbsp;in&nbsp;week&nbsp;$visit_per_week_week</p>
+						<p class=\"flex_col_white_bg_text_right_headline\">Unique&nbsp;visits&nbsp;in&nbsp;week&nbsp;$visit_per_week_week</p>
                   				<p class=\"flex_col_white_bg_text_right_content\">";
 						if($visit_per_week_human_unique_diff_from_last_week == 0){
 							echo"<img src=\"_inc/dashboard/_img/ti_angle_flat_no_change.png\" alt=\"ti_angle_up_no_change.png\" title=\"Same as last week ($visit_per_week_human_unique_diff_from_last_week unique human visits diff)\" />";
@@ -342,13 +343,13 @@ if($action == ""){
 					  <td style=\"vertical-align:top;\">";
 						if($registered_week == "0" OR $registered_week != "$week"){
 							echo"
-                  					<p class=\"flex_col_white_bg_text_right_headline\">Users&nbsp;in&nbsp;week&nbsp;$week</p>
+                  					<p class=\"flex_col_white_bg_text_right_headline\">New&nbsp;users&nbsp;in&nbsp;week&nbsp;$week</p>
                   					<p class=\"flex_col_white_bg_text_right_content\"><span>0</span></p>
 							";
 						}
 						else{
 							echo"
-                  					<p class=\"flex_col_white_bg_text_right_headline\">Users&nbsp;in&nbsp;week&nbsp;$registered_week</p>
+                  					<p class=\"flex_col_white_bg_text_right_headline\">New&nbsp;users&nbsp;in&nbsp;week&nbsp;$registered_week</p>
                   					<p class=\"flex_col_white_bg_text_right_content\">";
 							if($registered_users_registed_diff_from_last_week == 0){
 								echo"<img src=\"_inc/dashboard/_img/ti_angle_flat_no_change.png\" alt=\"ti_angle_up_no_change.png\" title=\"Same users as last week ($registered_users_registed_diff_from_last_week)\" />";

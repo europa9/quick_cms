@@ -85,7 +85,7 @@ a{
 a:hover{
 	color: #3b5997;
 }
-ul {
+ul, ol {
 	margin: 0px 0px 0px 20px;
 	padding: 0;
 }

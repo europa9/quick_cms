@@ -5,6 +5,15 @@ div.clear_main_right_content{
 	background: #f6f6f7;
 }
 
+/*- White bg box ------------------------------------------------------- */
+div.white_bg_box{
+	background: #fff;
+	border-radius: 5px;
+	border: #eaeef2 1px solid;
+	box-shadow: 0 2px 3px rgba(0,0,0,0.03);
+	padding: 10px 10px 10px 10px;
+	margin: 0px 20px 20px 20px;
+}
 
 /*- First row text boxes  ----------------------------------------------- */
 

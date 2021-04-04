@@ -114,6 +114,15 @@ if($process == "1"){
 
 }
 
+// Language
+if($l == ""){
+	if(isset($_SESSION['l'])){
+		$l = $_SESSION['l'];
+	}
+	else{
+		$l = "en";
+	}
+}
 
 echo"
 

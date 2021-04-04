@@ -581,9 +581,237 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		  </td>
 		 </tr>
 		</table>
-	<!-- //Summary -->
+		<!-- //Summary -->
 
-	";
+
+		<!-- Yesterdays meals as meals -->
+			";
+			$yesterday_mysql = quote_smart($link, $yesterday);
+			for($x=0;$x<7;$x++){
+				$inp_hour_name_mysql = quote_smart($link, $hour_names[$x]);
+				$check_meal_entries = "";
+				$inp_meal_entries_count= 0;
+				$inp_meal_energy_total = 0;
+				$inp_meal_fat_total = 0;
+				$inp_meal_saturated_total = 0;
+				$inp_meal_monounsaturated_fat_total = 0;
+				$inp_meal_polyunsaturated_fat_total = 0;
+				$inp_meal_cholesterol_total = 0;
+				$inp_meal_carbohydrates_total = 0;
+				$inp_meal_carbohydrates_of_which_sugars_total = 0;
+				$inp_meal_dietary_fiber_total = 0;
+				$inp_meal_proteins_total = 0;
+				$inp_meal_salt_total = 0;
+				$inp_meal_sodium_total = 0;
+				
+				$query = "SELECT entry_id, entry_user_id, entry_date, entry_hour_name, entry_food_id, entry_recipe_id, entry_name, entry_manufacturer_name, entry_serving_size, entry_serving_size_measurement, entry_energy_per_entry, entry_fat_per_entry, entry_saturated_fat_per_entry, entry_monounsaturated_fat_per_entry, entry_polyunsaturated_fat_per_entry, entry_cholesterol_per_entry, entry_carbohydrates_per_entry, entry_carbohydrates_of_which_sugars_per_entry, entry_dietary_fiber_per_entry, entry_proteins_per_entry, entry_salt_per_entry, entry_sodium_per_entry, entry_text, entry_deleted, entry_updated_datetime, entry_synchronized FROM $t_food_diary_entires WHERE entry_user_id=$my_user_id_mysql AND entry_date=$yesterday_mysql AND entry_hour_name=$inp_hour_name_mysql";
+				$result = mysqli_query($link, $query);
+				while($row = mysqli_fetch_row($result)) {
+    					list($get_entry_id, $get_entry_user_id, $get_entry_date, $get_entry_hour_name, $get_entry_food_id, $get_entry_recipe_id, $get_entry_name, $get_entry_manufacturer_name, $get_entry_serving_size, $get_entry_serving_size_measurement, $get_entry_energy_per_entry, $get_entry_fat_per_entry, $get_entry_saturated_fat_per_entry, $get_entry_monounsaturated_fat_per_entry, $get_entry_polyunsaturated_fat_per_entry, $get_entry_cholesterol_per_entry, $get_entry_carbohydrates_per_entry, $get_entry_carbohydrates_of_which_sugars_per_entry, $get_entry_dietary_fiber_per_entry, $get_entry_proteins_per_entry, $get_entry_salt_per_entry, $get_entry_sodium_per_entry, $get_entry_text, $get_entry_deleted, $get_entry_updated_datetime, $get_entry_synchronized) = $row;
+
+					// We have food or recipe from yesterday at hour x, lets look for that as a meal
+					if($check_meal_entries == ""){
+						if($get_entry_food_id != "0" && $get_entry_recipe_id == "0"){
+							$check_meal_entries = "f$get_entry_food_id";
+						}
+						elseif($get_entry_food_id == "0" && $get_entry_recipe_id != "0"){
+							$check_meal_entries = "r$get_entry_recipe_id";
+						}
+					}
+					else{
+						if($get_entry_food_id != "0" && $get_entry_recipe_id == "0"){
+							$check_meal_entries = $check_meal_entries . "|f$get_entry_food_id";
+						}
+						elseif($get_entry_food_id == "0" && $get_entry_recipe_id != "0"){
+							$check_meal_entries = $check_meal_entries . "|r$get_entry_recipe_id";
+						}
+					}
+
+					// Sum
+					$inp_meal_energy_total = $inp_meal_energy_total+$get_entry_energy_per_entry;
+					$inp_meal_fat_total = $inp_meal_fat_total+$get_entry_fat_per_entry;
+					$inp_meal_saturated_total = $inp_meal_saturated_total+$get_entry_saturated_fat_per_entry;
+					$inp_meal_monounsaturated_fat_total = $inp_meal_monounsaturated_fat_total+$get_entry_monounsaturated_fat_per_entry;
+					$inp_meal_polyunsaturated_fat_total = $inp_meal_polyunsaturated_fat_total+$get_entry_polyunsaturated_fat_per_entry;
+					$inp_meal_cholesterol_total = $inp_meal_cholesterol_total+$get_entry_cholesterol_per_entry;
+					$inp_meal_carbohydrates_total = $inp_meal_carbohydrates_total+$get_entry_carbohydrates_per_entry;
+					$inp_meal_carbohydrates_of_which_sugars_total = $inp_meal_carbohydrates_of_which_sugars_total+$get_entry_carbohydrates_of_which_sugars_per_entry;
+					$inp_meal_dietary_fiber_total = $inp_meal_dietary_fiber_total+$get_entry_dietary_fiber_per_entry;
+					$inp_meal_proteins_total = $inp_meal_proteins_total+$get_entry_proteins_per_entry;
+					$inp_meal_salt_total = $inp_meal_salt_total+$get_entry_salt_per_entry;
+					$inp_meal_sodium_total = $inp_meal_sodium_total+$get_entry_sodium_per_entry;
+
+					$inp_meal_entries_count++;
+				}
+				if($check_meal_entries != "" && $inp_meal_entries_count > 1){
+					// Look for meal
+					
+					$query_m = "SELECT meal_id, meal_user_id, meal_hour_name, meal_last_used_date, meal_energy_total, meal_fat_total, meal_saturated_total, meal_monounsaturated_fat_total, meal_polyunsaturated_fat_total, meal_cholesterol_total, meal_carbohydrates_total, meal_carbohydrates_of_which_sugars_total, meal_dietary_fiber_total, meal_proteins_total, meal_salt_total, meal_sodium_total FROM $t_food_diary_meals_index WHERE meal_user_id=$my_user_id_mysql AND meal_hour_name=$inp_hour_name_mysql AND meal_entries='$check_meal_entries'";
+					$result_m = mysqli_query($link, $query_m);
+					$row_m = mysqli_fetch_row($result_m);
+					list($get_meal_id, $get_meal_user_id, $get_meal_hour_name, $get_meal_last_used_date, $get_meal_energy_total, $get_meal_fat_total, $get_meal_saturated_total, $get_meal_monounsaturated_fat_total, $get_meal_polyunsaturated_fat_total, $get_meal_cholesterol_total, $get_meal_carbohydrates_total, $get_meal_carbohydrates_of_which_sugars_total, $get_meal_dietary_fiber_total, $get_meal_proteins_total, $get_meal_salt_total, $get_meal_sodium_total) = $row_m;
+					if($get_meal_id == ""){
+						// Insert the food as meal
+						mysqli_query($link, "INSERT INTO $t_food_diary_meals_index 
+						(meal_id, meal_user_id, meal_hour_name, meal_last_used_date, meal_used_times,
+
+
+meal_entries, meal_entries_count,
+						meal_energy_total, meal_fat_total, meal_saturated_total, meal_monounsaturated_fat_total, meal_polyunsaturated_fat_total, meal_cholesterol_total, 
+						meal_carbohydrates_total, meal_carbohydrates_of_which_sugars_total, meal_dietary_fiber_total, meal_proteins_total, meal_salt_total, 
+						meal_sodium_total) 
+						VALUES 
+						(NULL, '$get_my_user_id', $inp_hour_name_mysql, $yesterday_mysql, 0,
+'$check_meal_entries', $inp_meal_entries_count,
+						$inp_meal_energy_total,  $inp_meal_fat_total, $inp_meal_saturated_total, $inp_meal_monounsaturated_fat_total, $inp_meal_polyunsaturated_fat_total, $inp_meal_cholesterol_total,
+						$inp_meal_carbohydrates_total, $inp_meal_carbohydrates_of_which_sugars_total, $inp_meal_dietary_fiber_total, $inp_meal_proteins_total, $inp_meal_salt_total,
+						$inp_meal_sodium_total)")
+						or die(mysqli_error($link));
+						
+						// Get ID
+						$query_m = "SELECT meal_id FROM $t_food_diary_meals_index WHERE meal_user_id=$my_user_id_mysql AND meal_hour_name=$inp_hour_name_mysql AND meal_entries='$check_meal_entries'";
+						$result_m = mysqli_query($link, $query_m);
+						$row_m = mysqli_fetch_row($result_m);
+						list($get_meal_id) = $row_m;
+						
+						// Insert into meal items from entries
+						$query_e = "SELECT entry_id, entry_user_id, entry_date, entry_hour_name, entry_food_id, entry_recipe_id, entry_name, entry_manufacturer_name, entry_serving_size, entry_serving_size_measurement, entry_energy_per_entry, entry_fat_per_entry, entry_saturated_fat_per_entry, entry_monounsaturated_fat_per_entry, entry_polyunsaturated_fat_per_entry, entry_cholesterol_per_entry, entry_carbohydrates_per_entry, entry_carbohydrates_of_which_sugars_per_entry, entry_dietary_fiber_per_entry, entry_proteins_per_entry, entry_salt_per_entry, entry_sodium_per_entry, entry_text, entry_deleted, entry_updated_datetime, entry_synchronized FROM $t_food_diary_entires WHERE entry_user_id=$my_user_id_mysql AND entry_date=$yesterday_mysql AND entry_hour_name=$inp_hour_name_mysql";
+						$result_e = mysqli_query($link, $query_e);
+						while($row_e = mysqli_fetch_row($result_e)) {
+    							list($get_entry_id, $get_entry_user_id, $get_entry_date, $get_entry_hour_name, $get_entry_food_id, $get_entry_recipe_id, $get_entry_name, $get_entry_manufacturer_name, $get_entry_serving_size, $get_entry_serving_size_measurement, $get_entry_energy_per_entry, $get_entry_fat_per_entry, $get_entry_saturated_fat_per_entry, $get_entry_monounsaturated_fat_per_entry, $get_entry_polyunsaturated_fat_per_entry, $get_entry_cholesterol_per_entry, $get_entry_carbohydrates_per_entry, $get_entry_carbohydrates_of_which_sugars_per_entry, $get_entry_dietary_fiber_per_entry, $get_entry_proteins_per_entry, $get_entry_salt_per_entry, $get_entry_sodium_per_entry, $get_entry_text, $get_entry_deleted, $get_entry_updated_datetime, $get_entry_synchronized) = $row_e;
+
+
+							// Find picture
+							if($get_entry_food_id != "0"){
+								$query_f = "SELECT food_id, food_user_id, food_name, food_clean_name, food_manufacturer_name, food_manufacturer_name_and_food_name, food_description, food_country, food_net_content_metric, food_net_content_measurement_metric, food_net_content_us, food_net_content_measurement_us, food_net_content_added_measurement, food_serving_size_metric, food_serving_size_measurement_metric, food_serving_size_us, food_serving_size_measurement_us, food_serving_size_added_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy_metric, food_fat_metric, food_saturated_fat_metric, food_monounsaturated_fat_metric, food_polyunsaturated_fat_metric, food_cholesterol_metric, food_carbohydrates_metric, food_carbohydrates_of_which_sugars_metric, food_dietary_fiber_metric, food_proteins_metric, food_salt_metric, food_sodium_metric, food_energy_us, food_fat_us, food_saturated_fat_us, food_monounsaturated_fat_us, food_polyunsaturated_fat_us, food_cholesterol_us, food_carbohydrates_us, food_carbohydrates_of_which_sugars_us, food_dietary_fiber_us, food_proteins_us, food_salt_us, food_sodium_us, food_score, food_energy_calculated_metric, food_fat_calculated_metric, food_saturated_fat_calculated_metric, food_monounsaturated_fat_calculated_metric, food_polyunsaturated_fat_calculated_metric, food_cholesterol_calculated_metric, food_carbohydrates_calculated_metric, food_carbohydrates_of_which_sugars_calculated_metric, food_dietary_fiber_calculated_metric, food_proteins_calculated_metric, food_salt_calculated_metric, food_sodium_calculated_metric, food_energy_calculated_us, food_fat_calculated_us, food_saturated_fat_calculated_us, food_monounsaturated_fat_calculated_us, food_polyunsaturated_fat_calculated_us, food_cholesterol_calculated_us, food_carbohydrates_calculated_us, food_carbohydrates_of_which_sugars_calculated_us, food_dietary_fiber_calculated_us, food_proteins_calculated_us, food_salt_calculated_us, food_sodium_calculated_us, food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_image_a, food_thumb_a_small, food_thumb_a_medium, food_thumb_a_large, food_image_b, food_thumb_b_small, food_thumb_b_medium, food_thumb_b_large, food_image_c, food_thumb_c_small, food_thumb_c_medium, food_thumb_c_large, food_image_d, food_thumb_d_small, food_thumb_d_medium, food_thumb_d_large, food_image_e, food_thumb_e_small, food_thumb_e_medium, food_thumb_e_large, food_last_used, food_language, food_synchronized, food_accepted_as_master, food_notes, food_unique_hits, food_unique_hits_ip_block, food_comments, food_likes, food_dislikes, food_likes_ip_block, food_user_ip, food_created_date, food_last_viewed, food_age_restriction FROM $t_food_index WHERE food_id=$get_entry_food_id";
+								$result_f = mysqli_query($link, $query_f);
+								$row_f = mysqli_fetch_row($result_f);
+								list($get_food_id, $get_food_user_id, $get_food_name, $get_food_clean_name, $get_food_manufacturer_name, $get_food_manufacturer_name_and_food_name, $get_food_description, $get_food_country, $get_food_net_content_metric, $get_food_net_content_measurement_metric, $get_food_net_content_us, $get_food_net_content_measurement_us, $get_food_net_content_added_measurement, $get_food_serving_size_metric, $get_food_serving_size_measurement_metric, $get_food_serving_size_us, $get_food_serving_size_measurement_us, $get_food_serving_size_added_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy_metric, $get_food_fat_metric, $get_food_saturated_fat_metric, $get_food_monounsaturated_fat_metric, $get_food_polyunsaturated_fat_metric, $get_food_cholesterol_metric, $get_food_carbohydrates_metric, $get_food_carbohydrates_of_which_sugars_metric, $get_food_dietary_fiber_metric, $get_food_proteins_metric, $get_food_salt_metric, $get_food_sodium_metric, $get_food_energy_us, $get_food_fat_us, $get_food_saturated_fat_us, $get_food_monounsaturated_fat_us, $get_food_polyunsaturated_fat_us, $get_food_cholesterol_us, $get_food_carbohydrates_us, $get_food_carbohydrates_of_which_sugars_us, $get_food_dietary_fiber_us, $get_food_proteins_us, $get_food_salt_us, $get_food_sodium_us, $get_food_score, $get_food_energy_calculated_metric, $get_food_fat_calculated_metric, $get_food_saturated_fat_calculated_metric, $get_food_monounsaturated_fat_calculated_metric, $get_food_polyunsaturated_fat_calculated_metric, $get_food_cholesterol_calculated_metric, $get_food_carbohydrates_calculated_metric, $get_food_carbohydrates_of_which_sugars_calculated_metric, $get_food_dietary_fiber_calculated_metric, $get_food_proteins_calculated_metric, $get_food_salt_calculated_metric, $get_food_sodium_calculated_metric, $get_food_energy_calculated_us, $get_food_fat_calculated_us, $get_food_saturated_fat_calculated_us, $get_food_monounsaturated_fat_calculated_us, $get_food_polyunsaturated_fat_calculated_us, $get_food_cholesterol_calculated_us, $get_food_carbohydrates_calculated_us, $get_food_carbohydrates_of_which_sugars_calculated_us, $get_food_dietary_fiber_calculated_us, $get_food_proteins_calculated_us, $get_food_salt_calculated_us, $get_food_sodium_calculated_us, $get_food_barcode, $get_food_main_category_id, $get_food_sub_category_id, $get_food_image_path, $get_food_image_a, $get_food_thumb_a_small, $get_food_thumb_a_medium, $get_food_thumb_a_large, $get_food_image_b, $get_food_thumb_b_small, $get_food_thumb_b_medium, $get_food_thumb_b_large, $get_food_image_c, $get_food_thumb_c_small, $get_food_thumb_c_medium, $get_food_thumb_c_large, $get_food_image_d, $get_food_thumb_d_small, $get_food_thumb_d_medium, $get_food_thumb_d_large, $get_food_image_e, $get_food_thumb_e_small, $get_food_thumb_e_medium, $get_food_thumb_e_large, $get_food_last_used, $get_food_language, $get_food_synchronized, $get_food_accepted_as_master, $get_food_notes, $get_food_unique_hits, $get_food_unique_hits_ip_block, $get_food_comments, $get_food_likes, $get_food_dislikes, $get_food_likes_ip_block, $get_food_user_ip, $get_food_created_date, $get_food_last_viewed, $get_food_age_restriction) = $row_f;
+
+								$inp_item_image_path_mysql = quote_smart($link, $get_food_image_path);
+								$inp_item_image_file_mysql = quote_smart($link, $get_food_image_a);
+								$ext = get_extension($get_food_image_a);
+								$thumb = str_replace(".$ext", "_thumb_132x132.$ext", $get_food_image_a);
+								$inp_item_image_thumb_132x132_mysql = quote_smart($link, $thumb);
+
+								$thumb = str_replace(".$ext", "_thumb_66x132.$ext", $get_food_image_a);
+								$inp_item_image_thumb_66x132_mysql = quote_smart($link, $thumb);
+
+							}
+							else{
+								// get recipe
+								$query_r = "SELECT recipe_id, recipe_user_id, recipe_title, recipe_category_id, recipe_language, recipe_country, recipe_introduction, recipe_directions, recipe_image_path, recipe_image, recipe_thumb_278x156, recipe_video, recipe_date, recipe_date_saying, recipe_time, recipe_cusine_id, recipe_season_id, recipe_occasion_id, recipe_marked_as_spam, recipe_unique_hits, recipe_unique_hits_ip_block, recipe_comments, recipe_times_favorited, recipe_user_ip, recipe_notes, recipe_password, recipe_last_viewed, recipe_age_restriction, recipe_published FROM $t_recipes WHERE recipe_id=$get_entry_recipe_id";
+								$result_r = mysqli_query($link, $query_r);
+								$row_r = mysqli_fetch_row($result_r);
+								list($get_recipe_id, $get_recipe_user_id, $get_recipe_title, $get_recipe_category_id, $get_recipe_language, $get_recipe_country, $get_recipe_introduction, $get_recipe_directions, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156, $get_recipe_video, $get_recipe_date, $get_recipe_date_saying, $get_recipe_time, $get_recipe_cusine_id, $get_recipe_season_id, $get_recipe_occasion_id, $get_recipe_marked_as_spam, $get_recipe_unique_hits, $get_recipe_unique_hits_ip_block, $get_recipe_comments, $get_recipe_times_favorited, $get_recipe_user_ip, $get_recipe_notes, $get_recipe_password, $get_recipe_last_viewed, $get_recipe_age_restriction, $get_recipe_published) = $row_r;
+
+								$inp_item_image_path_mysql = quote_smart($link, $get_recipe_image_path);
+								$inp_item_image_file_mysql = quote_smart($link, $get_recipe_image);
+
+								$ext = get_extension($get_recipe_image);
+								$thumb = str_replace(".$ext", "_thumb_132x132.$ext", $get_recipe_image);
+								$inp_item_image_thumb_132x132_mysql = quote_smart($link, $thumb);
+
+								$thumb = str_replace(".$ext", "_thumb_66x132.$ext", $get_recipe_image);
+								$inp_item_image_thumb_66x132_mysql = quote_smart($link, $thumb);
+							}
+
+							$inp_item_name_mysql = quote_smart($link, $get_entry_name);
+							$inp_item_manufacturer_name_mysql = quote_smart($link, $get_entry_manufacturer_name);
+
+							$inp_item_serving_size_mysql = quote_smart($link, $get_entry_serving_size);
+							$inp_item_serving_size_measurement_mysql = quote_smart($link, $get_entry_serving_size_measurement);
+
+							/*
+							$inp_item_main_category_id_mysql = quote_smart($link, );
+							$inp_item_sub_category_id_mysql = quote_smart($link, );
+
+							$inp_item_metric_or_us_mysql = quote_smart($link, );
+
+							$inp_item_selected_serving_size_mysql = quote_smart($link, );
+							$inp_item_selected_measurement_mysql = quote_smart($link, );
+
+							$inp_item_serving_size_metric_mysql = quote_smart($link, );
+							$inp_item_serving_size_measurement_metric_mysql = quote_smart($link, );
+							$inp_item_serving_size_us_mysql = quote_smart($link, );
+							$inp_item_serving_size_measurement_us_mysql = quote_smart($link, );
+							$inp_item_serving_size_pcs_mysql = quote_smart($link, );
+							$inp_item_serving_size_pcs_measurement_mysql = quote_smart($link, );
+
+							$inp_item_energy_metric_mysql = quote_smart($link, );
+							$inp_item_fat_metric_mysql = quote_smart($link, );
+							$inp_item_saturated_fat_metric_mysql = quote_smart($link, );
+							$inp_item_monounsaturated_fat_metric_mysql = quote_smart($link, );
+							$inp_item_polyunsaturated_fat_metric_mysql = quote_smart($link, );
+							$inp_item_cholesterol_metric_mysql = quote_smart($link, );
+							$inp_item_carbohydrates_metric_mysql = quote_smart($link, );
+							$inp_item_carbohydrates_of_which_sugars_metric_mysql = quote_smart($link, );
+							$inp_item_dietary_fiber_metric_mysql = quote_smart($link, );
+							$inp_item_proteins_metric_mysql = quote_smart($link, );
+							$inp_item_salt_metric_mysql = quote_smart($link, );
+							$inp_item_sodium_metric_mysql = quote_smart($link, );
+
+							$inp_item_energy_us_mysql = quote_smart($link, );
+							$inp_item_fat_us_mysql = quote_smart($link, );
+							$inp_item_saturated_fat_us_mysql = quote_smart($link, );
+							$inp_item_monounsaturated_fat_us_mysql = quote_smart($link, );
+							$inp_item_polyunsaturated_fat_us_mysql = quote_smart($link, );
+							$inp_item_cholesterol_us_mysql = quote_smart($link, );
+							$inp_item_carbohydrates_us_mysql = quote_smart($link, );
+							$inp_item_carbohydrates_of_which_sugars_us_mysql = quote_smart($link, );
+							$inp_item_dietary_fiber_us_mysql = quote_smart($link, );
+							$inp_item_proteins_us_mysql = quote_smart($link, );
+							$inp_item_salt_us_mysql = quote_smart($link, );
+							$inp_item_sodium_us_mysql = quote_smart($link, );
+							*/
+
+							$inp_item_energy_serving_mysql = quote_smart($link, $get_entry_energy_per_entry);
+							$inp_item_fat_serving_mysql = quote_smart($link, $get_entry_fat_per_entry);
+							$inp_item_saturated_fat_serving_mysql = quote_smart($link, $get_entry_saturated_fat_per_entry);
+							$inp_item_monounsaturated_fat_serving_mysql = quote_smart($link, $get_entry_monounsaturated_fat_per_entry);
+							$inp_item_polyunsaturated_fat_serving_mysql = quote_smart($link, $get_entry_polyunsaturated_fat_per_entry);
+							$inp_item_cholesterol_serving_mysql = quote_smart($link, $get_entry_cholesterol_per_entry);
+							$inp_item_carbohydrates_serving_mysql = quote_smart($link, $get_entry_carbohydrates_per_entry);
+							$inp_item_carbohydrates_of_which_sugars_serving_mysql = quote_smart($link, $get_entry_carbohydrates_of_which_sugars_per_entry);
+							$inp_item_dietary_fiber_serving_mysql = quote_smart($link, $get_entry_dietary_fiber_per_entry);
+							$inp_item_proteins_serving_mysql = quote_smart($link, $get_entry_proteins_per_entry);
+							$inp_item_salt_serving_mysql = quote_smart($link, $get_entry_salt_per_entry);
+							$inp_item_sodium_serving_mysql = quote_smart($link, $get_entry_sodium_per_entry);
+
+
+							mysqli_query($link, "INSERT INTO $t_food_diary_meals_items
+							(item_id, item_user_id, item_meal_id, item_food_id, item_recipe_id, 
+							item_name, item_manufacturer_name, item_image_path, item_image_file, item_image_thumb_132x132, item_image_thumb_66x132, item_serving_size, 
+							item_serving_size_measurement, item_energy_serving, item_fat_serving, item_saturated_fat_serving, item_monounsaturated_fat_serving, 
+							item_polyunsaturated_fat_serving, item_cholesterol_serving, item_carbohydrates_serving, item_carbohydrates_of_which_sugars_serving, item_dietary_fiber_serving, 
+							item_proteins_serving, item_salt_serving, item_sodium_serving) 
+							VALUES 
+							(NULL, '$get_my_user_id', $get_meal_id, $get_entry_food_id, $get_entry_recipe_id, 
+							$inp_item_name_mysql, $inp_item_manufacturer_name_mysql, $inp_item_image_path_mysql, $inp_item_image_file_mysql, $inp_item_image_thumb_132x132_mysql, $inp_item_image_thumb_66x132_mysql, $inp_item_serving_size_mysql, 
+							$inp_item_serving_size_measurement_mysql, $inp_item_energy_serving_mysql,
+							$inp_item_fat_serving_mysql,
+							$inp_item_saturated_fat_serving_mysql,
+							$inp_item_monounsaturated_fat_serving_mysql,
+							$inp_item_polyunsaturated_fat_serving_mysql,
+							$inp_item_cholesterol_serving_mysql,
+							$inp_item_carbohydrates_serving_mysql,
+							$inp_item_carbohydrates_of_which_sugars_serving_mysql,
+							$inp_item_dietary_fiber_serving_mysql,
+							$inp_item_proteins_serving_mysql,
+							$inp_item_salt_serving_mysql,
+							$inp_item_sodium_serving_mysql
+							)")
+							or die(mysqli_error($link));
+						} // entries
+						
+
+					} // meal doesnt exists
+				} // food and recipes found
+			} // for hour names
+
+			echo"
+		<!-- //Yesterdays meals as meals -->		
+		";
 	} // goal
 } // logged in
 else{

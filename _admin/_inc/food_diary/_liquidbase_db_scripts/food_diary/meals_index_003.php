@@ -39,6 +39,9 @@ echo"
 	  	   meal_user_id INT,
 	  	   meal_hour_name VARCHAR(50),
 	  	   meal_last_used_date DATE,
+	  	   meal_used_times INT, 
+	  	   meal_entries TEXT,
+	  	   meal_entries_count INT, 
 
 	  	   meal_energy_total DOUBLE,
 	  	   meal_fat_total DOUBLE,

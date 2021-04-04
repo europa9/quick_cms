@@ -76,8 +76,11 @@ else{
 /*- Select language ------------------------------------------------------------------ */
 if(isset($_GET['l'])) {
 	$l = $_GET['l'];
+	if($l == ""){
+		$l = "en";
+	}
 
-	if(file_exists("../_translations/admin/$l/login/t_login.php")){
+	if(file_exists("../_translations/admin/$l/login/t_login.php") && $l != ""){
 		$_SESSION['l'] = $l;
 	}
 	else{
