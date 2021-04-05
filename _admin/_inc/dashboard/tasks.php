@@ -158,32 +158,33 @@ if($action == ""){
 
 					
 							echo"
-							<div class=\"task_content_priority_$get_task_priority_weight\">
+							<div class=\"tasks_drop_div\" id=\"status_code_id$get_status_code_id"; echo"user_id0\">
+								<div class=\"task_content_priority_$get_task_priority_weight\">
 
-								<p>
-								<a href=\"index.php?open=$open&amp;page=tasks&amp;action=open_task&amp;task_id=$get_task_id&amp;l=$l&amp;editor_language=$editor_language\""; if($get_read_id == ""){ echo" style=\"font-weight: bold;\""; } echo">";
+									<p>
+									<a href=\"index.php?open=$open&amp;page=tasks&amp;action=open_task&amp;task_id=$get_task_id&amp;l=$l&amp;editor_language=$editor_language\""; if($get_read_id == ""){ echo" style=\"font-weight: bold;\""; } echo">";
 
-							// Assigned to image
-							if($get_task_assigned_to_user_id == "" OR $get_task_assigned_to_user_id == "0"){
+									// Assigned to image
+									if($get_task_assigned_to_user_id == "" OR $get_task_assigned_to_user_id == "0"){
 					
-							}
-							else{
-								if($get_task_assigned_to_user_thumb_40 != "" && file_exists("../_uploads/users/images/$get_task_assigned_to_user_id/$get_task_assigned_to_user_thumb_40")){
+									}
+									else{
+										if($get_task_assigned_to_user_thumb_40 != "" && file_exists("../_uploads/users/images/$get_task_assigned_to_user_id/$get_task_assigned_to_user_thumb_40")){
+											echo"
+											<img src=\"../_uploads/users/images/$get_task_assigned_to_user_id/$get_task_assigned_to_user_thumb_40\" alt=\"../$get_task_assigned_to_user_thumb_40/_uploads/users/images/$get_task_assigned_to_user_id/$get_task_assigned_to_user_thumb_40\" width=\"20\" height=\"20\" />
+											";
+										}
+										else{
+											echo"
+											<img src=\"_inc/dashboard/_img/avatar_blank_40.png\" alt=\"avatar_blank_40.png\" width=\"20\" height=\"20\" />
+											";
+										}
+									}
 									echo"
-									<img src=\"../_uploads/users/images/$get_task_assigned_to_user_id/$get_task_assigned_to_user_thumb_40\" alt=\"../$get_task_assigned_to_user_thumb_40/_uploads/users/images/$get_task_assigned_to_user_id/$get_task_assigned_to_user_thumb_40\" width=\"20\" height=\"20\" />
-									";
-								}
-								else{
-									echo"
-									<img src=\"_inc/dashboard/_img/avatar_blank_40.png\" alt=\"avatar_blank_40.png\" width=\"20\" height=\"20\" />
-									";
-								}
-
-							}
-							echo"
-								$number  $get_task_title</a>
-								</p>
-							</div> <!-- //task_priority_x -->
+									$number  $get_task_title</a>
+									</p>
+								</div> <!-- //task_priority_x -->
+							</div> <!-- //tasks_drop_div -->
 							";
 						}
 						echo"
