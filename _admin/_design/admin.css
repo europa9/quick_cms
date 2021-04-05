@@ -50,6 +50,12 @@ h2{
 	margin: 0px 0px 0px 0px;
 	padding: 20px 0px 10px 0px;
 }
+a.h2{
+	font: normal 18px 'Open Sans',sans-serif;
+	color: #4099ff;
+	margin: 0px 0px 0px 0px;
+	padding: 20px 0px 10px 0px;
+}
 h3{
 	font: normal 16px 'Open Sans',sans-serif;
 	color: #322e2d;

@@ -31,13 +31,6 @@ if($result !== FALSE){
 	$row = mysqli_fetch_row($result);
 	list($get_current_category_id, $get_current_category_title, $get_current_category_weight, $get_current_category_bg_color, $get_current_category_border_color, $get_current_category_title_color, $get_current_category_pages_bg_color, $get_current_category_pages_bg_color_hover, $get_current_category_pages_bg_color_active, $get_current_category_pages_border_color, $get_current_category_pages_border_color_hover, $get_current_category_pages_border_color_active, $get_current_category_pages_title_color, $get_current_category_pages_title_color_hover, $get_current_category_pages_title_color_active, $get_current_category_created_datetime, $get_current_category_created_by_user_id, $get_current_category_updated_datetime, $get_current_category_updated_by_user_id) = $row;
 
-	// Find default page
-	if($get_current_category_id != ""){
-		$query = "SELECT page_id, page_title, page_category_id, page_weight, page_parent_id, page_text, page_created_datetime, page_created_by_user_id, page_updated_datetime, page_updated_by_user_id FROM $t_notes_pages WHERE page_category_id=$get_current_category_id ORDER BY page_weight LIMIT 0,1";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_current_page_id, $get_current_page_title, $get_current_page_category_id, $get_current_page_weight, $get_current_page_parent_id, $get_current_page_text, $get_current_page_created_datetime, $get_current_page_created_by_user_id, $get_current_page_updated_datetime, $get_current_page_updated_by_user_id) = $row;
-	}
 	
 	echo"
 	<h1>Notes</h1>
@@ -64,14 +57,7 @@ if($result !== FALSE){
 		if($get_current_category_id != ""){
 			echo"
 			<a href=\"index.php?open=$open&amp;page=notes_new_page&amp;category_id=$get_current_category_id&amp;editor_language=$editor_language&amp;l=$l\" class=\"btn_default\">New page</a>
-			";
-			if($get_current_page_id != ""){
-				echo"
-				<a href=\"index.php?open=$open&amp;page=notes_edit_page&amp;page_id=$get_current_page_id&amp;editor_language=$editor_language&amp;l=$l\" class=\"btn_default\">Edit page</a>
-				<a href=\"index.php?open=$open&amp;page=notes_delete_page&amp;page_id=$get_current_page_id&amp;editor_language=$editor_language&amp;l=$l\" class=\"btn_default\">Delete page</a>
-				";
-			}
-			echo"<a href=\"index.php?open=$open&amp;page=notes_edit_category&amp;category_id=$get_current_category_id&amp;editor_language=$editor_language&amp;l=$l\" class=\"btn_default\">Edit category</a>
+			<a href=\"index.php?open=$open&amp;page=notes_edit_category&amp;category_id=$get_current_category_id&amp;editor_language=$editor_language&amp;l=$l\" class=\"btn_default\">Edit category</a>
 			<a href=\"index.php?open=$open&amp;page=notes_delete_category&amp;category_id=$get_current_category_id&amp;editor_language=$editor_language&amp;l=$l\" class=\"btn_default\">Delete category</a>
 			";
 		}
@@ -83,14 +69,22 @@ if($result !== FALSE){
 		";
 		echo"
 		<div class=\"notes_page_and_pages_row\">
-			<!-- View note -->
+			<!-- View all notes for this categories -->
 			<div class=\"notes_page_and_pages_col_left\">
 				";
 				if($get_current_category_id != ""){
-					if($get_current_page_id != ""){
+					$x = 0;
+					$query_p = "SELECT page_id, page_title, page_category_id, page_weight, page_parent_id, page_text, page_created_datetime, page_created_by_user_id, page_updated_datetime, page_updated_by_user_id FROM $t_notes_pages WHERE page_category_id=$get_current_category_id ORDER BY page_weight";
+					$result_p = mysqli_query($link, $query_p);
+					while($row_p = mysqli_fetch_row($result_p)) {
+						list($get_page_id, $get_page_title, $get_page_category_id, $get_page_weight, $get_page_parent_id, $get_page_text, $get_page_created_datetime, $get_page_created_by_user_id, $get_page_updated_datetime, $get_page_updated_by_user_id) = $row_p;
+						if($x > 0){
+							echo"<hr />\n";
+						}
 						echo"
-						<h2>$get_current_page_title</h2>
-						$get_current_page_text";
+						<h2><a href=\"index.php?open=$open&amp;page=notes_open_page&amp;page_id=$get_page_id&amp;editor_language=$editor_language&amp;l=$l\" class=\"h2\">$get_page_title</a></h2>
+						$get_page_text";
+						$x++;
 					}
 				}
 				echo"
@@ -106,7 +100,7 @@ if($result !== FALSE){
 					while($row_p = mysqli_fetch_row($result_p)) {
 						list($get_page_id, $get_page_title, $get_page_category_id, $get_page_weight, $get_page_parent_id) = $row_p;
 						echo"				";
-						echo"<li><a href=\"index.php?open=$open&amp;page=notes_open_page&amp;page_id=$get_page_id&amp;editor_language=$editor_language&amp;l=$l\""; if($get_page_id == "$get_current_page_id"){ echo" class=\"active\""; } echo">$get_page_title</a>\n";
+						echo"<li><a href=\"index.php?open=$open&amp;page=notes_open_page&amp;page_id=$get_page_id&amp;editor_language=$editor_language&amp;l=$l\">$get_page_title</a>\n";
 					}
 				}
 				echo"
