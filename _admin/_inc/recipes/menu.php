@@ -34,6 +34,7 @@ echo"
 			<li><a href=\"./?open=$open&amp;page=seasons&amp;editor_language=$editor_language\""; if($page == "seasons"){ echo" class=\"selected\""; } echo">Seasons</a></li>
 			<li><a href=\"./?open=$open&amp;page=occasions&amp;editor_language=$editor_language\""; if($page == "occasions"){ echo" class=\"selected\""; } echo">Occasions</a></li>
 			<li><a href=\"./?open=$open&amp;page=searches&amp;editor_language=$editor_language\""; if($page == "searches"){ echo" class=\"selected\""; } echo">Searches</a></li>
+			<li><a href=\"index.php?open=$open&amp;page=settings&amp;editor_language=$editor_language\""; if($page == "settings"){ echo" class=\"selected\""; } echo">Settings</a></li>
 			<li><a href=\"./?open=$open&amp;page=tables&amp;editor_language=$editor_language\""; if($page == "tables"){ echo" class=\"selected\""; } echo">Tables</a></li>
 	
 ";

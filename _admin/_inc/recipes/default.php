@@ -38,7 +38,16 @@ $t_recipes_cuisines	= $mysqlPrefixSav . "recipes_cuisines";
 $t_recipes_seasons	= $mysqlPrefixSav . "recipes_seasons";
 $t_recipes_occasions	= $mysqlPrefixSav . "recipes_occasions";
 
+/*- Config ----------------------------------------------------------------------- */
+if(!(file_exists("_data/recipes.php"))){
+	$update_file="<?php
+\$recipesPrintLogoOnImagesSav = \"0\";
+?>";
 
+	$fh = fopen("_data/recipes.php", "w+") or die("can not open file");
+	fwrite($fh, $update_file);
+	fclose($fh);
+}
 
 /*- Check if setup is run ------------------------------------------------------------- */
 $t_recipes_liquidbase	= $mysqlPrefixSav . "recipes_liquidbase";

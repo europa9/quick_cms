@@ -452,7 +452,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		} // entries
 		// Control check $get_consumed_hour_energy
 		if($get_consumed_hour_energy != "$inp_consumed_hour_energy"){
-			echo"<p>Calculation error. $get_consumed_hour_energy=$inp_consumed_hour_energy from food_diary_consumed_hours</p>";
+			echo"<p><img src=\"_gfx/loading_22.gif\" alt=\"loading_22.gif\" /></p>
+			<meta http-equiv=refresh content=\"0; URL=index.php?l=$l\">";
 			mysqli_query($link, "UPDATE $t_food_diary_consumed_hours SET consumed_hour_energy=$inp_consumed_hour_energy WHERE consumed_hour_user_id=$my_user_id_mysql AND consumed_hour_date=$date_mysql AND consumed_hour_name='$hour_names[$x]'")
 			or die(mysqli_error($link));
 		}
@@ -648,6 +649,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$inp_meal_salt_total = $inp_meal_salt_total+$get_entry_salt_per_entry;
 					$inp_meal_sodium_total = $inp_meal_sodium_total+$get_entry_sodium_per_entry;
 
+					// Counter
 					$inp_meal_entries_count++;
 				}
 				if($check_meal_entries != "" && $inp_meal_entries_count > 1){
@@ -663,14 +665,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						$inp_meal_selected_measurement_mysql = quote_smart($link, $l_pcs_lowercase);
 						mysqli_query($link, "INSERT INTO $t_food_diary_meals_index 
 						(meal_id, meal_user_id, meal_hour_name, meal_last_used_date, meal_used_times,
-						meal_entries, meal_entries_count, meal_selected_serving_size, meal_selected_measurement, 
-
-						meal_energy_serving, meal_fat_serving, meal_saturated_fat_serving, meal_monounsaturated_fat_serving, meal_polyunsaturated_fat_serving, meal_cholesterol_serving, meal_carbohydrates_serving, meal_carbohydrates_of_which_sugars_serving, meal_dietary_fiber_serving, meal_proteins_serving, meal_salt_serving, meal_sodium_serving, 
-						
-						meal_energy_total, 
-						meal_fat_total, meal_saturated_total, meal_monounsaturated_fat_total, meal_polyunsaturated_fat_total, meal_cholesterol_total, 
-						meal_carbohydrates_total, meal_carbohydrates_of_which_sugars_total, meal_dietary_fiber_total, meal_proteins_total, meal_salt_total, 
-						meal_sodium_total) 
+						meal_entries, meal_entries_count, meal_selected_serving_size, meal_selected_measurement, meal_energy_serving, 
+						meal_fat_serving, meal_saturated_fat_serving, meal_monounsaturated_fat_serving, meal_polyunsaturated_fat_serving, meal_cholesterol_serving, 
+						meal_carbohydrates_serving, meal_carbohydrates_of_which_sugars_serving, meal_dietary_fiber_serving, meal_proteins_serving, meal_salt_serving, 
+						meal_sodium_serving, meal_energy_total, meal_fat_total, meal_saturated_total, meal_monounsaturated_fat_total, 
+						meal_polyunsaturated_fat_total, meal_cholesterol_total, meal_carbohydrates_total, meal_carbohydrates_of_which_sugars_total, meal_dietary_fiber_total, 
+						meal_proteins_total, meal_salt_total, meal_sodium_total) 
 						VALUES 
 						(NULL, '$get_my_user_id', $inp_hour_name_mysql, $yesterday_mysql, 0,
 						'$check_meal_entries', $inp_meal_entries_count, 1, $inp_meal_selected_measurement_mysql, $inp_meal_energy_total,  
@@ -717,7 +717,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						$inp_meal_sodium_us = 0;
 
 
-						// Insert into meal items from entries
+						// Insert into meal items from entries	
+						$inp_last_used_name = "";
 						$query_e = "SELECT entry_id, entry_user_id, entry_date, entry_hour_name, entry_food_id, entry_recipe_id, entry_name, entry_manufacturer_name, entry_serving_size, entry_serving_size_measurement, entry_energy_per_entry, entry_fat_per_entry, entry_saturated_fat_per_entry, entry_monounsaturated_fat_per_entry, entry_polyunsaturated_fat_per_entry, entry_cholesterol_per_entry, entry_carbohydrates_per_entry, entry_carbohydrates_of_which_sugars_per_entry, entry_dietary_fiber_per_entry, entry_proteins_per_entry, entry_salt_per_entry, entry_sodium_per_entry, entry_text, entry_deleted, entry_updated_datetime, entry_synchronized FROM $t_food_diary_entires WHERE entry_user_id=$my_user_id_mysql AND entry_date=$yesterday_mysql AND entry_hour_name=$inp_hour_name_mysql";
 						$result_e = mysqli_query($link, $query_e);
 						while($row_e = mysqli_fetch_row($result_e)) {
@@ -805,9 +806,42 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							$inp_item_sodium_serving_mysql
 							)")
 							or die(mysqli_error($link));
+
+							// Name
+							if($inp_last_used_name == ""){
+								$inp_last_used_name = "$get_entry_serving_size $get_entry_name";
+							}
+							else{
+								$inp_last_used_name = $inp_last_used_name . ", " . "$get_entry_serving_size $get_entry_name";
+							}
+
+
 						} // entries
 						
 
+
+						// Add the meal to last used table
+						$inp_last_used_name_mysql = quote_smart($link, $inp_last_used_name);
+						mysqli_query($link, "INSERT INTO $t_food_diary_last_used
+						(last_used_id, last_used_user_id, last_used_hour_name, last_used_food_id, last_used_recipe_id, 
+						last_used_meal_id, last_used_times, last_used_datetime, last_used_name, last_used_selected_serving_size, 
+						
+						last_used_selected_measurement, last_used_serving_size_pcs, last_used_serving_size_pcs_measurement, last_used_energy_serving, last_used_fat_serving, 
+						last_used_saturated_fat_serving, last_used_monounsaturated_fat_serving, last_used_polyunsaturated_fat_serving, last_used_cholesterol_serving, last_used_carbohydrates_serving, last_used_carbohydrates_of_which_sugars_serving, 
+						
+						last_used_dietary_fiber_serving, last_used_proteins_serving, last_used_salt_serving, last_used_sodium_serving) 
+						VALUES 
+						(NULL, '$get_my_user_id', $inp_hour_name_mysql, 0, 0, 
+						$get_meal_id, 1, '$datetime', $inp_last_used_name_mysql, 1, 
+						$inp_meal_selected_measurement_mysql, 1, $inp_meal_selected_measurement_mysql, $inp_meal_energy_total,  
+						$inp_meal_fat_total, $inp_meal_saturated_total, $inp_meal_monounsaturated_fat_total, $inp_meal_polyunsaturated_fat_total, $inp_meal_cholesterol_total,
+						$inp_meal_carbohydrates_total, $inp_meal_carbohydrates_of_which_sugars_total, $inp_meal_dietary_fiber_total, $inp_meal_proteins_total, $inp_meal_salt_total,
+						$inp_meal_sodium_total)")
+						or die(mysqli_error($link));
+
+
+						mysqli_query($link, "UPDATE $t_food_diary_meals_index SET meal_name=$inp_last_used_name_mysql WHERE meal_id=$get_meal_id")
+						or die(mysqli_error($link));
 					} // meal doesnt exists
 				} // food and recipes found
 			} // for hour names

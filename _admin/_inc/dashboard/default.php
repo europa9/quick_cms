@@ -549,29 +549,33 @@ if($action == ""){
 	<!-- //Row 2 -->
 
 	<!-- Row 3 -->
+		<a id=\"tasks\"></a>
 		<div class=\"flex_row\">
 			<!-- New Tasks / Unassigned -->
 				<div class=\"flex_col_white_bg\">";
 
-			$time = time();
+				$time = time();
 
-			$query_t = "SELECT status_code_id, status_code_title, status_code_text_color, status_code_bg_color, status_code_border_color, status_code_weight, status_code_show_on_board, status_code_on_status_close_task, status_code_count_tasks FROM $t_tasks_status_codes WHERE status_code_show_on_board=1 AND status_code_task_is_assigned=0 ORDER BY status_code_weight ASC LIMIT 0,1";
-			$result_t = mysqli_query($link, $query_t);
-			$row_t = mysqli_fetch_row($result_t);
-			list($get_status_code_id, $get_status_code_title, $get_status_code_text_color, $get_status_code_bg_color, $get_status_code_border_color, $get_status_code_weight, $get_status_code_show_on_board, $get_status_code_on_status_close_task, $get_status_code_count_tasks) = $row_t;	
+				$query_t = "SELECT status_code_id, status_code_title, status_code_text_color, status_code_bg_color, status_code_border_color, status_code_weight, status_code_show_on_board, status_code_on_status_close_task, status_code_count_tasks FROM $t_tasks_status_codes WHERE status_code_show_on_board=1 AND status_code_task_is_assigned=0 ORDER BY status_code_weight ASC LIMIT 0,1";
+				$result_t = mysqli_query($link, $query_t);
+				$row_t = mysqli_fetch_row($result_t);
+				list($get_status_code_id, $get_status_code_title, $get_status_code_text_color, $get_status_code_bg_color, $get_status_code_border_color, $get_status_code_weight, $get_status_code_show_on_board, $get_status_code_on_status_close_task, $get_status_code_count_tasks) = $row_t;	
 
-					echo"
-					<div class=\"task_status_headline\">
-						<div class=\"task_status_headline_left\">
-							<h2>$get_status_code_title</h2>
+				echo"
+				
+					<div class=\"tasks_drop_div\" id=\"status_code_id$get_status_code_id"; echo"user_id0\">
+						<div class=\"task_status_headline\">
+							<div class=\"task_status_headline_left\">
+								<h2>$get_status_code_title</h2>
+							</div>
+							<div class=\"task_status_headline_right\">
+								<p>
+								<a href=\"index.php?open=dashboard&amp;page=tasks&amp;action=new_task&amp;status_code_id=$get_status_code_id&amp;l=$l\">+</a>
+								</p>
+							</div>
 						</div>
-						<div class=\"task_status_headline_right\">
-							<p>
-							<a href=\"index.php?open=dashboard&amp;page=tasks&amp;action=new_task&amp;status_code_id=$get_status_code_id&amp;l=$l\">+</a>
-							</p>
-						</div>
-					</div>
-					<div class=\"clear\"></div>";
+						<div class=\"clear\"></div>
+						";
 
 						$query = "SELECT task_id, task_system_task_abbr, task_system_incremented_number, task_project_task_abbr, task_project_incremented_number, task_title, task_text, task_status_code_id, task_priority_id, task_priority_weight, task_created_datetime, task_created_by_user_id, task_created_by_user_alias, task_created_by_user_image, task_created_by_user_email, task_updated_datetime, task_due_datetime, task_due_time, task_due_translated, task_assigned_to_user_id, task_assigned_to_user_alias, task_assigned_to_user_image, task_assigned_to_user_thumb_40, task_assigned_to_user_email, task_qa_datetime, task_qa_by_user_id, task_qa_by_user_alias, task_qa_by_user_image, task_qa_by_user_email, task_finished_datetime, task_finished_by_user_id, task_finished_by_user_alias, task_finished_by_user_image, task_finished_by_user_email, task_is_archived, task_comments, task_project_id, task_project_part_id, task_system_id, task_system_part_id FROM $t_tasks_index ";
 						$query = $query . "WHERE task_status_code_id=$get_status_code_id AND task_is_archived='0' ORDER BY task_priority_id, task_id ASC";
@@ -601,7 +605,8 @@ if($action == ""){
 
 					
 							echo"
-							<div class=\"task_content_priority_$get_task_priority_weight\">
+							<div class=\"tasks_content_wrapper\" id=\"task_id$get_task_id\">
+								<div class=\"task_content_priority_$get_task_priority_weight\">
 
 								<p>
 								<a href=\"index.php?open=$open&amp;page=tasks&amp;action=open_task&amp;task_id=$get_task_id&amp;l=$l&amp;editor_language=$editor_language\""; if($get_read_id == ""){ echo" style=\"font-weight: bold;\""; } echo">";
@@ -626,10 +631,12 @@ if($action == ""){
 							echo"
 								$number  $get_task_title</a>
 								</p>
-							</div> <!-- //task_priority_x -->
+								</div> <!-- //task_priority_x -->
+							</div> <!-- //task_content_wrapper -->
 							";
 						}
 						echo"
+					</div> <!-- //tasks_drop_div -->
 				</div> <!-- //flex_col_white_bg -->
 			<!-- //New Tasks / Unassigned -->
 
@@ -686,8 +693,9 @@ if($action == ""){
 							list($get_status_code_id, $get_status_code_title, $get_status_code_text_color, $get_status_code_bg_color, $get_status_code_border_color, $get_status_code_weight, $get_status_code_show_on_board, $get_status_code_on_status_close_task, $get_status_code_count_tasks) = $row_s;
 
 							echo"
-							<h3>$get_status_code_title</h3>
-							";
+							<div class=\"tasks_drop_div\" id=\"status_code_id$get_status_code_id"; echo"user_id$get_user_id\">
+								<h3>$get_status_code_title</h3>
+								";
 
 							// Tasks
 							$query = "SELECT task_id, task_system_task_abbr, task_system_incremented_number, task_project_task_abbr, task_project_incremented_number, task_title, task_text, task_status_code_id, task_priority_id, task_priority_weight, task_created_datetime, task_created_by_user_id, task_created_by_user_alias, task_created_by_user_image, task_created_by_user_email, task_updated_datetime, task_due_datetime, task_due_time, task_due_translated, task_assigned_to_user_id, task_assigned_to_user_alias, task_assigned_to_user_image, task_assigned_to_user_thumb_40, task_assigned_to_user_email, task_qa_datetime, task_qa_by_user_id, task_qa_by_user_alias, task_qa_by_user_image, task_qa_by_user_email, task_finished_datetime, task_finished_by_user_id, task_finished_by_user_alias, task_finished_by_user_image, task_finished_by_user_email, task_is_archived, task_comments, task_project_id, task_project_part_id, task_system_id, task_system_part_id FROM $t_tasks_index ";
@@ -718,22 +726,25 @@ if($action == ""){
 
 									
 								echo"
-								<div class=\"task_content_priority_$get_task_priority_weight\">
- 									<!-- Due -->";
-										if($time > $get_task_due_time){
-											echo"<div class=\"task_content_info\">
+								<div class=\"tasks_content_wrapper\" id=\"task_id$get_task_id\">
+									<div class=\"task_content_priority_$get_task_priority_weight\">
+ 										<!-- Due -->";
+											if($time > $get_task_due_time){
+												echo"<div class=\"task_content_info\">
 												<p>$get_task_due_translated</p>
-											</div>\n";
-										}
-										echo"
- 									<!-- //Due -->
-									<p>
-									<a href=\"index.php?open=$open&amp;page=tasks&amp;action=open_task&amp;task_id=$get_task_id&amp;l=$l&amp;editor_language=$editor_language\""; if($get_read_id == ""){ echo" style=\"font-weight: bold;\""; } echo">$number $get_task_title</a>
-									</p>
-								</div>
+												</div>\n";
+											}
+											echo"
+ 										<!-- //Due -->
+										<p>
+										<a href=\"index.php?open=$open&amp;page=tasks&amp;action=open_task&amp;task_id=$get_task_id&amp;l=$l&amp;editor_language=$editor_language\""; if($get_read_id == ""){ echo" style=\"font-weight: bold;\""; } echo">$number $get_task_title</a>
+										</p>
+									</div> <!-- //task_content_priority_$get_task_priority_weight -->
+								</div> <!-- //tasks_content_wrapper -->
 								";
 							} // tasks (for this admin)
 							echo"
+							</div> <!-- //tasks_drop_div -->
 							";
 						} // statuses
 
@@ -744,7 +755,33 @@ if($action == ""){
 				echo"
 
 			<!-- //Tasks per admin -->
+
+			<!-- Drag and drop script -->
+				<script src=\"_javascripts/jquery/jquery-ui.js\"></script>
+				<script type=\"text/javascript\">
+					\$(function () {
+						\$( \".tasks_content_wrapper\" ).draggable();
+						\$( \".tasks_drop_div\" ).droppable({ drop: Drop });
+					});
+
+					function Drop(event, ui) {
+						var draggableId = ui.draggable.attr(\"id\");
+						var droppableId = \$(this).attr(\"id\");
+						var data            = 'task_id=' + draggableId + '&to_status_and_user=' + droppableId;
+						\$.ajax({
+							type: \"POST\",
+							url: \"index.php?open=dashboard&page=tasks_drag_and_drop_update_status&editor_language=$editor_language&l=$l&process=1\",
+      							data: data,
+							success: function (data) {
+								\$('.tasks_update_result').html(data);
+								window.location.replace(\"index.php?open=dashboard&editor_language=$editor_language&l=$l&time=$time#tasks\");
+							}
+						});
+					}
+				</script>
+			<!-- //Drag and drop script -->
 		</div>
+		<div class=\"tasks_update_result\"></div>
 		";
 		include("_inc/dashboard/tasks_include_send_monthly_newsletter.php");
 		echo"

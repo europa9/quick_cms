@@ -123,7 +123,7 @@ div.
 	}
 
 /* Under person */
-div.flex_col_white_bg > h3{
+div.flex_col_white_bg > div.tasks_drop_div > h3{
 	text-align: center;
 	color: #605859;
 }

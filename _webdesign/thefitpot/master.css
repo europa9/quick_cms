@@ -1224,8 +1224,18 @@ div.footer_child > ul.footer_icons > li {
 
 /* Footer after */
 div.footer_after{
+	display: flex;
+	flex-wrap: wrap;
+}
+div.footer_after_child {
+	flex: 1; /* explanation below */
+	margin: 5px;
+}
+div.footer_after_child:last-child {
 	text-align: center;
 }
+
+
 div.footer_after p{
 	font: normal 15px "Segoe UI", Arial, sans-serif;
 	color: #fff;

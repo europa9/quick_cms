@@ -655,6 +655,7 @@ else{
 			elseif($action == "upload_new" && $image != ""){
 				if($process == 1){
 					// Delete all old thumbnails
+					if($image == "a"){
 					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_a_small") && $get_current_food_thumb_a_small != ""){
 						unlink("../$get_current_food_image_path/$get_current_food_thumb_a_small");
 					}
@@ -664,7 +665,8 @@ else{
 					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_a_large") && $get_current_food_thumb_a_large != ""){
 						unlink("../$get_current_food_image_path/$get_current_food_thumb_a_large");
 					}
-
+					}
+					elseif($image == "b"){
 					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_b_small") && $get_current_food_thumb_b_small != ""){
 						unlink("../$get_current_food_image_path/$get_current_food_thumb_b_small");
 					}
@@ -674,7 +676,8 @@ else{
 					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_b_large") && $get_current_food_thumb_b_large != ""){
 						unlink("../$get_current_food_image_path/$get_current_food_thumb_b_large");
 					}
-
+					}
+					elseif($image == "c"){
 					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_c_small") && $get_current_food_thumb_c_small != ""){
 						unlink("../$get_current_food_image_path/$get_current_food_thumb_c_small");
 					}
@@ -684,7 +687,8 @@ else{
 					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_c_large") && $get_current_food_thumb_c_large != ""){
 						unlink("../$get_current_food_image_path/$get_current_food_thumb_c_large");
 					}
-
+					}
+					elseif($image == "d"){
 					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_d_small") && $get_current_food_thumb_d_small != ""){
 						unlink("../$get_current_food_image_path/$get_current_food_thumb_d_small");
 					}
@@ -693,6 +697,7 @@ else{
 					}
 					if(file_exists("../$get_current_food_image_path/$get_current_food_thumb_d_large") && $get_current_food_thumb_d_large != ""){
 						unlink("../$get_current_food_image_path/$get_current_food_thumb_d_large");
+					}
 					}
 
 					// Clean name
@@ -780,17 +785,56 @@ else{
 									$inp_food_image_path_mysql = quote_smart($link, $inp_food_image_path);
 									$inp_food_image_mysql = quote_smart($link, $new_name);
 
+									// Thumb small
+									$inp_thumb_name = str_replace(".$extension", "", $new_name);
+									$inp_thumb_small = $inp_thumb_name . "_thumb_132x132." . $extension;
+									$inp_thumb_small_mysql = quote_smart($link, $inp_thumb_small);
+									resize_crop_image(132, 132, "$root/_uploads/food/_img/$l/$get_current_food_id/$new_name", "$root/_uploads/food/_img/$l/$get_current_food_id/$inp_thumb_small");
+							
+
+									// Thumb medium
+									$inp_thumb_medium = $inp_thumb_name . "_thumb_200x200." . $extension;
+									$inp_thumb_medium_mysql = quote_smart($link, $inp_thumb_medium);
+									resize_crop_image(200, 200, "$root/_uploads/food/_img/$l/$get_current_food_id/$new_name", "$root/_uploads/food/_img/$l/$get_current_food_id/$inp_thumb_medium");
+							
+
+									// Logo over image
+									// Config
+									include("$root/_admin/_data/food.php");
+									if($foodPrintLogoOnImagesSav == "1"){
+										include("$root/_admin/_functions/stamp_image.php");
+										include("$root/_admin/_data/logo.php");
+										$stamp = "$logoFileStampImages1280x720Sav";
+										list($width,$height) = getimagesize("$root/_uploads/food/_img/$l/$get_current_food_id/$new_name");
+
+										if($width < 1280){ // Width less than 1280
+											$stamp = "$logoFileStampImages1280x720Sav";
+										}
+										elseif($width > 1280 && $width < 1920){  // Width bigger than 1280 and less than 1920
+											$stamp = "$logoFileStampImages1920x1080Sav";
+										}
+										elseif($width > 1921 && $width < 2560){
+											$stamp = "$logoFileStampImages2560x1440Sav";
+										}
+										else{
+											$stamp = "$logoFileStampImages7680x4320Sav";
+										}
+										stamp_image("$root/_uploads/food/_img/$l/$get_current_food_id/$new_name", "$root/$logoPathSav/$stamp");
+									}
+
+
+
 									if($image == "a"){
-										$result = mysqli_query($link, "UPDATE $t_food_index SET food_image_path=$inp_food_image_path_mysql, food_image_a=$inp_food_image_mysql, food_thumb_a_small='', food_thumb_a_medium='', food_thumb_a_large='' WHERE food_id='$get_current_food_id'");
+										$result = mysqli_query($link, "UPDATE $t_food_index SET food_image_path=$inp_food_image_path_mysql, food_image_a=$inp_food_image_mysql, food_thumb_a_small=$inp_thumb_small_mysql, food_thumb_a_medium=$inp_thumb_medium_mysql, food_thumb_a_large='' WHERE food_id='$get_current_food_id'");
 									}
 									elseif($image == "b"){
-										$result = mysqli_query($link, "UPDATE $t_food_index SET food_image_path=$inp_food_image_path_mysql, food_image_b=$inp_food_image_mysql, food_thumb_b_small='', food_thumb_b_medium='', food_thumb_b_large='' WHERE food_id='$get_current_food_id'");
+										$result = mysqli_query($link, "UPDATE $t_food_index SET food_image_path=$inp_food_image_path_mysql, food_image_b=$inp_food_image_mysql, food_thumb_b_small=$inp_thumb_small_mysql, food_thumb_b_medium=$inp_thumb_medium_mysql, food_thumb_b_large='' WHERE food_id='$get_current_food_id'");
 									}
 									elseif($image == "c"){
-										$result = mysqli_query($link, "UPDATE $t_food_index SET food_image_path=$inp_food_image_path_mysql, food_image_c=$inp_food_image_mysql, food_thumb_c_small='', food_thumb_c_medium='', food_thumb_c_large='' WHERE food_id='$get_current_food_id'");
+										$result = mysqli_query($link, "UPDATE $t_food_index SET food_image_path=$inp_food_image_path_mysql, food_image_c=$inp_food_image_mysql, food_thumb_c_small=$inp_thumb_small_mysql, food_thumb_c_medium=$inp_thumb_medium_mysql, food_thumb_c_large='' WHERE food_id='$get_current_food_id'");
 									}
 									elseif($image == "d"){
-										$result = mysqli_query($link, "UPDATE $t_food_index SET food_image_path=$inp_food_image_path_mysql, food_image_d=$inp_food_image_mysql, food_thumb_d_small='', food_thumb_d_medium='', food_thumb_d_large='' WHERE food_id='$get_current_food_id'");
+										$result = mysqli_query($link, "UPDATE $t_food_index SET food_image_path=$inp_food_image_path_mysql, food_image_d=$inp_food_image_mysql, food_thumb_d_small=$inp_thumb_small_mysql, food_thumb_d_medium=$inp_thumb_medium_mysql, food_thumb_d_large='' WHERE food_id='$get_current_food_id'");
 									}
 
 								}  // if($width == "" OR $height == ""){

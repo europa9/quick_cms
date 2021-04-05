@@ -176,6 +176,33 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							// recipe_thumb
 							$inp_recipe_thumb = $get_recipe_id . "_thumb_278x156.jpg";
 							$inp_recipe_thumb_mysql = quote_smart($link, $inp_recipe_thumb);
+							resize_crop_image(278, 156, "$root/$inp_recipe_image_path/$inp_recipe_image", "$root/$inp_recipe_image_path/$inp_recipe_thumb");
+							
+
+							// Logo over image
+							// Config
+							include("$root/_admin/_data/recipes.php");
+							if($recipesPrintLogoOnImagesSav == "1"){
+								include("$root/_admin/_functions/stamp_image.php");
+								include("$root/_admin/_data/logo.php");
+								$stamp = "$logoFileStampImages1280x720Sav";
+								list($width,$height) = getimagesize("$root/_uploads/food/_img/$l/$get_current_food_id/$new_name");
+
+								if($width < 1280){ // Width less than 1280
+									$stamp = "$logoFileStampImages1280x720Sav";
+								}
+								elseif($width > 1280 && $width < 1920){  // Width bigger than 1280 and less than 1920
+									$stamp = "$logoFileStampImages1920x1080Sav";
+								}
+								elseif($width > 1921 && $width < 2560){
+									$stamp = "$logoFileStampImages2560x1440Sav";
+								}
+								else{
+									$stamp = "$logoFileStampImages7680x4320Sav";
+								}
+								stamp_image("$root/$inp_recipe_image_path/$inp_recipe_image", "$root/$logoPathSav/$stamp");
+							}
+
 					
 							// IP
 							$inp_recipe_user_ip = $_SERVER['REMOTE_ADDR'];
@@ -216,18 +243,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							imagedestroy($tmp);
 					
 					
-							// Make thumb
-							$width = $newwidth;
-							$height = $newheight;
-
-							$thumb_final_path = "$root/" . $inp_recipe_image_path. "/" . $inp_recipe_thumb;
-							$newwidth=278;
-							$newheight=156; // ($height/$width)*$newwidth
-							$tmp=imagecreatetruecolor($newwidth,$newheight);
-							$src = imagecreatefromjpeg($target_path);
-							imagecopyresampled($tmp,$src,0,0,0,0,$newwidth,$newheight, $width,$height);
-							imagejpeg($tmp, $thumb_final_path);
-							imagedestroy($tmp);
 					
 
 

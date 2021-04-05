@@ -3,8 +3,8 @@
 *
 * File: food_diary/food_diary_delete_entry.php
 * Version 1.0.0.
-* Date 12:42 21.01.2018
-* Copyright (c) 2008-2018 Sindre Andre Ditlefsen
+* Date 20:09 04.04.2021
+* Copyright (c) 2008-2021 Sindre Andre Ditlefsen
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -64,10 +64,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['e
 	$entry_id = strip_tags(stripslashes($entry_id));
 	$entry_id_mysql = quote_smart($link, $entry_id);
 
-	$query = "SELECT entry_id, entry_user_id, entry_date, entry_meal_id, entry_food_id, entry_recipe_id, entry_name, entry_manufacturer_name, entry_serving_size, entry_serving_size_measurement, entry_energy_per_entry, entry_fat_per_entry, entry_carb_per_entry, entry_protein_per_entry, entry_text FROM $t_food_diary_entires WHERE entry_id=$entry_id_mysql AND entry_user_id=$my_user_id_mysql";
+	$query = "SELECT entry_id, entry_user_id, entry_date, entry_date_saying, entry_hour_name, entry_food_id, entry_recipe_id, entry_meal_id, entry_name, entry_manufacturer_name, entry_serving_size, entry_serving_size_measurement, entry_energy_per_entry, entry_fat_per_entry, entry_saturated_fat_per_entry, entry_monounsaturated_fat_per_entry, entry_polyunsaturated_fat_per_entry, entry_cholesterol_per_entry, entry_carbohydrates_per_entry, entry_carbohydrates_of_which_sugars_per_entry, entry_dietary_fiber_per_entry, entry_proteins_per_entry, entry_salt_per_entry, entry_sodium_per_entry, entry_text, entry_deleted, entry_updated_datetime, entry_synchronized FROM $t_food_diary_entires WHERE entry_id=$entry_id_mysql AND entry_user_id=$my_user_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_entry_id, $get_current_entry_user_id, $get_current_entry_date, $get_current_entry_meal_id, $get_current_entry_food_id, $get_current_entry_recipe_id, $get_current_entry_name, $get_current_entry_manufacturer_name, $get_current_entry_serving_size, $get_current_entry_serving_size_measurement, $get_current_entry_energy_per_entry, $get_current_entry_fat_per_entry, $get_current_entry_carb_per_entry, $get_current_entry_protein_per_entry, $get_current_entry_text) = $row;
+	list($get_current_entry_id, $get_current_entry_user_id, $get_current_entry_date, $get_current_entry_date_saying, $get_current_entry_hour_name, $get_current_entry_food_id, $get_current_entry_recipe_id, $get_current_entry_meal_id, $get_current_entry_name, $get_current_entry_manufacturer_name, $get_current_entry_serving_size, $get_current_entry_serving_size_measurement, $get_current_entry_energy_per_entry, $get_current_entry_fat_per_entry, $get_current_entry_saturated_fat_per_entry, $get_current_entry_monounsaturated_fat_per_entry, $get_current_entry_polyunsaturated_fat_per_entry, $get_current_entry_cholesterol_per_entry, $get_current_entry_carbohydrates_per_entry, $get_current_entry_carbohydrates_of_which_sugars_per_entry, $get_current_entry_dietary_fiber_per_entry, $get_current_entry_proteins_per_entry, $get_current_entry_salt_per_entry, $get_current_entry_sodium_per_entry, $get_current_entry_text, $get_current_entry_deleted, $get_current_entry_updated_datetime, $get_current_entry_synchronized) = $row;
 	
 	if($get_current_entry_id == ""){
 		echo"

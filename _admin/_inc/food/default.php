@@ -32,6 +32,17 @@ $t_food_measurements_translations = $mysqlPrefixSav . "food_measurements_transla
 
 /*- Functions ----------------------------------------------------------------------- */
 
+/*- Config ----------------------------------------------------------------------- */
+if(!(file_exists("_data/food.php"))){
+	$update_file="<?php
+\$foodPrintLogoOnImagesSav = \"0\";
+?>";
+	$fh = fopen("_data/food.php", "w+") or die("can not open file");
+	fwrite($fh, $update_file);
+	fclose($fh);
+}
+
+
 
 /*- Variables ------------------------------------------------------------------------ */
 

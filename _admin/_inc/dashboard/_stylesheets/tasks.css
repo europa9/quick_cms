@@ -57,7 +57,7 @@ div.flex_col_task{
 	}
 
 /* Under person */
-div.flex_col_task > h3{
+div.flex_col_task > div.tasks_drop_div > h3{
 	text-align: center;
 	color: #605859;
 }

@@ -17,8 +17,9 @@ if(!(isset($define_access_to_control_panel))){
 /*- Config ----------------------------------------------------------------------- */
 if(!(file_exists("_data/blog.php"))){
 	$update_file="<?php
-\$blogWhoCanHaveBlogSav = \"everyone\";
-\$blogEditModeSav 	= \"wuciwug\";
+\$blogWhoCanHaveBlogSav    = \"everyone\";
+\$blogEditModeSav 	   = \"wuciwug\";
+\$blogPrintLogoOnImagesSav = \"0\";
 
 \$blogPostsImageSizeXSav = \"950\";
 \$blogPostsImageSizeYSav = \"640\";
@@ -62,6 +63,8 @@ if($process == "1"){
 	$inp_edit_mode = $_POST['inp_edit_mode'];
 	$inp_edit_mode = output_html($inp_edit_mode);
 
+	$inp_print_logo_on_images = $_POST['inp_print_logo_on_images'];
+	$inp_print_logo_on_images = output_html($inp_print_logo_on_images);
 
 	$inp_posts_image_size_x = $_POST['inp_posts_image_size_x'];
 	$inp_posts_image_size_x = output_html($inp_posts_image_size_x);
@@ -87,6 +90,7 @@ if($process == "1"){
 	$update_file="<?php
 \$blogWhoCanHaveBlogSav = \"$inp_who_can_have_blog\";
 \$blogEditModeSav 	= \"$inp_edit_mode\";
+\$blogPrintLogoOnImagesSav = \"$inp_print_logo_on_images\";
 
 \$blogPostsImageSizeXSav = \"$inp_posts_image_size_x\";
 \$blogPostsImageSizeYSav = \"$inp_posts_image_size_y\";
@@ -171,6 +175,14 @@ echo"
 		<option value=\"bbcode\""; if($blogEditModeSav == "bbcode"){ echo" selected=\"selected\""; } echo">BB Code</option>
 	</select>
 	</p>
+
+	<p>Print logo on images:<br />
+	(<a href=\"index.php?open=webdesign&amp;page=logo&amp;editor_language=$editor_language&amp;l=$l\" class=\"small\">Upload logo</a>)<br />
+	<input type=\"radio\" name=\"inp_print_logo_on_images\" value=\"1\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\""; if($blogPrintLogoOnImagesSav == "1"){ echo" checked=\"checked\""; } echo" /> Yes
+	&nbsp;
+	<input type=\"radio\" name=\"inp_print_logo_on_images\" value=\"0\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\""; if($blogPrintLogoOnImagesSav == "0"){ echo" checked=\"checked\""; } echo" /> No
+	</p>
+
 
 	<p>Blog posts image size:<br />
 	<input type=\"text\" name=\"inp_posts_image_size_x\" value=\"$blogPostsImageSizeXSav\" size=\"3\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /> x

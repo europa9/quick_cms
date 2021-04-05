@@ -30,6 +30,7 @@ echo"
 			<li><a href=\"index.php?open=$open&amp;page=categories&amp;editor_language=$editor_language\""; if($page == "categories"){ echo" class=\"selected\""; } echo">Categories</a></li>
 			<li><a href=\"index.php?open=$open&amp;page=measurements&amp;editor_language=$editor_language\""; if($page == "measurements"){ echo" class=\"selected\""; } echo">Measurements</a></li>
 			<li><a href=\"index.php?open=$open&amp;page=members&amp;editor_language=$editor_language\""; if($page == "members"){ echo" class=\"selected\""; } echo">Members</a></li>
+			<li><a href=\"index.php?open=$open&amp;page=settings&amp;editor_language=$editor_language\""; if($page == "settings"){ echo" class=\"selected\""; } echo">Settings</a></li>
 			<li><a href=\"index.php?open=$open&amp;page=tables&amp;editor_language=$editor_language\""; if($page == "tables"){ echo" class=\"selected\""; } echo">Tables</a></li>
 			<li><a href=\"index.php?open=$open&amp;page=export_to_android_kotlin&amp;editor_language=$editor_language\""; if($page == "export_to_android_kotlin"){ echo" class=\"selected\""; } echo">Export to Android Kotlin</a></li>
 		

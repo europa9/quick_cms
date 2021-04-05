@@ -1762,13 +1762,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			// 1) Insert food into entry
 			mysqli_query($link, "INSERT INTO $t_food_diary_entires
 			(entry_id, entry_user_id, entry_date, entry_date_saying, entry_hour_name, entry_food_id, 
-			entry_recipe_id, entry_name, entry_manufacturer_name, entry_serving_size, entry_serving_size_measurement, 
+			entry_recipe_id, entry_meal_id, entry_name, entry_manufacturer_name, entry_serving_size, entry_serving_size_measurement, 
 			entry_energy_per_entry, entry_fat_per_entry, entry_saturated_fat_per_entry, entry_monounsaturated_fat_per_entry, entry_polyunsaturated_fat_per_entry, 
 			entry_cholesterol_per_entry, entry_carbohydrates_per_entry, entry_carbohydrates_of_which_sugars_per_entry, entry_dietary_fiber_per_entry, entry_proteins_per_entry, 
 			entry_salt_per_entry, entry_sodium_per_entry, entry_updated_datetime, entry_synchronized) 
 			VALUES 
 			(NULL, '$get_my_user_id', $inp_entry_date_mysql, $inp_entry_date_saying_mysql, $inp_entry_hour_name_mysql, $inp_entry_food_id_mysql, 
-			'0', $inp_entry_food_name_mysql, $inp_entry_food_manufacturer_name_mysql, $inp_entry_food_serving_size_mysql, $inp_entry_food_serving_size_measurement_mysql, 
+			'0', '0', $inp_entry_food_name_mysql, $inp_entry_food_manufacturer_name_mysql, $inp_entry_food_serving_size_mysql, $inp_entry_food_serving_size_measurement_mysql, 
 			$inp_entry_food_energy_per_entry_mysql, $inp_entry_food_fat_per_entry_mysql, $inp_entry_food_saturated_fat_per_entry_mysql, $inp_entry_food_monounsaturated_fat_per_entry_mysql, $inp_entry_food_polyunsaturated_fat_per_entry_mysql, 
 			$inp_entry_food_cholesterol_per_entry_mysql, $inp_entry_food_carb_per_entry_mysql, $inp_entry_food_carbohydrates_of_which_sugars_per_entry_mysql, $inp_entry_food_dietary_fiber_per_entry_mysql, $inp_entry_food_protein_per_entry_mysql,
 			$inp_entry_food_salt_per_entry_mysql, $inp_entry_food_sodium_per_entry_mysql, '$datetime', '0')")

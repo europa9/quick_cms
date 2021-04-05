@@ -44,6 +44,7 @@ echo"
 	  	   entry_hour_name VARCHAR(20),
 	  	   entry_food_id INT,
 	  	   entry_recipe_id INT,
+	  	   entry_meal_id INT,
 	  	   entry_name VARCHAR(250),
 	  	   entry_manufacturer_name VARCHAR(250),
 	  	   entry_serving_size DOUBLE,

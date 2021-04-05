@@ -411,7 +411,6 @@ else{
 						$get_current_food_thumb_a_medium = $inp_thumb_name . "_thumb_200x200." . $ext;
 						$inp_food_thumb_a_medium_mysql = quote_smart($link, $get_current_food_thumb_a_medium);
 						$result_update = mysqli_query($link, "UPDATE $t_food_index SET food_thumb_a_medium=$inp_food_thumb_a_medium_mysql WHERE food_id=$get_current_food_id") or die(mysqli_error($link));
-				
 						resize_crop_image(200, 200, "$root/$get_current_food_image_path/$get_current_food_image_a", "$root/$get_current_food_image_path/$get_current_food_thumb_a_medium");
 					}
 					echo"<a href=\"view_food.php?main_category_id=$get_current_main_category_id&amp;sub_category_id=$get_current_sub_category_id&amp;food_id=$food_id&amp;action=show_image&amp;image=a&amp;l=$l#image\" style=\"margin-right: 11px;\"><img src=\"$root/$get_current_food_image_path/$get_current_food_thumb_a_medium\" alt=\"$get_current_food_thumb_a_medium\" /></a>";

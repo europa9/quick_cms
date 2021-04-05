@@ -228,7 +228,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 						if($image){
-
 							if (($extension != "jpg") && ($extension != "jpeg") && ($extension != "png") && ($extension != "gif") && ($extension != "heic") && ($extension != "webp")) {
 								$ft = "warning";
 								$fm = "unknown_file_format";
@@ -253,10 +252,31 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 									}
 							
 
+									// Delete old image
+									if(file_exists("$root/$get_current_blog_post_image_path/$get_blog_post_image_thumb_small") && $get_current_blog_post_image_thumb_small != ""){
+										unlink("$root/$get_current_blog_post_image_path/$get_blog_post_image_thumb_small");
+									}
+									if(file_exists("$root/$get_current_blog_post_image_path/$get_blog_post_image_thumb_medium") && $get_current_blog_post_image_thumb_medium != ""){
+										unlink("$root/$get_current_blog_post_image_path/$get_blog_post_image_thumb_medium");
+									}
+									if(file_exists("$root/$get_current_blog_post_image_path/$get_blog_post_image_thumb_large") && $get_current_blog_post_image_thumb_large != ""){
+										unlink("$root/$get_current_blog_post_image_path/$get_blog_post_image_thumb_large");
+									}
+									if(file_exists("$root/$get_current_blog_post_image_path/$get_blog_post_image_file") && $get_current_blog_post_image_file != ""){
+										unlink("$root/$get_current_blog_post_image_path/$get_blog_post_image_file");
+									}
+
 									// Path
 									$inp_path = "_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id";
 									$inp_path_mysql = quote_smart($link, $inp_path);
 
+
+									// Resize original image to $blogPostsImageSizeXSav x $blogPostsImageSizeYSav
+									if($width > $blogPostsImageSizeXSav OR $height > $blogPostsImageSizeYSav){
+										resize_crop_image($blogPostsImageSizeXSav, $blogPostsImageSizeYSav, "$root/_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id/$inp_file", "$root/_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id/$inp_file");
+									}
+									
+									
 
 
 									// Thumb
@@ -275,6 +295,30 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 									$inp_thumb_c_mysql = quote_smart($link, $inp_thumb_c);
 									resize_crop_image($blogPostsThumbLargeSizeXSav, $blogPostsThumbLargeSizeYSav, "$root/$inp_path/$inp_file", "$root/$inp_path/$inp_thumb_c");
 	
+
+									// Logo over image
+									if($blogPrintLogoOnImagesSav == "1"){
+										include("$root/_admin/_functions/stamp_image.php");
+										include("$root/_admin/_data/logo.php");
+										$stamp = "$logoFileStampImages1280x720Sav";
+										list($width,$height) = getimagesize("$root/_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id/$inp_file");
+
+										if($width < 1280){ // Width less than 1280
+											$stamp = "$logoFileStampImages1280x720Sav";
+										}
+										elseif($width > 1280 && $width < 1920){  // Width bigger than 1280 and less than 1920
+											$stamp = "$logoFileStampImages1920x1080Sav";
+										}
+										elseif($width > 1921 && $width < 2560){
+											$stamp = "$logoFileStampImages2560x1440Sav";
+										}
+										else{
+											$stamp = "$logoFileStampImages7680x4320Sav";
+										}
+										stamp_image("$root/_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id/$inp_file", "$root/$logoPathSav/$stamp");
+									}
+
+
 									// Datetime
 									$datetime = date("Y-m-d H:i:s");
 
@@ -390,8 +434,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		
 					<form method=\"post\" action=\"my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
-
-
 					<p><b>$l_image: ($blogPostsImageSizeXSav x $blogPostsImageSizeYSav)</b><br />
 					<!-- Existing image? -->
 						";
@@ -434,8 +476,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 					<p>
-					<input type=\"submit\" value=\"$l_save\" class=\"btn btn_default\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
-					<a href=\"my_blog_new_post_text.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\" class=\"btn_default\">$l_next</a>
+					<input type=\"submit\" value=\"$l_upload\" class=\"btn btn_default\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 					</p>
 
 					</form>

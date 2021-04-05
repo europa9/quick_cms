@@ -145,12 +145,24 @@ echo"
 			</div>
 
 			<div class=\"footer_after\">
-				<p>
-
+				<div class=\"footer_after_child\">
+					<p>
 					$configWebsiteCopyrightSav
-					&middot;
-					<a href=\"#top\">$l_top</a>
 					</p>
+				</div>
+				<div class=\"footer_after_child\">
+					<!-- Languages -->
+						<p>\n";
+						$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_path_16x16, language_active_flag_16x16, language_active_default FROM $t_languages_active";
+						$result = mysqli_query($link, $query);
+						while($row = mysqli_fetch_row($result)) {
+							list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_path_16x16, $get_language_active_flag_16x16, $get_language_active_default) = $row;
+							echo"<a href=\"index.php?l=$get_language_active_iso_two\"><img src=\"$root/$get_language_active_flag_path_16x16/$get_language_active_flag_16x16\" alt=\"$get_language_active_flag_16x16\" /></a>\n";
+						}
+						echo"
+						</p>
+					<!-- //Languages -->
+				</div>
 			</div>
 	</footer>
 <!-- //Footer -->
