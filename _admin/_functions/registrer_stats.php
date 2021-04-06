@@ -288,9 +288,8 @@ else{
 	else{
 		$inp_accept_language = "ZZ";
 	}
-	$inp_accept_language_mysql = quote_smart($link, $inp_accept_language);
-	$inp_language = substr("$inp_accept_language", 0,2);
-	$inp_language_mysql = quote_smart($link, $inp_language);
+	$inp_accpeted_language = substr("$inp_accept_language", 0,2);
+	$inp_accpeted_language_mysql = quote_smart($link, $inp_accpeted_language);
 
 	$inp_page = $_SERVER['REQUEST_URI'];
 	$inp_page = output_html($inp_page);
@@ -848,7 +847,7 @@ else{
 
 
 		// Accepted languages :: Year
-		$query = "SELECT stats_accepted_language_id, stats_accepted_language_year, stats_accepted_language_name, stats_accepted_language_unique, stats_accepted_language_hits FROM $t_stats_accepted_languages_per_year WHERE stats_accepted_language_year='$inp_year' AND stats_accepted_language_name=$inp_language_mysql";
+		$query = "SELECT stats_accepted_language_id, stats_accepted_language_year, stats_accepted_language_name, stats_accepted_language_unique, stats_accepted_language_hits FROM $t_stats_accepted_languages_per_year WHERE stats_accepted_language_year='$inp_year' AND stats_accepted_language_name=$inp_accpeted_language_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_stats_accepted_language_id, $get_stats_accepted_language_year, $get_stats_accepted_language_name, $get_stats_accepted_language_unique, $get_stats_accepted_language_hits) = $row;
@@ -857,7 +856,7 @@ else{
 			mysqli_query($link, "INSERT INTO $t_stats_accepted_languages_per_year
 			(stats_accepted_language_id, stats_accepted_language_year, stats_accepted_language_name, stats_accepted_language_unique, stats_accepted_language_hits) 
 			VALUES
-			(NULL, '$inp_year', $inp_language_mysql, '1', '1')") or die(mysqli_error($link));
+			(NULL, '$inp_year', $inp_accpeted_language_mysql, '1', '1')") or die(mysqli_error($link));
 		}
 		else{
 			// We have record, if unique
@@ -875,7 +874,7 @@ else{
 		}
 
 		// Accepted languages :: Month
-		$query = "SELECT stats_accepted_language_id, stats_accepted_language_month, stats_accepted_language_year, stats_accepted_language_name, stats_accepted_language_unique, stats_accepted_language_hits FROM $t_stats_accepted_languages_per_month WHERE stats_accepted_language_month='$inp_month' AND stats_accepted_language_year='$inp_year' AND stats_accepted_language_name=$inp_language_mysql";
+		$query = "SELECT stats_accepted_language_id, stats_accepted_language_month, stats_accepted_language_year, stats_accepted_language_name, stats_accepted_language_unique, stats_accepted_language_hits FROM $t_stats_accepted_languages_per_month WHERE stats_accepted_language_month='$inp_month' AND stats_accepted_language_year='$inp_year' AND stats_accepted_language_name=$inp_accpeted_language_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_stats_accepted_language_id, $get_stats_accepted_language_month, $get_stats_accepted_language_year, $get_stats_accepted_language_name, $get_stats_accepted_language_unique, $get_stats_accepted_language_hits) = $row;
@@ -884,7 +883,7 @@ else{
 			mysqli_query($link, "INSERT INTO $t_stats_accepted_languages_per_month
 			(stats_accepted_language_id, stats_accepted_language_month, stats_accepted_language_year, stats_accepted_language_name, stats_accepted_language_unique, stats_accepted_language_hits) 
 			VALUES
-			(NULL, '$inp_month', '$inp_year', $inp_language_mysql, '1', '1')") or die(mysqli_error($link));
+			(NULL, '$inp_month', '$inp_year', $inp_accpeted_language_mysql, '1', '1')") or die(mysqli_error($link));
 		}
 		else{
 			// We have record, if unique
@@ -1231,7 +1230,7 @@ else{
 			(NULL, $inp_ip_mysql, $inp_tracker_ip_masked_mysql, '$inp_month', '$inp_month_short', 
 			'$inp_year', '$inp_unix_time', '$inp_hour_minute', '$inp_unix_time', '$inp_hour_minute',
 			 0, 0, $inp_user_agent_os_mysql, $inp_user_agent_browser_mysql, '$get_stats_user_agent_type', 
-			$inp_accept_language_mysql, '$get_current_language_active_iso_two', $inp_geoname_country_name_mysql, 1, $inp_url_mysql, 
+			$inp_accpeted_language_mysql, '$get_current_language_active_iso_two', $inp_geoname_country_name_mysql, 1, $inp_url_mysql, 
 			$inp_title_mysql, 0)") or die(mysqli_error($link));
 
 			$query = "SELECT tracker_id, tracker_hits FROM $t_stats_tracker_index WHERE tracker_ip=$inp_ip_mysql AND tracker_month='$inp_month' AND tracker_year='$inp_year'";
