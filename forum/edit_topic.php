@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: discuss/edit_topic.php
+* File: forum/edit_topic.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -84,7 +84,7 @@ if($get_current_topic_id == ""){
 }
 else{
 	/*- Headers ---------------------------------------------------------------------------------- */
-	$website_title = "$l_discuss - $get_current_topic_title";
+	$website_title = "$l_forum - $get_current_topic_title";
 	if(file_exists("./favicon.ico")){ $root = "."; }
 	elseif(file_exists("../favicon.ico")){ $root = ".."; }
 	elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -301,7 +301,7 @@ else{
 							mysqli_query($link, "INSERT INTO $t_forum_tags_index 
 							(tag_id, tag_title, tag_title_clean, tag_introduction, tag_description, tag_created, tag_updated, tag_topics_total_counter, tag_topics_today_counter, tag_topics_today_day, tag_topics_this_week_counter, tag_topics_this_week_week, tag_is_official, tag_icon_path) 
 							VALUES 
-							(NULL, $inp_tag_title_mysql, $inp_tag_clean_mysql, '', '', '$datetime', '$datetime', '1', '1', '$day', '1', '$week', -1, '_uploads/discuss/tags_icons')")
+							(NULL, $inp_tag_title_mysql, $inp_tag_clean_mysql, '', '', '$datetime', '$datetime', '1', '1', '$day', '1', '$week', -1, '_uploads/forum/tags_icons')")
 							or die(mysqli_error($link));
 						}
 						else{
@@ -331,7 +331,7 @@ else{
 				// Search engine
 				$reference_name_mysql = quote_smart($link, "topic_id");
 				$reference_id_mysql = quote_smart($link, "$get_current_topic_id");
-				$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='discuss' AND index_reference_name=$reference_name_mysql AND index_reference_id=$reference_id_mysql";
+				$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='forum' AND index_reference_name=$reference_name_mysql AND index_reference_id=$reference_id_mysql";
 				$result_exists = mysqli_query($link, $query_exists);
 				$row_exists = mysqli_fetch_row($result_exists);
 				list($get_index_id) = $row_exists;
@@ -376,7 +376,7 @@ else{
 					echo"<a href=\"index.php?show=$show&amp;l=$l\">$l_active</a>";
 				}
 				else{
-					echo"<a href=\"index.php?l=$l\">$l_discuss</a>";
+					echo"<a href=\"index.php?l=$l\">$l_forum</a>";
 				}
 				echo"
 				&gt;

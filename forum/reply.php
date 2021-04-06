@@ -110,7 +110,7 @@ else{
 		list($get_my_user_id, $get_my_user_email, $get_my_user_name, $get_my_user_alias, $get_my_user_rank) = $row;
 
 			// Get my subscriptions
-			$query = "SELECT es_id, es_on_off FROM $t_users_email_subscriptions WHERE es_user_id=$my_user_id_mysql AND es_type='discuss_notify_on_replies'";
+			$query = "SELECT es_id, es_on_off FROM $t_users_email_subscriptions WHERE es_user_id=$my_user_id_mysql AND es_type='forum_notify_on_replies'";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
 			list($get_es_id, $get_es_on_off) = $row;
@@ -118,7 +118,7 @@ else{
 				mysqli_query($link, "INSERT INTO $t_users_email_subscriptions
 				(es_id, es_user_id, es_type, es_on_off) 
 				VALUES 
-				(NULL, $my_user_id_mysql, 'discuss_notify_on_replies', '1')")
+				(NULL, $my_user_id_mysql, 'forum_notify_on_replies', '1')")
 				or die(mysqli_error($link));
 
 				$get_es_on_off = "1";
@@ -252,8 +252,8 @@ else{
 				list($get_topic_subscriber_id, $get_topic_id, $get_topic_subscriber_user_id, $get_topic_subscriber_user_email) = $row_w;
 
 				// Mail
-				$view_link = $configSiteURLSav . "/discuss/view_topic.php?topic_id=$get_current_topic_id";
-				$unsubscribe_link = $configSiteURLSav . "/discuss/unsubscribe_from_topic.php?topic_subscriber_id=$get_topic_subscriber_id&topic_id=$get_current_topic_id";
+				$view_link = $configSiteURLSav . "/forum/view_topic.php?topic_id=$get_current_topic_id";
+				$unsubscribe_link = $configSiteURLSav . "/forum/unsubscribe_from_topic.php?topic_subscriber_id=$get_topic_subscriber_id&topic_id=$get_current_topic_id";
 			
 				$user_agent = $_SERVER['HTTP_USER_AGENT'];
 				$user_agent = output_html($user_agent);
@@ -276,7 +276,7 @@ else{
 
 				$message = $message . "<p><b>Links</b><br />\n\n";
 				$message = $message . "View the topic by visiting the URL <a href=\"$view_link\">$view_link</a></p>\n\n";
-				$message = $message . "<p>\n\n--<br />\nBest regards<br />\n$discussFromNameSav<br />\nE-mail: $discussFromEmailSav<br />\n";
+				$message = $message . "<p>\n\n--<br />\nBest regards<br />\n$forumFromNameSav<br />\nE-mail: $forumFromEmailSav<br />\n";
 				$message = $message . "Web: $configSiteURLSav</p>";
 				$message = $message . "<p style=\"font-size: 80%;\">Dont want any more emails? You can unsubscribe by following this link:\n";
 				$message = $message . "<a href=\"$unsubscribe_link\">$unsubscribe_link</a></p>\n\n";
@@ -287,12 +287,12 @@ else{
 				$headers = "MIME-Version: 1.0" . "\r\n" .
 				    "Content-type: text/html; charset=iso-8859-1" . "\r\n" .
 				    "To: $get_topic_subscriber_user_email" . "\r\n" .
-				    "Reply-To: $discussFromEmailSav" . "\r\n" .
-				    "From: $discussFromEmailSav" . "\r\n" .
-				    "Reply-To: $discussFromEmailSav" . "\r\n" .
+				    "Reply-To: $forumFromEmailSav" . "\r\n" .
+				    "From: $forumFromEmailSav" . "\r\n" .
+				    "Reply-To: $forumFromEmailSav" . "\r\n" .
 				    'X-Mailer: PHP/' . phpversion();
 		
-				if($discussEmailSendingOnOffSav == "on"){
+				if($forumEmailSendingOnOffSav == "on"){
 					mail($get_topic_subscriber_user_email, $subject, $message, $headers);
 				}
 

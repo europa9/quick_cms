@@ -39,7 +39,7 @@ if($include_as_navigation_main_mode == 0){
 
 	echo"
 	<ul class=\"toc\">
-		<li class=\"header_home\"><a href=\"$root/forum/index.php?l=$l\""; if($minus_one == "index.php" && $minus_two == "discuss"){ echo" class=\"navigation_active\"";}echo">$get_current_title_value</a></li>
+		<li class=\"header_home\"><a href=\"$root/forum/index.php?l=$l\""; if($minus_one == "index.php" && $minus_two == "forum"){ echo" class=\"navigation_active\"";}echo">$get_current_title_value</a></li>
 	";
 }
 echo"
@@ -53,7 +53,7 @@ echo"
 	if($include_as_navigation_main_mode == 0 && $forumShowTagsBelowNavSav == "1"){
 		echo"
 		<!-- Tags -->
-			<li class=\"header_home\" style=\"margin: 30px 0px 0px 0px;padding-bottom: 0px;\"><a href=\"$root/forum/tags.php?l=$l\""; if($minus_one == "tags.php" && $minus_two == "discuss"){ echo" class=\"navigation_active\"";}echo" style=\"margin: 0px 0px 0px 0px;padding-bottom: 0px;\">$l_tags</a></li>
+			<li class=\"header_home\" style=\"margin: 30px 0px 0px 0px;padding-bottom: 0px;\"><a href=\"$root/forum/tags.php?l=$l\""; if($minus_one == "tags.php" && $minus_two == "forum"){ echo" class=\"navigation_active\"";}echo" style=\"margin: 0px 0px 0px 0px;padding-bottom: 0px;\">$l_tags</a></li>
 			</ul>
 			<ul class=\"forum_watch_tags_list\" style=\"margin-top: 0px;padding-top: 0px;\">
 			";
@@ -64,7 +64,7 @@ echo"
 				list($get_tag_id, $get_tag_title_clean, $get_tag_icon_path, $get_tag_icon_file_16) = $row_w;
 
 				echo"
-				<li class=\"$discussCSSToUseOnLiTagsBelowNavSav\""; if($x == 0){ echo" style=\"clear: left;\""; } echo"><a href=\"open_tag.php?tag=$get_tag_title_clean&amp;l=$l\" class=\"$discussCSSToUseOnATagsBelowNavSav\"";
+				<li class=\"$forumCSSToUseOnLiTagsBelowNavSav\""; if($x == 0){ echo" style=\"clear: left;\""; } echo"><a href=\"open_tag.php?tag=$get_tag_title_clean&amp;l=$l\" class=\"$forumCSSToUseOnATagsBelowNavSav\"";
 				if(file_exists("$root/$get_tag_icon_path/$get_tag_icon_file_16") && $get_tag_icon_file_16 != ""){
 					// echo"<img src=\"$root/$get_tag_icon_path/$get_tag_icon_file_16\" alt=\"$get_tag_icon_file_16\" /> ";
 					echo" style=\"background-image: url('$root/$get_tag_icon_path/$get_tag_icon_file_16');background-repeat: no-repeat;background-position: center left 4px;padding-left:26px\" ";
@@ -87,7 +87,7 @@ echo"
 		<!-- Watched tags -->
 
 			<ul class=\"forum_watch_tags_list\" style=\"margin-top: 0px;padding-top: 0px;\">
-				<li class=\"header_home\" style=\"margin: 30px 0px 0px 0px;padding-bottom: 0px;\"><a href=\"$root/forum/watched_tags.php?l=$l\""; if($minus_one == "watched_tags.php" && $minus_two == "discuss"){ echo" class=\"navigation_active\"";}echo" style=\"margin: 0px 0px 0px 0px;padding-bottom: 0px;\">$l_watched_tags</a></li>
+				<li class=\"header_home\" style=\"margin: 30px 0px 0px 0px;padding-bottom: 0px;\"><a href=\"$root/forum/watched_tags.php?l=$l\""; if($minus_one == "watched_tags.php" && $minus_two == "forum"){ echo" class=\"navigation_active\"";}echo" style=\"margin: 0px 0px 0px 0px;padding-bottom: 0px;\">$l_watched_tags</a></li>
 				";
 				if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$my_user_id = $_SESSION['user_id'];
@@ -101,7 +101,7 @@ echo"
 						list($get_watch_id, $get_watch_tag_id, $get_tag_id, $get_tag_title_clean, $get_tag_icon_path, $get_tag_icon_file_16) = $row_w;
 
 						echo"
-						<li class=\"$discussCSSToUseOnLiTagsBelowNavSav\""; if($x == 0){ echo" style=\"clear: left;\""; } echo"><a href=\"open_tag.php?tag=$get_tag_title_clean&amp;l=$l\" class=\"$discussCSSToUseOnATagsBelowNavSav\"";
+						<li class=\"$forumCSSToUseOnLiTagsBelowNavSav\""; if($x == 0){ echo" style=\"clear: left;\""; } echo"><a href=\"open_tag.php?tag=$get_tag_title_clean&amp;l=$l\" class=\"$forumCSSToUseOnATagsBelowNavSav\"";
 						if(file_exists("$root/$get_tag_icon_path/$get_tag_icon_file_16") && $get_tag_icon_file_16 != ""){
 							// echo"<img src=\"$root/$get_tag_icon_path/$get_tag_icon_file_16\" alt=\"$get_tag_icon_file_16\" /> ";
 							echo" style=\"background-image: url('$root/$get_tag_icon_path/$get_tag_icon_file_16');background-repeat: no-repeat;background-position: center left 4px;padding-left:26px\" ";
@@ -117,7 +117,7 @@ echo"
 		<!-- //Watched tags -->
 		<!-- Ignored tags -->
 			<ul class=\"forum_watch_tags_list\" style=\"margin-top: 0px;padding-top: 0px;\">
-				<li class=\"header_home\" style=\"margin: 30px 0px 0px 0px;padding-bottom: 0px;\"><a href=\"$root/forum/ignored_tags.php?l=$l\""; if($minus_one == "ignored_tags.php" && $minus_two == "discuss"){ echo" class=\"navigation_active\"";}echo" style=\"margin: 0px 0px 0px 0px;padding-bottom: 0px;\">$l_ignored_tags</a></li>
+				<li class=\"header_home\" style=\"margin: 30px 0px 0px 0px;padding-bottom: 0px;\"><a href=\"$root/forum/ignored_tags.php?l=$l\""; if($minus_one == "ignored_tags.php" && $minus_two == "forum"){ echo" class=\"navigation_active\"";}echo" style=\"margin: 0px 0px 0px 0px;padding-bottom: 0px;\">$l_ignored_tags</a></li>
 			
 				";
 				if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
@@ -132,7 +132,7 @@ echo"
 						list($get_ignore_id, $get_ignore_tag_id, $get_tag_id, $get_tag_title_clean, $get_tag_icon_path, $get_tag_icon_file_16) = $row_w;
 
 						echo"
-						<li class=\"$discussCSSToUseOnLiTagsBelowNavSav\""; if($x == 0){ echo" style=\"clear: left;\""; } echo"><a href=\"open_tag.php?tag=$get_tag_title_clean&amp;l=$l\" class=\"$discussCSSToUseOnATagsBelowNavSav\"";
+						<li class=\"$forumCSSToUseOnLiTagsBelowNavSav\""; if($x == 0){ echo" style=\"clear: left;\""; } echo"><a href=\"open_tag.php?tag=$get_tag_title_clean&amp;l=$l\" class=\"$forumCSSToUseOnATagsBelowNavSav\"";
 						if(file_exists("$root/$get_tag_icon_path/$get_tag_icon_file_16") && $get_tag_icon_file_16 != ""){
 							// echo"<img src=\"$root/$get_tag_icon_path/$get_tag_icon_file_16\" alt=\"$get_tag_icon_file_16\" /> ";
 							echo" style=\"background-image: url('$root/$get_tag_icon_path/$get_tag_icon_file_16');background-repeat: no-repeat;background-position: center left 4px;padding-left:26px\" ";

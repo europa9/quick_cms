@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: discuss/unsubscribe_from_discuss.php
+* File: forum/unsubscribe_from_forum.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -67,7 +67,7 @@ list($get_current_title_id, $get_current_title_language, $get_current_title_valu
 
 
 /*- Headers ---------------------------------------------------------------------------------- */
-$website_title = "$get_current_title_value - $l_unsubscribe_from_discuss";
+$website_title = "$get_current_title_value - $l_unsubscribe_from_forum";
 if(file_exists("./favicon.ico")){ $root = "."; }
 elseif(file_exists("../favicon.ico")){ $root = ".."; }
 elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -76,24 +76,24 @@ include("$root/_webdesign/header.php");
 
 
 // Check if I have subscription for entire board
-$query = "SELECT discuss_subscription_id, discuss_subscription_user_id, discuss_subscription_user_email FROM $t_forum_subscriptions WHERE discuss_subscription_id=$subscription_id_mysql AND discuss_subscription_user_id=$subscription_user_id_mysql";
+$query = "SELECT forum_subscription_id, forum_subscription_user_id, forum_subscription_user_email FROM $t_forum_subscriptions WHERE forum_subscription_id=$subscription_id_mysql AND forum_subscription_user_id=$subscription_user_id_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
-list($get_discuss_subscription_id, $get_discuss_subscription_user_id, $get_discuss_subscription_user_email) = $row;
+list($get_forum_subscription_id, $get_forum_subscription_user_id, $get_forum_subscription_user_email) = $row;
 
-if($get_discuss_subscription_id == ""){
+if($get_forum_subscription_id == ""){
 	echo"
-	<h1>$l_unsubscribe_from_discuss</h1>
+	<h1>$l_unsubscribe_from_forum</h1>
 	<p>$l_subscription_not_found</p>
 	";
 }
 else{
 	// Delete
-	$result = mysqli_query($link, "DELETE FROM $t_forum_subscriptions WHERE discuss_subscription_id='$get_discuss_subscription_id'");
+	$result = mysqli_query($link, "DELETE FROM $t_forum_subscriptions WHERE forum_subscription_id='$get_forum_subscription_id'");
 
 	echo"
-	<h1>$l_unsubscribe_from_discuss</h1>
-	<p>$l_subscription_deleted ($get_discuss_subscription_user_email)</p>
+	<h1>$l_unsubscribe_from_forum</h1>
+	<p>$l_subscription_deleted ($get_forum_subscription_user_email)</p>
 	";
 }
 

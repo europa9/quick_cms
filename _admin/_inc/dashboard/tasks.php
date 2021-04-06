@@ -158,7 +158,7 @@ if($action == ""){
 
 					
 							echo"
-							<div class=\"tasks_drop_div\" id=\"status_code_id$get_status_code_id"; echo"user_id0\">
+							<div class=\"tasks_content_wrapper\" id=\"task_id$get_task_id\">
 								<div class=\"task_content_priority_$get_task_priority_weight\">
 
 									<p>
@@ -184,7 +184,7 @@ if($action == ""){
 									$number  $get_task_title</a>
 									</p>
 								</div> <!-- //task_priority_x -->
-							</div> <!-- //tasks_drop_div -->
+							</div> <!-- //tasks_content_wrapper -->
 							";
 						}
 						echo"

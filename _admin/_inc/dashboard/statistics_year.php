@@ -848,13 +848,28 @@ else{
 			<span>Type</span>
 		   </th>
 		   <th scope=\"col\">
+			<span>IP</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Last URL</span>
+		   </th>
+		   <th scope=\"col\">
 			<span>OS</span>
 		   </th>
 		   <th scope=\"col\">
 			<span>Browser</span>
 		   </th>
 		   <th scope=\"col\">
-			<span>Minutes spent</span>
+			<span>Country</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Accepted language</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Language</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Time spent</span>
 		   </th>
 		   <th scope=\"col\">
 			<span>Hits</span>
@@ -864,11 +879,24 @@ else{
 		 <tbody>
 		";
 		$editor_language_mysql = quote_smart($link, $editor_language);
-		$query = "SELECT tracker_id, tracker_ip, tracker_month, tracker_month_short, tracker_year, tracker_time_start, tracker_hour_minute_start, tracker_time_end, tracker_hour_minute_end, tracker_minutes_spent, tracker_os, tracker_browser, tracker_type, tracker_language, tracker_hits FROM $t_stats_tracker_index WHERE tracker_language=$editor_language_mysql ORDER BY tracker_id DESC LIMIT 0,300";
+		$query = "SELECT tracker_id, tracker_ip, tracker_ip_masked, tracker_month, tracker_month_short, tracker_year, tracker_time_start, tracker_hour_minute_start, tracker_time_end, tracker_hour_minute_end, tracker_seconds_spent, tracker_time_spent, tracker_os, tracker_browser, tracker_type, tracker_country_name, tracker_accept_language, tracker_language, tracker_last_url_value, tracker_last_url_title, tracker_last_url_title_fetched, tracker_hits FROM $t_stats_tracker_index WHERE tracker_language=$editor_language_mysql ORDER BY tracker_id DESC LIMIT 0,300";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
-			list($get_tracker_id, $get_tracker_ip, $get_tracker_month, $get_tracker_month_short, $get_tracker_year, $get_tracker_time_start, $get_tracker_hour_minute_start, $get_tracker_time_end, $get_tracker_hour_minute_end, $get_tracker_minutes_spent, $get_tracker_os, $get_tracker_browser, $get_tracker_type, $get_tracker_language, $get_tracker_hits) = $row;
+			list($get_tracker_id, $get_tracker_ip, $get_tracker_ip_masked, $get_tracker_month, $get_tracker_month_short, $get_tracker_year, $get_tracker_time_start, $get_tracker_hour_minute_start, $get_tracker_time_end, $get_tracker_hour_minute_end, $get_tracker_seconds_spent, $get_tracker_time_spent, $get_tracker_os, $get_tracker_browser, $get_tracker_type, $get_tracker_country_name, $get_tracker_accept_language, $get_tracker_language, $get_tracker_last_url_value, $get_tracker_last_url_title, $get_tracker_last_url_title_fetched, $get_tracker_hits) = $row;
 			
+			if($get_tracker_last_url_title_fetched == "0"){
+				$inp_url_title = get_title($get_tracker_last_url_value);
+				$inp_url_title = output_html($inp_url_title);
+				if($inp_url_title == ""){
+					$inp_url_title = "$get_tracker_last_url_title";
+				}
+				$inp_url_title_mysql = quote_smart($link, $inp_url_title);
+				
+				mysqli_query($link, "UPDATE $t_stats_tracker_index SET tracker_last_url_title=$inp_url_title_mysql, tracker_last_url_title_fetched=1 WHERE tracker_id=$get_tracker_id") or die(mysqli_error());
+
+				$get_tracker_last_url_title = "$inp_url_title";
+			}
+
 			echo"
 			 <tr>
 			  <td>
@@ -878,13 +906,28 @@ else{
 				<span>$get_tracker_type</span>
 			  </td>
 			  <td>
+				<span>$get_tracker_ip_masked</span>
+			  </td>
+			  <td>
+				<span><a href=\"$get_tracker_last_url_value\">$get_tracker_last_url_title</a></span>
+			  </td>
+			  <td>
 				<span>$get_tracker_os</span>
 			  </td>
 			  <td>
 				<span>$get_tracker_browser</span>
 			  </td>
 			  <td>
-				<span>$get_tracker_minutes_spent</span>
+				<span>$get_tracker_country_name</span>
+			  </td>
+			  <td>
+				<span>$get_tracker_accept_language</span>
+			  </td>
+			  <td>
+				<span>$get_tracker_language</span>
+			  </td>
+			  <td>
+				<span>$get_tracker_time_spent</span>
 			  </td>
 			  <td>
 				<span>$get_tracker_hits</span>

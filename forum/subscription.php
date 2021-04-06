@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: discuss/subscription.php
+* File: forum/subscription.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -80,7 +80,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$inp_subscribe_to_all_new_topics = output_html($inp_subscribe_to_all_new_topics);
 
 			if($inp_subscribe_to_all_new_topics == "1"){
-				if($get_discuss_subscription_id == ""){
+				if($get_forum_subscription_id == ""){
 					// Insert
 					$inp_email_mysql = quote_smart($link, $get_my_user_email);
 					$datetime = date("Y-m-d H:i:s");
@@ -94,9 +94,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				}
 			}
 			else{
-				if($get_discuss_subscription_id != ""){
+				if($get_forum_subscription_id != ""){
 					// Delete
-					$result = mysqli_query($link, "DELETE FROM $t_forum_subscriptions WHERE forum_subscription_id='$get_discuss_subscription_id'");
+					$result = mysqli_query($link, "DELETE FROM $t_forum_subscriptions WHERE forum_subscription_id='$get_forum_subscription_id'");
 				}
 			}
 			$url = "subscription.php?l=$l&ft=success&fm=changes_saved";
@@ -146,7 +146,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 else{
 	echo"
 	<h1><img src=\"_gfx/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" /> Loading...</h1>
-	<meta http-equiv=\"refresh\" content=\"1;url=$root/users/login.php?l=$l&amp;referer=$root/discuss/subscription.php\">
+	<meta http-equiv=\"refresh\" content=\"1;url=$root/users/login.php?l=$l&amp;referer=$root/forum/subscription.php\">
 	";
 
 } // not logged in

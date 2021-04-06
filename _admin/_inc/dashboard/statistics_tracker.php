@@ -102,10 +102,10 @@ else{
 $tracker_id_mysql = quote_smart($link, $tracker_id);
 
 // Find year
-$query = "SELECT tracker_id, tracker_ip, tracker_month, tracker_month_short, tracker_year, tracker_time_start, tracker_hour_minute_start, tracker_time_end, tracker_hour_minute_end, tracker_minutes_spent, tracker_os, tracker_browser, tracker_type, tracker_language, tracker_hits FROM $t_stats_tracker_index WHERE tracker_id=$tracker_id_mysql";
+$query = "SELECT tracker_id, tracker_ip, tracker_ip_masked, tracker_month, tracker_month_short, tracker_year, tracker_time_start, tracker_hour_minute_start, tracker_time_end, tracker_hour_minute_end, tracker_seconds_spent, tracker_time_spent, tracker_os, tracker_browser, tracker_type, tracker_country_name, tracker_accept_language, tracker_language, tracker_last_url_value, tracker_last_url_title, tracker_last_url_title_fetched, tracker_hits FROM $t_stats_tracker_index WHERE tracker_id=$tracker_id_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
-list($get_current_tracker_id, $get_current_tracker_ip, $get_current_tracker_month, $get_current_tracker_month_short, $get_current_tracker_year, $get_current_tracker_time_start, $get_current_tracker_hour_minute_start, $get_current_tracker_time_end, $get_current_tracker_hour_minute_end, $get_current_tracker_minutes_spent, $get_current_tracker_os, $get_current_tracker_browser, $get_current_tracker_type, $get_current_tracker_language, $get_current_tracker_hits) = $row;
+list($get_current_tracker_id, $get_current_tracker_ip, $get_current_tracker_ip_masked, $get_current_tracker_month, $get_current_tracker_month_short, $get_current_tracker_year, $get_current_tracker_time_start, $get_current_tracker_hour_minute_start, $get_current_tracker_time_end, $get_current_tracker_hour_minute_end, $get_current_tracker_seconds_spent, $get_current_tracker_time_spent, $get_current_tracker_os, $get_current_tracker_browser, $get_current_tracker_type, $get_current_tracker_country_name, $get_current_tracker_accept_language, $get_current_tracker_language, $get_current_tracker_last_url_value, $get_current_tracker_last_url_title, $get_current_tracker_last_url_title_fetched, $get_current_tracker_hits) = $row;
 
 if($get_current_tracker_id == ""){
 	echo"<p>Server error 404</p>";
@@ -144,31 +144,56 @@ else{
 			<span>Title</span>
 		   </th>
 		   <th scope=\"col\">
-			<span>Minutes spent</span>
+			<span>Time spent</span>
 		   </th>
 		  </tr>
 		 </thead>
 		 <tbody>
 		";
-		$last_url_id = 0;
-		$last_time_start = 0;
-		$last_minutes_spent = 0;
-		$prev_day = 0;
-		$query = "SELECT url_id, url_tracker_id, url_value, url_title, url_title_fetched, url_day, url_month, url_month_short, url_year, url_time_start, url_hour_minute_start, url_time_end, url_hour_minute_end, url_minutes_spent FROM $t_stats_tracker_urls WHERE url_tracker_id=$get_current_tracker_id ORDER BY url_id ASC";
+		$last_url_id 		= 0;
+		$last_time_start 	= 0;
+		$last_seconds_spent 	= 0;
+		$last_time_spent 	= 0;
+		$prev_day 		= 0;
+		$query = "SELECT url_id, url_tracker_id, url_value, url_title, url_title_fetched, url_day, url_month, url_month_short, url_year, url_time_start, url_hour_minute_start, url_time_end, url_hour_minute_end, url_seconds_spent, url_time_spent FROM $t_stats_tracker_urls WHERE url_tracker_id=$get_current_tracker_id ORDER BY url_id ASC";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
-			list($get_url_id, $get_url_tracker_id, $get_url_value, $get_url_title, $get_url_title_fetched, $get_url_day, $get_url_month, $get_url_month_short, $get_url_year, $get_url_time_start, $get_url_hour_minute_start, $get_url_time_end, $get_url_hour_minute_end, $get_url_minutes_spent) = $row;
+			list($get_url_id, $get_url_tracker_id, $get_url_value, $get_url_title, $get_url_title_fetched, $get_url_day, $get_url_month, $get_url_month_short, $get_url_year, $get_url_time_start, $get_url_hour_minute_start, $get_url_time_end, $get_url_hour_minute_end, $get_url_seconds_spent, $get_url_time_spent) = $row;
 			
 			// Time spent
 			if($last_time_start == "0"){
-				$calculate_minutes_spent_on_last = 0;
+				$calculate_time_spent_on_last = 0;
 			}
 			else{
-				$calculate_minutes_spent_on_last = round(($get_url_time_start-$last_time_start)/60, 0);
+			
+				$calculate_seconds = $get_url_time_start-$last_time_start;
+				$hours = floor($calculate_seconds / 3600);
+
+				$minutes = floor(($calculate_seconds / 60) % 60);
+				$minutes_len = strlen($minutes);
+				if($minutes_len == "1"){
+					$minutes = "0" . $minutes;
+				}
+
+				$seconds = $calculate_seconds % 60;
+				$seconds_len = strlen($seconds);
+				if($seconds_len == "1"){
+					$seconds = "0" . $seconds;
+				}
+				if($hours == "0"){
+					$calculate_time_spent_on_last = "$minutes:$seconds";
+				}
+				else{
+					$calculate_time_spent_on_last = "$hours:$minutes:$seconds";
+				}
 			}
-			if($last_url_id != "0" && $last_minutes_spent != "$calculate_minutes_spent_on_last"){
-				mysqli_query($link, "UPDATE $t_stats_tracker_urls SET url_minutes_spent=$calculate_minutes_spent_on_last WHERE url_id=$last_url_id") or die(mysqli_error($link));
-				echo"<div class=\"info\"><p>Calculating ID $last_url_id from $last_minutes_spent to $calculate_minutes_spent_on_last</p></div>
+			if($last_url_id != "0" && $last_time_spent != "$calculate_time_spent_on_last"){
+				mysqli_query($link, "UPDATE $t_stats_tracker_urls SET 
+							url_seconds_spent=$calculate_seconds, 
+							url_time_spent='$calculate_time_spent_on_last' 
+							WHERE url_id=$last_url_id") or die(mysqli_error($link));
+
+				echo"<div class=\"info\"><p>Calculating ID $last_url_id from $last_time_spent to $calculate_time_spent_on_last</p></div>
 				<meta http-equiv=refresh content=\"1; URL=index.php?open=dashboard&amp;page=statistics_tracker&amp;tracker_id=$get_current_tracker_id&amp;editor_language=$editor_language&amp;l=$l\">
 				";
 			}
@@ -210,7 +235,7 @@ else{
 				<span><a href=\"$get_url_value\">$get_url_title</a></span>
 			  </td>
 			  <td>
-				<span>$get_url_minutes_spent</span>
+				<span>$get_url_time_spent</span>
 			  </td>
 			 </tr>
 			";
@@ -218,7 +243,8 @@ else{
 			// Transfer
 			$last_url_id 	 = $get_url_id;
 			$last_time_start = $get_url_time_start;
-			$last_minutes_spent = $get_url_minutes_spent;
+			$last_seconds_spent = $get_url_seconds_spent;
+			$last_time_spent = $get_url_time_spent;
 
 			$prev_day = $get_url_day;
 		}

@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: discuss/share_topic_with_email.php
+* File: forum/share_topic_with_email.php
 * Version 1.0.0
 * Date 22:43 08.03.2019
 * Copyright (c) 2019 S. A. Ditlefsen
@@ -24,7 +24,7 @@ else{ $root = "../../.."; }
 
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
-include("$root/_admin/_data/discuss.php");
+include("$root/_admin/_data/forum.php");
 
 
 /*- Functions ------------------------------------------------------------------------- */
@@ -144,19 +144,19 @@ else{
 			$message = $message . "$get_my_user_alias $l_has_shared_the_following_topic_with_you_lowercase:\n";
 			$message = $message . "$get_current_topic_title\n\n";
 			$message = $message . "$l_you_can_read_it_here:\n";
-			$message = $message . "$configSiteURLSav/discuss/view_topic.php?topic_id=$get_current_topic_id&l=$l\n\n";
+			$message = $message . "$configSiteURLSav/forum/view_topic.php?topic_id=$get_current_topic_id&l=$l\n\n";
 			$message = $message . "$l_message_from $get_my_user_alias:\n";
 			$message = $message . "$inp_message\n\n";
 			$message = $message . "--\n";
 			$message = $message . "Regards\n";
-			$message = $message . "$discussFromNameSav\n";
-			$message = $message . "E-mail: $discussFromEmailSav\n";
+			$message = $message . "$forumFromNameSav\n";
+			$message = $message . "E-mail: $forumFromEmailSav\n";
 			$message = $message . "Ip: $inp_user_ip\n";
 			$message = $message . "Datetime: $datetime";
 			$message = decode_national_letters($message);
 
-			$headers = "From: $discussFromEmailSav" . "\r\n" .
-			    "Reply-To: $discussFromEmailSav" . "\r\n" .
+			$headers = "From: $forumFromEmailSav" . "\r\n" .
+			    "Reply-To: $forumFromEmailSav" . "\r\n" .
 			    'X-Mailer: PHP/' . phpversion();
 
 			mail($inp_to_email, $subject, $message, $headers);			
@@ -227,7 +227,7 @@ else{
 		<h1>
 		<img src=\"$root/_webdesign/images/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
 		Loading...</h1>
-		<meta http-equiv=\"refresh\" content=\"1;url=$root/users/login.php?referer=discuss/share_topic_with_email.php?topic_id=$topic_id&amp;l=$l\">
+		<meta http-equiv=\"refresh\" content=\"1;url=$root/users/login.php?referer=forum/share_topic_with_email.php?topic_id=$topic_id&amp;l=$l\">
 		";
 	} // not logged in		
 } //  post found

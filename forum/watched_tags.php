@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* File: discuss/watched_tags.php
+* File: forum/watched_tags.php
 * Version 1.0.0.
 * Date 22:49 13.04.2019
 * Copyright (c) 2008-2019 Sindre Andre Ditlefsen
@@ -146,7 +146,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 else{
 	echo"
 	<h1><img src=\"_gfx/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" /> Loading...</h1>
-	<meta http-equiv=\"refresh\" content=\"1;url=$root/users/login.php?l=$l&amp;referer=$root/discuss/watched_tags.php\">
+	<meta http-equiv=\"refresh\" content=\"1;url=$root/users/login.php?l=$l&amp;referer=$root/forum/watched_tags.php\">
 	";
 } // not logged in
 

@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: discuss/reply_comment_edit.php
+* File: forum/reply_comment_edit.php
 * Version 1.0.0
 * Date 09:38 26.04.2019
 * Copyright (c) 2011-2019 S. A. Ditlefsen
@@ -24,7 +24,7 @@ else{ $root = "../../.."; }
 
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
-include("$root/_admin/_data/discuss.php");
+include("$root/_admin/_data/forum.php");
 
 /*- Forum config ------------------------------------------------------------------------ */
 include("$root/_admin/_data/forum.php");
@@ -86,7 +86,7 @@ else{
 	
 
 	/*- Headers ---------------------------------------------------------------------------------- */
-	$website_title = "$l_discuss - $get_current_topic_title - $l_edit_comment";
+	$website_title = "$l_forum - $get_current_topic_title - $l_edit_comment";
 	if(file_exists("./favicon.ico")){ $root = "."; }
 	elseif(file_exists("../favicon.ico")){ $root = ".."; }
 	elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -208,7 +208,7 @@ else{
 					echo"<a href=\"index.php?show=$show&amp;l=$l\">$l_active</a>";
 				}
 				else{
-					echo"<a href=\"index.php?l=$l\">$l_discuss</a>";
+					echo"<a href=\"index.php?l=$l\">$l_forum</a>";
 				}
 				echo"
 				&gt;
@@ -274,7 +274,7 @@ else{
 					echo"<a href=\"index.php?show=$show&amp;l=$l\">$l_active</a>";
 				}
 				else{
-					echo"<a href=\"index.php?l=$l\">$l_discuss</a>";
+					echo"<a href=\"index.php?l=$l\">$l_forum</a>";
 				}
 				echo"
 				&gt;
@@ -295,7 +295,7 @@ else{
 		<h1>
 		<img src=\"$root/_webdesign/images/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
 		Loading...</h1>
-		<meta http-equiv=\"refresh\" content=\"1;url=$root/users/index.php?page=login&amp;l=$l&amp;refer=$root/discuss/report_topic.php?topic_id=$topic_id\">
+		<meta http-equiv=\"refresh\" content=\"1;url=$root/users/index.php?page=login&amp;l=$l&amp;refer=$root/forum/report_topic.php?topic_id=$topic_id\">
 		";
 	}
 } //  post found

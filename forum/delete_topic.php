@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: discuss/delete_topic.php
+* File: forum/delete_topic.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -72,7 +72,7 @@ if($get_current_topic_id == ""){
 }
 else{
 	/*- Headers ---------------------------------------------------------------------------------- */
-	$website_title = "$l_discuss - $get_current_topic_title";
+	$website_title = "$l_forum - $get_current_topic_title";
 	if(file_exists("./favicon.ico")){ $root = "."; }
 	elseif(file_exists("../favicon.ico")){ $root = ".."; }
 	elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -117,7 +117,7 @@ else{
 				$result = mysqli_query($link, "DELETE FROM $t_forum_topics_tags WHERE topic_id=$topic_id_mysql");
 
 				// Search engine
-				$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_module_name='discuss' AND index_reference_name='topic_id' AND index_reference_id=$get_current_topic_id");
+				$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_module_name='forum' AND index_reference_name='topic_id' AND index_reference_id=$get_current_topic_id");
 
 				$url = "index.php?l=$l&ft=success&fm=topic_deleted";
 				header("Location: $url");
@@ -140,7 +140,7 @@ else{
 					echo"<a href=\"index.php?show=$show&amp;l=$l\">$l_active</a>";
 				}
 				else{
-					echo"<a href=\"index.php?l=$l\">$l_discuss</a>";
+					echo"<a href=\"index.php?l=$l\">$l_forum</a>";
 				}
 				echo"
 				&gt;

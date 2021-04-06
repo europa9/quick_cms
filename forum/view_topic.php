@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: discuss/view_topic.php
+* File: forum/view_topic.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -319,11 +319,11 @@ else{
 					else{
 						echo"
 						<p>
-						<a href=\"$root/users/login.php?l=$l&amp;referer=$root/discuss/vote_topic_up.php?topic_id=$topic_id&amp;show=$show&amp;l=$l\"><img src=\"_gfx/vote_up.png\" alt=\"vote_up\" /></a>
+						<a href=\"$root/users/login.php?l=$l&amp;referer=$root/forum/vote_topic_up.php?topic_id=$topic_id&amp;show=$show&amp;l=$l\"><img src=\"_gfx/vote_up.png\" alt=\"vote_up\" /></a>
 						</p>
 						<h2 class=\"grey\" style=\"padding:0;margin:0;\">$get_current_topic_rating</h2>
 						<p>
-						<a href=\"$root/users/login.php?l=$l&amp;referer=$root/discuss/vote_topic_down.php?topic_id=$topic_id&amp;show=$show&amp;l=$l\"><img src=\"_gfx/vote_down.png\" alt=\"vote_down\" /></a>
+						<a href=\"$root/users/login.php?l=$l&amp;referer=$root/forum/vote_topic_down.php?topic_id=$topic_id&amp;show=$show&amp;l=$l\"><img src=\"_gfx/vote_down.png\" alt=\"vote_down\" /></a>
 						</p>
 						";
 					}
@@ -502,11 +502,11 @@ else{
 					else{
 						echo"
 						<p>
-						<a href=\"$root/users/login.php?l=$l&amp;referer=$root/discuss/vote_reply_up.php?reply_id=$get_reply_id&amp;topic_id=$topic_id&amp;show=$show&amp;l=$l\"><img src=\"_gfx/vote_up.png\" alt=\"vote_up\" /></a>
+						<a href=\"$root/users/login.php?l=$l&amp;referer=$root/forum/vote_reply_up.php?reply_id=$get_reply_id&amp;topic_id=$topic_id&amp;show=$show&amp;l=$l\"><img src=\"_gfx/vote_up.png\" alt=\"vote_up\" /></a>
 						</p>
 						<h2 class=\"grey\" style=\"padding:0;margin:0;\">$get_reply_rating</h2>
 						<p>
-						<a href=\"$root/users/login.php?l=$l&amp;referer=$root/discuss/vote_reply_down.php?reply_id=$get_reply_id&amp;topic_id=$topic_id&amp;show=$show&amp;l=$l\"><img src=\"_gfx/vote_down.png\" alt=\"vote_down\" /></a>
+						<a href=\"$root/users/login.php?l=$l&amp;referer=$root/forum/vote_reply_down.php?reply_id=$get_reply_id&amp;topic_id=$topic_id&amp;show=$show&amp;l=$l\"><img src=\"_gfx/vote_down.png\" alt=\"vote_down\" /></a>
 						</p>
 						";
 					}
@@ -601,7 +601,7 @@ else{
 					else{
 						echo"
 						<p>
-						<a href=\"$root/users/login.php?l=$l&amp;refer=$root/discuss/reply_add_a_comment.php?reply_id=$get_reply_id&amp;topic_id=$topic_id&amp;l=$l\" class=\"small\">$l_add_a_comment</a>
+						<a href=\"$root/users/login.php?l=$l&amp;refer=$root/forum/reply_add_a_comment.php?reply_id=$get_reply_id&amp;topic_id=$topic_id&amp;l=$l\" class=\"small\">$l_add_a_comment</a>
 						</p>
 						";
 					}
@@ -635,7 +635,7 @@ else{
 		else{
 			echo"
 			<p>
-			<a href=\"$root/users/login.php?l=$l&amp;refer=$root/discuss/view_topic.php?topic_id=$topic_id\" class=\"btn_default\">$l_reply</a>
+			<a href=\"$root/users/login.php?l=$l&amp;refer=$root/forum/view_topic.php?topic_id=$topic_id\" class=\"btn_default\">$l_reply</a>
 			</p>
 			";
 		}

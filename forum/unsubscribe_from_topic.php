@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: discuss/unsubscribe_from_topic.php
+* File: forum/unsubscribe_from_topic.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -65,7 +65,7 @@ list($get_current_topic_id, $get_current_topic_user_id, $get_current_topic_user_
 if($get_current_topic_id == ""){
 
 	/*- Headers ---------------------------------------------------------------------------------- */
-	$website_title = "$l_discuss - 404";
+	$website_title = "$l_forum - 404";
 	if(file_exists("./favicon.ico")){ $root = "."; }
 	elseif(file_exists("../favicon.ico")){ $root = ".."; }
 	elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -76,7 +76,7 @@ if($get_current_topic_id == ""){
 }
 else{
 	/*- Headers ---------------------------------------------------------------------------------- */
-	$website_title = "$l_discuss - $get_current_topic_title";
+	$website_title = "$l_forum - $get_current_topic_title";
 	if(file_exists("./favicon.ico")){ $root = "."; }
 	elseif(file_exists("../favicon.ico")){ $root = ".."; }
 	elseif(file_exists("../../favicon.ico")){ $root = "../.."; }

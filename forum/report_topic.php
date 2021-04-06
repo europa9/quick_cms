@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: discuss/report_topic.php
+* File: forum/report_topic.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -69,7 +69,7 @@ if($get_current_topic_id == ""){
 }
 else{
 	/*- Headers ---------------------------------------------------------------------------------- */
-	$website_title = "$l_discuss - $get_current_topic_title - $l_report_topic";
+	$website_title = "$l_forum - $get_current_topic_title - $l_report_topic";
 	if(file_exists("./favicon.ico")){ $root = "."; }
 	elseif(file_exists("../favicon.ico")){ $root = ".."; }
 	elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -135,14 +135,14 @@ else{
 				$from = "post@" . $_SERVER['HTTP_HOST'];
 				$reply = "post@" . $_SERVER['HTTP_HOST'];
 			
-				$view_link = $configSiteURLSav . "/discuss/view_topic.php?topic_id=$topic_id";
-				$edit_link = $configControlPanelURLSav . "/discuss/edit_topic.php?topic_id=$topic_id";
-				$delete_link = $configControlPanelURLSav . "/discuss/delete_topic.php?topic_id=$topic_id";
+				$view_link = $configSiteURLSav . "/forum/view_topic.php?topic_id=$topic_id";
+				$edit_link = $configControlPanelURLSav . "/forum/edit_topic.php?topic_id=$topic_id";
+				$delete_link = $configControlPanelURLSav . "/forum/delete_topic.php?topic_id=$topic_id";
 			
 				$user_agent = $_SERVER['HTTP_USER_AGENT'];
 				$user_agent = output_html($user_agent);
 
-				$subject = "Discuss - Reported topic $get_current_topic_title at $host";
+				$subject = "forum - Reported topic $get_current_topic_title at $host";
 
 				$message = "<html>\n";
 				$message = $message. "<head>\n";
@@ -188,8 +188,8 @@ else{
 
 
 				// Send mail
-				$headers = "From: $discussFromEmailSav" . "\r\n" .
-				    "Reply-To: $discussFromEmailSav" . "\r\n" .
+				$headers = "From: $forumFromEmailSav" . "\r\n" .
+				    "Reply-To: $forumFromEmailSav" . "\r\n" .
 				    'X-Mailer: PHP/' . phpversion();
 				mail($get_moderator_user_email, $subject, $message, $headers);
 
@@ -217,7 +217,7 @@ else{
 					echo"<a href=\"index.php?show=$show&amp;l=$l\">$l_active</a>";
 				}
 				else{
-					echo"<a href=\"index.php?l=$l\">$l_discuss</a>";
+					echo"<a href=\"index.php?l=$l\">$l_forum</a>";
 				}
 				echo"
 				&gt;
@@ -280,7 +280,7 @@ else{
 					echo"<a href=\"index.php?show=$show&amp;l=$l\">$l_active</a>";
 				}
 				else{
-					echo"<a href=\"index.php?l=$l\">$l_discuss</a>";
+					echo"<a href=\"index.php?l=$l\">$l_forum</a>";
 				}
 				echo"
 				&gt;
@@ -299,7 +299,7 @@ else{
 		<h1>
 		<img src=\"$root/_webdesign/images/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
 		Loading...</h1>
-		<meta http-equiv=\"refresh\" content=\"1;url=$root/users/index.php?page=login&amp;l=$l&amp;refer=$root/discuss/report_topic.php?topic_id=$topic_id\">
+		<meta http-equiv=\"refresh\" content=\"1;url=$root/users/index.php?page=login&amp;l=$l&amp;refer=$root/forum/report_topic.php?topic_id=$topic_id\">
 		";
 	}
 } //  post found

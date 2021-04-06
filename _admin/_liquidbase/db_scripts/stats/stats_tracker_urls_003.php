@@ -31,7 +31,8 @@ if(isset($_SESSION['admin_user_id'])){
 					url_hour_minute_start VARCHAR(5),
 					url_time_end INT,
 					url_hour_minute_end VARCHAR(5),
-					url_minutes_spent INT)")
+					url_seconds_spent INT,
+					url_time_spent VARCHAR(25))")
 					or die(mysqli_error($link));
 	}
 

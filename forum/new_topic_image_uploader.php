@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: discuss/new_topic_image_uploader.php
+* File: forum/new_topic_image_uploader.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -24,7 +24,7 @@ else{ $root = "../../.."; }
 
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
-include("$root/_admin/_data/discuss.php");
+include("$root/_admin/_data/forum.php");
 
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/forum/ts_forum.php");
@@ -80,8 +80,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			if(!(is_dir("$root/_uploads/users/images"))){
 				mkdir("$root/_uploads/users/images", 0777);
 			}
-			if(!(is_dir("$root/_uploads/users/images/$get_my_user_id/discuss"))){
-				mkdir("$root/_uploads/users/images/$get_my_user_id/discuss", 0777);
+			if(!(is_dir("$root/_uploads/users/images/$get_my_user_id/forum"))){
+				mkdir("$root/_uploads/users/images/$get_my_user_id/forum", 0777);
 			}
 
 
@@ -160,7 +160,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 							imagecopyresampled($tmp_org,$src,0,0,0,0,$newwidth,$newheight, $width,$height);
 							$datetime = date("ymdhis");
-							$filename = "$root/_uploads/users/images/$get_my_user_id/discuss/". $get_my_user_id . "_" . $datetime . "." . $extension;
+							$filename = "$root/_uploads/users/images/$get_my_user_id/forum/". $get_my_user_id . "_" . $datetime . "." . $extension;
 
 							if($extension=="jpg" || $extension=="jpeg" ){
 								imagejpeg($tmp_org,$filename,100);
@@ -253,14 +253,14 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					if(isset($_GET['new_image'])){
 						$new_image = $_GET['new_image'];
 						$new_image = output_html($new_image);
-						if(file_exists("$root/_uploads/users/images/$get_my_user_id/discuss/$new_image")){
+						if(file_exists("$root/_uploads/users/images/$get_my_user_id/forum/$new_image")){
 							$fm = "
 								</p>
 								<form method=\"GET\" action=\"new_topic_image_uploader.php\" enctype=\"multipart/form-data\">
 									<p><b>$l_image_uploaded</b></p>
 
 									<p>
-									<img src=\"$root/_uploads/users/images/$get_my_user_id/discuss/$new_image\" alt=\"$root/_uploads/users/images/$get_my_user_id/discuss/$new_image\" />
+									<img src=\"$root/_uploads/users/images/$get_my_user_id/forum/$new_image\" alt=\"$root/_uploads/users/images/$get_my_user_id/forum/$new_image\" />
 									</p>
 
 									<script>
@@ -269,14 +269,14 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 									});
 									</script>
 									<p><b>$l_url_to_copy:</b><br />
-									<input type=\"text\" name=\"inp_copy\" value=\"$configSiteURLSav/_uploads/users/images/$get_my_user_id/discuss/$new_image\" size=\"25\" />
+									<input type=\"text\" name=\"inp_copy\" value=\"$configSiteURLSav/_uploads/users/images/$get_my_user_id/forum/$new_image\" size=\"25\" />
 									</p>
 								</form>
 								<p>
 								";
 						}
 						else{
-							$fm = "Image uploaded, but an error happened.. <a href=\"$root/_uploads/users/images/$get_my_user_id/discuss/$new_image\">$root/_uploads/users/images/$get_my_user_id/discuss/$new_image</a>";
+							$fm = "Image uploaded, but an error happened.. <a href=\"$root/_uploads/users/images/$get_my_user_id/forum/$new_image\">$root/_uploads/users/images/$get_my_user_id/forum/$new_image</a>";
 						}
 					}
 					
@@ -313,7 +313,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 else{
 	echo"
 	<h1><img src=\"_gfx/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" /> Loading...</h1>
-	<meta http-equiv=\"refresh\" content=\"1;url=$root/users/login.php?l=$l&amp;referer=$root/discuss/new_topic.php\">
+	<meta http-equiv=\"refresh\" content=\"1;url=$root/users/login.php?l=$l&amp;referer=$root/forum/new_topic.php\">
 	";
 }
 

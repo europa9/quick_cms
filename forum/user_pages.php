@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: discuss/new_topic.php
+* File: forum/new_topic.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -40,7 +40,7 @@ $l_mysql = quote_smart($link, $l);
 
 
 /*- Headers ---------------------------------------------------------------------------------- */
-$website_title = "$l_discuss - $l_user_pages";
+$website_title = "$l_forum - $l_user_pages";
 if(file_exists("./favicon.ico")){ $root = "."; }
 elseif(file_exists("../favicon.ico")){ $root = ".."; }
 elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -73,7 +73,7 @@ else{
 	<h1>
 	<img src=\"_gfx/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
 	Loading...</h1>
-	<meta http-equiv=\"refresh\" content=\"1;url=$root/users/index.php?page=login&amp;l=$l&amp;refer=$root/discuss/user_pages.php\">
+	<meta http-equiv=\"refresh\" content=\"1;url=$root/users/index.php?page=login&amp;l=$l&amp;refer=$root/forum/user_pages.php\">
 	";
 }
 

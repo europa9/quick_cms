@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: discuss/vote_reply_up.php
+* File: forum/vote_reply_up.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -93,7 +93,7 @@ else{
 
 	if($get_current_reply_id == ""){
 		echo"<p>Reply not found.</p>
-		<meta http-equiv=\"refresh\" content=\"1;url=$root/discuss/view_topic.php?topic_id=$get_current_topic_id&amp;l=$get_current_topic_language\" />
+		<meta http-equiv=\"refresh\" content=\"1;url=$root/forum/view_topic.php?topic_id=$get_current_topic_id&amp;l=$get_current_topic_language\" />
 		";
 	}
 	else{

@@ -281,14 +281,15 @@ else{
 
 	// Inp from user agent
 	if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
-		$inp_language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-		$inp_language = output_html($inp_language);
-		$inp_language = strtolower($inp_language);
+		$inp_accept_language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+		$inp_accept_language = output_html($inp_accept_language);
+		$inp_accept_language = strtolower($inp_accept_language);
 	}
 	else{
-		$inp_language = "ZZ";
+		$inp_accept_language = "ZZ";
 	}
-	$inp_language = substr("$inp_language", 0,2);
+	$inp_accept_language_mysql = quote_smart($link, $inp_accept_language);
+	$inp_language = substr("$inp_accept_language", 0,2);
 	$inp_language_mysql = quote_smart($link, $inp_language);
 
 	$inp_page = $_SERVER['REQUEST_URI'];
@@ -1211,53 +1212,93 @@ else{
 		}
 
 		// Tracker :: Index
-		$query = "SELECT tracker_id, tracker_time_start, tracker_hits FROM $t_stats_tracker_index WHERE tracker_ip=$inp_ip_mysql AND tracker_month='$inp_month' AND tracker_year='$inp_year' AND tracker_os=$inp_user_agent_os_mysql AND tracker_browser=$inp_user_agent_browser_mysql";
+		$inp_url_mysql = quote_smart($link, $page_url);
+		$inp_title_mysql = quote_smart($link, $website_title);
+		$query = "SELECT tracker_id, tracker_time_start, tracker_hits FROM $t_stats_tracker_index WHERE tracker_ip=$inp_ip_mysql AND tracker_month='$inp_month' AND tracker_year='$inp_year' AND tracker_os=$inp_user_agent_os_mysql AND tracker_browser=$inp_user_agent_browser_mysql AND tracker_language='$get_current_language_active_iso_two'";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_tracker_id, $get_tracker_time_start, $get_tracker_hits) = $row;
 		if($get_tracker_id == ""){
-
+			$inp_tracker_ip_masked = substr($inp_ip, -10);
+			$inp_tracker_ip_masked_mysql = quote_smart($link, $inp_tracker_ip_masked);
 			mysqli_query($link, "INSERT INTO $t_stats_tracker_index 
-			(tracker_id, tracker_ip, tracker_month, tracker_month_short, tracker_year, 
-			tracker_time_start, tracker_hour_minute_start, tracker_time_end, tracker_hour_minute_end, tracker_minutes_spent, 
-			tracker_os, tracker_browser, tracker_type, tracker_language, tracker_hits) 
+			(tracker_id, tracker_ip, tracker_ip_masked, tracker_month, tracker_month_short, 
+			tracker_year, tracker_time_start, tracker_hour_minute_start, tracker_time_end, tracker_hour_minute_end, 
+			tracker_seconds_spent, tracker_time_spent, tracker_os, tracker_browser, tracker_type,
+			tracker_accept_language, tracker_language, tracker_country_name, tracker_hits, tracker_last_url_value,
+			tracker_last_url_title, tracker_last_url_title_fetched) 
 			VALUES
-			(NULL, $inp_ip_mysql, '$inp_month', '$inp_month_short', '$inp_year', 
-			'$inp_unix_time', '$inp_hour_minute', '$inp_unix_time', '$inp_hour_minute', 0,
-			$inp_user_agent_os_mysql, $inp_user_agent_browser_mysql, '$get_stats_user_agent_type', '$get_current_language_active_iso_two', 1)") or die(mysqli_error($link));
+			(NULL, $inp_ip_mysql, $inp_tracker_ip_masked_mysql, '$inp_month', '$inp_month_short', 
+			'$inp_year', '$inp_unix_time', '$inp_hour_minute', '$inp_unix_time', '$inp_hour_minute',
+			 0, 0, $inp_user_agent_os_mysql, $inp_user_agent_browser_mysql, '$get_stats_user_agent_type', 
+			$inp_accept_language_mysql, '$get_current_language_active_iso_two', $inp_geoname_country_name_mysql, 1, $inp_url_mysql, 
+			$inp_title_mysql, 0)") or die(mysqli_error($link));
 
 			$query = "SELECT tracker_id, tracker_hits FROM $t_stats_tracker_index WHERE tracker_ip=$inp_ip_mysql AND tracker_month='$inp_month' AND tracker_year='$inp_year'";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
 			list($get_tracker_id, $get_tracker_hits) = $row;
 
+
+
+
 		}
 		else{
 			// Hits, dates
 			$inp_hits = $get_tracker_hits+1;
-			$inp_minutes_spent = round(($inp_unix_time-$get_tracker_time_start)/60, 0);
+			$inp_seconds_spent = $inp_unix_time-$get_tracker_time_start;
+			$inp_tracker_time_spent = "";
+			if($inp_seconds_spent > 60){
+
+				$hours = floor($inp_seconds_spent / 3600);
+
+				$minutes = floor(($inp_seconds_spent / 60) % 60);
+				$minutes_len = strlen($minutes);
+				if($minutes_len == "1"){
+					$minutes = "0" . $minutes;
+				}
+
+				$seconds = $inp_seconds_spent % 60;
+				$seconds_len = strlen($seconds);
+				if($seconds_len == "1"){
+					$seconds = "0" . $seconds;
+				}
+				if($hours == "0"){
+					$inp_tracker_time_spent= "$minutes:$seconds";
+				}
+				else{
+					$inp_tracker_time_spent= "$hours:$minutes:$seconds";
+				}
+
+			}
+			else{
+				$inp_tracker_time_spent = "$inp_seconds_spent s";
+			}
+			$inp_tracker_time_spent_mysql = quote_smart($link, $inp_tracker_time_spent);
 
 			mysqli_query($link, "UPDATE $t_stats_tracker_index SET 
 						tracker_time_end='$inp_unix_time', 
 						tracker_hour_minute_end='$inp_hour_minute', 
-						tracker_minutes_spent='$inp_minutes_spent',
-						tracker_hits=$inp_hits 
+						tracker_seconds_spent='$inp_seconds_spent',
+						tracker_time_spent=$inp_tracker_time_spent_mysql,
+						tracker_hits=$inp_hits, 
+						tracker_last_url_value=$inp_url_mysql,
+						tracker_last_url_title=$inp_title_mysql, 
+						tracker_last_url_title_fetched=0
 						WHERE tracker_id=$get_tracker_id") or die(mysqli_error($link));
 		}
 
 
 		// Tracker :: URL
-		$inp_url_mysql = quote_smart($link, $page_url);
-		$inp_title_mysql = quote_smart($link, $website_title);
 
 		mysqli_query($link, "INSERT INTO $t_stats_tracker_urls
 			(url_id, url_tracker_id, url_value, url_title, url_title_fetched, url_year, 
 			url_month, url_month_short, url_day, url_time_start, url_hour_minute_start, url_time_end, 
-			url_hour_minute_end, url_minutes_spent) 
+			url_hour_minute_end, url_seconds_spent, url_time_spent) 
 			VALUES
 			(NULL, $get_tracker_id, $inp_url_mysql, $inp_title_mysql, 0, '$inp_year', 
 			'$inp_month', '$inp_month_short', '$inp_day',  '$inp_unix_time', '$inp_hour_minute', '$inp_unix_time', 
-			'$inp_hour_minute', 0)") or die(mysqli_error($link));
+			'$inp_hour_minute', 0, 0)") or die(mysqli_error($link));
 
 	} // End Human
 

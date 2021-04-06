@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: discuss/new_topic.php
+* File: forum/new_topic.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -79,7 +79,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	list($get_my_user_id, $get_my_user_email, $get_my_user_name, $get_my_user_alias, $get_my_user_rank) = $row;
 	
 	// Get my subscriptions
-	$query = "SELECT es_id, es_on_off FROM $t_users_email_subscriptions WHERE es_user_id=$my_user_id_mysql AND es_type='discuss_notify_on_replies'";
+	$query = "SELECT es_id, es_on_off FROM $t_users_email_subscriptions WHERE es_user_id=$my_user_id_mysql AND es_type='forum_notify_on_replies'";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
 	list($get_es_id, $get_es_on_off) = $row;
@@ -87,7 +87,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		mysqli_query($link, "INSERT INTO $t_users_email_subscriptions
 		(es_id, es_user_id, es_type, es_on_off) 
 		VALUES 
-		(NULL, $my_user_id_mysql, 'discuss_notify_on_replies', '1')")
+		(NULL, $my_user_id_mysql, 'forum_notify_on_replies', '1')")
 		or die(mysqli_error($link));
 
 		$get_es_on_off = "1";
@@ -305,7 +305,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					mysqli_query($link, "INSERT INTO $t_forum_tags_index 
 					(tag_id, tag_title, tag_title_clean, tag_introduction, tag_description, tag_created, tag_updated, tag_topics_total_counter, tag_topics_today_counter, tag_topics_today_day, tag_topics_this_week_counter, tag_topics_this_week_week, tag_is_official, tag_icon_path) 
 					VALUES 
-					(NULL, $inp_tag_title_mysql, $inp_tag_clean_mysql, '', '', '$datetime', '$datetime', '1', '1', '$day', '1', '$week', -1, '_uploads/discuss/tags_icons')")
+					(NULL, $inp_tag_title_mysql, $inp_tag_clean_mysql, '', '', '$datetime', '$datetime', '1', '1', '$day', '1', '$week', -1, '_uploads/forum/tags_icons')")
 					or die(mysqli_error($link));
 
 					// Get new Tag ID
@@ -324,8 +324,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						$subject = "$configWebsiteTitleSav - New tag $inp_tag_title";
 						$message = "Hello $get_mod_user_name,\n\n";
 						$message = $message . "There is a new tag $inp_tag_title.\n";
-						$message = $message . "View: $configSiteURLSav/discuss/open_tag.php?tag=$inp_tag_clean&l=$l\n";
-						$message = $message . "Admin: $configControlPanelURLSav/index.php?open=discuss&page=tags&action=open_tag&tag_id=$get_tag_id&editor_language=$l\n\n";
+						$message = $message . "View: $configSiteURLSav/forum/open_tag.php?tag=$inp_tag_clean&l=$l\n";
+						$message = $message . "Admin: $configControlPanelURLSav/index.php?open=forum&page=tags&action=open_tag&tag_id=$get_tag_id&editor_language=$l\n\n";
 						$message = $message . "Best regards\n$configWebsiteTitleSav\n$configSiteURLSav";
 						$headers = "From: $forumFromEmailSav" . "\r\n" .
 						    "Reply-To: $forumFromEmailSav" . "\r\n" .
@@ -375,7 +375,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				// Links
 				$view_link = $configSiteURLSav . "/forum/view_topic.php?topic_id=$get_topic_id";
-				$unsubscribe_link = $configSiteURLSav . "/forum/unsubscribe_from_discuss.php?subscription_id=$get_forum_subscription_id&subscription_user_id=$get_forum_subscription_user_id";
+				$unsubscribe_link = $configSiteURLSav . "/forum/unsubscribe_from_forum.php?subscription_id=$get_forum_subscription_id&subscription_user_id=$get_forum_subscription_user_id";
 		
 			
 				// Topic title substr
@@ -620,7 +620,7 @@ div.topics_chat_view_text {
 		index_language) 
 		VALUES 
 		(NULL, $inp_index_title_mysql, $inp_index_url_mysql, $inp_index_short_description_mysql, $inp_index_keywords_mysql, 
-		'discuss', 'topic_id','$get_topic_id', 0, '$datetime', '$datetime_saying', $inp_index_language_mysql)")
+		'forum', 'topic_id','$get_topic_id', 0, '$datetime', '$datetime_saying', $inp_index_language_mysql)")
 		or die(mysqli_error($link));
 
 		// Header
@@ -748,7 +748,7 @@ div.topics_chat_view_text {
 else{
 	echo"
 	<h1><img src=\"_gfx/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" /> Loading...</h1>
-	<meta http-equiv=\"refresh\" content=\"1;url=$root/users/login.php?l=$l&amp;referer=$root/discuss/new_topic.php\">
+	<meta http-equiv=\"refresh\" content=\"1;url=$root/users/login.php?l=$l&amp;referer=$root/forum/new_topic.php\">
 	";
 }
 

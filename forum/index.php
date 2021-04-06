@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* File: discuss/index.php
+* File: forum/index.php
 * Version 1.0.0.
 * Date 19:42 08.02.2018
 * Copyright (c) 2008-2018 Sindre Andre Ditlefsen

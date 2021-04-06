@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: discuss/form_view.php
+* File: forum/form_view.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -90,7 +90,7 @@ else{
 		list($get_user_id, $get_user_email, $get_user_name, $get_user_alias, $get_user_rank) = $row;
 	
 		// Get my subscriptions
-		$query = "SELECT es_id, es_on_off FROM $t_users_email_subscriptions WHERE es_user_id=$my_user_id_mysql AND es_type='discuss_notify_on_replies'";
+		$query = "SELECT es_id, es_on_off FROM $t_users_email_subscriptions WHERE es_user_id=$my_user_id_mysql AND es_type='forum_notify_on_replies'";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_es_id, $get_es_on_off) = $row;
@@ -98,7 +98,7 @@ else{
 			mysqli_query($link, "INSERT INTO $t_users_email_subscriptions
 			(es_id, es_user_id, es_type, es_on_off) 
 			VALUES 
-			(NULL, $my_user_id_mysql, 'discuss_notify_on_replies', '1')")
+			(NULL, $my_user_id_mysql, 'forum_notify_on_replies', '1')")
 			or die(mysqli_error($link));
 
 			$get_es_on_off = "1";
@@ -307,14 +307,14 @@ else{
 
 		
 				// Mail from
-				$view_link = $configSiteURLSav . "/discuss/view_topic.php?topic_id=$get_topic_id";
-				$edit_link = $configSiteURLSav . "/discuss/edit_topic.php?topic_id=$get_topic_id";
-				$delete_link = $configSiteURLSav . "/discuss/delete_topic.php?topic_id=$get_topic_id";
+				$view_link = $configSiteURLSav . "/forum/view_topic.php?topic_id=$get_topic_id";
+				$edit_link = $configSiteURLSav . "/forum/edit_topic.php?topic_id=$get_topic_id";
+				$delete_link = $configSiteURLSav . "/forum/delete_topic.php?topic_id=$get_topic_id";
 			
 				$user_agent = $_SERVER['HTTP_USER_AGENT'];
 				$user_agent = output_html($user_agent);
 
-				$subject = "Discuss - New topic $inp_title at $configWebsiteTitleSav";
+				$subject = "forum - New topic $inp_title at $configWebsiteTitleSav";
 
 				$message = "<html>\n";
 				$message = $message. "<head>\n";
@@ -359,7 +359,7 @@ else{
 			       "line-break-chars" => "\r\n"
 				);
 				$header = "Content-type: text/html; charset=".$encoding." \r\n";
-				$header .= "From: ".$discussFromNameSav." <".$discussFromEmailSav."> \r\n";
+				$header .= "From: ".$forumFromNameSav." <".$forumFromEmailSav."> \r\n";
 				$header .= "MIME-Version: 1.0 \r\n";
 				$header .= "Content-Transfer-Encoding: 8bit \r\n";
 				$header .= "Date: ".date("r (T)")." \r\n";
@@ -372,7 +372,7 @@ else{
 				<h1>
 				<img src=\"$root/_webdesign/images/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
 				Loading...</h1>
-				<meta http-equiv=\"refresh\" content=\"1;url=$root/discuss/view_topic.php?topic_id=$get_topic_id&amp;l=$l\">
+				<meta http-equiv=\"refresh\" content=\"1;url=$root/forum/view_topic.php?topic_id=$get_topic_id&amp;l=$l\">
 				";
 
 
@@ -456,7 +456,7 @@ else{
 
 				<hr />
 				<p class=\"smal\">
-				$l_when_sending_this_form_it_will_create_a_new_post_on_the_discussion_board
+				$l_when_sending_this_form_it_will_create_a_new_post_on_the_forumion_board
 				$l_the_members_of_the_site_can_then_reply_to_it 
 				</p>
 			";
@@ -467,7 +467,7 @@ else{
 		<h1>
 		<img src=\"$root/_webdesign/images/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
 		Loading...</h1>
-		<meta http-equiv=\"refresh\" content=\"1;url=$root/users/login.php?l=$l&amp;referer=$root/discuss/form_view.php?form_id=$form_id&amp;l=$l\">
+		<meta http-equiv=\"refresh\" content=\"1;url=$root/users/login.php?l=$l&amp;referer=$root/forum/form_view.php?form_id=$form_id&amp;l=$l\">
 		";
 	}
 

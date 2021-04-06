@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: discuss/vote_topic_up.php
+* File: forum/vote_topic_up.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen

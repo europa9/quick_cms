@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* File: discuss/tags.php
+* File: forum/tags.php
 * Version 1.0.0.
 * Date 18:12 16.04.2019
 * Copyright (c) 2008-2019 Sindre Andre Ditlefsen

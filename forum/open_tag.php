@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* File: discuss/index.php
+* File: forum/index.php
 * Version 1.0.0.
 * Date 19:42 08.02.2018
 * Copyright (c) 2008-2018 Sindre Andre Ditlefsen
@@ -212,7 +212,7 @@ else{
 				}
 				else{
 					echo"
-					<a href=\"$root/users/login.php?l=$l&amp;referer=$root/discuss/open_tag.php?action=watch_tag&amp;tag=$get_current_tag_title_clean&amp;l=$l\" class=\"btn_default\">$l_watch_or_ignore_tag</a>
+					<a href=\"$root/users/login.php?l=$l&amp;referer=$root/forum/open_tag.php?action=watch_tag&amp;tag=$get_current_tag_title_clean&amp;l=$l\" class=\"btn_default\">$l_watch_or_ignore_tag</a>
 					
 					";
 				}
