@@ -235,34 +235,35 @@ list($get_current_food_id, $get_current_food_user_id, $get_current_food_name, $g
 		$date_saying = date("j M Y");
 
 		// Check if exists
-		$query = "SELECT feed_id FROM $t_users_feeds_index WHERE feed_module_name='food' AND feed_module_part_name='food' AND feed_module_part_id=$get_current_food_id AND feed_user_id=$get_current_food_user_id";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_current_feed_id) = $row;
-		if($get_current_feed_id == ""){
-			// Insert feed
-			mysqli_query($link, "INSERT INTO $t_users_feeds_index
-			(feed_id, feed_title, feed_text, feed_image_path, feed_image_file, 
-			feed_image_thumb_300x169, feed_image_thumb_540x304, feed_link_url, feed_link_name, feed_module_name, 
-			feed_module_part_name, feed_module_part_id, feed_main_category_id, feed_main_category_name, 
-			feed_user_id, feed_user_email, feed_user_name, feed_user_alias, 
-			feed_user_photo_file, feed_user_photo_thumb_40, feed_user_photo_thumb_50, feed_user_photo_thumb_60, feed_user_photo_thumb_200, 
-			feed_user_subscribe, feed_user_ip, feed_user_hostname, feed_language, feed_created_datetime, 
-			feed_created_year, feed_created_time, feed_created_date_saying, feed_likes, feed_dislikes, feed_comments) 
-			VALUES 
-			(NULL, $inp_feed_title_mysql, $inp_feed_text_mysql, $inp_feed_image_path_mysql, $inp_feed_image_file_mysql, 
-			$inp_feed_image_thumb_a_mysql, $inp_feed_image_thumb_b_mysql, $inp_feed_link_url_mysql, $inp_feed_link_name_mysql, 'food', 
-			'food', $get_current_food_id, $get_current_food_sub_category_id, $inp_feed_category_name_mysql, 
-			$get_my_user_id, $inp_feed_user_email_mysql, $inp_feed_user_name_mysql, $inp_feed_user_alias_mysql, 
-			$inp_feed_user_photo_file_mysql, $inp_feed_user_photo_thumb_40_mysql, $inp_feed_user_photo_thumb_50_mysql, $inp_feed_user_photo_thumb_60_mysql, $inp_feed_user_photo_thumb_200_mysql, 
-			$get_es_on_off, $inp_my_ip_mysql, $inp_my_hostname_mysql, $inp_feed_language_mysql, '$datetime',
-			'$year', '$time', '$date_saying', 0, 0, 0)")
-			or die(mysqli_error($link));
+		if($get_current_food_age_restriction == "0"){
+			$query = "SELECT feed_id FROM $t_users_feeds_index WHERE feed_module_name='food' AND feed_module_part_name='food' AND feed_module_part_id=$get_current_food_id AND feed_user_id=$get_current_food_user_id";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_current_feed_id) = $row;
+			if($get_current_feed_id == ""){
+				// Insert feed
+				mysqli_query($link, "INSERT INTO $t_users_feeds_index
+				(feed_id, feed_title, feed_text, feed_image_path, feed_image_file, 
+				feed_image_thumb_300x169, feed_image_thumb_540x304, feed_link_url, feed_link_name, feed_module_name, 
+				feed_module_part_name, feed_module_part_id, feed_main_category_id, feed_main_category_name, 
+				feed_user_id, feed_user_email, feed_user_name, feed_user_alias, 
+				feed_user_photo_file, feed_user_photo_thumb_40, feed_user_photo_thumb_50, feed_user_photo_thumb_60, feed_user_photo_thumb_200, 
+				feed_user_subscribe, feed_user_ip, feed_user_hostname, feed_language, feed_created_datetime, 
+				feed_created_year, feed_created_time, feed_created_date_saying, feed_likes, feed_dislikes, feed_comments) 
+				VALUES 
+				(NULL, $inp_feed_title_mysql, $inp_feed_text_mysql, $inp_feed_image_path_mysql, $inp_feed_image_file_mysql, 
+				$inp_feed_image_thumb_a_mysql, $inp_feed_image_thumb_b_mysql, $inp_feed_link_url_mysql, $inp_feed_link_name_mysql, 'food', 
+				'food', $get_current_food_id, $get_current_food_sub_category_id, $inp_feed_category_name_mysql, 
+				$get_my_user_id, $inp_feed_user_email_mysql, $inp_feed_user_name_mysql, $inp_feed_user_alias_mysql, 
+				$inp_feed_user_photo_file_mysql, $inp_feed_user_photo_thumb_40_mysql, $inp_feed_user_photo_thumb_50_mysql, $inp_feed_user_photo_thumb_60_mysql, $inp_feed_user_photo_thumb_200_mysql, 
+				$get_es_on_off, $inp_my_ip_mysql, $inp_my_hostname_mysql, $inp_feed_language_mysql, '$datetime',
+				'$year', '$time', '$date_saying', 0, 0, 0)")
+				or die(mysqli_error($link));
 						
-		} // Create feed
-		else{
-			// Update feed
-			mysqli_query($link, "UPDATE $t_users_feeds_index SET
+			} // Create feed
+			else{
+				// Update feed
+				mysqli_query($link, "UPDATE $t_users_feeds_index SET
 						feed_title=$inp_feed_title_mysql, 
 						feed_text=$inp_feed_text_mysql, 
 						feed_image_path=$inp_feed_image_path_mysql, 
@@ -272,8 +273,8 @@ list($get_current_food_id, $get_current_food_user_id, $get_current_food_name, $g
 						feed_modified_datetime='$datetime'
 						WHERE feed_id=$get_current_feed_id")
 						or die(mysqli_error($link));
-		} // Update feed
-			
+			} // Update feed
+		} // age restriction	
 
 		echo"
 

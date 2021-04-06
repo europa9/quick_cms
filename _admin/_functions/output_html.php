@@ -16,7 +16,7 @@
 */
 function output_html($value){
 	// Stripslashes
-	$value = htmlentities($value);
+	$value = htmlentities($value, ENT_COMPAT, "UTF-8");
 	$value = str_replace('"',"&quot;","$value");
 	$value = str_replace("'","&#039;","$value");
 	$value = str_replace("<","&gt;","$value"); // less than

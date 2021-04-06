@@ -63,10 +63,10 @@ echo"
 
 
 <!-- Headline, buttons, search -->
-	<div class=\"food_headline\">
+	<div class=\"food_float_left\">
 		<h1>$l_food</h1>
 	</div>
-	<div class=\"food_menu\">
+	<div class=\"food_float_right\">
 		
 		<!-- Food menu -->
 			<script>
@@ -113,6 +113,8 @@ echo"
          
         		// if searchString is not empty
         		if(searchString) {
+
+
            			// ajax call
             			\$.ajax({
                 			type: \"GET\",
@@ -122,7 +124,8 @@ echo"
 						\$(\"#nettport_search_results\").html(''); 
 					},
                				success: function(html){
-                    				\$(\"#nettport_search_results\").append(html);
+						\$(\"#nettport_search_results\").html(''); 
+                    				\$(\"#nettport_search_results\").html(html);
               				}
             			});
        			}
@@ -133,7 +136,8 @@ echo"
 	<!-- //Search script -->
 <!-- //Food Search -->
 
-<!-- User adaptet view -->";
+<!-- User adaptet view and Language selector -->
+	<div class=\"food_float_left\">";
 	if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$my_user_id = $_SESSION['user_id'];
 		$my_user_id = output_html($my_user_id);
@@ -168,7 +172,7 @@ echo"
 	<input type=\"checkbox\" name=\"inp_show_pcs_metric\" class=\"onclick_go_to_url\""; if($get_current_view_pcs_metric == "1"){ echo" checked=\"checked\" data-target=\"user_adapted_view.php?set=pcs_metric&amp;value=0&amp;process=1&amp;referer=index&amp;l=$l\""; } else{ echo" data-target=\"user_adapted_view.php?set=pcs_metric&amp;value=1&amp;process=1&amp;referer=index&amp;l=$l\""; } echo" /> $l_pcs_g
 	<input type=\"checkbox\" name=\"inp_show_metric_us_and_or_pcs\" class=\"onclick_go_to_url\""; if($get_current_view_eight_us == "1"){ echo" checked=\"checked\" data-target=\"user_adapted_view.php?set=eight_us&amp;value=0&amp;process=1&amp;referer=index&amp;l=$l\""; } else{ echo" data-target=\"user_adapted_view.php?set=eight_us&amp;value=1&amp;process=1&amp;referer=index&amp;l=$l\""; } echo" /> $l_eight
 	<input type=\"checkbox\" name=\"inp_show_metric_us_and_or_pcs\" class=\"onclick_go_to_url\""; if($get_current_view_pcs_us == "1"){ echo" checked=\"checked\" data-target=\"user_adapted_view.php?set=pcs_us&amp;value=0&amp;process=1&amp;referer=index&amp;l=$l\""; } else{ echo" data-target=\"user_adapted_view.php?set=pcs_us&amp;value=1&amp;process=1&amp;referer=index&amp;l=$l\""; } echo" /> $l_pcs_oz
-	</p>
+	
 
 	<!-- On check go to URL -->
 		<script>
@@ -180,9 +184,26 @@ echo"
    		});
 		</script>
 	<!-- //On check go to URL -->
+	</div>
+<!-- //User adaptet view and Language selector -->
 
-<!-- //User adaptet view -->
 
+<!-- Language selector -->
+	<div class=\"food_float_right\">
+
+	<b>$l_language:</b>\n";
+	$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_path_16x16, language_active_flag_16x16, language_active_default FROM $t_languages_active";
+	$result = mysqli_query($link, $query);
+	while($row = mysqli_fetch_row($result)) {
+		list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_path_16x16, $get_language_active_flag_16x16, $get_language_active_default) = $row;
+		echo"
+		<a href=\"index.php?l=$get_language_active_iso_two\"><img src=\"$root/$get_language_active_flag_path_16x16/$get_language_active_flag_16x16\" alt=\"$get_language_active_flag_16x16\" /></a>
+		";
+	}
+	echo"</p>
+	</div>
+	<div class=\"clear\"></div>
+<!-- //Language selector -->
 
 <!-- All categories -->
 	<div class=\"clear\"></div>
@@ -627,7 +648,12 @@ echo"
 
 		} // has image
 	} // while
-	if($x == "2"){
+	if($x == "0"){
+		echo"
+				<div class=\"clear\"></div>
+		";
+	}
+	elseif($x == "2"){
 		echo"
 				<div class=\"left_center_center_right_right_center\" style=\"text-align: center;padding-bottom: 20px;\">
 				</div>

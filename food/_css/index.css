@@ -8,18 +8,18 @@
 *
 */
 /*- Headline ------------------------------------------------------------------------------ */
-div.food_headline{
+div.food_float_left{
 	float: left;
 }
-div.food_menu{
+div.food_float_right{
 	float: right;
 	padding: 10px 0px 0px 0px;
 }
 @media screen and (max-width: 52.375em) {
-	div.food_headline{
+	div.food_float_left{
 		float: none;
 	}
-	div.food_menu{
+	div.food_float_right{
 		float: none;
 		padding: 0px 0px 0px 0px;
 		overflow: auto;
