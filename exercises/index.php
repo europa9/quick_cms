@@ -74,14 +74,15 @@ echo"
 
 
 <!-- Search -->
-	<form method=\"post\" action=\"search_exercise.php\" enctype=\"multipart/form-data\">
-	<p>
-	<input type=\"text\" name=\"q\" value=\"\" size=\"20\" id=\"nettport_inp_search_query\" />
-	<input type=\"submit\" value=\"$l_search\" id=\"nettport_search_submit_button\" />
-	</p>
+	<div class=\"exercises_float_left\">
+		<form method=\"post\" action=\"search_exercise.php\" enctype=\"multipart/form-data\">
+		<p>
+		<input type=\"text\" name=\"q\" value=\"\" size=\"20\" id=\"nettport_inp_search_query\" />
+		<input type=\"submit\" value=\"$l_search\" id=\"nettport_search_submit_button\" />
+		</p>
 	
 
-	<!-- Search script -->
+		<!-- Search script -->
 		<script id=\"source\" language=\"javascript\" type=\"text/javascript\">
 		\$(document).ready(function () {
 			\$('#nettport_inp_search_query').keyup(function () {
@@ -107,12 +108,21 @@ echo"
             		});
             	});
 		</script>
-	<!-- //Search script -->
+		<!-- //Search script -->
+	</div>
 <!-- //Search -->
+
+<!-- Buttons -->
+	<div class=\"exercises_float_right\">
+		<p>
+		<a href=\"$root/exercises/my_exercises.php?l=$l\" class=\"btn_default\">$l_my_exercises</a>
+		</p>
+	</div>
+	<div class=\"clear\"></div>
+<!-- //Buttons -->
 
 
 <!-- Types -->
-	<div class=\"clear\"></div>
 	<div class=\"exercises_all_main_categories_selector\">
 		<a href=\"#\" id=\"show_all_main_categories_link_img\"><img src=\"_gfx/show_all_categories_img.png\" alt=\"show_all_categories_img.png\" class=\"show_all_main_categories_img\" /></a>
 		<a href=\"#\" id=\"show_all_main_categories_link_text\">$l_types</a>
@@ -183,41 +193,32 @@ echo"
 				<a href=\"view_exercise.php?exercise_id=$get_exercise_id&amp;type_id=$get_exercise_type_id&amp;main_muscle_group_id=$get_exercise_muscle_group_id_main&amp;l=$l\" class=\"exercise_index_title\">$get_exercise_title</a><br />
 				</p>\n";
 					// Images
-					$query_images = "SELECT exercise_image_id, exercise_image_type, exercise_image_path, exercise_image_file, exercise_image_thumb_medium FROM $t_exercise_index_images WHERE exercise_image_exercise_id='$get_exercise_id' ORDER BY exercise_image_type ASC LIMIT 0,2";
+					$query_images = "SELECT exercise_image_id, exercise_image_type, exercise_image_path, exercise_image_file, exercise_image_thumb_120x120, exercise_image_thumb_150x150 FROM $t_exercise_index_images WHERE exercise_image_exercise_id='$get_exercise_id' ORDER BY exercise_image_type ASC LIMIT 0,2";
 					$result_images = mysqli_query($link, $query_images);
 					while($row_images = mysqli_fetch_row($result_images)) {
-						list($get_exercise_image_id, $get_exercise_image_type, $get_exercise_image_path, $get_exercise_image_file, $get_exercise_image_thumb_medium) = $row_images;
+						list($get_exercise_image_id, $get_exercise_image_type, $get_exercise_image_path, $get_exercise_image_file, $get_exercise_image_thumb_120x120, $get_exercise_image_thumb_150x150) = $row_images;
 
 						if($get_exercise_image_file != "" && file_exists("$root/$get_exercise_image_path/$get_exercise_image_file")){
 							
-							if(!(file_exists("../$get_exercise_image_path/$get_exercise_image_thumb_medium"))){
-								$extension = getExtension($get_exercise_image_file);
+							if($get_exercise_image_thumb_150x150 == ""){
+								$extension = get_extension($get_exercise_image_file);
 								$extension = strtolower($extension);
 
 								$thumb = substr($get_exercise_image_file, 0, -4);
-								$thumb = $thumb . "_thumb_medium." . $extension;
-								$thumb_mysql = quote_smart($link, $thumb);
+								$get_exercise_image_thumb_150x150 = $thumb . "_thumb_150x150." . $extension;
+								$thumb_mysql = quote_smart($link, $get_exercise_image_thumb_150x150);
 
+								$result_update = mysqli_query($link, "UPDATE $t_exercise_index_images SET exercise_image_thumb_150x150=$thumb_mysql WHERE exercise_image_id=$get_exercise_image_id") or die(mysqli_error($link));
+							}
+							if(!(file_exists("../$get_exercise_image_path/$get_exercise_image_thumb_150x150"))){
 								// Thumb
 								$inp_new_x = 150;
 								$inp_new_y = 150;
-								resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_exercise_image_path/$get_exercise_image_file", "$root/$get_exercise_image_path/$get_exercise_image_thumb_medium");
-
-								$result_update = mysqli_query($link, "UPDATE $t_exercise_index_images SET exercise_image_thumb_medium=$thumb_mysql WHERE exercise_image_id=$get_exercise_image_id") or die(mysqli_error($link));
-							}
-							if($get_exercise_image_thumb_medium == ""){
-								$extension = getExtension($get_exercise_image_file);
-								$extension = strtolower($extension);
-
-								$thumb = substr($get_exercise_image_file, 0, -4);
-								$thumb = $thumb . "_thumb_medium." . $extension;
-								$thumb_mysql = quote_smart($link, $thumb);
-
-								$result_update = mysqli_query($link, "UPDATE $t_exercise_index_images SET exercise_image_thumb_medium=$thumb_mysql WHERE exercise_image_id=$get_exercise_image_id") or die(mysqli_error($link));
+								resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_exercise_image_path/$get_exercise_image_file", "$root/$get_exercise_image_path/$get_exercise_image_thumb_150x150");
 							}
 
 							echo"				";
-							echo"<a href=\"view_exercise.php?exercise_id=$get_exercise_id&amp;type_id=$get_exercise_type_id&amp;main_muscle_group_id=$get_exercise_muscle_group_id_main&amp;l=$l\"><img src=\"$root/$get_exercise_image_path/$get_exercise_image_thumb_medium\" alt=\"$get_exercise_image_thumb_medium\" /></a>\n";
+							echo"<a href=\"view_exercise.php?exercise_id=$get_exercise_id&amp;type_id=$get_exercise_type_id&amp;main_muscle_group_id=$get_exercise_muscle_group_id_main&amp;l=$l\"><img src=\"$root/$get_exercise_image_path/$get_exercise_image_thumb_150x150\" alt=\"$get_exercise_image_thumb_150x150\" /></a>\n";
 						}
 					}
 					echo"

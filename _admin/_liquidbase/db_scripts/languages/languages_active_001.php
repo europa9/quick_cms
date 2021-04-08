@@ -27,6 +27,8 @@ if(isset($_SESSION['admin_user_id'])){
 	   language_active_native_name VARCHAR(250),
 	   language_active_iso_two VARCHAR(250),
 	   language_active_iso_three VARCHAR(250),
+	   language_active_iso_two_alt_a VARCHAR(20),
+	   language_active_iso_two_alt_b VARCHAR(20),
 	   language_active_flag_path_16x16 VARCHAR(250),
 	   language_active_flag_16x16 VARCHAR(250),
 	   language_active_flag_path_32x32 VARCHAR(250),

@@ -189,39 +189,40 @@ echo"
 			</p>
 			";
 			// Images
-			$query_images = "SELECT exercise_image_id, exercise_image_type, exercise_image_path, exercise_image_file, exercise_image_thumb_small FROM $t_exercise_index_images WHERE exercise_image_exercise_id='$get_exercise_id' ORDER BY exercise_image_type ASC LIMIT 0,2";
+			$query_images = "SELECT exercise_image_id, exercise_image_type, exercise_image_path, exercise_image_file, exercise_image_thumb_150x150 FROM $t_exercise_index_images WHERE exercise_image_exercise_id='$get_exercise_id' ORDER BY exercise_image_type ASC LIMIT 0,2";
 			$result_images = mysqli_query($link, $query_images);
 			while($row_images = mysqli_fetch_row($result_images)) {
-				list($get_exercise_image_id, $get_exercise_image_type, $get_exercise_image_path, $get_exercise_image_file, $get_exercise_image_thumb_small) = $row_images;
+				list($get_exercise_image_id, $get_exercise_image_type, $get_exercise_image_path, $get_exercise_image_file, $get_exercise_image_thumb_150x150) = $row_images;
 
 				if($get_exercise_image_file != "" && file_exists("$root/$get_exercise_image_path/$get_exercise_image_file")){
 	
-					if(!(file_exists("../$get_exercise_image_path/$get_exercise_image_thumb_small"))){
-						$extension = getExtension($get_exercise_image_file);
-						$extension = strtolower($extension);
+							if($get_exercise_image_thumb_150x150 == ""){
+								$extension = get_extension($get_exercise_image_file);
+								$extension = strtolower($extension);
 
-						$thumb = substr($get_exercise_image_file, 0, -4);
-						$thumb = $thumb . "_thumb_small." . $extension;
-						$thumb_mysql = quote_smart($link, $thumb);
+								$thumb = substr($get_exercise_image_file, 0, -4);
+								$get_exercise_image_thumb_150x150 = $thumb . "_thumb_150x150." . $extension;
+								$thumb_mysql = quote_smart($link, $get_exercise_image_thumb_150x150);
 
-						// Thumb
-						$inp_new_x = 121;
-						$inp_new_y = 121;
-						resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_exercise_image_path/$get_exercise_image_file", "$root/$get_exercise_image_path/$get_exercise_image_thumb_small");
-						$result_update = mysqli_query($link, "UPDATE $t_exercise_index_images SET exercise_image_thumb_small=$thumb_mysql WHERE exercise_image_id=$get_exercise_image_id") or die(mysqli_error($link));
-					}
-					if($get_exercise_image_thumb_small == ""){
-						$extension = getExtension($get_exercise_image_file);
-						$extension = strtolower($extension);
+								$result_update = mysqli_query($link, "UPDATE $t_exercise_index_images SET exercise_image_thumb_150x150=$thumb_mysql WHERE exercise_image_id=$get_exercise_image_id") or die(mysqli_error($link));
+							}
+							if(!(file_exists("../$get_exercise_image_path/$get_exercise_image_thumb_150x150"))){
+								$extension = get_extension($get_exercise_image_file);
+								$extension = strtolower($extension);
 
-						$thumb = substr($get_exercise_image_file, 0, -4);
-						$thumb = $thumb . "_thumb_small." . $extension;
-						$thumb_mysql = quote_smart($link, $thumb);
+								$thumb = substr($get_exercise_image_file, 0, -4);
+								$thumb = $thumb . "_thumb_150x150." . $extension;
+								$thumb_mysql = quote_smart($link, $thumb);
 
-						$result_update = mysqli_query($link, "UPDATE $t_exercise_index_images SET exercise_image_thumb_small=$thumb_mysql WHERE exercise_image_id=$get_exercise_image_id") or die(mysqli_error($link));
-					}
+								// Thumb
+								$inp_new_x = 150;
+								$inp_new_y = 150;
+								resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_exercise_image_path/$get_exercise_image_file", "$root/$get_exercise_image_path/$get_exercise_image_thumb_150x150");
 
-					echo"			<a href=\"view_exercise.php?exercise_id=$get_exercise_id&amp;type_id=$type_id&amp;main_muscle_group_id=$get_main_muscle_group_id&amp;l=$l\"><img src=\"$root/$get_exercise_image_path/$get_exercise_image_thumb_small\" alt=\"$get_exercise_image_thumb_small\" /></a>\n";
+								$result_update = mysqli_query($link, "UPDATE $t_exercise_index_images SET exercise_image_thumb_150x150=$thumb_mysql WHERE exercise_image_id=$get_exercise_image_id") or die(mysqli_error($link));
+							}
+
+					echo"			<a href=\"view_exercise.php?exercise_id=$get_exercise_id&amp;type_id=$type_id&amp;main_muscle_group_id=$get_main_muscle_group_id&amp;l=$l\"><img src=\"$root/$get_exercise_image_path/$get_exercise_image_thumb_150x150\" alt=\"$get_exercise_image_thumb_150x150\" /></a>\n";
 				}
 			}
 			echo"

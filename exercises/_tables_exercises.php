@@ -25,5 +25,7 @@ $t_muscle_groups_translations	 	= $mysqlPrefixSav . "muscle_groups_translations"
 $t_muscle_part_of 			= $mysqlPrefixSav . "muscle_part_of";
 $t_muscle_part_of_translations	 	= $mysqlPrefixSav . "muscle_part_of_translations";
 
+/*- Tables Ads ---------------------------------------------------------------------------- */
+$t_ads_index				= $mysqlPrefixSav . "ads_index";
 
 ?>

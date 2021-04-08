@@ -389,45 +389,46 @@ else {
 		 <tr>";
 
 		$img_counter = 0;
-		$query = "SELECT exercise_image_id, exercise_image_type, exercise_image_path, exercise_image_file, exercise_image_thumb_large FROM $t_exercise_index_images WHERE exercise_image_exercise_id='$get_current_exercise_id' ORDER BY exercise_image_type ASC";
+		$query = "SELECT exercise_image_id, exercise_image_type, exercise_image_path, exercise_image_file, exercise_image_thumb_350x350 FROM $t_exercise_index_images WHERE exercise_image_exercise_id='$get_current_exercise_id' ORDER BY exercise_image_type ASC";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
-			list($get_exercise_image_id, $get_exercise_image_type, $get_exercise_image_path, $get_exercise_image_file, $get_exercise_image_thumb_large) = $row;
+			list($get_exercise_image_id, $get_exercise_image_type, $get_exercise_image_path, $get_exercise_image_file, $get_exercise_image_thumb_350x350) = $row;
 
 
 			if($get_exercise_image_file != "" && file_exists("$root/$get_exercise_image_path/$get_exercise_image_file")){
-							
-				if(!(file_exists("../$get_exercise_image_path/$get_exercise_image_thumb_large"))){
+					
+				if($get_exercise_image_thumb_350x350 == ""){
 					$extension = getExtension($get_exercise_image_file);
 					$extension = strtolower($extension);
 
 					$thumb = substr($get_exercise_image_file, 0, -4);
-					$thumb = $thumb . "_thumb_large." . $extension;
+					$get_exercise_image_thumb_350x350 = $thumb . "_thumb_350x350." . $extension;
+					$thumb_mysql = quote_smart($link, $get_exercise_image_thumb_350x350);
+
+					$result_update = mysqli_query($link, "UPDATE $t_exercise_index_images SET exercise_image_thumb_350x350=$thumb_mysql WHERE exercise_image_id=$get_exercise_image_id") or die(mysqli_error($link));
+					echo"<div class=\"info\"><p>Creating thumb</p></div>\n";
+				}		
+				if(!(file_exists("../$get_exercise_image_path/$get_exercise_image_thumb_350x350"))){
+					$extension = getExtension($get_exercise_image_file);
+					$extension = strtolower($extension);
+
+					$thumb = substr($get_exercise_image_file, 0, -4);
+					$thumb = $thumb . "_thumb_350x350." . $extension;
 					$thumb_mysql = quote_smart($link, $thumb);
 
 					// Thumb
 					$inp_new_x = 350;
 					$inp_new_y = 350;
-					resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_exercise_image_path/$get_exercise_image_file", "$root/$get_exercise_image_path/$get_exercise_image_thumb_large");
+					resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_exercise_image_path/$get_exercise_image_file", "$root/$get_exercise_image_path/$get_exercise_image_thumb_350x350");
 
-					$result_update = mysqli_query($link, "UPDATE $t_exercise_index_images SET exercise_image_thumb_large=$thumb_mysql WHERE exercise_image_id=$get_exercise_image_id") or die(mysqli_error($link));
-				}
-				if($get_exercise_image_thumb_large == ""){
-					$extension = getExtension($get_exercise_image_file);
-					$extension = strtolower($extension);
-
-					$thumb = substr($get_exercise_image_file, 0, -4);
-					$thumb = $thumb . "_thumb_large." . $extension;
-					$thumb_mysql = quote_smart($link, $thumb);
-
-					$result_update = mysqli_query($link, "UPDATE $t_exercise_index_images SET exercise_image_thumb_large=$thumb_mysql WHERE exercise_image_id=$get_exercise_image_id") or die(mysqli_error($link));
+					$result_update = mysqli_query($link, "UPDATE $t_exercise_index_images SET exercise_image_thumb_350x350=$thumb_mysql WHERE exercise_image_id=$get_exercise_image_id") or die(mysqli_error($link));
 				}
 
 					
 				echo"
 				  <td style=\"padding-right: 10px;\">
 					<p>
-					<a href=\"$root/$get_exercise_image_path/$get_exercise_image_file\"><img src=\"$root/$get_exercise_image_path/$get_exercise_image_thumb_large\" alt=\"$get_exercise_image_thumb_large\" /></a>
+					<a href=\"$root/$get_exercise_image_path/$get_exercise_image_file\"><img src=\"$root/$get_exercise_image_path/$get_exercise_image_thumb_350x350\" alt=\"$get_exercise_image_thumb_350x350\" /></a>
 					</p>
 				  </td>";
 
@@ -759,10 +760,10 @@ else {
 
 			if($get_user_rank == "admin" OR $get_user_rank == "moderator"){
 
-				$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+				$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_default FROM $t_languages_active";
 				$result = mysqli_query($link, $query);
 				while($row = mysqli_fetch_row($result)) {
-					list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
+					list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_default) = $row;
 
 
 					$query_t = "SELECT relation_id, exercise_original_id, exercise_target_id, exercise_language, exercise_translated FROM $t_exercise_index_translations_relations WHERE exercise_original_id=$get_current_exercise_id AND exercise_language='$get_language_active_iso_two'";

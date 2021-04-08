@@ -11,4 +11,5 @@ $l_favorite_plans = "Favorite plans";
 $l_my_plan = "My plan";
 $l_my_workout_plan = "My workout plan";
 $l_browse_by_tags = "Browse by tags";
+$l_language = "Language";
 ?>

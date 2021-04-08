@@ -82,6 +82,7 @@ echo"
 
 
 <!-- Tags -->
+	<div class=\"workout_plans_float_left\">
 	<h2>$l_browse_by_tags</h2>
 	<p>
 	";
@@ -98,7 +99,26 @@ echo"
 	}
 	echo"
 	</p>
+	</div>
 <!-- //Tags -->
+
+<!-- Language selector -->
+	<div class=\"workout_plans_float_right\">
+
+		<p><b>$l_language:</b>\n";
+		$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag_path_16x16, language_active_flag_16x16, language_active_default FROM $t_languages_active";
+		$result = mysqli_query($link, $query);
+		while($row = mysqli_fetch_row($result)) {
+			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag_path_16x16, $get_language_active_flag_16x16, $get_language_active_default) = $row;
+			echo"
+			<a href=\"index.php?l=$get_language_active_iso_two\"><img src=\"$root/$get_language_active_flag_path_16x16/$get_language_active_flag_16x16\" alt=\"$get_language_active_flag_16x16\" /></a>
+			";
+		}
+		echo"</p>
+	</div>
+	<div class=\"clear\"></div>
+<!-- //Language selector -->
+
 
 <!-- Show last workout plans -->
 	<hr />

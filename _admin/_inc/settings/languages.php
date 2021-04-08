@@ -224,10 +224,10 @@ elseif($action == "add_language"){
 
 		// Get
 		$inp_language_mysql = quote_smart($link, $inp_language);
-		$query = "SELECT language_id, language_name, language_slug, language_native_name, language_iso_two, language_iso_three, language_flag_path_16x16, language_flag_16x16, language_flag_path_32x32, language_flag_32x32, language_charset FROM $t_languages WHERE language_id=$inp_language_mysql";
+		$query = "SELECT language_id, language_name, language_slug, language_native_name, language_iso_two, language_iso_three, language_iso_two_alt_a, language_iso_two_alt_b, language_flag_path_16x16, language_flag_16x16, language_flag_path_32x32, language_flag_32x32, language_charset FROM $t_languages WHERE language_id=$inp_language_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
-		list($get_language_id, $get_language_name, $get_language_slug, $get_language_native_name, $get_language_iso_two, $get_language_iso_three, $get_language_flag_path_16x16, $get_language_flag_16x16, $get_language_flag_path_32x32, $get_language_flag_32x32, $get_language_charset) = $row;
+		list($get_language_id, $get_language_name, $get_language_slug, $get_language_native_name, $get_language_iso_two, $get_language_iso_three, $get_language_iso_two_alt_a, $get_language_iso_two_alt_b, $get_language_flag_path_16x16, $get_language_flag_16x16, $get_language_flag_path_32x32, $get_language_flag_32x32, $get_language_charset) = $row;
 
 		if($get_language_id == ""){
 			header("Location: ?open=settings&page=languages&ft=error&fm=language_not_found&editor_language=$editor_language&l=$l");
@@ -250,20 +250,23 @@ elseif($action == "add_language"){
 				$inp_native_name_mysql = quote_smart($link, $get_language_native_name);
 				$inp_iso_two_mysql = quote_smart($link, $get_language_iso_two);
 				$inp_iso_three_mysql = quote_smart($link, $get_language_iso_three);
+				$inp_iso_two_alt_a_mysql = quote_smart($link, $get_language_iso_two_alt_a);
+				$inp_iso_two_alt_b_mysql = quote_smart($link, $get_language_iso_two_alt_b);
 				$inp_active_flag_path_16x16_mysql = quote_smart($link, $get_language_flag_path_16x16);
 				$inp_active_flag_16x16_mysql = quote_smart($link, $get_language_flag_16x16);
 				$inp_active_flag_path_32x32_mysql = quote_smart($link, $get_language_flag_path_32x32);
 				$inp_active_flag_32x32_mysql = quote_smart($link, $get_language_flag_32x32);
 				$inp_active_charset_mysql = quote_smart($link, $get_language_charset);
 
+
 				mysqli_query($link, "INSERT INTO $t_languages_active
 				(language_active_id, language_active_name, language_active_slug, language_active_native_name, language_active_iso_two, 
-				language_active_iso_three, language_active_flag_path_16x16, language_active_flag_16x16, language_active_flag_path_32x32, language_active_flag_32x32, 
-				language_active_charset, language_active_default) 
+				language_active_iso_three, language_active_iso_two_alt_a, language_active_iso_two_alt_b, language_active_flag_path_16x16, language_active_flag_16x16, 
+				language_active_flag_path_32x32, language_active_flag_32x32, language_active_charset, language_active_default) 
 				VALUES 
 				(NULL, $inp_name_mysql, $inp_slug_mysql, $inp_native_name_mysql, $inp_iso_two_mysql, 
-				$inp_iso_three_mysql, $inp_active_flag_path_16x16_mysql, $inp_active_flag_16x16_mysql, $inp_active_flag_path_32x32_mysql, $inp_active_flag_32x32_mysql,  
-				$inp_active_charset_mysql, 0)")
+				$inp_iso_three_mysql, $inp_iso_two_alt_a_mysql, $inp_iso_two_alt_b_mysql, $inp_active_flag_path_16x16_mysql, $inp_active_flag_16x16_mysql, 
+				$inp_active_flag_path_32x32_mysql, $inp_active_flag_32x32_mysql, $inp_active_charset_mysql, 0)")
 				or die(mysqli_error($link));
 				header("Location: ?open=settings&page=languages&ft=success&fm=language_added_to_the_list&editor_language=$editor_language&l=$l");
 				exit;
@@ -423,10 +426,10 @@ elseif($action == "edit_language"){
 		
 	// Locate this language
 	$language_id_mysql = quote_smart($link, $language_id);
-	$query = "SELECT language_id, language_name, language_slug, language_native_name, language_iso_two, language_iso_three, language_flag_path_16x16, language_flag_16x16, language_flag_path_32x32, language_flag_32x32, language_charset FROM $t_languages WHERE language_id=$language_id_mysql";
+	$query = "SELECT language_id, language_name, language_slug, language_native_name, language_iso_two, language_iso_three, language_iso_two_alt_a, language_iso_two_alt_b, language_flag_path_16x16, language_flag_16x16, language_flag_path_32x32, language_flag_32x32, language_charset FROM $t_languages WHERE language_id=$language_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_language_id, $get_current_language_name, $get_current_language_slug, $get_current_language_native_name, $get_current_language_iso_two, $get_current_language_iso_three, $get_current_language_flag_path_16x16, $get_current_language_flag_16x16, $get_current_language_flag_path_32x32, $get_current_language_flag_32x32, $get_current_language_charset) = $row;
+	list($get_current_language_id, $get_current_language_name, $get_current_language_slug, $get_current_language_native_name, $get_current_language_iso_two, $get_current_language_iso_three, $get_current_language_iso_two_alt_a, $get_current_language_iso_two_alt_b, $get_current_language_flag_path_16x16, $get_current_language_flag_16x16, $get_current_language_flag_path_32x32, $get_current_language_flag_32x32, $get_current_language_charset) = $row;
 	if($get_current_language_id == ""){
 		echo"Language not found";
 	}
@@ -451,6 +454,14 @@ elseif($action == "edit_language"){
 			$inp_iso_three = output_html($inp_iso_three);
 			$inp_iso_three_mysql = quote_smart($link, $inp_iso_three);
 
+			$inp_iso_two_alt_a = $_POST['inp_iso_two_alt_a'];
+			$inp_iso_two_alt_a = output_html($inp_iso_two_alt_a);
+			$inp_iso_two_alt_a_mysql = quote_smart($link, $inp_iso_two_alt_a);
+
+			$inp_iso_two_alt_b = $_POST['inp_iso_two_alt_b'];
+			$inp_iso_two_alt_b = output_html($inp_iso_two_alt_b);
+			$inp_iso_two_alt_b_mysql = quote_smart($link, $inp_iso_two_alt_b);
+
 			$inp_charset = $_POST['inp_charset'];
 			$inp_charset = output_html($inp_charset);
 			$inp_charset_mysql = quote_smart($link, $inp_charset);
@@ -461,6 +472,8 @@ elseif($action == "edit_language"){
 							language_native_name=$inp_native_name_mysql,
 							language_iso_two=$inp_iso_two_mysql,
 							language_iso_three=$inp_iso_three_mysql,
+							language_iso_two_alt_a=$inp_iso_two_alt_a_mysql,
+							language_iso_two_alt_b=$inp_iso_two_alt_b_mysql,
 							language_charset=$inp_charset_mysql
 							WHERE language_id=$get_current_language_id") or die(mysqli_error($link));
 
@@ -652,6 +665,14 @@ elseif($action == "edit_language"){
 
 			<p>ISO three:<br />
 			<input type=\"text\" name=\"inp_iso_three\" value=\"$get_current_language_iso_three\" size=\"25\" />
+			</p>
+
+			<p>ISO two alternative a:<br />
+			<input type=\"text\" name=\"inp_iso_two_alt_a\" value=\"$get_current_language_iso_two_alt_a\" size=\"25\" />
+			</p>
+
+			<p>ISO two alternative b:<br />
+			<input type=\"text\" name=\"inp_iso_two_alt_b\" value=\"$get_current_language_iso_two_alt_b\" size=\"25\" />
 			</p>
 
 			<p>Charset:<br />

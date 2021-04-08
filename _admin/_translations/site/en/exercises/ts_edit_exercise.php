@@ -1,4 +1,5 @@
 <?php
+$l_my_exercises = "My exercises";
 $l_exercises = "Exercises";
 $l_edit_exercise = "Edit exercise";
 $l_edit = "Edit";

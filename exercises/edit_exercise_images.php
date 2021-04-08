@@ -80,8 +80,6 @@ function delete_cache($dirname) {
 }
 
 
-
-
 /*- Headers ---------------------------------------------------------------------------------- */
 $website_title = "$l_exercises - $l_edit_exercise";
 if(file_exists("./favicon.ico")){ $root = "."; }
@@ -188,13 +186,22 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 					// Do I already have a image of that type? Then delete the old image..
-					$query = "SELECT exercise_image_id, exercise_image_path, exercise_image_file FROM $t_exercise_index_images WHERE exercise_image_exercise_id='$get_exercise_id' AND exercise_image_type=$inp_image_type_mysql";
+					$query = "SELECT exercise_image_id, exercise_image_path, exercise_image_file, exercise_image_thumb_120x120, exercise_image_thumb_150x150, exercise_image_thumb_350x350 FROM $t_exercise_index_images WHERE exercise_image_exercise_id='$get_exercise_id' AND exercise_image_type=$inp_image_type_mysql";
 					$result = mysqli_query($link, $query);
 					$row = mysqli_fetch_row($result);
-					list($get_exercise_image_id, $get_exercise_image_path, $get_exercise_image_file) = $row;
+					list($get_exercise_image_id, $get_exercise_image_path, $get_exercise_image_file, $get_exercise_image_thumb_120x120, $get_exercise_image_thumb_150x150, $get_exercise_image_thumb_350x350) = $row;
 					if($get_exercise_image_id != ""){
 						if($get_exercise_image_file != "" && file_exists("$root/$get_exercise_image_path/$get_exercise_image_file")){
 							unlink("$root/$get_exercise_image_path/$get_exercise_image_file");
+						}
+						if($get_exercise_image_thumb_120x120 != "" && file_exists("$root/$get_exercise_image_path/$get_exercise_image_thumb_120x120")){
+							unlink("$root/$get_exercise_image_path/$get_exercise_image_thumb_120x120");
+						}
+						if($get_exercise_image_thumb_150x150 != "" && file_exists("$root/$get_exercise_image_path/$get_exercise_image_thumb_150x150")){
+							unlink("$root/$get_exercise_image_path/$get_exercise_image_thumb_150x150");
+						}
+						if($get_exercise_image_thumb_350x350 != "" && file_exists("$root/$get_exercise_image_path/$get_exercise_image_thumb_350x350")){
+							unlink("$root/$get_exercise_image_path/$get_exercise_image_thumb_350x350");
 						}
 
 						// Delete from mysql
@@ -257,36 +264,25 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 					
 							// Thumbs
-							$inp_exercise_image_thumb_small  = $get_exercise_title_clean . "_" . $get_exercise_id . "_" . $inp_image_type . "_thumb_small.$file_type";
-							$inp_exercise_image_thumb_small_mysql = quote_smart($link, $inp_exercise_image_thumb_small);
-							if(file_exists("$root/$inp_exercise_image_path/$inp_exercise_image_thumb_small")){
-								unlink("$root/$inp_exercise_image_path/$inp_exercise_image_thumb_small");
-							}
+							$inp_exercise_image_thumb_120x120  = $get_exercise_title_clean . "_" . $get_exercise_id . "_" . $inp_image_type . "_thumb_120x120.$file_type";
+							$inp_exercise_image_thumb_120x120_mysql = quote_smart($link, $inp_exercise_image_thumb_120x120);
 
-							$inp_exercise_image_thumb_medium = $get_exercise_title_clean . "_" . $get_exercise_id . "_" . $inp_image_type . "_thumb_medium.$file_type";
-							$inp_exercise_image_thumb_medium_mysql = quote_smart($link, $inp_exercise_image_thumb_medium);
-							if(file_exists("$root/$inp_exercise_image_path/$inp_exercise_image_thumb_medium")){
-								unlink("$root/$inp_exercise_image_path/$inp_exercise_image_thumb_medium");
-							}
+							$inp_exercise_image_thumb_150x150 = $get_exercise_title_clean . "_" . $get_exercise_id . "_" . $inp_image_type . "_thumb_150x150.$file_type";
+							$inp_exercise_image_thumb_150x150_mysql = quote_smart($link, $inp_exercise_image_thumb_150x150);
 
-							$inp_exercise_image_thumb_large  = $get_exercise_title_clean . "_" . $get_exercise_id . "_" . $inp_image_type . "_thumb_large.$file_type";
-							$inp_exercise_image_thumb_large_mysql = quote_smart($link, $inp_exercise_image_thumb_large);
-							if(file_exists("$root/$inp_exercise_image_path/$inp_exercise_image_thumb_large")){
-								unlink("$root/$inp_exercise_image_path/$inp_exercise_image_thumb_large");
-							}
-
+							$inp_exercise_image_thumb_350x350  = $get_exercise_title_clean . "_" . $get_exercise_id . "_" . $inp_image_type . "_thumb_350x350.$file_type";
+							$inp_exercise_image_thumb_350x350_mysql = quote_smart($link, $inp_exercise_image_thumb_350x350);
 
 
 							// Insert MySQL
 							mysqli_query($link, "INSERT INTO $t_exercise_index_images
 							(exercise_image_id, exercise_image_user_id, exercise_image_exercise_id, exercise_image_datetime, exercise_image_user_ip, exercise_image_type, exercise_image_path, 
-							exercise_image_file, exercise_image_thumb_small, exercise_image_thumb_medium, exercise_image_thumb_large, exercise_image_uniqe_hits, exercise_image_uniqe_hits_ip_block) 
+							exercise_image_file, exercise_image_thumb_120x120, exercise_image_thumb_150x150, exercise_image_thumb_350x350, exercise_image_uniqe_hits, exercise_image_uniqe_hits_ip_block) 
 							VALUES 
 							(NULL, $my_user_id_mysql, '$get_exercise_id', '$inp_exercise_image_datetime', $inp_exercise_image_user_ip_mysql, $inp_image_type_mysql, $inp_exercise_image_path_mysql, 
-							$inp_exercise_image_file_mysql, $inp_exercise_image_thumb_small_mysql, $inp_exercise_image_thumb_medium_mysql, $inp_exercise_image_thumb_large_mysql, '0', '')")
+							$inp_exercise_image_file_mysql, $inp_exercise_image_thumb_120x120_mysql, $inp_exercise_image_thumb_150x150_mysql, $inp_exercise_image_thumb_350x350_mysql, '0', '')")
 							or die(mysqli_error($link));
 
-							// Rezie image to 950x640
 	
 							// Header
 							$url = "edit_exercise_images.php?action=$action&exercise_id=$exercise_id&main_muscle_group_id=$main_muscle_group_id&type_id=$type_id&l=$l";
@@ -474,19 +470,37 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				 <tr>";
 
 			
-			$query = "SELECT exercise_image_id, exercise_image_type, exercise_image_path, exercise_image_file FROM $t_exercise_index_images WHERE exercise_image_exercise_id='$get_exercise_id' ORDER BY exercise_image_type ASC";
+			$query = "SELECT exercise_image_id, exercise_image_type, exercise_image_path, exercise_image_file, exercise_image_thumb_150x150 FROM $t_exercise_index_images WHERE exercise_image_exercise_id='$get_exercise_id' ORDER BY exercise_image_type ASC";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
-				list($get_exercise_image_id, $get_exercise_image_type, $get_exercise_image_path, $get_exercise_image_file) = $row;
+				list($get_exercise_image_id, $get_exercise_image_type, $get_exercise_image_path, $get_exercise_image_file, $get_exercise_image_thumb_150x150) = $row;
 
 				if($get_exercise_image_file != "" && file_exists("$root/$get_exercise_image_path/$get_exercise_image_file")){
+
+					if($get_exercise_image_thumb_150x150 == ""){
+						$extension = get_extension($get_exercise_image_file);
+						$extension = strtolower($extension);
+
+						$thumb = substr($get_exercise_image_file, 0, -4);
+						$get_exercise_image_thumb_150x150 = $thumb . "_thumb_150x150." . $extension;
+						$thumb_mysql = quote_smart($link, $get_exercise_image_thumb_150x150);
+
+						$result_update = mysqli_query($link, "UPDATE $t_exercise_index_images SET exercise_image_thumb_150x150=$thumb_mysql WHERE exercise_image_id=$get_exercise_image_id") or die(mysqli_error($link));
+					}
+					if($get_exercise_image_thumb_150x150 != "" && !(file_exists("$root/$get_exercise_image_path/$get_exercise_image_thumb_150x150"))){
+						// Thumb
+						$inp_new_x = 150;
+						$inp_new_y = 150;
+						resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_exercise_image_path/$get_exercise_image_file", "$root/$get_exercise_image_path/$get_exercise_image_thumb_150x150");
+						echo"<div class=\"info\"><p>Creating thumb</p></div>\n";
+					}
 
 					$get_exercise_image_type_saying = ucfirst(str_replace("_", " ", $get_exercise_image_type));
 					
 					echo"
 					  <td style=\"padding-right: 10px;\">
 						<p><b>$get_exercise_image_type_saying</b><br />
-						<img src=\"$root/image.php?width=100&amp;height=67&amp;image=/$get_exercise_image_path/$get_exercise_image_file\" alt=\"$get_exercise_image_type\" /><br />
+						<img src=\"$root/$get_exercise_image_path/$get_exercise_image_thumb_150x150\" alt=\"$get_exercise_image_type\" /><br />
 						</p>
 					  </td>";
 				}

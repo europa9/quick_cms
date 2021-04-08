@@ -16,6 +16,7 @@ $l_edit_title = "Rediger tittel";
 $l_edit_video = "Redigere video";
 $l_exercises = "&Oslash;velser";
 $l_muscles_that_are_beeing_trained = "Muskler som trenes";
+$l_my_exercises = "Mine &oslash;velser";
 $l_save = "Lagre";
 $l_tags = "Tags";
 $l_title = "Tittel";

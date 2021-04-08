@@ -64,14 +64,6 @@ $l_mysql = quote_smart($link, $l);
 
 
 
-/*- Headers ---------------------------------------------------------------------------------- */
-$website_title = "$l_exercises - $l_new_exercise";
-if(file_exists("./favicon.ico")){ $root = "."; }
-elseif(file_exists("../favicon.ico")){ $root = ".."; }
-elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
-elseif(file_exists("../../../favicon.ico")){ $root = "../../.."; }
-include("$root/_webdesign/header.php");
-
 /*- Content ---------------------------------------------------------------------------------- */
 // Logged in?
 if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
@@ -95,8 +87,20 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 	if($get_exercise_id == ""){
 		echo"<p>Exercise not found.</p>";
+		die;
 	}
 	else{
+
+		/*- Headers ---------------------------------------------------------------------------------- */
+		$website_title = "$l_exercises - $l_edit_exercise $get_exercise_title";
+		if(file_exists("./favicon.ico")){ $root = "."; }
+		elseif(file_exists("../favicon.ico")){ $root = ".."; }
+		elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
+		elseif(file_exists("../../../favicon.ico")){ $root = "../../.."; }
+		include("$root/_webdesign/header.php");
+
+
+
 		echo"
 		<h1>$get_exercise_title</h1>
 	

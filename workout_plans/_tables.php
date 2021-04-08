@@ -37,6 +37,7 @@ $t_exercise_types_translations 			= $mysqlPrefixSav . "exercise_types_translatio
 $t_exercise_levels				= $mysqlPrefixSav . "exercise_levels";
 $t_exercise_levels_translations 		= $mysqlPrefixSav . "exercise_levels_translations";
 
+$t_exercise_queries 				= $mysqlPrefixSav . "exercise_queries";
 /*- Tables Muscles ---------------------------------------------------------------------------- */
 $t_muscles				= $mysqlPrefixSav . "muscles";
 $t_muscles_translations 		= $mysqlPrefixSav . "muscles_translations";

@@ -11,13 +11,6 @@
 
 
 
-
-/*- Tables ---------------------------------------------------------------------------- */
-include("_tables.php");
-
-
-
-
 /*- Functions ------------------------------------------------------------------------ */
 include("../_admin/_functions/output_html.php");
 include("../_admin/_functions/clean.php");
@@ -62,24 +55,12 @@ if (mysqli_connect_errno()){
 
 
 
-
-/*- Tables exercises ---------------------------------------------------------------- */
-$t_exercise_index 				= $mysqlPrefixSav . "exercise_index";
-$t_exercise_index_translations_relations	= $mysqlPrefixSav . "exercise_index_translations_relations";
-$t_exercise_index_images			= $mysqlPrefixSav . "exercise_index_images";
-$t_exercise_index_videos			= $mysqlPrefixSav . "exercise_index_videos";
-$t_exercise_index_muscles			= $mysqlPrefixSav . "exercise_index_muscles";
-$t_exercise_index_muscles_images		= $mysqlPrefixSav . "exercise_index_muscles_images";
-$t_exercise_index_tags				= $mysqlPrefixSav . "exercise_index_tags";
-$t_exercise_tags_cloud				= $mysqlPrefixSav . "exercise_tags_cloud";
-$t_exercise_equipments 				= $mysqlPrefixSav . "exercise_equipments";
-$t_exercise_types				= $mysqlPrefixSav . "exercise_types";
-$t_exercise_types_translations 			= $mysqlPrefixSav . "exercise_types_translations";
-$t_exercise_levels				= $mysqlPrefixSav . "exercise_levels";
-$t_exercise_levels_translations 		= $mysqlPrefixSav . "exercise_levels_translations";
+/*- Tables ---------------------------------------------------------------------------- */
+include("_tables.php");
 
 
-$t_exercise_queries 				= $mysqlPrefixSav . "exercise_queries";
+
+
 
 /*- Variables ------------------------------------------------------------------------- */
 if(isset($_GET['l']) OR isset($_POST['l'])) {
@@ -219,37 +200,30 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 			";
 
 			// Thumb
-			$query_images = "SELECT exercise_image_id, exercise_image_type, exercise_image_path, exercise_image_file, exercise_image_thumb_medium FROM $t_exercise_index_images WHERE exercise_image_exercise_id='$get_exercise_id' ORDER BY exercise_image_type ASC LIMIT 0,2";
+			$query_images = "SELECT exercise_image_id, exercise_image_type, exercise_image_path, exercise_image_file, exercise_image_thumb_150x150 FROM $t_exercise_index_images WHERE exercise_image_exercise_id='$get_exercise_id' ORDER BY exercise_image_type ASC LIMIT 0,2";
 			$result_images = mysqli_query($link, $query_images);
 			while($row_images = mysqli_fetch_row($result_images)) {
-				list($get_exercise_image_id, $get_exercise_image_type, $get_exercise_image_path, $get_exercise_image_file, $get_exercise_image_thumb_medium) = $row_images;
+				list($get_exercise_image_id, $get_exercise_image_type, $get_exercise_image_path, $get_exercise_image_file, $get_exercise_image_thumb_150x150) = $row_images;
 
 				if($get_exercise_image_file != "" && file_exists("../$get_exercise_image_path/$get_exercise_image_file")){
-							
-					if(!(file_exists("../$get_exercise_image_path/$get_exercise_image_thumb_medium"))){
+						
+					if($get_exercise_image_thumb_150x150 == ""){
 						$extension = get_extension($get_exercise_image_file);
 						$extension = strtolower($extension);
 
 						$thumb = substr($get_exercise_image_file, 0, -4);
-						$thumb = $thumb . "_thumb_medium." . $extension;
+						$get_exercise_image_thumb_150x150 = $thumb . "_thumb_150x150." . $extension;
 						$thumb_mysql = quote_smart($link, $thumb);
-
+					}	
+					if(!(file_exists("../$get_exercise_image_path/$get_exercise_image_thumb_150x150"))){
 						// Thumb
 						$inp_new_x = 150;
 						$inp_new_y = 150;
-						resize_crop_image($inp_new_x, $inp_new_y, "../$get_exercise_image_path/$get_exercise_image_file", "../$get_exercise_image_path/$get_exercise_image_thumb_medium");
-					}
-					if($get_exercise_image_thumb_medium == ""){
-						$extension = get_extension($get_exercise_image_file);
-						$extension = strtolower($extension);
-
-						$thumb = substr($get_exercise_image_file, 0, -4);
-						$thumb = $thumb . "_thumb_medium." . $extension;
-						$thumb_mysql = quote_smart($link, $thumb);
+						resize_crop_image($inp_new_x, $inp_new_y, "../$get_exercise_image_path/$get_exercise_image_file", "../$get_exercise_image_path/$get_exercise_image_thumb_150x150");
 					}
 
 					echo"				";
-					echo"<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=add_exercise_to_session&amp;session_id=$session_id&amp;type_id=$get_exercise_type_id&amp;main_muscle_group_id=$get_exercise_muscle_group_id_main&amp;exercise_id=$get_exercise_id&amp;mode=step_4_data&amp;l=$l\"><img src=\"../$get_exercise_image_path/$get_exercise_image_thumb_medium\" alt=\"$get_exercise_image_thumb_medium\" /></a>\n";
+					echo"<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=add_exercise_to_session&amp;session_id=$session_id&amp;type_id=$get_exercise_type_id&amp;main_muscle_group_id=$get_exercise_muscle_group_id_main&amp;exercise_id=$get_exercise_id&amp;mode=step_4_data&amp;l=$l\"><img src=\"../$get_exercise_image_path/$get_exercise_image_thumb_150x150\" alt=\"$get_exercise_image_thumb_150x150\" /></a>\n";
 				}
 			}
 

@@ -2,6 +2,7 @@
 $l_browse_by_tags = "Bla igjennom tags";
 $l_favorites = "Favoritter";
 $l_favorite_plans = "Favorittplaner";
+$l_language = "Spr&aring;k";
 $l_my_favorite_plans = "Mine favorittplaner";
 $l_my_plan = "Min plan";
 $l_my_workout_plan = "Min treningsplan";

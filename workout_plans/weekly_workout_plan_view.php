@@ -397,12 +397,30 @@ else{
 					   <td style=\"border-bottom: #ccc 1px solid;width: 250px;\">
 						";
 						// Images
-						$query_images = "SELECT exercise_image_id, exercise_image_type, exercise_image_path, exercise_image_file FROM $t_exercise_index_images WHERE exercise_image_exercise_id='$get_workout_session_main_exercise_id' ORDER BY exercise_image_type DESC LIMIT 0,2";
+						$query_images = "SELECT exercise_image_id, exercise_image_type, exercise_image_path, exercise_image_file, exercise_image_thumb_120x120 FROM $t_exercise_index_images WHERE exercise_image_exercise_id='$get_workout_session_main_exercise_id' ORDER BY exercise_image_type DESC LIMIT 0,2";
 						$result_images = mysqli_query($link, $query_images);
 						while($row_images = mysqli_fetch_row($result_images)) {
-							list($get_exercise_image_id, $get_exercise_image_type, $get_exercise_image_path, $get_exercise_image_file) = $row_images;
-							if($get_exercise_image_file != ""){
-								echo"			<a href=\"$root/exercises/view_exercise.php?exercise_id=$get_workout_session_main_exercise_id&amp;l=$l\"><img src=\"$root/image.php?width=119&amp;height=80&amp;image=/$get_exercise_image_path/$get_exercise_image_file\" alt=\"$get_exercise_image_type\" /></a>\n";
+							list($get_exercise_image_id, $get_exercise_image_type, $get_exercise_image_path, $get_exercise_image_file, $get_exercise_image_thumb_120x120) = $row_images;
+							if($get_exercise_image_file != "" && file_exists("$root/$get_exercise_image_path/$get_exercise_image_file")){
+
+								if($get_exercise_image_thumb_120x120 == ""){
+									$extension = get_extension($get_exercise_image_file);
+									$extension = strtolower($extension);
+
+									$thumb = substr($get_exercise_image_file, 0, -4);
+									$get_exercise_image_thumb_120x120 = $thumb . "_thumb_120x120." . $extension;
+									$thumb_mysql = quote_smart($link, $get_exercise_image_thumb_120x120);
+
+									$result_update = mysqli_query($link, "UPDATE $t_exercise_index_images SET exercise_image_thumb_120x120=$thumb_mysql WHERE exercise_image_id=$get_exercise_image_id") or die(mysqli_error($link));
+								}
+								if(!(file_exists("../$get_exercise_image_path/$get_exercise_image_thumb_120x120"))){
+									// Thumb
+									$inp_new_x = 120;
+									$inp_new_y = 120;
+									resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_exercise_image_path/$get_exercise_image_file", "$root/$get_exercise_image_path/$get_exercise_image_thumb_120x120");
+								}
+								echo"			<a href=\"$root/exercises/view_exercise.php?exercise_id=$get_workout_session_main_exercise_id&amp;l=$l\"><img src=\"$root/$get_exercise_image_path/$get_exercise_image_thumb_120x120\" alt=\"$get_exercise_image_type\" /></a>\n";
+							
 							}
 						}
 						echo"
