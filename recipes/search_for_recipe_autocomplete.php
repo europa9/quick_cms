@@ -72,12 +72,12 @@ if(isset($_GET['q']) && $_GET['q'] != ''){
 	// 1. Search for recipe
 	$search_results_count  = 0;
 	$x = 0;
-	$query = "SELECT $t_recipes.recipe_id, $t_recipes.recipe_title, $t_recipes.recipe_language, $t_recipes.recipe_introduction, $t_recipes.recipe_image_path, $t_recipes.recipe_image, $t_recipes.recipe_unique_hits, $t_recipes_numbers.number_serving_calories, $t_recipes_numbers.number_serving_proteins, $t_recipes_numbers.number_serving_fat, $t_recipes_numbers.number_serving_carbs FROM $t_recipes JOIN $t_recipes_numbers ON $t_recipes.recipe_id=$t_recipes_numbers.number_recipe_id WHERE $t_recipes.recipe_title LIKE $q_mysql AND $t_recipes.recipe_language=$l_mysql";
-	$result = mysqli_query($link, $query);
-	while($row = mysqli_fetch_row($result)) {
-		list($get_recipe_id, $get_recipe_title, $get_recipe_language, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image, $get_recipe_unique_hits, $get_number_serving_calories, $get_number_serving_proteins, $get_number_serving_fat, $get_number_serving_carbs) = $row;
+	$query_r = "SELECT recipe_id, recipe_title, recipe_introduction, recipe_image_path, recipe_image, recipe_thumb_278x156, recipe_unique_hits FROM $t_recipes WHERE $t_recipes.recipe_title LIKE $q_mysql AND $t_recipes.recipe_language=$l_mysql";
+	$result_r = mysqli_query($link, $query_r);
+	while($row_r = mysqli_fetch_row($result_r)) {
+		list($get_recipe_id, $get_recipe_title, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156, $get_recipe_unique_hits) = $row_r;
 
-		if($get_recipe_image != ""){
+		if(file_exists("$root/$get_recipe_image_path/$get_recipe_image") && $get_recipe_image != ""){
 		
 
 			// Get rating
@@ -86,20 +86,26 @@ if(isset($_GET['q']) && $_GET['q'] != ''){
 			$row_rating = mysqli_fetch_row($result_rating);
 			list($get_rating_id, $get_rating_average) = $row_rating;
 
+			// Get numbers
+			$query_rating = "SELECT number_id, number_recipe_id, number_servings, number_energy_metric, number_fat_metric, number_saturated_fat_metric, number_monounsaturated_fat_metric, number_polyunsaturated_fat_metric, number_cholesterol_metric, number_carbohydrates_metric, number_carbohydrates_of_which_sugars_metric, number_dietary_fiber_metric, number_proteins_metric, number_salt_metric, number_sodium_metric, number_energy_serving, number_fat_serving, number_saturated_fat_serving, number_monounsaturated_fat_serving, number_polyunsaturated_fat_serving, number_cholesterol_serving, number_carbohydrates_serving, number_carbohydrates_of_which_sugars_serving, number_dietary_fiber_serving, number_proteins_serving, number_salt_serving, number_sodium_serving, number_energy_total, number_fat_total, number_saturated_fat_total, number_monounsaturated_fat_total, number_polyunsaturated_fat_total, number_cholesterol_total, number_carbohydrates_total, number_carbohydrates_of_which_sugars_total, number_dietary_fiber_total, number_proteins_total, number_salt_total, number_sodium_total FROM $t_recipes_numbers WHERE number_recipe_id='$get_recipe_id'";
+			$result_rating = mysqli_query($link, $query_rating);
+			$row_rating = mysqli_fetch_row($result_rating);
+			list($get_number_id, $get_number_recipe_id, $get_number_servings, $get_number_energy_metric, $get_number_fat_metric, $get_number_saturated_fat_metric, $get_number_monounsaturated_fat_metric, $get_number_polyunsaturated_fat_metric, $get_number_cholesterol_metric, $get_number_carbohydrates_metric, $get_number_carbohydrates_of_which_sugars_metric, $get_number_dietary_fiber_metric, $get_number_proteins_metric, $get_number_salt_metric, $get_number_sodium_metric, $get_number_energy_serving, $get_number_fat_serving, $get_number_saturated_fat_serving, $get_number_monounsaturated_fat_serving, $get_number_polyunsaturated_fat_serving, $get_number_cholesterol_serving, $get_number_carbohydrates_serving, $get_number_carbohydrates_of_which_sugars_serving, $get_number_dietary_fiber_serving, $get_number_proteins_serving, $get_number_salt_serving, $get_number_sodium_serving, $get_number_energy_total, $get_number_fat_total, $get_number_saturated_fat_total, $get_number_monounsaturated_fat_total, $get_number_polyunsaturated_fat_total, $get_number_cholesterol_total, $get_number_carbohydrates_total, $get_number_carbohydrates_of_which_sugars_total, $get_number_dietary_fiber_total, $get_number_proteins_total, $get_number_salt_total, $get_number_sodium_total) = $row_rating;
+
 			
-			// 3 divs
-
-			// 600 / 4 = 150
-			// 600 / 3 = 200
-
 			// Thumb
+			if(!(file_exists("$root/$get_recipe_image_path/$get_recipe_thumb_278x156"))){
 
-			$inp_new_x = 190;
-			$inp_new_y = 98;
-			$thumb = "recipe_" . $get_recipe_id . "-" . $inp_new_x . "x" . $inp_new_y . ".png";
-
-			if(!(file_exists("$root/_cache/$thumb"))){
-				resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_recipe_image_path/$get_recipe_image", "$root/_cache/$thumb");
+				// Update thumb name
+				$ext = get_extension($get_recipe_image);
+				$thumb = str_replace(".$ext", "", $get_recipe_image);
+				$get_recipe_thumb_278x156 = $thumb . "_thumb_275x156.$ext";
+				$inp_thumb_mysql = quote_smart($link, $get_recipe_thumb_278x156);
+				
+				echo"<div class=\"info\"><p>Make thumb of recipe images. Image=<a href=\"$root/$get_recipe_image_path/$get_recipe_image\">$root/$get_recipe_image_path/$get_recipe_image</a>.\n";
+				echo"Thumb=<a href=\"$root/$get_recipe_image_path/$get_recipe_thumb_278x156\">$root/$get_recipe_image_path/$get_recipe_thumb_278x156</a>.</p></div>\n";
+				mysqli_query($link, "UPDATE $t_recipes SET recipe_thumb_278x156=$inp_thumb_mysql WHERE recipe_id=$get_recipe_id") or die(mysqli_error($link));
+				resize_crop_image(278, 156, "$root/$get_recipe_image_path/$get_recipe_image", "$root/$get_recipe_image_path/$get_recipe_thumb_278x156");
 			}
 
 
@@ -130,7 +136,7 @@ if(isset($_GET['q']) && $_GET['q'] != ''){
 			echo"
 					<!-- skriver ut bilder per oppskrift -->
 					<p class=\"recipe_open_category_img_p\">
-					<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\"><img src=\"$root/_cache/$thumb\" alt=\"$get_recipe_image\"  /></a><br />
+					<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\"><img src=\"$root/$get_recipe_image_path/$get_recipe_thumb_278x156\" alt=\"$get_recipe_image\" /></a><br />
 					</p>
 					<p class=\"recipe_open_category_p\">
 					<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id&amp;l=$l\" class=\"recipe_open_category_a\">$get_recipe_title</a>

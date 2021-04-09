@@ -72,7 +72,7 @@ if(isset($_GET['main_group_id'])){
 	$main_group_id = strip_tags(stripslashes($main_group_id));
 }
 else{
-	$main_muscle_group_id = "";
+	$main_group_id = "";
 }
 if(isset($_GET['sub_group_id'])){
 	$sub_group_id = $_GET['sub_group_id'];
@@ -451,6 +451,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				</table>
 
 			</div>
+			<div class=\"clear\"></div>
 		<!-- //Used muscles -->
 		";
 	} // found

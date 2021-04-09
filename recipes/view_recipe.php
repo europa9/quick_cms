@@ -1448,6 +1448,13 @@ else{
 				";
 
 			}
+			elseif($x == "3"){
+				echo"
+					<div class=\"left_center_center_right_right\"></div>
+					<div class=\"clear\"></div>
+				";
+
+			}
 		echo"
 		<!-- //This months most popular recipes -->
 		";

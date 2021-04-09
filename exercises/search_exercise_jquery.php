@@ -225,6 +225,15 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 			$x++;
 		
 		} // query
+
+		if($x == "1"){
+			echo"
+				<div class=\"left_right_right\">
+			</div>
+				<div class=\"clear\"></div>
+			";
+
+		}
 	}
 	else{
 		echo"Q is blank";

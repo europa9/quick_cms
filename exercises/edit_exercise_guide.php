@@ -181,7 +181,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		<!-- //Feedback -->
 
 		<!-- TinyMCE -->
-			
 				<script type=\"text/javascript\" src=\"$root/_admin/_javascripts/tinymce/tinymce.min.js\"></script>
 				<script>
 				tinymce.init({
@@ -235,7 +234,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 			<p><img src=\"$root/_admin/_translations/site/$get_exercise_language/$get_exercise_language.png\" alt=\"$get_exercise_language\" style=\"float: left;padding:4px 4px 0px 0px;\" /> <b>$l_guide:</b><br />
-			<textarea name=\"inp_exercise_guide\" rows=\"10\" cols=\"70\" class=\"myTextEditor\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">$get_exercise_guide</textarea>
+			<textarea name=\"inp_exercise_guide\" rows=\"10\" cols=\"70\" class=\"editor\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">$get_exercise_guide</textarea>
 			</p>
 
 			

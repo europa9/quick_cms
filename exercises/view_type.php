@@ -90,9 +90,56 @@ echo"
 		<a href=\"view_type.php?type_id=$type_id&amp;l=$l\">$get_current_type_translation_value</a>
 		</p>
 	</div>
+	<div class=\"clear\"></div>
 <!-- //Where am I ? -->
 
+<!-- Search -->
+	<div class=\"exercises_float_left\">
+		<form method=\"post\" action=\"search_exercise.php\" enctype=\"multipart/form-data\">
+		<p>
+		<input type=\"text\" name=\"q\" value=\"\" size=\"20\" id=\"nettport_inp_search_query\" />
+		<input type=\"submit\" value=\"$l_search\" id=\"nettport_search_submit_button\" />
+		</p>
+	
 
+		<!-- Search script -->
+		<script id=\"source\" language=\"javascript\" type=\"text/javascript\">
+		\$(document).ready(function () {
+			\$('#nettport_inp_search_query').keyup(function () {
+        			var searchString    = $(\"#nettport_inp_search_query\").val();
+       				var data            = 'l=$l&q='+ searchString;
+         
+        			// if searchString is not empty
+        			if(searchString) {
+           				// ajax call
+            				\$.ajax({
+                				type: \"POST\",
+               					url: \"search_exercise_jquery.php\",
+                				data: data,
+						beforeSend: function(html) { // this happens before actual call
+							\$(\"#nettport_search_results\").html(''); 
+						},
+               					success: function(html){
+                    					\$(\"#nettport_search_results\").append(html);
+              					}
+            				});
+       				}
+        			return false;
+            		});
+            	});
+		</script>
+		<!-- //Search script -->
+	</div>
+<!-- //Search -->
+
+<!-- Buttons -->
+	<div class=\"exercises_float_right\">
+		<p>
+		<a href=\"$root/exercises/my_exercises.php?l=$l\" class=\"btn_default\">$l_my_exercises</a>
+		</p>
+	</div>
+	<div class=\"clear\"></div>
+<!-- //Buttons -->
 
 <!-- Sub categories of exercise type -->
 	<div class=\"clear\"></div>
@@ -138,7 +185,7 @@ echo"
 
 
 <!-- Show all main muscle groups -->
-	
+	<div id=\"nettport_search_results\">
 	";	
 	// Get all Show all types
 	$query = "SELECT muscle_group_id, muscle_group_name, muscle_group_name_clean, muscle_group_parent_id, muscle_group_image_path, muscle_group_image_file FROM $t_muscle_groups WHERE muscle_group_parent_id='0'";
@@ -238,6 +285,7 @@ echo"
 		}
 	}
 	echo"
+	</div>
 <!-- //Show all types -->
 
 ";

@@ -66,11 +66,11 @@ $inp_user_agent = $_SERVER['HTTP_USER_AGENT'];
 $inp_user_agent = output_html($inp_user_agent);
 $inp_user_agent_mysql = quote_smart($link, $inp_user_agent);
 
-$inp_ip = $_SERVER['REMOTE_ADDR'];
-$inp_ip = output_html($inp_ip);
-$inp_ip_mysql = quote_smart($link, $inp_ip);
+$my_ip = $_SERVER['REMOTE_ADDR'];
+$my_ip = output_html($my_ip);
+$my_ip_mysql = quote_smart($link, $my_ip);
 
-$inp_hostname = "$inp_ip";
+$inp_hostname = "$my_ip";
 if($configSiteUseGethostbyaddrSav == "1"){
 	$inp_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']); // Some servers in local network cant use getostbyaddr because of nameserver missing
 }
@@ -79,7 +79,7 @@ $inp_hostname_mysql = quote_smart($link, $inp_hostname);
 
 
 // Check if the user is banned
-$query = "SELECT banned_ip_id FROM $t_banned_ips WHERE banned_ip=$inp_ip_mysql";
+$query = "SELECT banned_ip_id FROM $t_banned_ips WHERE banned_ip=$my_ip_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
 list($get_banned_ip_id) = $row;
@@ -105,7 +105,7 @@ if($get_banned_ip_id != "" OR $get_banned_hostname_id != "" OR $get_banned_user_
 	echo"<body>\n";
 	echo"<h1>Server error 403 #1</h1>\n";
 	if($get_banned_ip_id != ""){
-		echo"<p>IP ";echo $inp_ip;echo" is banned.</p>\n";
+		echo"<p>IP ";echo $my_ip;echo" is banned.</p>\n";
 	}
 	if($get_banned_hostname_id != ""){
 		echo"<p>Hostname ";echo $inp_hostname;echo" is banned.</p>\n";
@@ -315,7 +315,7 @@ else{
 	if($get_stats_user_agent_type == "bot"){
 
 		// Visists :: Year :: IPs
-		$query = "SELECT stats_visit_per_year_ip_id, stats_visit_per_year_ip_year, stats_visit_per_year_type, stats_visit_per_year_ip FROM $t_stats_visists_per_year_ips WHERE stats_visit_per_year_ip_year='$inp_year' AND stats_visit_per_year_ip=$inp_ip_mysql";
+		$query = "SELECT stats_visit_per_year_ip_id, stats_visit_per_year_ip_year, stats_visit_per_year_type, stats_visit_per_year_ip FROM $t_stats_visists_per_year_ips WHERE stats_visit_per_year_ip_year='$inp_year' AND stats_visit_per_year_ip=$my_ip_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_stats_visit_per_year_ip_id, $get_stats_visit_per_year_ip_year, $get_stats_visit_per_year_type, $get_stats_visit_per_year_ip) = $row;
@@ -324,7 +324,7 @@ else{
 			mysqli_query($link, "INSERT INTO $t_stats_visists_per_year_ips 
 			(stats_visit_per_year_ip_id, stats_visit_per_year_ip_year, stats_visit_per_year_type, stats_visit_per_year_ip) 
 			VALUES
-			(NULL, '$inp_year', '$get_stats_user_agent_type', $inp_ip_mysql)") or die(mysqli_error($link));
+			(NULL, '$inp_year', '$get_stats_user_agent_type', $my_ip_mysql)") or die(mysqli_error($link));
 			
 			// Update unique
 			$inp_visit_per_year_bots_unique = $get_stats_visit_per_year_unique_bots+1;
@@ -350,7 +350,7 @@ else{
 		} // Visits :: Year
 
 		// Visists :: Month :: IPs
-		$query = "SELECT stats_visit_per_month_ip_id, stats_visit_per_month_ip_month, stats_visit_per_month_ip_year, stats_visit_per_month_type, stats_visit_per_month_ip FROM $t_stats_visists_per_month_ips WHERE stats_visit_per_month_ip_month='$inp_month' AND stats_visit_per_month_ip_year='$inp_year' AND stats_visit_per_month_ip=$inp_ip_mysql";
+		$query = "SELECT stats_visit_per_month_ip_id, stats_visit_per_month_ip_month, stats_visit_per_month_ip_year, stats_visit_per_month_type, stats_visit_per_month_ip FROM $t_stats_visists_per_month_ips WHERE stats_visit_per_month_ip_month='$inp_month' AND stats_visit_per_month_ip_year='$inp_year' AND stats_visit_per_month_ip=$my_ip_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_stats_visit_per_month_ip_id, $get_stats_visit_per_month_ip_month, $get_stats_visit_per_month_ip_year, $get_stats_visit_per_month_type, $get_stats_visit_per_month_ip) = $row;
@@ -359,7 +359,7 @@ else{
 			mysqli_query($link, "INSERT INTO $t_stats_visists_per_month_ips 
 			(stats_visit_per_month_ip_id, stats_visit_per_month_ip_month, stats_visit_per_month_ip_year, stats_visit_per_month_type, stats_visit_per_month_ip) 
 			VALUES
-			(NULL, '$inp_month', '$inp_year', '$get_stats_user_agent_type', $inp_ip_mysql)") or die(mysqli_error($link));
+			(NULL, '$inp_month', '$inp_year', '$get_stats_user_agent_type', $my_ip_mysql)") or die(mysqli_error($link));
 			
 			// Update unique
 			$inp_visit_per_month_bots_unique = $get_stats_visit_per_month_unique_bots+1;
@@ -386,7 +386,7 @@ else{
 		} // Visits :: Month
 
 		// Visists :: Week :: IPs
-		$query = "SELECT stats_visit_per_week_ip_id, stats_visit_per_week_ip_week, stats_visit_per_week_ip_year, stats_visit_per_week_type, stats_visit_per_week_ip FROM $t_stats_visists_per_week_ips WHERE stats_visit_per_week_ip_week='$inp_week' AND stats_visit_per_week_ip_year='$inp_year' AND stats_visit_per_week_ip=$inp_ip_mysql";
+		$query = "SELECT stats_visit_per_week_ip_id, stats_visit_per_week_ip_week, stats_visit_per_week_ip_year, stats_visit_per_week_type, stats_visit_per_week_ip FROM $t_stats_visists_per_week_ips WHERE stats_visit_per_week_ip_week='$inp_week' AND stats_visit_per_week_ip_year='$inp_year' AND stats_visit_per_week_ip=$my_ip_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_stats_visit_per_week_ip_id, $get_stats_visit_per_week_ip_week, $get_stats_visit_per_week_ip_year, $get_stats_visit_per_week_type, $get_stats_visit_per_week_ip) = $row;
@@ -395,7 +395,7 @@ else{
 			mysqli_query($link, "INSERT INTO $t_stats_visists_per_week_ips 
 			(stats_visit_per_week_ip_id, stats_visit_per_week_ip_week, stats_visit_per_week_ip_year, stats_visit_per_week_type, stats_visit_per_week_ip) 
 			VALUES
-			(NULL, '$inp_week', '$inp_year', '$get_stats_user_agent_type', $inp_ip_mysql)") or die(mysqli_error($link));
+			(NULL, '$inp_week', '$inp_year', '$get_stats_user_agent_type', $my_ip_mysql)") or die(mysqli_error($link));
 			
 			// Update unique
 			$inp_visit_per_week_bots_unique = $get_stats_visit_per_week_unique_bots+1;
@@ -423,7 +423,7 @@ else{
 
 
 		// Visists :: Day :: IPs
-		$query = "SELECT stats_visit_per_day_ip_id, stats_visit_per_day_ip_day, stats_visit_per_day_ip_month, stats_visit_per_day_ip_year, stats_visit_per_day_type, stats_visit_per_day_ip FROM $t_stats_visists_per_day_ips WHERE stats_visit_per_day_ip_day='$inp_day' AND stats_visit_per_day_ip_month='$inp_month' AND stats_visit_per_day_ip_year='$inp_year' AND stats_visit_per_day_ip=$inp_ip_mysql";
+		$query = "SELECT stats_visit_per_day_ip_id, stats_visit_per_day_ip_day, stats_visit_per_day_ip_month, stats_visit_per_day_ip_year, stats_visit_per_day_type, stats_visit_per_day_ip FROM $t_stats_visists_per_day_ips WHERE stats_visit_per_day_ip_day='$inp_day' AND stats_visit_per_day_ip_month='$inp_month' AND stats_visit_per_day_ip_year='$inp_year' AND stats_visit_per_day_ip=$my_ip_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_stats_visit_per_day_ip_id, $get_stats_visit_per_day_ip_day, $get_stats_visit_per_day_ip_month, $get_stats_visit_per_day_ip_year, $get_stats_visit_per_day_type, $get_stats_visit_per_day_ip) = $row;
@@ -432,7 +432,7 @@ else{
 			mysqli_query($link, "INSERT INTO $t_stats_visists_per_day_ips 
 			(stats_visit_per_day_ip_id, stats_visit_per_day_ip_day, stats_visit_per_day_ip_month, stats_visit_per_day_ip_year, stats_visit_per_day_type, stats_visit_per_day_ip) 
 			VALUES
-			(NULL, '$inp_day', '$inp_month', '$inp_year', '$get_stats_user_agent_type', $inp_ip_mysql)") or die(mysqli_error($link));
+			(NULL, '$inp_day', '$inp_month', '$inp_year', '$get_stats_user_agent_type', $my_ip_mysql)") or die(mysqli_error($link));
 			
 			// Update unique
 			$inp_visit_per_day_bots_unique = $get_stats_visit_per_day_unique_bots+1;
@@ -525,11 +525,11 @@ else{
 				mysqli_query($link, "INSERT INTO $t_stats_pages_visits_per_year_ips 
 				(stats_pages_per_year_ip_id, stats_pages_per_year_ip_year, stats_pages_per_year_ip_page_id, stats_pages_per_year_ip_ip) 
 				VALUES
-				(NULL, '$inp_year', $get_stats_pages_per_year_id, $inp_ip_mysql)") or die(mysqli_error($link));
+				(NULL, '$inp_year', $get_stats_pages_per_year_id, $my_ip_mysql)") or die(mysqli_error($link));
 			}
 			else{
 				// We have record, if unique
-				$query = "SELECT stats_pages_per_year_ip_id FROM $t_stats_pages_visits_per_year_ips WHERE stats_pages_per_year_ip_year='$inp_year' AND stats_pages_per_year_ip_page_id=$get_stats_pages_per_year_id AND stats_pages_per_year_ip_ip=$inp_ip_mysql";
+				$query = "SELECT stats_pages_per_year_ip_id FROM $t_stats_pages_visits_per_year_ips WHERE stats_pages_per_year_ip_year='$inp_year' AND stats_pages_per_year_ip_page_id=$get_stats_pages_per_year_id AND stats_pages_per_year_ip_ip=$my_ip_mysql";
 				$result = mysqli_query($link, $query);
 				$row = mysqli_fetch_row($result);
 				list($get_stats_pages_per_year_ip_id) = $row;
@@ -538,7 +538,7 @@ else{
 					mysqli_query($link, "INSERT INTO $t_stats_pages_visits_per_year_ips 
 					(stats_pages_per_year_ip_id, stats_pages_per_year_ip_year, stats_pages_per_year_ip_page_id, stats_pages_per_year_ip_ip) 
 					VALUES
-					(NULL, '$inp_year', $get_stats_pages_per_year_id, $inp_ip_mysql)") or die(mysqli_error($link));
+					(NULL, '$inp_year', $get_stats_pages_per_year_id, $my_ip_mysql)") or die(mysqli_error($link));
 	
 
 					// Unique
@@ -551,7 +551,7 @@ else{
 	} // End Bot
 	elseif($get_stats_user_agent_type == "desktop" OR $get_stats_user_agent_type == "mobile"){
 		// Visists :: Year :: IPs
-		$query = "SELECT stats_visit_per_year_ip_id, stats_visit_per_year_ip_year, stats_visit_per_year_type, stats_visit_per_year_ip FROM $t_stats_visists_per_year_ips WHERE stats_visit_per_year_ip_year='$inp_year' AND stats_visit_per_year_ip=$inp_ip_mysql";
+		$query = "SELECT stats_visit_per_year_ip_id, stats_visit_per_year_ip_year, stats_visit_per_year_type, stats_visit_per_year_ip FROM $t_stats_visists_per_year_ips WHERE stats_visit_per_year_ip_year='$inp_year' AND stats_visit_per_year_ip=$my_ip_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_stats_visit_per_year_ip_id, $get_stats_visit_per_year_ip_year, $get_stats_visit_per_year_type, $get_stats_visit_per_year_ip) = $row;
@@ -560,7 +560,7 @@ else{
 			mysqli_query($link, "INSERT INTO $t_stats_visists_per_year_ips 
 			(stats_visit_per_year_ip_id, stats_visit_per_year_ip_year, stats_visit_per_year_type, stats_visit_per_year_ip) 
 			VALUES
-			(NULL, '$inp_year', '$get_stats_user_agent_type', $inp_ip_mysql)") or die(mysqli_error($link));
+			(NULL, '$inp_year', '$get_stats_user_agent_type', $my_ip_mysql)") or die(mysqli_error($link));
 			
 			// Update unique
 			$inp_visit_per_year_human_unique = $get_stats_visit_per_year_human_unique+1;
@@ -599,7 +599,7 @@ else{
 
 
 		// Visists :: Month :: IPs
-		$query = "SELECT stats_visit_per_month_ip_id, stats_visit_per_month_ip_month, stats_visit_per_month_ip_year, stats_visit_per_month_type, stats_visit_per_month_ip FROM $t_stats_visists_per_month_ips WHERE stats_visit_per_month_ip_month='$inp_month' AND stats_visit_per_month_ip_year='$inp_year' AND stats_visit_per_month_ip=$inp_ip_mysql";
+		$query = "SELECT stats_visit_per_month_ip_id, stats_visit_per_month_ip_month, stats_visit_per_month_ip_year, stats_visit_per_month_type, stats_visit_per_month_ip FROM $t_stats_visists_per_month_ips WHERE stats_visit_per_month_ip_month='$inp_month' AND stats_visit_per_month_ip_year='$inp_year' AND stats_visit_per_month_ip=$my_ip_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_stats_visit_per_month_ip_id, $get_stats_visit_per_month_ip_month, $get_stats_visit_per_month_ip_year, $get_stats_visit_per_month_type, $get_stats_visit_per_month_ip) = $row;
@@ -608,7 +608,7 @@ else{
 			mysqli_query($link, "INSERT INTO $t_stats_visists_per_month_ips 
 			(stats_visit_per_month_ip_id, stats_visit_per_month_ip_month, stats_visit_per_month_ip_year, stats_visit_per_month_type, stats_visit_per_month_ip) 
 			VALUES
-			(NULL, '$inp_month', '$inp_year', '$get_stats_user_agent_type', $inp_ip_mysql)") or die(mysqli_error($link));
+			(NULL, '$inp_month', '$inp_year', '$get_stats_user_agent_type', $my_ip_mysql)") or die(mysqli_error($link));
 			
 			// Update unique
 			$inp_visit_per_month_human_unique = $get_stats_visit_per_month_human_unique+1;
@@ -645,7 +645,7 @@ else{
 		} // Visits :: Month
 
 		// Visists :: Week :: IPs
-		$query = "SELECT stats_visit_per_week_ip_id, stats_visit_per_week_ip_week, stats_visit_per_week_ip_month, stats_visit_per_week_ip_year, stats_visit_per_week_type, stats_visit_per_week_ip FROM $t_stats_visists_per_week_ips WHERE stats_visit_per_week_ip_week='$inp_week' AND stats_visit_per_week_ip_year='$inp_year' AND stats_visit_per_week_ip=$inp_ip_mysql";
+		$query = "SELECT stats_visit_per_week_ip_id, stats_visit_per_week_ip_week, stats_visit_per_week_ip_month, stats_visit_per_week_ip_year, stats_visit_per_week_type, stats_visit_per_week_ip FROM $t_stats_visists_per_week_ips WHERE stats_visit_per_week_ip_week='$inp_week' AND stats_visit_per_week_ip_year='$inp_year' AND stats_visit_per_week_ip=$my_ip_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_stats_visit_per_week_ip_id, $get_stats_visit_per_week_ip_week, $get_stats_visit_per_week_ip_month, $get_stats_visit_per_week_ip_year, $get_stats_visit_per_week_type, $get_stats_visit_per_week_ip) = $row;
@@ -654,7 +654,7 @@ else{
 			mysqli_query($link, "INSERT INTO $t_stats_visists_per_week_ips 
 			(stats_visit_per_week_ip_id, stats_visit_per_week_ip_week, stats_visit_per_week_ip_month, stats_visit_per_week_ip_year, stats_visit_per_week_type, stats_visit_per_week_ip) 
 			VALUES
-			(NULL, '$inp_week', '$inp_month', '$inp_year', '$get_stats_user_agent_type', $inp_ip_mysql)") or die(mysqli_error($link));
+			(NULL, '$inp_week', '$inp_month', '$inp_year', '$get_stats_user_agent_type', $my_ip_mysql)") or die(mysqli_error($link));
 			
 			// Update unique
 			$inp_visit_per_week_human_unique = $get_stats_visit_per_week_human_unique+1;
@@ -691,7 +691,7 @@ else{
 		} // Visits :: Day
 
 		// Visists :: Day :: IPs
-		$query = "SELECT stats_visit_per_day_ip_id, stats_visit_per_day_ip_day, stats_visit_per_day_ip_month, stats_visit_per_day_ip_year, stats_visit_per_day_type, stats_visit_per_day_ip FROM $t_stats_visists_per_day_ips WHERE stats_visit_per_day_ip_day='$inp_day' AND stats_visit_per_day_ip_month='$inp_month' AND stats_visit_per_day_ip_year='$inp_year' AND stats_visit_per_day_ip=$inp_ip_mysql";
+		$query = "SELECT stats_visit_per_day_ip_id, stats_visit_per_day_ip_day, stats_visit_per_day_ip_month, stats_visit_per_day_ip_year, stats_visit_per_day_type, stats_visit_per_day_ip FROM $t_stats_visists_per_day_ips WHERE stats_visit_per_day_ip_day='$inp_day' AND stats_visit_per_day_ip_month='$inp_month' AND stats_visit_per_day_ip_year='$inp_year' AND stats_visit_per_day_ip=$my_ip_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_stats_visit_per_day_ip_id, $get_stats_visit_per_day_ip_day, $get_stats_visit_per_day_ip_month, $get_stats_visit_per_day_ip_year, $get_stats_visit_per_day_type, $get_stats_visit_per_day_ip) = $row;
@@ -700,7 +700,7 @@ else{
 			mysqli_query($link, "INSERT INTO $t_stats_visists_per_day_ips 
 			(stats_visit_per_day_ip_id, stats_visit_per_day_ip_day, stats_visit_per_day_ip_month, stats_visit_per_day_ip_year, stats_visit_per_day_type, stats_visit_per_day_ip) 
 			VALUES
-			(NULL, '$inp_day', '$inp_month', '$inp_year', '$get_stats_user_agent_type', $inp_ip_mysql)") or die(mysqli_error($link));
+			(NULL, '$inp_day', '$inp_month', '$inp_year', '$get_stats_user_agent_type', $my_ip_mysql)") or die(mysqli_error($link));
 			
 			// Update unique
 			$inp_visit_per_day_human_unique = $get_stats_visit_per_day_human_unique+1;
@@ -972,7 +972,7 @@ else{
 		$get_ip_id = 0;
 		$get_geoname_country_name = "Unknown";
 		$get_geoname_country_iso_code = "ZZ";
-		$ip_array = explode(".", $inp_ip);
+		$ip_array = explode(".", $my_ip);
 		$size = sizeof($ip_array);
 		if($size > 1){
 			$ip_a = $ip_array[0];
@@ -998,7 +998,7 @@ else{
 			list($get_ip_id, $get_geoname_country_iso_code, $get_geoname_country_name) = $row;
 		} // ipv4
 		else{
-			$ip_array = explode(":", $inp_ip);
+			$ip_array = explode(":", $my_ip);
 
 			$ip_a = hexdec($ip_array[0]);
 			$ip_a_mysql = quote_smart($link, $ip_a);
@@ -1118,11 +1118,11 @@ else{
 				mysqli_query($link, "INSERT INTO $t_stats_pages_visits_per_year_ips 
 				(stats_pages_per_year_ip_id, stats_pages_per_year_ip_year, stats_pages_per_year_ip_page_id, stats_pages_per_year_ip_ip) 
 				VALUES
-				(NULL, '$inp_year', $get_stats_pages_per_year_id, $inp_ip_mysql)") or die(mysqli_error($link));
+				(NULL, '$inp_year', $get_stats_pages_per_year_id, $my_ip_mysql)") or die(mysqli_error($link));
 			}
 			else{
 				// We have record, if unique
-				$query = "SELECT stats_pages_per_year_ip_id FROM $t_stats_pages_visits_per_year_ips WHERE stats_pages_per_year_ip_year='$inp_year' AND stats_pages_per_year_ip_page_id=$get_stats_pages_per_year_id AND stats_pages_per_year_ip_ip=$inp_ip_mysql";
+				$query = "SELECT stats_pages_per_year_ip_id FROM $t_stats_pages_visits_per_year_ips WHERE stats_pages_per_year_ip_year='$inp_year' AND stats_pages_per_year_ip_page_id=$get_stats_pages_per_year_id AND stats_pages_per_year_ip_ip=$my_ip_mysql";
 				$result = mysqli_query($link, $query);
 				$row = mysqli_fetch_row($result);
 				list($get_stats_pages_per_year_ip_id) = $row;
@@ -1132,7 +1132,7 @@ else{
 					mysqli_query($link, "INSERT INTO $t_stats_pages_visits_per_year_ips 
 					(stats_pages_per_year_ip_id, stats_pages_per_year_ip_year, stats_pages_per_year_ip_page_id, stats_pages_per_year_ip_ip) 
 					VALUES
-					(NULL, '$inp_year', $get_stats_pages_per_year_id, $inp_ip_mysql)") or die(mysqli_error($link));
+					(NULL, '$inp_year', $get_stats_pages_per_year_id, $my_ip_mysql)") or die(mysqli_error($link));
 	
 
 					// Unique
@@ -1213,12 +1213,13 @@ else{
 		// Tracker :: Index
 		$inp_url_mysql = quote_smart($link, $page_url);
 		$inp_title_mysql = quote_smart($link, $website_title);
-		$query = "SELECT tracker_id, tracker_time_start, tracker_hits FROM $t_stats_tracker_index WHERE tracker_ip=$inp_ip_mysql AND tracker_month='$inp_month' AND tracker_year='$inp_year' AND tracker_os=$inp_user_agent_os_mysql AND tracker_browser=$inp_user_agent_browser_mysql AND tracker_language='$get_current_language_active_iso_two'";
+		$query = "SELECT tracker_id, tracker_time_start, tracker_hits FROM $t_stats_tracker_index WHERE tracker_ip=$my_ip_mysql AND tracker_month='$inp_month' AND tracker_year='$inp_year' AND tracker_os=$inp_user_agent_os_mysql AND tracker_browser=$inp_user_agent_browser_mysql AND tracker_language='$get_current_language_active_iso_two'";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_tracker_id, $get_tracker_time_start, $get_tracker_hits) = $row;
 		if($get_tracker_id == ""){
-			$inp_tracker_ip_masked = substr($inp_ip, -10);
+			$inp_tracker_ip_masked = substr($my_ip, -6);
+			$inp_tracker_ip_masked = "..." . $inp_tracker_ip_masked;
 			$inp_tracker_ip_masked_mysql = quote_smart($link, $inp_tracker_ip_masked);
 			mysqli_query($link, "INSERT INTO $t_stats_tracker_index 
 			(tracker_id, tracker_ip, tracker_ip_masked, tracker_month, tracker_month_short, 
@@ -1227,13 +1228,13 @@ else{
 			tracker_accept_language, tracker_language, tracker_country_name, tracker_hits, tracker_last_url_value,
 			tracker_last_url_title, tracker_last_url_title_fetched) 
 			VALUES
-			(NULL, $inp_ip_mysql, $inp_tracker_ip_masked_mysql, '$inp_month', '$inp_month_short', 
+			(NULL, $my_ip_mysql, $inp_tracker_ip_masked_mysql, '$inp_month', '$inp_month_short', 
 			'$inp_year', '$inp_unix_time', '$inp_hour_minute', '$inp_unix_time', '$inp_hour_minute',
 			 0, 0, $inp_user_agent_os_mysql, $inp_user_agent_browser_mysql, '$get_stats_user_agent_type', 
 			$inp_accpeted_language_mysql, '$get_current_language_active_iso_two', $inp_geoname_country_name_mysql, 1, $inp_url_mysql, 
 			$inp_title_mysql, 0)") or die(mysqli_error($link));
 
-			$query = "SELECT tracker_id, tracker_hits FROM $t_stats_tracker_index WHERE tracker_ip=$inp_ip_mysql AND tracker_month='$inp_month' AND tracker_year='$inp_year'";
+			$query = "SELECT tracker_id, tracker_hits FROM $t_stats_tracker_index WHERE tracker_ip=$my_ip_mysql AND tracker_month='$inp_month' AND tracker_year='$inp_year'";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
 			list($get_tracker_id, $get_tracker_hits) = $row;

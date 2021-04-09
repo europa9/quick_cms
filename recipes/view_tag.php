@@ -38,20 +38,110 @@ include("$root/_admin/_translations/site/$l/recipes/ts_recipes.php");
 /*- Variables ------------------------------------------------------------------------- */
 if(isset($_GET['tag'])) {
 	$tag = $_GET['tag'];
-	$tag = strip_tags(stripslashes($tag));
+	$tag = output_html($tag);
 }
 else{
 	$tag = "";
 }
-$tag_mysql = quote_smart($link, $tag);
-
-
 $l_mysql = quote_smart($link, $l);
+
+// Find tag
+$year = date("Y");
+$month = date("m");
+$week = date("W");
+$tag_title_clean_mysql = quote_smart($link, $tag);
+$query = "SELECT tag_id, tag_language, tag_title, tag_title_clean, tag_number_of_recipes, tag_last_clicked_week, tag_unique_views_counter, tag_unique_views_ip_block FROM $t_recipes_tags_unique WHERE tag_language=$l_mysql AND tag_title_clean=$tag_title_clean_mysql";
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_row($result);
+list($get_tag_id, $get_tag_language, $get_tag_title, $get_tag_title_clean, $get_tag_number_of_recipes, $get_tag_last_clicked_week, $get_tag_unique_views_counter, $get_tag_unique_views_ip_block) = $row;
+if($get_tag_id == ""){
+	
+
+
+	/*- Headers ---------------------------------------------------------------------------------- */
+	$website_title = "$l_recipes - Server error 404";
+	if(file_exists("./favicon.ico")){ $root = "."; }
+	elseif(file_exists("../favicon.ico")){ $root = ".."; }
+	elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
+	elseif(file_exists("../../../favicon.ico")){ $root = "../../.."; }
+	include("$root/_webdesign/header.php");
+	echo"<p>Tag not found.</p>";
+
+	// Go trough all recipes, find all tags
+	$result = mysqli_query($link, "TRUNCATE $t_recipes_tags_unique") or die(mysqli_error($link));
+	
+	// Loop trought tags and insert them
+	$query_t = "SELECT tag_id, tag_language, tag_recipe_id, tag_title, tag_title_clean, tag_user_id FROM $t_recipes_tags";
+	$result_t = mysqli_query($link, $query_t);
+	while($row_t = mysqli_fetch_row($result_t)) {
+		list($get_tag_id, $get_tag_language, $get_tag_recipe_id, $get_tag_title, $get_tag_title_clean, $get_tag_user_id) = $row_t;
+
+		// Check that recipe exists
+		$query_rating = "SELECT recipe_id FROM $t_recipes WHERE recipe_id=$get_tag_recipe_id";
+		$result_rating = mysqli_query($link, $query_rating);
+		$row_rating = mysqli_fetch_row($result_rating);
+		list($get_recipe_id) = $row_rating;
+		if($get_recipe_id == ""){
+			echo"<div class=\"warning\"><p>Recipe not found for tag $get_tag_title (recipe id was $get_tag_recipe_id and tag id was $get_tag_id)</p></div>";
+			$result = mysqli_query($link, "DELETE FROM $t_recipes_tags WHERE tag_id=$get_tag_id") or die(mysqli_error($link));
+		}
+		else{
+			// Check for unique tag
+			$inp_tite_mysql = quote_smart($link, $get_tag_title); 
+			$inp_tite_clean_mysql = quote_smart($link, $get_tag_title_clean); 
+			$inp_language_mysql = quote_smart($link, $get_tag_language); 
+			$query_rating = "SELECT tag_id FROM $t_recipes_tags_unique WHERE tag_language=$inp_language_mysql AND tag_title_clean=$inp_tite_clean_mysql";
+			$result_rating = mysqli_query($link, $query_rating);
+			$row_rating = mysqli_fetch_row($result_rating);
+			list($get_recipes_tags_unique_tag_id) = $row_rating;
+			if($get_recipes_tags_unique_tag_id == ""){
+				echo"<div class=\"success\"><p>Creating unique tag $get_tag_title.</p></div>";
+
+				mysqli_query($link, "INSERT INTO $t_recipes_tags_unique (tag_id, tag_language, tag_title, tag_title_clean) 
+							VALUES(NULL, $inp_language_mysql, $inp_tite_mysql, $inp_tite_clean_mysql)") or die(mysqli_error($link));
+			} // create unique tag
+		}
+	}
+	
+}
+else{
+	// Update hits
+	$inp_ip = $_SERVER['REMOTE_ADDR'];
+	$inp_ip = output_html($inp_ip);
+
+	$ip_block_array = explode("\n", $get_tag_unique_views_ip_block);
+	$ip_block_array_size = sizeof($ip_block_array);
+
+	if($ip_block_array_size > 10){
+		$ip_block_array_size = 5;
+	}
+
+	$has_seen_this_before = 0;
+	$inp_unique_hits_ip_block = "";
+	for($x=0;$x<$ip_block_array_size;$x++){
+		if($ip_block_array[$x] == "$inp_ip"){
+			$has_seen_this_before = 1;
+			break;
+		}
+		if($inp_unique_hits_ip_block == ""){
+			$inp_unique_hits_ip_block = $ip_block_array[$x];
+		}
+		else{
+			$inp_unique_hits_ip_block = $inp_unique_hits_ip_block . "\n" . $ip_block_array[$x];
+		}
+	}
+
+	if($has_seen_this_before == 0){
+		$inp_unique_hits_ip_block = $inp_ip . "\n" . $inp_unique_hits_ip_block;
+		$inp_unique_hits_ip_block_mysql = quote_smart($link, $inp_unique_hits_ip_block);
+		$inp_unique_hits = $get_tag_unique_views_counter + 1;
+		$result = mysqli_query($link, "UPDATE $t_recipes_tags_unique SET tag_unique_views_counter=$inp_unique_hits, tag_unique_views_ip_block=$inp_unique_hits_ip_block_mysql WHERE tag_id=$get_tag_id") or die(mysqli_error($link));
+	}
 
 
 
 /*- Headers ---------------------------------------------------------------------------------- */
-$website_title = "$l_recipes - #$tag";
+$website_title = "$l_recipes - $get_tag_title";
 if(file_exists("./favicon.ico")){ $root = "."; }
 elseif(file_exists("../favicon.ico")){ $root = ".."; }
 elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -83,13 +173,13 @@ else{
 echo"
 <!-- Headline -->
 	<div class=\"recipes_headline\">
-		<h1>#$tag</h1>
+		<h1>$get_tag_title</h1>
 
 		<!-- Where am I? -->
 			<p><b>$l_you_are_here:</b><br />
 			<a href=\"index.php?l=$l\">$l_recipes</a>
 			&gt;
-			<a href=\"view_tag_1200.php?tag=$tag&amp;l=$l\">#$tag</a>
+			<a href=\"view_tag.php?tag=$tag&amp;l=$l\">$get_tag_title</a>
 			</p>
 		<!-- //Where am I? -->
 	</div>
@@ -186,7 +276,7 @@ echo"
 	// Select recipes
 	$x = 0;
 	$count_recipes = 0;
-	$query = "SELECT $t_recipes_tags.tag_id, $t_recipes.recipe_id, $t_recipes.recipe_title, $t_recipes.recipe_introduction, $t_recipes.recipe_image_path, $t_recipes.recipe_image, $t_recipes.recipe_thumb_278x156, $t_recipes.recipe_unique_hits FROM $t_recipes_tags INNER JOIN $t_recipes ON $t_recipes_tags.tag_recipe_id=$t_recipes.recipe_id WHERE $t_recipes_tags.tag_language=$l_mysql AND $t_recipes_tags.tag_title_clean=$tag_mysql";
+	$query = "SELECT $t_recipes_tags.tag_id, $t_recipes.recipe_id, $t_recipes.recipe_title, $t_recipes.recipe_introduction, $t_recipes.recipe_image_path, $t_recipes.recipe_image, $t_recipes.recipe_thumb_278x156, $t_recipes.recipe_unique_hits FROM $t_recipes_tags INNER JOIN $t_recipes ON $t_recipes_tags.tag_recipe_id=$t_recipes.recipe_id WHERE $t_recipes_tags.tag_language=$l_mysql AND $t_recipes_tags.tag_title_clean=$tag_title_clean_mysql";
 
 	// Order
 	if($order_method == "desc"){
@@ -394,70 +484,57 @@ echo"
 	<div class=\"clear\"></div>
 	";
 
-	// Check if it exists in tags unique
-	$year = date("Y");
-	$month = date("m");
-	$week = date("W");
-	$tag_title_clean_mysql = quote_smart($link, $tag);
-	$query = "SELECT tag_id, tag_language, tag_title, tag_title_clean, tag_number_of_recipes, tag_last_clicked_week, tag_unique_views_counter, tag_unique_views_ip_block FROM $t_recipes_tags_unique WHERE tag_language=$l_mysql AND tag_title_clean=$tag_title_clean_mysql";
-	$result = mysqli_query($link, $query);
-	$row = mysqli_fetch_row($result);
-	list($get_tag_id, $get_tag_language, $get_tag_title, $get_tag_title_clean, $get_tag_number_of_recipes, $get_tag_last_clicked_week, $get_tag_unique_views_counter, $get_tag_unique_views_ip_block) = $row;
-	if($get_tag_id == ""){
-		// Insert this tag unique
-		mysqli_query($link, "INSERT INTO $t_recipes_tags_unique 
-		(tag_id, tag_language, tag_title, tag_title_clean, tag_number_of_recipes, tag_last_clicked_year, tag_last_clicked_month, tag_last_clicked_week, tag_unique_views_counter) 
-		VALUES 
-		(NULL, $l_mysql, $tag_title_clean_mysql, $tag_title_clean_mysql, $count_recipes, $year, $month, $week, 1)")
-		or die(mysqli_error($link)); 
+
+
+	// Update count, year, month, week
+	if($count_recipes != "$get_tag_number_of_recipes" OR $week != "$get_tag_last_clicked_week"){
+		$result = mysqli_query($link, "UPDATE $t_recipes_tags_unique SET 
+					tag_number_of_recipes=$count_recipes, 
+					tag_last_clicked_year=$year, 
+					tag_last_clicked_month=$month, 
+					tag_last_clicked_week=$week
+					WHERE tag_id=$get_tag_id") or die(mysqli_error($link));
 	}
-	else{
-		// Update count, year, month, week
-		if($count_recipes != "$get_tag_number_of_recipes" OR $week != "$get_tag_last_clicked_week"){
-			$result = mysqli_query($link, "UPDATE $t_recipes_tags_unique SET 
-						tag_number_of_recipes=$count_recipes, 
-						tag_last_clicked_year=$year, 
-						tag_last_clicked_month=$month, 
-						tag_last_clicked_week=$week
-						WHERE tag_id=$get_tag_id") or die(mysqli_error($link));
-		}
-
-		// Update hits
-		$inp_ip = $_SERVER['REMOTE_ADDR'];
-		$inp_ip = output_html($inp_ip);
-
-		$ip_block_array = explode("\n", $get_tag_unique_views_ip_block);
-		$ip_block_array_size = sizeof($ip_block_array);
-
-		if($ip_block_array_size > 10){
-			$ip_block_array_size = 5;
-		}
+	if($count_recipes == "0"){
+		echo"<div class=\"info\"><p>No recipes found for this tag</p></div>";
+		$result = mysqli_query($link, "TRUNCATE $t_recipes_tags_unique") or die(mysqli_error($link));
 	
-		$has_seen_this_before = 0;
+		// Loop trought tags and insert them
+		
+		$query_t = "SELECT tag_id, tag_language, tag_recipe_id, tag_title, tag_title_clean, tag_user_id FROM $t_recipes_tags";
+		$result_t = mysqli_query($link, $query_t);
+		while($row_t = mysqli_fetch_row($result_t)) {
+			list($get_tag_id, $get_tag_language, $get_tag_recipe_id, $get_tag_title, $get_tag_title_clean, $get_tag_user_id) = $row_t;
 
-		$inp_unique_hits_ip_block = "";
-		for($x=0;$x<$ip_block_array_size;$x++){
-			if($ip_block_array[$x] == "$inp_ip"){
-				$has_seen_this_before = 1;
-				break;
-			}
-			if($inp_unique_hits_ip_block == ""){
-				$inp_unique_hits_ip_block = $ip_block_array[$x];
+			// Check that recipe exists
+			$query_rating = "SELECT recipe_id FROM $t_recipes WHERE recipe_id=$get_tag_recipe_id";
+			$result_rating = mysqli_query($link, $query_rating);
+			$row_rating = mysqli_fetch_row($result_rating);
+			list($get_recipe_id) = $row_rating;
+			if($get_recipe_id == ""){
+				echo"<div class=\"warning\"><p>Recipe not found for tag $get_tag_title (recipe id was $get_tag_recipe_id and tag id was $get_tag_id)</p></div>";
+				$result = mysqli_query($link, "DELETE FROM $t_recipes_tags WHERE tag_id=$get_tag_id") or die(mysqli_error($link));
 			}
 			else{
-				$inp_unique_hits_ip_block = $inp_unique_hits_ip_block . "\n" . $ip_block_array[$x];
+				// Check for unique tag
+				$inp_tite_mysql = quote_smart($link, $get_tag_title); 
+				$inp_tite_clean_mysql = quote_smart($link, $get_tag_title_clean); 
+				$inp_language_mysql = quote_smart($link, $get_tag_language); 
+
+				$query_rating = "SELECT tag_id FROM $t_recipes_tags_unique WHERE tag_language=$inp_language_mysql AND tag_title_clean=$inp_tite_clean_mysql";
+				$result_rating = mysqli_query($link, $query_rating);
+				$row_rating = mysqli_fetch_row($result_rating);
+				list($get_recipes_tags_unique_tag_id) = $row_rating;
+				if($get_recipes_tags_unique_tag_id == ""){
+					echo"<div class=\"success\"><p>Creating unique tag $get_tag_title.</p></div>";
+
+					mysqli_query($link, "INSERT INTO $t_recipes_tags_unique (tag_id, tag_language, tag_title, tag_title_clean) 
+								VALUES(NULL, $inp_language_mysql, $inp_tite_mysql, $inp_tite_clean_mysql)") or die(mysqli_error($link));
+				} // create unique tag
 			}
 		}
-	
-		if($has_seen_this_before == 0){
-			$inp_unique_hits_ip_block = $inp_ip . "\n" . $inp_unique_hits_ip_block;
-			$inp_unique_hits_ip_block_mysql = quote_smart($link, $inp_unique_hits_ip_block);
-			$inp_unique_hits = $get_tag_unique_views_counter + 1;
-			$result = mysqli_query($link, "UPDATE $t_recipes_tags_unique SET tag_unique_views_counter=$inp_unique_hits, tag_unique_views_ip_block=$inp_unique_hits_ip_block_mysql WHERE tag_id=$get_tag_id") or die(mysqli_error($link));
-		}
-
-	}
-
+	} // no recipes
+} // tag found
 
 /*- Footer ----------------------------------------------------------------------------------- */
 include("$root/_webdesign/footer.php");

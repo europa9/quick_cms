@@ -84,7 +84,7 @@ echo"
 
 <!-- Cookies warning -->
 	";
-	include("$root/_admin/_functions/cookies_warning_include.php");
+	// include("$root/_admin/_functions/cookies_warning_include.php");
 	echo"
 <!-- //Cookies warning -->
 

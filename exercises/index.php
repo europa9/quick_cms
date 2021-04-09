@@ -122,6 +122,20 @@ echo"
 <!-- //Buttons -->
 
 
+<!-- Tags -->
+	<p>";
+	$l_mysql = quote_smart($link, $l);
+	$query = "SELECT cloud_id, cloud_text, cloud_clean, cloud_unique_hits FROM $t_exercise_tags_cloud WHERE cloud_language=$l_mysql ORDER BY cloud_unique_hits DESC LIMIT 0,20";
+	$result = mysqli_query($link, $query);
+	while($row = mysqli_fetch_row($result)) {
+		list($get_cloud_id, $get_cloud_text, $get_cloud_clean, $get_cloud_unique_hits) = $row;
+
+		echo"	<a href=\"view_tag.php?tag=$get_cloud_clean&amp;l=$l\" class=\"btn_default\">$get_cloud_text</a>\n";
+	}
+	echo"
+	</p>
+<!-- //Tags -->
+
 <!-- Types -->
 	<div class=\"exercises_all_main_categories_selector\">
 		<a href=\"#\" id=\"show_all_main_categories_link_img\"><img src=\"_gfx/show_all_categories_img.png\" alt=\"show_all_categories_img.png\" class=\"show_all_main_categories_img\" /></a>
@@ -167,7 +181,7 @@ echo"
 	";	
 	//  
 	$x = 0;
-	$query = "SELECT exercise_id, exercise_title, exercise_user_id, exercise_muscle_group_id_main, exercise_equipment_id, exercise_type_id, exercise_level_id, exercise_updated_datetime, exercise_guide FROM $t_exercise_index WHERE exercise_language=$l_mysql ORDER BY exercise_title ASC";
+	$query = "SELECT exercise_id, exercise_title, exercise_user_id, exercise_muscle_group_id_main, exercise_equipment_id, exercise_type_id, exercise_level_id, exercise_updated_datetime, exercise_guide FROM $t_exercise_index WHERE exercise_language=$l_mysql ORDER BY exercise_uniqe_hits DESC";
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
 		list($get_exercise_id, $get_exercise_title, $get_exercise_user_id, $get_exercise_muscle_group_id_main, $get_exercise_equipment_id, $get_exercise_type_id, $get_exercise_level_id, $get_exercise_updated_datetime, $get_exercise_guide) = $row;

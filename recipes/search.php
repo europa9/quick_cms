@@ -187,24 +187,8 @@ echo"</h1>
 <!-- //Feedback -->
 
 
-	<!-- Left and right -->
-		<!-- Content left hide view -->
-			<script>
-			\$(document).ready(function(){
-				\$(\".content_left_hide_view_a\").click(function () {
-					\$(\".recipe_search_left\").toggle();
-				});
-			});
-			</script>
 
 
-			<div class=\"content_left_hide_view_div\">
-				<a href=\"#\" class=\"content_left_hide_view_a\"><img src=\"_gfx/icons/ic_list_black_18dp_1x.png\" alt=\"ic_list_black_18dp_1x.png\" /></a>
-			</div>
-			<div class=\"clear\"></div>
-			
-		<!-- Content left hide view -->
-		<div class=\"recipe_search_left\">
 			<!-- Search form -->
         			<form method=\"get\" action=\"search.php\" enctype=\"multipart/form-data\">
 				<p>
@@ -214,129 +198,6 @@ echo"</h1>
 				<div class=\"clear\"></div>
 			<!-- //Search form -->
 
-
-			<!-- Max calories -->
-
-				<script>
-				\$(document).ready(function(){
-   				 \$(\".recipe_search_text\").focusin(
-    				    function () {
-    				        \$(this).val(\"\");
-   				     }
- 				   );
-				});
-				</script>
-
-
-				<p style=\"margin:0;padding: 26px 0px 0px 0px;\"><b>$l_max</b></p>
-
-				<p>$l_calories<br />
-				<input type=\"text\" name=\"number_serving_calories_from\" value=\""; if($number_serving_calories_from != ""){ echo"$number_serving_calories_from"; } else{ echo"$l_from"; }  echo"\" size=\"5\" class=\"recipe_search_text\" />
-				<input type=\"text\" name=\"number_serving_calories_to\" value=\""; if($number_serving_calories_to != ""){ echo"$number_serving_calories_to"; } else{ echo"$l_to"; }  echo"\" size=\"5\" class=\"recipe_search_text\" />
-				<input type=\"submit\" value=\"$l_search\" class=\"btn btn_default\" />
-				</p>
-
-				<p>$l_fat<br />
-				<input type=\"text\" name=\"number_serving_fat_from\" value=\""; if($number_serving_fat_from != ""){ echo"$number_serving_fat_from"; } else{ echo"$l_from"; }  echo"\" size=\"5\" class=\"recipe_search_text\" />
-				<input type=\"text\" name=\"number_serving_fat_to\" value=\""; if($number_serving_fat_to != ""){ echo"$number_serving_fat_to"; } else{ echo"$l_to"; }  echo"\" size=\"5\" class=\"recipe_search_text\" />
-				<input type=\"submit\" value=\"$l_search\" class=\"btn btn_default\" />
-				</p>
-
-				<p>$l_carbs<br />
-				<input type=\"text\" name=\"number_serving_carbs_from\" value=\""; if($number_serving_carbs_from != ""){ echo"$number_serving_carbs_from"; } else{ echo"$l_from"; }  echo"\" size=\"5\" class=\"recipe_search_text\" />
-				<input type=\"text\" name=\"number_serving_carbs_to\" value=\""; if($number_serving_carbs_to != ""){ echo"$number_serving_carbs_to"; } else{ echo"$l_to"; }  echo"\" size=\"5\" class=\"recipe_search_text\" />
-				<input type=\"submit\" value=\"$l_search\" class=\"btn btn_default\" />
-				</p>
-
-				<p>$l_proteins<br />
-				<input type=\"text\" name=\"number_serving_proteins_from\" value=\""; if($number_serving_proteins_from != ""){ echo"$number_serving_proteins_from"; } else{ echo"$l_from"; }  echo"\" size=\"5\" class=\"recipe_search_text\" />
-				<input type=\"text\" name=\"number_serving_proteins_to\" value=\""; if($number_serving_proteins_to != ""){ echo"$number_serving_proteins_to"; } else{ echo"$l_to"; }  echo"\" size=\"5\" class=\"recipe_search_text\" />
-				<input type=\"submit\" value=\"$l_search\" class=\"btn btn_default\" />
-				</p>
-
-
-				</form>
-			<!-- //Max calories -->
-
-
-			<!-- Order -->
-				<p style=\"margin:0;padding: 26px 0px 0px 0px;\"><b>$l_order</b></p>
-				
-					<script>
-					\$(function(){
-						\$('#inp_order_by_select').on('change', function () {
-							var url = \$(this).val();
-							if (url) { // require a URL
- 								window.location = url;
-							}
-						return false;
-					});
-					\$('#inp_order_method_select').on('change', function () {
-							var url = \$(this).val();
-							if (url) { // require a URL
- 								window.location = url;
-							}
-							return false;
-						});
-					});
-					</script>
-					";
-					$order_url = "search.php?q=$q";
-					if($number_serving_calories_from != ""){
-						$order_url = $order_url . "&amp;number_serving_calories_from=$number_serving_calories_from";
-					}
-					if($number_serving_calories_to != ""){
-						$order_url = $order_url . "&amp;number_serving_calories_to=$number_serving_calories_to";
-					}
-
-					if($number_serving_proteins_from != ""){
-						$order_url = $order_url . "&amp;number_serving_proteins_from=$number_serving_proteins_from";
-					}
-					if($number_serving_proteins_to != ""){
-						$order_url = $order_url . "&amp;number_serving_proteins_to=$number_serving_proteins_to";
-					}
-
-
-					if($number_serving_fat_from != ""){
-						$order_url = $order_url . "&amp;number_serving_fat_from=$number_serving_fat_from";
-					}
-					if($number_serving_fat_to != ""){
-						$order_url = $order_url . "&amp;number_serving_fat_to=$number_serving_fat_to";
-					}
-
-
-					if($number_serving_carbs_from != ""){
-						$order_url = $order_url . "&amp;number_serving_carbs_from=$number_serving_carbs_from";
-					}
-					if($number_serving_carbs_to != ""){
-						$order_url = $order_url . "&amp;number_serving_carbs_to=$number_serving_carbs_to";
-					}
-
-			
-				echo"
-				
-        			<form method=\"get\" action=\"search.php\" enctype=\"multipart/form-data\">
-				<p>
-				<select name=\"inp_order_by\" id=\"inp_order_by_select\">
-					<option value=\"$order_url\">- $l_order_by -</option>
-					<option value=\"$order_url&amp;order_by=recipe_id&amp;order_method=$order_method\""; if($order_by == "recipe_id" OR $order_by == ""){ echo" selected=\"selected\""; } echo">$l_date</option>
-					<option value=\"$order_url&amp;order_by=recipe_title&amp;order_method=$order_method\""; if($order_by == "recipe_title"){ echo" selected=\"selected\""; } echo">$l_title</option>
-					<option value=\"$order_url&amp;order_by=recipe_unique_hits&amp;order_method=$order_method\""; if($order_by == "recipe_unique_hits"){ echo" selected=\"selected\""; } echo">$l_unique_hits</option>
-					<option value=\"$order_url&amp;order_by=number_serving_calories&amp;order_method=$order_method\""; if($order_by == "number_serving_calories"){ echo" selected=\"selected\""; } echo">$l_calories</option>
-					<option value=\"$order_url&amp;order_by=number_serving_fat&amp;order_method=$order_method\""; if($order_by == "number_serving_fat"){ echo" selected=\"selected\""; } echo">$l_fat</option>
-					<option value=\"$order_url&amp;order_by=number_serving_carbs&amp;order_method=$order_method\""; if($order_by == "number_serving_carbs"){ echo" selected=\"selected\""; } echo">$l_carbs</option>
-					<option value=\"$order_url&amp;order_by=number_serving_proteins&amp;order_method=$order_method\""; if($order_by == "number_serving_proteins"){ echo" selected=\"selected\""; } echo">$l_proteins</option>
-				</select>
-				<select name=\"inp_order_method\" id=\"inp_order_method_select\">
-					<option value=\"$order_url&amp;order_by=$order_by&amp;order_method=asc\""; if($order_method == "asc" OR $order_method == ""){ echo" selected=\"selected\""; } echo">$l_asc</option>
-					<option value=\"$order_url&amp;order_by=$order_by&amp;order_method=desc\""; if($order_method == "desc"){ echo" selected=\"selected\""; } echo">$l_desc</option>
-				</select>
-				</p>
-        			</form>
-			<!-- //Order -->
-		</div>
-		<div class=\"recipe_search_right\">
-	
 
 ";
 
@@ -351,45 +212,9 @@ if($q != ""){
 	$q_mysql = quote_smart($link, $q);
 
 	$x = 0;
-	$query = "SELECT $t_recipes.recipe_id, $t_recipes.recipe_title, $t_recipes.recipe_introduction, $t_recipes.recipe_image_path, $t_recipes.recipe_image, $t_recipes.recipe_unique_hits, $t_recipes_numbers.number_serving_calories, $t_recipes_numbers.number_serving_proteins, $t_recipes_numbers.number_serving_fat, $t_recipes_numbers.number_serving_carbs FROM $t_recipes JOIN $t_recipes_numbers ON $t_recipes.recipe_id=$t_recipes_numbers.number_recipe_id WHERE $t_recipes.recipe_title LIKE $q_mysql AND $t_recipes.recipe_language=$l_mysql";
+
+	$query = "SELECT $t_recipes.recipe_id, $t_recipes.recipe_title, $t_recipes.recipe_introduction, $t_recipes.recipe_image_path, $t_recipes.recipe_image, $t_recipes.recipe_thumb_278x156, $t_recipes.recipe_unique_hits FROM $t_recipes WHERE $t_recipes.recipe_title LIKE $q_mysql AND $t_recipes.recipe_language=$l_mysql";
 	
-	if($number_serving_calories_from != ""){
-		$number_serving_calories_from_mysql = quote_smart($link, $number_serving_calories_from);
-		$query = $query . " AND number_serving_calories > $number_serving_calories_from_mysql";
-	}
-	if($number_serving_calories_to != ""){
-		$number_serving_calories_to_mysql = quote_smart($link, $number_serving_calories_to);
-		$query = $query . " AND number_serving_calories < $number_serving_calories_to_mysql";
-	}
-
-	if($number_serving_proteins_from != ""){
-		$number_serving_proteins_from_mysql = quote_smart($link, $number_serving_proteins_from);
-		$query = $query . " AND number_serving_proteins > $number_serving_proteins_from_mysql";
-	}
-	if($number_serving_proteins_to != ""){
-		$number_serving_proteins_to_mysql = quote_smart($link, $number_serving_proteins_to);
-		$query = $query . " AND number_serving_proteins < $number_serving_proteins_to_mysql";
-	}
-
-
-	if($number_serving_fat_from != ""){
-		$number_serving_fat_from_mysql = quote_smart($link, $number_serving_fat_from);
-		$query = $query . " AND number_serving_fat > $number_serving_fat_from_mysql";
-	}
-	if($number_serving_fat_to != ""){
-		$number_serving_fat_to_mysql = quote_smart($link, $number_serving_fat_to);
-		$query = $query . " AND number_serving_fat < $number_serving_fat_to_mysql";
-	}
-
-
-	if($number_serving_carbs_from != ""){
-		$number_serving_carbs_from_mysql = quote_smart($link, $number_serving_carbs_from);
-		$query = $query . " AND number_serving_carbs > $number_serving_carbs_from_mysql";
-	}
-	if($number_serving_carbs_to != ""){
-		$number_serving_carbs_to_mysql = quote_smart($link, $number_serving_carbs_to);
-		$query = $query . " AND number_serving_carbs < $number_serving_carbs_to_mysql";
-	}
 
 	// Order
 	if($order_by != ""){
@@ -403,9 +228,6 @@ if($q != ""){
 		if($order_by == "recipe_id" OR $order_by == "recipe_title" OR $order_by == "recipe_unique_hits"){
 			$order_by_mysql = "$t_recipes.$order_by";
 		}
-		elseif($order_by == "number_serving_calories" OR $order_by == "number_serving_fat" OR $order_by == "number_serving_carbs" OR $order_by == "number_serving_proteins"){
-			$order_by_mysql = "$t_recipes_numbers.$order_by";
-		}
 		else{
 			$order_by_mysql = "$t_recipes.recipe_id";
 		}
@@ -418,25 +240,40 @@ if($q != ""){
 	//echo 	$query;
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
-		list($get_recipe_id, $get_recipe_title, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image, $get_recipe_unique_hits, $get_number_serving_calories, $get_number_serving_proteins, $get_number_serving_fat, $get_number_serving_carbs) = $row;
+		list($get_recipe_id, $get_recipe_title, $get_recipe_introduction, $get_recipe_image_path, $get_recipe_image, $get_recipe_thumb_278x156, $get_recipe_unique_hits) = $row;
 
 		if($get_recipe_image != ""){
 		
+			// Get rating
+			$query_rating = "SELECT rating_id, rating_average FROM $t_recipes_rating WHERE rating_recipe_id='$get_recipe_id'";
+			$result_rating = mysqli_query($link, $query_rating);
+			$row_rating = mysqli_fetch_row($result_rating);
+			list($get_rating_id, $get_rating_average) = $row_rating;
 
-			// 3 divs
+			// Get numbers
+			$query_rating = "SELECT number_id, number_recipe_id, number_servings, number_energy_metric, number_fat_metric, number_saturated_fat_metric, number_monounsaturated_fat_metric, number_polyunsaturated_fat_metric, number_cholesterol_metric, number_carbohydrates_metric, number_carbohydrates_of_which_sugars_metric, number_dietary_fiber_metric, number_proteins_metric, number_salt_metric, number_sodium_metric, number_energy_serving, number_fat_serving, number_saturated_fat_serving, number_monounsaturated_fat_serving, number_polyunsaturated_fat_serving, number_cholesterol_serving, number_carbohydrates_serving, number_carbohydrates_of_which_sugars_serving, number_dietary_fiber_serving, number_proteins_serving, number_salt_serving, number_sodium_serving, number_energy_total, number_fat_total, number_saturated_fat_total, number_monounsaturated_fat_total, number_polyunsaturated_fat_total, number_cholesterol_total, number_carbohydrates_total, number_carbohydrates_of_which_sugars_total, number_dietary_fiber_total, number_proteins_total, number_salt_total, number_sodium_total FROM $t_recipes_numbers WHERE number_recipe_id='$get_recipe_id'";
+			$result_rating = mysqli_query($link, $query_rating);
+			$row_rating = mysqli_fetch_row($result_rating);
+			list($get_number_id, $get_number_recipe_id, $get_number_servings, $get_number_energy_metric, $get_number_fat_metric, $get_number_saturated_fat_metric, $get_number_monounsaturated_fat_metric, $get_number_polyunsaturated_fat_metric, $get_number_cholesterol_metric, $get_number_carbohydrates_metric, $get_number_carbohydrates_of_which_sugars_metric, $get_number_dietary_fiber_metric, $get_number_proteins_metric, $get_number_salt_metric, $get_number_sodium_metric, $get_number_energy_serving, $get_number_fat_serving, $get_number_saturated_fat_serving, $get_number_monounsaturated_fat_serving, $get_number_polyunsaturated_fat_serving, $get_number_cholesterol_serving, $get_number_carbohydrates_serving, $get_number_carbohydrates_of_which_sugars_serving, $get_number_dietary_fiber_serving, $get_number_proteins_serving, $get_number_salt_serving, $get_number_sodium_serving, $get_number_energy_total, $get_number_fat_total, $get_number_saturated_fat_total, $get_number_monounsaturated_fat_total, $get_number_polyunsaturated_fat_total, $get_number_cholesterol_total, $get_number_carbohydrates_total, $get_number_carbohydrates_of_which_sugars_total, $get_number_dietary_fiber_total, $get_number_proteins_total, $get_number_salt_total, $get_number_sodium_total) = $row_rating;
 
-			// 600 / 4 = 150
-			// 600 / 3 = 200
-
+			
 			// Thumb
+			if(!(file_exists("$root/$get_recipe_image_path/$get_recipe_thumb_278x156"))){
 
-			$inp_new_x = 190;
-			$inp_new_y = 98;
-			$thumb = "recipe_" . $get_recipe_id . "-" . $inp_new_x . "x" . $inp_new_y . ".png";
-
-			if(!(file_exists("$root/_cache/$thumb"))){
-				resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_recipe_image_path/$get_recipe_image", "$root/_cache/$thumb");
+				// Update thumb name
+				$ext = get_extension($get_recipe_image);
+				$thumb = str_replace(".$ext", "", $get_recipe_image);
+				$get_recipe_thumb_278x156 = $thumb . "_thumb_275x156.$ext";
+				$inp_thumb_mysql = quote_smart($link, $get_recipe_thumb_278x156);
+				
+				echo"<div class=\"info\"><p>Make thumb of recipe images. Image=<a href=\"$root/$get_recipe_image_path/$get_recipe_image\">$root/$get_recipe_image_path/$get_recipe_image</a>.\n";
+				echo"Thumb=<a href=\"$root/$get_recipe_image_path/$get_recipe_thumb_278x156\">$root/$get_recipe_image_path/$get_recipe_thumb_278x156</a>.</p></div>\n";
+				mysqli_query($link, "UPDATE $t_recipes SET recipe_thumb_278x156=$inp_thumb_mysql WHERE recipe_id=$get_recipe_id") or die(mysqli_error($link));
+				resize_crop_image(278, 156, "$root/$get_recipe_image_path/$get_recipe_image", "$root/$get_recipe_image_path/$get_recipe_thumb_278x156");
 			}
+
+
+
 
 
 
@@ -461,7 +298,7 @@ if($q != ""){
 		
 			echo"
 					<p class=\"recipe_open_category_img_p\">
-					<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id\"><img src=\"$root/_cache/$thumb\" alt=\"$get_recipe_image\" width=\"$inp_new_x\" height=\"$inp_new_y\" /></a><br />
+					<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id\"><img src=\"$root/$get_recipe_image_path/$get_recipe_thumb_278x156\" alt=\"$get_recipe_image\" /></a><br />
 					</p>
 					<p class=\"recipe_open_category_p\">
 					<a href=\"$root/recipes/view_recipe.php?recipe_id=$get_recipe_id\" class=\"recipe_open_category_a\">$get_recipe_title</a>
@@ -654,8 +491,6 @@ else{
 	";
 }
 echo"
-		</div>
-	<!-- Left and right -->
 
 ";
 

@@ -148,12 +148,13 @@ input {
 
 .btn_default {
 	padding: 4px 10px 4px 10px; 
-	margin: 0 3px; 
+	margin: 0px 3px 0px 0px; 
 	font: normal 14px 'Open Sans',sans-serif;
 	background: #fff;
 	border: #cccccc 1px solid; 
 	border-radius: 5px;
 	color: #333333;
+  line-height: 200%;
 }
 .btn_default:hover {
 	border: #adadad 1px solid; 

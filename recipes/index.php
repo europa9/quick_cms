@@ -153,6 +153,21 @@ echo"
 	</div>
 <!-- //Search -->
 
+<!-- Tag cloud -->
+	<p>";
+
+	$query = "SELECT tag_id, tag_language, tag_title, tag_title_clean, tag_number_of_recipes, tag_last_clicked_year, tag_last_clicked_month, tag_last_clicked_week, tag_unique_views_counter FROM $t_recipes_tags_unique WHERE tag_language=$l_mysql ORDER BY tag_unique_views_counter DESC LIMIT 0,20";
+	$result = mysqli_query($link, $query);
+	while($row = mysqli_fetch_row($result)) {
+		list($get_tag_id, $get_tag_language, $get_tag_title, $get_tag_title_clean, $get_tag_number_of_recipes, $get_tag_last_clicked_year, $get_tag_last_clicked_month, $get_tag_last_clicked_week, $get_tag_unique_views_counter) = $row;
+
+		echo"
+		<a href=\"view_tag.php?tag=$get_tag_title_clean&amp;l=$get_tag_language\" class=\"btn_default\">$get_tag_title</a>
+		";
+	}
+	echo"
+	</p>
+<!-- //Tag cloud -->
 
 <!-- Categories -->
 	<p style=\"padding-bottom:0;margin-bottom:0;\"><a href=\"$root/recipes/categories.php?l=$l\" class=\"frontpage_category_headline_leftside_a\">$l_categories</a></p>

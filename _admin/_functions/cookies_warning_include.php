@@ -2,7 +2,7 @@
 
 /*- Cookies warning -------------------------------------------------------------------------- */
 $t_pages_cookies_policy_accepted = $mysqlPrefixSav . "pages_cookies_policy_accepted";
-$query = "SELECT cookies_policy_accepted_id FROM $t_pages_cookies_policy_accepted WHERE cookies_policy_accepted_ip=$inp_ip_mysql";
+$query = "SELECT cookies_policy_accepted_id FROM $t_pages_cookies_policy_accepted WHERE cookies_policy_accepted_ip=$my_ip_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
 list($get_cookies_policy_accepted_id) = $row;
