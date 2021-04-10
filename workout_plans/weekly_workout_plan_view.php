@@ -403,8 +403,12 @@ else{
 						$result_muscle = mysqli_query($link, $query_muscle);
 						$row_muscle = mysqli_fetch_row($result_muscle);
 						list($get_exercise_muscle_image_id, $get_exercise_muscle_image_file) = $row_muscle;
+						if(file_exists("$root/_uploads/exercises/muscle_image/$get_exercise_muscle_image_file") && $get_exercise_muscle_image_file != ""){
+							echo"
+							<img src=\"$root/_uploads/exercises/muscle_image/$get_exercise_muscle_image_file\" alt=\"$get_exercise_muscle_image_file\" />
+							";
+						}
 						echo"
-						<img src=\"$root/_uploads/exercises/muscle_image/$get_exercise_muscle_image_file\" alt=\"$get_exercise_muscle_image_file\" />
 					   </td>
 					  <td class=\"$style\">
 					 </td>

@@ -962,7 +962,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								echo"
 								<tr>
 								  <td class=\"$style\">
-									<span>$get_workout_session_main_exercise_title";
+									<span><a href=\"$root/exercises/view_exercise.php?exercise_id=$get_workout_session_main_exercise_id&amp;l=$l\">$get_workout_session_main_exercise_title</a>";
 									if($get_workout_session_main_text != ""){
 										echo"<br />$get_workout_session_main_text\n";
 									}
