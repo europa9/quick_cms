@@ -179,9 +179,9 @@ function output_html($value){
 	// 1. Misc signs
 	$value = str_replace('"',"&quot;","$value");
 	$value = str_replace("'","&#039;","$value");
-	$value = str_replace("<","&gt;","$value"); // less than
-	$value = str_replace(">","&lt;","$value"); // greater than
-	$value = str_replace("\n","<br />","$value");
+	$value = str_replace("<", "&lt;", "$value"); // less than
+	$value = str_replace(">", "&gt;", "$value"); // greater than
+	$value = str_replace("\n","<br />\n", "$value");
 	
 	// 1. Punctuation
 	$value = str_replace('«', '&laquo;', $value);

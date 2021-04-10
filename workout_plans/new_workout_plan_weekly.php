@@ -73,10 +73,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 	// Get workout plan weekly
 	$weekly_id_mysql = quote_smart($link, $weekly_id);
-	$query = "SELECT workout_weekly_id, workout_weekly_user_id, workout_weekly_period_id, workout_weekly_weight, workout_weekly_language, workout_weekly_title, workout_weekly_title_clean, workout_weekly_introduction, workout_weekly_goal, workout_weekly_image_path, workout_weekly_image_file, workout_weekly_created, workout_weekly_updated, workout_weekly_unique_hits, workout_weekly_unique_hits_ip_block, workout_weekly_comments, workout_weekly_likes, workout_weekly_dislikes, workout_weekly_rating, workout_weekly_ip_block, workout_weekly_user_ip, workout_weekly_notes FROM $t_workout_plans_weekly WHERE workout_weekly_id=$weekly_id_mysql AND workout_weekly_user_id=$my_user_id_mysql";
+	$query = "SELECT workout_weekly_id, workout_weekly_user_id, workout_weekly_period_id, workout_weekly_weight, workout_weekly_language, workout_weekly_title, workout_weekly_title_clean, workout_weekly_introduction, workout_weekly_text, workout_weekly_goal, workout_weekly_image_path, workout_weekly_image_file, workout_weekly_created, workout_weekly_updated, workout_weekly_unique_hits, workout_weekly_unique_hits_ip_block, workout_weekly_comments, workout_weekly_likes, workout_weekly_dislikes, workout_weekly_rating, workout_weekly_ip_block, workout_weekly_user_ip, workout_weekly_notes FROM $t_workout_plans_weekly WHERE workout_weekly_id=$weekly_id_mysql AND workout_weekly_user_id=$my_user_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_workout_weekly_id, $get_current_workout_weekly_user_id, $get_current_workout_weekly_period_id, $get_current_workout_weekly_weight, $get_current_workout_weekly_language, $get_current_workout_weekly_title, $get_current_workout_weekly_title_clean, $get_current_workout_weekly_introduction, $get_current_workout_weekly_goal, $get_current_workout_weekly_image_path, $get_current_workout_weekly_image_file, $get_current_workout_weekly_created, $get_current_workout_weekly_updated, $get_current_workout_weekly_unique_hits, $get_current_workout_weekly_unique_hits_ip_block, $get_current_workout_weekly_comments, $get_current_workout_weekly_likes, $get_current_workout_weekly_dislikes, $get_current_workout_weekly_rating, $get_current_workout_weekly_ip_block, $get_current_workout_weekly_user_ip, $get_current_workout_weekly_notes) = $row;
+	list($get_current_workout_weekly_id, $get_current_workout_weekly_user_id, $get_current_workout_weekly_period_id, $get_current_workout_weekly_weight, $get_current_workout_weekly_language, $get_current_workout_weekly_title, $get_current_workout_weekly_title_clean, $get_current_workout_weekly_introduction, $get_current_workout_weekly_text, $get_current_workout_weekly_goal, $get_current_workout_weekly_image_path, $get_current_workout_weekly_image_file, $get_current_workout_weekly_created, $get_current_workout_weekly_updated, $get_current_workout_weekly_unique_hits, $get_current_workout_weekly_unique_hits_ip_block, $get_current_workout_weekly_comments, $get_current_workout_weekly_likes, $get_current_workout_weekly_dislikes, $get_current_workout_weekly_rating, $get_current_workout_weekly_ip_block, $get_current_workout_weekly_user_ip, $get_current_workout_weekly_notes) = $row;
 	
 	
 
@@ -120,14 +120,18 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$config->set('HTML.Allowed', 'p,b,a[href],i,ul,li');
 			}
 
+			// Text
+			$inp_text = $_POST['inp_text'];
+			$inp_text = $purifier->purify($inp_text);
+
 			// Goal
 			$inp_goal = $_POST['inp_goal'];
 			$inp_goal = $purifier->purify($inp_goal);
 
 
-			$sql = "UPDATE $t_workout_plans_weekly SET workout_weekly_goal=? WHERE workout_weekly_id=$weekly_id_mysql";
+			$sql = "UPDATE $t_workout_plans_weekly SET workout_weekly_text=?, workout_weekly_goal=? WHERE workout_weekly_id=$weekly_id_mysql";
 			$stmt = $link->prepare($sql);
-			$stmt->bind_param("s", $inp_goal);
+			$stmt->bind_param("ss", $inp_text, $inp_goal);
 			$stmt->execute();
 			if ($stmt->errno) {
 				echo "FAILURE!!! " . $stmt->error; die;
@@ -147,27 +151,26 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$inp_sunday_mysql = quote_smart("$l_day 7 - $l_sunday");
 			*/
 
-			$inp_day_a_mysql = quote_smart($link, "$l_day 1");
-			$inp_day_a_clean_mysql = quote_smart($link, clean("$l_day 1"));
+			$inp_day_a_mysql = quote_smart($link, "$l_session 1");
+			$inp_day_a_clean_mysql = quote_smart($link, clean("$l_session 1"));
 
-			$inp_day_b_mysql = quote_smart($link, "$l_day 2");
-			$inp_day_b_clean_mysql = quote_smart($link, clean("$l_day 2"));
+			$inp_day_b_mysql = quote_smart($link, "$l_session 2");
+			$inp_day_b_clean_mysql = quote_smart($link, clean("$l_session 2"));
 
-			$inp_day_c_mysql = quote_smart($link, "$l_day 3");
-			$inp_day_c_clean_mysql = quote_smart($link, clean("$l_day 3"));
+			$inp_day_c_mysql = quote_smart($link, "$l_session 3");
+			$inp_day_c_clean_mysql = quote_smart($link, clean("$l_session 3"));
 
-			$inp_day_d_mysql = quote_smart($link, "$l_day 4");
-			$inp_day_d_clean_mysql = quote_smart($link, clean("$l_day 4"));
+			$inp_day_d_mysql = quote_smart($link, "$l_session 4");
+			$inp_day_d_clean_mysql = quote_smart($link, clean("$l_session 4"));
 
-			$inp_day_e_mysql = quote_smart($link, "$l_day 5");
-			$inp_day_e_clean_mysql = quote_smart($link, clean("$l_day 5"));
+			$inp_day_e_mysql = quote_smart($link, "$l_session 5");
+			$inp_day_e_clean_mysql = quote_smart($link, clean("$l_session 5"));
 
-			$inp_day_f_mysql = quote_smart($link, "$l_day 6");
-			$inp_day_f_clean_mysql = quote_smart($link, clean("$l_day 6"));
+			$inp_day_f_mysql = quote_smart($link, "$l_session 6");
+			$inp_day_f_clean_mysql = quote_smart($link, clean("$l_session 6"));
 
-			$inp_day_g_mysql = quote_smart($link, "$l_day 7");
-			$inp_day_g_clean_mysql = quote_smart($link, clean("$l_day 7"));
-
+			$inp_day_g_mysql = quote_smart($link, "$l_session 7");
+			$inp_day_g_clean_mysql = quote_smart($link, clean("$l_session 7"));
 
 
 			if($inp_amout_of_days_per_week_week > "0"){
@@ -257,7 +260,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			}
 
 			// Header
-			$url = "new_workout_plan_weekly_step_2_template_image.php?weekly_id=$weekly_id&action=new_session&l=$l";
+			$url = "new_workout_plan_weekly_step_2_template_image.php?weekly_id=$weekly_id&l=$l";
 			header("Location: $url");
 			exit;
 
@@ -374,6 +377,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$get_current_workout_weekly_introduction = str_replace("<br />", "\n", $get_current_workout_weekly_introduction);
 			echo"$get_current_workout_weekly_introduction</textarea>
 			</p>
+
+			<p><b>$l_text:</b><br />
+			<textarea name=\"inp_text\" rows=\"10\" cols=\"30\" class=\"editor\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">$get_current_workout_weekly_text</textarea>
+			</p>
+
 
 			<p><b>$l_goal:</b><br />
 			<textarea name=\"inp_goal\" rows=\"10\" cols=\"30\" class=\"editor\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">$get_current_workout_weekly_goal</textarea>

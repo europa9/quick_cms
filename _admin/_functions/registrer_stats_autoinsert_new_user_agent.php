@@ -118,7 +118,7 @@ if($define_in_register_stats == "1"){
 
 				// Browser checkup
 				// A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
-				$mobile_browsers = array('AppleWebKit', 'Dalvik', 'Mobile Safari', 'Minefield', 'Safari', 'Chrome', 'Firefox', 'Opera', 'SamsungBrowser', 'UCBrowser');
+				$mobile_browsers = array('AppleWebKit', 'Dalvik', 'Mobile Safari', 'Minefield', 'Safari', 'Chrome', 'Firefox', 'Opera', 'OPR', 'SamsungBrowser', 'UCBrowser');
 				$inp_stats_user_agent_browser = "";
 				foreach($mobile_browsers as $m_b){
  					if(stripos($my_user_agent, $m_b) !== false ){

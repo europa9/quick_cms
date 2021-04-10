@@ -106,7 +106,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 		if($inp_duration == "yearly"){
 			mysqli_query($link, "INSERT INTO $t_workout_plans_yearly
-			(workout_yearly_id, workout_yearly_user_id, workout_yearly_language, workout_yearly_title, workout_yearly_title_clean, workout_yearly_created, workout_yearly_updated, workout_yearly_unique_hits, workout_yearly_comments, workout_yearly_likes, workout_yearly_dislikes, workout_yearly_rating, workout_yearly_user_ip) 
+			(workout_yearly_id, workout_yearly_user_id, workout_yearly_language, workout_yearly_title, workout_yearly_title_clean, 
+			workout_yearly_created, workout_yearly_updated, workout_yearly_unique_hits, workout_yearly_comments, workout_yearly_likes, 
+			workout_yearly_dislikes, workout_yearly_rating, workout_yearly_user_ip) 
 			VALUES 
 			(NULL, $my_user_id_mysql, $inp_language_mysql, $inp_title_mysql, $inp_title_clean_mysql, '$datetime', '$datetime', '0', 
 			'0', '0', '0', '0', $inp_user_ip_mysql)
@@ -141,14 +143,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		}
 		elseif($inp_duration == "weekly"){
 			mysqli_query($link, "INSERT INTO $t_workout_plans_weekly
-			(workout_weekly_id, workout_weekly_user_id, workout_weekly_period_id, workout_weekly_language, workout_weekly_title, workout_weekly_title_clean, 
-			workout_weekly_image_thumb_medium, workout_weekly_image_thumb_big, workout_weekly_image_file, 
-			workout_weekly_created, workout_weekly_updated, workout_weekly_unique_hits, 
-			workout_weekly_comments, workout_weekly_likes, workout_weekly_dislikes, workout_weekly_rating, workout_weekly_user_ip) 
+			(workout_weekly_id, workout_weekly_user_id, workout_weekly_period_id, workout_weekly_language, workout_weekly_title, 
+			workout_weekly_title_clean, workout_weekly_created, workout_weekly_updated, workout_weekly_unique_hits, workout_weekly_comments,
+			 workout_weekly_likes, workout_weekly_dislikes, workout_weekly_rating, workout_weekly_user_ip) 
 			VALUES 
-			(NULL, $my_user_id_mysql, '0', $inp_language_mysql, $inp_title_mysql, $inp_title_clean_mysql, '', '', '', 
-			'$datetime', '$datetime', '0', 
-			'0', '0', '0', '0', $inp_user_ip_mysql)
+			(NULL, $my_user_id_mysql, '0', $inp_language_mysql, $inp_title_mysql, 
+			$inp_title_clean_mysql, '$datetime', '$datetime', '0', '0',
+			 '0', '0', '0', $inp_user_ip_mysql)
 			")
 			or die(mysqli_error($link));
 

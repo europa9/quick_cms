@@ -42,11 +42,11 @@ echo"
 	  	   workout_weekly_title VARCHAR(250),
 	  	   workout_weekly_title_clean VARCHAR(250),
 	  	   workout_weekly_introduction TEXT,
+	  	   workout_weekly_text TEXT,
 	  	   workout_weekly_goal TEXT,
 	  	   workout_weekly_image_path VARCHAR(250),
-	  	   workout_weekly_image_thumb_medium VARCHAR(250),
-	  	   workout_weekly_image_thumb_big VARCHAR(250),
 	  	   workout_weekly_image_file VARCHAR(250),
+	  	   workout_weekly_image_thumb_400x225 VARCHAR(250),
 	  	   workout_weekly_created DATETIME,
 	  	   workout_weekly_updated DATETIME,
 	  	   workout_weekly_unique_hits INT,
@@ -63,11 +63,13 @@ echo"
 
 		$date = date("Y-m-d");
 		$datetime = date("Y-m-d H:i:s");
+		/*
 		mysqli_query($link, "INSERT INTO $t_workout_plans_weekly
 		(workout_weekly_id, workout_weekly_user_id, workout_weekly_language, workout_weekly_title, workout_weekly_introduction, workout_weekly_goal, workout_weekly_created, workout_weekly_updated, workout_weekly_unique_hits, workout_weekly_unique_hits_ip_block, workout_weekly_comments, workout_weekly_likes, workout_weekly_dislikes, workout_weekly_rating, workout_weekly_ip_block, workout_weekly_user_ip, workout_weekly_notes) 
 		VALUES 
 		(NULL, '1', 'en', '7 days strenght training', 'Here is a 7 day strenght training plan to increase muscle strenght', 'Increase muscle strenght', '$datetime', '$datetime', '0', '', '0', '0', '0', '0', '', '', '')")
 		or die(mysqli_error($link));
+		*/
 	}
 	echo"
 	<!-- //workout_weekly -->

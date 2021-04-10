@@ -48,10 +48,10 @@ $l_mysql = quote_smart($link, $l);
 
 // Get workout plan weekly
 $weekly_id_mysql = quote_smart($link, $weekly_id);
-$query = "SELECT workout_weekly_id, workout_weekly_user_id, workout_weekly_period_id, workout_weekly_weight, workout_weekly_language, workout_weekly_title, workout_weekly_title_clean, workout_weekly_introduction, workout_weekly_goal, workout_weekly_image_path, workout_weekly_image_thumb_big, workout_weekly_image_thumb_medium, workout_weekly_image_file, workout_weekly_created, workout_weekly_updated, workout_weekly_unique_hits, workout_weekly_unique_hits_ip_block, workout_weekly_comments, workout_weekly_likes, workout_weekly_dislikes, workout_weekly_rating, workout_weekly_ip_block, workout_weekly_user_ip, workout_weekly_notes FROM $t_workout_plans_weekly WHERE workout_weekly_id=$weekly_id_mysql";
+$query = "SELECT workout_weekly_id, workout_weekly_user_id, workout_weekly_period_id, workout_weekly_weight, workout_weekly_language, workout_weekly_title, workout_weekly_title_clean, workout_weekly_introduction, workout_weekly_text, workout_weekly_goal, workout_weekly_image_path, workout_weekly_image_file, workout_weekly_created, workout_weekly_updated, workout_weekly_unique_hits, workout_weekly_unique_hits_ip_block, workout_weekly_comments, workout_weekly_likes, workout_weekly_dislikes, workout_weekly_rating, workout_weekly_ip_block, workout_weekly_user_ip, workout_weekly_notes FROM $t_workout_plans_weekly WHERE workout_weekly_id=$weekly_id_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
-list($get_current_workout_weekly_id, $get_current_workout_weekly_user_id, $get_current_workout_weekly_period_id, $get_current_workout_weekly_weight, $get_current_workout_weekly_language, $get_current_workout_weekly_title, $get_current_workout_weekly_title_clean, $get_current_workout_weekly_introduction, $get_current_workout_weekly_goal, $get_current_workout_weekly_image_path, $get_current_workout_weekly_image_thumb_big, $get_current_workout_weekly_image_thumb_medium, $get_current_workout_weekly_image_file, $get_current_workout_weekly_created, $get_current_workout_weekly_updated, $get_current_workout_weekly_unique_hits, $get_current_workout_weekly_unique_hits_ip_block, $get_current_workout_weekly_comments, $get_current_workout_weekly_likes, $get_current_workout_weekly_dislikes, $get_current_workout_weekly_rating, $get_current_workout_weekly_ip_block, $get_current_workout_weekly_user_ip, $get_current_workout_weekly_notes) = $row;
+list($get_current_workout_weekly_id, $get_current_workout_weekly_user_id, $get_current_workout_weekly_period_id, $get_current_workout_weekly_weight, $get_current_workout_weekly_language, $get_current_workout_weekly_title, $get_current_workout_weekly_title_clean, $get_current_workout_weekly_introduction, $get_current_workout_weekly_text, $get_current_workout_weekly_goal, $get_current_workout_weekly_image_path, $get_current_workout_weekly_image_file, $get_current_workout_weekly_created, $get_current_workout_weekly_updated, $get_current_workout_weekly_unique_hits, $get_current_workout_weekly_unique_hits_ip_block, $get_current_workout_weekly_comments, $get_current_workout_weekly_likes, $get_current_workout_weekly_dislikes, $get_current_workout_weekly_rating, $get_current_workout_weekly_ip_block, $get_current_workout_weekly_user_ip, $get_current_workout_weekly_notes) = $row;
 if($get_current_workout_weekly_id == ""){
 
 	/*- Headers ---------------------------------------------------------------------------------- */
@@ -215,39 +215,6 @@ else{
 		";
 		if($get_current_workout_weekly_image_file != "" && file_exists("$root/$get_current_workout_weekly_image_path/$get_current_workout_weekly_image_file")){
 
-			/* Check thumbs */
-			// Image: 950 x 640
-			// Big: 400 x 269
-			// Medium: 145 x 98
-
-			if(!(file_exists("$root/$get_current_workout_weekly_image_path/$get_current_workout_weekly_image_thumb_big")) OR $get_current_workout_weekly_image_thumb_big == ""){
-
-				$ext = get_extension("$get_current_workout_weekly_image_file");
-
-				$thumb_big = $get_current_workout_weekly_title_clean . "_" . $get_current_workout_weekly_id . "_thumb_400x269." . $ext;
-				$thumb_big_mysql = quote_smart($link, $thumb_big);
-
-				resize_crop_image("400", "269", "$root/$get_current_workout_weekly_image_path/$get_current_workout_weekly_image_file", "$root/$get_current_workout_weekly_image_path/$thumb_big");
-
-				$result = mysqli_query($link, "UPDATE $t_workout_plans_weekly SET workout_weekly_image_thumb_big=$thumb_big_mysql WHERE workout_weekly_id=$weekly_id_mysql") or die(mysqli_error($link));
-
-				echo"<div class=\"info\"><p>Created big thumb</p></div>";
-			}
-			if(!(file_exists("$root/$get_current_workout_weekly_image_path/$get_current_workout_weekly_image_thumb_medium")) OR $get_current_workout_weekly_image_thumb_medium == ""){
-
-				$ext = get_extension("$get_current_workout_weekly_image_file");
-
-				$thumb_medium = $get_current_workout_weekly_title_clean . "_" . $get_current_workout_weekly_id . "_thumb_145x98." . $ext;
-				$thumb_medium_mysql = quote_smart($link, $thumb_medium);
-
-				resize_crop_image("145", "98", "$root/$get_current_workout_weekly_image_path/$get_current_workout_weekly_image_file", "$root/$get_current_workout_weekly_image_path/$thumb_medium");
-
-				$result = mysqli_query($link, "UPDATE $t_workout_plans_weekly SET workout_weekly_image_thumb_medium=$thumb_medium_mysql WHERE workout_weekly_id=$weekly_id_mysql") or die(mysqli_error($link));
-
-				echo"<div class=\"info\"><p>Created medium thumb</p></div>";
-			}
-
-
 
 
 			echo"
@@ -266,13 +233,17 @@ else{
 				<img src=\"_gfx/icons/eye_dark_grey.png\" alt=\"eye.png\" /> $get_current_workout_weekly_unique_hits $l_unique_views_lovercase
 				</p>
 			</div>
+			<div class=\"clear\"></div>
 			";
 		}
 		echo"
 	<!-- //Intro and Image -->
 
+	<!-- Text -->
+		$get_current_workout_weekly_text
+	<!-- //Text -->
+
 	<!-- Goals -->
-		<div class=\"clear\"></div>
 		";
 		if($get_current_workout_weekly_goal != ""){
 			echo"
@@ -433,7 +404,7 @@ else{
 						$row_muscle = mysqli_fetch_row($result_muscle);
 						list($get_exercise_muscle_image_id, $get_exercise_muscle_image_file) = $row_muscle;
 						echo"
-						<img src=\"$root/image.php?width=80&amp;height=80&amp;image=/_uploads/exercises/muscle_image/$get_exercise_muscle_image_file\" alt=\"$get_exercise_muscle_image_file\" />
+						<img src=\"$root/_uploads/exercises/muscle_image/$get_exercise_muscle_image_file\" alt=\"$get_exercise_muscle_image_file\" />
 					   </td>
 					  <td class=\"$style\">
 					 </td>

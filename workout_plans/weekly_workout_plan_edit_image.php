@@ -204,13 +204,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					if(is_numeric($width) && is_numeric($height)){
 
 						// Check that file is big enough
-						if($width < 949){
+						if($width < 1279){
 							unlink($target_path);
 							$url = "weekly_workout_plan_edit_image.php?weekly_id=$weekly_id&duration_type=$duration_type&l=$l&ft=error&fm=width_have_to_be_bigger&width=$width&height=$height";
 							header("Location: $url");
 							exit;
 						}
-						if($height < 639){
+						if($height < 719){
 							unlink($target_path);
 							$url = "weekly_workout_plan_edit_image.php?weekly_id=$weekly_id&duration_type=$duration_type&l=$l&ft=error&fm=height_have_to_be_bigger&width=$width&height=$height";
 							header("Location: $url");
@@ -231,30 +231,23 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					
 						// Dette bildet er OK
 						// Resize it
-						$inp_new_x = 950;
-						$inp_new_y = 640;
+						$inp_new_x = 1280;
+						$inp_new_y = 720;
 						resize_crop_image($inp_new_x, $inp_new_y, "$root/$inp_image_path/$inp_image_file", "$root/$inp_image_path/$inp_image_file");
 
-						// Thumb big
-						$inp_thumb_big = $get_current_workout_weekly_title_clean . "_" . $get_current_workout_weekly_id . "_thumb_400x269" . ".$file_type";
-						$inp_thumb_big_mysql = quote_smart($link, $inp_thumb_big);
+						// Thumb
+						$inp_thumb = $get_current_workout_weekly_title_clean . "_" . $get_current_workout_weekly_id . "_thumb_400x225" . ".$file_type";
+						$inp_thumb_mysql = quote_smart($link, $inp_thumb);
 						$inp_new_x = 400;
-						$inp_new_y = 269;
+						$inp_new_y = 225;
 						resize_crop_image($inp_new_x, $inp_new_y, "$root/$inp_image_path/$inp_image_file", "$root/$inp_image_path/$inp_thumb_big");
-
-						// Thumb medium
-						$inp_thumb_medium = $get_current_workout_weekly_title_clean . "_" . $get_current_workout_weekly_id . "_thumb_145x98" . ".$file_type";
-						$inp_thumb_medium_mysql = quote_smart($link, $inp_thumb_medium);
-						$inp_new_x = 145;
-						$inp_new_y = 98;
-						resize_crop_image($inp_new_x, $inp_new_y, "$root/$inp_image_path/$inp_image_file", "$root/$inp_image_path/$inp_thumb_medium");
 
 
 						// Update MySQL
-						$result = mysqli_query($link, "UPDATE $t_workout_plans_weekly SET workout_weekly_image_path=$inp_image_path_mysql,
-						workout_weekly_image_thumb_medium=$inp_thumb_medium_mysql, 
-						workout_weekly_image_thumb_big=$inp_thumb_big_mysql, 
-						workout_weekly_image_file=$inp_image_file_mysql WHERE workout_weekly_id=$weekly_id_mysql");
+						$result = mysqli_query($link, "UPDATE $t_workout_plans_weekly SET 
+										workout_weekly_image_path=$inp_image_path_mysql,
+										workout_weekly_image_file=$inp_image_file_mysql,
+										workout_weekly_image_thumb_400x225=$inp_thumb_mysql WHERE workout_weekly_id=$weekly_id_mysql");
 
 
 						// Header
@@ -402,7 +395,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<form method=\"post\" action=\"weekly_workout_plan_edit_image.php?weekly_id=$weekly_id&amp;duration_type=$duration_type&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 	
 
-			<p><b>$l_new_image (950x640 jpg):</b><br />
+			<p><b>$l_new_image (1280x720 jpg):</b><br />
 			<input type=\"file\" name=\"inp_image\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 			</p>
 

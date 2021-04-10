@@ -127,7 +127,7 @@ else{
 			<h1>$get_current_workout_weekly_title</h1>
 		  </td>
 		  <td>
-			<img src=\"$root/$logoPathPdfSav/$logoFilePdfSav\" alt=\"$logoFilePdfSav\" style=\"float: right;padding-bottom: 10px;\" />
+			<img src=\"$root/$logoPathSav/$logoFilePdfSav\" alt=\"$logoFilePdfSav\" style=\"float: right;padding-bottom: 10px;\" />
 		  </td>
 		 </tr>
 		</table>

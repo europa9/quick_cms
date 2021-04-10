@@ -1135,7 +1135,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 												\$(\"#nettport_search_results\").html(''); 
 											},
                										success: function(html){
-                    										\$(\"#nettport_search_results\").append(html);
+                    										\$(\"#nettport_search_results\").html(html);
               										}
             									});
        									}

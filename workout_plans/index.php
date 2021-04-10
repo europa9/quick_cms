@@ -126,12 +126,12 @@ echo"
 	//  
 	$x = 0;
 
-	$query_w = "SELECT workout_weekly_id, workout_weekly_user_id, workout_weekly_period_id, workout_weekly_title, workout_weekly_title_clean, workout_weekly_updated, workout_weekly_introduction, workout_weekly_image_path, workout_weekly_image_thumb_big, workout_weekly_image_thumb_medium, workout_weekly_image_file FROM $t_workout_plans_weekly ";
+	$query_w = "SELECT workout_weekly_id, workout_weekly_user_id, workout_weekly_period_id, workout_weekly_title, workout_weekly_title_clean, workout_weekly_updated, workout_weekly_introduction, workout_weekly_image_path, workout_weekly_image_file, workout_weekly_image_thumb_400x225 FROM $t_workout_plans_weekly ";
 	$query_w = $query_w . "WHERE workout_weekly_language=$l_mysql ";
 	$query_w = $query_w . "ORDER BY workout_weekly_unique_hits DESC";
 	$result_w = mysqli_query($link, $query_w);
 	while($row_w = mysqli_fetch_row($result_w)) {
-		list($get_workout_weekly_id, $get_workout_weekly_user_id, $get_workout_weekly_period_id, $get_workout_weekly_title, $get_workout_weekly_title_clean, $get_workout_weekly_updated, $get_workout_weekly_introduction, $get_workout_weekly_image_path, $get_workout_weekly_image_thumb_big, $get_workout_weekly_image_thumb_medium, $get_workout_weekly_image_file) = $row_w;
+		list($get_workout_weekly_id, $get_workout_weekly_user_id, $get_workout_weekly_period_id, $get_workout_weekly_title, $get_workout_weekly_title_clean, $get_workout_weekly_updated, $get_workout_weekly_introduction, $get_workout_weekly_image_path, $get_workout_weekly_image_file, $get_workout_weekly_image_thumb_400x225) = $row_w;
 
 
 		if($get_workout_weekly_image_file != "" && file_exists("$root/$get_workout_weekly_image_path/$get_workout_weekly_image_file")){
@@ -211,22 +211,20 @@ echo"
 					<p style=\"padding-bottom:0;margin-bottom:0;\">
 					
 					";
-					// Image: 950 x 640
-					// Big: 400 x 269
-					// Medium: 145 x 98
-					if(!(file_exists("$root/$get_workout_weekly_image_path/$get_workout_weekly_image_thumb_big")) OR $get_workout_weekly_image_thumb_big == ""){
+					// Image: 1280x720
+					if(!(file_exists("$root/$get_workout_weekly_image_path/$get_workout_weekly_image_thumb_400x225")) OR $get_workout_weekly_image_thumb_400x225 == ""){
 						$ext = get_extension("$get_workout_weekly_image_file");
-						$get_workout_weekly_image_thumb_big = $get_workout_weekly_title_clean . "_" . $get_workout_weekly_id . "_thumb_400x269." . $ext;
-						$get_workout_weekly_image_thumb_big_mysql = quote_smart($link, $get_workout_weekly_image_thumb_big);
-						resize_crop_image("400", "269", "$root/$get_workout_weekly_image_path/$get_workout_weekly_image_file", "$root/$get_workout_weekly_image_path/$get_workout_weekly_image_thumb_big");
-						$result = mysqli_query($link, "UPDATE $t_workout_plans_weekly SET workout_weekly_image_thumb_big=$get_workout_weekly_image_thumb_big_mysql WHERE workout_weekly_id=$get_workout_weekly_id") or die(mysqli_error($link));
+						$get_workout_weekly_image_thumb = $get_workout_weekly_id . "_thumb_400x225." . $ext;
+						$get_workout_weekly_image_thumb_mysql = quote_smart($link, $get_workout_weekly_image_thumb);
+						resize_crop_image("400", "225", "$root/$get_workout_weekly_image_path/$get_workout_weekly_image_file", "$root/$get_workout_weekly_image_path/$get_workout_weekly_image_thumb");
+						$result = mysqli_query($link, "UPDATE $t_workout_plans_weekly SET workout_weekly_image_thumb_400x225=$get_workout_weekly_image_thumb_mysql WHERE workout_weekly_id=$get_workout_weekly_id") or die(mysqli_error($link));
 						echo"<div class=\"info\"><p>Created big thumb</p></div>";
 					}
 
 					echo"
 					<a href=\"weekly_workout_plan_view";
 					if($get_stats_user_agent_type == "mobile"){ echo"_mobile"; } 
-					echo".php?weekly_id=$get_workout_weekly_id&amp;l=$l\"><img src=\"$root/$get_workout_weekly_image_path/$get_workout_weekly_image_thumb_big\" alt=\"$get_workout_weekly_image_thumb_big\" /></a><br />
+					echo".php?weekly_id=$get_workout_weekly_id&amp;l=$l\"><img src=\"$root/$get_workout_weekly_image_path/$get_workout_weekly_image_thumb_400x225\" alt=\"$get_workout_weekly_image_thumb_400x225\" /></a><br />
 					<a href=\"weekly_workout_plan_view";
 					if($get_stats_user_agent_type == "mobile"){ echo"_mobile"; } 
 					echo".php?weekly_id=$get_workout_weekly_id&amp;l=$l\" class=\"h2\">$get_workout_weekly_title</a>
@@ -243,6 +241,14 @@ echo"
 			$x++;
 		} // image
 	} // loop
+	if($x == "1"){
+		echo"
+				<div class=\"left_right_right\">
+				</div>
+				<div class=\"clear\"></div>
+		";
+
+	}
 	echo"
 <!-- //Show last workout plans -->
 
