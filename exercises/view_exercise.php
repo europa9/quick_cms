@@ -242,9 +242,10 @@ else {
 	
 		<!-- Search -->
 			<div class=\"exercises_float_right\">
-				<form method=\"post\" action=\"search_exercise.php\" enctype=\"multipart/form-data\">
+				<form method=\"get\" action=\"search_exercise.php\" enctype=\"multipart/form-data\">
 				<p>
 				<input type=\"text\" name=\"search_query\" value=\"\" size=\"20\" id=\"nettport_inp_search_query\" />
+				<input type=\"hidden\" name=\"l\" value=\"$l\" />
 				<input type=\"submit\" value=\"$l_search\" id=\"nettport_search_submit_button\" />
 				</p>
 	
@@ -303,16 +304,8 @@ else {
 
 				
 
-				// Does the muscle image exist?
-				$query_muscle = "SELECT exercise_muscle_image_id, exercise_muscle_image_file FROM $t_exercise_index_muscles_images WHERE exercise_muscle_image_exercise_id='$get_current_exercise_id'";
-				$result_muscle = mysqli_query($link, $query_muscle);
-				$row_muscle = mysqli_fetch_row($result_muscle);
-				list($get_exercise_muscle_image_id, $get_exercise_muscle_image_file) = $row_muscle;
-				if($get_exercise_muscle_image_id == ""){
-					$muscle_image_main = array();
-					$muscle_image_main_count = 0;
-				}
-				
+				$exercise_muscle_image_main_muscle_ids = "";
+				$exercise_muscle_image_assistant_muscle_ids = "";
 				$count = 0;
 				$query = "SELECT exercise_muscle_id, exercise_muscle_muscle_id FROM $t_exercise_index_muscles WHERE exercise_muscle_exercise_id='$get_current_exercise_id' AND exercise_muscle_type='main'";
 				$result = mysqli_query($link, $query);
@@ -343,9 +336,11 @@ else {
 					$count = $count+1;
 
 					// Muscle image
-					if($get_exercise_muscle_image_id == ""){
-						$muscle_image_main[$muscle_image_main_count] = $get_muscle_latin_name_clean;
-						$muscle_image_main_count = $muscle_image_main_count+1;
+					if($exercise_muscle_image_main_muscle_ids == ""){
+						$exercise_muscle_image_main_muscle_ids = $get_exercise_muscle_id;
+					}
+					else{
+						$exercise_muscle_image_main_muscle_ids = $exercise_muscle_image_main_muscle_ids . "," . $get_exercise_muscle_id;
 					}
 				}
 				echo"
@@ -359,11 +354,6 @@ else {
 			   <td style=\"padding-left: 10px;\">
 				<p>";
 
-				// Muscle image
-				if($get_exercise_muscle_image_id == ""){
-					$muscle_image_assistant = array();
-					$muscle_image_assistant_count = 0;
-				}
 
 				$count = 0;
 				$query = "SELECT exercise_muscle_id, exercise_muscle_muscle_id FROM $t_exercise_index_muscles WHERE exercise_muscle_exercise_id='$get_current_exercise_id' AND exercise_muscle_type='assistant'";
@@ -395,9 +385,11 @@ else {
 					$count = $count+1;
 
 					// Muscle image
-					if($get_exercise_muscle_image_id == ""){
-						$muscle_image_assistant[$muscle_image_assistant_count] = $get_muscle_latin_name_clean;
-						$muscle_image_assistant_count = $muscle_image_assistant_count+1;
+					if($exercise_muscle_image_assistant_muscle_ids == ""){
+						$exercise_muscle_image_assistant_muscle_ids = $get_exercise_muscle_id;
+					}
+					else{
+						$exercise_muscle_image_assistant_muscle_ids = $exercise_muscle_image_assistant_muscle_ids . "," . $get_exercise_muscle_id;
 					}
 				}
 				echo"
@@ -561,117 +553,176 @@ else {
 		<!-- //Text -->
 
 		<!-- Muscle image -->";
-		if($get_exercise_muscle_image_id == ""){
-			$inp_exercise_muscle_image_file = "main-";
-			sort($muscle_image_main);
-			for($x=0;$x<sizeof($muscle_image_main);$x++){
-				if($x == 0){
-					$inp_exercise_muscle_image_file = $inp_exercise_muscle_image_file . $muscle_image_main[$x];
-				}
-				else{
-					$inp_exercise_muscle_image_file = $inp_exercise_muscle_image_file . "-" . $muscle_image_main[$x];
-				}
-			}
-
-			$inp_exercise_muscle_image_file = $inp_exercise_muscle_image_file  . "-assistant-";
-			sort($muscle_image_assistant);
-			for($x=0;$x<sizeof($muscle_image_assistant);$x++){
-				if($x == 0){
-					$inp_exercise_muscle_image_file = $inp_exercise_muscle_image_file . $muscle_image_assistant[$x];
-				}
-				else{
-					$inp_exercise_muscle_image_file = $inp_exercise_muscle_image_file . "-" . $muscle_image_assistant[$x];
-				}
-			}
-
-			$inp_exercise_muscle_image_file  = $inp_exercise_muscle_image_file . ".png";
-			$inp_exercise_muscle_image_file_mysql = quote_smart($link, $inp_exercise_muscle_image_file);
-
-			mysqli_query($link, "INSERT INTO $t_exercise_index_muscles_images
-			(exercise_muscle_image_id, exercise_muscle_image_exercise_id, exercise_muscle_image_file) 
-			VALUES 
-			(NULL, '$get_current_exercise_id', $inp_exercise_muscle_image_file_mysql)")
-			or die(mysqli_error($link));
-
-			echo"<div class=\"info\"><p>Added muscle image $inp_exercise_muscle_image_file</p></div>";
-
-
-			$query_muscle = "SELECT exercise_muscle_image_id, exercise_muscle_image_file FROM $t_exercise_index_muscles_images WHERE exercise_muscle_image_exercise_id='$get_current_exercise_id'";
+			// Find image
+			if($exercise_muscle_image_main_muscle_ids == ""){ $exercise_muscle_image_main_muscle_ids = 0; }
+			$exercise_muscle_image_main_muscle_ids_mysql = quote_smart($link, $exercise_muscle_image_main_muscle_ids);
+			if($exercise_muscle_image_assistant_muscle_ids == ""){ $exercise_muscle_image_assistant_muscle_ids = 0; }
+			$exercise_muscle_image_assistant_muscle_ids_mysql = quote_smart($link, $exercise_muscle_image_assistant_muscle_ids);
+			$query_muscle = "SELECT exercise_muscle_image_id, exercise_muscle_image_file, exercise_muscle_image_main_muscle_ids, exercise_muscle_image_assistant_muscle_ids FROM $t_exercise_index_muscles_images WHERE exercise_muscle_image_exercise_id='$get_current_exercise_id' AND exercise_muscle_image_main_muscle_ids=$exercise_muscle_image_main_muscle_ids_mysql AND exercise_muscle_image_assistant_muscle_ids=$exercise_muscle_image_assistant_muscle_ids_mysql";
 			$result_muscle = mysqli_query($link, $query_muscle);
 			$row_muscle = mysqli_fetch_row($result_muscle);
-			list($get_exercise_muscle_image_id, $get_exercise_muscle_image_file) = $row_muscle;
-		}
-		if(!(file_exists("$root/_uploads/exercises/muscle_image/$get_exercise_muscle_image_file"))){
+			list($get_exercise_muscle_image_id, $get_exercise_muscle_image_file, $get_exercise_muscle_image_main_muscle_ids, $get_exercise_muscle_image_assistant_muscle_ids) = $row_muscle;
 			
-			$missing_file = "$root/_cache/exercise_muscle_missing_img_$get_current_exercise_id.txt";
+			// Muscle image doesnt exists
+			if($get_exercise_muscle_image_id == ""){
+				// Truncate all existsing
+				mysqli_query($link, "TRUNCATE $t_exercise_index_muscles_images");
 
-			
-			if(!(file_exists("$missing_file"))){
-				// Who is moderator of the week?
-				$week = date("W");
-				$year = date("Y");
+				$inp_exercise_muscle_image_file = "main-";
 
-				$query = "SELECT moderator_user_id, moderator_user_email, moderator_user_name FROM $t_users_moderator_of_the_week WHERE moderator_week=$week AND moderator_year=$year";
+				$x=0;
+				$query = "SELECT exercise_muscle_id, exercise_muscle_muscle_id FROM $t_exercise_index_muscles WHERE exercise_muscle_exercise_id='$get_current_exercise_id' AND exercise_muscle_type='main'";
 				$result = mysqli_query($link, $query);
-				$row = mysqli_fetch_row($result);
-				list($get_moderator_user_id, $get_moderator_user_email, $get_moderator_user_name) = $row;
-				if($get_moderator_user_id == ""){
-					// Create moderator of the week
-					include("$root/_admin/_functions/create_moderator_of_the_week.php");
+				while($row = mysqli_fetch_row($result)) {
+					list($get_exercise_muscle_id, $get_exercise_muscle_muscle_id) = $row;
+
+
+					// Find muscles main and sub group
+					$query_muscle = "SELECT muscle_id, muscle_latin_name_clean, muscle_group_id_main, muscle_group_id_sub FROM $t_muscles WHERE muscle_id='$get_exercise_muscle_muscle_id'";
+					$result_muscle = mysqli_query($link, $query_muscle);
+					$row_muscle = mysqli_fetch_row($result_muscle);
+					list($get_muscle_id, $get_muscle_latin_name_clean, $get_muscle_group_id_main, $get_muscle_group_id_sub) = $row_muscle;
+
+
+					// Translation
+					$query_translation = "SELECT muscle_translation_id, muscle_translation_simple_name, muscle_translation_short_name FROM $t_muscles_translations WHERE muscle_translation_muscle_id='$get_exercise_muscle_muscle_id' AND muscle_translation_language=$l_mysql";
+					$result_translation = mysqli_query($link, $query_translation);
+					$row_translation = mysqli_fetch_row($result_translation);
+					list($get_muscle_translation_id, $get_muscle_translation_simple_name, $get_muscle_translation_short_name) = $row_translation;
 					
+
+					if($x == 0){
+						$inp_exercise_muscle_image_file = $inp_exercise_muscle_image_file . "$get_muscle_latin_name_clean";
+					}
+					else{
+						$inp_exercise_muscle_image_file = $inp_exercise_muscle_image_file . "-" . $get_muscle_latin_name_clean;
+					}
+					$x++;
+				}
+			
+				
+				$inp_exercise_muscle_image_file = $inp_exercise_muscle_image_file  . "-assistant-";
+				$x = 0;
+				$query = "SELECT exercise_muscle_id, exercise_muscle_muscle_id FROM $t_exercise_index_muscles WHERE exercise_muscle_exercise_id='$get_current_exercise_id' AND exercise_muscle_type='assistant'";
+				$result = mysqli_query($link, $query);
+				while($row = mysqli_fetch_row($result)) {
+					list($get_exercise_muscle_id, $get_exercise_muscle_muscle_id) = $row;
+
+
+					// Find muscles main and sub group	
+					$query_muscle = "SELECT muscle_id, muscle_latin_name_clean, muscle_group_id_main, muscle_group_id_sub FROM $t_muscles WHERE muscle_id='$get_exercise_muscle_muscle_id'";
+					$result_muscle = mysqli_query($link, $query_muscle);
+					$row_muscle = mysqli_fetch_row($result_muscle);
+					list($get_muscle_id, $get_muscle_latin_name_clean, $get_muscle_group_id_main, $get_muscle_group_id_sub) = $row_muscle;
+
+
+					// Translation
+					$query_translation = "SELECT muscle_translation_id, muscle_translation_simple_name, muscle_translation_short_name FROM $t_muscles_translations WHERE muscle_translation_muscle_id='$get_exercise_muscle_muscle_id' AND muscle_translation_language=$l_mysql";
+					$result_translation = mysqli_query($link, $query_translation);
+					$row_translation = mysqli_fetch_row($result_translation);
+					list($get_muscle_translation_id, $get_muscle_translation_simple_name, $get_muscle_translation_short_name) = $row_translation;
+					
+
+					if($x == 0){
+						$inp_exercise_muscle_image_file = $inp_exercise_muscle_image_file . "$get_muscle_latin_name_clean";
+					}
+					else{
+						$inp_exercise_muscle_image_file = $inp_exercise_muscle_image_file . "-" . $get_muscle_latin_name_clean;
+					}
+					$x++;
+				}
+
+
+				$inp_exercise_muscle_image_file  = $inp_exercise_muscle_image_file . ".png";
+				$inp_exercise_muscle_image_file_mysql = quote_smart($link, $inp_exercise_muscle_image_file);
+
+				mysqli_query($link, "INSERT INTO $t_exercise_index_muscles_images
+				(exercise_muscle_image_id, exercise_muscle_image_exercise_id, exercise_muscle_image_file, exercise_muscle_image_main_muscle_ids, exercise_muscle_image_assistant_muscle_ids) 
+				VALUES 
+				(NULL, '$get_current_exercise_id', $inp_exercise_muscle_image_file_mysql, $exercise_muscle_image_main_muscle_ids_mysql, $exercise_muscle_image_assistant_muscle_ids_mysql)")
+				or die(mysqli_error($link));
+
+				echo"<div class=\"info\"><p>Added muscle image $inp_exercise_muscle_image_file</p></div>";
+
+
+				$query_muscle = "SELECT exercise_muscle_image_id, exercise_muscle_image_file FROM $t_exercise_index_muscles_images WHERE exercise_muscle_image_exercise_id='$get_current_exercise_id'";
+				$result_muscle = mysqli_query($link, $query_muscle);
+				$row_muscle = mysqli_fetch_row($result_muscle);
+				list($get_exercise_muscle_image_id, $get_exercise_muscle_image_file) = $row_muscle;
+			}
+
+
+			if(!(file_exists("$root/_uploads/exercises/muscle_image/$get_exercise_muscle_image_file"))){
+			
+				$missing_file = "$root/_cache/exercise_muscle_missing_img_$get_current_exercise_id.txt";
+
+			
+				if(!(file_exists("$missing_file"))){
+					// Who is moderator of the week?
+					$week = date("W");
+					$year = date("Y");
+
 					$query = "SELECT moderator_user_id, moderator_user_email, moderator_user_name FROM $t_users_moderator_of_the_week WHERE moderator_week=$week AND moderator_year=$year";
 					$result = mysqli_query($link, $query);
 					$row = mysqli_fetch_row($result);
 					list($get_moderator_user_id, $get_moderator_user_email, $get_moderator_user_name) = $row;
-				}
+						if($get_moderator_user_id == ""){
+						// Create moderator of the week
+						include("$root/_admin/_functions/create_moderator_of_the_week.php");
+					
+						$query = "SELECT moderator_user_id, moderator_user_email, moderator_user_name FROM $t_users_moderator_of_the_week WHERE moderator_week=$week AND moderator_year=$year";
+						$result = mysqli_query($link, $query);
+						$row = mysqli_fetch_row($result);
+						list($get_moderator_user_id, $get_moderator_user_email, $get_moderator_user_name) = $row;
+					}
 
 
-				echo"<div class=\"clear\"></div>
-				<div class=\"info\"><p>E-mail sent to admins. Writing to $missing_file</p></div>";
+					echo"<div class=\"clear\"></div>
+					<div class=\"info\"><p>E-mail sent to admins. Writing to $missing_file</p></div>";
 
-				// Mail from
-				$host = $_SERVER['HTTP_HOST'];
+					// Mail from
+					$host = $_SERVER['HTTP_HOST'];
 		
-				$view_link = $configSiteURLSav . "/exercises/view_exercise.php?exercise_id=$get_current_exercise_id";
+					$view_link = $configSiteURLSav . "/exercises/view_exercise.php?exercise_id=$get_current_exercise_id";
 
-				$subject = "Exercise missing muscle image $get_exercise_muscle_image_file at $host";
+					$subject = "Exercise missing muscle image $get_exercise_muscle_image_file at $host";
 
-				$message = "<html>\n";
-				$message = $message. "<head>\n";
-				$message = $message. "  <title>$subject</title>\n";
-				$message = $message. " </head>\n";
-				$message = $message. "<body>\n";
+					$message = "<html>\n";
+					$message = $message. "<head>\n";
+					$message = $message. "  <title>$subject</title>\n";
+					$message = $message. " </head>\n";
+					$message = $message. "<body>\n";
 
-				$message = $message . "<p>Hi $get_moderator_user_name,</p>\n\n";
-				$message = $message . "<p><b>Summary:</b><br />A exercise is missing muscle image.</p>\n\n";
+					$message = $message . "<p>Hi $get_moderator_user_name,</p>\n\n";
+					$message = $message . "<p><b>Summary:</b><br />A exercise is missing muscle image.</p>\n\n";
 
 					$message = $message . "<p style='padding-bottom:0;margin-bottom:0'><b>Information:</b></p>\n";
-				$message = $message . "<table>\n";
-				$message = $message . " <tr><td><span>Exercise ID:</span></td><td><span>$get_current_exercise_id</span></td></tr>\n";
-				$message = $message . " <tr><td><span>Title:</span></td><td><span><a href=\"$view_link\">$get_current_exercise_title</a></span></td></tr>\n";
-				$message = $message . "</table>\n";
+					$message = $message . "<table>\n";
+					$message = $message . " <tr><td><span>Exercise ID:</span></td><td><span>$get_current_exercise_id</span></td></tr>\n";
+					$message = $message . " <tr><td><span>Title:</span></td><td><span><a href=\"$view_link\">$get_current_exercise_title</a></span></td></tr>\n";
+					$message = $message . "</table>\n";
 		
-				$message = $message . "<p>\n\n--<br />\nBest regards<br />\n$host</p>";
-				$message = $message. "</body>\n";
-				$message = $message. "</html>\n";
+					$message = $message . "<p>\n\n--<br />\nBest regards<br />\n$host</p>";
+					$message = $message. "</body>\n";
+					$message = $message. "</html>\n";
 
 
-				// Preferences for Subject field
-				$headers[] = 'MIME-Version: 1.0';
-				$headers[] = 'Content-type: text/html; charset=utf-8';
-				$headers[] = "From: $configFromNameSav <" . $configFromEmailSav . ">";
-				// mail($get_moderator_user_email, $subject, $message, implode("\r\n", $headers));
+					// Preferences for Subject field
+					$headers[] = 'MIME-Version: 1.0';
+					$headers[] = 'Content-type: text/html; charset=utf-8';
+					$headers[] = "From: $configFromNameSav <" . $configFromEmailSav . ">";
+					// mail($get_moderator_user_email, $subject, $message, implode("\r\n", $headers));
 
 
 
-				$fh = fopen($missing_file, "w") or die("can not open file");
-				fwrite($fh, "-");
-				fclose($fh);
-			} // missing file
+					$fh = fopen($missing_file, "w") or die("can not open file");
+					fwrite($fh, "-");
+					fclose($fh);
+				} // missing file
 			
-		} // img doesnt exists
-		echo"
-		<p><img src=\"$root/_uploads/exercises/muscle_image/$get_exercise_muscle_image_file\" alt=\"$get_exercise_muscle_image_file\" /></p>
+			} // img doesnt exists
+			echo"
+			<p><img src=\"$root/_uploads/exercises/muscle_image/$get_exercise_muscle_image_file\" alt=\"$get_exercise_muscle_image_file\" /></p>
 		<!-- //Muscle image -->
 		
 

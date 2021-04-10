@@ -16,7 +16,7 @@ if(!(isset($define_access_to_control_panel))){
 
 /*- Tables ---------------------------------------------------------------------------- */
 
-$result = mysqli_query($link, "DROP TABLE IF EXISTS $t_exercise_muscles_images") or die(mysqli_error($link)); 
+$result = mysqli_query($link, "DROP TABLE IF EXISTS $t_exercise_index_muscles_images") or die(mysqli_error($link)); 
 
 
 echo"
@@ -33,12 +33,20 @@ echo"
 		";
 	}
 	else{
+echo"<pre>CREATE TABLE $t_exercise_index_muscles_images(
+	  	 exercise_muscle_image_id INT NOT NULL AUTO_INCREMENT,
+	 	  PRIMARY KEY(exercise_muscle_image_id), 
+	  	   exercise_muscle_image_exercise_id INT,
+	  	   exercise_muscle_image_file VARCHAR(250),
+	  	   exercise_muscle_image_main_muscle_ids VARCHAR(250),
+	  	   exercise_muscle_image_assistant_muscle_ids VARCHAR(250)</pre>";
 		mysqli_query($link, "CREATE TABLE $t_exercise_index_muscles_images(
 	  	 exercise_muscle_image_id INT NOT NULL AUTO_INCREMENT,
 	 	  PRIMARY KEY(exercise_muscle_image_id), 
 	  	   exercise_muscle_image_exercise_id INT,
-	  	   exercise_muscle_image_file VARCHAR(250))")
-		   or die(mysqli_error());
+	  	   exercise_muscle_image_file VARCHAR(250),
+	  	   exercise_muscle_image_main_muscle_ids VARCHAR(250),
+	  	   exercise_muscle_image_assistant_muscle_ids VARCHAR(250))") or die(mysqli_error());
 
 		// Will be added automatically
 	}

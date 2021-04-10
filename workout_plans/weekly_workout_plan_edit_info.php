@@ -84,10 +84,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 	// Get workout plan weekly
 	$weekly_id_mysql = quote_smart($link, $weekly_id);
-	$query = "SELECT workout_weekly_id, workout_weekly_user_id, workout_weekly_period_id, workout_weekly_weight, workout_weekly_language, workout_weekly_title, workout_weekly_title_clean, workout_weekly_introduction, workout_weekly_goal, workout_weekly_image_path, workout_weekly_image_file, workout_weekly_created, workout_weekly_updated, workout_weekly_unique_hits, workout_weekly_unique_hits_ip_block, workout_weekly_comments, workout_weekly_likes, workout_weekly_dislikes, workout_weekly_rating, workout_weekly_ip_block, workout_weekly_user_ip, workout_weekly_notes FROM $t_workout_plans_weekly WHERE workout_weekly_id=$weekly_id_mysql";
+	$query = "SELECT workout_weekly_id, workout_weekly_user_id, workout_weekly_period_id, workout_weekly_weight, workout_weekly_language, workout_weekly_title, workout_weekly_title_clean, workout_weekly_introduction, workout_weekly_text, workout_weekly_goal, workout_weekly_image_path, workout_weekly_image_file, workout_weekly_created, workout_weekly_updated, workout_weekly_unique_hits, workout_weekly_unique_hits_ip_block, workout_weekly_comments, workout_weekly_likes, workout_weekly_dislikes, workout_weekly_rating, workout_weekly_ip_block, workout_weekly_user_ip, workout_weekly_notes FROM $t_workout_plans_weekly WHERE workout_weekly_id=$weekly_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_workout_weekly_id, $get_current_workout_weekly_user_id, $get_current_workout_weekly_period_id, $get_current_workout_weekly_weight, $get_current_workout_weekly_language, $get_current_workout_weekly_title, $get_current_workout_weekly_title_clean, $get_current_workout_weekly_introduction, $get_current_workout_weekly_goal, $get_current_workout_weekly_image_path, $get_current_workout_weekly_image_file, $get_current_workout_weekly_created, $get_current_workout_weekly_updated, $get_current_workout_weekly_unique_hits, $get_current_workout_weekly_unique_hits_ip_block, $get_current_workout_weekly_comments, $get_current_workout_weekly_likes, $get_current_workout_weekly_dislikes, $get_current_workout_weekly_rating, $get_current_workout_weekly_ip_block, $get_current_workout_weekly_user_ip, $get_current_workout_weekly_notes) = $row;
+	list($get_current_workout_weekly_id, $get_current_workout_weekly_user_id, $get_current_workout_weekly_period_id, $get_current_workout_weekly_weight, $get_current_workout_weekly_language, $get_current_workout_weekly_title, $get_current_workout_weekly_title_clean, $get_current_workout_weekly_introduction, $get_current_workout_weekly_text, $get_current_workout_weekly_goal, $get_current_workout_weekly_image_path, $get_current_workout_weekly_image_file, $get_current_workout_weekly_created, $get_current_workout_weekly_updated, $get_current_workout_weekly_unique_hits, $get_current_workout_weekly_unique_hits_ip_block, $get_current_workout_weekly_comments, $get_current_workout_weekly_likes, $get_current_workout_weekly_dislikes, $get_current_workout_weekly_rating, $get_current_workout_weekly_ip_block, $get_current_workout_weekly_user_ip, $get_current_workout_weekly_notes) = $row;
 	
 	
 
@@ -146,23 +146,27 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$config = HTMLPurifier_Config::createDefault();
 			$purifier = new HTMLPurifier($config);
 
-			if($get_user_rank == "admin" OR $get_user_rank == "moderator" OR $get_user_rank == "editor"){
+			if($get_my_user_rank == "admin" OR $get_my_user_rank == "moderator" OR $get_my_user_rank == "editor"){
 			}
-			elseif($get_user_rank == "trusted"){
+			elseif($get_my_user_rank == "trusted"){
 			}
 			else{
 				// p, ul, li, b
 				$config->set('HTML.Allowed', 'p,b,a[href],i,ul,li');
 			}
 
+			// Text
+			$inp_text = $_POST['inp_text'];
+			$inp_text = $purifier->purify($inp_text);
+
 			// Goal
 			$inp_goal = $_POST['inp_goal'];
 			$inp_goal = $purifier->purify($inp_goal);
 
 
-			$sql = "UPDATE $t_workout_plans_weekly SET workout_weekly_goal=? WHERE workout_weekly_id=$weekly_id_mysql";
+			$sql = "UPDATE $t_workout_plans_weekly SET workout_weekly_text=?, workout_weekly_goal=? WHERE workout_weekly_id=$weekly_id_mysql";
 			$stmt = $link->prepare($sql);
-			$stmt->bind_param("s", $inp_goal);
+			$stmt->bind_param("ss", $inp_text, $inp_goal);
 			$stmt->execute();
 			if ($stmt->errno) {
 				echo "FAILURE!!! " . $stmt->error; die;
@@ -313,6 +317,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<textarea name=\"inp_introduction\" rows=\"10\" cols=\"70\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">";
 			$get_current_workout_weekly_introduction = str_replace("<br />", "\n", $get_current_workout_weekly_introduction);
 			echo"$get_current_workout_weekly_introduction</textarea>
+			</p>
+
+			<p><b>$l_text:</b><br />
+			<textarea name=\"inp_text\" rows=\"10\" cols=\"70\" class=\"editor\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">$get_current_workout_weekly_text</textarea>
 			</p>
 
 			<p><b>$l_goal:</b><br />
