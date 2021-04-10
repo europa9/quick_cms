@@ -220,24 +220,66 @@ else {
 
 
 		<!-- Where am I? -->
-		<p>
-		<b>$l_you_are_here:</b><br />
-		<a href=\"$root/exercises/index.php?l=$l\">$l_exercises</a>
-		&gt;
-		<a href=\"$root/exercises/view_type.php?type_id=$get_current_type_id&amp;l=$l\">$get_current_type_translation_value</a>";
-		if(isset($get_current_main_muscle_group_translation_name)){
-			echo"
-			&gt;
-			<a href=\"$root/exercises/view_muscle_group.php?main_muscle_group_id=$get_current_exercise_muscle_group_id_main&amp;type_id=$get_current_type_id&amp;l=$l\">$get_current_main_muscle_group_translation_name</a>
-			";
-		}
-		echo"
-		&gt;
-		<a href=\"$root/exercises/view_exercise.php?exercise_id=$exercise_id&amp;l=$l\">$get_current_exercise_title</a>
-		</p>
+			<div class=\"exercises_float_left\">
+				<p>
+				<b>$l_you_are_here:</b><br />
+				<a href=\"$root/exercises/index.php?l=$l\">$l_exercises</a>
+				&gt;
+				<a href=\"$root/exercises/view_type.php?type_id=$get_current_type_id&amp;l=$l\">$get_current_type_translation_value</a>";
+				if(isset($get_current_main_muscle_group_translation_name)){
+					echo"
+					&gt;
+					<a href=\"$root/exercises/view_muscle_group.php?main_muscle_group_id=$get_current_exercise_muscle_group_id_main&amp;type_id=$get_current_type_id&amp;l=$l\">$get_current_main_muscle_group_translation_name</a>
+					";
+				}
+				echo"
+				&gt;
+				<a href=\"$root/exercises/view_exercise.php?exercise_id=$exercise_id&amp;l=$l\">$get_current_exercise_title</a>
+				</p>
+			</div>
 		<!-- //Where am I? -->
 
 	
+		<!-- Search -->
+			<div class=\"exercises_float_right\">
+				<form method=\"post\" action=\"search_exercise.php\" enctype=\"multipart/form-data\">
+				<p>
+				<input type=\"text\" name=\"search_query\" value=\"\" size=\"20\" id=\"nettport_inp_search_query\" />
+				<input type=\"submit\" value=\"$l_search\" id=\"nettport_search_submit_button\" />
+				</p>
+	
+
+				<!-- Search script -->
+				<script id=\"source\" language=\"javascript\" type=\"text/javascript\">
+				\$(document).ready(function () {
+				\$('#nettport_inp_search_query').keyup(function () {
+        				var searchString    = $(\"#nettport_inp_search_query\").val();
+       					var data            = 'l=$l&search_query='+ searchString;
+         
+        				// if searchString is not empty
+        				if(searchString) {
+           				// ajax call
+            				\$.ajax({
+                				type: \"GET\",
+               					url: \"search_exercise_jquery.php\",
+                				data: data,
+						beforeSend: function(html) { // this happens before actual call
+							\$(\"#nettport_search_results\").html(''); 
+						},
+               					success: function(html){
+                    					\$(\"#nettport_search_results\").append(html);
+              					}
+            				});
+       					}
+        				return false;
+            			});
+            			});
+				</script>
+				<!-- //Search script -->
+			</div>
+			<div class=\"clear\"></div>
+			<div id=\"nettport_search_results\"></div>
+		<!-- //Search -->
 		<!-- Ad -->
 		";
 		include("$root/ad/_includes/ad_main_below_headline.php");

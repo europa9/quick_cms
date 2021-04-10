@@ -12,7 +12,7 @@
 if($action == ""){
 	// Select country
 	echo"
-	<h1>$get_food_manufacturer_name $get_food_name</h1>
+	<h1>$get_current_food_manufacturer_name $get_current_food_name</h1>
 
 	<h2>$l_please_select_your_country</h2>
 	";
@@ -22,7 +22,6 @@ if($action == ""){
 	while($row = mysqli_fetch_row($result)) {
 		list($get_restriction_id, $get_restriction_country_iso, $get_restriction_country_name, $get_restriction_country_flag, $get_restriction_language, $get_restriction_age_limit, $get_restriction_title, $get_restriction_text, $get_restriction_can_view_food, $get_restriction_can_view_image) = $row;
 
-		$flag = "$root/_admin/_design/gfx/flags/16x16/$get_restriction_country_flag" . "_16x16.png";
 		$get_restriction_country_name = substr($get_restriction_country_name, 0, 30);
 		if($x == 0){
 			echo"
@@ -32,7 +31,7 @@ if($action == ""){
 	
 		echo"
 				<div class=\"view_food_select_country_col\">
-					<a href=\"view_food.php?action=view_agreement&amp;main_category_id=$main_category_id&amp;sub_category_id=$sub_category_id&amp;food_id=$food_id&amp;country=$get_restriction_country_iso&amp;l=$l\"><img src=\"$flag\" alt=\"$get_restriction_country_flag\" /> $get_restriction_country_name</a>
+					<a href=\"view_food.php?action=view_agreement&amp;main_category_id=$main_category_id&amp;sub_category_id=$sub_category_id&amp;food_id=$food_id&amp;country=$get_restriction_country_iso&amp;l=$l\">$get_restriction_country_name</a>
 				
 				</div>
 		";

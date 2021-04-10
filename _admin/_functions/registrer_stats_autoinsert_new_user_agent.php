@@ -8,8 +8,15 @@
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
-
-
+/*- Get string between ------------------------------------------------------------------- */
+  function get_between($content,$start,$end){
+    $r = explode($start, $content);
+    if (isset($r[1])){
+        $r = explode($end, $r[1]);
+        return $r[0];
+    }
+    return '';
+  }
 
 /*- Find me based on user ------------------------------------------------------------------- */
 if($define_in_register_stats == "1"){
@@ -44,7 +51,8 @@ if($define_in_register_stats == "1"){
 
 
 	foreach($robots as $r){
- 		if(stripos($inp_user_agent, $r) !== false ){
+		$r_position = stripos($my_user_agent, $r);
+ 		if($r_position !== false ){
 
 			// Visitor type
 			$visitor_type = "bot";
@@ -54,6 +62,19 @@ if($define_in_register_stats == "1"){
 			$inp_stats_user_agent_url = "http://" . $r . ".com";
 			$inp_stats_user_agent_url = output_html($inp_stats_user_agent_url);
 			$inp_stats_user_agent_url_mysql = quote_smart($link, $inp_stats_user_agent_url);
+
+			// Bot version
+			$inp_stats_user_agent_bot_version = get_between($my_user_agent, $r, ';');
+			if($inp_stats_user_agent_bot_version == ""){
+				$inp_stats_user_agent_bot_version = get_between($my_user_agent, ucfirst($r), ';');
+			}
+			$inp_stats_user_agent_bot_version = str_replace("/", "", $inp_stats_user_agent_bot_version);
+			$inp_stats_user_agent_bot_version = output_html($inp_stats_user_agent_bot_version);
+			$inp_stats_user_agent_bot_version_mysql = quote_smart($link, $inp_stats_user_agent_bot_version);
+			//echo"Agent: $my_user_agent<br />get_between($my_user_agent, $r, ';')<br />Bot ver: $inp_stats_user_agent_bot_version";
+
+
+
 
 			// Agent Name
 			$inp_stats_user_agent_bot = ucfirst($r);
@@ -69,11 +90,11 @@ if($define_in_register_stats == "1"){
 			mysqli_query($link, "INSERT INTO $t_stats_user_agents_index
 			(stats_user_agent_id, stats_user_agent_string, stats_user_agent_type, stats_user_agent_browser, stats_user_agent_browser_version, 
 			stats_user_agent_browser_icon, stats_user_agent_os, stats_user_agent_os_version, stats_user_agent_os_icon, stats_user_agent_bot, 
-			stats_user_agent_bot_icon, stats_user_agent_bot_website, stats_user_agent_banned) 
+			stats_user_agent_bot_version, stats_user_agent_bot_icon, stats_user_agent_bot_website, stats_user_agent_banned) 
 			VALUES
-			(NULL, $inp_user_agent_mysql, 'bot', '', '', 
+			(NULL, $my_user_agent_mysql, 'bot', '', '', 
 			'', '', '', '', $inp_stats_user_agent_bot_mysql, 
-			$inp_stats_user_agent_bot_icon_mysql, $inp_stats_user_agent_url_mysql, '0')
+			$inp_stats_user_agent_bot_version_mysql, $inp_stats_user_agent_bot_icon_mysql, $inp_stats_user_agent_url_mysql, '0')
 			") or die(mysqli_error($link));
 
 
@@ -87,7 +108,9 @@ if($define_in_register_stats == "1"){
 		$mobile_os = array('Android', 'Blackberry', 'iPhone', 'iPad', 'Nokia', 'Samsung');
 		
 		foreach($mobile_os as $m_os){
- 			if(stripos($inp_user_agent, $m_os) !== false ){
+
+			$m_os_position = stripos($my_user_agent, $m_os);
+ 			if($m_os_position !== false ){
 
 				// Visitor type
 				$visitor_type = "mobile";
@@ -98,7 +121,7 @@ if($define_in_register_stats == "1"){
 				$mobile_browsers = array('AppleWebKit', 'Dalvik', 'Mobile Safari', 'Minefield', 'Safari', 'Chrome', 'Firefox', 'Opera', 'SamsungBrowser', 'UCBrowser');
 				$inp_stats_user_agent_browser = "";
 				foreach($mobile_browsers as $m_b){
- 					if(stripos($inp_user_agent, $m_b) !== false ){
+ 					if(stripos($my_user_agent, $m_b) !== false ){
 						$inp_stats_user_agent_browser = "$m_b";
 					}
 				}
@@ -107,6 +130,15 @@ if($define_in_register_stats == "1"){
 				$inp_stats_user_agent_browser_icon = $inp_stats_user_agent_browser_icon . ".png";
 				$inp_stats_user_agent_browser_icon = output_html($inp_stats_user_agent_browser_icon);
 				$inp_stats_user_agent_browser_icon_mysql = quote_smart($link, $inp_stats_user_agent_browser_icon);
+
+				// Browser version
+				$inp_stats_user_agent_browser_version = 0;
+				if($inp_stats_user_agent_browser != ""){
+					$inp_stats_user_agent_browser_version = substr($my_user_agent, strrpos($my_user_agent, '/') + 1);
+				}
+				//echo"Agent: $my_user_agent<br />Browser ver: $inp_stats_user_agent_browser_version ";
+				$inp_stats_user_agent_browser_version = output_html($inp_stats_user_agent_browser_version);
+				$inp_stats_user_agent_browser_version_mysql = quote_smart($link, $inp_stats_user_agent_browser_version);
 
 
 				// Browser
@@ -124,15 +156,26 @@ if($define_in_register_stats == "1"){
 				$inp_stats_user_agent_os_icon =  $inp_stats_user_agent_os_icon. ".png";
 				$inp_stats_user_agent_os_icon = output_html($inp_stats_user_agent_os_icon);
 				$inp_stats_user_agent_os_icon_mysql = quote_smart($link, $inp_stats_user_agent_os_icon);
-			
+
+				// OS Version
+				// my_user_agent = Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:87.0) Gecko/20100101 Firefox/87.0
+				// os = Windows NT
+				// os_position = 13
+				$inp_stats_user_agent_os_version = get_between($my_user_agent, $m_os, ';');
+				$inp_stats_user_agent_os_version = str_replace(" ", "", $inp_stats_user_agent_os_version);
+				$inp_stats_user_agent_os_version = output_html($inp_stats_user_agent_os_version);
+				$inp_stats_user_agent_os_version_mysql = quote_smart($link, $inp_stats_user_agent_os_version);
+				// echo"Agent: $my_user_agent<br />OS: $inp_stats_user_agent_os <br />OS ver: $inp_stats_user_agent_os_version ";
+
+
 				// Insert new mobile
 				mysqli_query($link, "INSERT INTO $t_stats_user_agents_index
 				(stats_user_agent_id, stats_user_agent_string, stats_user_agent_type, stats_user_agent_browser, stats_user_agent_browser_version, 
 				stats_user_agent_browser_icon, stats_user_agent_os, stats_user_agent_os_version, stats_user_agent_os_icon, stats_user_agent_bot, 
 				stats_user_agent_bot_icon, stats_user_agent_bot_website, stats_user_agent_banned) 
 				VALUES
-				(NULL, $inp_user_agent_mysql, 'mobile', $inp_stats_user_agent_browser_mysql, 0,
-				'', $inp_stats_user_agent_os_mysql, 0, $inp_stats_user_agent_browser_icon_mysql, '',
+				(NULL, $my_user_agent_mysql, 'mobile', $inp_stats_user_agent_browser_mysql, $inp_stats_user_agent_browser_version_mysql,
+				'', $inp_stats_user_agent_os_mysql, $inp_stats_user_agent_os_version_mysql, $inp_stats_user_agent_browser_icon_mysql, '',
 				'', '', '0')
 				") or die(mysqli_error($link));
 
@@ -151,9 +194,10 @@ if($define_in_register_stats == "1"){
 
 		// A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Æ Ø Å
 
-		$desktop_os = array('Freebsd', 'Fedora', 'Linux x86_64', 'Linux i686', 'linux-gnu', 'Mac OS X', 'Windows', 'Ubuntu', 'X11');
+		$desktop_os = array('Freebsd', 'Fedora', 'Linux x86_64', 'Linux i686', 'linux-gnu', 'Mac OS X', 'Windows NT', 'Ubuntu', 'X11');
 		foreach($desktop_os as $os){
- 			if(stripos($inp_user_agent, $os) !== false ){
+			$os_position = stripos($my_user_agent, $os);
+ 			if($os_position !== false ){
 				
 				// Visitor type
 				$visitor_type = "desktop";
@@ -169,13 +213,23 @@ if($define_in_register_stats == "1"){
 				$inp_stats_user_agent_os_icon = output_html($inp_stats_user_agent_os_icon);
 				$inp_stats_user_agent_os_icon_mysql = quote_smart($link, $inp_stats_user_agent_os_icon);
 
+				// OS Version
+				// my_user_agent = Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:87.0) Gecko/20100101 Firefox/87.0
+				// os = Windows NT
+				// os_position = 13
+				$inp_stats_user_agent_os_version = get_between($my_user_agent, $os, ';');
+				$inp_stats_user_agent_os_version = str_replace(" ", "", $inp_stats_user_agent_os_version);
+				$inp_stats_user_agent_os_version = output_html($inp_stats_user_agent_os_version);
+				$inp_stats_user_agent_os_version_mysql = quote_smart($link, $inp_stats_user_agent_os_version);
+				
+				
 
 				// Browser checkup (desktop)
-				$desktop_browsers = array('AppleWebKit', 'Safari', 'Chrome', 'Edge', 'Firefox', 'Galeon', 'Minefield', 'MSIE', 'Opera', 'SkypeUriPreview', 'Trident', 
+				$desktop_browsers = array('AppleWebKit', 'Safari', 'Chrome', 'Edge', 'Edg', 'Firefox', 'Galeon', 'Minefield', 'MSIE', 'Opera', 'SkypeUriPreview', 'Trident', 
 							  'Thunderbird', 'Qt', 'Wget');
 				$inp_stats_user_agent_browser = "";
 				foreach($desktop_browsers as $d_b){
- 					if(stripos($inp_user_agent, $d_b) !== false ){
+ 					if(stripos($my_user_agent, $d_b) !== false ){
 						$inp_stats_user_agent_browser = "$d_b";
 					}
 				}
@@ -187,11 +241,19 @@ if($define_in_register_stats == "1"){
 				$inp_stats_user_agent_browser_icon_mysql = quote_smart($link, $inp_stats_user_agent_browser_icon);
 
 
+				// Browser version
+				$inp_stats_user_agent_browser_version = 0;
+				if($inp_stats_user_agent_browser != ""){
+					$inp_stats_user_agent_browser_version = substr($my_user_agent, strrpos($my_user_agent, '/') + 1);
+				}
+				// echo"Agent: $my_user_agent<br />Browser ver: $inp_stats_user_agent_browser_version ";
+				$inp_stats_user_agent_browser_version = output_html($inp_stats_user_agent_browser_version);
+				$inp_stats_user_agent_browser_version_mysql = quote_smart($link, $inp_stats_user_agent_browser_version);
+
 
 				// Browser
 				$inp_stats_user_agent_browser = output_html(ucfirst($inp_stats_user_agent_browser));
 				$inp_stats_user_agent_browser_mysql = quote_smart($link, $inp_stats_user_agent_browser);
-
 
 
 				// Insert new desktop
@@ -200,8 +262,8 @@ if($define_in_register_stats == "1"){
 				stats_user_agent_browser_icon, stats_user_agent_os, stats_user_agent_os_version, stats_user_agent_os_icon, stats_user_agent_bot, 
 				stats_user_agent_bot_icon, stats_user_agent_bot_website, stats_user_agent_banned) 
 				VALUES
-				(NULL, $inp_user_agent_mysql, 'desktop', $inp_stats_user_agent_browser_mysql, 0, 
-				$inp_stats_user_agent_browser_icon_mysql, $inp_stats_user_agent_os_mysql, 0, $inp_stats_user_agent_os_icon_mysql, '', 
+				(NULL, $my_user_agent_mysql, 'desktop', $inp_stats_user_agent_browser_mysql, $inp_stats_user_agent_browser_version_mysql, 
+				$inp_stats_user_agent_browser_icon_mysql, $inp_stats_user_agent_os_mysql, $inp_stats_user_agent_os_version_mysql, $inp_stats_user_agent_os_icon_mysql, '', 
 				'', '', '0')
 				") or die(mysqli_error($link));
 
@@ -222,7 +284,7 @@ if($define_in_register_stats == "1"){
 			'bot', 'crawler');
 
 		foreach($crawlers as $c){
- 			if(stripos($inp_user_agent, $c) !== false ){
+ 			if(stripos($my_user_agent, $c) !== false ){
 
 
 
@@ -236,12 +298,12 @@ if($define_in_register_stats == "1"){
 						$visitor_type = "bot";
 
 						// URL
-						$inp_stats_user_agent_url = "http://" . $inp_user_agent . ".com";
+						$inp_stats_user_agent_url = "http://" . $my_user_agent . ".com";
 						$inp_stats_user_agent_url = output_html($inp_stats_user_agent_url);
 						$inp_stats_user_agent_url_mysql = quote_smart($link, $inp_stats_user_agent_url);
 
 						// Agent Name
-						$inp_stats_user_agent_bot = ucfirst($inp_user_agent);
+						$inp_stats_user_agent_bot = ucfirst($my_user_agent);
 						$inp_stats_user_agent_bot = output_html($inp_stats_user_agent_bot);
 						$inp_stats_user_agent_bot_mysql = quote_smart($link, $inp_stats_user_agent_bot);
 
@@ -256,7 +318,7 @@ if($define_in_register_stats == "1"){
 						stats_user_agent_browser_icon, stats_user_agent_os, stats_user_agent_os_version, stats_user_agent_os_icon, stats_user_agent_bot, 
 						stats_user_agent_bot_icon, stats_user_agent_bot_website, stats_user_agent_banned) 
 						VALUES
-						(NULL, $inp_user_agent_mysql, 'bot', '', 0, 
+						(NULL, $my_user_agent_mysql, 'bot', '', 0, 
 						'', '', 0, '' $inp_stats_user_agent_bot_mysql, 
 						$inp_stats_user_agent_bot_icon_mysql, $inp_stats_user_agent_url_mysql, '0')
 						") or die(mysqli_error($link));
@@ -275,7 +337,7 @@ if($define_in_register_stats == "1"){
 		mysqli_query($link, "INSERT INTO $t_stats_user_agents_index
 		(stats_user_agent_id, stats_user_agent_string, stats_user_agent_type, stats_user_agent_banned) 
 		VALUES
-		(NULL, $inp_user_agent_mysql, 'unknown', '0')
+		(NULL, $my_user_agent_mysql, 'unknown', '0')
 		") or die(mysqli_error($link));
 
 
@@ -316,7 +378,7 @@ if($define_in_register_stats == "1"){
 
 		$host = $_SERVER['HTTP_HOST'];
 		$from = "$configFromEmailSav";
-		$subject = "New user agent at $host: $inp_user_agent";
+		$subject = "New user agent at $host: $my_user_agent";
 
 		$message = "<html>\n";
 		$message = $message. "<head>\n";
@@ -326,7 +388,7 @@ if($define_in_register_stats == "1"){
 
 		$message = $message . "<p>Hi $get_moderator_user_name,</p>\n\n";
 		$message = $message . "<p><b>Summary:</b><br />There is a new user agent at at $host. Please update database at the control panel dashboard.</p>\n\n";
-		$message = $message . "<p style=\"margin-bottom:0;padding-bottom:0;\"><b>User agent:</b><br />\n<a href=\"https://www.google.no/search?q=$inp_user_agent\">$inp_user_agent</a></p>\n\n";
+		$message = $message . "<p style=\"margin-bottom:0;padding-bottom:0;\"><b>User agent:</b><br />\n<a href=\"https://www.google.no/search?q=$my_user_agent\">$my_user_agent</a></p>\n\n";
 		$message = $message . "<p><b>Actions:</b><br />\n";
 		$message = $message . "Site: <a href=\"$configSiteURLSav\">$configSiteURLSav</a><br />";
 		$message = $message . "Admin: <a href=\"$configControlPanelURLSav\">$configControlPanelURLSav</a></p>";

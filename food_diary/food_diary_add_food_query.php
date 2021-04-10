@@ -187,24 +187,172 @@ else{
 
 
 /*- Query --------------------------------------------------------------------------- */
-if(isset($_GET['q']) OR isset($_POST['q'])){
-	if(isset($_GET['q'])) {
-		$q = $_GET['q'];
-	}
-	else{
-		$q = $_POST['q'];
-	}
-	$q = utf8_decode($q);
-	$q = trim($q);
-	$q = strtolower($q);
+if(isset($_GET['search_query'])){
+	$search_query = $_GET['search_query'];
+	
+	$search_query = trim($search_query);
+
+
+			$search_query = str_replace("å", "|aring;", $search_query);
+			$search_query = str_replace("æ", "|aelig;", $search_query);
+			$search_query = str_replace("Å", "|Aring;", $search_query);
+			$search_query = str_replace("Æ", "|Aelig;", $search_query);
+			$search_query = str_replace("À", "|#192;", $search_query);
+			$search_query = str_replace("Á", "|#193;", $search_query);
+			$search_query = str_replace("Â", "|#194;", $search_query);
+			$search_query = str_replace("Ã", "|#195;", $search_query);
+			$search_query = str_replace("Ä", "|#196;", $search_query);
+			$search_query = str_replace("Å", "|#197;", $search_query);
+			$search_query = str_replace("Æ", "|#198;", $search_query);
+			$search_query = str_replace("Ç", "|#199;", $search_query);
+			$search_query = str_replace("È", "|#200;", $search_query);
+			$search_query = str_replace("É", "|#201;", $search_query);
+			$search_query = str_replace("Ê", "|#202;", $search_query);
+			$search_query = str_replace("Ë", "|#203;", $search_query);
+			$search_query = str_replace("Ì", "|#204;", $search_query);
+			$search_query = str_replace("Í", "|#205;", $search_query);
+			$search_query = str_replace("Î", "|#206;", $search_query);
+			$search_query = str_replace("Ï", "|#207;", $search_query);
+			$search_query = str_replace("Ð", "|#208;", $search_query);
+			$search_query = str_replace("Ñ", "|#209;", $search_query);
+			$search_query = str_replace("Ò", "|#210;", $search_query);
+			$search_query = str_replace("Ó", "|#211;", $search_query);
+			$search_query = str_replace("Ô", "|#212;", $search_query);
+			$search_query = str_replace("Õ", "|#213;", $search_query);
+			$search_query = str_replace("Ö", "|#214;", $search_query);
+			$search_query = str_replace("×", "|#215;", $search_query);  
+			$search_query = str_replace("Ø", "|#216;", $search_query);
+			$search_query = str_replace("Ø", "|Oslash;", $search_query);
+			$search_query = str_replace("ø", "|oslash;", $search_query);
+			$search_query = str_replace("Ù", "|#217;", $search_query);
+			$search_query = str_replace("Ú", "|#218;", $search_query);
+			$search_query = str_replace("Û", "|#219;", $search_query);
+			$search_query = str_replace("Ü", "|#220;", $search_query);
+			$search_query = str_replace("Ý", "|#221;", $search_query);
+			$search_query = str_replace("Þ", "|#222;", $search_query);
+			$search_query = str_replace("ß", "|#223;", $search_query);
+			$search_query = str_replace("à", "|#224;", $search_query);
+			$search_query = str_replace("á", "|#225;", $search_query);
+			$search_query = str_replace("â", "|#226;", $search_query);
+			$search_query = str_replace("ã", "|#227;", $search_query);
+			$search_query = str_replace("ä", "|#228;", $search_query);
+			$search_query = str_replace("å", "|#229;", $search_query);
+			$search_query = str_replace("æ", "|#230;", $search_query);
+			$search_query = str_replace("ç", "|#231;", $search_query);
+			$search_query = str_replace("è", "|#232;", $search_query);
+			$search_query = str_replace("é", "|#233;", $search_query);
+			$search_query = str_replace("ê", "|#234;", $search_query);
+			$search_query = str_replace("ë", "|#235;", $search_query);
+			$search_query = str_replace("ì", "|#236;", $search_query);
+			$search_query = str_replace("í", "|#237;", $search_query);
+			$search_query = str_replace("î", "|#238;", $search_query);
+			$search_query = str_replace("ï", "|#239;", $search_query);
+			$search_query = str_replace("ð", "|#240;", $search_query);
+			$search_query = str_replace("ñ", "|#241;", $search_query);
+			$search_query = str_replace("ñ", "|ntilde;", $search_query);
+			$search_query = str_replace("ò", "|#242;", $search_query);
+			$search_query = str_replace("ó", "|#243;", $search_query);
+			$search_query = str_replace("ô", "|#244;", $search_query);
+			$search_query = str_replace("õ", "|#245;", $search_query);
+			$search_query = str_replace("ö", "|#246;", $search_query);
+			$search_query = str_replace("÷", "|#247;", $search_query); 
+			$search_query = str_replace("ø", "|#248;", $search_query);
+			$search_query = str_replace("ù", "|#249;", $search_query);
+			$search_query = str_replace("ú", "|#250;", $search_query);
+			$search_query = str_replace("û", "|#251;", $search_query);
+			$search_query = str_replace("ü", "|#252;", $search_query);
+			$search_query = str_replace("ý", "|#253;", $search_query);
+			$search_query = str_replace("þ", "|#254;", $search_query);
+			$search_query = str_replace("ÿ", "|#255;", $search_query);
+
+
+
+	$search_query = strtolower($search_query);
+	$search_query = output_html($search_query);
+
+
+
+	$search_query = str_replace("|aring;", "&aring;", $search_query);
+	$search_query = str_replace("|aelig;", "&aelig;", $search_query);
+	$search_query = str_replace("|Aring;", "Å", $search_query);
+	$search_query = str_replace("|Aelig;", "Æ", $search_query);
+	$search_query = str_replace("|#192;", "À", $search_query);
+	$search_query = str_replace("|#193;", "Á", $search_query);
+	$search_query = str_replace("|#194;", "Â", $search_query);
+	$search_query = str_replace("|#195;", "Ã", $search_query);
+	$search_query = str_replace("|#196;", "Ä", $search_query);
+	$search_query = str_replace("|#197;", "Å", $search_query);
+	$search_query = str_replace("|#198;", "Æ", $search_query);
+	$search_query = str_replace("|#199;", "Ç", $search_query);
+	$search_query = str_replace("|#200;", "È", $search_query);
+	$search_query = str_replace("|#201;", "É", $search_query);
+	$search_query = str_replace("|#202;", "Ê", $search_query);
+	$search_query = str_replace("|#203;", "Ë", $search_query);
+	$search_query = str_replace("|#204;", "Ì", $search_query);
+	$search_query = str_replace("|#205;", "Í", $search_query);
+	$search_query = str_replace("|#206;", "Î", $search_query);
+	$search_query = str_replace("|#207;", "Ï", $search_query);
+	$search_query = str_replace("|#208;", "Ð", $search_query);
+	$search_query = str_replace("|#209;", "Ñ", $search_query);
+	$search_query = str_replace("|#210;", "Ò", $search_query);
+	$search_query = str_replace("|#211;", "Ó", $search_query);
+	$search_query = str_replace("|#212;", "Ô", $search_query);
+	$search_query = str_replace("|#213;", "Õ", $search_query);
+	$search_query = str_replace("|#214;", "Ö", $search_query);
+	$search_query = str_replace("|#215;", "×", $search_query);  
+	$search_query = str_replace("|#216;", "Ø", $search_query);
+	$search_query = str_replace("|Oslash;", "Ø", $search_query);
+	$search_query = str_replace("|oslash;", "&oslash;", $search_query);
+	$search_query = str_replace("|oslash;", "ø", $search_query);
+	$search_query = str_replace("|#217;", "Ù", $search_query);
+	$search_query = str_replace("|#218;", "Ú", $search_query);
+	$search_query = str_replace("|#219;", "Û", $search_query);
+	$search_query = str_replace("|#220;", "Ü", $search_query);
+	$search_query = str_replace("|#221;", "Ý", $search_query);
+	$search_query = str_replace("|#222;", "Þ", $search_query);
+	$search_query = str_replace("|#223;", "ß", $search_query);
+	$search_query = str_replace("|#224;", "à", $search_query);
+	$search_query = str_replace("|#225;", "á", $search_query);
+	$search_query = str_replace("|#226;", "â", $search_query);
+	$search_query = str_replace("|#227;", "ã", $search_query);
+	$search_query = str_replace("|#228;", "ä", $search_query);
+	$search_query = str_replace("|#229;", "å", $search_query);
+	$search_query = str_replace("|#230;", "æ", $search_query);
+	$search_query = str_replace("|#231;", "ç", $search_query);
+	$search_query = str_replace("|#232;", "è", $search_query);
+	$search_query = str_replace("|#233;", "é", $search_query);
+	$search_query = str_replace("|#234;", "ê", $search_query);
+	$search_query = str_replace("|#235;", "ë", $search_query);
+	$search_query = str_replace("|#236;", "ì", $search_query);
+	$search_query = str_replace("|#237;", "í", $search_query);
+	$search_query = str_replace("|#238;", "î", $search_query);
+	$search_query = str_replace("|#239;", "ï", $search_query);
+	$search_query = str_replace("|#240;", "ð", $search_query);
+	$search_query = str_replace("|#241;", "ñ", $search_query);
+	$search_query = str_replace("|ntilde;", "ñ", $search_query);
+	$search_query = str_replace("|#242;", "ò", $search_query);
+	$search_query = str_replace("|#243;", "ó", $search_query);
+	$search_query = str_replace("|#244;", "ô", $search_query);
+	$search_query = str_replace("|#245;", "õ", $search_query);
+	$search_query = str_replace("|#246;", "ö", $search_query);
+	$search_query = str_replace("|#247;", "÷", $search_query); 
+	$search_query = str_replace("|#248;", "ø", $search_query);
+	$search_query = str_replace("|#249;", "ù", $search_query);
+	$search_query = str_replace("|#250;", "ú", $search_query);
+	$search_query = str_replace("|#251;", "û", $search_query);
+	$search_query = str_replace("|#252;", "ü", $search_query);
+	$search_query = str_replace("|#253;", "ý", $search_query);
+	$search_query = str_replace("|#254;", "þ", $search_query);
+	$search_query = str_replace("|#255;", "ÿ", $search_query);
+
+
+	$search_query_mysql = quote_smart($link, $search_query);
+
+
 	$inp_datetime = date("Y-m-d H:i:s");
-	$q = output_html($q);
-	$q_mysql = quote_smart($link, $q);
 
-
-
-	if($q != ""){
-		$query_t = "SELECT query_name, query_times FROM $t_food_index_queries WHERE query_name=$q_mysql";
+	if($search_query != ""){
+		$query_t = "SELECT query_name, query_times FROM $t_food_index_queries WHERE query_name=$search_query_mysql";
 		$result_t = mysqli_query($link, $query_t);
 		$row_t = mysqli_fetch_row($result_t);
 		list($get_query_name, $get_query_times) = $row_t;
@@ -215,28 +363,28 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 			mysqli_query($link, "INSERT INTO $t_food_index_queries
 			(query_name, query_times, query_last_use) 
 			VALUES
-			($q_mysql, '1', '$inp_datetime') ")
+			($search_query_mysql, '1', '$inp_datetime') ")
 			or $insert_error = 1;
 
 		}
 		else{
 			$inp_query_times = $get_query_times+1;
 
-			$result = mysqli_query($link, "UPDATE $t_food_index_queries SET query_times='$inp_query_times', query_last_use='$inp_datetime' WHERE query_name=$q_mysql");
+			$result = mysqli_query($link, "UPDATE $t_food_index_queries SET query_times='$inp_query_times', query_last_use='$inp_datetime' WHERE query_name=$search_query_mysql");
 		}
 
 
 
 		// Ready for MySQL search
-		$q = "" . $q . "%";
-		$q_mysql = quote_smart($link, $q);
+		$search_query = "" . $search_query . "%";
+		$search_query_mysql = quote_smart($link, $search_query);
 
 
 		// Set layout
 		$x = 0;
 
 		// Query
-		$query = "SELECT food_id, food_user_id, food_name, food_clean_name, food_manufacturer_name, food_manufacturer_name_and_food_name, food_description, food_country, food_net_content_metric, food_net_content_measurement_metric, food_net_content_us, food_net_content_measurement_us, food_net_content_added_measurement, food_serving_size_metric, food_serving_size_measurement_metric, food_serving_size_us, food_serving_size_measurement_us, food_serving_size_added_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy_metric, food_fat_metric, food_saturated_fat_metric, food_monounsaturated_fat_metric, food_polyunsaturated_fat_metric, food_cholesterol_metric, food_carbohydrates_metric, food_carbohydrates_of_which_sugars_metric, food_dietary_fiber_metric, food_proteins_metric, food_salt_metric, food_sodium_metric, food_energy_us, food_fat_us, food_saturated_fat_us, food_monounsaturated_fat_us, food_polyunsaturated_fat_us, food_cholesterol_us, food_carbohydrates_us, food_carbohydrates_of_which_sugars_us, food_dietary_fiber_us, food_proteins_us, food_salt_us, food_sodium_us, food_score, food_energy_calculated_metric, food_fat_calculated_metric, food_saturated_fat_calculated_metric, food_monounsaturated_fat_calculated_metric, food_polyunsaturated_fat_calculated_metric, food_cholesterol_calculated_metric, food_carbohydrates_calculated_metric, food_carbohydrates_of_which_sugars_calculated_metric, food_dietary_fiber_calculated_metric, food_proteins_calculated_metric, food_salt_calculated_metric, food_sodium_calculated_metric, food_energy_calculated_us, food_fat_calculated_us, food_saturated_fat_calculated_us, food_monounsaturated_fat_calculated_us, food_polyunsaturated_fat_calculated_us, food_cholesterol_calculated_us, food_carbohydrates_calculated_us, food_carbohydrates_of_which_sugars_calculated_us, food_dietary_fiber_calculated_us, food_proteins_calculated_us, food_salt_calculated_us, food_sodium_calculated_us, food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_image_a, food_thumb_a_small, food_thumb_a_medium, food_thumb_a_large, food_image_b, food_thumb_b_small, food_thumb_b_medium, food_thumb_b_large, food_image_c, food_thumb_c_small, food_thumb_c_medium, food_thumb_c_large, food_image_d, food_thumb_d_small, food_thumb_d_medium, food_thumb_d_large, food_image_e, food_thumb_e_small, food_thumb_e_medium, food_thumb_e_large, food_last_used, food_language, food_synchronized, food_accepted_as_master, food_notes, food_unique_hits, food_unique_hits_ip_block, food_comments, food_likes, food_dislikes, food_likes_ip_block, food_user_ip, food_created_date, food_last_viewed, food_age_restriction FROM $t_food_index WHERE food_language=$l_mysql AND (food_name LIKE $q_mysql OR food_manufacturer_name LIKE $q_mysql)";
+		$query = "SELECT food_id, food_user_id, food_name, food_clean_name, food_manufacturer_name, food_manufacturer_name_and_food_name, food_description, food_country, food_net_content_metric, food_net_content_measurement_metric, food_net_content_us, food_net_content_measurement_us, food_net_content_added_measurement, food_serving_size_metric, food_serving_size_measurement_metric, food_serving_size_us, food_serving_size_measurement_us, food_serving_size_added_measurement, food_serving_size_pcs, food_serving_size_pcs_measurement, food_energy_metric, food_fat_metric, food_saturated_fat_metric, food_monounsaturated_fat_metric, food_polyunsaturated_fat_metric, food_cholesterol_metric, food_carbohydrates_metric, food_carbohydrates_of_which_sugars_metric, food_dietary_fiber_metric, food_proteins_metric, food_salt_metric, food_sodium_metric, food_energy_us, food_fat_us, food_saturated_fat_us, food_monounsaturated_fat_us, food_polyunsaturated_fat_us, food_cholesterol_us, food_carbohydrates_us, food_carbohydrates_of_which_sugars_us, food_dietary_fiber_us, food_proteins_us, food_salt_us, food_sodium_us, food_score, food_energy_calculated_metric, food_fat_calculated_metric, food_saturated_fat_calculated_metric, food_monounsaturated_fat_calculated_metric, food_polyunsaturated_fat_calculated_metric, food_cholesterol_calculated_metric, food_carbohydrates_calculated_metric, food_carbohydrates_of_which_sugars_calculated_metric, food_dietary_fiber_calculated_metric, food_proteins_calculated_metric, food_salt_calculated_metric, food_sodium_calculated_metric, food_energy_calculated_us, food_fat_calculated_us, food_saturated_fat_calculated_us, food_monounsaturated_fat_calculated_us, food_polyunsaturated_fat_calculated_us, food_cholesterol_calculated_us, food_carbohydrates_calculated_us, food_carbohydrates_of_which_sugars_calculated_us, food_dietary_fiber_calculated_us, food_proteins_calculated_us, food_salt_calculated_us, food_sodium_calculated_us, food_barcode, food_main_category_id, food_sub_category_id, food_image_path, food_image_a, food_thumb_a_small, food_thumb_a_medium, food_thumb_a_large, food_image_b, food_thumb_b_small, food_thumb_b_medium, food_thumb_b_large, food_image_c, food_thumb_c_small, food_thumb_c_medium, food_thumb_c_large, food_image_d, food_thumb_d_small, food_thumb_d_medium, food_thumb_d_large, food_image_e, food_thumb_e_small, food_thumb_e_medium, food_thumb_e_large, food_last_used, food_language, food_synchronized, food_accepted_as_master, food_notes, food_unique_hits, food_unique_hits_ip_block, food_comments, food_likes, food_dislikes, food_likes_ip_block, food_user_ip, food_created_date, food_last_viewed, food_age_restriction FROM $t_food_index WHERE food_language=$l_mysql AND (food_name LIKE $search_query_mysql OR food_manufacturer_name LIKE $search_query_mysql)";
 	
 		// Order
 		if($order_by != ""){
@@ -474,11 +622,11 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 		}
 	}
 	else{
-		echo"Q is blank";
+		echo"<p>Search query is blank. Please enter a search query.</p>";
 	}
 }
 else{
-	echo"No q";
+	echo"<p>No search query given.</p>";
 }
 
 

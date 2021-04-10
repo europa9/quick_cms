@@ -154,7 +154,6 @@ input {
 	border: #cccccc 1px solid; 
 	border-radius: 5px;
 	color: #333333;
-  line-height: 200%;
 }
 .btn_default:hover {
 	border: #adadad 1px solid; 

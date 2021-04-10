@@ -4,7 +4,7 @@
 * File: _admin/_inc/user_agents.php
 * Version 2
 * Date 20:54 27.04.2019
-* Copyright (c) 2008-2019 Sindre Andre Ditlefsen
+* Copyright (c) 2021 Sindre Andre Ditlefsen
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -49,6 +49,12 @@ if($action == ""){
 		}
 		echo"	
 	<!-- //Feedback -->
+
+	<!-- Buttons -->
+		<p>
+		<a href=\"index.php?open=dashboard&amp;page=user_agents_export&amp;editor_language=$editor_language&amp;l=$l\" class=\"btn_default\">Export</a>
+		</p>
+	<!-- //Buttons -->
 
 	<!-- User agents -->
 
@@ -128,10 +134,10 @@ if($action == ""){
 elseif($action == "edit_user_agent"){
 	// Find user agent
 	$user_agent_id_mysql = quote_smart($link, $user_agent_id);
-	$query = "SELECT stats_user_agent_id, stats_user_agent_string, stats_user_agent_type, stats_user_agent_browser, stats_user_agent_browser_version, stats_user_agent_browser_icon, stats_user_agent_os, stats_user_agent_os_version, stats_user_agent_os_icon, stats_user_agent_bot, stats_user_agent_bot_icon, stats_user_agent_bot_website, stats_user_agent_banned FROM $t_stats_user_agents_index WHERE stats_user_agent_id=$user_agent_id_mysql";
+	$query = "SELECT stats_user_agent_id, stats_user_agent_string, stats_user_agent_type, stats_user_agent_browser, stats_user_agent_browser_version, stats_user_agent_browser_icon, stats_user_agent_os, stats_user_agent_os_version, stats_user_agent_os_icon, stats_user_agent_bot, stats_user_agent_bot_version, stats_user_agent_bot_icon, stats_user_agent_bot_website, stats_user_agent_banned FROM $t_stats_user_agents_index WHERE stats_user_agent_id=$user_agent_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_stats_user_agent_id, $get_current_stats_user_agent_string, $get_current_stats_user_agent_type, $get_current_stats_user_agent_browser, $get_current_stats_user_agent_browser_version, $get_current_stats_user_agent_browser_icon, $get_current_stats_user_agent_os, $get_current_stats_user_agent_os_version, $get_current_stats_user_agent_os_icon, $get_current_stats_user_agent_bot, $get_current_stats_user_agent_bot_icon, $get_current_stats_user_agent_bot_website, $get_current_stats_user_agent_banned) = $row;
+	list($get_current_stats_user_agent_id, $get_current_stats_user_agent_string, $get_current_stats_user_agent_type, $get_current_stats_user_agent_browser, $get_current_stats_user_agent_browser_version, $get_current_stats_user_agent_browser_icon, $get_current_stats_user_agent_os, $get_current_stats_user_agent_os_version, $get_current_stats_user_agent_os_icon, $get_current_stats_user_agent_bot, $get_current_stats_user_agent_bot_version, $get_current_stats_user_agent_bot_icon, $get_current_stats_user_agent_bot_website, $get_current_stats_user_agent_banned) = $row;
 
 	if($get_current_stats_user_agent_id == ""){
 		echo"
@@ -185,6 +191,10 @@ elseif($action == "edit_user_agent"){
 		}
 		$inp_bot_icon_mysql = quote_smart($link, $inp_bot_icon);
 		
+		$inp_bot_version = $_POST['inp_bot_version'];
+		$inp_bot_version = output_html($inp_bot_version);
+		$inp_bot_version_mysql = quote_smart($link, $inp_bot_version);
+
 		$inp_type = $_POST['inp_type'];
 		$inp_type = output_html($inp_type);
 		$inp_type_mysql = quote_smart($link, $inp_type);
@@ -200,8 +210,13 @@ elseif($action == "edit_user_agent"){
 		$inp_banned_mysql = quote_smart($link, $inp_banned);
 		
 		
-		$result = mysqli_query($link, "UPDATE $t_stats_user_agents_index SET stats_user_agent_browser=$inp_browser_mysql, stats_user_agent_browser_version=$inp_browser_version_mysql, 
-				stats_user_agent_os=$inp_os_mysql, stats_user_agent_os_version=$inp_os_version_mysql, stats_user_agent_bot=$inp_bot_mysql, 
+		$result = mysqli_query($link, "UPDATE $t_stats_user_agents_index SET 
+						stats_user_agent_browser=$inp_browser_mysql, 
+						stats_user_agent_browser_version=$inp_browser_version_mysql, 
+						stats_user_agent_os=$inp_os_mysql, 
+						stats_user_agent_os_version=$inp_os_version_mysql, 
+						stats_user_agent_bot=$inp_bot_mysql, 
+						stats_user_agent_bot_version=$inp_bot_version_mysql, 
 				stats_user_agent_browser_icon=$inp_browser_icon_mysql, stats_user_agent_os_icon=$inp_os_icon_mysql, 
 				stats_user_agent_bot_icon=$inp_bot_icon_mysql, stats_user_agent_type=$inp_type_mysql, stats_user_agent_banned=$inp_banned_mysql 
 				WHERE stats_user_agent_id=$get_current_stats_user_agent_id") or die(mysqli_error($link));
@@ -248,6 +263,8 @@ elseif($action == "edit_user_agent"){
 		<input type=\"text\" name=\"inp_os_version\" size=\"20\" value=\"$get_current_stats_user_agent_os_version\" /></p>
 		<p><b>$l_bot</b><br />
 		<input type=\"text\" name=\"inp_bot\" size=\"20\" value=\"$get_current_stats_user_agent_bot\" /></p>
+		<p><b>$l_bot version</b><br />
+		<input type=\"text\" name=\"inp_bot_version\" size=\"20\" value=\"$get_current_stats_user_agent_bot_version\" /></p>
 		
 		<p><b>$l_type</b><br />
 		<select name=\"inp_type\">

@@ -156,13 +156,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
         					// getting the value that user typed
         					var searchString    = $(\"#inp_entry_food_query\").val();
         					// forming the queryString
-       						var data            = 'l=$l&date=$date&hour_name=$hour_name&q='+ searchString;
+       						var data            = 'l=$l&date=$date&hour_name=$hour_name&search_query='+ searchString;
          
         					// if searchString is not empty
         					if(searchString) {
         						// ajax call
           						\$.ajax({
-                						type: \"POST\",
+                						type: \"GET\",
                							url: \"food_diary_add_food_query.php\",
                 						data: data,
 								beforeSend: function(html) { // this happens before actual call
@@ -513,13 +513,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
         					// getting the value that user typed
         					var searchString    = $(\"#inp_entry_food_query\").val();
         					// forming the queryString
-       						var data            = 'l=$l&date=$date&hour_name=$hour_name&q='+ searchString;
+       						var data            = 'l=$l&date=$date&hour_name=$hour_name&search_query='+ searchString;
          
         					// if searchString is not empty
         					if(searchString) {
         						// ajax call
           						\$.ajax({
-                						type: \"POST\",
+                						type: \"GET\",
                							url: \"food_diary_add_food_query.php\",
                 						data: data,
 								beforeSend: function(html) { // this happens before actual call
@@ -869,13 +869,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
         					// getting the value that user typed
         					var searchString    = $(\"#inp_entry_food_query\").val();
         					// forming the queryString
-       						var data            = 'l=$l&date=$date&hour_name=$hour_name&q='+ searchString;
+       						var data            = 'l=$l&date=$date&hour_name=$hour_name&search_query='+ searchString;
          
         					// if searchString is not empty
         					if(searchString) {
         						// ajax call
           						\$.ajax({
-                						type: \"POST\",
+                						type: \"GET\",
                							url: \"food_diary_add_food_query.php\",
                 						data: data,
 								beforeSend: function(html) { // this happens before actual call
@@ -1290,13 +1290,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
         					// getting the value that user typed
         					var searchString    = $(\"#inp_entry_food_query\").val();
         					// forming the queryString
-       						var data            = 'l=$l&date=$date&hour_name=$hour_name&q='+ searchString;
+       						var data            = 'l=$l&date=$date&hour_name=$hour_name&search_query='+ searchString;
          
         					// if searchString is not empty
         					if(searchString) {
         						// ajax call
           						\$.ajax({
-                						type: \"POST\",
+                						type: \"GET\",
                							url: \"food_diary_add_food_query.php\",
                 						data: data,
 								beforeSend: function(html) { // this happens before actual call

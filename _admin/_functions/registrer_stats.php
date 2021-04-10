@@ -62,9 +62,9 @@ $t_stats_tracker_index = $mysqlPrefixSav . "stats_tracker_index";
 $t_stats_tracker_urls  = $mysqlPrefixSav . "stats_tracker_urls";
 
 /*- Find me based on user ------------------------------------------------------------------- */
-$inp_user_agent = $_SERVER['HTTP_USER_AGENT'];
-$inp_user_agent = output_html($inp_user_agent);
-$inp_user_agent_mysql = quote_smart($link, $inp_user_agent);
+$my_user_agent = $_SERVER['HTTP_USER_AGENT'];
+$my_user_agent = output_html($my_user_agent);
+$my_user_agent_mysql = quote_smart($link, $my_user_agent);
 
 $my_ip = $_SERVER['REMOTE_ADDR'];
 $my_ip = output_html($my_ip);
@@ -89,7 +89,7 @@ $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
 list($get_banned_hostname_id) = $row;
 
-$query = "SELECT banned_user_agent_id FROM $t_banned_user_agents WHERE banned_user_agent=$inp_user_agent_mysql";
+$query = "SELECT banned_user_agent_id FROM $t_banned_user_agents WHERE banned_user_agent=$my_user_agent_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
 list($get_banned_user_agent_id) = $row;
@@ -111,7 +111,7 @@ if($get_banned_ip_id != "" OR $get_banned_hostname_id != "" OR $get_banned_user_
 		echo"<p>Hostname ";echo $inp_hostname;echo" is banned.</p>\n";
 	}
 	if($get_banned_user_agent_id != ""){
-		echo"<p>User agent ";echo $user_agent;echo" is banned.</p>\n";
+		echo"<p>User agent ";echo $my_user_agent;echo" is banned.</p>\n";
 	}
 	echo"</body>\n";
 	echo"</html>";
@@ -120,7 +120,7 @@ if($get_banned_ip_id != "" OR $get_banned_hostname_id != "" OR $get_banned_user_
 
 
 // Find user agent. By looking for user agent we can know if it is human or bot
-$query = "SELECT stats_user_agent_id, stats_user_agent_string, stats_user_agent_type, stats_user_agent_browser, stats_user_agent_browser_version, stats_user_agent_browser_icon, stats_user_agent_os, stats_user_agent_os_version, stats_user_agent_os_icon, stats_user_agent_bot, stats_user_agent_bot_icon, stats_user_agent_bot_website, stats_user_agent_banned FROM $t_stats_user_agents_index WHERE stats_user_agent_string=$inp_user_agent_mysql";
+$query = "SELECT stats_user_agent_id, stats_user_agent_string, stats_user_agent_type, stats_user_agent_browser, stats_user_agent_browser_version, stats_user_agent_browser_icon, stats_user_agent_os, stats_user_agent_os_version, stats_user_agent_os_icon, stats_user_agent_bot, stats_user_agent_bot_icon, stats_user_agent_bot_website, stats_user_agent_banned FROM $t_stats_user_agents_index WHERE stats_user_agent_string=$my_user_agent_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
 list($get_stats_user_agent_id, $get_stats_user_agent_string, $get_stats_user_agent_type, $get_stats_user_agent_browser, $get_stats_user_agent_browser_version, $get_stats_user_agent_browser_icon, $get_stats_user_agent_os, $get_stats_user_agent_os_version, $get_stats_user_agent_os_icon, $get_stats_user_agent_bot, $get_stats_user_agent_bot_icon, $get_stats_user_agent_bot_website, $get_stats_user_agent_banned) = $row;
@@ -1218,7 +1218,7 @@ else{
 		$row = mysqli_fetch_row($result);
 		list($get_tracker_id, $get_tracker_time_start, $get_tracker_hits) = $row;
 		if($get_tracker_id == ""){
-			$inp_tracker_ip_masked = substr($my_ip, -6);
+			$inp_tracker_ip_masked = substr($my_ip, -12);
 			$inp_tracker_ip_masked = "..." . $inp_tracker_ip_masked;
 			$inp_tracker_ip_masked_mysql = quote_smart($link, $inp_tracker_ip_masked);
 			mysqli_query($link, "INSERT INTO $t_stats_tracker_index 

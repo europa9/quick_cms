@@ -95,9 +95,9 @@ echo"
 
 <!-- Search -->
 	<div class=\"exercises_float_left\">
-		<form method=\"post\" action=\"search_exercise.php\" enctype=\"multipart/form-data\">
+		<form method=\"get\" action=\"search_exercise.php\" enctype=\"multipart/form-data\">
 		<p>
-		<input type=\"text\" name=\"q\" value=\"\" size=\"20\" id=\"nettport_inp_search_query\" />
+		<input type=\"text\" name=\"search_query\" value=\"\" size=\"20\" id=\"nettport_inp_search_query\" />
 		<input type=\"submit\" value=\"$l_search\" id=\"nettport_search_submit_button\" />
 		</p>
 	
@@ -107,13 +107,13 @@ echo"
 		\$(document).ready(function () {
 			\$('#nettport_inp_search_query').keyup(function () {
         			var searchString    = $(\"#nettport_inp_search_query\").val();
-       				var data            = 'l=$l&q='+ searchString;
+       				var data            = 'l=$l&search_query='+ searchString;
          
         			// if searchString is not empty
         			if(searchString) {
            				// ajax call
             				\$.ajax({
-                				type: \"POST\",
+                				type: \"GET\",
                					url: \"search_exercise_jquery.php\",
                 				data: data,
 						beforeSend: function(html) { // this happens before actual call

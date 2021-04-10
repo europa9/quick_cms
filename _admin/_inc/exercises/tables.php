@@ -45,6 +45,7 @@ $t_exercise_levels_translations 		= $mysqlPrefixSav . "exercise_levels_translati
 
 $t_exercise_muscles_images			= $mysqlPrefixSav . "exercise_muscles_images";
 
+$t_exercise_search_queries 			= $mysqlPrefixSav . "exercise_search_queries";
 
 
 

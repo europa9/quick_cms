@@ -15,7 +15,7 @@ $t_exercise_types				= $mysqlPrefixSav . "exercise_types";
 $t_exercise_types_translations 			= $mysqlPrefixSav . "exercise_types_translations";
 $t_exercise_levels				= $mysqlPrefixSav . "exercise_levels";
 $t_exercise_levels_translations 		= $mysqlPrefixSav . "exercise_levels_translations";
-
+$t_exercise_search_queries 			= $mysqlPrefixSav . "exercise_search_queries";
 
 /*- Tables Muscles ---------------------------------------------------------------------------- */
 $t_muscles				= $mysqlPrefixSav . "muscles";
@@ -27,5 +27,16 @@ $t_muscle_part_of_translations	 	= $mysqlPrefixSav . "muscle_part_of_translation
 
 /*- Tables Ads ---------------------------------------------------------------------------- */
 $t_ads_index				= $mysqlPrefixSav . "ads_index";
+
+/*- Tables stats ---------------------------------------------------------------------------- */
+$t_stats_comments_per_year	= $mysqlPrefixSav . "stats_comments_per_year";
+$t_stats_comments_per_month	= $mysqlPrefixSav . "stats_comments_per_month";
+
+
+/*- Tables mod ---------------------------------------------------------------------------- */
+$t_users_moderator_of_the_week	= $mysqlPrefixSav . "users_moderator_of_the_week";
+
+/*- Search engine ---------------------------------------------------------------------------- */
+$t_search_engine_index 	= $mysqlPrefixSav . "search_engine_index";
 
 ?>

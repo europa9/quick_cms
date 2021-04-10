@@ -1,4 +1,25 @@
 
+/*- Left and right ------------------------------------------------------------------------------ */
+div.exercises_float_left{
+	float: left;
+}
+div.exercises_float_right{
+	float: right;
+}
+@media screen and (max-width: 52.375em) {
+	div.exercises_float_left{
+		float: none;
+	}
+	div.exercises_float_right{
+		float: none;
+		padding: 0px 0px 0px 0px;
+		overflow: auto;
+		white-space: nowrap;
+	}
+}
+
+
+
 /*- Meta ------------------------------------------------------- */
 	div.meta_left{
 		float: left;
