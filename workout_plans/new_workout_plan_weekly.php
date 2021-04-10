@@ -259,6 +259,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								 WHERE index_id=$get_index_id") or die(mysqli_error($link));
 			}
 
+
 			// Header
 			$url = "new_workout_plan_weekly_step_2_template_image.php?weekly_id=$weekly_id&l=$l";
 			header("Location: $url");

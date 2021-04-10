@@ -192,6 +192,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								 WHERE index_id=$get_index_id") or die(mysqli_error($link));
 			}
 
+			// Make sure workout plan exists in feed
+			include("new_workout_plan_weekly_include_insert_into_feed.php");
+
 
 			// Header
 			$url = "weekly_workout_plan_edit_info.php?weekly_id=$weekly_id&duration_type=$duration_type=&l=$l";

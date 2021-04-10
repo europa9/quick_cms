@@ -222,9 +222,7 @@ echo"
 					}
 
 					echo"
-					<a href=\"weekly_workout_plan_view";
-					if($get_stats_user_agent_type == "mobile"){ echo"_mobile"; } 
-					echo".php?weekly_id=$get_workout_weekly_id&amp;l=$l\"><img src=\"$root/$get_workout_weekly_image_path/$get_workout_weekly_image_thumb_400x225\" alt=\"$get_workout_weekly_image_thumb_400x225\" /></a><br />
+					<a href=\"weekly_workout_plan_view.php?weekly_id=$get_workout_weekly_id&amp;l=$l\"><img src=\"$root/$get_workout_weekly_image_path/$get_workout_weekly_image_thumb_400x225\" alt=\"$get_workout_weekly_image_thumb_400x225\" /></a><br />
 					<a href=\"weekly_workout_plan_view";
 					if($get_stats_user_agent_type == "mobile"){ echo"_mobile"; } 
 					echo".php?weekly_id=$get_workout_weekly_id&amp;l=$l\" class=\"h2\">$get_workout_weekly_title</a>

@@ -93,11 +93,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<!-- //Feedback -->
 
 			<!-- Quick menu -->
-			<div style=\"height:10px;\"></div>
-			<p style=\"padding-bottom:0;\">
-				<a href=\"my_workout_plans.php?l=$l\" class=\"btn_default\">$l_my_workout_plans</a>
-			</p>
-			<div style=\"clear:both;height:10px;\"></div>
+				<div style=\"height:10px;\"></div>
+				<p style=\"padding-bottom:0;\">
+					<a href=\"my_workout_plans.php?l=$l\" class=\"btn_default\">$l_my_workout_plans</a>
+				</p>
+				<div style=\"clear:both;height:10px;\"></div>
 			<!-- //Quick menu -->
 
 			<!-- Select plan - Select session - registrer -->
@@ -121,6 +121,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			echo"
 					</ul>
 				</div>
+				<div class=\"clear\"></div>
 			<!-- //Select plan - Select session - registrer -->
 			";
 		} // more than 1 plan

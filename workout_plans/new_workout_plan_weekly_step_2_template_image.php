@@ -311,6 +311,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 										workout_weekly_image_thumb_400x225=$inp_thumb_400x225_mysql WHERE workout_weekly_id=$weekly_id_mysql");
 
 
+						// Make sure workout plan exists in feed
+						include("new_workout_plan_weekly_include_insert_into_feed.php");
+
 						// Header
 						$url = "new_workout_plan_weekly_step_3_sessions.php?weekly_id=$get_current_workout_weekly_id&l=$l&ft=success&fm=image_uploaded";
 						header("Location: $url");
@@ -374,6 +377,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							 WHERE workout_weekly_id=$weekly_id_mysql") or die(mysqli_error($link));
 
 
+			// Make sure workout plan exists in feed
+			include("new_workout_plan_weekly_include_insert_into_feed.php");
 
 			// Header
 			$url = "new_workout_plan_weekly_step_3_sessions.php?weekly_id=$get_current_workout_weekly_id&l=$l";
