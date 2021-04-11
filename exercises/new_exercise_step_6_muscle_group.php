@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: exercise/new_exercise_step_5_muscles.php
+* File: exercise/new_exercise_step_6_muscle_group.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -116,8 +116,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$inp_exercise_muscle_group_id_sub = output_html($inp_exercise_muscle_group_id_sub);
 			$inp_exercise_muscle_group_id_sub_mysql = quote_smart($link, $inp_exercise_muscle_group_id_sub);
 			if(empty($inp_exercise_muscle_group_id_sub)){
-				$url = "new_exercise_step_5_muscle_group.php?type_id=$type_id&l=$l";
-				$url = "new_exercise_step_5_muscle_group.php?exercise_id=$get_exercise_id&l=$l";
+				$url = "new_exercise_step_6_muscle_group.php?type_id=$type_id&l=$l";
+				$url = "new_exercise_step_6_muscle_group.php?exercise_id=$get_exercise_id&l=$l";
 				header("Location: $url");
 				exit;
 			}
@@ -127,8 +127,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$row = mysqli_fetch_row($result);
 			list($get_sub_muscle_group_id, $get_sub_muscle_group_parent_id) = $row;
 			if($get_sub_muscle_group_id == ""){
-				$url = "new_exercise_step_5_muscle_group.php?type_id=$type_id&l=$l";
-				$url = "new_exercise_step_5_muscle_group.php?exercise_id=$get_exercise_id&l=$l";
+				$url = "new_exercise_step_6_muscle_group.php?type_id=$type_id&l=$l";
+				$url = "new_exercise_step_6_muscle_group.php?exercise_id=$get_exercise_id&l=$l";
 				header("Location: $url");
 				exit;
 			}
@@ -140,7 +140,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			list($get_main_muscle_group_id, $get_muscle_group_parent_id) = $row;
 			if($get_main_muscle_group_id == ""){
 
-				$url = "new_exercise_step_5_muscle_group.php?exercise_id=$get_exercise_id&l=$l";
+				$url = "new_exercise_step_6_muscle_group.php?exercise_id=$get_exercise_id&l=$l";
 				$url = $url . "&ft=error&fm=main_muscle_group_not_found__please_select_a_sub_muscle";
 				header("Location: $url");
 				exit;
@@ -170,7 +170,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			}
 
 			// Header
-			$url = "new_exercise_step_6_muscles_that_are_beeing_trained.php?exercise_id=$get_exercise_id&main_group_id=$get_main_muscle_group_id&sub_group_id=$inp_exercise_muscle_group_id_sub&l=$l";
+			$url = "new_exercise_step_7_muscles_that_are_beeing_trained.php?exercise_id=$get_exercise_id&main_group_id=$get_main_muscle_group_id&sub_group_id=$inp_exercise_muscle_group_id_sub&l=$l";
 			header("Location: $url");
 			exit;
 
@@ -197,7 +197,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 		<!-- Form -->
 
-			<form method=\"post\" action=\"new_exercise_step_5_muscle_group.php?exercise_id=$exercise_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+			<form method=\"post\" action=\"new_exercise_step_6_muscle_group.php?exercise_id=$exercise_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 	
 			<p><b>$l_muscle_group:</b><br />
 			<select name=\"inp_exercise_muscle_group_id_sub\">

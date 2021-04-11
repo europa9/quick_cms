@@ -8,6 +8,7 @@ $l_type = "Type";
 $l_main_muscle_group = "Main muscle group"; 
 $l_muscle_group = "Muscle group"; 
 $l_title = "Title";
+$l_text = "Text";
 $l_preparation = "Preparation";
 $l_guide = "Guide";
 $l_important = "Important";

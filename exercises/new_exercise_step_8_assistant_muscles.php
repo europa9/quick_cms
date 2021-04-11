@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: exercise/new_exercise_step_7_assistant_muscles.php
+* File: exercise/new_exercise_step_8_assistant_muscles.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -224,7 +224,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					  <tr>
 					   <td style=\"padding-left: 8px;\">
 						<span>
-						<a href=\"new_exercise_step_7_assistant_muscles.php?exercise_id=$exercise_id&amp;main_group_id=$main_group_id&amp;sub_group_id=$sub_group_id&amp;muscle_id=$get_exercise_muscle_muscle_id&amp;l=$l&amp;action=remove\">$get_muscle_translation_simple_name</a>
+						<a href=\"new_exercise_step_8_assistant_muscles.php?exercise_id=$exercise_id&amp;main_group_id=$main_group_id&amp;sub_group_id=$sub_group_id&amp;muscle_id=$get_exercise_muscle_muscle_id&amp;l=$l&amp;action=remove\">$get_muscle_translation_simple_name</a>
 						</span>
 					   </td>
 					  </tr>
@@ -265,7 +265,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					 <thead>
 					  <tr>
 					   <th scope=\"col\">
-						<a href=\"new_exercise_step_7_assistant_muscles.php?exercise_id=$exercise_id&amp;l=$l&amp;main_group_id=$get_main_muscle_group_id&amp;l=$l\""; if($main_group_id == "$get_main_muscle_group_id"){ echo" style=\"font-weight: bold;\"";}echo">$get_main_muscle_group_translation_name</a>
+						<a href=\"new_exercise_step_8_assistant_muscles.php?exercise_id=$exercise_id&amp;l=$l&amp;main_group_id=$get_main_muscle_group_id&amp;l=$l\""; if($main_group_id == "$get_main_muscle_group_id"){ echo" style=\"font-weight: bold;\"";}echo">$get_main_muscle_group_translation_name</a>
 					   </th>
 					  </tr>
 					 </thead>
@@ -288,7 +288,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							echo"
 							  <tr>
 							   <td style=\"padding-left: 8px;\">
-								<a href=\"new_exercise_step_7_assistant_muscles.php?exercise_id=$exercise_id&amp;main_group_id=$get_main_muscle_group_id&amp;sub_group_id=$get_sub_muscle_group_id&amp;l=$l\""; if($sub_group_id == "$get_sub_muscle_group_id"){ echo" style=\"font-weight: bold;\"";}echo">$get_sub_muscle_group_translation_name</a>
+								<a href=\"new_exercise_step_8_assistant_muscles.php?exercise_id=$exercise_id&amp;main_group_id=$get_main_muscle_group_id&amp;sub_group_id=$get_sub_muscle_group_id&amp;l=$l\""; if($sub_group_id == "$get_sub_muscle_group_id"){ echo" style=\"font-weight: bold;\"";}echo">$get_sub_muscle_group_translation_name</a>
 							   </td>
 							  </tr>
 							";
@@ -318,7 +318,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 									}
 					
 									echo"
-									<a href=\"new_exercise_step_7_assistant_muscles.php?exercise_id=$exercise_id&amp;main_group_id=$get_main_muscle_group_id&amp;sub_group_id=$get_sub_muscle_group_id&amp;muscle_id=$get_muscle_id&amp;l=$l&amp;action=add\">$get_muscle_translation_simple_name</a>
+									<a href=\"new_exercise_step_8_assistant_muscles.php?exercise_id=$exercise_id&amp;main_group_id=$get_main_muscle_group_id&amp;sub_group_id=$get_sub_muscle_group_id&amp;muscle_id=$get_muscle_id&amp;l=$l&amp;action=add\">$get_muscle_translation_simple_name</a>
 									";
 
 
@@ -366,7 +366,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 										}
 					
 										echo"
-										<a href=\"new_exercise_step_7_assistant_muscles.php?exercise_id=$exercise_id&amp;main_group_id=$get_main_muscle_group_id&amp;sub_group_id=$get_sub_muscle_group_id&amp;muscle_id=$get_muscle_id&amp;l=$l&amp;action=add\">";
+										<a href=\"new_exercise_step_8_assistant_muscles.php?exercise_id=$exercise_id&amp;main_group_id=$get_main_muscle_group_id&amp;sub_group_id=$get_sub_muscle_group_id&amp;muscle_id=$get_muscle_id&amp;l=$l&amp;action=add\">";
 										if($get_muscle_translation_short_name == ""){
 											if($get_muscle_short_name == ""){
 												echo"$get_muscle_simple_name";
@@ -417,7 +417,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 		<div class=\"clear\"></div>
 		<p>
-		<a href=\"new_exercise_step_8_equipment.php?exercise_id=$exercise_id&amp;l=$l\" class=\"btn\" />$l_continue</a>
+		<a href=\"new_exercise_step_9_equipment.php?exercise_id=$exercise_id&amp;l=$l\" class=\"btn\" />$l_continue</a>
 		</p>
 
 		";

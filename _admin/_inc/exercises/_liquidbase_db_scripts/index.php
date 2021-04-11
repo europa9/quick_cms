@@ -48,6 +48,7 @@ echo"
 	  	   exercise_equipment_id  INT,
 	  	   exercise_type_id INT,
 	  	   exercise_level_id INT,
+	  	   exercise_text TEXT,
 	  	   exercise_preparation TEXT,
 	  	   exercise_guide TEXT,
 	  	   exercise_important TEXT,

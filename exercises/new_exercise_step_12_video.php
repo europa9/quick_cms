@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: exercise/new_exercise_step_11_video.php
+* File: exercise/new_exercise_step_12_video.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -160,7 +160,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			
 
 			// Header
-			$url = "new_exercise_step_12_finish.php?exercise_id=$get_exercise_id&muscle_group_id_main=$get_exercise_muscle_group_id_main&l=$l&process=1";
+			$url = "new_exercise_step_13_finish.php?exercise_id=$get_exercise_id&muscle_group_id_main=$get_exercise_muscle_group_id_main&l=$l&process=1";
 			header("Location: $url");
 			exit;
 
@@ -196,7 +196,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<!-- //Focus -->
 
 
-			<form method=\"post\" action=\"new_exercise_step_11_video.php?exercise_id=$exercise_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+			<form method=\"post\" action=\"new_exercise_step_12_video.php?exercise_id=$exercise_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 			<h2>$l_video</h2>
 
 			<p><b>$l_service:</b><br />
@@ -215,7 +215,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			<p>
 			<input type=\"submit\" value=\"$l_continue\" class=\"btn\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
-			<a href=\"new_exercise_step_12_finish.php?exercise_id=$exercise_id&amp;l=$l&amp;process=1\" class=\"btn btn_default\">$l_skip</a>
+			<a href=\"new_exercise_step_13_finish.php?exercise_id=$exercise_id&amp;l=$l&amp;process=1\" class=\"btn btn_default\">$l_skip</a>
 			</p>
 
 			</form>

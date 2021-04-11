@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: exercise/new_exercise_step_9_tags.php
+* File: exercise/new_exercise_step_10_tags.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -123,7 +123,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$ft = "error";
 					$fm = "you_already_have_that_tag";
 				
-					$url = "new_exercise_step_9_tags.php?exercise_id=$exercise_id&l=$l";
+					$url = "new_exercise_step_10_tags.php?exercise_id=$exercise_id&l=$l";
 					$url = $url . "&ft=$ft&fm=$fm";
 					header("Location: $url");
 					exit;
@@ -161,7 +161,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 				
-				$url = "new_exercise_step_9_tags.php?exercise_id=$exercise_id&l=$l";
+				$url = "new_exercise_step_10_tags.php?exercise_id=$exercise_id&l=$l";
 				$url = $url . "&ft=success&fm=tag_added";
 				header("Location: $url");
 				exit;
@@ -203,7 +203,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			});
 			</script>
 	
-			<form method=\"post\" action=\"new_exercise_step_9_tags.php?exercise_id=$exercise_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+			<form method=\"post\" action=\"new_exercise_step_10_tags.php?exercise_id=$exercise_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
 
 			<p><b>$l_new_tag:</b><br />
@@ -236,7 +236,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							<span>$get_tag_text</span>
 						  </td>
 						  <td style=\"padding: 4px 4px 3px 0px;vertical-align:top;\">
-							 <span><a href=\"new_exercise_step_9_tags.php?exercise_id=$exercise_id&amp;action=delete_tag&amp;tag_id=$get_tag_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/delete.png\" alt=\"delete.png\" /></a></span>
+							 <span><a href=\"new_exercise_step_10_tags.php?exercise_id=$exercise_id&amp;action=delete_tag&amp;tag_id=$get_tag_id&amp;l=$l&amp;process=1\"><img src=\"_gfx/icons/delete.png\" alt=\"delete.png\" /></a></span>
 						  </td>
 						 </tr>";
 					}
@@ -248,7 +248,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<!-- //Tags -->
 
 			<!-- Next step -->
-				<p><a href=\"new_exercise_step_10_images.php?exercise_id=$exercise_id&amp;action=upload_image&amp;l=$l\" class=\"btn_default\">$l_next_step</a></p>
+				<p><a href=\"new_exercise_step_11_images.php?exercise_id=$exercise_id&amp;action=upload_image&amp;l=$l\" class=\"btn_default\">$l_next_step</a></p>
 			<!-- //Next step -->
 			";
 
@@ -261,7 +261,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$row = mysqli_fetch_row($result);
 			list($get_current_tag_id, $get_current_tag_text, $get_current_tag_clean) = $row;
 			if($get_current_tag_id == ""){
-				$url = "new_exercise_step_9_tags.php?exercise_id=$exercise_id&main_muscle_group_id=$get_exercise_muscle_group_id_main&type_id=$get_exercise_type_id&l=$l";
+				$url = "new_exercise_step_10_tags.php?exercise_id=$exercise_id&main_muscle_group_id=$get_exercise_muscle_group_id_main&type_id=$get_exercise_type_id&l=$l";
 				$url = $url . "&ft=info&fm=tag_not_found";
 				header("Location: $url");
 				exit;
@@ -285,7 +285,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				}
 
 			
-				$url = "new_exercise_step_9_tags.php?exercise_id=$exercise_id&main_muscle_group_id=$get_exercise_muscle_group_id_main&type_id=$get_exercise_type_id&l=$l";
+				$url = "new_exercise_step_10_tags.php?exercise_id=$exercise_id&main_muscle_group_id=$get_exercise_muscle_group_id_main&type_id=$get_exercise_type_id&l=$l";
 				$url = $url . "&ft=success&fm=tag_deleted";
 				header("Location: $url");
 				exit;

@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: exercise/edit_exercise_preparation.php
+* File: food/new_exercise_step_3_guide.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -28,18 +28,12 @@ include("$root/_admin/website_config.php");
 /*- Tables ---------------------------------------------------------------------------- */
 include("_tables_exercises.php");
 
-/*- Tables ---------------------------------------------------------------------------- */
-$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
-$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
-
 /*- Functions ------------------------------------------------------------------------- */
 include("$root/_admin/_functions/encode_national_letters.php");
 include("$root/_admin/_functions/decode_national_letters.php");
 
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/exercises/ts_new_exercise.php");
-include("$root/_admin/_translations/site/$l/exercises/ts_edit_exercise.php");
-
 
 /*- Variables ------------------------------------------------------------------------- */
 if(isset($_GET['exercise_id'])){
@@ -49,20 +43,6 @@ if(isset($_GET['exercise_id'])){
 else{
 	$exercise_id = "";
 }
-if(isset($_GET['type_id'])){
-	$type_id = $_GET['type_id'];
-	$type_id = strip_tags(stripslashes($type_id));
-}
-else{
-	$type_id = "";
-}
-if(isset($_GET['main_muscle_group_id'])){
-	$main_muscle_group_id = $_GET['main_muscle_group_id'];
-	$main_muscle_group_id = strip_tags(stripslashes($main_muscle_group_id));
-}
-else{
-	$main_muscle_group_id = "";
-}
 
 $tabindex = 0;
 $l_mysql = quote_smart($link, $l);
@@ -71,7 +51,7 @@ $l_mysql = quote_smart($link, $l);
 
 
 /*- Headers ---------------------------------------------------------------------------------- */
-$website_title = "$l_exercises - $l_edit_exercise";
+$website_title = "$l_exercises - $l_new_exercise";
 if(file_exists("./favicon.ico")){ $root = "."; }
 elseif(file_exists("../favicon.ico")){ $root = ".."; }
 elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -93,19 +73,20 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 	// Get exercise
 	$exercise_id_mysql = quote_smart($link, $exercise_id);
-	$query = "SELECT exercise_id, exercise_title, exercise_user_id, exercise_language, exercise_muscle_group_id_main, exercise_muscle_group_id_sub, exercise_muscle_part_of_id, exercise_equipment_id, exercise_type_id, exercise_level_id, exercise_preparation, exercise_guide, exercise_important, exercise_created_datetime, exercise_updated_datetime, exercise_user_ip, exercise_uniqe_hits, exercise_uniqe_hits_ip_block, exercise_likes, exercise_dislikes, exercise_rating, exercise_rating_ip_block, exercise_number_of_comments, exercise_reported, exercise_reported_checked, exercise_reported_reason FROM $t_exercise_index WHERE exercise_id=$exercise_id_mysql AND exercise_user_id=$my_user_id_mysql";
+	$query = "SELECT exercise_id, exercise_title, exercise_guide FROM $t_exercise_index WHERE exercise_id=$exercise_id_mysql AND exercise_user_id=$my_user_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_exercise_id, $get_exercise_title, $get_exercise_user_id, $get_exercise_language, $get_exercise_muscle_group_id_main, $get_exercise_muscle_group_id_sub, $get_exercise_muscle_part_of_id, $get_exercise_equipment_id, $get_exercise_type_id, $get_exercise_level_id, $get_exercise_preparation, $get_exercise_guide, $get_exercise_important, $get_exercise_created_datetime, $get_exercise_updated_datetime, $get_exercise_user_ip, $get_exercise_uniqe_hits, $get_exercise_uniqe_hits_ip_block, $get_exercise_likes, $get_exercise_dislikes, $get_exercise_rating, $get_exercise_rating_ip_block, $get_exercise_number_of_comments, $get_exercise_reported, $get_exercise_reported_checked, $get_exercise_reported_reason) = $row;
+	list($get_exercise_id, $get_exercise_title, $get_exercise_guide) = $row;
+
 	
 
 	if($get_exercise_id == ""){
 		echo"<p>Exercise not found.</p>";
 	}
 	else{
-		if($process == 1){
-			
-			
+
+		if($process == "1"){
+
 			
 			// Purifier
 			require_once "$root/_admin/_functions/htmlpurifier/HTMLPurifier.auto.php";
@@ -120,70 +101,29 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				// p, ul, li, b
 				$config->set('HTML.Allowed', 'p,b,a[href],i,ul,li');
 			}
+			// Guide
+			$inp_exercise_guide = $_POST['inp_exercise_guide'];
+			$inp_exercise_guide = $purifier->purify($inp_exercise_guide);
+			$inp_exercise_guide = encode_national_letters($inp_exercise_guide);
 
-			// Preparation
-			$inp_exercise_preparation = $_POST['inp_exercise_preparation'];
-			$inp_exercise_preparation = $purifier->purify($inp_exercise_preparation);
-			// $inp_exercise_preparation = encode_national_letters($inp_exercise_preparation);
-
-			$sql = "UPDATE $t_exercise_index SET exercise_preparation=? WHERE exercise_id=$get_exercise_id";
+			$sql = "UPDATE $t_exercise_index SET exercise_guide=? WHERE exercise_id=$get_exercise_id";
 			$stmt = $link->prepare($sql);
-			$stmt->bind_param("s", $inp_exercise_preparation);
+			$stmt->bind_param("s", $inp_exercise_guide);
 			$stmt->execute();
 			if ($stmt->errno) {
 				echo "FAILURE!!! " . $stmt->error; die;
 			}
 
-			// Update meta data
-			$datetime = date("Y-m-d H:i:s");
 
-			$inp_user_ip = $_SERVER['REMOTE_ADDR'];
-			$inp_user_ip = output_html($inp_user_ip);
-			$inp_user_ip_mysql = quote_smart($link, $inp_user_ip);
-
-			$result = mysqli_query($link, "UPDATE $t_exercise_index SET exercise_updated_datetime='$datetime', exercise_user_ip=$inp_user_ip_mysql WHERE exercise_id=$exercise_id_mysql");
-
-
-
-			// Search engine
-			$reference_name_mysql = quote_smart($link, "exercise_id");
-			$reference_id_mysql = quote_smart($link, "$get_exercise_id");
-			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='exercises' AND index_reference_name=$reference_name_mysql AND index_reference_id=$reference_id_mysql";
-			$result_exists = mysqli_query($link, $query_exists);
-			$row_exists = mysqli_fetch_row($result_exists);
-			list($get_index_id) = $row_exists;
-			if($get_index_id != ""){
-				$inp_index_short_description = substr($inp_exercise_preparation, 0, 200);
-				$inp_index_short_description = output_html($inp_index_short_description);
-				$inp_index_short_description_mysql = quote_smart($link, $inp_index_short_description);
-
-				$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
-								index_short_description=$inp_index_short_description_mysql WHERE index_id=$get_index_id") or die(mysqli_error($link));
-			}
-			$url = "edit_exercise_preparation.php?exercise_id=$exercise_id&main_muscle_group_id=$main_muscle_group_id&type_id=$type_id&l=$l";
-			$url = $url . "&ft=success&fm=changes_saved";
+			// Header
+			$url = "new_exercise_step_5_important.php?exercise_id=$get_exercise_id&l=$l";
 			header("Location: $url");
 			exit;
 
-		}
-		echo"
-		<h1>$get_exercise_title</h1>
+		} // process
 	
-
-
-
-		<!-- Where am I? -->
-			<p>
-			<b>$l_you_are_here:</b><br />
-			<a href=\"$root/exercises/index.php?l=$l\">$l_exercises</a>
-			&gt;
-			<a href=\"$root/exercises/my_exercises.php?main_muscle_group_id=$main_muscle_group_id&amp;type_id=$type_id&amp;l=$l\">$l_my_exercises</a>
-			&gt;
-			<a href=\"$root/exercises/edit_exercise.php?exercise_id=$exercise_id&amp;main_muscle_group_id=$main_muscle_group_id&amp;type_id=$type_id&amp;l=$l\">$get_exercise_title</a>
-			&gt;
-			<a href=\"$root/exercises/edit_exercise_preparation.php?exercise_id=$exercise_id&amp;main_muscle_group_id=$main_muscle_group_id&amp;type_id=$type_id&amp;l=$l\">$l_preparation</a>
-			</p>
-		<!-- //Where am I? -->
+		echo"
+		<h1>$l_new_exercise</h1>
 	
 
 		<!-- Feedback -->
@@ -244,42 +184,32 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				});
 				</script>
 		<!-- //TinyMCE -->
+
 		<!-- Form -->
+
+			<!-- Focus -->
 			<script>
-			\$(document).ready(function(){
-				\$('[name=\"inp_exercise_preparation\"]').focus();
-			});
+				\$(document).ready(function(){
+					\$('[name=\"inp_exercise_guide\"]').focus();
+				});
 			</script>
+			<!-- //Focus -->
+
+
+			<form method=\"post\" action=\"new_exercise_step_4_guide.php?exercise_id=$exercise_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 	
-			<form method=\"post\" action=\"edit_exercise_preparation.php?exercise_id=$exercise_id&amp;main_muscle_group_id=$main_muscle_group_id&amp;type_id=$type_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
-
-			<p><img src=\"$root/_admin/_translations/site/$get_exercise_language/$get_exercise_language.png\" alt=\"$get_exercise_language\" style=\"float: left;padding:4px 4px 0px 0px;\" /> <b>$l_preparation:</b><br />
-			<textarea name=\"inp_exercise_preparation\" rows=\"10\" cols=\"70\" class=\"editor\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">$get_exercise_preparation</textarea>
+			<p><b>$l_guide:</b><br />
+			<textarea name=\"inp_exercise_guide\" rows=\"10\" cols=\"70\" class=\"editor\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">$get_exercise_guide</textarea>
 			</p>
 
-			
+
 			<p>
-			<input type=\"submit\" value=\"$l_save\" class=\"btn\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+			<input type=\"submit\" value=\"$l_continue\" class=\"btn\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 			</p>
-
 
 			</form>
 		<!-- //Form -->
-
-		<!-- Actions -->
-			<div style=\"float:left;\">
-				<p>
-				<a href=\"edit_exercise_text.php?exercise_id=$exercise_id&amp;main_muscle_group_id=$get_exercise_muscle_group_id_main&amp;type_id=$get_exercise_type_id&amp;l=$l\" class=\"small\">&lt; $l_text</a>
-				</p>
-			</div>
-			<div style=\"float:right;\">
-				<p>
-				<a href=\"edit_exercise_guide.php?exercise_id=$exercise_id&amp;main_muscle_group_id=$get_exercise_muscle_group_id_main&amp;type_id=$get_exercise_type_id&amp;l=$l\" class=\"small\">$l_guide &gt;</a>
-				</p>
-			</div>
-			<div class=\"clear\"></div>
-		<!-- //Actions -->
 		";
 	} // found
 }

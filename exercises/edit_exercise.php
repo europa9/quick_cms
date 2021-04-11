@@ -139,6 +139,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
  
 					<li><a href=\"$root/exercises/view_exercise.php?exercise_id=$exercise_id&amp;main_muscle_group_id=$main_muscle_group_id&amp;type_id=$type_id&amp;l=$l\">$l_view_exercise</a></li>
 					<li><a href=\"$root/exercises/edit_exercise_title.php?exercise_id=$exercise_id&amp;main_muscle_group_id=$main_muscle_group_id&amp;type_id=$type_id&amp;l=$l\">$l_title</a></li>
+					<li><a href=\"$root/exercises/edit_exercise_text.php?exercise_id=$exercise_id&amp;main_muscle_group_id=$main_muscle_group_id&amp;type_id=$type_id&amp;l=$l\">$l_text</a></li>
 					<li><a href=\"$root/exercises/edit_exercise_preparation.php?exercise_id=$exercise_id&amp;main_muscle_group_id=$main_muscle_group_id&amp;type_id=$type_id&amp;l=$l\">$l_preparation</a></li>
 					<li><a href=\"$root/exercises/edit_exercise_guide.php?exercise_id=$exercise_id&amp;main_muscle_group_id=$main_muscle_group_id&amp;type_id=$type_id&amp;l=$l\">$l_guide</a></li>
 					<li><a href=\"$root/exercises/edit_exercise_important.php?exercise_id=$exercise_id&amp;main_muscle_group_id=$main_muscle_group_id&amp;type_id=$type_id&amp;l=$l\">$l_important</a></li>

@@ -48,48 +48,48 @@ echo"
 	  	 restriction_can_view_image INT)")
 		   or die(mysqli_error());
 
-		$query = "SELECT language_iso_two, language_flag FROM $t_languages";
+		$t_stats_ip_to_country_geonames = $mysqlPrefixSav . "stats_ip_to_country_geonames";
+		$query = "SELECT geoname_country_iso_code, geoname_country_name FROM $t_stats_ip_to_country_geonames";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
-			list($get_language_iso_two, $get_language_flag) = $row;
+			list($get_geoname_country_iso_code, $get_geoname_country_name) = $row;
 
-			
-			$inp_country_iso = "$get_language_iso_two";
-			$inp_country_iso_mysql = quote_smart($link, $inp_country_iso);
+			if($get_geoname_country_name != ""){
+				$inp_country_iso = "$get_geoname_country_iso_code";
+				$inp_country_iso_mysql = quote_smart($link, $inp_country_iso);
 
-			$inp_country_name = "$get_language_flag";
-			$inp_country_name = str_replace("_", " ", $inp_country_name);
-			$inp_country_name = ucwords($inp_country_name);
-			$inp_country_name_mysql = quote_smart($link, $inp_country_name);
+				$inp_country_name = "$get_geoname_country_name";
+				$inp_country_name_mysql = quote_smart($link, $inp_country_name);
 
-			$inp_country_flag = "$get_language_flag";
-			$inp_country_flag_mysql = quote_smart($link, $inp_country_flag);
+				$inp_country_flag = "$get_geoname_country_name";
+				$inp_country_flag_mysql = quote_smart($link, $inp_country_flag);
 
-			$inp_language = "$get_language_iso_two";
-			$inp_language_mysql = quote_smart($link, $inp_language);
+				$inp_language = "$get_geoname_country_iso_code";
+				$inp_language_mysql = quote_smart($link, $inp_language);
 
-			$inp_title = "Age restriction";
-			$inp_title_mysql = quote_smart($link, $inp_title);
+				$inp_title = "Age restriction";
+				$inp_title_mysql = quote_smart($link, $inp_title);
 
-			$inp_text = "This page can only be viewed by adults.";
-			$inp_text_mysql = quote_smart($link, $inp_text);
+				$inp_text = "This page can only be viewed by adults.";
+				$inp_text_mysql = quote_smart($link, $inp_text);
 
-			$inp_can_view_image = "0";
-			$inp_can_view_image_mysql = quote_smart($link, $inp_can_view_image);
+				$inp_can_view_image = "0";
+				$inp_can_view_image_mysql = quote_smart($link, $inp_can_view_image);
 			
 
-			// Check if country exists
-			$query_search = "SELECT restriction_id FROM $t_food_age_restrictions WHERE restriction_country_name=$inp_country_name_mysql";
-			$result_search = mysqli_query($link, $query_search);
-			$row_search = mysqli_fetch_row($result_search);
-			list($get_restriction_id) = $row_search;
+				// Check if country exists
+				$query_search = "SELECT restriction_id FROM $t_food_age_restrictions WHERE restriction_country_name=$inp_country_name_mysql";
+				$result_search = mysqli_query($link, $query_search);
+				$row_search = mysqli_fetch_row($result_search);
+				list($get_restriction_id) = $row_search;
 
-			if($get_restriction_id == ""){
+				if($get_restriction_id == ""){
 				mysqli_query($link, "INSERT INTO $t_food_age_restrictions 
 				(restriction_id, restriction_country_iso, restriction_country_name, restriction_country_flag, restriction_language, restriction_age_limit, restriction_title, restriction_text,  restriction_can_view_food, restriction_can_view_image) 
 				VALUES 
 				(NULL, $inp_country_iso_mysql, $inp_country_name_mysql, $inp_country_flag_mysql, $inp_language_mysql, '21', $inp_title_mysql, $inp_text_mysql, '1', $inp_can_view_image_mysql)")
 				or die(mysqli_error($link));
+				}
 			}
 		}
 

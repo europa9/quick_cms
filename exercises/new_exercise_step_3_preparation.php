@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: food/new_exercise_step_4_important.php
+* File: food/new_exercise_step_2_preparation.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -27,6 +27,10 @@ include("$root/_admin/website_config.php");
 
 /*- Tables ---------------------------------------------------------------------------- */
 include("_tables_exercises.php");
+
+/*- Tables ---------------------------------------------------------------------------- */
+$t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
+$t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
 
 /*- Functions ------------------------------------------------------------------------- */
 include("$root/_admin/_functions/encode_national_letters.php");
@@ -73,11 +77,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 	// Get exercise
 	$exercise_id_mysql = quote_smart($link, $exercise_id);
-	$query = "SELECT exercise_id, exercise_title, exercise_important FROM $t_exercise_index WHERE exercise_id=$exercise_id_mysql AND exercise_user_id=$my_user_id_mysql";
+	$query = "SELECT exercise_id, exercise_title, exercise_preparation FROM $t_exercise_index WHERE exercise_id=$exercise_id_mysql AND exercise_user_id=$my_user_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_exercise_id, $get_exercise_title, $get_exercise_important) = $row;
+	list($get_exercise_id, $get_exercise_title, $get_exercise_preparation) = $row;
 	
+	
+
 	if($get_exercise_id == ""){
 		echo"<p>Exercise not found.</p>";
 	}
@@ -99,32 +105,51 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				// p, ul, li, b
 				$config->set('HTML.Allowed', 'p,b,a[href],i,ul,li');
 			}
-			
-			// Important
-			$inp_exercise_important = $_POST['inp_exercise_important'];
-			$inp_exercise_important = $purifier->purify($inp_exercise_important);
-			$inp_exercise_important = encode_national_letters($inp_exercise_important);
+
+			// Preparation
+			$inp_exercise_preparation = $_POST['inp_exercise_preparation'];
+			$inp_exercise_preparation = $purifier->purify($inp_exercise_preparation);
+			$inp_exercise_preparation = encode_national_letters($inp_exercise_preparation);
 			
 
 
-			$sql = "UPDATE $t_exercise_index SET exercise_important=? WHERE exercise_id=$get_exercise_id";
+			$sql = "UPDATE $t_exercise_index SET exercise_preparation=? WHERE exercise_id=$get_exercise_id";
 			$stmt = $link->prepare($sql);
-			$stmt->bind_param("s", $inp_exercise_important);
+			$stmt->bind_param("s", $inp_exercise_preparation);
 			$stmt->execute();
 			if ($stmt->errno) {
 				echo "FAILURE!!! " . $stmt->error; die;
 			}
 
 
+			// Search engine
+			$reference_name_mysql = quote_smart($link, "exercise_id");
+			$reference_id_mysql = quote_smart($link, "$get_exercise_id");
+			$query_exists = "SELECT index_id FROM $t_search_engine_index WHERE index_module_name='exercises' AND index_reference_name=$reference_name_mysql AND index_reference_id=$reference_id_mysql";
+			$result_exists = mysqli_query($link, $query_exists);
+			$row_exists = mysqli_fetch_row($result_exists);
+			list($get_index_id) = $row_exists;
+			if($get_index_id != ""){
+				$inp_index_short_description = substr($inp_exercise_preparation, 0, 200);
+				$inp_index_short_description = output_html($inp_index_short_description);
+				$inp_index_short_description_mysql = quote_smart($link, $inp_index_short_description);
+
+				$result = mysqli_query($link, "UPDATE $t_search_engine_index SET 
+								index_short_description=$inp_index_short_description_mysql WHERE index_id=$get_index_id") or die(mysqli_error($link));
+			}
+
+
+
+
 			// Header
-			$url = "new_exercise_step_5_muscle_group.php?exercise_id=$get_exercise_id&l=$l";
+			$url = "new_exercise_step_4_guide.php?exercise_id=$get_exercise_id&l=$l";
 			header("Location: $url");
 			exit;
 
 		} // process
 	
 		echo"
-		<h1>$l_new_exercise</h1>
+		<h1>$l_new_exercise - $get_exercise_title</h1>
 	
 
 		<!-- Feedback -->
@@ -191,17 +216,17 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<!-- Focus -->
 			<script>
 				\$(document).ready(function(){
-					\$('[name=\"inp_exercise_important\"]').focus();
+					\$('[name=\"inp_exercise_preparation\"]').focus();
 				});
 			</script>
 			<!-- //Focus -->
 
 
-			<form method=\"post\" action=\"new_exercise_step_4_important.php?exercise_id=$exercise_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+			<form method=\"post\" action=\"new_exercise_step_3_preparation.php?exercise_id=$exercise_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 	
 
-			<p><b>$l_important:</b><br />
-			<textarea name=\"inp_exercise_important\" rows=\"10\" cols=\"70\" class=\"editor\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">$get_exercise_important</textarea>
+			<p><b>$l_preparation:</b><br />
+			<textarea name=\"inp_exercise_preparation\" rows=\"10\" cols=\"70\" class=\"editor\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">$get_exercise_preparation</textarea>
 			</p>
 
 

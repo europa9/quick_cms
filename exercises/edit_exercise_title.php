@@ -219,9 +219,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			</div>
 			<div style=\"float:right;\">
 				<p>
-				<a href=\"edit_exercise_preparation.php?exercise_id=$exercise_id&amp;main_muscle_group_id=$get_exercise_muscle_group_id_main&amp;type_id=$get_exercise_type_id&amp;l=$l\" class=\"small\">$l_preparation &gt;</a>
+				<a href=\"edit_exercise_text.php?exercise_id=$exercise_id&amp;main_muscle_group_id=$get_exercise_muscle_group_id_main&amp;type_id=$get_exercise_type_id&amp;l=$l\" class=\"small\">$l_text &gt;</a>
 				</p>
 			</div>
+			<div class=\"clear\"></div>
 		<!-- //Actions -->
 		";
 	} // found

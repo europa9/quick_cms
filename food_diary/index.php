@@ -452,10 +452,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		} // entries
 		// Control check $get_consumed_hour_energy
 		if($get_consumed_hour_energy != "$inp_consumed_hour_energy"){
-			echo"<p><img src=\"_gfx/loading_22.gif\" alt=\"loading_22.gif\" /></p>
-			<meta http-equiv=refresh content=\"0; URL=index.php?l=$l\">";
-			mysqli_query($link, "UPDATE $t_food_diary_consumed_hours SET consumed_hour_energy=$inp_consumed_hour_energy WHERE consumed_hour_user_id=$my_user_id_mysql AND consumed_hour_date=$date_mysql AND consumed_hour_name='$hour_names[$x]'")
-			or die(mysqli_error($link));
+			mysqli_query($link, "UPDATE $t_food_diary_consumed_hours SET consumed_hour_energy=$inp_consumed_hour_energy WHERE consumed_hour_user_id=$my_user_id_mysql AND consumed_hour_date=$date_mysql AND consumed_hour_name='$hour_names[$x]'") or die(mysqli_error($link));
 		}
 		echo"
 		 </tbody>

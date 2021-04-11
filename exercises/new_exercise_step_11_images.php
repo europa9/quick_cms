@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: exercise/new_exercise_step_9_images.php
+* File: exercise/new_exercise_step_11_images.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -214,13 +214,13 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							// Check that file is big enough
 							if($width < 889){
 								unlink($target_path);
-								$url = "new_exercise_step_10_images.php?action=upload_image&exercise_id=$exercise_id&l=$l&ft=error&fm=width_have_to_be_bigger&width=$width&height=$height";
+								$url = "new_exercise_step_11_images.php?action=upload_image&exercise_id=$exercise_id&l=$l&ft=error&fm=width_have_to_be_bigger&width=$width&height=$height";
 								header("Location: $url");
 								exit;
 							}
 							if($height < 889){
 								unlink($target_path);
-								$url = "new_exercise_step_10_images.php?action=upload_image&exercise_id=$exercise_id&l=$l&ft=error&fm=height_have_to_be_bigger&width=$width&height=$height";
+								$url = "new_exercise_step_11_images.php?action=upload_image&exercise_id=$exercise_id&l=$l&ft=error&fm=height_have_to_be_bigger&width=$width&height=$height";
 								header("Location: $url");
 								exit;
 							}
@@ -272,7 +272,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 	
 							// Header
-							$url = "new_exercise_step_10_images.php?exercise_id=$exercise_id&l=$l&ft=success&fm=image_uploaded&file_name=$inp_exercise_image_file&file_path=$inp_exercise_image_path";
+							$url = "new_exercise_step_11_images.php?exercise_id=$exercise_id&l=$l&ft=success&fm=image_uploaded&file_name=$inp_exercise_image_file&file_path=$inp_exercise_image_path";
 							header("Location: $url");
 							exit;
 					
@@ -281,7 +281,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							// Dette er en fil som har fått byttet filendelse...
 							unlink("$target_path");
 
-							$url = "new_exercise_step_10_images.php?action=upload_image&exercise_id=$exercise_id&l=$l&ft=error&fm=file_is_not_an_image";
+							$url = "new_exercise_step_11_images.php?action=upload_image&exercise_id=$exercise_id&l=$l&ft=error&fm=file_is_not_an_image";
 							header("Location: $url");
 							exit;
 						}
@@ -289,22 +289,22 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					else{
    						switch ($_FILES['inp_image'] ['error']){
 							case 1:
-								$url = "new_exercise_step_10_images.php?action=upload_image&exercise_id=$exercise_id&l=$ll&ft=error&fm=to_big_file";
+								$url = "new_exercise_step_11_images.php?action=upload_image&exercise_id=$exercise_id&l=$ll&ft=error&fm=to_big_file";
 								header("Location: $url");
 								exit;
 								break;
 							case 2:
-								$url = "new_exercise_step_10_images.php?action=upload_image&exercise_id=$exercise_id&l=$l&ft=error&fm=to_big_file";
+								$url = "new_exercise_step_11_images.php?action=upload_image&exercise_id=$exercise_id&l=$l&ft=error&fm=to_big_file";
 								header("Location: $url");
 								exit;
 								break;
 							case 3:
-								$url = "new_exercise_step_10_images.php?action=upload_image&exercise_id=$exercise_id&l=$l&ft=error&fm=only_parts_uploaded";
+								$url = "new_exercise_step_11_images.php?action=upload_image&exercise_id=$exercise_id&l=$l&ft=error&fm=only_parts_uploaded";
 								header("Location: $url");
 								exit;
 								break;
 							case 4:
-								$url = "new_exercise_step_10_images.php?action=upload_image&exercise_id=$exercise_id&l=$l&ft=error&fm=no_file_uploaded";
+								$url = "new_exercise_step_11_images.php?action=upload_image&exercise_id=$exercise_id&l=$l&ft=error&fm=no_file_uploaded";
 								header("Location: $url");
 								exit;
 								break;
@@ -312,7 +312,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					} // if(move_uploaded_file($_FILES['file']['tmp_name'], $target_path)) {
 				}
 				else{
-					$url = "new_exercise_step_10_images.php?action=upload_image&exercise_id=$exercise_id&l=$l&ft=error&fm=invalid_file_type&file_type=$file_type";
+					$url = "new_exercise_step_11_images.php?action=upload_image&exercise_id=$exercise_id&l=$l&ft=error&fm=invalid_file_type&file_type=$file_type";
 					header("Location: $url");
 					exit;
 				}
@@ -371,7 +371,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 
-			<form method=\"post\" action=\"new_exercise_step_10_images.php?action=upload_image&amp;exercise_id=$exercise_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+			<form method=\"post\" action=\"new_exercise_step_11_images.php?action=upload_image&amp;exercise_id=$exercise_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 			
 			<p><b>$l_new_image (890x890 jpg):</b><br />
 			<input type=\"file\" name=\"inp_image\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
@@ -393,8 +393,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 			<p style=\"margin-top: 40px;\">
-			<a href=\"new_exercise_step_10_images.php?exercise_id=$exercise_id&amp;l=$l&\" class=\"btn btn_default\">$l_images</a>
-			<a href=\"new_exercise_step_11_video.php?exercise_id=$exercise_id&amp;l=$l&\" class=\"btn btn_default\">$l_continue</a>
+			<a href=\"new_exercise_step_11_images.php?exercise_id=$exercise_id&amp;l=$l&\" class=\"btn btn_default\">$l_images</a>
+			<a href=\"new_exercise_step_12_video.php?exercise_id=$exercise_id&amp;l=$l&\" class=\"btn btn_default\">$l_continue</a>
 			</p>
 
 			";
@@ -477,8 +477,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<!-- //Display all images -->
 
 			<p>
-			<a href=\"new_exercise_step_10_images.php?action=upload_image&amp;exercise_id=$exercise_id&amp;l=$l&\" class=\"btn\">$l_upload_image</a>
-			<a href=\"new_exercise_step_11_video.php?exercise_id=$exercise_id&amp;l=$l&\" class=\"btn\">$l_continue</a>
+			<a href=\"new_exercise_step_11_images.php?action=upload_image&amp;exercise_id=$exercise_id&amp;l=$l&\" class=\"btn\">$l_upload_image</a>
+			<a href=\"new_exercise_step_12_video.php?exercise_id=$exercise_id&amp;l=$l&\" class=\"btn\">$l_continue</a>
 			</p>
 
 			";

@@ -48,6 +48,7 @@ $l_select_equipment = "Velg utstyr";
 $l_service = "Service";
 $l_skip = "Hopp over";
 $l_sub_muscle_group = "Undermuskelgruppe";
+$l_text = "Tekst";
 $l_title = "Tittel";
 $l_to_big_file = "Filen er for stor";
 $l_type = "Type";

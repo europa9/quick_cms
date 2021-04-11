@@ -1,7 +1,7 @@
 <?php 
 /**
 *
-* File: exercise/new_exercise_step_8_equipment.php
+* File: exercise/new_exercise_step_9_equipment.php
 * Version 1.0.0
 * Date 12:05 10.02.2018
 * Copyright (c) 2011-2018 S. A. Ditlefsen
@@ -108,7 +108,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$ft = "success";
 			$fm = "equipment_saved";
 				
-			$url = "new_exercise_step_9_tags.php?exercise_id=$exercise_id&l=$l";
+			$url = "new_exercise_step_10_tags.php?exercise_id=$exercise_id&l=$l";
 			$url = $url . "&ft=$ft&fm=$fm";
 			header("Location: $url");
 			exit;
@@ -164,7 +164,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$ft = "success";
 				$fm = "new_equipment_created";
 				
-				$url = "new_exercise_step_9_tags.php?exercise_id=$exercise_id&l=$l";
+				$url = "new_exercise_step_10_tags.php?exercise_id=$exercise_id&l=$l";
 				$url = $url . "&ft=$ft&fm=$fm";
 				header("Location: $url");
 				exit;
@@ -181,7 +181,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$ft = "success";
 				$fm = "the_equipment_already_existed_so_we_used_the_existing_one";
 				
-				$url = "new_exercise_step_9_tags.php?exercise_id=$exercise_id&l=$l";
+				$url = "new_exercise_step_10_tags.php?exercise_id=$exercise_id&l=$l";
 				$url = $url . "&ft=$ft&fm=$fm";
 				header("Location: $url");
 				exit;
@@ -214,7 +214,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		</p>
 
 
-		<form method=\"post\" action=\"new_exercise_step_8_equipment.php?exercise_id=$exercise_id&amp;l=$l&amp;action=use_existing&amp;process=1\" enctype=\"multipart/form-data\">
+		<form method=\"post\" action=\"new_exercise_step_9_equipment.php?exercise_id=$exercise_id&amp;l=$l&amp;action=use_existing&amp;process=1\" enctype=\"multipart/form-data\">
 			<p>$l_select_equipment:
 			<select name=\"inp_exercise_equipment_id\">
 			<option value=\"0\">$l_none</option>
@@ -239,7 +239,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		<p>... $l_or_add_new_lowercase</p>
 
 
-		<form method=\"post\" action=\"new_exercise_step_8_equipment.php?exercise_id=$exercise_id&amp;l=$l&amp;action=make_new&amp;process=1\" enctype=\"multipart/form-data\">
+		<form method=\"post\" action=\"new_exercise_step_9_equipment.php?exercise_id=$exercise_id&amp;l=$l&amp;action=make_new&amp;process=1\" enctype=\"multipart/form-data\">
 			<p>$l_new_name:
 			<input type=\"text\" name=\"inp_equipment_title\" size=\"10\" />
 			<input type=\"submit\" value=\"$l_create\" class=\"btn\" />

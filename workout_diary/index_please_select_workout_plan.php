@@ -154,7 +154,6 @@ if($action == ""){
 
 
 	echo"
-		<
 	<!-- //Show popular workout plans -->
 	";
 }

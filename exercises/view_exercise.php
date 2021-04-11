@@ -75,10 +75,10 @@ $t_stats_comments_per_week	= $mysqlPrefixSav . "stats_comments_per_week";
 
 // Get exercise
 $exercise_id_mysql = quote_smart($link, $exercise_id);
-$query = "SELECT exercise_id, exercise_title, exercise_title_alternative, exercise_user_id, exercise_language, exercise_muscle_group_id_main, exercise_muscle_group_id_sub, exercise_muscle_part_of_id, exercise_equipment_id, exercise_type_id, exercise_level_id, exercise_preparation, exercise_guide, exercise_important, exercise_created_datetime, exercise_updated_datetime, exercise_user_ip, exercise_uniqe_hits, exercise_uniqe_hits_ip_block, exercise_likes, exercise_dislikes, exercise_rating, exercise_rating_ip_block, exercise_number_of_comments, exercise_reported, exercise_reported_checked, exercise_reported_reason FROM $t_exercise_index WHERE exercise_id=$exercise_id_mysql";
+$query = "SELECT exercise_id, exercise_title, exercise_title_alternative, exercise_user_id, exercise_language, exercise_muscle_group_id_main, exercise_muscle_group_id_sub, exercise_muscle_part_of_id, exercise_equipment_id, exercise_type_id, exercise_level_id, exercise_text, exercise_preparation, exercise_guide, exercise_important, exercise_created_datetime, exercise_updated_datetime, exercise_user_ip, exercise_uniqe_hits, exercise_uniqe_hits_ip_block, exercise_likes, exercise_dislikes, exercise_rating, exercise_rating_ip_block, exercise_number_of_comments, exercise_reported, exercise_reported_checked, exercise_reported_reason FROM $t_exercise_index WHERE exercise_id=$exercise_id_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
-list($get_current_exercise_id, $get_current_exercise_title, $get_current_exercise_title_alternative, $get_current_exercise_user_id, $get_current_exercise_language, $get_current_exercise_muscle_group_id_main, $get_current_exercise_muscle_group_id_sub, $get_current_exercise_muscle_part_of_id, $get_current_exercise_equipment_id, $get_current_exercise_type_id, $get_current_exercise_level_id, $get_current_exercise_preparation, $get_current_exercise_guide, $get_current_exercise_important, $get_current_exercise_created_datetime, $get_current_exercise_updated_datetime, $get_current_exercise_user_ip, $get_current_exercise_uniqe_hits, $get_current_exercise_uniqe_hits_ip_block, $get_current_exercise_likes, $get_current_exercise_dislikes, $get_current_exercise_rating, $get_current_exercise_rating_ip_block, $get_current_exercise_number_of_comments, $get_current_exercise_reported, $get_current_exercise_reported_checked, $get_current_exercise_reported_reason) = $row;
+list($get_current_exercise_id, $get_current_exercise_title, $get_current_exercise_title_alternative, $get_current_exercise_user_id, $get_current_exercise_language, $get_current_exercise_muscle_group_id_main, $get_current_exercise_muscle_group_id_sub, $get_current_exercise_muscle_part_of_id, $get_current_exercise_equipment_id, $get_current_exercise_type_id, $get_current_exercise_level_id, $get_current_exercise_text, $get_current_exercise_preparation, $get_current_exercise_guide, $get_current_exercise_important, $get_current_exercise_created_datetime, $get_current_exercise_updated_datetime, $get_current_exercise_user_ip, $get_current_exercise_uniqe_hits, $get_current_exercise_uniqe_hits_ip_block, $get_current_exercise_likes, $get_current_exercise_dislikes, $get_current_exercise_rating, $get_current_exercise_rating_ip_block, $get_current_exercise_number_of_comments, $get_current_exercise_reported, $get_current_exercise_reported_checked, $get_current_exercise_reported_reason) = $row;
 
 
 if($get_current_exercise_id == ""){
@@ -542,14 +542,16 @@ else {
 		<!-- //Display all images -->
 
 		<!-- Text -->
-		<p style=\"padding-bottom:0;margin-bottom:0\"><b>$l_preparation</b></p>
-		$get_current_exercise_preparation
+			$get_current_exercise_text
 
-		<p style=\"padding-bottom:0;margin-bottom:0\"><b>$l_guide</b></p>
-		$get_current_exercise_guide
+			<p style=\"padding-bottom:0;margin-bottom:0\"><b>$l_preparation</b></p>
+			$get_current_exercise_preparation
 
-		<p style=\"padding-bottom:0;margin-bottom:0\"><b>$l_important</b></p>
-		$get_current_exercise_important
+			<p style=\"padding-bottom:0;margin-bottom:0\"><b>$l_guide</b></p>
+			$get_current_exercise_guide
+
+			<p style=\"padding-bottom:0;margin-bottom:0\"><b>$l_important</b></p>
+			$get_current_exercise_important
 		<!-- //Text -->
 
 		<!-- Muscle image -->";
