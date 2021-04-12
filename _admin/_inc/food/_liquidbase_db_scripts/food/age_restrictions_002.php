@@ -37,61 +37,57 @@ echo"
 		mysqli_query($link, "CREATE TABLE $t_food_age_restrictions (
 	  	 restriction_id INT NOT NULL AUTO_INCREMENT,
 	 	  PRIMARY KEY(restriction_id), 
-	  	 restriction_country_iso VARCHAR(2),
 	  	 restriction_country_name VARCHAR(250),
-	  	 restriction_country_flag VARCHAR(250),
+	  	 restriction_country_iso_two VARCHAR(2),
+	  	 restriction_country_flag_path_16x16 VARCHAR(250),
+	  	 restriction_country_flag_16x16 VARCHAR(250),
 	  	 restriction_language VARCHAR(250),
 	  	 restriction_age_limit INT,
 	  	 restriction_title VARCHAR(250),
 	  	 restriction_text VARCHAR(250),
 	  	 restriction_can_view_food INT,
-	  	 restriction_can_view_image INT)")
+	  	 restriction_can_view_images INT)")
 		   or die(mysqli_error());
 
-		$t_stats_ip_to_country_geonames = $mysqlPrefixSav . "stats_ip_to_country_geonames";
-		$query = "SELECT geoname_country_iso_code, geoname_country_name FROM $t_stats_ip_to_country_geonames";
+		$query = "SELECT country_id, country_name, country_name_clean, country_native_name, country_iso_two, country_iso_three, country_language_alt_a, country_language_alt_b, country_flag_path_16x16, country_flag_16x16, country_flag_path_32x32, country_flag_32x32 FROM $t_languages_countries ORDER BY country_name ASC";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
-			list($get_geoname_country_iso_code, $get_geoname_country_name) = $row;
+			list($get_country_id, $get_country_name, $get_country_name_clean, $get_country_native_name, $get_country_iso_two, $get_country_iso_three, $get_country_language_alt_a, $get_country_language_alt_b, $get_country_flag_path_16x16, $get_country_flag_16x16, $get_country_flag_path_32x32, $get_country_flag_32x32) = $row;
 
-			if($get_geoname_country_name != ""){
-				$inp_country_iso = "$get_geoname_country_iso_code";
-				$inp_country_iso_mysql = quote_smart($link, $inp_country_iso);
+			$inp_country_iso_two_mysql = quote_smart($link, $get_country_iso_two);
 
-				$inp_country_name = "$get_geoname_country_name";
-				$inp_country_name_mysql = quote_smart($link, $inp_country_name);
-
-				$inp_country_flag = "$get_geoname_country_name";
-				$inp_country_flag_mysql = quote_smart($link, $inp_country_flag);
-
-				$inp_language = "$get_geoname_country_iso_code";
-				$inp_language_mysql = quote_smart($link, $inp_language);
-
-				$inp_title = "Age restriction";
-				$inp_title_mysql = quote_smart($link, $inp_title);
-
-				$inp_text = "This page can only be viewed by adults.";
-				$inp_text_mysql = quote_smart($link, $inp_text);
-
-				$inp_can_view_image = "0";
-				$inp_can_view_image_mysql = quote_smart($link, $inp_can_view_image);
+			$inp_country_name = "$get_country_name";
+			$inp_country_name_mysql = quote_smart($link, $inp_country_name);
 			
-
-				// Check if country exists
-				$query_search = "SELECT restriction_id FROM $t_food_age_restrictions WHERE restriction_country_name=$inp_country_name_mysql";
-				$result_search = mysqli_query($link, $query_search);
-				$row_search = mysqli_fetch_row($result_search);
-				list($get_restriction_id) = $row_search;
-
-				if($get_restriction_id == ""){
-				mysqli_query($link, "INSERT INTO $t_food_age_restrictions 
-				(restriction_id, restriction_country_iso, restriction_country_name, restriction_country_flag, restriction_language, restriction_age_limit, restriction_title, restriction_text,  restriction_can_view_food, restriction_can_view_image) 
-				VALUES 
-				(NULL, $inp_country_iso_mysql, $inp_country_name_mysql, $inp_country_flag_mysql, $inp_language_mysql, '21', $inp_title_mysql, $inp_text_mysql, '1', $inp_can_view_image_mysql)")
-				or die(mysqli_error($link));
-				}
+			// Flag
+			$inp_country_flag_path_16x16_mysql = quote_smart($link, "_admin/_design/gfx/flags/16x16");
+			$inp_country_flag_16x16_mysql = quote_smart($link, "unknown.png");
+			if(file_exists("../$get_country_flag_path_16x16/$get_country_flag_16x16") && $get_country_flag_16x16 != ""){
+				$inp_country_flag_path_16x16_mysql = quote_smart($link, $get_country_flag_path_16x16);
+				$inp_country_flag_16x16_mysql = quote_smart($link, $get_country_flag_16x16);
 			}
-		}
+
+
+			$inp_language_mysql = quote_smart($link, $get_country_language_alt_a);
+
+			$inp_title = "Age restriction";
+			$inp_title_mysql = quote_smart($link, $inp_title);
+
+			$inp_text = "This page can only be viewed by adults.";
+			$inp_text_mysql = quote_smart($link, $inp_text);
+
+			$inp_can_view_image = "0";
+			$inp_can_view_image_mysql = quote_smart($link, $inp_can_view_image);
+
+			mysqli_query($link, "INSERT INTO $t_food_age_restrictions 
+			(restriction_id, restriction_country_name, restriction_country_iso_two, restriction_country_flag_path_16x16, restriction_country_flag_16x16, 
+			restriction_language, restriction_age_limit, restriction_title, restriction_text,  restriction_can_view_food, restriction_can_view_images) 
+			VALUES 
+			(NULL, $inp_country_name_mysql, $inp_country_iso_two_mysql, $inp_country_flag_path_16x16_mysql, $inp_country_flag_16x16_mysql, 
+			$inp_language_mysql, '21', $inp_title_mysql, $inp_text_mysql, '1', $inp_can_view_image_mysql)")
+			or die(mysqli_error($link));
+			
+		} // while countries
 
 	}
 	echo"

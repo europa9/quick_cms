@@ -285,19 +285,25 @@ else{
 		else{
 			// Can I see food and images?
 			$country_mysql = quote_smart($link, $get_accepted_country);
-			$query = "SELECT restriction_id, restriction_country_iso, restriction_country_name, restriction_country_flag, restriction_language, restriction_age_limit, restriction_title, restriction_text, restriction_can_view_food, restriction_can_view_image FROM $t_food_age_restrictions WHERE restriction_country_iso=$country_mysql";
+			$query = "SELECT restriction_id, restriction_country_iso_two, restriction_country_name, restriction_country_flag_path_16x16, restriction_country_flag_16x16, restriction_language, restriction_age_limit, restriction_title, restriction_text, restriction_can_view_food, restriction_can_view_images FROM $t_food_age_restrictions WHERE restriction_country_iso_two=$country_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
-			list($get_restriction_id, $get_restriction_country_iso, $get_restriction_country_name, $get_restriction_country_flag, $get_restriction_language, $get_restriction_age_limit, $get_restriction_title, $get_restriction_text, $get_restriction_can_view_food, $get_restriction_can_view_image) = $row;
+			list($get_current_restriction_id, $get_current_restriction_country_iso_two, $get_current_restriction_country_name, $get_current_restriction_country_flag_path_16x16, $get_current_restriction_country_flag_16x16, $get_current_restriction_language, $get_current_restriction_age_limit, $get_current_restriction_title, $get_current_restriction_text, $get_current_restriction_can_view_food, $get_current_restriction_can_view_images) = $row;
 
-			$can_view_food = $get_restriction_can_view_food;
-			$can_view_images = $get_restriction_can_view_image;
+			if($get_current_restriction_id == ""){
+				// Could not find country, delete request and start over
+				mysqli_query($link, "TRUNCATE $t_food_age_restrictions_accepted") or die(mysqli_error($link));
+			}
+
+			$can_view_food = $get_current_restriction_can_view_food;
+			$can_view_images = $get_current_restriction_can_view_images;
 
 			if($can_view_food == 0){
 				echo"
 				<h1 style=\"padding-bottom:0;margin-bottom:0;\">$get_current_food_manufacturer_name $get_current_food_name</h1>
-				<p>$get_restriction_text</p>
+				<p>$get_current_restriction_text</p>
 				";
+				
 			}
 		}
 	}

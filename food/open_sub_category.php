@@ -104,10 +104,10 @@ include("$root/_admin/_translations/site/$l/food/ts_food.php");
 /*- Sub category -------------------------------------------------------------------------- */
 // Select sub category
 $sub_category_id_mysql = quote_smart($link, $sub_category_id);
-$query = "SELECT category_id, category_user_id, category_name, category_age_restriction, category_parent_id, category_icon, category_last_updated, category_note FROM $t_food_categories WHERE category_id=$sub_category_id_mysql";
+$query = "SELECT category_id, category_user_id, category_name, category_age_restriction, category_parent_id, category_icon, category_last_updated, category_note, category_age_limit FROM $t_food_categories WHERE category_id=$sub_category_id_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
-list($get_current_sub_category_id, $get_current_sub_category_user_id, $get_current_sub_category_name, $get_current_sub_category_age_restriction, $get_current_sub_category_parent_id, $get_current_sub_category_icon, $get_current_sub_category_last_updated, $get_current_sub_category_note) = $row;
+list($get_current_sub_category_id, $get_current_sub_category_user_id, $get_current_sub_category_name, $get_current_sub_category_age_restriction, $get_current_sub_category_parent_id, $get_current_sub_category_icon, $get_current_sub_category_last_updated, $get_current_sub_category_note, $get_current_category_age_limit) = $row;
 
 if($get_current_sub_category_id== ""){
 	$website_title = "$l_food - Server error 404";
@@ -155,9 +155,51 @@ if($get_current_main_category_id == ""){
 	";
 }
 else{
+	// Age limit?
+	$can_view_food = 1;
+	$can_view_images = 1;
+	if($get_current_category_age_limit == "1"){
+		// Check if I have accepted 
+		$inp_ip_mysql = quote_smart($link, $my_ip);
+		$query_t = "SELECT accepted_id, accepted_country FROM $t_food_age_restrictions_accepted WHERE accepted_ip=$inp_ip_mysql";
+		$result_t = mysqli_query($link, $query_t);
+		$row_t = mysqli_fetch_row($result_t);
+		list($get_accepted_id, $get_accepted_country) = $row_t;
+		
+		if($get_accepted_id == ""){
+			// Accept age restriction
+			$can_view_food = 0;
+			include("open_sub_category_show_age_restriction_warning.php");
+		}
+		else{
+			// Can I see food and images?
+			$country_mysql = quote_smart($link, $get_accepted_country);
+			$query = "SELECT restriction_id, restriction_country_iso_two, restriction_country_name, restriction_country_flag_path_16x16, restriction_country_flag_16x16, restriction_language, restriction_age_limit, restriction_title, restriction_text, restriction_can_view_food, restriction_can_view_images FROM $t_food_age_restrictions WHERE restriction_country_iso_two=$country_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_current_restriction_id, $get_current_restriction_country_iso_two, $get_current_restriction_country_name, $get_current_restriction_country_flag_path_16x16, $get_current_restriction_country_flag_16x16, $get_current_restriction_language, $get_current_restriction_age_limit, $get_current_restriction_title, $get_current_restriction_text, $get_current_restriction_can_view_food, $get_current_restriction_can_view_images) = $row;
 
-	echo"
-	<!-- Headline, buttons, search -->
+			if($get_current_restriction_id == ""){
+				// Could not find country, delete request and start over
+				mysqli_query($link, "TRUNCATE $t_food_age_restrictions_accepted") or die(mysqli_error($link));
+			}
+
+			$can_view_food = $get_current_restriction_can_view_food;
+			$can_view_images = $get_current_restriction_can_view_images;
+
+			if($can_view_food == 0){
+				echo"
+				<h1 style=\"padding-bottom:0;margin-bottom:0;\">$get_current_food_manufacturer_name $get_current_food_name</h1>
+				<p>$get_current_restriction_text</p>
+				";
+				
+			}
+		}
+	}
+
+	if($can_view_food == 1){
+		echo"
+		<!-- Headline, buttons, search -->
 		<div class=\"food_headline\">
 		
 			<!-- Headline -->
@@ -579,8 +621,6 @@ else{
 			}
 			$query = $query . " ORDER BY $order_by_mysql $order_method_mysql";
 		}
-
-
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
 			list($get_food_id, $get_food_user_id, $get_food_name, $get_food_clean_name, $get_food_manufacturer_name, $get_food_manufacturer_name_and_food_name, $get_food_description, $get_food_country, $get_food_net_content_metric, $get_food_net_content_measurement_metric, $get_food_net_content_us, $get_food_net_content_measurement_us, $get_food_net_content_added_measurement, $get_food_serving_size_metric, $get_food_serving_size_measurement_metric, $get_food_serving_size_us, $get_food_serving_size_measurement_us, $get_food_serving_size_added_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy_metric, $get_food_fat_metric, $get_food_saturated_fat_metric, $get_food_monounsaturated_fat_metric, $get_food_polyunsaturated_fat_metric, $get_food_cholesterol_metric, $get_food_carbohydrates_metric, $get_food_carbohydrates_of_which_sugars_metric, $get_food_dietary_fiber_metric, $get_food_proteins_metric, $get_food_salt_metric, $get_food_sodium_metric, $get_food_energy_us, $get_food_fat_us, $get_food_saturated_fat_us, $get_food_monounsaturated_fat_us, $get_food_polyunsaturated_fat_us, $get_food_cholesterol_us, $get_food_carbohydrates_us, $get_food_carbohydrates_of_which_sugars_us, $get_food_dietary_fiber_us, $get_food_proteins_us, $get_food_salt_us, $get_food_sodium_us, $get_food_score, $get_food_energy_calculated_metric, $get_food_fat_calculated_metric, $get_food_saturated_fat_calculated_metric, $get_food_monounsaturated_fat_calculated_metric, $get_food_polyunsaturated_fat_calculated_metric, $get_food_cholesterol_calculated_metric, $get_food_carbohydrates_calculated_metric, $get_food_carbohydrates_of_which_sugars_calculated_metric, $get_food_dietary_fiber_calculated_metric, $get_food_proteins_calculated_metric, $get_food_salt_calculated_metric, $get_food_sodium_calculated_metric, $get_food_energy_calculated_us, $get_food_fat_calculated_us, $get_food_saturated_fat_calculated_us, $get_food_monounsaturated_fat_calculated_us, $get_food_polyunsaturated_fat_calculated_us, $get_food_cholesterol_calculated_us, $get_food_carbohydrates_calculated_us, $get_food_carbohydrates_of_which_sugars_calculated_us, $get_food_dietary_fiber_calculated_us, $get_food_proteins_calculated_us, $get_food_salt_calculated_us, $get_food_sodium_calculated_us, $get_food_barcode, $get_food_main_category_id, $get_food_sub_category_id, $get_food_image_path, $get_food_image_a, $get_food_thumb_a_small, $get_food_thumb_a_medium, $get_food_thumb_a_large, $get_food_image_b, $get_food_thumb_b_small, $get_food_thumb_b_medium, $get_food_thumb_b_large, $get_food_image_c, $get_food_thumb_c_small, $get_food_thumb_c_medium, $get_food_thumb_c_large, $get_food_image_d, $get_food_thumb_d_small, $get_food_thumb_d_medium, $get_food_thumb_d_large, $get_food_image_e, $get_food_thumb_e_small, $get_food_thumb_e_medium, $get_food_thumb_e_large, $get_food_last_used, $get_food_language, $get_food_synchronized, $get_food_accepted_as_master, $get_food_notes, $get_food_unique_hits, $get_food_unique_hits_ip_block, $get_food_comments, $get_food_likes, $get_food_dislikes, $get_food_likes_ip_block, $get_food_user_ip, $get_food_created_date, $get_food_last_viewed, $get_food_age_restriction) = $row;
@@ -671,23 +711,28 @@ else{
 				}
 
 
-				if($get_food_score > 0){
-					echo"
-					<img src=\"_gfx/smiley_sad.png\" alt=\"smiley_sad.gif\" title=\"$get_food_score\" class=\"food_score_img\" />";
-				}
-				elseif($get_food_score < 0){
-					echo"
-					<img src=\"_gfx/smiley_smile.png\" alt=\"smiley_smile.png\" title=\"$get_food_score\" class=\"food_score_img\" />";
-				}
-				else{
-					echo"
-					<img src=\"_gfx/smiley_confused.png\" alt=\"smiley_confused.png\" title=\"$get_food_score\" class=\"food_score_img\" />";
+				if($can_view_images == "1"){
+					if($get_food_score > 0){
+						echo"
+						<img src=\"_gfx/smiley_sad.png\" alt=\"smiley_sad.gif\" title=\"$get_food_score\" class=\"food_score_img\" />";
+					}
+					elseif($get_food_score < 0){
+						echo"
+						<img src=\"_gfx/smiley_smile.png\" alt=\"smiley_smile.png\" title=\"$get_food_score\" class=\"food_score_img\" />";
+					}
+					else{
+						echo"
+						<img src=\"_gfx/smiley_confused.png\" alt=\"smiley_confused.png\" title=\"$get_food_score\" class=\"food_score_img\" />";
+					}
 				}
 
 				echo"
-				<p style=\"padding-bottom:5px;\">
-				<a href=\"view_food.php?main_category_id=$main_category_id&amp;sub_category_id=$get_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\"><img src=\"$root/$get_food_image_path/$get_food_thumb_a_small\" alt=\"$get_food_image_a\" style=\"margin-bottom: 5px;\" /></a><br />
-				<a href=\"view_food.php?main_category_id=$main_category_id&amp;sub_category_id=$sub_category_id&amp;food_id=$get_food_id&amp;l=$l\" style=\"font-weight: bold;color: #444444;\">$title</a><br />
+				<p style=\"padding-bottom:5px;\">\n";
+				if($can_view_images == "1"){
+					echo"					";
+					echo"<a href=\"view_food.php?main_category_id=$main_category_id&amp;sub_category_id=$get_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\"><img src=\"$root/$get_food_image_path/$get_food_thumb_a_small\" alt=\"$get_food_image_a\" style=\"margin-bottom: 5px;\" /></a><br />\n";
+				}
+				echo"<a href=\"view_food.php?main_category_id=$main_category_id&amp;sub_category_id=$sub_category_id&amp;food_id=$get_food_id&amp;l=$l\" style=\"font-weight: bold;color: #444444;\">$title</a><br />
 				";
 				echo"
 				</p>
@@ -1513,10 +1558,10 @@ else{
 		</table>
 		
 		<p><a href=\"open_sub_category.php?main_category_id=$main_category_id&amp;sub_category_id=$sub_category_id&amp;l=$l&amp;update_statistics=1\" class=\"smal\">$l_update_statistics</a></p>
-	<!-- //Stats -->
-	";
-
-}
+		<!-- //Stats -->
+		";
+	} // can view food == 1
+} // category found
 
 
 /*- Footer ----------------------------------------------------------------------------------- */

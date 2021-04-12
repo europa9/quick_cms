@@ -49,6 +49,7 @@ if($action == ""){
 	<!-- Menus -->
 		<p>
 		<a href=\"index.php?open=$open&amp;page=$page&amp;action=edit_languages&amp;editor_language=$editor_language&amp;l=$l\" class=\"btn_default\">Edit languages</a>
+		<a href=\"index.php?open=$open&amp;page=$page&amp;action=edit_countries&amp;editor_language=$editor_language&amp;l=$l\" class=\"btn_default\">Edit countries</a>
 		</p>
 	<!-- //Menus -->
 
@@ -376,7 +377,7 @@ elseif($action == "edit_languages"){
 
 
 	<!-- Languages -->
-		<table>
+		<table class=\"hor-zebra\">
 		 <thead>
 		  <tr>
 		   <th colspan=\"2\">
@@ -386,7 +387,7 @@ elseif($action == "edit_languages"){
 		 </thead>
 		 <tbody>
 		";
-		$query = "SELECT language_id, language_name, language_iso_two, language_flag_path_16x16, language_flag_16x16 FROM $t_languages";
+		$query = "SELECT language_id, language_name, language_iso_two, language_flag_path_16x16, language_flag_16x16 FROM $t_languages ORDER BY language_name ASC";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
 			list($get_language_id, $get_language_name, $get_language_iso_two, $get_language_flag_path_16x16, $get_language_flag_16x16) = $row;
@@ -794,4 +795,461 @@ elseif($action == "delete_language"){
 		";
 	} // found
 } // action == edit_language
+elseif($action == "edit_countries"){
+
+	echo"
+	<h2>Edit countries</h2>
+
+	<!-- Where am I? -->
+		<p><b>You are here:</b><br />
+		<a href=\"index.php?open=$open&amp;page=$page&amp;editor_language=$editor_language&amp;l=$l\">Languages</a>
+		&gt;
+		<a href=\"index.php?open=$open&amp;page=$page&amp;action=edit_countries&amp;editor_language=$editor_language&amp;l=$l\">Edit countries</a>
+		</p>
+	<!-- //Where am I?  -->
+
+
+	<!-- Feedback -->
+	";
+	if($ft != ""){
+		$fm = str_replace("_", " ", $fm);
+		$fm = ucfirst($fm);
+		echo"<div class=\"$ft\"><span>$fm</span></div>";
+	}
+	echo"	
+	<!-- //Feedback -->
+
+	
+
+
+	<!-- Countries -->
+		<table class=\"hor-zebra\">
+		 <thead>
+		  <tr>
+		   <th colspan=\"2\">
+			<span>Countries</span>
+		   </th>
+		  </tr>
+		 </thead>
+		 <tbody>
+		";
+		$query = "SELECT country_id, country_name, country_flag_path_16x16, country_flag_16x16 FROM $t_languages_countries ORDER BY country_name ASC";
+		$result = mysqli_query($link, $query);
+		while($row = mysqli_fetch_row($result)) {
+			list($get_country_id, $get_country_name, $get_country_flag_path_16x16, $get_country_flag_16x16) = $row;
+	
+			echo"
+			 <tr>
+       			  <td style=\"padding-right:4px;\">
+				<a href=\"index.php?open=settings&amp;page=languages&amp;action=edit_country&amp;country_id=$get_country_id&amp;editor_language=$editor_language&amp;l=$l\" style=\"color:#000;\"><img src=\"../$get_country_flag_path_16x16/$get_country_flag_16x16\" alt=\"$get_country_flag_16x16\" /></a>
+			  </td>
+       			  <td>
+          			<span><a href=\"index.php?open=settings&amp;page=languages&amp;action=edit_country&amp;country_id=$get_country_id&amp;editor_language=$editor_language&amp;l=$l\" style=\"color:#000;\">$get_country_name</a></span>
+			  </td>
+     			 </tr>
+			";
+		}
+		echo"
+		 </tbody>
+		</table>
+	<!-- //Countries -->
+	";
+} // action == edit_country
+elseif($action == "edit_country"){
+	if(isset($_GET['country_id'])) {
+		$country_id = $_GET['country_id'];
+		$country_id = strip_tags(stripslashes($country_id));
+		if(!(is_numeric($country_id))){
+			echo"Country not numeric";
+			die;
+		}
+	}
+	else{
+		echo"Missing country";
+		die;
+	}
+		
+	// Locate this country
+	$country_id_mysql = quote_smart($link, $country_id);
+	$query = "SELECT country_id, country_name, country_name_clean, country_native_name, country_iso_two, country_iso_three, country_language_alt_a, country_language_alt_b, country_flag_path_16x16, country_flag_16x16, country_flag_path_32x32, country_flag_32x32 FROM $t_languages_countries WHERE country_id=$country_id_mysql";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_current_country_id, $get_current_country_name, $get_current_country_name_clean, $get_current_country_native_name, $get_current_country_iso_two, $get_current_country_iso_three, $get_current_country_language_alt_a, $get_current_country_language_alt_b, $get_current_country_flag_path_16x16, $get_current_country_flag_16x16, $get_current_country_flag_path_32x32, $get_current_country_flag_32x32) = $row;
+	if($get_current_country_id == ""){
+		echo"Country not found";
+	}
+	else{
+		if($process == "1"){
+			$inp_name = $_POST['inp_name'];
+			$inp_name = output_html($inp_name);
+			$inp_name_mysql = quote_smart($link, $inp_name);
+
+			$inp_name_clean = clean($inp_name);
+			$inp_name_clean_mysql = quote_smart($link, $inp_name_clean);
+
+			$inp_native_name = $_POST['inp_native_name'];
+			$inp_native_name = output_html($inp_native_name);
+			$inp_native_name_mysql = quote_smart($link, $inp_native_name);
+
+			$inp_iso_two = $_POST['inp_iso_two'];
+			$inp_iso_two = output_html($inp_iso_two);
+			$inp_iso_two_mysql = quote_smart($link, $inp_iso_two);
+
+			$inp_iso_three = $_POST['inp_iso_three'];
+			$inp_iso_three = output_html($inp_iso_three);
+			$inp_iso_three_mysql = quote_smart($link, $inp_iso_three);
+
+
+			$inp_language_alt_a = $_POST['inp_language_alt_a'];
+			$inp_language_alt_a = output_html($inp_language_alt_a);
+			$inp_language_alt_a_mysql = quote_smart($link, $inp_language_alt_a);
+
+			$inp_language_alt_b = $_POST['inp_language_alt_b'];
+			$inp_language_alt_b = output_html($inp_language_alt_b);
+			$inp_language_alt_b_mysql = quote_smart($link, $inp_language_alt_b);
+
+
+			$result = mysqli_query($link, "UPDATE $t_languages_countries SET 
+							country_name=$inp_name_mysql, 
+							country_name_clean=$inp_name_clean_mysql, 
+							country_native_name=$inp_native_name_mysql, 
+							country_iso_two=$inp_iso_two_mysql, 
+							country_iso_three=$inp_iso_three_mysql, 
+							country_language_alt_a=$inp_language_alt_a_mysql, 
+							country_language_alt_b=$inp_language_alt_b_mysql
+							WHERE country_id=$get_current_country_id") or die(mysqli_error($link));
+
+			// Icon 16x16
+			$name = stripslashes($_FILES['inp_flag_16x16']['name']);
+			$name = output_html($name);
+			$extension = get_extension($name);
+			$extension = strtolower($extension);
+
+			$ft_image_a = "";
+			$fm_image_a = "";
+			if($name){
+				if (($extension != "jpg") && ($extension != "jpeg") && ($extension != "png") && ($extension != "gif")) {
+					$ft_image_a = "warning";
+					$fm_image_a = "unknown_file_extension";
+				}
+				else{
+					$new_path = "_design/gfx/flags/16x16/";
+					$uploaded_file = $new_path . $name ;
+
+					// Upload file
+					if (move_uploaded_file($_FILES['inp_flag_16x16']['tmp_name'], $uploaded_file)) {
+	
+
+						// Get image size
+						$file_size = filesize($uploaded_file);
+						
+						// Check with and height
+						list($width,$height) = getimagesize($uploaded_file);
+	
+						if($width == "" OR $height == ""){
+							$ft_image_a = "warning";
+							$fm_image_a = "getimagesize_failed";
+							unlink($uploaded_file);
+						}
+						else{
+							$ft_image_a = "success";
+							$fm_image_a = "flag_16x16_uploaded";
+							$inp_flag_mysql = quote_smart($link, $name);
+							$result = mysqli_query($link, "UPDATE $t_languages_countries SET 
+											country_flag_path_16x16='_admin/_design/gfx/flags/16x16',
+											country_flag_16x16=$inp_flag_mysql
+							WHERE country_id=$get_current_country_id") or die(mysqli_error($link));
+							
+						}  // if($width == "" OR $height == ""){
+					} // move_uploaded_file
+					else{
+						$ft_image_a = "warning";
+						switch ($_FILES['inp_food_image']['error']) {
+							case UPLOAD_ERR_OK:
+           							$fm_image_a = "There is no error, the file uploaded with success.";
+								break;
+							case UPLOAD_ERR_NO_FILE:
+           							// $fm_image = "no_file_uploaded";
+								break;
+							case UPLOAD_ERR_INI_SIZE:
+           							$fm_image_a = "to_big_size_in_configuration";
+								break;
+							case UPLOAD_ERR_FORM_SIZE:
+           							$fm_image_a = "to_big_size_in_form";
+								break;
+							default:
+           							$fm_image_a = "unknown_error";
+								break;
+						}	
+					}
+				} // extension check
+			} // if($image){
+
+
+			// Icon 32x32
+			$name = stripslashes($_FILES['inp_flag_32x32']['name']);
+			$name = output_html($name);
+			$extension = get_extension($name);
+			$extension = strtolower($extension);
+
+			$ft_image_b = "";
+			$fm_image_b = "";
+			if($name){
+				if (($extension != "jpg") && ($extension != "jpeg") && ($extension != "png") && ($extension != "gif")) {
+					$ft_image_b = "warning";
+					$fm_image_b = "unknown_file_extension";
+				}
+				else{
+					$new_path = "_design/gfx/flags/32x32/";
+					$uploaded_file = $new_path . $name ;
+
+					// Upload file
+					if (move_uploaded_file($_FILES['inp_flag_32x32']['tmp_name'], $uploaded_file)) {
+	
+
+						// Get image size
+						$file_size = filesize($uploaded_file);
+						
+						// Check with and height
+						list($width,$height) = getimagesize($uploaded_file);
+	
+						if($width == "" OR $height == ""){
+							$ft_image_b = "warning";
+							$fm_image_b = "getimagesize_failed";
+							unlink($uploaded_file);
+						}
+						else{
+							$ft_image_b = "success";
+							$fm_image_b = "flag_32x32_uploaded";
+							$inp_flag_mysql = quote_smart($link, $name);
+							$result = mysqli_query($link, "UPDATE $t_languages_countries SET 
+											country_flag_path_32x32='_admin/_design/gfx/flags/32x32',
+											country_flag_32x32=$inp_flag_mysql
+							WHERE country_id=$get_current_country_id") or die(mysqli_error($link));
+							
+						}  // if($width == "" OR $height == ""){
+					} // move_uploaded_file
+					else{
+						$ft_image_b = "warning";
+						switch ($_FILES['inp_food_image']['error']) {
+							case UPLOAD_ERR_OK:
+           							$fm_image_b = "There is no error, the file uploaded with success.";
+								break;
+							case UPLOAD_ERR_NO_FILE:
+           							// $fm_image = "no_file_uploaded";
+								break;
+							case UPLOAD_ERR_INI_SIZE:
+           							$fm_image_b = "to_big_size_in_configuration";
+								break;
+							case UPLOAD_ERR_FORM_SIZE:
+           							$fm_image_b = "to_big_size_in_form";
+								break;
+							default:
+           							$fm_image_b = "unknown_error";
+								break;
+						}	
+					}
+				} // extension check
+			} // if($image){
+
+			$url = "index.php?open=$open&page=$page&action=edit_country&country_id=$get_current_country_id&editor_language=$editor_language&l=$l&ft=success&fm=changes_saved&ft_image_a=$ft_image_a&fm_image_a=$fm_image_a&ft_image_b=$ft_image_b&fm_image_b=$fm_image_b";
+			header("Location: $url");
+			exit;
+		
+		}
+		echo"
+		<h2>Edit country $get_current_country_name</h2>
+
+		<!-- Where am I? -->
+			<p><b>You are here:</b><br />
+			<a href=\"index.php?open=$open&amp;page=$page&amp;editor_language=$editor_language&amp;l=$l\">Languages</a>
+			&gt;
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=edit_countries&amp;editor_language=$editor_language&amp;l=$l\">Edit countries</a>
+			&gt;
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=edit_country&amp;country_id=$get_current_country_id&amp;editor_language=$editor_language&amp;l=$l\">Edit country $get_current_country_name</a>
+			</p>
+		<!-- //Where am I?  -->
+
+
+		<!-- Feedback -->
+		";
+		if($ft != ""){
+			$fm = str_replace("_", " ", $fm);
+			$fm = ucfirst($fm);
+			echo"<div class=\"$ft\"><span>$fm</span></div>";
+		}
+		echo"	
+		<!-- //Feedback -->
+
+		<!-- Edit country form -->
+			<!-- Focus -->
+				<script>
+				\$(document).ready(function(){
+					\$('[name=\"inp_food_image\"]').focus();
+				});
+				</script>
+			<!-- //Focus -->
+
+			<form method=\"post\" action=\"index.php?open=$open&amp;page=$page&amp;action=edit_country&amp;country_id=$get_current_country_id&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+
+			<p>Name:<br />
+			<input type=\"text\" name=\"inp_name\" value=\"$get_current_country_name\" size=\"25\" />
+			</p>
+
+			<p>Native name:<br />
+			<input type=\"text\" name=\"inp_native_name\" value=\"$get_current_country_native_name\" size=\"25\" />
+			</p>
+
+			<p>ISO two:<br />
+			<input type=\"text\" name=\"inp_iso_two\" value=\"$get_current_country_iso_two\" size=\"25\" />
+			</p>
+
+			<p>ISO three:<br />
+			<input type=\"text\" name=\"inp_iso_three\" value=\"$get_current_country_iso_three\" size=\"25\" />
+			</p>
+
+			<p>Language alternative a:<br />
+			<select name=\"inp_language_alt_a\">
+				<option value=\"\""; if($get_current_country_language_alt_a == ""){ echo" selected=\"selected\""; } echo">-</option>\n";
+			$query = "SELECT language_id, language_name, language_iso_two, language_flag_path_16x16, language_flag_16x16 FROM $t_languages ORDER BY language_name ASC";
+			$result = mysqli_query($link, $query);
+			while($row = mysqli_fetch_row($result)) {
+				list($get_language_id, $get_language_name, $get_language_iso_two, $get_language_flag_path_16x16, $get_language_flag_16x16) = $row;
+				echo"				";
+				echo"<option value=\"$get_language_iso_two\""; if($get_current_country_language_alt_a == "$get_language_iso_two"){ echo" selected=\"selected\""; } echo">$get_language_name</option>\n";
+			}
+			echo"
+			</select>
+			</p>
+
+			<p>Language alternative b:<br />
+			<select name=\"inp_language_alt_b\">
+				<option value=\"\""; if($get_current_country_language_alt_b == ""){ echo" selected=\"selected\""; } echo">-</option>\n";
+			$query = "SELECT language_id, language_name, language_iso_two, language_flag_path_16x16, language_flag_16x16 FROM $t_languages ORDER BY language_name ASC";
+			$result = mysqli_query($link, $query);
+			while($row = mysqli_fetch_row($result)) {
+				list($get_language_id, $get_language_name, $get_language_iso_two, $get_language_flag_path_16x16, $get_language_flag_16x16) = $row;
+				echo"				";
+				echo"<option value=\"$get_language_iso_two\""; if($get_current_country_language_alt_b == "$get_language_iso_two"){ echo" selected=\"selected\""; } echo">$get_language_name</option>\n";
+			}
+			echo"
+			</select>
+			</p>
+
+
+			<p>
+			<b>Flag 16x16</b><br />\n";
+			if(file_exists("../$get_current_country_flag_path_16x16/$get_current_country_flag_16x16")){
+				echo"<img src=\"../$get_current_country_flag_path_16x16/$get_current_country_flag_16x16\" alt=\"$get_current_country_flag_16x16\" /><br />\n";
+				
+			}
+			echo"
+			<input type=\"file\" name=\"inp_flag_16x16\" />
+			</p>
+
+			<p>
+			<b>Flag 32x32</b><br />\n";
+			if(file_exists("../$get_current_country_flag_path_32x32/$get_current_country_flag_32x32")){
+				echo"<img src=\"../$get_current_country_flag_path_32x32/$get_current_country_flag_32x32\" alt=\"$get_current_country_flag_32x32\" /><br />\n";
+				
+			}
+			echo"
+			<input type=\"file\" name=\"inp_flag_32x32\" />
+			</p>
+
+			<p> 
+			<input type=\"submit\" value=\"Save changes\" class=\"btn\" />
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=delete_country&amp;country_id=$get_current_country_id&amp;editor_language=$editor_language&amp;l=$l\" class=\"btn_warning\">Delete</a>
+			</p>
+			</form>
+					
+		<!-- //Edit country form -->
+		";
+	} // found
+} // action == edit_country
+elseif($action == "delete_country"){
+	if(isset($_GET['country_id'])) {
+		$country_id = $_GET['country_id'];
+		$country_id = strip_tags(stripslashes($country_id));
+		if(!(is_numeric($country_id))){
+			echo"Country not numeric";
+			die;
+		}
+	}
+	else{
+		echo"Missing country";
+		die;
+	}
+		
+	// Locate this country
+	$country_id_mysql = quote_smart($link, $country_id);
+	$query = "SELECT country_id, country_name, country_name_clean, country_native_name, country_iso_two, country_iso_three, country_language_alt_a, country_language_alt_b, country_flag_path_16x16, country_flag_16x16, country_flag_path_32x32, country_flag_32x32 FROM $t_languages_countries WHERE country_id=$country_id_mysql";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_current_country_id, $get_current_country_name, $get_current_country_name_clean, $get_current_country_native_name, $get_current_country_iso_two, $get_current_country_iso_three, $get_current_country_language_alt_a, $get_current_country_language_alt_b, $get_current_country_flag_path_16x16, $get_current_country_flag_16x16, $get_current_country_flag_path_32x32, $get_current_country_flag_32x32) = $row;
+	if($get_current_country_id == ""){
+		echo"Country not found";
+	}
+	else{
+		if($process == "1"){
+			$result = mysqli_query($link, "DELETE FROM $t_languages_countries WHERE country_id=$get_current_country_id") or die(mysqli_error($link));
+
+			// Icon 16x16
+			if(file_exists("../$get_current_country_flag_path_16x16/$get_current_country_flag_16x16") && $get_current_country_flag_16x16 != ""){
+				unlink("../$get_current_country_flag_path_16x16/$get_current_country_flag_16x16");
+			}
+			
+
+
+			// Icon 32x32
+			if(file_exists("../$get_current_country_flag_path_32x32/$get_current_country_flag_32x32") && $get_current_country_flag_32x32 != ""){
+				unlink("../$get_current_country_flag_path_16x16/$get_current_country_flag_32x32");
+				
+			}
+			
+
+			$url = "index.php?open=$open&page=$page&editor_language=$editor_language&l=$l&ft=success&fm=country_deleted";
+			header("Location: $url");
+			exit;
+		
+		}
+		echo"
+		<h2>Delete country $get_current_country_name</h2>
+
+		<!-- Where am I? -->
+			<p><b>You are here:</b><br />
+			<a href=\"index.php?open=$open&amp;page=$page&amp;editor_language=$editor_language&amp;l=$l\">Languages</a>
+			&gt;
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=edit_countries&amp;editor_language=$editor_language&amp;l=$l\">Edit countries</a>
+			&gt;
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=edit_country&amp;country_id=$get_current_country_id&amp;editor_language=$editor_language&amp;l=$l\">Edit country $get_current_country_name</a>
+			&gt;
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=delete_country&amp;country_id=$get_current_country_id&amp;editor_language=$editor_language&amp;l=$l\">Delete country $get_current_country_name</a>
+			</p>
+		<!-- //Where am I?  -->
+
+
+		<!-- Feedback -->
+		";
+		if($ft != ""){
+			$fm = str_replace("_", " ", $fm);
+			$fm = ucfirst($fm);
+			echo"<div class=\"$ft\"><span>$fm</span></div>";
+		}
+		echo"	
+		<!-- //Feedback -->
+
+		<!-- Delete country form -->
+			<p>
+			Are you sure you want to delete the country?
+			</p>
+
+			<p>
+			<a href=\"index.php?open=$open&amp;page=$page&amp;action=delete_country&amp;country_id=$get_current_country_id&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\" class=\"btn_danger\">Confirm</a>
+			</p>
+
+		<!-- //Delete country form -->
+		";
+	} // found
+} // action == edit_country
 ?>

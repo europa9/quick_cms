@@ -1,10 +1,10 @@
 <?php
 /**
 *
-* File: food/view_food_show_age_restriction_warning.php
-* Version 1.0.0
-* Date 23:07 09.07.2017
-* Copyright (c) 2008-2018 Sindre Andre Ditlefsen
+* File: _food/open_sub_category_show_age_restriction_warning.php
+* Version 1.0.0.
+* Date 16:13 12.04.2021
+* Copyright (c) 2021 Sindre Andre Ditlefsen
 * License: http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -12,7 +12,7 @@
 if($action == ""){
 	// Select country
 	echo"
-	<h1>$get_current_food_manufacturer_name $get_current_food_name</h1>
+	<h1>$get_current_sub_category_translation_value</h1>
 
 	<h2>$l_please_select_your_country</h2>
 	";
@@ -31,7 +31,7 @@ if($action == ""){
 	
 		echo"
 				<div class=\"view_food_select_country_col\">
-					<a href=\"view_food.php?action=view_agreement&amp;main_category_id=$main_category_id&amp;sub_category_id=$sub_category_id&amp;food_id=$food_id&amp;country=$get_restriction_country_iso_two&amp;l=$l\"><img src=\"$root/$get_restriction_country_flag_path_16x16/$get_restriction_country_flag_16x16\" alt=\"$get_restriction_country_flag_16x16\" /> $get_restriction_country_name</a>
+					<a href=\"open_sub_category.php?action=view_agreement&amp;main_category_id=$main_category_id&amp;sub_category_id=$sub_category_id&amp;country=$get_restriction_country_iso_two&amp;l=$l\"><img src=\"$root/$get_restriction_country_flag_path_16x16/$get_restriction_country_flag_16x16\" alt=\"$get_restriction_country_flag_16x16\" /> $get_restriction_country_name</a>
 				
 				</div>
 		";
@@ -78,7 +78,7 @@ elseif($action == "view_agreement"){
 		<p>$get_current_restriction_text</p>
 
 		<p>
-		<a href=\"view_food.php?action=agree_to_agreement&amp;main_category_id=$main_category_id&amp;sub_category_id=$sub_category_id&amp;food_id=$food_id&amp;country=$get_current_restriction_country_iso_two&amp;l=$l\" class=\"btn_default\">$l_agree</a>
+		<a href=\"open_sub_category.php?action=agree_to_agreement&amp;main_category_id=$main_category_id&amp;sub_category_id=$sub_category_id&amp;country=$get_current_restriction_country_iso_two&amp;l=$l\" class=\"btn_default\">$l_agree</a>
 		</p>
 		";
 	}
@@ -104,7 +104,6 @@ elseif($action == "agree_to_agreement"){
 	}
 	else{
 		// Agree
-
 		$inp_ip = $_SERVER['REMOTE_ADDR'];
 		$inp_ip = output_html($inp_ip);
 		$inp_ip_mysql = quote_smart($link, $inp_ip);
@@ -125,4 +124,8 @@ elseif($action == "agree_to_agreement"){
 
 	}
 }
+
+
+/*- Footer ----------------------------------------------------------------------------------- */
+include("$root/_webdesign/footer.php");
 ?>

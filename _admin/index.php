@@ -171,6 +171,7 @@ if(file_exists($mysql_config_file)){
 
 	$t_languages 			= $mysqlPrefixSav . "languages";
 	$t_languages_active 		= $mysqlPrefixSav . "languages_active";
+	$t_languages_countries		= $mysqlPrefixSav . "languages_countries";
 	
 	$t_site_translations_directories = $mysqlPrefixSav . "site_translations_directories";
 	$t_site_translations_files       = $mysqlPrefixSav . "site_translations_files";

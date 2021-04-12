@@ -7,3 +7,24 @@ img.food_score_img {
 	top: 30px;
 	left: 50px;
 }
+
+
+
+/*- View food show age restrictions waring ---------------------------------------------- */
+div.view_food_select_country_row{
+	display: flex;
+}
+
+div.view_food_select_country_col{
+	flex: 1;
+	padding: 1px 0px 1px 0px;
+}
+
+@media screen and (max-width: 52.375em) {
+	div.view_food_select_country_row{
+		display: inline-block;
+	}
+	div.view_food_select_country_col{
+		flex: 0;
+	}
+}

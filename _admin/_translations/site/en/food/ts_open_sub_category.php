@@ -24,4 +24,7 @@ $l_dash_polyunsaturated_fat = "- polyunsaturated fat";
 $l_dietary_fiber  = "Dietary fiber";
 $l_sodium  = "Sodium";
 $l_cholesterol  = "Cholesterol";
+$l_please_select_your_country = "Please select your country";
+$l_agree = "Agree";
+$l_decline = "Decline";
 ?>
