@@ -268,9 +268,9 @@ else{
 
 
 			<p>$l_i_accept:<br />
-			<input type=\"checkbox\" name=\"inp_cookies_policy\"> <a href=\"$root/legal/index.php?doc=cookies_policy&amp;l=$l\">$l_cookies_policy</a><br />
-			<input type=\"checkbox\" name=\"inp_privacy_policy\"> <a href=\"$root/legal/index.php?doc=privacy_policy&amp;l=$l\">$l_privacy_policy</a><br />
-			<input type=\"checkbox\" name=\"inp_terms_of_use\"> <a href=\"$root/legal/index.php?doc=terms_of_use&amp;l=$l\">$l_terms_of_use</a><br />
+			<label><input type=\"checkbox\" name=\"inp_cookies_policy\"> <span class=\"click_cookies_policy\">$l_cookies_policy</span> [<a href=\"$root/legal/index.php?doc=cookies_policy&amp;l=$l\">$l_read</a>]</label><br />
+			<label><input type=\"checkbox\" name=\"inp_privacy_policy\"> <span class=\"click_privacy_policy\">$l_privacy_policy</span> [<a href=\"$root/legal/index.php?doc=privacy_policy&amp;l=$l\">$l_read</a>]</label><br />
+			<label><input type=\"checkbox\" name=\"inp_terms_of_use\"> <span class=\"click_terms_of_use\">$l_terms_of_use</span> [<a href=\"$root/legal/index.php?doc=terms_of_use&amp;l=$l\">$l_read</a>]</label><br />
 			</p>
 
 			<p>

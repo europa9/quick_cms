@@ -275,40 +275,100 @@ list($get_current_food_id, $get_current_food_user_id, $get_current_food_name, $g
 
 	
 					// per 8 US System
-					$inp_food_energy_us = round(($inp_food_energy_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					if($get_current_food_serving_size_us == "0"){
+						$inp_food_energy_us = 0;
+					}
+					else{
+						$inp_food_energy_us = round(($inp_food_energy_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					}
 					$inp_food_energy_us_mysql = quote_smart($link, $inp_food_energy_us);
 
-					$inp_food_fat_us = round(($inp_food_fat_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					if($get_current_food_serving_size_us == "0"){
+						$inp_food_fat_us = 0;
+					}
+					else{
+						$inp_food_fat_us = round(($inp_food_fat_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					}
 					$inp_food_fat_us_mysql = quote_smart($link, $inp_food_fat_us);
 	
-					$inp_food_saturated_fat_us = round(($inp_food_saturated_fat_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					if($get_current_food_serving_size_us == "0"){
+						$inp_food_saturated_fat_us = 0;
+					}
+					else{
+						$inp_food_saturated_fat_us = round(($inp_food_saturated_fat_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					}
 					$inp_food_saturated_fat_us_mysql = quote_smart($link, $inp_food_saturated_fat_us);
 
-					$inp_food_monounsaturated_fat_us = round(($inp_food_monounsaturated_fat_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					if($get_current_food_serving_size_us == "0"){
+						$inp_food_monounsaturated_fat_us = 0;
+					}
+					else{
+						$inp_food_monounsaturated_fat_us = round(($inp_food_monounsaturated_fat_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					}
 					$inp_food_monounsaturated_fat_us_mysql = quote_smart($link, $inp_food_monounsaturated_fat_us);
 
-					$inp_food_polyunsaturated_fat_us = round(($inp_food_polyunsaturated_fat_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					if($get_current_food_serving_size_us == "0"){
+						$inp_food_polyunsaturated_fat_us = 0;
+					}
+					else{
+						$inp_food_polyunsaturated_fat_us = round(($inp_food_polyunsaturated_fat_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					}
 					$inp_food_polyunsaturated_fat_us_mysql = quote_smart($link, $inp_food_polyunsaturated_fat_us);
 
-					$inp_food_carbohydrates_us  = round(($inp_food_carbohydrates_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					if($get_current_food_serving_size_us == "0"){
+						$inp_food_carbohydrates_us  = 0;
+					}
+					else{
+						$inp_food_carbohydrates_us  = round(($inp_food_carbohydrates_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					}
 					$inp_food_carbohydrates_us_mysql = quote_smart($link, $inp_food_carbohydrates_us);
 
-					$inp_food_dietary_fiber_us = round(($inp_food_dietary_fiber_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					if($get_current_food_serving_size_us == "0"){
+						$inp_food_dietary_fiber_us = 0;
+					}
+					else{
+						$inp_food_dietary_fiber_us = round(($inp_food_dietary_fiber_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					}
 					$inp_food_dietary_fiber_us_mysql = quote_smart($link, $inp_food_dietary_fiber_us);
 
-					$inp_food_carbohydrates_of_which_sugars_us = round(($inp_food_carbohydrates_of_which_sugars_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					if($get_current_food_serving_size_us == "0"){
+						$inp_food_carbohydrates_of_which_sugars_us = 0;
+					}
+					else{
+						$inp_food_carbohydrates_of_which_sugars_us = round(($inp_food_carbohydrates_of_which_sugars_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					}
 					$inp_food_carbohydrates_of_which_sugars_us_mysql = quote_smart($link, $inp_food_carbohydrates_of_which_sugars_us);
 
-					$inp_food_proteins_us = round(($inp_food_proteins_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					if($get_current_food_serving_size_us == "0"){
+						$inp_food_proteins_us = 0;
+					}
+					else{
+						$inp_food_proteins_us = round(($inp_food_proteins_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					}
 					$inp_food_proteins_us_mysql = quote_smart($link, $inp_food_proteins_us);
 
-					$inp_food_salt_us = round(($inp_food_salt_calculated_metric/$get_current_food_serving_size_us)*8, 2);
+					if($get_current_food_serving_size_us == "0"){
+						$inp_food_salt_us = 0;
+					}
+					else{
+						$inp_food_salt_us = round(($inp_food_salt_calculated_metric/$get_current_food_serving_size_us)*8, 2);
+					}
 					$inp_food_salt_us_mysql = quote_smart($link, $inp_food_salt_us);
 
-					$inp_food_sodium_us = round(($inp_food_sodium_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					if($get_current_food_serving_size_us == "0"){
+						$inp_food_sodium_us = 0;
+					}
+					else{
+						$inp_food_sodium_us = round(($inp_food_sodium_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					}
 					$inp_food_sodium_us_mysql = quote_smart($link, $inp_food_sodium_us);
 
-					$inp_food_cholesterol_us = round(($inp_food_cholesterol_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					if($get_current_food_serving_size_us == "0"){
+						$inp_food_cholesterol_us = 0;
+					}
+					else{
+						$inp_food_cholesterol_us = round(($inp_food_cholesterol_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+					}
 					$inp_food_cholesterol_us_mysql = quote_smart($link, $inp_food_cholesterol_us);
 
 

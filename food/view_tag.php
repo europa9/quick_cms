@@ -287,7 +287,19 @@ while($row = mysqli_fetch_row($result)) {
 		}
 	} // img
 }
-if($x == "3"){
+if($x == "1"){
+	echo"
+			<div class=\"left_center_center_left_right_center\" style=\"text-align: center;padding-bottom: 20px;\">
+		</div>
+		
+			<div class=\"left_center_center_right_right_center\" style=\"text-align: center;padding-bottom: 20px;\">
+		</div>
+		<div class=\"left_center_center_right_right\" style=\"text-align: center;padding-bottom: 20px;\">
+		</div>
+		<div class=\"clear\"></div>
+	";
+}
+elseif($x == "3"){
 	echo"
 		<div class=\"left_center_center_right_right\" style=\"text-align: center;padding-bottom: 20px;\">
 		</div>

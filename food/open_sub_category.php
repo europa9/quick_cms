@@ -156,8 +156,13 @@ if($get_current_main_category_id == ""){
 }
 else{
 	// Age limit?
-	$can_view_food = 1;
-	$can_view_images = 1;
+	$get_current_restriction_show_food = 1;
+	$get_current_restriction_show_image_a = 1;
+	$get_current_restriction_show_image_b = 1;
+	$get_current_restriction_show_image_c = 1;
+	$get_current_restriction_show_image_d = 1;
+	$get_current_restriction_show_image_e = 1;
+	$get_current_restriction_show_smileys = 1;
 	if($get_current_category_age_limit == "1"){
 		// Check if I have accepted 
 		$inp_ip_mysql = quote_smart($link, $my_ip);
@@ -168,26 +173,23 @@ else{
 		
 		if($get_accepted_id == ""){
 			// Accept age restriction
-			$can_view_food = 0;
+			$get_current_restriction_show_food = 0;
 			include("open_sub_category_show_age_restriction_warning.php");
 		}
 		else{
 			// Can I see food and images?
 			$country_mysql = quote_smart($link, $get_accepted_country);
-			$query = "SELECT restriction_id, restriction_country_iso_two, restriction_country_name, restriction_country_flag_path_16x16, restriction_country_flag_16x16, restriction_language, restriction_age_limit, restriction_title, restriction_text, restriction_can_view_food, restriction_can_view_images FROM $t_food_age_restrictions WHERE restriction_country_iso_two=$country_mysql";
+			$query = "SELECT restriction_id, restriction_country_name, restriction_country_iso_two, restriction_country_flag_path_16x16, restriction_country_flag_16x16, restriction_language, restriction_age_limit, restriction_title, restriction_text, restriction_show_food, restriction_show_image_a, restriction_show_image_b, restriction_show_image_c, restriction_show_image_d, restriction_show_image_e, restriction_show_smileys FROM $t_food_age_restrictions WHERE restriction_country_iso_two=$country_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
-			list($get_current_restriction_id, $get_current_restriction_country_iso_two, $get_current_restriction_country_name, $get_current_restriction_country_flag_path_16x16, $get_current_restriction_country_flag_16x16, $get_current_restriction_language, $get_current_restriction_age_limit, $get_current_restriction_title, $get_current_restriction_text, $get_current_restriction_can_view_food, $get_current_restriction_can_view_images) = $row;
+			list($get_current_restriction_id, $get_current_restriction_country_name, $get_current_restriction_country_iso_two, $get_current_restriction_country_flag_path_16x16, $get_current_restriction_country_flag_16x16, $get_current_restriction_language, $get_current_restriction_age_limit, $get_current_restriction_title, $get_current_restriction_text, $get_current_restriction_show_food, $get_current_restriction_show_image_a, $get_current_restriction_show_image_b, $get_current_restriction_show_image_c, $get_current_restriction_show_image_d, $get_current_restriction_show_image_e, $get_current_restriction_show_smileys) = $row;
 
 			if($get_current_restriction_id == ""){
-				// Could not find country, delete request and start over
-				mysqli_query($link, "TRUNCATE $t_food_age_restrictions_accepted") or die(mysqli_error($link));
+				// Could not find country
+				echo"<div class=\"error\"><p>Could not find country.</p></div>\n";
 			}
 
-			$can_view_food = $get_current_restriction_can_view_food;
-			$can_view_images = $get_current_restriction_can_view_images;
-
-			if($can_view_food == 0){
+			if($get_current_restriction_show_food == 0){
 				echo"
 				<h1 style=\"padding-bottom:0;margin-bottom:0;\">$get_current_food_manufacturer_name $get_current_food_name</h1>
 				<p>$get_current_restriction_text</p>
@@ -197,10 +199,10 @@ else{
 		}
 	}
 
-	if($can_view_food == 1){
+	if($get_current_restriction_show_food == 1){
 		echo"
 		<!-- Headline, buttons, search -->
-		<div class=\"food_headline\">
+		<div class=\"food_float_left\">
 		
 			<!-- Headline -->
 				<h1>$get_current_sub_category_translation_value</h1>
@@ -217,7 +219,7 @@ else{
 			<!-- //Where am I ? -->
 
 		</div>
-		<div class=\"food_menu\">
+		<div class=\"food_float_right\">
 		
 			<!-- Food menu -->
 				<script>
@@ -711,7 +713,7 @@ else{
 				}
 
 
-				if($can_view_images == "1"){
+				if($get_current_restriction_show_smileys == "1"){
 					if($get_food_score > 0){
 						echo"
 						<img src=\"_gfx/smiley_sad.png\" alt=\"smiley_sad.gif\" title=\"$get_food_score\" class=\"food_score_img\" />";
@@ -728,7 +730,7 @@ else{
 
 				echo"
 				<p style=\"padding-bottom:5px;\">\n";
-				if($can_view_images == "1"){
+				if($get_current_restriction_show_image_a == "1"){
 					echo"					";
 					echo"<a href=\"view_food.php?main_category_id=$main_category_id&amp;sub_category_id=$get_sub_category_id&amp;food_id=$get_food_id&amp;l=$l\"><img src=\"$root/$get_food_image_path/$get_food_thumb_a_small\" alt=\"$get_food_image_a\" style=\"margin-bottom: 5px;\" /></a><br />\n";
 				}

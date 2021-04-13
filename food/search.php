@@ -266,9 +266,11 @@ if($search_query != "" OR $manufacturer_name != "" OR $store_id != "" OR $barcod
 	$query = $query . "  WHERE food_language=$l_mysql";
 
 	if($search_query != ""){
-		$search_query = "%" . $search_query . "%";
 		$search_query_mysql = quote_smart($link, $search_query);
-		$query = $query . " AND ($t_food_index.food_name LIKE $search_query_mysql OR $t_food_index.food_manufacturer_name LIKE $search_query_mysql)";
+
+		$search_query_like = "%" . $search_query . "%";
+		$search_query_like_mysql = quote_smart($link, $search_query_like);
+		$query = $query . " AND ($t_food_index.food_name LIKE $search_query_like_mysql OR $t_food_index.food_manufacturer_name LIKE $search_query_like_mysql OR $t_food_index.food_barcode=$search_query_mysql)";
 	}
 
 	if($manufacturer_name != ""){

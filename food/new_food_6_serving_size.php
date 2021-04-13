@@ -487,22 +487,37 @@ list($get_current_food_id, $get_current_food_user_id, $get_current_food_name, $g
 			<!-- Serving size form -->
 
 			<!-- Food image -->
-			";
+				<div style=\"float: right;\">
+					<p>";
 				if(file_exists("$root/$get_current_food_image_path/$get_current_food_image_a") && $get_current_food_image_a != ""){
 					echo"
-					<span style=\"float: left;margin-right: 20px;\">
+					
 					<img src=\"$root/$get_current_food_image_path/$get_current_food_image_a\" alt=\"$root/$get_current_food_image_path/$get_current_food_image_a\" width=\"600\" height=\"600\" />
-					</span>
+					
 					";
 				}
 				if(file_exists("$root/$get_current_food_image_path/$get_current_food_image_b") && $get_current_food_image_b != ""){
 					echo"
-					<span style=\"float: left;margin-right: 20px;\">
+				
 					<img src=\"$root/$get_current_food_image_path/$get_current_food_image_b\" alt=\"$root/$get_current_food_image_path/$get_current_food_image_b\" width=\"600\" height=\"600\" />
-					</span>
+					
 					";
 				}
-			echo"
+				if(file_exists("$root/$get_current_food_image_path/$get_current_food_image_c") && $get_current_food_image_c != ""){
+					echo"
+					<img src=\"$root/$get_current_food_image_path/$get_current_food_image_c\" alt=\"$root/$get_current_food_image_path/$get_current_food_image_c\" width=\"600\" height=\"600\" />
+					
+					";
+				}
+				if(file_exists("$root/$get_current_food_image_path/$get_current_food_image_d") && $get_current_food_image_d != ""){
+					echo"
+					<img src=\"$root/$get_current_food_image_path/$get_current_food_image_d\" alt=\"$root/$get_current_food_image_path/$get_current_food_image_d\" width=\"600\" height=\"600\" />
+					
+					";
+				}
+				echo"
+					</p>
+				</div>
 			<!-- //Food image -->
 				
 		<div class=\"clear\"></div>

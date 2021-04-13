@@ -34,6 +34,7 @@ $l_prefered_messurement = "Foretrukket m&aring;leenhet";
 $l_privacy_policy = "Personvernregler";
 $l_profile = "Profil";
 $l_profile_hello_about = "Takk for din registrering. Lar oss bruke noen f&aring; minutter til &aring; fullf&oslash;re profilen din.";
+$l_read = "Les";
 $l_save = "Lagre";
 $l_server_error = "Serverfeil";
 $l_terms_of_use = "Vilk&aring;r for bruk";

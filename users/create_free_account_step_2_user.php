@@ -28,6 +28,7 @@ include("$root/_admin/_data/logo.php");
 include("$root/_admin/_data/config/user_system.php");
 
 /*- Tables ---------------------------------------------------------------------------- */
+include("_tables_users.php");
 $t_search_engine_index 		= $mysqlPrefixSav . "search_engine_index";
 $t_search_engine_access_control = $mysqlPrefixSav . "search_engine_access_control";
 
@@ -201,7 +202,7 @@ if(!(isset($_SESSION['user_id']))){
 
 
 				// Ip
-				$inp_user_last_ip_mysql = quote_smart($link, $inp_ip);
+				$inp_user_last_ip_mysql = quote_smart($link, $my_ip);
 
 
 				// Insert user
@@ -617,17 +618,14 @@ if(!(isset($_SESSION['user_id']))){
 				$row = mysqli_fetch_row($result);
 				list($inp_country) = $row;
 			}
-			$prev_country = "";
-			$query = "SELECT geoname_country_name FROM $t_stats_ip_to_country_geonames ORDER BY geoname_country_name ASC";
+			$query = "SELECT country_id, country_name FROM $t_languages_countries ORDER BY country_name ASC";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
-				list($get_geoname_country_name) = $row;
+				list($get_country_id, $get_country_name) = $row;
 
-				if($get_geoname_country_name != "$prev_country"){
-					echo"			";
-					echo"<option value=\"$get_geoname_country_name\""; if(isset($inp_country) && $inp_country == "$get_geoname_country_name"){ echo" selected=\"selected\""; } echo">$get_geoname_country_name</option>\n";
-				}
-				$prev_country = "$get_geoname_country_name";
+				echo"			";
+				echo"<option value=\"$get_country_name\""; if(isset($inp_country) && $inp_country == "$get_country_name"){ echo" selected=\"selected\""; } echo">$get_country_name</option>\n";
+				
 			}
 			echo"
 			</select>

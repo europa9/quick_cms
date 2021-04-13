@@ -29,6 +29,9 @@ include("$root/_admin/_data/config/user_system.php");
 include("$root/_admin/_data/user_professional_allowed_settings.php");
 
 /*- Tables ---------------------------------------------------------------------------------- */
+include("_tables_users.php");
+
+
 $t_users_professional_allowed_companies			= $mysqlPrefixSav . "users_professional_allowed_companies";
 $t_users_professional_allowed_company_locations		= $mysqlPrefixSav . "users_professional_allowed_company_locations";
 $t_users_professional_allowed_departments		= $mysqlPrefixSav . "users_professional_allowed_departments";
@@ -269,19 +272,14 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<option value=\"\""; if($get_profile_country == ""){ echo" selected=\"selected\""; } echo">- $l_please_select -</option>";
 
 
-			$prev_country = "";
-			$query = "SELECT language_flag FROM $t_languages ORDER BY language_flag ASC";
+			
+			$query = "SELECT country_id, country_name FROM $t_languages_countries ORDER BY country_name ASC";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
-				list($get_language_flag) = $row;
+				list($get_country_id, $get_country_name) = $row;
 
-				$country = str_replace("_", " ", $get_language_flag);
-				$country = ucwords($country);
-				if($country != "$prev_country"){
-					echo"			";
-					echo"<option value=\"$country\""; if($get_profile_country == "$country"){ echo" selected=\"selected\""; } echo">$country</option>\n";
-				}
-				$prev_country = "$country";
+				echo"			";
+				echo"<option value=\"$get_country_name\""; if($get_profile_country == "$get_country_name"){ echo" selected=\"selected\""; } echo">$get_country_name</option>\n";
 			}
 
 

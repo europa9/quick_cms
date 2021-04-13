@@ -45,8 +45,13 @@ echo"
 	  	 restriction_age_limit INT,
 	  	 restriction_title VARCHAR(250),
 	  	 restriction_text VARCHAR(250),
-	  	 restriction_can_view_food INT,
-	  	 restriction_can_view_images INT)")
+	  	 restriction_show_food INT,
+	  	 restriction_show_image_a INT,
+	  	 restriction_show_image_b INT,
+	  	 restriction_show_image_c INT,
+	  	 restriction_show_image_d INT,
+	  	 restriction_show_image_e INT,
+	  	 restriction_show_smileys INT)")
 		   or die(mysqli_error());
 
 		$query = "SELECT country_id, country_name, country_name_clean, country_native_name, country_iso_two, country_iso_three, country_language_alt_a, country_language_alt_b, country_flag_path_16x16, country_flag_16x16, country_flag_path_32x32, country_flag_32x32 FROM $t_languages_countries ORDER BY country_name ASC";
@@ -76,15 +81,16 @@ echo"
 			$inp_text = "This page can only be viewed by adults.";
 			$inp_text_mysql = quote_smart($link, $inp_text);
 
-			$inp_can_view_image = "0";
-			$inp_can_view_image_mysql = quote_smart($link, $inp_can_view_image);
-
 			mysqli_query($link, "INSERT INTO $t_food_age_restrictions 
 			(restriction_id, restriction_country_name, restriction_country_iso_two, restriction_country_flag_path_16x16, restriction_country_flag_16x16, 
-			restriction_language, restriction_age_limit, restriction_title, restriction_text,  restriction_can_view_food, restriction_can_view_images) 
+			restriction_language, restriction_age_limit, restriction_title, restriction_text,  restriction_show_food, 
+			restriction_show_image_a, restriction_show_image_b, restriction_show_image_c, restriction_show_image_d, restriction_show_image_e, 
+			restriction_show_smileys) 
 			VALUES 
 			(NULL, $inp_country_name_mysql, $inp_country_iso_two_mysql, $inp_country_flag_path_16x16_mysql, $inp_country_flag_16x16_mysql, 
-			$inp_language_mysql, '21', $inp_title_mysql, $inp_text_mysql, '1', $inp_can_view_image_mysql)")
+			$inp_language_mysql, '21', $inp_title_mysql, $inp_text_mysql, '1', 
+			0, 0, 0, 0, 0, 
+			0)")
 			or die(mysqli_error($link));
 			
 		} // while countries
