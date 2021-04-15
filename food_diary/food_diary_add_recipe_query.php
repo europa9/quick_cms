@@ -112,7 +112,7 @@ if(isset($_GET['hour_name']) OR isset($_POST['hour_name'])) {
 	}
 	
 	$hour_name = stripslashes(strip_tags($hour_name));
-	if($hour_name != "breakfast" && $hour_name != "lunch" && $hour_name != "before_training" && $hour_name != "after_training" && $hour_name != "dinner" && $hour_name != "snacks" && $hour_name != "supper"){
+	if($hour_name != "breakfast" && $hour_name != "lunch" && $hour_name != "before_training" && $hour_name != "after_training" && $hour_name != "linner" && $hour_name != "dinner" && $hour_name != "snacks" && $hour_name != "supper" && $hour_name != "night_meal"){
 		echo"Unknown hour name";
 		die;
 	}

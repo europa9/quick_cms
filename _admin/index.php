@@ -469,6 +469,7 @@ echo"<!DOCTYPE html>
 		<div class=\"header_right\">
 			<div class=\"header_right_quick_menu\">
 				<ul>
+					<li><a href=\"index.php?editor_language=$editor_language&amp;l=$l\"><img src=\"_design/gfx/icons/material/ic_dashboard_black_24dp.png\" alt=\"ic_dashboard_black_24dp.png\" /></a></li>
 					<li><a href=\"../index.php?l=$l\"><img src=\"_design/gfx/icons/material/ic_home_black_24dp.png\" alt=\"ic_home_black_24dp.png\" /></a></li>
 					<li><a href=\"index.php?open=dashboard&amp;page=notes&amp;action=edit&amp;editor_language=$editor_language&amp;l=$l\"><img src=\"_design/gfx/icons/material/ic_speaker_notes_black_24dp.png\" alt=\"ic_speaker_notes_black_24dp.png\" /></a></li>
 					<li><a href=\"index.php?open=dashboard&amp;page=tasks&amp;editor_language=$editor_language&amp;l=$l\"><img src=\"_design/gfx/icons/material/ic_assignment_black_24dp.png\" alt=\"ic_assignment_black_24dp.png\" /></a></li>

@@ -129,7 +129,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<div"; if($get_current_meal_plan_number_of_days > 1){ echo" class=\"right\" style=\"width: 82%;\""; } echo">
 				<!-- Next -->
 					<p>
-					<a href=\"new_meal_plan_step_3_image.php?meal_plan_id=$meal_plan_id&amp;l=$l\" class=\"btn btn_default\">$l_next</a>
+					<a href=\"meal_plan_view_$get_current_meal_plan_number_of_days.php?meal_plan_id=$meal_plan_id&amp;l=$l\" class=\"btn btn_default\">$l_next</a>
 					</p>
 				<!-- //Next -->
 			";
@@ -212,13 +212,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							echo"$l_after_training ";
 						}
 						elseif($x == 4){
-							echo"$l_dinnar";
+							echo"$l_linner";
 						}
 						elseif($x == 5){
-							echo"$l_snacks";
+							echo"$l_dinnar";
 						}
 						elseif($x == 6){
+							echo"$l_snacks";
+						}
+						elseif($x == 7){
 							echo"$l_supper ";
+						}
+						elseif($x == 8){
+							echo"$l_night_meal";
 						}
 						else{
 							echo"x out of range";

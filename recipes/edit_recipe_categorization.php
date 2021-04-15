@@ -331,16 +331,13 @@ else{
 
 		<p><b>$l_country</b><br />
 		<select name=\"inp_recipe_country\">";
-			$query = "SELECT geoname_country_name FROM $t_stats_ip_to_country_geonames ORDER BY geoname_country_name ASC";
-			$result = mysqli_query($link, $query);
-			while($row = mysqli_fetch_row($result)) {
-				list($get_geoname_country_name) = $row;
-
-				if($get_geoname_country_name != "$prev_country"){
-				echo"			";
-				echo"<option value=\"$get_geoname_country_name\""; if($get_recipe_country == "$get_geoname_country_name"){ echo" selected=\"selected\""; } echo">$get_geoname_country_name</option>\n";
-			}
-			$prev_country = "$get_geoname_country_name";
+		$query = "SELECT country_id, country_name FROM $t_languages_countries ORDER BY country_name ASC";
+		$result = mysqli_query($link, $query);
+		while($row = mysqli_fetch_row($result)) {
+			list($get_country_id, $get_country_name) = $row;
+			echo"			";
+			echo"<option value=\"$get_country_name\""; if($get_recipe_country == "$get_country_name"){ echo" selected=\"selected\""; } echo">$get_country_name</option>\n";
+			
 		}
 		echo"
 		</select>
@@ -414,12 +411,11 @@ else{
 
 		<p><b>$l_language</b><br />
 		<select name=\"inp_recipe_language\">\n";
-		$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+		$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_default FROM $t_languages_active";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
-			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
+			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_default) = $row;
 	
-			$flag_path 	= "$root/_webdesign/images/footer/flag_$get_language_active_flag" . "_16x16.png";
 
 			echo"						";
 			echo"<option value=\"$get_language_active_iso_two\""; if($get_recipe_language == "$get_language_active_iso_two"){ echo" selected=\"selected\""; } echo">$get_language_active_name</option>\n";

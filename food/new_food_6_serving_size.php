@@ -469,7 +469,9 @@ list($get_current_food_id, $get_current_food_user_id, $get_current_food_name, $g
 						<p><b>$l_description:</b></p> 
 					  </td>
 					  <td>
-						<p><input type=\"text\" name=\"inp_food_description\" value=\"$get_current_food_description\" size=\"35\" />
+						<p><textarea name=\"inp_food_description\" rows=\"5\" cols=\"60\">";
+						$get_current_food_description = str_replace("<br />", "\n", $get_current_food_description);
+						echo"$get_current_food_description</textarea>
 						</p>
 					  </td>
 					 </tr>

@@ -49,7 +49,7 @@ else{
 if(isset($_GET['referer'])) {
 	$referer = $_GET['referer'];
 	$referer = strip_tags(stripslashes($referer));
-	if($referer != "index" && $referer != "categories_browse" && $referer != "edit_recipe_ingredients" && $referer != "browse_recipes_newest" && $referer != "browse_recipes_rating" && $referer != "browse_recipes_views" && $referer != "browse_recipes_comments" && $referer != "submit_recipe_step_2_group_and_elements" && $referer != "view_tag"){
+	if($referer != "index" && $referer != "categories_browse" && $referer != "edit_recipe_ingredients" && $referer != "browse_recipes_newest" && $referer != "browse_recipes_rating" && $referer != "browse_recipes_views" && $referer != "browse_recipes_comments" && $referer != "submit_recipe_step_2_group_and_elements" && $referer != "view_tag" && $referer != "cuisines_browse"){
 		echo"Unknown referer";
 		die;
 	}
@@ -219,6 +219,23 @@ if($referer == "categories_browse"){
 	$url = "categories_browse.php?category_id=$category_id&l=$l&ft=info&fm=$fm";
 	header("Location: $url");
 	exit;
+}
+elseif($referer == "cuisines_browse"){
+	if(isset($_GET['cuisine_id'])){
+		$cuisine_id= $_GET['cuisine_id'];
+		$cuisine_id = strip_tags(stripslashes($cuisine_id));
+		if((is_numeric($cuisine_id))){
+			echo"Cuisine id not numeric";
+			die;
+		}
+		$url = "cuisines_browse.php?cuisine_id=$cuisine_id&l=$l&ft=info&fm=$fm";
+		header("Location: $url");
+		exit;
+	}
+	else{
+		echo"Missing cuisine id";
+		die;
+	}
 }
 elseif($referer == "edit_recipe_ingredients"){
 	$url = "edit_recipe_ingredients.php?action=add_items&recipe_id=$recipe_id&group_id=$group_id&l=$l&ft=info&fm=$fm";

@@ -120,6 +120,9 @@ while($row = mysqli_fetch_row($result)) {
 	$inp_banned_mysql 	= quote_smart($link, $get_stats_user_agent_banned);
 
 
+	/*
+	TEXT FILES:
+
 	if($rows_in_file_counter == "0"){
 		$input = "(NULL, $inp_string_mysql, $inp_type_mysql, $inp_browser_mysql, $inp_browser_version_mysql, $inp_browser_icon_mysql, $inp_os_mysql, $inp_os_version_mysql, $inp_os_icon_mysql, $inp_bot_mysql, $inp_bot_version_mysql, $inp_bot_icon_mysql, $inp_bot_website_mysql, $inp_banned_mysql)";
 	}
@@ -141,18 +144,37 @@ while($row = mysqli_fetch_row($result)) {
 		$rows_in_file_counter = -1;
 		$files_counter++;
 	}
+	*/
 
+
+	// Array files:
+	if($rows_in_file_counter == "0"){
+		$input = "<?php
+\$user_agents_index = array(
+array('stats_user_agent_string' => '$get_stats_user_agent_string','stats_user_agent_type' => '$get_stats_user_agent_type','stats_user_agent_browser' => '$get_stats_user_agent_browser','stats_user_agent_browser_version' => '$get_stats_user_agent_browser_version','stats_user_agent_browser_icon' => '$get_stats_user_agent_browser_icon','stats_user_agent_os' => '$get_stats_user_agent_os', 'stats_user_agent_os_version' => '$get_stats_user_agent_os_version', 'stats_user_agent_os_icon' => '$get_stats_user_agent_os_icon', 'stats_user_agent_bot' => '$get_stats_user_agent_bot', 'stats_user_agent_bot_version' => '$get_stats_user_agent_bot_version', 'stats_user_agent_bot_icon' => '$get_stats_user_agent_bot_icon', 'stats_user_agent_bot_website' => '$get_stats_user_agent_bot_website', 'stats_user_agent_banned' => '$get_stats_user_agent_banned')";
+	}
+	else{
+$input = $input . ",
+array('stats_user_agent_string' => '$get_stats_user_agent_string','stats_user_agent_type' => '$get_stats_user_agent_type','stats_user_agent_browser' => '$get_stats_user_agent_browser','stats_user_agent_browser_version' => '$get_stats_user_agent_browser_version','stats_user_agent_browser_icon' => '$get_stats_user_agent_browser_icon','stats_user_agent_os' => '$get_stats_user_agent_os', 'stats_user_agent_os_version' => '$get_stats_user_agent_os_version', 'stats_user_agent_os_icon' => '$get_stats_user_agent_os_icon', 'stats_user_agent_bot' => '$get_stats_user_agent_bot', 'stats_user_agent_bot_version' => '$get_stats_user_agent_bot_version', 'stats_user_agent_bot_icon' => '$get_stats_user_agent_bot_icon', 'stats_user_agent_bot_website' => '$get_stats_user_agent_bot_website', 'stats_user_agent_banned' => '$get_stats_user_agent_banned')";
+	}
 
 	$rows_in_file_counter++;
 
 
 } // while
 
+// footer
+$input = $input . "
+);
+?>
+";
+
+
 // Write last
 echo"
-	<li><a href=\"_liquidbase/db_scripts/stats/user_agents/$files_counter.txt\">_liquidbase/db_scripts/stats/user_agents/$files_counter.txt</a></li>
+	<li><a href=\"_liquidbase/db_scripts/stats/user_agents/$files_counter.php\">_liquidbase/db_scripts/stats/user_agents/$files_counter.php</a></li>
 ";
-$fh = fopen("_liquidbase/db_scripts/stats/user_agents/$files_counter.txt", "w+") or die("can not open file");
+$fh = fopen("_liquidbase/db_scripts/stats/user_agents/$files_counter.php", "w+") or die("can not open file");
 fwrite($fh, $input);
 fclose($fh);
 

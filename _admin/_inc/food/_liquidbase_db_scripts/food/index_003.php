@@ -45,6 +45,7 @@ echo"
 	  	   food_manufacturer_name VARCHAR(250),
 		   food_manufacturer_name_and_food_name VARCHAR(250),
 	  	   food_description VARCHAR(250),
+	  	   food_text TEXT,
 	  	   food_country VARCHAR(250),
 	  	   food_net_content_metric DOUBLE,
 	  	   food_net_content_measurement_metric VARCHAR(50),

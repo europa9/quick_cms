@@ -3,4 +3,5 @@ $l_select_the_stores_where_you_can_purcase_the_food = "Select the stores where y
 $l_available_stores = "Available stores";
 $l_stores_where_you_can_buy_the_food = "Stores where you can buy the food";
 $l_changes_saved = "Changes saved";
+$l_continue = "Continue";
 ?>

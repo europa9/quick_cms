@@ -15,6 +15,7 @@ $l_saving_changes = "Lagrer endringer";
 $l_sodium_in_gram = "Salt i gram";
 $l_stores = "Butikker";
 $l_tags = "Tags";
+$l_text = "Tekst";
 $l_view_food = "Vis mat";
 $l_what_do_you_want_to_edit = "Hva &oslash;nsker du &aring; endre?";
 ?>

@@ -342,7 +342,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 						// Header
-						$url = "meal_plan_view_$get_current_meal_plan_number_of_days.php?meal_plan_id=$meal_plan_id&l=$l&ft=success&fm=image_uploaded";
+						$url = "new_meal_plan_step_4_entries.php?meal_plan_id=$get_current_meal_plan_id&entry_day_number=1&l=$l&ft=success&fm=image_uploaded";
 						header("Location: $url");
 						exit;
 					}

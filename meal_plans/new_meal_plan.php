@@ -381,7 +381,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			or die(mysqli_error($link));
 
 			// Header
-			$url = "new_meal_plan_step_2_entries.php?meal_plan_id=$get_meal_plan_id&entry_day_number=1&l=$l";
+			$url = "new_meal_plan_step_2_text.php?meal_plan_id=$get_meal_plan_id&entry_day_number=1&l=$l";
 			header("Location: $url");
 		}
 		
@@ -442,11 +442,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 		<p><b>$l_title*:</b><br />
-		<input type=\"text\" name=\"inp_title\" value=\"$inp_title\" size=\"40\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+		<input type=\"text\" name=\"inp_title\" value=\"$inp_title\" size=\"40\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" style=\"width: 99%;\" />
 		</p>
 
 		<p><b>$l_introduction*:</b><br />
-		<textarea name=\"inp_introduction\" rows=\"3\" cols=\"50\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\"></textarea>
+		<textarea name=\"inp_introduction\" rows=\"4\" cols=\"60\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\"></textarea>
 		</p>
 
 		<p><b>$l_number_of_days*:</b><br />

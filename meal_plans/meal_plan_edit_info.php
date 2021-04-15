@@ -192,6 +192,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				<ul>
 					<li><a href=\"meal_plan_edit.php?meal_plan_id=$meal_plan_id&amp;entry_day_number=1&amp;l=$l\">$l_edit</a></li>
 					<li><a href=\"meal_plan_edit_info.php?meal_plan_id=$meal_plan_id&amp;l=$l\" class=\"selected\">$l_info</a></li>
+					<li><a href=\"meal_plan_edit_text.php?meal_plan_id=$meal_plan_id&amp;l=$l\">$l_text</a></li>
 					<li><a href=\"meal_plan_edit_image.php?meal_plan_id=$meal_plan_id&amp;l=$l\">$l_image</a></li>
 				</ul>
 			</div>
@@ -212,7 +213,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			</p>
 
 			<p><b>$l_introduction*:</b><br />
-			<textarea name=\"inp_introduction\" rows=\"3\" cols=\"50\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">";
+			<textarea name=\"inp_introduction\" rows=\"5\" cols=\"60\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">";
 			$get_current_meal_plan_introduction = str_replace("<br />", "\n", $get_current_meal_plan_introduction);
 			echo"$get_current_meal_plan_introduction</textarea>
 			</p>

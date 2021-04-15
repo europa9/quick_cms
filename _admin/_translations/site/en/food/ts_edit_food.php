@@ -17,4 +17,5 @@ $l_prices = "Prices";
 $l_my_food = "My food";
 $l_view_food = "View food";
 $l_carbohydrates = "Carbohydrates";
+$l_text = "Text";
 ?>

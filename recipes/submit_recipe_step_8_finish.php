@@ -396,7 +396,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$inp_my_ip_mysql = quote_smart($link, $inp_my_ip);
 
 		// Feed My hostname
-		$inp_my_hostname = "$inp_ip";
+		$inp_my_hostname = "$my_ip";
 		if($configSiteUseGethostbyaddrSav == "1"){
 			$inp_my_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']); // Some servers in local network cant use getostbyaddr because of nameserver missing
 		}

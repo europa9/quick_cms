@@ -151,6 +151,15 @@ echo"
 			$x++;
 		} // image
 	} // loop
+
+	if($x == 1){
+		echo"
+				<div class=\"left_right_right\"></div>
+				<div class=\"clear\"></div>
+		";
+	}
+
+
 	echo"
 <!-- //Show last meal plans -->
 

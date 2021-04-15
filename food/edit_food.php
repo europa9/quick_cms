@@ -171,7 +171,8 @@ else{
 					<ul>
 						<li><a href=\"view_food.php?main_category_id=$get_current_main_category_id&amp;sub_category_id=$get_current_sub_category_id&amp;food_id=$get_current_food_id&amp;l=$l\">$l_view_food</a></li>
 						<li><a href=\"edit_food_category.php?food_id=$get_current_food_id&amp;l=$l\">$l_category</a></li>
-						<li><a href=\"edit_food_general.php?food_id=$get_current_food_id&amp;l=$l\">$l_general</a></li>\n";
+						<li><a href=\"edit_food_general.php?food_id=$get_current_food_id&amp;l=$l\">$l_general</a></li>
+						<li><a href=\"edit_food_text.php?food_id=$get_current_food_id&amp;l=$l\">$l_text</a></li>\n";
 						if($get_current_food_serving_size_added_measurement == "oz_us" OR $get_current_food_serving_size_added_measurement == "fl_oz_us"){
 							echo"<li><a href=\"edit_food_numbers_pcs_us_system.php?food_id=$get_current_food_id&amp;l=$l\">$l_numbers</a></li>\n";
 						}

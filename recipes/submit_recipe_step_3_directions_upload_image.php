@@ -218,8 +218,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				// IP
 				$my_ip = "";
 				$my_ip = $_SERVER['REMOTE_ADDR'];
-				$my_ip = output_html($inp_ip);
-				$my_ip_mysql = quote_smart($link, $inp_ip);
+				$my_ip = output_html($my_ip);
+				$my_ip_mysql = quote_smart($link, $my_ip);
 
 				$my_hostname = "";
 				$my_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);

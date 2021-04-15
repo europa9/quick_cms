@@ -84,10 +84,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	// Get recipe
 	$recipe_id_mysql = quote_smart($link, $recipe_id);
 
-	$query = "SELECT recipe_id, recipe_directions FROM $t_recipes WHERE recipe_id=$recipe_id_mysql AND recipe_user_id=$my_user_id_mysql";
+	$query = "SELECT recipe_id, recipe_title, recipe_directions FROM $t_recipes WHERE recipe_id=$recipe_id_mysql AND recipe_user_id=$my_user_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_recipe_id, $get_recipe_directions) = $row;
+	list($get_recipe_id, $get_recipe_title, $get_recipe_directions) = $row;
 
 	if($get_recipe_id == ""){
 		echo"
@@ -147,7 +147,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		include("$root/_admin/_translations/site/$l/recipes/ts_view_recipe.php");
 
 		echo"
-		<h1>$l_submit_recipe</h1>
+		<h1>$l_submit_recipe - $get_recipe_title</h1>
 	
 
 		<!-- Focus -->

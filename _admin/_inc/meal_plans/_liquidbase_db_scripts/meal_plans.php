@@ -44,6 +44,7 @@ echo"
 	  	   meal_plan_title_clean VARCHAR(250),
 	  	   meal_plan_number_of_days INT,
 	  	   meal_plan_introduction TEXT,
+	  	   meal_plan_text TEXT,
 
 	  	   meal_plan_total_energy_without_training INT,
 	  	   meal_plan_total_fat_without_training INT,

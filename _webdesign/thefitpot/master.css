@@ -498,6 +498,18 @@ header{
 		background: #213147 url("../../_uploads/pages/navigation/no/forum_18x18_active.png") no-repeat 10px center;
 	}
 
+
+	/* Diet */
+	a.nav_8b1ff0de0735c12f319132b3b2a2f3a0{
+		background: url("../../_uploads/pages/navigation/no/kosthold_18x18_inactive.png") no-repeat 10px center;
+	}
+	a.nav_8b1ff0de0735c12f319132b3b2a2f3a0:hover{
+		background: #213147 url("../../_uploads/pages/navigation/no/kosthold_18x18_hover.png") no-repeat 10px center;
+	}
+	a.nav_8b1ff0de0735c12f319132b3b2a2f3a0:active{
+		background: #213147 url("../../_uploads/pages/navigation/no/kosthold_18x18_active.png") no-repeat 10px center;
+	}
+
 	/* Workout plans */
 	a.nav_266eb038dbb21a9363231fd5500efe9c{
 		background: url("../../_uploads/pages/navigation/no/treningsplaner_18x18_inactive.png") no-repeat 10px center;

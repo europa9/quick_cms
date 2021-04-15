@@ -17,6 +17,25 @@ if(!(isset($define_access_to_control_panel))){
 
 /*- Functions ----------------------------------------------------------------------- */
 
+/*- Tables ---------------------------------------------------------------------------- */
+$t_forum_titles			= $mysqlPrefixSav . "forum_titles";
+$t_forum_subscriptions 		= $mysqlPrefixSav . "forum_subscriptions";
+$t_forum_topics 		= $mysqlPrefixSav . "forum_topics";
+$t_forum_topics_subscribers 	= $mysqlPrefixSav . "forum_topics_subscribers";
+$t_forum_topics_read_by_user	= $mysqlPrefixSav . "forum_topics_read_by_user";
+$t_forum_topics_read_by_ip	= $mysqlPrefixSav . "forum_topics_read_by_ip";
+$t_forum_topics_tags 		= $mysqlPrefixSav . "forum_topics_tags";
+$t_forum_replies		= $mysqlPrefixSav . "forum_replies";
+$t_forum_replies_comments	= $mysqlPrefixSav . "forum_replies_comments";
+$t_forum_forms			= $mysqlPrefixSav . "forum_forms";
+$t_forum_forms_questions	= $mysqlPrefixSav . "forum_forms_questions";
+$t_forum_top_users_yearly	= $mysqlPrefixSav . "forum_top_users_yearly";
+$t_forum_top_users_monthly	= $mysqlPrefixSav . "forum_top_users_monthly";
+$t_forum_top_users_all_time	= $mysqlPrefixSav . "forum_top_users_all_time";
+$t_forum_tags_index		= $mysqlPrefixSav . "forum_tags_index";
+$t_forum_tags_index_translation	= $mysqlPrefixSav . "forum_tags_index_translation";
+$t_forum_tags_watch		= $mysqlPrefixSav . "forum_tags_watch";
+$t_forum_tags_ignore		= $mysqlPrefixSav . "forum_tags_ignore";
 
 /*- Variables ------------------------------------------------------------------------ */
 
@@ -45,7 +64,7 @@ if($process == "1"){
 
 	$datetime = date("Y-m-d H:i:s");
 
-	mysqli_query($link, "INSERT INTO $t_discuss_forms
+	mysqli_query($link, "INSERT INTO $t_forum_forms
 	(form_id, form_language, form_title, form_introduction, form_insert_title_start, form_tags, form_created, form_updated) 
 	VALUES 
 	(NULL, $inp_language_mysql, $inp_title_mysql, $inp_introduction_mysql, $inp_insert_title_start_mysql, $inp_tags_mysql, '$datetime', '$datetime')")
@@ -88,10 +107,10 @@ echo"
 
 	<p><b>Language:</b><br />
 	<select name=\"inp_language\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">\n";
-	$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+	$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_default FROM $t_languages_active";
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
-		list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
+		list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_default) = $row;
 		echo"	<option value=\"$get_language_active_iso_two\">$get_language_active_name</option>\n";
 	}
 	echo"

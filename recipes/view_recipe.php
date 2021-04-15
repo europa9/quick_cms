@@ -347,7 +347,7 @@ else{
 				else{
 					// Update visit
 					$inp_count = $get_stats_chef_of_the_month_got_visits_count+1;
-					$inp_points = $inp_count*0.1;
+					$inp_points = $inp_count*0.001;
 					$inp_total_points = $get_stats_chef_of_the_month_recipes_posted_points+$inp_points+$get_stats_chef_of_the_month_got_favorites_points+$get_stats_chef_of_the_month_got_comments_points;
 					mysqli_query($link, "UPDATE $t_recipes_stats_chef_of_the_month SET stats_chef_of_the_month_got_visits_count=$inp_count, stats_chef_of_the_month_got_visits_points=$inp_points, stats_chef_of_the_month_total_points=$inp_total_points WHERE stats_chef_of_the_month_id=$get_stats_chef_of_the_month_id") or die(mysqli_error($link)); 
 				}

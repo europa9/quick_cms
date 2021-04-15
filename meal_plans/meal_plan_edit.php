@@ -101,7 +101,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			<p><b>$l_you_are_here</b><br />
 			<a href=\"my_meal_plans.php?l=$l\">$l_my_meal_plans</a>
 			&gt;
-			<a href=\"meal_plan_edit.php?meal_plan_id=$meal_plan_id&amp;entry_day_number=$entry_day_number&amp;entry_meal_number=$entry_meal_number&amp;l=$l\">$get_current_meal_plan_title</a>
+			<a href=\"meal_plan_view_$get_current_meal_plan_number_of_days.php?meal_plan_id=$get_current_meal_plan_id&amp;l=$l\">$get_current_meal_plan_title</a>
+			&gt;
+			<a href=\"meal_plan_edit.php?meal_plan_id=$get_current_meal_plan_id&amp;entry_day_number=1&amp;l=$l\">$l_edit</a>
 			</p>
 		<!-- //Where am I ? -->
 
@@ -110,6 +112,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				<ul>
 					<li><a href=\"meal_plan_edit.php?meal_plan_id=$meal_plan_id&amp;entry_day_number=$entry_day_number&amp;l=$l\" class=\"selected\">$l_edit</a></li>
 					<li><a href=\"meal_plan_edit_info.php?meal_plan_id=$meal_plan_id&amp;l=$l\">$l_info</a></li>
+					<li><a href=\"meal_plan_edit_text.php?meal_plan_id=$meal_plan_id&amp;l=$l\">$l_text</a></li>
 					<li><a href=\"meal_plan_edit_image.php?meal_plan_id=$meal_plan_id&amp;l=$l\">$l_image</a></li>
 				</ul>
 			</div>
@@ -199,7 +202,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$inp_day_carb_with_training = 0;
 				$inp_day_protein_with_training = 0;
 
-				for($x=0;$x<7;$x++){
+				for($x=0;$x<9;$x++){
 					// Layout 
 					if(isset($layout) && $layout == "bodycell"){
 						$layout = "subcell";
@@ -214,25 +217,31 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					   <th scope=\"col\"><a id=\"meal_number$x\"></a>
 						<span><b>";
 						if($x == 0){
-							echo"$l_breakfast ";
+							echo"$l_breakfast";
 						}
 						elseif($x == 1){
 							echo"$l_lunch";
 						}
 						elseif($x == 2){
-							echo"$l_before_training  ";
+							echo"$l_before_training";
 						}
 						elseif($x == 3){
-							echo"$l_after_training ";
+							echo"$l_after_training";
 						}
 						elseif($x == 4){
-							echo"$l_dinnar";
+							echo"$l_linner";
 						}
 						elseif($x == 5){
-							echo"$l_snacks";
+							echo"$l_dinnar";
 						}
 						elseif($x == 6){
-							echo"$l_supper ";
+							echo"$l_snacks";
+						}
+						elseif($x == 7){
+							echo"$l_supper";
+						}
+						elseif($x == 8){
+							echo"$l_night_meal";
 						}
 						else{
 							echo"x out of range";

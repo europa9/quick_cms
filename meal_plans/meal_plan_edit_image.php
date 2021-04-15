@@ -293,6 +293,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				<ul>
 					<li><a href=\"meal_plan_edit.php?meal_plan_id=$meal_plan_id&amp;entry_day_number=1&amp;l=$l\">$l_edit</a></li>
 					<li><a href=\"meal_plan_edit_info.php?meal_plan_id=$meal_plan_id&amp;l=$l\">$l_info</a></li>
+					<li><a href=\"meal_plan_edit_text.php?meal_plan_id=$meal_plan_id&amp;l=$l\">$l_text</a></li>
 					<li><a href=\"meal_plan_edit_image.php?meal_plan_id=$meal_plan_id&amp;l=$l\" class=\"selected\">$l_image</a></li>
 				</ul>
 			</div>

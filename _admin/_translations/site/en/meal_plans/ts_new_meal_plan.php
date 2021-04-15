@@ -15,6 +15,8 @@ $l_after_training = "After training";
 $l_dinnar = "Dinnar";
 $l_snacks = "Snacks";
 $l_supper = "Supper";
+$l_linner = "Linner";
+$l_night_meal = "Night meal";
 $l_food = "Food";
 
 $l_meal = "Meal";

@@ -122,10 +122,16 @@ else{
 				$query_t = "SELECT sub_category_id, sub_category_translation_value FROM $t_downloads_sub_categories_translations WHERE sub_category_id='$get_current_sub_category_id' AND sub_category_translation_language=$l_mysql";
 				$result_t = mysqli_query($link, $query_t);
 				$row_t = mysqli_fetch_row($result_t);
-				list($get_current_sub_category_id, $get_current_sub_category_translation_value) = $row_t;
+				list($get_current_translation_sub_category_id, $get_current_sub_category_translation_value) = $row_t;
 		
 				if($get_current_sub_category_id == ""){
-					echo"<p>Sub category translation not found</p>";
+					$inp_value_mysql = quote_smart($link, $get_current_sub_category_title);
+					echo"<p>Sub category translation not found. Fixed automatically. Sub category id=$get_current_sub_category_id, title=$get_current_sub_category_title</p>";
+					mysqli_query($link, "INSERT INTO $t_downloads_sub_categories_translations 
+							     (sub_category_translation_id, sub_category_id, sub_category_translation_language, sub_category_translation_value)
+							     VALUES
+							     (NULL, $get_current_sub_category_id, $l_mysql, $inp_value_mysql)") or die(mysqli_error($link));
+
 				}
 				$website_title = "$l_downloads - $get_current_main_category_translation_value - $get_current_sub_category_translation_value - $get_current_download_title";
 			} // sub category found

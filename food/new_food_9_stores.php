@@ -253,9 +253,8 @@ list($get_current_food_id, $get_current_food_user_id, $get_current_food_name, $g
 			<!-- New store -->
 				<p>
 				<a href=\"my_stores_new.php?l=$l\" class=\"btn_default\">$l_new_store</a>
-				<a href=\"new_food_10_publish.php?main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$food_id&amp;l=$l\" class=\"btn_default\">$l_view_food</a>
+				<a href=\"new_food_10_text.php?main_category_id=$get_current_food_main_category_id&amp;sub_category_id=$get_current_food_sub_category_id&amp;food_id=$food_id&amp;l=$l\" class=\"btn_default\">$l_continue</a>
 				</p>
-				
 			<!-- //New store -->
 	
 			";

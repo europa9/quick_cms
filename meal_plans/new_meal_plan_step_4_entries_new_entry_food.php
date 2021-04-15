@@ -533,7 +533,22 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						}
 					} // while
 
-
+					if($x == 2){
+						echo"
+							<div class=\"left_center_center_right_right_center\">
+							</div>
+							<div class=\"left_center_center_right_right\">
+							</div>
+							<div class=\"clear\"></div>
+						";
+					}
+					elseif($x == 3){
+						echo"
+							<div class=\"left_center_center_right_right\">
+							</div>
+							<div class=\"clear\"></div>
+						";
+					}
 				echo"
 				</div> <!--  //nettport_search_results ->
 			<!-- //Meal plans :: Food list -->
@@ -971,6 +986,22 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						}
 					} // while
 
+					if($x == 2){
+						echo"
+							<div class=\"left_center_center_right_right_center\">
+							</div>
+							<div class=\"left_center_center_right_right\">
+							</div>
+							<div class=\"clear\"></div>
+						";
+					}
+					elseif($x == 3){
+						echo"
+							<div class=\"left_center_center_right_right\">
+							</div>
+							<div class=\"clear\"></div>
+						";
+					}
 					echo"
 
 					<!-- //Food list -->
@@ -1392,6 +1423,22 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 								$x = 0;
 							}
 						} // while
+						if($x == 2){
+							echo"
+							<div class=\"left_center_center_right_right_center\">
+							</div>
+							<div class=\"left_center_center_right_right\">
+							</div>
+							<div class=\"clear\"></div>
+							";
+						}
+						elseif($x == 3){
+							echo"
+							<div class=\"left_center_center_right_right\">
+							</div>
+							<div class=\"clear\"></div>
+							";
+						}
 						echo"
 
 						<!-- //Food list -->

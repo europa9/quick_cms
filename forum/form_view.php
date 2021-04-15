@@ -24,6 +24,7 @@ else{ $root = "../../.."; }
 
 /*- Website config -------------------------------------------------------------------- */
 include("$root/_admin/website_config.php");
+include("$root/_admin/_data/forum.php");
 
 /*- Translation ------------------------------------------------------------------------ */
 include("$root/_admin/_translations/site/$l/forum/ts_forum.php");
@@ -148,7 +149,7 @@ else{
 				// Title
 				$inp_title = trim($inp_title);
 				$inp_title = output_html($inp_title);
-				$size = sizeof($inp_title);
+				$size = strlen($inp_title);
 				if($size > 40){
 					$inp_title = substr($inp_title, 0, 35);
 					$inp_title = $inp_title . "...";
@@ -345,7 +346,7 @@ else{
 				$message = $message . "View: <a href=\"$view_link\">$view_link</a><br />\n";
 				$message = $message . "Edit: <a href=\"$edit_link\">$edit_link</a><br />\n";
 				$message = $message . "Delete: <a href=\"$delete_link\">$delete_link</a></p>";
-				$message = $message . "<p>\n\n--<br />\nBest regards<br />\n$host</p>";
+				$message = $message . "<p>\n\n--<br />\nBest regards<br />\n$configFromNameSav</p>";
 				$message = $message. "</body>\n";
 				$message = $message. "</html>\n";
 
@@ -370,7 +371,7 @@ else{
 
 				echo"
 				<h1>
-				<img src=\"$root/_webdesign/images/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
+				<img src=\"_gfx/loading_22.gif\" alt=\"loading_22.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
 				Loading...</h1>
 				<meta http-equiv=\"refresh\" content=\"1;url=$root/forum/view_topic.php?topic_id=$get_topic_id&amp;l=$l\">
 				";
@@ -456,7 +457,7 @@ else{
 
 				<hr />
 				<p class=\"smal\">
-				$l_when_sending_this_form_it_will_create_a_new_post_on_the_forumion_board
+				$l_when_sending_this_form_it_will_create_a_new_post_on_the_discussion_board
 				$l_the_members_of_the_site_can_then_reply_to_it 
 				</p>
 			";
