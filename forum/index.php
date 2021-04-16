@@ -232,18 +232,29 @@ if($action == ""){
 				
 				";
 				// Tags
-				echo"<p class=\"p_forum_tags\">\n";
+				$tags = 0;
 				$query_t = "SELECT topic_tag_id, topic_tag_title, topic_tag_clean FROM $t_forum_topics_tags WHERE topic_id=$get_topic_id";
 				$result_t = mysqli_query($link, $query_t);
 				while($row_t = mysqli_fetch_row($result_t)) {
 					list($get_topic_tag_id, $get_topic_tag_title, $get_topic_tag_clean) = $row_t;
 					
+					if($get_topic_tag_title == ""){
+						echo"<div class=\"info\"><p>Cleanup empty tag for topic id $get_topic_id</p></div>\n";
+						mysqli_query($link, "DELETE FROM $t_forum_topics_tags WHERE topic_id=$get_topic_id") or die(mysqli_error($link));
+					}
+
 					$tag_title_clean_mysql = quote_smart($link, $get_topic_tag_clean);
 					$query_tag = "SELECT tag_id, tag_icon_path, tag_icon_file_16 FROM $t_forum_tags_index WHERE tag_title_clean=$tag_title_clean_mysql";
 					$result_tag = mysqli_query($link, $query_tag);
 					$row_tag = mysqli_fetch_row($result_tag);
 					list($get_tag_id, $get_tag_icon_path, $get_tag_icon_file_16) = $row_tag;
 		
+					// Tags Header
+					if($tags == 0){
+						echo"<p class=\"p_forum_tags\">\n";
+					}
+
+					// Tags body
 					echo"
 					<a href=\"open_tag.php?tag=$get_topic_tag_clean&amp;l=$l\" class=\"forum_a_tag\"";
 					if(file_exists("$root/$get_tag_icon_path/$get_tag_icon_file_16") && $get_tag_icon_file_16 != ""){
@@ -252,9 +263,15 @@ if($action == ""){
 					}
 					echo">$get_topic_tag_title</a>
 					";
+					$tags++;
+				}
+				// Tags footer
+				if($tags > 0){
+					echo"
+					</p>
+					";
 				}
 				echo"
-				</p>
 			  </td>
 			  <td style=\"vertical-align: center;text-align: right;width: 20%\" class=\"td_forum_replies_views\">
 				<p class=\"forum_meta_data\">

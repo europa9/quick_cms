@@ -277,90 +277,90 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$inp_tag_clean = clean($inp_tags_array[$x]);
 				$inp_tag_clean_mysql = quote_smart($link, $inp_tag_clean);
 
-				// Check if I have this tag from before
-				$query = "SELECT topic_tag_id FROM $t_forum_topics_tags WHERE topic_id=$get_topic_id AND topic_tag_clean=$inp_tag_clean_mysql";
-				$result = mysqli_query($link, $query);
-				$row = mysqli_fetch_row($result);
-				list($get_topic_tag_id) = $row;
-				if($get_topic_tag_id == ""){
-					// Insert
-					mysqli_query($link, "INSERT INTO $t_forum_topics_tags 
-					(topic_tag_id, topic_id, topic_tag_title, topic_tag_clean) 
-					VALUES 
-					(NULL, $get_topic_id, $inp_tag_title_mysql, $inp_tag_clean_mysql)")
-					or die(mysqli_error($link));
-				}
+				if($inp_tag_title != ""){
+					// Check if I have this tag from before
+					$query = "SELECT topic_tag_id FROM $t_forum_topics_tags WHERE topic_id=$get_topic_id AND topic_tag_clean=$inp_tag_clean_mysql";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_topic_tag_id) = $row;
+					if($get_topic_tag_id == ""){
+						// Insert
+						mysqli_query($link, "INSERT INTO $t_forum_topics_tags 
+						(topic_tag_id, topic_id, topic_tag_title, topic_tag_clean) 
+						VALUES 
+						(NULL, $get_topic_id, $inp_tag_title_mysql, $inp_tag_clean_mysql)")
+						or die(mysqli_error($link));
+					}
 
-				// Tag index
-				$datetime = date("Y-m-d H:i:s");
-				$day = date("d");
-				$week = date("W");
+					// Tag index
+					$datetime = date("Y-m-d H:i:s");
+					$day = date("d");
+					$week = date("W");
 
-				$query = "SELECT tag_id, tag_topics_total_counter, tag_topics_today_counter, tag_topics_today_day, tag_topics_this_week_counter, tag_topics_this_week_week FROM $t_forum_tags_index WHERE tag_title_clean=$inp_tag_clean_mysql";
-				$result = mysqli_query($link, $query);
-				$row = mysqli_fetch_row($result);
-				list($get_tag_id, $get_tag_topics_total_counter, $get_tag_topics_today_counter, $get_tag_topics_today_day, $get_tag_topics_this_week_counter, $get_tag_topics_this_week_week) = $row;
-				if($get_tag_id == ""){
-					// Insert
-					mysqli_query($link, "INSERT INTO $t_forum_tags_index 
-					(tag_id, tag_title, tag_title_clean, tag_introduction, tag_description, tag_created, tag_updated, tag_topics_total_counter, tag_topics_today_counter, tag_topics_today_day, tag_topics_this_week_counter, tag_topics_this_week_week, tag_is_official, tag_icon_path) 
-					VALUES 
-					(NULL, $inp_tag_title_mysql, $inp_tag_clean_mysql, '', '', '$datetime', '$datetime', '1', '1', '$day', '1', '$week', -1, '_uploads/forum/tags_icons')")
-					or die(mysqli_error($link));
-
-					// Get new Tag ID
 					$query = "SELECT tag_id, tag_topics_total_counter, tag_topics_today_counter, tag_topics_today_day, tag_topics_this_week_counter, tag_topics_this_week_week FROM $t_forum_tags_index WHERE tag_title_clean=$inp_tag_clean_mysql";
 					$result = mysqli_query($link, $query);
 					$row = mysqli_fetch_row($result);
 					list($get_tag_id, $get_tag_topics_total_counter, $get_tag_topics_today_counter, $get_tag_topics_today_day, $get_tag_topics_this_week_counter, $get_tag_topics_this_week_week) = $row;
+					if($get_tag_id == ""){
+						// Insert
+						mysqli_query($link, "INSERT INTO $t_forum_tags_index 
+						(tag_id, tag_title, tag_title_clean, tag_introduction, tag_description, tag_created, tag_updated, tag_topics_total_counter, tag_topics_today_counter, tag_topics_today_day, tag_topics_this_week_counter, tag_topics_this_week_week, tag_is_official, tag_icon_path) 
+						VALUES 
+						(NULL, $inp_tag_title_mysql, $inp_tag_clean_mysql, '', '', '$datetime', '$datetime', '1', '1', '$day', '1', '$week', -1, '_uploads/forum/tags_icons')")
+						or die(mysqli_error($link));
+
+						// Get new Tag ID
+						$query = "SELECT tag_id, tag_topics_total_counter, tag_topics_today_counter, tag_topics_today_day, tag_topics_this_week_counter, tag_topics_this_week_week FROM $t_forum_tags_index WHERE tag_title_clean=$inp_tag_clean_mysql";
+						$result = mysqli_query($link, $query);
+						$row = mysqli_fetch_row($result);
+						list($get_tag_id, $get_tag_topics_total_counter, $get_tag_topics_today_counter, $get_tag_topics_today_day, $get_tag_topics_this_week_counter, $get_tag_topics_this_week_week) = $row;
 			
 
-					// Email to moderators about new tag
-					$query = "SELECT user_id, user_email, user_name, user_alias, user_rank FROM $t_users WHERE user_rank='admin' OR user_rank='moderator'";
-					$result = mysqli_query($link, $query);
-					while($row = mysqli_fetch_row($result)) {
-						list($get_mod_user_id, $get_mod_user_email, $get_mod_user_name, $get_mod_user_alias, $get_mod_user_rank) = $row;
+						// Email to moderators about new tag
+						$query = "SELECT user_id, user_email, user_name, user_alias, user_rank FROM $t_users WHERE user_rank='admin' OR user_rank='moderator'";
+						$result = mysqli_query($link, $query);
+						while($row = mysqli_fetch_row($result)) {
+							list($get_mod_user_id, $get_mod_user_email, $get_mod_user_name, $get_mod_user_alias, $get_mod_user_rank) = $row;
 
-						$subject = "$configWebsiteTitleSav - New tag $inp_tag_title";
-						$message = "Hello $get_mod_user_name,\n\n";
-						$message = $message . "There is a new tag $inp_tag_title.\n";
-						$message = $message . "View: $configSiteURLSav/forum/open_tag.php?tag=$inp_tag_clean&l=$l\n";
-						$message = $message . "Admin: $configControlPanelURLSav/index.php?open=forum&page=tags&action=open_tag&tag_id=$get_tag_id&editor_language=$l\n\n";
-						$message = $message . "Best regards\n$configWebsiteTitleSav\n$configSiteURLSav";
-						$headers = "From: $forumFromEmailSav" . "\r\n" .
+							$subject = "$configWebsiteTitleSav - New tag $inp_tag_title";
+							$message = "Hello $get_mod_user_name,\n\n";
+							$message = $message . "There is a new tag $inp_tag_title.\n";
+							$message = $message . "View: $configSiteURLSav/forum/open_tag.php?tag=$inp_tag_clean&l=$l\n";
+							$message = $message . "Admin: $configControlPanelURLSav/index.php?open=forum&page=tags&action=open_tag&tag_id=$get_tag_id&editor_language=$l\n\n";
+							$message = $message . "Best regards\n$configWebsiteTitleSav\n$configSiteURLSav";
+							$headers = "From: $forumFromEmailSav" . "\r\n" .
 						    "Reply-To: $forumFromEmailSav" . "\r\n" .
 						    'X-Mailer: PHP/' . phpversion();
 
-						if($forumEmailSendingOnOffSav == "on"){
-							mail($get_mod_user_email, $subject, $message, $headers);
+							if($forumEmailSendingOnOffSav == "on"){
+								mail($get_mod_user_email, $subject, $message, $headers);
+							}
 						}
-					}
 
-				}
-				else{
-					$inp_tag_topics_total_counter = $get_tag_topics_total_counter+1;
-
-					if($get_tag_topics_today_day == "$day"){
-						$inp_tag_topics_today_counter = $get_tag_topics_today_counter+1;
 					}
 					else{
-						$inp_tag_topics_today_counter = 0;
+						$inp_tag_topics_total_counter = $get_tag_topics_total_counter+1;
+
+						if($get_tag_topics_today_day == "$day"){
+							$inp_tag_topics_today_counter = $get_tag_topics_today_counter+1;
+						}
+							else{
+							$inp_tag_topics_today_counter = 0;
+						}
+
+						if($get_tag_topics_this_week_week == "$week"){
+							$inp_tag_topics_this_week_counter = $get_tag_topics_this_week_counter+1;
+						}
+						else{
+							$inp_tag_topics_this_week_counter = $get_tag_topics_this_week_counter+1;
+						}
+
+						$r_update = mysqli_query($link, "UPDATE $t_forum_tags_index SET tag_topics_total_counter=$inp_tag_topics_total_counter, tag_topics_today_counter=$inp_tag_topics_today_counter, tag_topics_today_day=$day, tag_topics_this_week_counter=$inp_tag_topics_this_week_counter, tag_topics_this_week_week=$week WHERE tag_id=$get_tag_id");
 					}
 
-					if($get_tag_topics_this_week_week == "$week"){
-						$inp_tag_topics_this_week_counter = $get_tag_topics_this_week_counter+1;
-					}
-					else{
-						$inp_tag_topics_this_week_counter = $get_tag_topics_this_week_counter+1;
-					}
-
-					$r_update = mysqli_query($link, "UPDATE $t_forum_tags_index SET tag_topics_total_counter=$inp_tag_topics_total_counter, tag_topics_today_counter=$inp_tag_topics_today_counter, tag_topics_today_day=$day, tag_topics_this_week_counter=$inp_tag_topics_this_week_counter, tag_topics_this_week_week=$week WHERE tag_id=$get_tag_id");
-
-
-				}
-				
-			}	
-		}
+				} // tag not empty
+			} // for size
+		} // size > 0
 
 
 		// Email to all board subscribers

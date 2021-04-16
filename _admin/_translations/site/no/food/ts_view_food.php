@@ -40,6 +40,7 @@ $l_net_content_metric = "Nettoinnhold metrisk";
 $l_net_content_us_system = "Nettoinnhold US system";
 $l_new_rating_for_food = "Ny rangering for mat";
 $l_numbers = "Nummer";
+$l_pcs_lowercase = "stk";
 $l_per_100 = "Per 100";
 $l_per_8 = "Per 8";
 $l_per_serving = "Per servering";

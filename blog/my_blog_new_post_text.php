@@ -302,7 +302,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$inp_my_ip_mysql = quote_smart($link, $inp_my_ip);
 
 					// My hostname
-					$inp_my_hostname = "$inp_ip";
+					$inp_my_hostname = "$inp_my_ip";
 					if($configSiteUseGethostbyaddrSav == "1"){
 						$inp_my_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']); // Some servers in local network cant use getostbyaddr because of nameserver missing
 					}
@@ -406,17 +406,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					</p>
 			<!-- //Where am I? -->
 
-			<!-- Process -->
-					<p><b>$l_process:</b><br />
-					<a href=\"my_blog_new_post_meta.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\">$l_meta</a>
-					-&gt; 
-					<a href=\"my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\">$l_main_image</a>
-					-&gt; 
-					<a href=\"my_blog_new_post.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\" style=\"font-weight: bold;\">$l_text</a>
-					-&gt; 
-					<a href=\"view_post.php?post_id=$get_current_blog_post_id&amp;l=$l\">$l_view_post</a>
-					</p>
-			<!-- //Process -->
 
 			<!-- Feedback -->
 				";
@@ -577,6 +566,21 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					</form>
 					<div style=\"height: 20px;\"></div>
 			<!-- //Text form -->
+
+
+			<!-- Previous and next -->
+				<div class=\"blog_previous\">
+					<p>
+					<a href=\"my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\">&laquo; $l_main_image</a>
+					</p>
+				</div>
+				<div class=\"blog_next\">
+					<p>
+					<a href=\"view_post.php?post_id=$get_current_blog_post_id&amp;l=$l\">$l_view &raquo;</a>
+					</p>
+				</div>
+				<div class=\"clear\"></div>
+			<!-- //Previous and next -->
 			";
 		} // blog info found
 	} // can post (access)

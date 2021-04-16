@@ -134,7 +134,6 @@ else{
 include("../_admin/_translations/site/$l/food/ts_food.php");
 include("../_admin/_translations/site/$l/meal_plans/ts_new_meal_plan.php");
 include("../_admin/_translations/site/$l/meal_plans/ts_meal_plan_edit.php");
-include("../_admin/_translations/site/$l/meal_plans/ts_new_meal_plan_step_2_entries_new_entry_food.php");
 
 
 /*- Table exists? -------------------------------------------------------------------- */

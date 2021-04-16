@@ -1440,7 +1440,7 @@ $inp_last_used_carbohydrates_of_which_sugars_metric_mysql,
 			}
 
 			$url = "index.php?action=food_diary&date=$date";
-			$url = $url . "&ft=success&fm=food_added#meal_id$meal_id";
+			$url = $url . "&ft=success&fm=food_added#hour_name$hour_name";
 			header("Location: $url");
 			exit;
 		}

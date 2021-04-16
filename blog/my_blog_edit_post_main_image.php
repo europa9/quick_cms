@@ -186,6 +186,20 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 								exit;
 							}
 							else{
+								// Delete old image
+								if(file_exists("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_thumb_small") && $get_current_blog_post_image_thumb_small != ""){
+									unlink("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_thumb_small");
+								}
+								if(file_exists("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_thumb_medium") && $get_current_blog_post_image_thumb_medium != ""){
+									unlink("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_thumb_medium");
+								}
+								if(file_exists("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_thumb_large") && $get_current_blog_post_image_thumb_large != ""){
+									unlink("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_thumb_large");
+								}
+								if(file_exists("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_file") && $get_current_blog_post_image_file != ""){
+									unlink("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_file");
+								}
+
 								if(move_uploaded_file($tmp_name, "$filename")){
 							
 									// Check width and height
@@ -201,19 +215,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 										exit;
 									}
 
-									// Delete old image
-									if(file_exists("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_thumb_small") && $get_current_blog_post_image_thumb_small != ""){
-										unlink("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_thumb_small");
-									}
-									if(file_exists("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_thumb_medium") && $get_current_blog_post_image_thumb_medium != ""){
-										unlink("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_thumb_medium");
-									}
-									if(file_exists("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_thumb_large") && $get_current_blog_post_image_thumb_large != ""){
-										unlink("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_thumb_large");
-									}
-									if(file_exists("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_file") && $get_current_blog_post_image_file != ""){
-										unlink("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_file");
-									}
 							
 
 									// Path

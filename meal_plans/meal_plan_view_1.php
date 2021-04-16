@@ -74,6 +74,20 @@ else{
 	elseif(file_exists("../../../favicon.ico")){ $root = "../../.."; }
 	include("$root/_webdesign/header.php");
 
+	// Logged in?
+	$get_my_user_id = 0;
+	$get_my_user_rank = "";
+	if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
+	
+		// Get my user
+		$my_user_id = $_SESSION['user_id'];
+		$my_user_id = output_html($my_user_id);
+		$my_user_id_mysql = quote_smart($link, $my_user_id);
+		$query = "SELECT user_id, user_email, user_name, user_alias, user_rank FROM $t_users WHERE user_id=$my_user_id_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_my_user_id, $get_my_user_email, $get_my_user_name, $get_my_user_alias, $get_my_user_rank) = $row;
+	}
 
 	
 	// Unique hits
@@ -133,7 +147,16 @@ else{
 			\n";
 		}
 		echo"
-		<img src=\"_gfx/icons/eye_dark_grey.png\" alt=\"eye.png\" /> $get_current_meal_plan_views $l_unique_views_lovercase
+		<img src=\"_gfx/icons/eye_dark_grey.png\" alt=\"eye.png\" /> $get_current_meal_plan_views $l_unique_views_lovercase";
+
+		// Edit, delete
+		if($get_current_meal_plan_user_id == "$get_my_user_id" OR ($get_my_user_rank == "admin" OR $get_my_user_rank == "moderator" OR $get_my_user_rank == "editor")){
+			echo"
+			<a href=\"meal_plan_edit.php?meal_plan_id=$get_current_meal_plan_id&amp;entry_day_number=1&amp;l=$l\"><img src=\"_gfx/icons/edit.png\" alt=\"edit.png\" /></a>
+			<a href=\"meal_plan_delete.php?meal_plan_id=$get_current_meal_plan_id&amp;entry_day_number=1&amp;l=$l\"><img src=\"_gfx/icons/delete.png\" alt=\"delete.png\" /></a>
+			";
+		}
+		echo"
 		</p>
 
 		<p>

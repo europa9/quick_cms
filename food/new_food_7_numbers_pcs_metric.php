@@ -263,6 +263,44 @@ list($get_current_food_id, $get_current_food_user_id, $get_current_food_name, $g
 				$inp_food_cholesterol_us_mysql = quote_smart($link, $inp_food_cholesterol_us);
 
 
+
+					// Calculate net content
+					$inp_food_energy_net_content	   = round(($get_current_food_net_content_metric*$inp_food_energy)/100, 0);
+					$inp_food_energy_net_content_mysql = quote_smart($link, $inp_food_energy_net_content);
+
+					$inp_food_fat_net_content 	= round(($get_current_food_net_content_metric*$inp_food_fat)/100, 1);
+					$inp_food_fat_net_content_mysql = quote_smart($link, $inp_food_fat_net_content);
+
+	  				$inp_food_saturated_fat_net_content 	  = round(($get_current_food_net_content_metric*$inp_food_saturated_fat)/100, 1);
+					$inp_food_saturated_fat_net_content_mysql = quote_smart($link, $inp_food_saturated_fat_net_content);
+
+	  				$inp_food_monounsaturated_fat_net_content	= round(($get_current_food_net_content_metric*$inp_food_monounsaturated_fat)/100, 1);
+					$inp_food_monounsaturated_fat_net_content_mysql = quote_smart($link, $inp_food_monounsaturated_fat_net_content);
+
+	  				$inp_food_polyunsaturated_fat_net_content 	= round(($get_current_food_net_content_metric*$inp_food_polyunsaturated_fat)/100, 1);
+					$inp_food_polyunsaturated_fat_net_content_mysql = quote_smart($link, $inp_food_polyunsaturated_fat_net_content);
+
+	  				$inp_food_cholesterol_net_content	= round(($get_current_food_net_content_metric*$inp_food_cholesterol)/100, 1);
+					$inp_food_cholesterol_net_content_mysql = quote_smart($link, $inp_food_cholesterol_net_content);
+
+	 				$inp_food_carbohydrates_net_content 	  = round(($get_current_food_net_content_metric*$inp_food_carbohydrates)/100, 1);
+					$inp_food_carbohydrates_net_content_mysql = quote_smart($link, $inp_food_carbohydrates_net_content);
+
+	  				$inp_food_carbohydrates_of_which_sugars_net_content 	  = round(($get_current_food_net_content_metric*$inp_food_carbohydrates_of_which_sugars)/100, 1);
+					$inp_food_carbohydrates_of_which_sugars_net_content_mysql = quote_smart($link, $inp_food_carbohydrates_of_which_sugars_net_content);
+
+	  				$inp_food_dietary_fiber_net_content 		= round(($get_current_food_net_content_metric*$inp_food_dietary_fiber)/100, 1);
+					$inp_food_dietary_fiber_net_content_mysql 	= quote_smart($link, $inp_food_dietary_fiber_net_content);
+
+	 				$inp_food_proteins_net_content       = round(($get_current_food_net_content_metric*$inp_food_proteins)/100, 1);
+					$inp_food_proteins_net_content_mysql = quote_smart($link, $inp_food_proteins_net_content);
+
+	  				$inp_food_salt_net_content       = round(($get_current_food_net_content_metric*$inp_food_salt)/100, 1);
+					$inp_food_salt_net_content_mysql = quote_smart($link, $inp_food_salt_net_content);
+
+	  				$inp_food_sodium_net_content       = round(($get_current_food_net_content_metric*$inp_food_sodium)/100, 0);
+					$inp_food_sodium_net_content_mysql = quote_smart($link, $inp_food_sodium_net_content);
+
 				// Score
 				$inp_total = $inp_food_energy + $inp_food_fat + $inp_food_saturated_fat + $inp_food_carbohydrates + $inp_food_dietary_fiber + $inp_food_carbohydrates_of_which_sugars + $inp_food_proteins + $inp_food_salt;
 				$inp_calculation = ($inp_food_energy * 1) + 
@@ -339,7 +377,20 @@ list($get_current_food_id, $get_current_food_user_id, $get_current_food_name, $g
 								food_carbohydrates_of_which_sugars_calculated_us=$inp_food_carbohydrates_of_which_sugars_calculated_metric_mysql, 
 								food_proteins_calculated_us=$inp_food_proteins_calculated_metric_mysql, 
 								food_salt_calculated_us=$inp_food_salt_calculated_metric_mysql, 
-								food_sodium_calculated_us=$inp_food_sodium_calculated_metric_mysql
+								food_sodium_calculated_us=$inp_food_sodium_calculated_metric_mysql,
+
+								food_energy_net_content=$inp_food_energy_net_content_mysql,
+								food_fat_net_content=$inp_food_fat_net_content_mysql,
+								food_saturated_fat_net_content=$inp_food_monounsaturated_fat_net_content_mysql,
+								food_monounsaturated_fat_net_content=$inp_food_monounsaturated_fat_net_content_mysql, 
+								food_polyunsaturated_fat_net_content=$inp_food_polyunsaturated_fat_net_content_mysql, 
+								food_cholesterol_net_content=$inp_food_cholesterol_net_content_mysql,
+								food_carbohydrates_net_content=$inp_food_carbohydrates_net_content_mysql,
+								food_carbohydrates_of_which_sugars_net_content=$inp_food_carbohydrates_of_which_sugars_net_content_mysql,
+								food_dietary_fiber_net_content=$inp_food_dietary_fiber_net_content_mysql,
+								food_proteins_net_content=$inp_food_proteins_net_content_mysql,
+								food_salt_net_content=$inp_food_salt_net_content_mysql,
+								food_sodium_net_content=$inp_food_sodium_net_content_mysql
 								WHERE food_id='$get_current_food_id'") or die(mysqli_error($link));
 
 

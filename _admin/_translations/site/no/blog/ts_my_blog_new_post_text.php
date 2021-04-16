@@ -8,5 +8,6 @@ $l_publish = "Publiser";
 $l_read_more = "Les mer";
 $l_save_draft = "Lagre utkast";
 $l_unpublish_and_save_as_draft = "Fjern publiseringen og lagre utkastet";
+$l_view = "Vis";
 $l_view_post = "Vis innlegg";
 ?>

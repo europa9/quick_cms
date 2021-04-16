@@ -246,24 +246,21 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 										$ft = "warning";
 										$fm = "image_could_not_be_uploaded_please_check_file_size";
 						
+
 										$url = "my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&l=$l&ft=$ft&fm=$fm"; 
 										header("Location: $url");
 										exit;
-									}
-							
+									}						
 
 									// Delete old image
-									if(file_exists("$root/$get_current_blog_post_image_path/$get_blog_post_image_thumb_small") && $get_current_blog_post_image_thumb_small != ""){
-										unlink("$root/$get_current_blog_post_image_path/$get_blog_post_image_thumb_small");
+									if(file_exists("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_thumb_small") && $get_current_blog_post_image_thumb_small != ""){
+										unlink("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_thumb_small");
 									}
-									if(file_exists("$root/$get_current_blog_post_image_path/$get_blog_post_image_thumb_medium") && $get_current_blog_post_image_thumb_medium != ""){
-										unlink("$root/$get_current_blog_post_image_path/$get_blog_post_image_thumb_medium");
+									if(file_exists("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_thumb_medium") && $get_current_blog_post_image_thumb_medium != ""){
+										unlink("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_thumb_medium");
 									}
-									if(file_exists("$root/$get_current_blog_post_image_path/$get_blog_post_image_thumb_large") && $get_current_blog_post_image_thumb_large != ""){
-										unlink("$root/$get_current_blog_post_image_path/$get_blog_post_image_thumb_large");
-									}
-									if(file_exists("$root/$get_current_blog_post_image_path/$get_blog_post_image_file") && $get_current_blog_post_image_file != ""){
-										unlink("$root/$get_current_blog_post_image_path/$get_blog_post_image_file");
+									if(file_exists("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_thumb_large") && $get_current_blog_post_image_thumb_large != ""){
+										unlink("$root/$get_current_blog_post_image_path/$get_current_blog_post_image_thumb_large");
 									}
 
 									// Path
@@ -284,16 +281,16 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 									$inp_thumb_a = $file_without_extension . "_thumb_a." . $extension;
 									$inp_thumb_a_mysql = quote_smart($link, $inp_thumb_a);
-									resize_crop_image($blogPostsThumbSmallSizeXSav, $blogPostsThumbSmallSizeYSav, "$root/$inp_path/$inp_file", "$root/$inp_path/$inp_thumb_a");
+									resize_crop_image($blogPostsThumbSmallSizeXSav, $blogPostsThumbSmallSizeYSav, "$root/_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id/$inp_file", "$root/_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id//$inp_thumb_a");
 
 
 									$inp_thumb_b = $file_without_extension . "_thumb_b." . $extension;
 									$inp_thumb_b_mysql = quote_smart($link, $inp_thumb_b);
-									resize_crop_image($blogPostsThumbMediumSizeXSav, $blogPostsThumbMediumSizeYSav, "$root/$inp_path/$inp_file", "$root/$inp_path/$inp_thumb_b");
+									resize_crop_image($blogPostsThumbMediumSizeXSav, $blogPostsThumbMediumSizeYSav, "$root/_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id/$inp_file", "$root/_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id//$inp_thumb_b");
 
 									$inp_thumb_c = $file_without_extension . "_thumb_c." . $extension;
 									$inp_thumb_c_mysql = quote_smart($link, $inp_thumb_c);
-									resize_crop_image($blogPostsThumbLargeSizeXSav, $blogPostsThumbLargeSizeYSav, "$root/$inp_path/$inp_file", "$root/$inp_path/$inp_thumb_c");
+									resize_crop_image($blogPostsThumbLargeSizeXSav, $blogPostsThumbLargeSizeYSav, "$root/_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id/$inp_file", "$root/_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id//$inp_thumb_c");
 	
 
 									// Logo over image
@@ -302,6 +299,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 										include("$root/_admin/_data/logo.php");
 										$stamp = "$logoFileStampImages1280x720Sav";
 										list($width,$height) = getimagesize("$root/_uploads/blog/$l/$get_blog_info_id/$get_current_blog_post_id/$inp_file");
+		
+										if($width == ""){
+											echo"<p>Error</p>";
+										}
 
 										if($width < 1280){ // Width less than 1280
 											$stamp = "$logoFileStampImages1280x720Sav";
@@ -383,7 +384,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				echo"
 			
-				<h1>$l_new_post</h1>
+				<h1>"; if($get_current_blog_post_title != ""){ echo"$get_current_blog_post_title"; } else{ echo"$l_new_post"; } echo"</h1>
 
 				<!-- Where am I? -->
 					<p><b>$l_you_are_here:</b><br />
@@ -398,19 +399,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					<a href=\"my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\">$l_images</a>
 					</p>
 				<!-- //Where am I? -->
-
-				<!-- Process -->
-					<p><b>$l_process:</b><br />
-					<a href=\"my_blog_new_post_meta.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\">$l_meta</a>
-					-&gt; 
-					<a href=\"my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\" style=\"font-weight: bold;\">$l_main_image</a>
-					-&gt; 
-					<a href=\"my_blog_new_post.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\">$l_text</a>
-					-&gt; 
-					<a href=\"view_post.php?post_id=$get_current_blog_post_id&amp;l=$l\">$l_view_post</a>
-					</p>
-				<!-- //Process -->
-			
 
 				<!-- Feedback -->
 				";
@@ -482,7 +470,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					</form>
 				<!-- //Upload image form -->
 
-
+				<!-- Previous and next -->
+					<div class=\"blog_previous\">
+						<p>
+						<a href=\"my_blog_new_post_meta.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\">&laquo; $l_meta</a>
+						</p>
+					</div>
+					<div class=\"blog_next\">
+						<p>
+						<a href=\"my_blog_new_post_text.php?blog_post_id=$get_current_blog_post_id&amp;l=$l\">$l_text &raquo;</a>
+						</p>
+					</div>
+					<div class=\"clear\"></div>
+				<!-- //Previous and next -->
 
 				";
 			}  // action == ""
