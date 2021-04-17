@@ -1017,10 +1017,60 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						</p>
 					<!-- //Where am I ? -->
 
+					<!-- Feedback -->
+						";
+						if($ft != ""){
+							if($fm == "changes_saved"){
+								$fm = "$l_changes_saved";
+							}
+							else{
+								$fm = ucfirst($fm);
+								$fm = str_replace("_", " ", $fm);
+							}
+							echo"<div class=\"$ft\"><span>$fm</span></div>";
+						}
+						echo"	
+					<!-- //Feedback -->
+
+					<!-- Sessions (day 1, day 2, day 3 - etc) -->
+						<h2>$get_current_workout_session_title</h2>
+						<p>$l_your_now_adding_exercises_for $get_current_workout_session_title</p>
+
+						<div class=\"float_left\">
+
+						</div>
+						<div class=\"float_right\">
+							<!-- Next session -->";
+							$next_weight = $get_current_workout_session_weight+1;
+							$query = "SELECT workout_session_id, workout_session_title FROM $t_workout_plans_sessions WHERE workout_session_user_id=$my_user_id_mysql AND workout_session_weekly_id=$get_current_workout_session_weekly_id AND workout_session_weight=$next_weight";
+							$result = mysqli_query($link, $query);
+							$row = mysqli_fetch_row($result);
+							list($get_next_workout_session_id, $get_next_workout_session_title) = $row;
+							if($get_next_workout_session_id != ""){	
+								echo"
+								<p>
+								<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$get_current_workout_session_weekly_id&amp;action=add_exercise_to_session&amp;session_id=$get_next_workout_session_id&amp;l=$l\">$get_next_workout_session_title</a>
+								</p>
+								";
+							}
+							else{
+								echo"
+								<p>
+								<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$get_current_workout_session_weekly_id&amp;l=$l\">$l_finish</a>
+								</p>
+								";
+							}
+							echo"
+							<!-- //Next session -->
+						</div>
+					<!-- //Sessions (day 1, day 2, day 3 - etc) -->
+					
 					<!-- Search for exercise -->
 						<!-- Search script -->
 						<script id=\"source\" language=\"javascript\" type=\"text/javascript\">
 						\$(document).ready(function () {
+							\$('[name=\"q\"]').focus();
+
 							\$('#nettport_inp_search_query').keyup(function () {
         							var searchString    = $(\"#nettport_inp_search_query\").val();
        								var data            = 'weekly_id=$weekly_id&session_id=$session_id&l=$l&q='+ searchString;
@@ -1044,7 +1094,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
             						});
             					});
 						</script>
-
 						<!-- //Search script -->
 
 						<form method=\"post\" action=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=add_exercise_to_session&amp;session_id=$session_id&amp;l=$l\" enctype=\"multipart/form-data\">

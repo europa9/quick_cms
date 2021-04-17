@@ -36,9 +36,12 @@ $l_mysql = quote_smart($link, $l);
 if(isset($_GET['duration_type'])){
 	$duration_type = $_GET['duration_type'];
 	$duration_type = strip_tags(stripslashes($duration_type));
+	if($duration_type == ""){
+		$duration_type = "week";
+	}
 }
 else{
-	$duration_type = "year";
+	$duration_type = "week";
 }
 if(isset($_GET['yearly_id'])){
 	$yearly_id = $_GET['yearly_id'];
@@ -81,6 +84,20 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	echo"
 	<h1>$l_my_workout_plans</h1>
 	
+	<!-- Where am I ? -->
+		<p><b>$l_you_are_here:</b><br />
+		<a href=\"index.php?l=$l\">$l_workout_plans</a>
+		&gt;
+		<a href=\"my_workout_plans.php?duration_type=$duration_type&amp;l=$l\">$l_my_workout_plans</a>
+		</p>
+	<!-- //Where am I ? -->
+
+	<!-- Quick menu -->
+		<p>
+		<a href=\"$root/workout_plans/new_workout_plan.php?l=$l\" class=\"btn_default\">$l_new_workout_plan</a>
+		</p>
+	<!-- //Quick menu -->
+
 
 	<!-- Selector -->
 

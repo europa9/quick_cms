@@ -41,9 +41,11 @@ echo"
 	  	   workout_session_title_clean VARCHAR(250),
 	  	   workout_session_duration VARCHAR(250),
 	  	   workout_session_intensity VARCHAR(250),
+	  	   workout_session_repeat VARCHAR(250),
+	  	   workout_session_pause VARCHAR(250),
 	  	   workout_session_goal TEXT,
 	  	   workout_session_warmup TEXT,
-	  	   workout_session_end TEXT)")
+	  	   workout_session_end TEXT,)")
 		   or die(mysqli_error());
 	}
 	echo"

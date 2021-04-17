@@ -8,5 +8,7 @@ $l_group = "Gruppe";
 $l_info = "Info";
 $l_muscle_group = "Muskelgruppe";
 $l_my_workout_plans = "Mine treningsplaner";
+$l_pause = "Pause";
+$l_repeat = "Gjentagelse";
 $l_search_for_exercise = "S&oslash;k etter &oslash;velse";
 ?>

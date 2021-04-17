@@ -131,6 +131,20 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			</p>
 			<!-- //Exisitng image -->
 
+			<!-- Feedback -->
+			";
+			if($ft != ""){
+				if($fm == "changes_saved"){
+					$fm = "$l_changes_saved";
+				}
+				else{
+					$fm = ucfirst($fm);
+					$fm = str_replace("_", " ", $fm);
+				}
+				echo"<div class=\"$ft\"><span>$fm</span></div>";
+			}
+			echo"	
+			<!-- //Feedback -->
 			<!-- Form -->
 			
 
@@ -314,8 +328,16 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						// Make sure workout plan exists in feed
 						include("new_workout_plan_weekly_include_insert_into_feed.php");
 
+
+						// Get first session id
+						$query = "SELECT workout_session_id FROM $t_workout_plans_sessions WHERE workout_session_user_id=$my_user_id_mysql AND workout_session_weekly_id=$weekly_id_mysql ORDER BY workout_session_id ASC LIMIT 0,1";
+						$result = mysqli_query($link, $query);
+						$row = mysqli_fetch_row($result);
+						list($get_workout_session_id) = $row;
+	
+
 						// Header
-						$url = "new_workout_plan_weekly_step_3_sessions.php?weekly_id=$get_current_workout_weekly_id&l=$l&ft=success&fm=image_uploaded";
+						$url = "new_workout_plan_weekly_step_3_sessions.php?weekly_id=$get_current_workout_weekly_id&action=add_exercise_to_session&session_id=$get_workout_session_id&l=$l&ft=success&fm=image_uploaded";
 						header("Location: $url");
 						exit;
 					}
@@ -379,9 +401,15 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			// Make sure workout plan exists in feed
 			include("new_workout_plan_weekly_include_insert_into_feed.php");
-
+			
+			// Get first session id
+			$query = "SELECT workout_session_id FROM $t_workout_plans_sessions WHERE workout_session_user_id=$my_user_id_mysql AND workout_session_weekly_id=$weekly_id_mysql ORDER BY workout_session_id ASC LIMIT 0,1";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_workout_session_id) = $row;
+	
 			// Header
-			$url = "new_workout_plan_weekly_step_3_sessions.php?weekly_id=$get_current_workout_weekly_id&l=$l";
+			$url = "new_workout_plan_weekly_step_3_sessions.php?weekly_id=$get_current_workout_weekly_id&action=add_exercise_to_session&session_id=$get_workout_session_id&l=$l&ft=success&fm=template_image_used";
 			header("Location: $url");
 			exit;
 

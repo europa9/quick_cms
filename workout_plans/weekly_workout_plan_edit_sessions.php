@@ -562,12 +562,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			elseif($action == "edit_session"){
 				// Get session
 				$session_id_mysql = quote_smart($link, $session_id);
-				$query = "SELECT workout_session_id, workout_session_user_id, workout_session_weekly_id, workout_session_weight, workout_session_title, workout_session_title_clean, workout_session_duration, workout_session_intensity, workout_session_goal, workout_session_warmup, workout_session_end FROM $t_workout_plans_sessions WHERE workout_session_id=$session_id_mysql";
+				$query = "SELECT workout_session_id, workout_session_user_id, workout_session_weekly_id, workout_session_weight, workout_session_title, workout_session_title_clean, workout_session_duration, workout_session_intensity, workout_session_repeat, workout_session_pause, workout_session_goal, workout_session_warmup, workout_session_end FROM $t_workout_plans_sessions WHERE workout_session_id=$session_id_mysql";
 				$result = mysqli_query($link, $query);
 				$row = mysqli_fetch_row($result);
-				list($get_workout_session_id, $get_current_workout_session_user_id, $get_current_workout_session_weekly_id, $get_current_workout_session_weight, $get_current_workout_session_title, $get_current_workout_session_title_clean, $get_current_workout_session_duration, $get_current_workout_session_intensity, $get_current_workout_session_goal, $get_current_workout_session_warmup, $get_current_workout_session_end) = $row;
+				list($get_current_workout_session_id, $get_current_workout_session_user_id, $get_current_workout_session_weekly_id, $get_current_workout_session_weight, $get_current_workout_session_title, $get_current_workout_session_title_clean, $get_current_workout_session_duration, $get_current_workout_session_intensity, $get_current_workout_session_repeat, $get_current_workout_session_pause, $get_current_workout_session_goal, $get_current_workout_session_warmup, $get_current_workout_session_end) = $row;
 	
-				if($get_workout_session_id == ""){
+				if($get_current_workout_session_id == ""){
 					echo"Session not found.";
 				}
 				else{
@@ -604,6 +604,16 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							$inp_intensity = output_html($inp_intensity);		
 							$inp_intensity_mysql = quote_smart($link, $inp_intensity);
 
+							// Pause
+							$inp_pause = $_POST['inp_pause'];
+							$inp_pause = output_html($inp_pause);		
+							$inp_pause_mysql = quote_smart($link, $inp_pause);
+
+							// Repeat
+							$inp_repeat = $_POST['inp_repeat'];
+							$inp_repeat = output_html($inp_repeat);		
+							$inp_repeat_mysql = quote_smart($link, $inp_repeat);
+
 							// Warmup
 							$inp_warmup = $_POST['inp_warmup'];
 							$inp_warmup = output_html($inp_warmup);		
@@ -619,9 +629,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							$res = mysqli_query($link, "UPDATE $t_workout_plans_sessions SET workout_session_title=$inp_title_mysql, 
 									workout_session_title_clean=$inp_title_clean_mysql, workout_session_duration=$inp_duration_mysql, 
 									workout_session_intensity=$inp_intensity_mysql,
+									workout_session_pause=$inp_pause_mysql,
+									workout_session_repeat=$inp_repeat_mysql,
 									workout_session_warmup=$inp_warmup_mysql,
 									workout_session_end=$inp_end_mysql
-									 WHERE workout_session_id='$get_workout_session_id'");
+									 WHERE workout_session_id='$get_current_workout_session_id'");
 
 
 							// Purifier
@@ -643,7 +655,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							$inp_goal = $purifier->purify($inp_goal);
 
 
-							$sql = "UPDATE $t_workout_plans_sessions SET workout_session_goal=? WHERE workout_session_id='$get_workout_session_id'";
+							$sql = "UPDATE $t_workout_plans_sessions SET workout_session_goal=? WHERE workout_session_id='$get_current_workout_session_id'";
 							$stmt = $link->prepare($sql);
 							$stmt->bind_param("s", $inp_goal);
 							$stmt->execute();
@@ -653,7 +665,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 	
 							// Header
-							$url = "weekly_workout_plan_edit_sessions.php?weekly_id=$weekly_id&l=$l&ft=success&fm=changes_saved";
+							$url = "weekly_workout_plan_edit_sessions.php?weekly_id=$weekly_id&action=edit_session&session_id=$session_id&l=$l&ft=success&fm=changes_saved";
 							header("Location: $url");
 							exit;
 
@@ -778,6 +790,18 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 							<p><b>$l_intensity:</b><br />
 							<input type=\"text\" name=\"inp_intensity\" size=\"30\" value=\"$get_current_workout_session_intensity\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /> %
+							</p>
+
+							<p><b>$l_repeat:</b><br />
+							<textarea name=\"inp_repeat\" rows=\"4\" cols=\"70\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">";
+							$get_current_workout_session_repeat = str_replace("<br />", "\n", $get_current_workout_session_repeat);
+							echo"$get_current_workout_session_repeat</textarea>
+							</p>
+
+							<p><b>$l_pause:</b><br />
+							<textarea name=\"inp_pause\" rows=\"4\" cols=\"70\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">";
+							$get_current_workout_session_pause = str_replace("<br />", "\n", $get_current_workout_session_pause);
+							echo"$get_current_workout_session_pause</textarea>
 							</p>
 
 							<p><b>$l_goal:</b><br />
