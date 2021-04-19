@@ -353,14 +353,14 @@ else{
 				if($get_current_food_image_path == ""){
 					$year = date("Y");
 
-					$inp_food_image_path = "_uploads/food/_img/$editor_language/$year";
+					$inp_food_image_path = "_uploads/food/_img/$get_current_food_language/$year";
 					if(!(file_exists("../$inp_food_image_path"))){
 						mkdir("../$inp_food_image_path");
 					}
 
 					$food_manufacturer_name_clean = clean($get_current_food_manufacturer_name);
 					$store_dir = $food_manufacturer_name_clean . "_" . $get_current_food_clean_name;
-					$inp_food_image_path = "_uploads/food/_img/$editor_language/$year/$store_dir";
+					$inp_food_image_path = "_uploads/food/_img/$get_current_food_language/$year/$store_dir";
 					if(!(file_exists("../$inp_food_image_path"))){
 						mkdir("../$inp_food_image_path");
 					}

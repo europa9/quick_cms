@@ -1144,6 +1144,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						<!-- Search for exercise -->
 							<script id=\"source\" language=\"javascript\" type=\"text/javascript\">
 							\$(document).ready(function () {
+								\$('[name=\"q\"]').focus();
 								\$('#nettport_inp_search_query').keyup(function () {
         								var searchString    = $(\"#nettport_inp_search_query\").val();
        									var data            = 'weekly_id=$weekly_id&session_id=$session_id&l=$l&q='+ searchString;

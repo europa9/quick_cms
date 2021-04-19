@@ -3,3 +3,11 @@
 		width: 95%;
 	}
 }
+
+
+div.float_left{
+	float: left;
+}
+div.float_right{
+	float: right;
+}

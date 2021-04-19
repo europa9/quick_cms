@@ -184,6 +184,9 @@ list($get_current_food_id, $get_current_food_user_id, $get_current_food_name, $g
 				$inp_food_dietary_fiber = $_POST['inp_food_dietary_fiber'];
 				$inp_food_dietary_fiber = output_html($inp_food_dietary_fiber);
 				$inp_food_dietary_fiber = str_replace(",", ".", $inp_food_dietary_fiber);
+				if($inp_food_dietary_fiber == ""){
+					$inp_food_dietary_fiber = 0;
+				}
 				$inp_food_dietary_fiber_metric_mysql = quote_smart($link, $inp_food_dietary_fiber);
 
 
@@ -255,7 +258,12 @@ list($get_current_food_id, $get_current_food_user_id, $get_current_food_name, $g
 					$inp_food_carbohydrates_calculated_metric = round($inp_food_carbohydrates*$get_current_food_serving_size_metric/100, 0);
 					$inp_food_carbohydrates_calculated_metric_mysql = quote_smart($link, $inp_food_carbohydrates_calculated_metric);
 
-					$inp_food_dietary_fiber_calculated_metric = round($inp_food_dietary_fiber*$get_current_food_serving_size_metric/100, 0);
+					if($inp_food_dietary_fiber == ""){
+						$inp_food_dietary_fiber_calculated_metric = 0;
+					}
+					else{
+						$inp_food_dietary_fiber_calculated_metric = round($inp_food_dietary_fiber*$get_current_food_serving_size_metric/100, 0);
+					}
 					$inp_food_dietary_fiber_calculated_metric_mysql = quote_smart($link, $inp_food_dietary_fiber_calculated_metric);
 
 					$inp_food_carbohydrates_of_which_sugars_calculated_metric = round($inp_food_carbohydrates_of_which_sugars*$get_current_food_serving_size_metric/100, 0);
@@ -327,7 +335,12 @@ list($get_current_food_id, $get_current_food_user_id, $get_current_food_name, $g
 						$inp_food_dietary_fiber_us = 0;
 					}
 					else{
-						$inp_food_dietary_fiber_us = round(($inp_food_dietary_fiber_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+						if($inp_food_dietary_fiber_calculated_metric == ""){
+							$inp_food_dietary_fiber_us = 0;
+						}
+						else{
+							$inp_food_dietary_fiber_us = round(($inp_food_dietary_fiber_calculated_metric/$get_current_food_serving_size_us)*8, 0);
+						}
 					}
 					$inp_food_dietary_fiber_us_mysql = quote_smart($link, $inp_food_dietary_fiber_us);
 
@@ -401,7 +414,13 @@ list($get_current_food_id, $get_current_food_user_id, $get_current_food_name, $g
 	  				$inp_food_carbohydrates_of_which_sugars_net_content 	  = round(($get_current_food_net_content_metric*$inp_food_carbohydrates_of_which_sugars)/100, 1);
 					$inp_food_carbohydrates_of_which_sugars_net_content_mysql = quote_smart($link, $inp_food_carbohydrates_of_which_sugars_net_content);
 
-	  				$inp_food_dietary_fiber_net_content 		= round(($get_current_food_net_content_metric*$inp_food_dietary_fiber)/100, 1);
+
+					if($inp_food_dietary_fiber == ""){
+	  					$inp_food_dietary_fiber_net_content = 0;
+					}
+					else{
+		  				$inp_food_dietary_fiber_net_content 		= round(($get_current_food_net_content_metric*$inp_food_dietary_fiber)/100, 1);
+					}
 					$inp_food_dietary_fiber_net_content_mysql 	= quote_smart($link, $inp_food_dietary_fiber_net_content);
 
 	 				$inp_food_proteins_net_content       = round(($get_current_food_net_content_metric*$inp_food_proteins)/100, 1);
@@ -415,6 +434,7 @@ list($get_current_food_id, $get_current_food_user_id, $get_current_food_name, $g
 
 	
 					// Score
+					if($inp_food_dietary_fiber == ""){ $inp_food_dietary_fiber = 0; }
 					$inp_total = $inp_food_energy + $inp_food_fat + $inp_food_saturated_fat + $inp_food_carbohydrates + $inp_food_dietary_fiber + $inp_food_carbohydrates_of_which_sugars + $inp_food_proteins + $inp_food_salt;
 					$inp_calculation = ($inp_food_energy * 1) + 
 				  		   	   ($inp_food_fat * 13) +  
@@ -506,7 +526,7 @@ list($get_current_food_id, $get_current_food_user_id, $get_current_food_name, $g
 								food_salt_net_content=$inp_food_salt_net_content_mysql,
 								food_sodium_net_content=$inp_food_sodium_net_content_mysql
 
-								 WHERE food_id='$get_current_food_id'") or print(mysqli_error());
+								 WHERE food_id=$get_current_food_id") or print(mysqli_error());
 
 
 

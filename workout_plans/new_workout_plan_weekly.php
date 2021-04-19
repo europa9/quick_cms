@@ -189,7 +189,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				(workout_session_id, workout_session_user_id, workout_session_weekly_id, workout_session_weight, workout_session_title, workout_session_title_clean, workout_session_duration, workout_session_intensity,
 				workout_session_warmup, workout_session_end) 
 				VALUES 
-				(NULL, $my_user_id_mysql, $weekly_id_mysql, '0', $inp_day_b_mysql, $inp_day_b_clean_mysql, '', '', '', '')
+				(NULL, $my_user_id_mysql, $weekly_id_mysql, '1', $inp_day_b_mysql, $inp_day_b_clean_mysql, '', '', '', '')
 				")
 				or die(mysqli_error($link));
 			}
@@ -199,7 +199,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				(workout_session_id, workout_session_user_id, workout_session_weekly_id, workout_session_weight, workout_session_title, workout_session_title_clean, workout_session_duration, workout_session_intensity,
 				workout_session_warmup, workout_session_end) 
 				VALUES 
-				(NULL, $my_user_id_mysql, $weekly_id_mysql, '0', $inp_day_c_mysql, $inp_day_c_clean_mysql, '', '', '', '')
+				(NULL, $my_user_id_mysql, $weekly_id_mysql, '2', $inp_day_c_mysql, $inp_day_c_clean_mysql, '', '', '', '')
 				")
 				or die(mysqli_error($link));
 			}
@@ -209,7 +209,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				(workout_session_id, workout_session_user_id, workout_session_weekly_id, workout_session_weight, workout_session_title, workout_session_title_clean, workout_session_duration, workout_session_intensity,
 				workout_session_warmup, workout_session_end) 
 				VALUES 
-				(NULL, $my_user_id_mysql, $weekly_id_mysql, '0', $inp_day_d_mysql, $inp_day_d_clean_mysql, '', '', '', '')
+				(NULL, $my_user_id_mysql, $weekly_id_mysql, '3', $inp_day_d_mysql, $inp_day_d_clean_mysql, '', '', '', '')
 				")
 				or die(mysqli_error($link));
 			}
@@ -219,7 +219,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				(workout_session_id, workout_session_user_id, workout_session_weekly_id, workout_session_weight, workout_session_title, workout_session_title_clean, workout_session_duration, workout_session_intensity,
 				workout_session_warmup, workout_session_end) 
 				VALUES 
-				(NULL, $my_user_id_mysql, $weekly_id_mysql, '0', $inp_day_e_mysql, $inp_day_e_clean_mysql, '', '', '', '')
+				(NULL, $my_user_id_mysql, $weekly_id_mysql, '4', $inp_day_e_mysql, $inp_day_e_clean_mysql, '', '', '', '')
 				")
 				or die(mysqli_error($link));
 			}
@@ -229,7 +229,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				(workout_session_id, workout_session_user_id, workout_session_weekly_id, workout_session_weight, workout_session_title, workout_session_title_clean, workout_session_duration, workout_session_intensity,
 				workout_session_warmup, workout_session_end) 
 				VALUES 
-				(NULL, $my_user_id_mysql, $weekly_id_mysql, '0', $inp_day_f_mysql, $inp_day_f_clean_mysql, '', '', '', '')
+				(NULL, $my_user_id_mysql, $weekly_id_mysql, '5', $inp_day_f_mysql, $inp_day_f_clean_mysql, '', '', '', '')
 				")
 				or die(mysqli_error($link));
 			}
@@ -239,7 +239,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				(workout_session_id, workout_session_user_id, workout_session_weekly_id, workout_session_weight, workout_session_title, workout_session_title_clean, workout_session_duration, workout_session_intensity,
 				workout_session_warmup, workout_session_end) 
 				VALUES 
-				(NULL, $my_user_id_mysql, $weekly_id_mysql, '0', $inp_day_g_mysql, $inp_day_g_clean_mysql, '', '', '', '')
+				(NULL, $my_user_id_mysql, $weekly_id_mysql, '6', $inp_day_g_mysql, $inp_day_g_clean_mysql, '', '', '', '')
 				")
 				or die(mysqli_error($link));
 			}

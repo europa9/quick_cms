@@ -524,15 +524,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		elseif($action == "edit_session"){
 			// Get session
 			$session_id_mysql = quote_smart($link, $session_id);
-			$query = "SELECT workout_session_id, workout_session_user_id, workout_session_weekly_id, workout_session_weight, workout_session_title, workout_session_title_clean, workout_session_duration, workout_session_intensity, workout_session_goal, workout_session_warmup, workout_session_end FROM $t_workout_plans_sessions WHERE workout_session_id=$session_id_mysql AND workout_session_user_id=$my_user_id_mysql";
+			$query = "SELECT workout_session_id, workout_session_user_id, workout_session_weekly_id, workout_session_weight, workout_session_title, workout_session_title_clean, workout_session_duration, workout_session_intensity, workout_session_repeat, workout_session_pause, workout_session_goal, workout_session_warmup, workout_session_end FROM $t_workout_plans_sessions WHERE workout_session_id=$session_id_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
-			list($get_workout_session_id, $get_current_workout_session_user_id, $get_current_workout_session_weekly_id, $get_current_workout_session_weight, $get_current_workout_session_title, $get_current_workout_session_title_clean, $get_current_workout_session_duration, $get_current_workout_session_intensity, $get_current_workout_session_goal, $get_current_workout_session_warmup, $get_current_workout_session_end) = $row;
+			list($get_current_workout_session_id, $get_current_workout_session_user_id, $get_current_workout_session_weekly_id, $get_current_workout_session_weight, $get_current_workout_session_title, $get_current_workout_session_title_clean, $get_current_workout_session_duration, $get_current_workout_session_intensity, $get_current_workout_session_repeat, $get_current_workout_session_pause, $get_current_workout_session_goal, $get_current_workout_session_warmup, $get_current_workout_session_end) = $row;
 	
-			if($get_workout_session_id == ""){
+			if($get_current_workout_session_id == ""){
 				echo"Session not found.";
 			}
 			else{
+				if($get_current_workout_session_user_id != "$my_user_id"){
+					echo"Access denied. Only the owner can edit.";
+					die;
+				}
 
 
 				if($process == "1"){
@@ -557,6 +561,16 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$inp_intensity = output_html($inp_intensity);		
 					$inp_intensity_mysql = quote_smart($link, $inp_intensity);
 
+					// Pause
+					$inp_pause = $_POST['inp_pause'];
+					$inp_pause = output_html($inp_pause);		
+					$inp_pause_mysql = quote_smart($link, $inp_pause);
+
+					// Repeat
+					$inp_repeat = $_POST['inp_repeat'];
+					$inp_repeat = output_html($inp_repeat);		
+					$inp_repeat_mysql = quote_smart($link, $inp_repeat);
+
 					// Warmup
 					$inp_warmup = $_POST['inp_warmup'];
 					$inp_warmup = output_html($inp_warmup);		
@@ -572,9 +586,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$res = mysqli_query($link, "UPDATE $t_workout_plans_sessions SET workout_session_title=$inp_title_mysql, 
 									workout_session_title_clean=$inp_title_clean_mysql, workout_session_duration=$inp_duration_mysql, 
 									workout_session_intensity=$inp_intensity_mysql,
+									workout_session_pause=$inp_pause_mysql,
+									workout_session_repeat=$inp_repeat_mysql,
+									workout_session_warmup=$inp_warmup_mysql,
 									workout_session_warmup=$inp_warmup_mysql,
 									workout_session_end=$inp_end_mysql
-									 WHERE workout_session_id='$get_workout_session_id'");
+									 WHERE workout_session_id=$get_current_workout_session_id");
 
 
 					// Purifier
@@ -615,8 +632,17 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				echo"
 				<h1>$l_new_weekly_workout_plan</h1>
 
-
-				<h2>$get_current_workout_session_title</h2>
+				<!-- Where am I ? -->
+					<p><b>$l_you_are_here:</b><br />
+					<a href=\"new_workout_plan.php?type_id=$type_id&amp;l=$l\">$l_new_workout_plan</a>
+					&gt;
+					<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;type_id=$type_id&amp;l=$l\">$l_sessions</a>
+					&gt;
+					<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=open_session&amp;session_id=$get_current_workout_session_id&amp;type_id=$type_id&amp;l=$l\">$get_current_workout_session_title</a>
+					&gt;
+					<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=edit_session&amp;session_id=$get_current_workout_session_id&amp;type_id=$type_id&amp;l=$l\">$l_info</a>
+					</p>
+				<!-- //Where am I ? -->
 	
 
 				<!-- Feedback -->
@@ -633,6 +659,17 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				echo"	
 				<!-- //Feedback -->
 
+				<!-- Sessions (day 1, day 2, day 3 - etc) -->
+					<h2>$l_info_for $get_current_workout_session_title</h2>
+					<p>
+					<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=open_session&amp;session_id=$session_id&amp;type_id=$type_id&amp;l=$l\">$get_current_workout_session_title</a>
+					&middot;
+					<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=add_exercise_to_session&amp;session_id=$session_id&amp;type_id=$type_id&amp;l=$l\">$l_add_exercise</a>
+					&middot;
+					<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=edit_session&amp;session_id=$session_id&amp;l=$l\" style=\"font-weight: bold;\">$l_info</a>
+					</p>
+				<!-- //Sessions (day 1, day 2, day 3 - etc) -->
+					
 
 				<!-- TinyMCE -->
 				<script type=\"text/javascript\" src=\"$root/_admin/_javascripts/tinymce/tinymce_4.7.1/tinymce.min.js\"></script>
@@ -697,7 +734,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				</script>
 
 
-				<form method=\"post\" action=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=edit_session&amp;session_id=$session_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+				<form method=\"post\" action=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=edit_session&amp;session_id=$get_current_workout_session_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 	
 
 				<p><b>$l_session_title:</b><br />
@@ -710,6 +747,18 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				<p><b>$l_intensity:</b><br />
 				<input type=\"text\" name=\"inp_intensity\" size=\"30\" value=\"$get_current_workout_session_intensity\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+				</p>
+
+				<p><b>$l_repeat:</b><br />
+				<textarea name=\"inp_repeat\" rows=\"4\" cols=\"70\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">";
+				$get_current_workout_session_repeat = str_replace("<br />", "\n", $get_current_workout_session_repeat);
+				echo"$get_current_workout_session_repeat</textarea>
+				</p>
+
+				<p><b>$l_pause:</b><br />
+				<textarea name=\"inp_pause\" rows=\"4\" cols=\"70\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">";
+				$get_current_workout_session_pause = str_replace("<br />", "\n", $get_current_workout_session_pause);
+				echo"$get_current_workout_session_pause</textarea>
 				</p>
 
 				<p><b>$l_goal:</b><br />
@@ -826,8 +875,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					</p>
 				<!-- //Where am I ? -->
 
-				<h2>$get_current_workout_session_title</h2>
 	
+				<!-- Sessions (day 1, day 2, day 3 - etc) -->
+					<h2>$get_current_workout_session_title</h2>
+					<p>
+					<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=open_session&amp;session_id=$session_id&amp;type_id=$type_id&amp;l=$l\" style=\"font-weight: bold;\">$get_current_workout_session_title</a>
+					&middot;
+					<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=add_exercise_to_session&amp;session_id=$session_id&amp;type_id=$type_id&amp;l=$l\">$l_add_exercise</a>
+					&middot;
+					<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=edit_session&amp;session_id=$session_id&amp;l=$l\">$l_info</a>
+					</p>
+				<!-- //Sessions (day 1, day 2, day 3 - etc) -->
+					
+
 
 				<!-- List sessions_main -->
 				<p>
@@ -1033,36 +1093,14 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					<!-- //Feedback -->
 
 					<!-- Sessions (day 1, day 2, day 3 - etc) -->
-						<h2>$get_current_workout_session_title</h2>
-						<p>$l_your_now_adding_exercises_for $get_current_workout_session_title</p>
-
-						<div class=\"float_left\">
-
-						</div>
-						<div class=\"float_right\">
-							<!-- Next session -->";
-							$next_weight = $get_current_workout_session_weight+1;
-							$query = "SELECT workout_session_id, workout_session_title FROM $t_workout_plans_sessions WHERE workout_session_user_id=$my_user_id_mysql AND workout_session_weekly_id=$get_current_workout_session_weekly_id AND workout_session_weight=$next_weight";
-							$result = mysqli_query($link, $query);
-							$row = mysqli_fetch_row($result);
-							list($get_next_workout_session_id, $get_next_workout_session_title) = $row;
-							if($get_next_workout_session_id != ""){	
-								echo"
-								<p>
-								<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$get_current_workout_session_weekly_id&amp;action=add_exercise_to_session&amp;session_id=$get_next_workout_session_id&amp;l=$l\">$get_next_workout_session_title</a>
-								</p>
-								";
-							}
-							else{
-								echo"
-								<p>
-								<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$get_current_workout_session_weekly_id&amp;l=$l\">$l_finish</a>
-								</p>
-								";
-							}
-							echo"
-							<!-- //Next session -->
-						</div>
+						<h2>$l_add_exercises_to $get_current_workout_session_title</h2>
+						<p>
+						<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=open_session&amp;session_id=$session_id&amp;type_id=$type_id&amp;l=$l\">$get_current_workout_session_title</a>
+						&middot;
+						<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=add_exercise_to_session&amp;session_id=$session_id&amp;type_id=$type_id&amp;l=$l\" style=\"font-weight: bold;\">$l_add_exercise</a>
+						&middot;
+						<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=edit_session&amp;session_id=$session_id&amp;l=$l\">$l_info</a>
+						</p>
 					<!-- //Sessions (day 1, day 2, day 3 - etc) -->
 					
 					<!-- Search for exercise -->
@@ -1138,6 +1176,57 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						</div>
 					<!-- //Browse for exercise: Select type -->
 
+
+
+					<!-- Sessions (day 1, day 2, day 3 - etc) -->
+
+						<div class=\"float_left\">
+							<!-- Prev session -->
+							<p>";
+							$prev_weight = $get_current_workout_session_weight-1;
+							$query = "SELECT workout_session_id, workout_session_title FROM $t_workout_plans_sessions WHERE workout_session_user_id=$my_user_id_mysql AND workout_session_weekly_id=$get_current_workout_session_weekly_id AND workout_session_weight=$prev_weight";
+							$result = mysqli_query($link, $query);
+							$row = mysqli_fetch_row($result);
+							list($get_prev_workout_session_id, $get_prev_workout_session_title) = $row;
+							if($get_prev_workout_session_id != ""){	
+								echo"
+								<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$get_current_workout_session_weekly_id&amp;action=add_exercise_to_session&amp;session_id=$get_prev_workout_session_id&amp;l=$l\">&laquo; $get_prev_workout_session_title</a>
+								</p>
+								";
+							}
+							else{
+								echo"
+								";
+							}
+							echo"
+							</p>
+							<!-- //Prev session -->
+						</div>
+						<div class=\"float_right\">
+							<!-- Next session -->
+							<p>";
+							$next_weight = $get_current_workout_session_weight+1;
+							$query = "SELECT workout_session_id, workout_session_title FROM $t_workout_plans_sessions WHERE workout_session_user_id=$my_user_id_mysql AND workout_session_weekly_id=$get_current_workout_session_weekly_id AND workout_session_weight=$next_weight";
+							$result = mysqli_query($link, $query);
+							$row = mysqli_fetch_row($result);
+							list($get_next_workout_session_id, $get_next_workout_session_title) = $row;
+							if($get_next_workout_session_id != ""){	
+								echo"
+								<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$get_current_workout_session_weekly_id&amp;action=add_exercise_to_session&amp;session_id=$get_next_workout_session_id&amp;l=$l\">$get_next_workout_session_title &raquo;</a>
+								
+								";
+							}
+							else{
+								echo"
+								<a href=\"weekly_workout_plan_view.php?weekly_id=$get_current_workout_session_weekly_id&amp;l=$l\">$l_finish &raquo;</a>
+								";
+							}
+							echo"
+							</p>
+							<!-- //Next session -->
+						</div>
+						<div class=\"clear\"></div>
+					<!-- //Sessions (day 1, day 2, day 3 - etc) -->
 					";
 				} // mode == ""
 				elseif($mode == "step_2_muscle_group"){
