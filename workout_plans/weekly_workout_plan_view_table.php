@@ -355,12 +355,12 @@ else{
 				";
 
 				// Image
-				$query_images = "SELECT exercise_image_id, exercise_image_type, exercise_image_path, exercise_image_file FROM $t_exercise_index_images WHERE exercise_image_exercise_id='$exercise_id' ORDER BY exercise_image_type ASC LIMIT 0,2";
+				$query_images = "SELECT exercise_image_id, exercise_image_user_id, exercise_image_exercise_id, exercise_image_type, exercise_image_path, exercise_image_file, exercise_image_thumb_120x120, exercise_image_thumb_150x150, exercise_image_thumb_350x350 FROM $t_exercise_index_images WHERE exercise_image_exercise_id='$exercise_id' ORDER BY exercise_image_type ASC LIMIT 0,2";
 				$result_images = mysqli_query($link, $query_images);
 				while($row_images = mysqli_fetch_row($result_images)) {
-					list($get_exercise_image_id, $get_exercise_image_type, $get_exercise_image_path, $get_exercise_image_file) = $row_images;
+					list($get_exercise_image_id, $get_exercise_image_user_id, $get_exercise_image_exercise_id, $get_exercise_image_type, $get_exercise_image_path, $get_exercise_image_file, $get_exercise_image_thumb_120x120, $get_exercise_image_thumb_150x150, $get_exercise_image_thumb_350x350) = $row_images;
 					if($get_exercise_image_file != ""){
-						echo"			<a href=\"$root/exercises/view_exercise.php?exercise_id=$exercise_id&amp;l=$l\"><img src=\"$root/image.php?width=100&amp;height=100&amp;image=/$get_exercise_image_path/$get_exercise_image_file\" alt=\"$get_exercise_image_type\" /></a>\n";
+						echo"			<a href=\"$root/exercises/view_exercise.php?exercise_id=$exercise_id&amp;l=$l\"><img src=\"$root/$get_exercise_image_path/$get_exercise_image_thumb_150x150\" alt=\"$get_exercise_image_thumb_150x150\" /></a>\n";
 					}
 				}
 				echo"
@@ -371,9 +371,12 @@ else{
 				$result_muscle = mysqli_query($link, $query_muscle);
 				$row_muscle = mysqli_fetch_row($result_muscle);
 				list($get_exercise_muscle_image_id, $get_exercise_muscle_image_file) = $row_muscle;
+				if($get_exercise_muscle_image_file != "" && file_exists("$root/_uploads/exercises/muscle_image/$get_exercise_muscle_image_file")){
+					echo"
+					<img src=\"$root/_uploads/exercises/muscle_image/$get_exercise_muscle_image_file\" alt=\"$get_exercise_muscle_image_file\" width=\"150\" height=\"150\" />
+					";
+				}
 				echo"
-				<img src=\"$root/image.php?width=100&amp;height=100&amp;image=/_uploads/exercises/muscle_image/$get_exercise_muscle_image_file\" alt=\"$get_exercise_muscle_image_file\" />
-			
 				</p>
 				";
 

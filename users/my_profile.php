@@ -71,6 +71,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		<h2>$l_general_account_settings</h2>
 		<div class=\"vertical\">
 			<ul>
+				<li><a href=\"known_devices.php?l=$l\""; if($page == "known_devices"){ echo" class=\"navigation_active\"";}echo"><img src=\"_gfx/ic_verified_user_black_18dp.png\" alt=\"ic_verified_user_black_18dp.png\" /> $l_known_devices</a></li>
 				<li><a href=\"edit_subscriptions.php?l=$l\""; if($page == "edit_subscriptions"){ echo" class=\"navigation_active\"";}echo"><img src=\"_gfx/ic_notifications_black_18dp_1x.png\" alt=\"ic_notifications_black_18dp_1x.png\" /> $l_subscriptions</a></li>
 				<li><a href=\"settings.php?l=$l\""; if($page == "settings"){ echo" class=\"navigation_active\"";}echo"><img src=\"_gfx/ic_settings_black_18dp_1x.png\" alt=\"ic_settings_black_18dp_1x.png\" /> $l_settings</a></li>
 				<li><a href=\"edit_password.php?l=$l\""; if($page == "edit_password"){ echo" class=\"navigation_active\"";}echo"><img src=\"_gfx/ic_lock_outline_black_18dp_1x.png\" alt=\"ic_lock_outline_black_18dp_1x.png\" /> $l_password</a></li>

@@ -70,12 +70,12 @@ $my_ip = $_SERVER['REMOTE_ADDR'];
 $my_ip = output_html($my_ip);
 $my_ip_mysql = quote_smart($link, $my_ip);
 
-$inp_hostname = "$my_ip";
+$my_hostname = "$my_ip";
 if($configSiteUseGethostbyaddrSav == "1"){
-	$inp_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']); // Some servers in local network cant use getostbyaddr because of nameserver missing
+	$my_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']); // Some servers in local network cant use getostbyaddr because of nameserver missing
 }
-$inp_hostname = output_html($inp_hostname);
-$inp_hostname_mysql = quote_smart($link, $inp_hostname);
+$my_hostname = output_html($my_hostname);
+$my_hostname_mysql = quote_smart($link, $my_hostname);
 
 
 // Check if the user is banned
@@ -84,7 +84,7 @@ $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
 list($get_banned_ip_id) = $row;
 
-$query = "SELECT banned_hostname_id FROM $t_banned_hostnames WHERE banned_hostname=$inp_hostname_mysql";
+$query = "SELECT banned_hostname_id FROM $t_banned_hostnames WHERE banned_hostname=$my_hostname_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
 list($get_banned_hostname_id) = $row;
@@ -108,7 +108,7 @@ if($get_banned_ip_id != "" OR $get_banned_hostname_id != "" OR $get_banned_user_
 		echo"<p>IP ";echo $my_ip;echo" is banned.</p>\n";
 	}
 	if($get_banned_hostname_id != ""){
-		echo"<p>Hostname ";echo $inp_hostname;echo" is banned.</p>\n";
+		echo"<p>Hostname ";echo $my_hostname;echo" is banned.</p>\n";
 	}
 	if($get_banned_user_agent_id != ""){
 		echo"<p>User agent ";echo $my_user_agent;echo" is banned.</p>\n";

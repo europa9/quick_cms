@@ -1358,6 +1358,53 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						</p>
 					<!-- //Where am I ? -->
 
+					<!-- Quick menu for navigating -->
+						<p>
+						<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$get_current_workout_session_weekly_id&amp;l=$l\" class=\"btn_default\">$l_sessions</a>";
+						
+						// Prev session
+						$prev_weight = $get_current_workout_session_weight-1;
+						$query = "SELECT workout_session_id, workout_session_title FROM $t_workout_plans_sessions WHERE workout_session_user_id=$my_user_id_mysql AND workout_session_weekly_id=$get_current_workout_session_weekly_id AND workout_session_weight=$prev_weight";
+						$result = mysqli_query($link, $query);
+						$row = mysqli_fetch_row($result);
+						list($get_prev_workout_session_id, $get_prev_workout_session_title) = $row;
+						if($get_prev_workout_session_id != ""){	
+							echo"
+							<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$get_current_workout_session_weekly_id&amp;action=add_exercise_to_session&amp;session_id=$get_prev_workout_session_id&amp;l=$l\" class=\"btn_default\">&laquo; $get_prev_workout_session_title</a>
+							";
+						}
+
+						// Next
+						$next_weight = $get_current_workout_session_weight+1;
+						$query = "SELECT workout_session_id, workout_session_title FROM $t_workout_plans_sessions WHERE workout_session_user_id=$my_user_id_mysql AND workout_session_weekly_id=$get_current_workout_session_weekly_id AND workout_session_weight=$next_weight";
+						$result = mysqli_query($link, $query);
+						$row = mysqli_fetch_row($result);
+						list($get_next_workout_session_id, $get_next_workout_session_title) = $row;
+						if($get_next_workout_session_id != ""){	
+							echo"
+							<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$get_current_workout_session_weekly_id&amp;action=add_exercise_to_session&amp;session_id=$get_next_workout_session_id&amp;l=$l\" class=\"btn_default\">$get_next_workout_session_title &raquo;</a>
+							
+							";
+						}
+						else{
+							echo"
+							<a href=\"weekly_workout_plan_view.php?weekly_id=$get_current_workout_session_weekly_id&amp;l=$l\" class=\"btn_default\">$l_finish &raquo;</a>
+							";
+						}
+						echo"
+						</p>
+					<!-- //Quick menu for navigating -->
+
+					<!-- Sessions (day 1, day 2, day 3 - etc) -->
+						<p>
+						<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=open_session&amp;session_id=$session_id&amp;type_id=$type_id&amp;l=$l\">$get_current_workout_session_title</a>
+						&middot;
+						<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=add_exercise_to_session&amp;session_id=$session_id&amp;type_id=$type_id&amp;l=$l\" style=\"font-weight: bold;\">$l_add_exercise</a>
+						&middot;
+						<a href=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=edit_session&amp;session_id=$session_id&amp;l=$l\">$l_info</a>
+						</p>
+					<!-- //Sessions (day 1, day 2, day 3 - etc) -->
+
 					<!-- Feedback -->
 						";
 						if($ft != ""){
@@ -1384,6 +1431,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						<!-- Search script -->
 						<script id=\"source\" language=\"javascript\" type=\"text/javascript\">
 						\$(document).ready(function () {
+							\$('[name=\"q\"]').focus();
 							\$('#nettport_inp_search_query').keyup(function () {
         							var searchString    = $(\"#nettport_inp_search_query\").val();
        								var data            = 'weekly_id=$weekly_id&session_id=$session_id&l=$l&q='+ searchString;

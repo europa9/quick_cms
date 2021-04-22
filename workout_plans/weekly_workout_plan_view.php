@@ -258,10 +258,10 @@ else{
 	<!-- Sessions -->
 
 		";
-		$query = "SELECT workout_session_id, workout_session_weight, workout_session_title, workout_session_title_clean, workout_session_duration, workout_session_intensity FROM $t_workout_plans_sessions WHERE workout_session_weekly_id=$get_current_workout_weekly_id ORDER BY workout_session_weight ASC";
+		$query = "SELECT workout_session_id, workout_session_user_id, workout_session_weekly_id, workout_session_weight, workout_session_title, workout_session_title_clean, workout_session_duration, workout_session_intensity, workout_session_repeat, workout_session_pause, workout_session_goal, workout_session_warmup, workout_session_end FROM $t_workout_plans_sessions WHERE workout_session_weekly_id=$get_current_workout_weekly_id ORDER BY workout_session_weight ASC";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
-			list($get_workout_session_id, $get_workout_session_weight, $get_workout_session_title, $get_workout_session_title_clean, $get_workout_session_duration, $get_workout_session_intensity) = $row;
+			list($get_workout_session_id, $get_workout_session_user_id, $get_workout_session_weekly_id, $get_workout_session_weight, $get_workout_session_title, $get_workout_session_title_clean, $get_workout_session_duration, $get_workout_session_intensity, $get_workout_session_repeat, $get_workout_session_pause, $get_workout_session_goal, $get_workout_session_warmup, $get_workout_session_end) = $row;
 
 
 			echo"
@@ -422,6 +422,24 @@ else{
 			
 			<!-- //List sessions_main -->
 			";
+
+			if($get_workout_session_repeat != "" OR $get_workout_session_pause != ""){
+				echo"
+				<p>
+				";
+				if($get_workout_session_repeat != ""){
+					echo"<b>$l_repeat:</b> $get_workout_session_repeat";
+				}
+				if($get_workout_session_repeat != "" && $get_workout_session_pause != ""){
+					echo"<br />\n";
+				}
+				if($get_workout_session_pause != ""){
+					echo"<b>$l_pause:</b> $get_workout_session_pause";
+				}
+				echo"
+				</p>
+				";
+			}
 		} // get sessions
 		echo"
 

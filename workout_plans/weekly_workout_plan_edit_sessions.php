@@ -1144,7 +1144,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						<!-- Search for exercise -->
 							<script id=\"source\" language=\"javascript\" type=\"text/javascript\">
 							\$(document).ready(function () {
-								\$('[name=\"q\"]').focus();
 								\$('#nettport_inp_search_query').keyup(function () {
         								var searchString    = $(\"#nettport_inp_search_query\").val();
        									var data            = 'weekly_id=$weekly_id&session_id=$session_id&l=$l&q='+ searchString;
@@ -1166,11 +1165,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
        									}
         								return false;
             							});
+								\$('[name=\"q\"]').focus();
             						});
 							</script>
 
 
-							<form method=\"post\" action=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=add_exercise_to_session&amp;session_id=$session_id&amp;l=$l\" enctype=\"multipart/form-data\">
+							<form method=\"post\" action=\"weekly_workout_plan_edit_sessions.php?weekly_id=$weekly_id&amp;action=add_exercise_to_session&amp;session_id=$session_id&amp;l=$l\" enctype=\"multipart/form-data\">
 							<p><b>$l_search_for_exercise:</b><br />
 							<input type=\"text\" name=\"q\" value=\"\" size=\"20\" id=\"nettport_inp_search_query\" />
 							<input type=\"submit\" value=\"$l_search\" id=\"nettport_search_submit_button\" />
@@ -1272,7 +1272,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							</script>
 
 
-							<form method=\"post\" action=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=add_exercise_to_session&amp;session_id=$session_id&amp;l=$l\" enctype=\"multipart/form-data\">
+							<form method=\"post\" action=\"weekly_workout_plan_edit_sessions.php?weekly_id=$weekly_id&amp;action=add_exercise_to_session&amp;session_id=$session_id&amp;l=$l\" enctype=\"multipart/form-data\">
 							<p><b>$l_search_for_exercise:</b><br />
 							<input type=\"text\" name=\"q\" value=\"\" size=\"20\" id=\"nettport_inp_search_query\" />
 							<input type=\"submit\" value=\"$l_search\" id=\"nettport_search_submit_button\" />
@@ -1314,7 +1314,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					} // $mode == "step_2_muscle_group"
 					elseif($mode == "step_3_exercises"){
 						echo"
-						<h1>$get_current_workout_weekly_title</h1>
+						<h1>$l_add_exercise $get_current_workout_weekly_title</h1>
 
 						<!-- Where am I ? -->
 							<p><b>$l_you_are_here:</b><br />
@@ -1349,6 +1349,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							</p>
 						<!-- //Where am I ? -->
 
+						<!-- Quick menu for navigating -->
+							<p>
+							<a href=\"weekly_workout_plan_edit_sessions.php?weekly_id=$weekly_id&amp;l=$l\">$l_sessions</a>
+							</p>
+						<!-- //Quick menu for navigating -->
+
 						<!-- Feedback -->
 							";
 							if($ft != ""){
@@ -1374,6 +1380,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						<!-- Search for exercise -->
 							<script id=\"source\" language=\"javascript\" type=\"text/javascript\">
 							\$(document).ready(function () {
+								\$('[name=\"q\"]').focus();
 								\$('#nettport_inp_search_query').keyup(function () {
         								var searchString    = $(\"#nettport_inp_search_query\").val();
        									var data            = 'weekly_id=$weekly_id&session_id=$session_id&l=$l&q='+ searchString;
@@ -1398,7 +1405,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
             						});
 							</script>
 	
-							<form method=\"post\" action=\"new_workout_plan_weekly_step_3_sessions.php?weekly_id=$weekly_id&amp;action=add_exercise_to_session&amp;session_id=$session_id&amp;l=$l\" enctype=\"multipart/form-data\">
+							<form method=\"post\" action=\"weekly_workout_plan_edit_sessions.php?weekly_id=$weekly_id&amp;action=add_exercise_to_session&amp;session_id=$session_id&amp;l=$l\" enctype=\"multipart/form-data\">
 							<p><b>$l_search_for_exercise:</b><br />
 							<input type=\"text\" name=\"q\" value=\"\" size=\"20\" id=\"nettport_inp_search_query\" />
 							<input type=\"submit\" value=\"$l_search\" id=\"nettport_search_submit_button\" />
