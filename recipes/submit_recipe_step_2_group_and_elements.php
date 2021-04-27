@@ -3061,6 +3061,53 @@ else{
 						</script>
 
 					<!-- //Special character replacer -->
+
+
+					<!-- User adapted view -->";
+						if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
+							$my_user_id = $_SESSION['user_id'];
+							$my_user_id = output_html($my_user_id);
+							$my_user_id_mysql = quote_smart($link, $my_user_id);
+			
+							$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_recipes_user_adapted_view WHERE view_user_id=$get_my_user_id";
+							$result_t = mysqli_query($link, $query_t);
+							$row_t = mysqli_fetch_row($result_t);
+							list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
+						}
+						else{
+							// IP
+							$my_user_ip = $_SERVER['REMOTE_ADDR'];
+							$my_user_ip = output_html($my_user_ip);
+							$my_user_ip_mysql = quote_smart($link, $my_user_ip);
+			
+							$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_recipes_user_adapted_view WHERE view_ip=$my_user_ip_mysql";
+							$result_t = mysqli_query($link, $query_t);
+							$row_t = mysqli_fetch_row($result_t);
+							list($get_current_view_id, $get_current_view_user_id, $get_current_view_ip, $get_current_view_year, $get_current_view_system, $get_current_view_hundred_metric, $get_current_view_serving, $get_current_view_pcs_metric, $get_current_view_eight_us, $get_current_view_pcs_us) = $row_t;
+						}
+						if($get_current_view_hundred_metric == ""){
+							$get_current_view_hundred_metric = "1";
+						}
+						echo"
+						<p><a id=\"adapter_view\"></a>
+						<input type=\"checkbox\" name=\"inp_show_hundred_metric\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=hundred_metric&amp;process=1&amp;referer=submit_recipe_step_2_group_and_elements&amp;action=$action&amp;recipe_id=$recipe_id&amp;group_id=$group_id&amp;l=$l\""; if($get_current_view_hundred_metric == "1"){ echo" checked=\"checked\""; } echo" /> $l_hundred
+						<input type=\"checkbox\" name=\"inp_show_pcs_metric\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=pcs_metric&amp;process=1&amp;referer=submit_recipe_step_2_group_and_elements&amp;action=$action&amp;recipe_id=$recipe_id&amp;group_id=$group_id&amp;l=$l\""; if($get_current_view_pcs_metric == "1"){ echo" checked=\"checked\""; } echo" /> $l_pcs_g
+						<input type=\"checkbox\" name=\"inp_show_eight_us\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=eight_us&amp;process=1&amp;referer=submit_recipe_step_2_group_and_elements&amp;action=$action&amp;recipe_id=$recipe_id&amp;group_id=$group_id&amp;l=$l\""; if($get_current_view_eight_us == "1"){ echo" checked=\"checked\""; } echo" /> $l_eight
+						<input type=\"checkbox\" name=\"inp_show_pcs_us\" class=\"onclick_go_to_url\" data-target=\"user_adapted_view.php?set=pcs_us&amp;process=1&amp;referer=submit_recipe_step_2_group_and_elements&amp;action=$action&amp;recipe_id=$recipe_id&amp;group_id=$group_id&amp;l=$l\""; if($get_current_view_pcs_us == "1"){ echo" checked=\"checked\""; } echo" /> $l_pcs_oz
+						</p>
+
+						<!-- On check go to URL -->
+						<script>
+						\$(function() {
+							\$(\".onclick_go_to_url\").change(function(){
+								var item=\$(this);
+								window.location.href= item.data(\"target\")
+							});
+  						});
+						</script>
+						<!-- //On check go to URL -->
+					<!-- //User adapted view -->
+
 					<div id=\"nettport_search_results\">
 					</div><div class=\"clear\"></div>
 

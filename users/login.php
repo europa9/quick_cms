@@ -148,8 +148,7 @@ if($action == "check"){
 			$month = date("m");
 			$week = date("W");
 
-			$inp_country = strtoupper($get_geoname_country_iso_code);
-			$inp_country_mysql = quote_smart($link, $inp_country);
+			$inp_country_mysql = quote_smart($link, $get_geoname_country_name);
 			$inp_browser_mysql = quote_smart($link, $get_stats_user_agent_browser);
 			$inp_os_mysql = quote_smart($link, $get_stats_user_agent_os);
 			$inp_os_icon = clean($get_stats_user_agent_os);
@@ -224,6 +223,8 @@ if($action == "check"){
 				$host = $_SERVER['HTTP_HOST'];
 
 
+
+
 				// I am approved?
 				if($get_user_verified_by_moderator == "1"){
 
@@ -288,8 +289,8 @@ if($action == "check"){
 				
 
 					// Check if I am known
-					$inp_fingerprint = $my_hostname . "|" . $get_geoname_country_iso_code . "|" . $my_user_agent . "|" . $inp_accpeted_language . "|" . $inp_language;
-					$inp_fingerprint = md5($inp_fingerprint);
+					$inp_fingerprint = $my_hostname . "|" . $get_geoname_country_name . "|" . $get_stats_user_agent_os . "|" . $get_stats_user_agent_browser  . "|" . $inp_accpeted_language;
+					// $inp_fingerprint = md5($inp_fingerprint);
 					$inp_fingerprint_mysql = quote_smart($link, $inp_fingerprint);
 
 					$query = "SELECT known_device_id FROM $t_users_known_devices WHERE known_device_user_id=$get_user_id AND known_device_fingerprint=$inp_fingerprint_mysql";
@@ -362,7 +363,7 @@ if($action == "check"){
 						$message = $message . "     <span><b>$l_country:</b></span>\n";
 						$message = $message . "  </td>\n\n";
 						$message = $message . "  <td style=\"padding-right: 4px;\">\n\n";
-						$message = $message . "     <span>$get_geoname_country_iso_code</span>\n";
+						$message = $message . "     <span>$get_geoname_country_name</span>\n";
 						$message = $message . "  </td>\n\n";
 						$message = $message . " </tr>\n\n";
 						$message = $message . "</table>\n\n";
@@ -528,7 +529,7 @@ if($action == "check"){
 					$message = $message . "     <span><b>$l_country:</b></span>\n";
 					$message = $message . "  </td>\n\n";
 					$message = $message . "  <td style=\"padding-right: 4px;\">\n\n";
-					$message = $message . "     <span>$get_geoname_country_iso_code</span>\n";
+					$message = $message . "     <span>$get_geoname_country_name</span>\n";
 					$message = $message . "  </td>\n\n";
 					$message = $message . " </tr>\n\n";
 					$message = $message . "</table>\n\n";
@@ -628,7 +629,7 @@ if($action == "check"){
 					$message = $message . "     <span><b>$l_country:</b></span>\n";
 					$message = $message . "  </td>\n\n";
 					$message = $message . "  <td style=\"padding-right: 4px;\">\n\n";
-					$message = $message . "     <span>$get_geoname_country_iso_code</span>\n";
+					$message = $message . "     <span>$get_geoname_country_name</span>\n";
 					$message = $message . "  </td>\n\n";
 					$message = $message . " </tr>\n\n";
 					$message = $message . "</table>\n\n";

@@ -612,14 +612,10 @@ else{
 					   </th>
 					";
 				}
-				if($get_current_food_serving_size_pcs != "1"){
-					echo"
-					   <th scope=\"col\" style=\"text-align: center;padding: 6px 8px 6px 8px;\">
-						<span>$l_net_content<br />$get_current_food_net_content_metric $get_current_food_net_content_measurement_metric (1 $l_pcs_lowercase)</span>
-					   </th>
-					";
-				}
 				echo"
+				   <th scope=\"col\" style=\"text-align: center;padding: 6px 8px 6px 8px;\">
+					<span>$l_net_content<br />$get_current_food_net_content_metric $get_current_food_net_content_measurement_metric (1 $l_pcs_lowercase)</span>
+				   </th>
 				   <th scope=\"col\" style=\"text-align: center;padding: 6px 8px 6px 8px;\" class=\"current_sub_category_calories_med\">
 					<span>$l_median_for<br />
 					$get_current_sub_category_translation_value</span>
@@ -672,14 +668,10 @@ else{
 					   </td>
 					";
 				}
-				if($get_current_food_serving_size_pcs != "1"){
-					echo"
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-						<span>$get_current_food_energy_net_content</span>
-					   </th>
-					";
-				}
 				echo"
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span>$get_current_food_energy_net_content</span>
+				   </th>
 				  </tr>
 
 				  <tr>
@@ -781,18 +773,14 @@ else{
 						</span>
 					   </td>";
 				}
-				if($get_current_food_serving_size_pcs != "1"){
-					echo"
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-						<span>$get_current_food_fat_net_content<br />
-						$get_current_food_saturated_fat_net_content<br />
-						$get_current_food_monounsaturated_fat_net_content<br />
-						$get_current_food_polyunsaturated_fat_net_content
-						</span>
-					   </th>
-					";
-				}
 				echo"
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span>$get_current_food_fat_net_content<br />
+					$get_current_food_saturated_fat_net_content<br />
+					$get_current_food_monounsaturated_fat_net_content<br />
+					$get_current_food_polyunsaturated_fat_net_content
+					</span>
+				   </th>
 				  </tr>
 
 				  <tr>
@@ -854,16 +842,12 @@ else{
 					   </td>
 					";
 				}
-				if($get_current_food_serving_size_pcs != "1"){
-					echo"
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-						<span>$get_current_food_carbohydrates_net_content<br />
-						$get_current_food_carbohydrates_of_which_sugars_net_content
-						</span>
-					   </th>
-					";
-				}
 				echo"
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span>$get_current_food_carbohydrates_net_content<br />
+					$get_current_food_carbohydrates_of_which_sugars_net_content
+					</span>
+				   </th>
 				  </tr>
 
 
@@ -910,15 +894,11 @@ else{
 					   </td>
 					";
 				}
-				if($get_current_food_serving_size_pcs != "1"){
-					echo"
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-						<span>$get_current_food_dietary_fiber_net_content
-						</span>
-					   </th>
-					";
-				}
 				echo"
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span>$get_current_food_dietary_fiber_net_content
+					</span>
+				   </th>
 				  </tr>
 
 				  <tr>
@@ -963,15 +943,11 @@ else{
 		 			  </td>
 					";
 				}
-				if($get_current_food_serving_size_pcs != "1"){
-					echo"
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-						<span>$get_current_food_proteins_net_content
-						</span>
-					   </th>
-					";
-				}
 				echo"
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span>$get_current_food_proteins_net_content
+					</span>
+				   </th>
 				  </tr>
 
 				  <tr>
@@ -1030,15 +1006,11 @@ else{
 					   </td>
 					";
 				}
-				if($get_current_food_serving_size_pcs != "1"){
-					echo"
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-						<span>$get_current_food_salt_net_content<br />
-						$get_current_food_sodium_net_content</span>
-					   </th>
-					";
-				}
 				echo"
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span>$get_current_food_salt_net_content<br />
+					$get_current_food_sodium_net_content</span>
+				   </th>
 				  </tr>
 
 				  <tr>
@@ -1082,14 +1054,10 @@ else{
 		 			  </td>
 					";
 				}
-				if($get_current_food_serving_size_pcs != "1"){
-					echo"
-					   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
-						<span>$get_current_food_cholesterol_net_content</span>
-					   </th>
-					";
-				}
 				echo"
+				   <td style=\"text-align: center;padding: 0px 4px 0px 4px;\">
+					<span>$get_current_food_cholesterol_net_content</span>
+				   </th>
 				 </tr>
 
 				</table>

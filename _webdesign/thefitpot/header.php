@@ -363,7 +363,7 @@ echo"<!DOCTYPE html>
 				}
 				else{
 					echo"
-					<li><a href=\"$root/users/login.php?l=$l\" class=\"last\"><img src=\"$root/_webdesign/$webdesignSav/images/header/ic_login_24x24_333333.png\" alt=\"ic_login_24x24_333333.png\" title=\"$l_login\" /></a></li>
+					<li><a href=\"$root/users/login.php?l=$l\" class=\"last\"><img src=\"$root/_webdesign/$webdesignSav/images/header/login_24x24_white.png\" alt=\"ic_login_24x24_333333.png\" title=\"$l_login\" /> $l_login</a></li>
 					";
 				}
 				echo"

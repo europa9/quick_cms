@@ -164,7 +164,13 @@ else{
 	// My user
 	if(isset($_SESSION['user_id'])){
 		$my_user_id = $_SESSION['user_id'];
+		$my_user_id = output_html($my_user_id);
 		$my_user_id_mysql = quote_smart($link, $my_user_id);
+
+		$query = "SELECT user_id, user_email, user_name, user_alias, user_rank FROM $t_users WHERE user_id=$my_user_id_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_user_id, $get_user_email, $get_user_name, $get_user_alias, $get_user_rank) = $row;
 
 		if($get_current_food_user_id != "$my_user_id"){
 			echo"

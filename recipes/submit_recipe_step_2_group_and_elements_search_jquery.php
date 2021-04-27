@@ -522,26 +522,24 @@ if(isset($_GET['q']) OR isset($_POST['q'])){
 							\$(\"#inp_item_salt_metric\").val($get_food_salt_metric);
 							\$(\"#inp_item_sodium_metric\").val($get_food_sodium_metric);
 
-
-
-							\$(\"#inp_item_calories_calculated\").val($get_food_energy_net_content * inpAmount);
-							\$(\"#inp_item_fat_calculated\").val($get_food_fat_net_content * inpAmount);
-							\$(\"#inp_item_saturated_fat_calculated\").val($get_food_saturated_fat_net_content * inpAmount);\n";
-							if($get_food_monounsaturated_fat_net_content != ""){
+							\$(\"#inp_item_calories_calculated\").val($get_food_energy_calculated_metric * inpAmount * (1/$get_food_serving_size_pcs));
+							\$(\"#inp_item_fat_calculated\").val($get_food_fat_calculated_metric * inpAmount * (1/$get_food_serving_size_pcs));
+							\$(\"#inp_item_saturated_fat_calculated\").val($get_food_saturated_fat_calculated_metric * inpAmount * (1/$get_food_serving_size_pcs));\n";
+							if($get_food_monounsaturated_fat_calculated_metric != ""){
 								echo"							";
-								echo"\$(\"#inp_item_monounsaturated_fat_calculated\").val($get_food_monounsaturated_fat_net_content * inpAmount);\n";
+								echo"\$(\"#inp_item_monounsaturated_fat_calculated\").val($get_food_monounsaturated_fat_calculated_metric * inpAmount * (1/$get_food_serving_size_pcs));\n";
 							}
-							if($get_food_polyunsaturated_fat_net_content != ""){
+							if($get_food_polyunsaturated_fat_calculated_metric != ""){
 								echo"							";
-								echo"\$(\"#inp_item_polyunsaturated_fat_calculated\").val($get_food_polyunsaturated_fat_net_content * inpAmount);\n";
+								echo"\$(\"#inp_item_polyunsaturated_fat_calculated\").val($get_food_polyunsaturated_fat_calculated_metric * inpAmount * (1/$get_food_serving_size_pcs));\n";
 							}
 							echo"
-							\$(\"#inp_item_carbohydrates_calculated\").val($get_food_carbohydrates_net_content * inpAmount);
-							\$(\"#inp_item_carbohydrates_of_which_sugars_calculated\").val($get_food_dietary_fiber_net_content * inpAmount);
-							\$(\"#inp_item_dietary_fiber_calculated\").val($get_food_dietary_fiber_net_content * inpAmount);
-							\$(\"#inp_item_proteins_calculated\").val($get_food_proteins_net_content * inpAmount);
-							\$(\"#inp_item_salt_calculated\").val($get_food_salt_net_content * inpAmount);
-							\$(\"#inp_item_sodium_calculated\").val($get_food_sodium_net_content * inpAmount);
+							\$(\"#inp_item_carbohydrates_calculated\").val($get_food_carbohydrates_calculated_metric * inpAmount * (1/$get_food_serving_size_pcs));
+							\$(\"#inp_item_carbohydrates_of_which_sugars_calculated\").val($get_food_dietary_fiber_calculated_metric * inpAmount * (1/$get_food_serving_size_pcs));
+							\$(\"#inp_item_dietary_fiber_calculated\").val($get_food_dietary_fiber_calculated_metric * inpAmount * (1/$get_food_serving_size_pcs));
+							\$(\"#inp_item_proteins_calculated\").val($get_food_proteins_calculated_metric * inpAmount * (1/$get_food_serving_size_pcs));
+							\$(\"#inp_item_salt_calculated\").val($get_food_salt_calculated_metric * inpAmount * (1/$get_food_serving_size_pcs));
+							\$(\"#inp_item_sodium_calculated\").val($get_food_sodium_calculated_metric * inpAmount * (1/$get_food_serving_size_pcs));
 				
 							$(\"#nettport_search_results\").hide();
 

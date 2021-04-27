@@ -10,7 +10,7 @@ if(isset($_SESSION['admin_user_id'])){
 			   known_device_id INT NOT NULL AUTO_INCREMENT,
 			   PRIMARY KEY(known_device_id), 
 			   known_device_user_id INT,
-			   known_device_fingerprint VARCHAR(200),
+			   known_device_fingerprint TEXT,
 			   known_device_created_datetime DATETIME,
 			   known_device_created_datetime_saying VARCHAR(200),
 			   known_device_updated_datetime DATETIME,

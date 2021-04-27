@@ -106,8 +106,11 @@ if($process == "1"){
 		$row = mysqli_fetch_row($result);
 		list($get_ip_id, $get_geoname_country_iso_code, $get_geoname_country_name) = $row;
 	} // ipv6
-	$inp_country = strtoupper($get_geoname_country_iso_code);
-	$inp_country_mysql = quote_smart($link, $inp_country);
+	if($get_geoname_country_name == ""){
+		$get_geoname_country_iso_code = "ZZ";
+		$get_geoname_country_name = "N/A";
+	}
+	$inp_country_mysql = quote_smart($link, $get_geoname_country_name);
 
 	$inp_browser_mysql = quote_smart($link, $get_stats_user_agent_browser);
 
@@ -254,7 +257,7 @@ if($process == "1"){
 			$message = $message . "     <span><b>$l_country:</b></span>\n";
 			$message = $message . "  </td>\n\n";
 			$message = $message . "  <td style=\"padding-right: 4px;\">\n\n";
-			$message = $message . "     <span>$get_geoname_country_iso_code</span>\n";
+			$message = $message . "     <span>$get_geoname_country_name</span>\n";
 			$message = $message . "  </td>\n\n";
 			$message = $message . " </tr>\n\n";
 			$message = $message . "</table>\n\n";
@@ -354,7 +357,7 @@ if($process == "1"){
 			$message = $message . "     <span><b>$l_country:</b></span>\n";
 			$message = $message . "  </td>\n\n";
 			$message = $message . "  <td style=\"padding-right: 4px;\">\n\n";
-			$message = $message . "     <span>$get_geoname_country_iso_code</span>\n";
+			$message = $message . "     <span>$get_geoname_country_name</span>\n";
 			$message = $message . "  </td>\n\n";
 			$message = $message . " </tr>\n\n";
 			$message = $message . "</table>\n\n";
@@ -418,8 +421,8 @@ if($process == "1"){
 	mysqli_query($link, "UPDATE $t_users_logins SET login_successfully=1 WHERE login_id=$get_current_login_id") or die(mysqli_error($link));
 
 	// Check if I am known
-	$inp_fingerprint = $my_hostname . "|" . $get_geoname_country_iso_code . "|" . $my_user_agent . "|" . $inp_accpeted_language . "|" . $inp_language;
-	$inp_fingerprint = md5($inp_fingerprint);
+	$inp_fingerprint = $my_hostname . "|" . $get_geoname_country_name . "|" . $get_stats_user_agent_os . "|" . $get_stats_user_agent_browser . "|" . $inp_accpeted_language;
+	// $inp_fingerprint = md5($inp_fingerprint);
 	$inp_fingerprint_mysql = quote_smart($link, $inp_fingerprint);
 
 	$query = "SELECT known_device_id FROM $t_users_known_devices WHERE known_device_user_id=$get_user_id AND known_device_fingerprint=$inp_fingerprint_mysql";
@@ -491,7 +494,7 @@ if($process == "1"){
 		$message = $message . "     <span><b>$l_country:</b></span>\n";
 		$message = $message . "  </td>\n\n";
 		$message = $message . "  <td style=\"padding-right: 4px;\">\n\n";
-		$message = $message . "     <span>$get_geoname_country_iso_code</span>\n";
+		$message = $message . "     <span>$get_geoname_country_name</span>\n";
 		$message = $message . "  </td>\n\n";
 		$message = $message . " </tr>\n\n";
 		$message = $message . "</table>\n\n";
