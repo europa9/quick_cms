@@ -1,4 +1,55 @@
 @import '../blog/_css/index.css';
+@import '../search/_css/search.css';
+
+/*- Search on index ------------------------------------------------------------------ */
+div.search_search_div{
+	width: 100%;
+	padding: 10px 0px 10px 0px;
+}
+div.search_search_div > form > p > input[type=text]{
+	position: relative;
+	padding: 5px 40px 5px 5px;
+	color: #525252;
+	border: #c3ccd9 1px solid;
+	border-radius: 5px;
+	background: linear-gradient(to right, #FFFFFF 0%,#464747 #F9F9F9 100%);
+	width: 85%;
+}
+div.search_search_div > form > p > input[type=text]:hover{
+	position: relative;
+	padding: 5px 40px 5px 5px;
+	color: #000;
+	border: #000 1px solid;
+	border-radius: 5px;
+	background: linear-gradient(to right, #FFFFFF 0%,#464747 #F9F9F9 100%);
+	width: 85%;
+}
+div.search_search_div > form > p > input[type=submit]{
+	position: relative;
+	left: -37px;
+	color: #8233C5;
+	background: url("../_webdesign/thefitpot/images/header/main_navigation_search_black.png") no-repeat;
+	border: 0;
+}
+
+
+/*- Grid on index ------------------------------------------------------------------ */
+div.grid_wrapper{
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+}
+div.grid_wrapper > div.grid_item{
+	padding: 15px 0px 15px 0px;
+}
+div.grid_wrapper > div.grid_item > a > img{
+	float: left;
+}
+div.grid_wrapper > div.grid_item > a > span{
+	float: left;
+	padding: 10px 0px 0px 6px;
+	font-size: 110%;
+	color: #474445;
+}
 
 /*- Blog first post ------------------------------------------------------------------ */
 div.blog_frontpage_first_post{
@@ -8,9 +59,8 @@ div.blog_frontpage_first_post{
 div.blog_frontpage_first_post_category_title_box{
 	background: #fff;
 	position: absolute;
-	top: 45%;
-	margin-left: 2%;
-	padding: 20px 20px 20px 20px;
+	margin: -12% 0px 0px 2%;
+	padding: 20px 20px 0px 20px;
 	max-width: 35%;
 }
 a.blog_frontpage_first_post_category{

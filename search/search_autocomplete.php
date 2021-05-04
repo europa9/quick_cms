@@ -86,12 +86,12 @@ if(isset($_GET['inp_search_query']) && $_GET['inp_search_query'] != ''){
 							resize_crop_image($inp_new_x, $inp_new_y, "$root/$get_index_image_path/$get_index_image_file", "$root/$get_index_image_path/$get_index_image_thumb_235x132");
 						}
 						echo"
-						<a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\"><img src=\"$root/$get_index_image_path/$get_index_image_thumb_235x132\" alt=\"$get_index_image_thumb_235x132\" class=\"search_index_image\" /></a>
+						<a href=\"$root/search/go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\"><img src=\"$root/$get_index_image_path/$get_index_image_thumb_235x132\" alt=\"$get_index_image_thumb_235x132\" class=\"search_index_image\" /></a>
 						";
 					}
 					echo"
-						<a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\" class=\"search_index_title\">$get_index_title</a><br />
-						<a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\" class=\"search_index_url\">$get_index_url</a><br />
+						<a href=\"$root/search/go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\" class=\"search_index_title\">$get_index_title</a><br />
+						<a href=\"$root/search/go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\" class=\"search_index_url\">$get_index_url</a><br />
 						<span class=\"search_index_description\">$get_index_short_description</span>
 						</p>
 					</div>";
@@ -136,15 +136,15 @@ if(isset($_GET['inp_search_query']) && $_GET['inp_search_query'] != ''){
 						}
 						echo"
 						  <td class=\"search_index_td_image\">
-							<a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\"><img src=\"$root/$get_index_image_path/$get_index_image_thumb_235x132\" alt=\"$get_index_image_thumb_235x132\" class=\"search_index_image\" /></a>
+							<a href=\"$root/search/go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\"><img src=\"$root/$get_index_image_path/$get_index_image_thumb_235x132\" alt=\"$get_index_image_thumb_235x132\" class=\"search_index_image\" /></a>
 						  </td>
 						";
 					}
 					echo"
 						  <td class=\"search_index_td_info\">
 							<p>
-							<a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\" class=\"search_index_title\">$get_index_title</a><br />
-							<a href=\"go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\" class=\"search_index_url\">$get_index_url</a><br />
+							<a href=\"$root/search/go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\" class=\"search_index_title\">$get_index_title</a><br />
+							<a href=\"$root/search/go.php?index_id=$get_index_id&amp;process=1&amp;l=$l\" class=\"search_index_url\">$get_index_url</a><br />
 							<span class=\"search_index_description\">$get_index_short_description</span>
 							</p>
 						  </td>

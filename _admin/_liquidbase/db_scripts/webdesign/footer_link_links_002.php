@@ -37,7 +37,7 @@ if(isset($_SESSION['admin_user_id'])){
 					VALUES 
 					(NULL, '4', 'Retningslinjer for informasjonskapsler', 'legal/index.php?doc=cookies_policy&amp;l=no', '', '', '', 'internal', 'no', 1,  '$datetime', 1),
 					(NULL, '4', 'Personvernregler', 'legal/index.php?doc=privacy_policy&amp;l=no', '', '', '', 'internal', 'no', 1,  '$datetime', 1),
-					(NULL, '4', 'Vilkår for bruk', 'legal/index.php?doc=terms_of_use&amp;l=no', '', '', '', 'internal', 'no', 1,  '$datetime', 1)
+					(NULL, '4', 'Vilk&aring;r for bruk', 'legal/index.php?doc=terms_of_use&amp;l=no', '', '', '', 'internal', 'no', 1,  '$datetime', 1)
 					") or die(mysqli_error());
 
 

@@ -46,12 +46,200 @@ include("recipes/_tables.php");
 include("$root/_admin/_translations/site/$l/blog/ts_blog.php");
 
 
-/*- Content ---------------------------------------------------------------------------------- */
+/*- Search + 6 icons ---------------------------------------------------------------------------------- */
+echo"
+<!-- Search -->
+
+	<div class=\"search_search_div\">
+		<form method=\"get\" action=\"$root/search/search.php\" enctype=\"multipart/form-data\">
+		<p>
+		<input type=\"text\" name=\"inp_search_query\" id=\"inp_search_query\" class='auto' value=\"$l_search\" size=\"25\" />
+		<input type=\"submit\" value=\"\" class=\"btn_default\" />
+		</p>
+		</form>
+	</div>
+	<div id=\"inp_search_results\"></div>
+
+	<!-- Search engines Autocomplete -->
+		<script id=\"source\" language=\"javascript\" type=\"text/javascript\">
+			\$(document).ready(function () {
+
+				\$('#inp_search_query').click(function(){
+					var searchString    = \$(\"#inp_search_query\").val();";
+					$l_search_saying = str_replace("&oslash;", "ø", $l_search);
+					echo"
+					if(searchString == \"$l_search_saying\"){
+						\$(\"#inp_search_query\").val(\"\");
+
+					}
+
+				});
+
+				\$('#inp_search_query').keyup(function () {
+					// getting the value that user typed
+					var searchString    = \$(\"#inp_search_query\").val();
+					// forming the queryString
+      					var data            = 'l=$l&inp_search_query='+ searchString;
+         
+        				// if searchString is not empty
+        				if(searchString) {
+						\$(\"#inp_search_results\").css('visibility','visible');
+						// ajax call
+        					\$.ajax({
+        						type: \"GET\",
+        						url: \"$root/search/search_autocomplete.php\",
+                					data: data,
+							beforeSend: function(html) { // this happens before actual call
+								\$(\"#inp_search_results\").html(''); 
+							},
+               						success: function(html){
+                    						\$(\"#inp_search_results\").append(html);
+              						}
+            					});
+       					}
+        				return false;
+            			});
+         		});
+		</script>
+	<!-- //Search engines Autocomplete -->
+<!-- //Search -->
+";
+
+/*- Grids --------------------------------------------------------------------------------- */
+$t_grid_groups	= $mysqlPrefixSav . "grid_groups";
+$t_grid_items	= $mysqlPrefixSav . "grid_items";
+$l = output_html($l);
+$l_mysql = quote_smart($link, $l);
+
+$query_owner = "SELECT group_id FROM $t_grid_groups WHERE group_language=$l_mysql AND group_title_english='Frontpage' AND group_active=1";
+$result_owner = mysqli_query($link, $query_owner);
+$row_owner = mysqli_fetch_row($result_owner);
+list($get_group_id) = $row_owner;
+if($get_group_id != ""){
+	echo"
+	<div class=\"grid_wrapper\">
+	";
+	// Items
+	$query = "SELECT item_id, item_title, item_url, item_icon_path, item_icon_18x18, item_icon_hover_18x18, item_icon_24x24, item_icon_hover_24x24, item_icon_36x36, item_icon_hover_36x36, item_icon_48x48, item_icon_hover_48x48 FROM $t_grid_items WHERE item_group_id=$get_group_id ORDER BY item_weight ASC";
+	$result = mysqli_query($link, $query);
+	while($row = mysqli_fetch_row($result)) {
+		list($get_item_id, $get_item_title, $get_item_url, $get_item_icon_path, $get_item_icon_18x18, $get_item_icon_hover_18x18, $get_item_icon_24x24, $get_item_icon_hover_24x24, $get_item_icon_36x36, $get_item_icon_hover_36x36, $get_item_icon_48x48, $get_item_icon_hover_48x48) = $row;
+	
+
+		echo"
+		<div class=\"grid_item\">
+			<a href=\"$get_item_url\"><img src=\"$get_item_icon_path/$get_item_icon_36x36\" alt=\"$get_item_icon_36x36\" class=\"grid_icon\" /> <span>$get_item_title<span></a>
+		</div>
+		";
+
+	} // items
+	echo"
+	</div> <!-- //grid_wrapper -->
+
+	<!-- Change image on hover -->
+		<script>
+		\$(\".grid_item\").hover(function(){
+			\$(this).find(\"img\").attr(\"src\", function(index, attr){
+				return attr.replace(\"_36x36.png\", \"_hover_36x36.png\");
+			});
+			}, function(){
+				\$(this).find(\"img\").attr(\"src\", function(index, attr){
+				return attr.replace(\"_hover_36x36.png\", \"_36x36.png\");
+			});
+		});
+		</script>
+	<!-- //Change image on hover -->
+
+	
+	";
+} // group not empty
+
+/*- Feed 1-3 ------------------------------------------------------------------------------ */
+$x = 0;
+$t_users_feeds_index		= $mysqlPrefixSav . "users_feeds_index";
+$query = "SELECT feed_id, feed_title, feed_text, feed_image_path, feed_image_file, feed_image_thumb_300x169, feed_image_thumb_540x304, feed_link_url, feed_link_name, feed_module_name, feed_module_part_name, feed_module_part_id, feed_main_category_id, feed_main_category_name, feed_sub_category_id, feed_sub_category_name, feed_user_id, feed_user_email, feed_user_name, feed_user_alias, feed_user_photo_file, feed_user_photo_thumb_40, feed_user_photo_thumb_50, feed_user_photo_thumb_60, feed_user_photo_thumb_200, feed_user_subscribe, feed_user_ip, feed_user_hostname, feed_language, feed_created_datetime, feed_created_date_saying, feed_created_year, feed_created_time, feed_modified_datetime, feed_likes, feed_dislikes, feed_comments, feed_reported, feed_reported_checked, feed_reported_reason FROM $t_users_feeds_index WHERE feed_language=$l_mysql ORDER BY feed_id DESC LIMIT 0,4";
+$result = mysqli_query($link, $query);
+while($row = mysqli_fetch_row($result)) {
+	list($get_feed_id, $get_feed_title, $get_feed_text, $get_feed_image_path, $get_feed_image_file, $get_feed_image_thumb_300x169, $get_feed_image_thumb_540x304, $get_feed_link_url, $get_feed_link_name, $get_feed_module_name, $get_feed_module_part_name, $get_feed_module_part_id, $get_feed_main_category_id, $get_feed_main_category_name, $get_feed_sub_category_id, $get_feed_sub_category_name, $get_feed_user_id, $get_feed_user_email, $get_feed_user_name, $get_feed_user_alias, $get_feed_user_photo_file, $get_feed_user_photo_thumb_40, $get_feed_user_photo_thumb_50, $get_feed_user_photo_thumb_60, $get_feed_user_photo_thumb_200, $get_feed_user_subscribe, $get_feed_user_ip, $get_feed_user_hostname, $get_feed_language, $get_feed_created_datetime, $get_feed_created_date_saying, $get_feed_created_year, $get_feed_created_time, $get_feed_modified_datetime, $get_feed_likes, $get_feed_dislikes, $get_feed_comments, $get_feed_reported, $get_feed_reported_checked, $get_feed_reported_reason) = $row;
+	
+	if($x == 0){
+		echo"
+		<div class=\"blog_frontpage_first_post\">
+			<a href=\"$root/$get_feed_link_url\"><img src=\"$root/$get_feed_image_path/$get_feed_image_file\" alt=\"$get_feed_image_file\" class=\"recipe_of_the_day_img\" /></a>
+
+			<div class=\"blog_frontpage_first_post_category_title_box\">
+				<p>
+				<a href=\"$root/$get_feed_link_url\" class=\"blog_frontpage_first_post_category\">$get_feed_user_name</a><br />
+				<a href=\"$root/$get_feed_link_url\" class=\"blog_frontpage_first_post_title\">$get_feed_title</a>
+				</p>
+			</div>
+		</div>
+		";
+	} // x=0;
+	elseif($x > 0 && $x < 4){
+
+		if($x == 1){
+			echo"
+			<div class=\"clear\"></div>
+			<div class=\"left_center_right_left\">
+			";
+		}
+		elseif($x == 2){
+			echo"
+			<div class=\"left_center_right_center\">
+			";
+		}
+		elseif($x == 3){
+			echo"
+			<div class=\"left_center_right_right\">
+			";
+		}
+			
+		echo"
+			<p class=\"frontpage_post_image\">
+		";
+		if(file_exists("$root/$get_feed_image_path/$get_feed_image_file") && $get_feed_image_file != ""){
+			if(!(file_exists("$root/$get_feed_image_path/$get_feed_image_thumb_540x304")) && $get_feed_image_thumb_540x304 != ""){
+				// Create thumb
+				resize_crop_image(540, 304, "$root/$get_feed_image_path/$get_feed_image_file", "$root/$get_feed_image_path/$get_feed_image_thumb_540x304");
+				echo"<div class=\"info\"><p>Make thumb</p></div>";
+			}
+
+			if(file_exists("$root/$get_feed_image_path/$get_feed_image_thumb_540x304") && $get_feed_image_thumb_540x304 != ""){
+				echo"
+				<a href=\"$root/$get_feed_link_url\"><img src=\"$root/$get_feed_image_path/$get_feed_image_thumb_540x304\" alt=\"$get_feed_image_thumb_540x304\" /></a>
+				";
+			}
+		}
+		echo"
+			</p>
+
+			<p class=\"frontpage_post_category_p\">
+			<a href=\"$root/users/view_profile.php?user_id=$get_feed_user_id&amp;l=$l\" class=\"frontpage_post_category_a\">$get_feed_user_name</a><br />
+			</p>
+			<p class=\"frontpage_post_title\">
+			<a href=\"$root/$get_feed_link_url\" class=\"h2\">$get_feed_title</a><br />
+			</p>
+
+			</div>
+		";
+		if($x == "3"){
+			$x= 0;
+			echo"
+			";
+		}
+	} // x > 1
+	$x++;
+}
+
+
+/*- News ---------------------------------------------------------------------------------- */
 echo"
 
 
 <!-- 1 big blog entry, 3 smaller -->";
 
+/*
 	$x = 0;
 	$query = "SELECT blog_post_id, blog_post_user_id, blog_post_title, blog_post_category_id, blog_post_category_title, blog_post_privacy_level, blog_post_image_path, blog_post_image_thumb_small, blog_post_image_thumb_medium, blog_post_image_thumb_large, blog_post_image_file, blog_post_updated, blog_post_comments FROM $t_blog_posts WHERE blog_post_language=$l_mysql AND blog_post_privacy_level='everyone' AND blog_post_image_file != '' ORDER BY blog_post_id DESC LIMIT 0,5";
 	$result = mysqli_query($link, $query);
@@ -126,8 +314,8 @@ echo"
 						</p>
 					</div>
 				</div>
-
 				";
+				
 			} // x=0;
 			elseif($x > 0 && $x < 4){
 
@@ -171,6 +359,7 @@ echo"
 			$x++;
 		} // has image
 	} // while
+*/
 echo"
 <!-- //1 big blog entry -->
 
@@ -288,7 +477,7 @@ echo"
 
 	<!-- 1: 1 big on left, 2 small on right -->
 		";
-		$limit = "4,3";
+		$limit = "0,3";
 		include("blog/_index.php/a_1_big_on_left__2_small_on_right.php");
 		echo"
 	<!-- //1: 1 big on left, 2 small on right -->
@@ -296,7 +485,7 @@ echo"
 
 	<!-- 2: 2 small on left, 1 big on right -->
 		";
-		$limit = "7,3";
+		$limit = "4,3";
 		include("blog/_index.php/b_2_small_on_left__1_big_on_right.php");
 		echo"
 	<!-- //2: 2 small on left, 1 big on right -->

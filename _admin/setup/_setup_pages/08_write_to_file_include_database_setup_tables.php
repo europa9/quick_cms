@@ -195,21 +195,6 @@ $query = "SELECT * FROM $t_users_profile_photo LIMIT 1";
 
 
 
-$query = "SELECT * FROM $t_users_moderator_of_the_week LIMIT 1";
-$result = mysqli_query($link, $query);
-if($result !== FALSE){
-}
-else{
-	mysqli_query($link, "CREATE TABLE $t_users_moderator_of_the_week(
-	   moderator_of_the_week_id INT NOT NULL AUTO_INCREMENT,
-	   PRIMARY KEY(moderator_of_the_week_id), 
-	   moderator_week INT,
-	   moderator_year INT,
-	   moderator_user_id INT,
-	   moderator_user_email VARCHAR(270),
-	   moderator_user_name VARCHAR(270))")
-	or die(mysqli_error($link));
-}
 
 
 

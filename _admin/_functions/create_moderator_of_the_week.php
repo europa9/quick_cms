@@ -49,12 +49,20 @@ if($get_moderator_user_id == ""){
 
 
 		if($inp_week < 54){
+			
+			// Find date of monday of the week
+			$week_start = new DateTime();
+			$week_start->setISODate($year,$inp_week);
+			$start_date_saying = $week_start->format('j M Y');
+
 			mysqli_query($link, "INSERT INTO $t_users_moderator_of_the_week
-			(moderator_of_the_week_id, moderator_week, moderator_year, moderator_user_id, moderator_user_email, moderator_user_name,
-			moderator_user_alias, moderator_user_first_name, moderator_user_last_name, moderator_user_language) 
+			(moderator_of_the_week_id, moderator_week, moderator_year, moderator_start_date_saying, moderator_user_id, 
+			moderator_user_email, moderator_user_name, moderator_user_alias, moderator_user_first_name, moderator_user_last_name, 
+			moderator_user_language) 
 			VALUES 
-			(NULL, '$inp_week', '$year', '$get_mod_user_id', $inp_mod_email_mysql, $inp_mod_user_name_mysql,
-			$inp_mod_user_alias, $inp_mod_user_first_name, $inp_mod_user_last_name, $inp_mod_user_language)")
+			(NULL, '$inp_week', '$year', '$start_date_saying', '$get_mod_user_id', 
+			$inp_mod_email_mysql, $inp_mod_user_name_mysql, $inp_mod_user_alias, $inp_mod_user_first_name, $inp_mod_user_last_name, 
+			$inp_mod_user_language)")
 			or die(mysqli_error($link));
 
 			$get_moderator_user_id = "$get_mod_user_id";

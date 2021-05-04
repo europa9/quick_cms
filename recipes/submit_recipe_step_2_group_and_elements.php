@@ -705,7 +705,7 @@ else{
 					$url = "submit_recipe_step_2_group_and_elements.php?recipe_id=$get_recipe_id&action=add_items&group_id=$get_group_id&l=$l";
 					$url = $url . "&ft=$ft&fm=$fm";
 					$url = $url . "&amount=$inp_item_amount&measurement=$inp_item_measurement&grocery=$inp_item_grocery&calories=$inp_item_calories_calculated";
-					$url = $url . "&proteins=$inp_item_proteins_calculated&fat=$inp_item_fat_calculated&carbs=$inp_item_carbs_calculated";
+					$url = $url . "&proteins=$inp_item_proteins_calculated&fat=$inp_item_fat_calculated&carbs=$inp_item_carbohydrates_calculated";
 
 					header("Location: $url");
 					exit;
