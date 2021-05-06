@@ -462,6 +462,15 @@ if($process == "1"){
 
 		$message = $message . " <tr>\n\n";
 		$message = $message . "  <td style=\"padding-right: 4px;\">\n\n";
+		$message = $message . "     <span><b>$l_ip:</b></span>\n";
+		$message = $message . "  </td>\n\n";
+		$message = $message . "  <td style=\"padding-right: 4px;\">\n\n";
+		$message = $message . "     <span>$my_ip</span>\n";
+		$message = $message . "  </td>\n\n";
+		$message = $message . " </tr>\n\n";
+
+		$message = $message . " <tr>\n\n";
+		$message = $message . "  <td style=\"padding-right: 4px;\">\n\n";
 		$message = $message . "     <span><b>$l_hostname:</b></span>\n";
 		$message = $message . "  </td>\n\n";
 		$message = $message . "  <td style=\"padding-right: 4px;\">\n\n";
@@ -531,10 +540,17 @@ if($process == "1"){
 	// Update login attemts
 	mysqli_query($link, "UPDATE $t_users SET user_login_tries=0 WHERE user_id=$get_user_id") or die(mysqli_error($link));
 
+
+	// Delete old logins (users_logins and users_known_devices)
+	$one_year_ago = $year-1;
+	$one_months_ago = $month-1;
+	mysqli_query($link, "DELETE FROM $t_users_logins WHERE login_year < $year OR login_month < $one_months_ago") or die(mysqli_error($link));
+	mysqli_query($link, "DELETE FROM $t_users_known_devices WHERE known_device_updated_year < $one_year_ago") or die(mysqli_error($link));
+
+
 	// Move to admin-panel
 	header("Location: ../_liquidbase/liquidbase.php?l=$l");
 	exit;
-
 }
 
 // Language

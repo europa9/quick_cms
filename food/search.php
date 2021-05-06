@@ -66,6 +66,10 @@ else{
 if(isset($_GET['store_id'])) {
 	$store_id = $_GET['store_id'];
 	$store_id = strip_tags(stripslashes($store_id));
+	if(!(is_numeric($store_id))){
+		echo"Store id not numeric";
+		die;
+	}
 }
 else{
 	$store_id = "";
@@ -75,6 +79,10 @@ $store_id_mysql = quote_smart($link, $store_id);
 if(isset($_GET['barcode'])) {
 	$barcode = $_GET['barcode'];
 	$barcode = strip_tags(stripslashes($barcode));
+	if(!(is_numeric($barcode))){
+		echo"Barcode not numeric";
+		die;
+	}
 }
 else{
 	$barcode = "";
@@ -255,6 +263,18 @@ echo"
 
 if($search_query != "" OR $manufacturer_name != "" OR $store_id != "" OR $barcode != ""){
 	
+	// Check for hacker
+	if($search_query != ""){
+		include("$root/_admin/_functions/look_for_hacker_in_string.php");
+	}
+	if($manufacturer_name != ""){
+		$search_query_store_variable  = "$search_query";
+		$search_query  = "$manufacturer_name";
+		include("$root/_admin/_functions/look_for_hacker_in_string.php");
+		$search_query  = "$search_query_store_variable";
+	}
+
+
 	$search_results_count = 0;
 
 	

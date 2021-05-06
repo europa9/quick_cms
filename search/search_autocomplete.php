@@ -52,7 +52,11 @@ if(isset($_GET['inp_search_query']) && $_GET['inp_search_query'] != ''){
 		$inp_search_query = str_replace("/", "", $inp_search_query);
 		$inp_search_query_len = strlen($inp_search_query);
 		if($inp_search_query_len > 2){
-		$inp_search_query_percentage = $inp_search_query . "%";
+			// Check for hacker
+			$search_query  = "$inp_search_query";
+			include("$root/_admin/_functions/look_for_hacker_in_string.php");
+
+			$inp_search_query_percentage = $inp_search_query . "%";
 			$part_mysql = quote_smart($link, $inp_search_query_percentage);
 
 			$l = output_html($l);

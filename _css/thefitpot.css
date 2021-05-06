@@ -46,9 +46,29 @@ div.grid_wrapper > div.grid_item > a > img{
 }
 div.grid_wrapper > div.grid_item > a > span{
 	float: left;
-	padding: 10px 0px 0px 6px;
+	padding: 10px 0px 0px 0px;
 	font-size: 110%;
 	color: #474445;
+}
+@media screen and (max-width: 52.375em) {
+
+	div.grid_wrapper > div.grid_item{
+		text-align: center;
+	}
+	div.grid_wrapper > div.grid_item > a > img{
+		float: none;
+		padding: 0px 0px 4px 0px;
+	}
+	div.grid_wrapper > div.grid_item > a > span::before {
+		content: "\A";
+		white-space: pre;
+	}
+	div.grid_wrapper > div.grid_item > a > span{
+		float: none;
+		padding: 0px 0px 0px 0px;
+		font-size: 110%;
+		color: #474445;
+	}
 }
 
 /*- Blog first post ------------------------------------------------------------------ */

@@ -202,7 +202,9 @@ echo"</h1>
 ";
 
 if($q != ""){
-	
+	// Check for hacker
+	$search_query  = "$q";
+	include("$root/_admin/_functions/look_for_hacker_in_string.php");
 
 
 

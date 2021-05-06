@@ -155,6 +155,9 @@ echo"
 	";	
 	// 
 	if($search_query != ""){
+		// Check for hacker
+		include("$root/_admin/_functions/look_for_hacker_in_string.php");
+
 		// Searched
 		$search_query_mysql = quote_smart($link, $search_query);
 		$query = "SELECT query_id, query_name, query_language, query_times, query_last_use, query_hidden, query_no_of_results, query_email_sendt_month FROM $t_exercise_search_queries WHERE query_name=$search_query_mysql AND query_language=$l_mysql";

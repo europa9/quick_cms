@@ -12,36 +12,14 @@
 
 
 /*- Functions ------------------------------------------------------------------------ */
-include("../_admin/_functions/output_html.php");
-include("../_admin/_functions/clean.php");
-include("../_admin/_functions/quote_smart.php");
-include("../_admin/_functions/resize_crop_image.php");
-include("../_admin/_functions/get_extension.php");
+$root = "..";
+include("../_admin/website_config.php");
 
 
 /*- Common variables ----------------------------------------------------------------- */
 $server_name = $_SERVER['HTTP_HOST'];
 $server_name = clean($server_name);
 
-/*- MySQL ------------------------------------------------------------ */
-$check = substr($server_name, 0, 3);
-if($check == "www"){
-	$server_name = substr($server_name, 3);
-}
-$setup_finished_file = "setup_finished_" . $server_name . ".php";
-if(!(file_exists("../_admin/_data/$setup_finished_file"))){
-	die;
-}
-else{
-	include("../_admin/_data/config/meta.php");
-	include("../_admin/_data/config/user_system.php");
-}
-$mysql_config_file = "../_admin/_data/mysql_" . $server_name . ".php";
-include("$mysql_config_file");
-$link = mysqli_connect($mysqlHostSav, $mysqlUserNameSav, $mysqlPasswordSav, $mysqlDatabaseNameSav);
-if (mysqli_connect_errno()){
-	echo "Failed to connect to MySQL: " . mysqli_connect_error();
-}
 
 
 
@@ -93,8 +71,6 @@ else{
 }
 
 
-
-$root = "..";
 
 /*- Language ------------------------------------------------------------------------ */
 if(file_exists("../_admin/_translations/site/$l/food/ts_food.php")){
@@ -308,6 +284,8 @@ if(isset($_GET['search_query'])) {
 
 	$inp_datetime = date("Y-m-d H:i:s");
 	if($search_query != ""){
+		// Check for hacker
+		include("$root/_admin/_functions/look_for_hacker_in_string.php");
 
 		$query = "SELECT query_name, query_times FROM $t_food_queries WHERE query_name=$search_query_mysql";
 		$res = mysqli_query($link, $query);

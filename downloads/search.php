@@ -114,6 +114,9 @@ echo"
 ";
 
 if($search_query != ""){
+	// Check for hacker
+	include("$root/_admin/_functions/look_for_hacker_in_string.php");
+
 	
 	$search_results_count = 0;
 
@@ -219,7 +222,7 @@ if($search_query != ""){
 		if(!(file_exists("$q_antispam_file"))){
 			
 			$fh = fopen($q_antispam_file, "w") or die("can not open file");
-			fwrite($fh, "$q");
+			fwrite($fh, "$search_query");
 			fclose($fh);
 			
 		

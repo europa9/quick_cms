@@ -63,6 +63,11 @@ if(isset($_GET['q']) && $_GET['q'] != ''){
 	$q = trim($q);
 	$q = strtolower($q);
 	$q = output_html($q);
+
+	// Check for hacker
+	$search_query  = "$q";
+	include("$root/_admin/_functions/look_for_hacker_in_string.php");
+
 	$q = "%" . $q . "%";
 	$q_mysql = quote_smart($link, $q);
 

@@ -64,7 +64,13 @@ if($action == ""){
 	echo"	
 	<!-- //Feedback -->
 
-		
+	
+	<!-- Grids menu -->
+		<p>
+		<a href=\"index.php?open=$open&amp;page=$page&amp;action=css_code&amp;editor_language=$editor_language&amp;l=$l\" class=\"btn_default\">CSS</a>
+		</p>
+	<!-- //Grids menu -->
+
 	<!-- Menu: Editor language, Actions -->
 		<script>
 		\$(function(){
@@ -149,6 +155,9 @@ if($action == ""){
 				 <thead>
 				  <tr>
 				   <th>
+					<span>Category</span>
+				   </th>
+				   <th>
 					<span>Title</span>
 		 		  </th>
 				   <th>
@@ -163,6 +172,9 @@ if($action == ""){
 					list($get_item_id, $get_item_language, $get_item_group_id, $get_item_title, $get_item_url, $get_item_weight, $get_item_icon_path, $get_item_icon_18x18, $get_item_icon_24x24, $get_item_icon_36x36, $get_item_icon_48x48, $get_item_created_datetime, $get_item_created_user_id, $get_item_updated_datetime, $get_item_updated_user_id) = $row;
 					echo"
 					  <tr>
+					   <td>
+						<span><a href=\"index.php?open=$open&amp;page=$page&amp;action=open_group&amp;group_id=$get_item_group_id&amp;editor_language=$editor_language&amp;l=$l\">$get_item_group_id</a></span>
+					   </td>
 					   <td>
 						<span>$get_item_title</span>
 					   </td>
@@ -219,9 +231,9 @@ elseif($action == "new_group"){
 
 		// Insert
 		mysqli_query($link, "INSERT INTO $t_grid_groups
-		(group_id, group_language, group_title, group_title_english, group_active, group_created_user_id, group_created_datetime) 
+		(group_id, group_language, group_title, group_title_english, group_active, group_preferred_icon_size, group_created_user_id, group_created_datetime) 
 		VALUES 
-		(NULL, $inp_language_mysql, $inp_title_mysql, $inp_title_english_mysql, $inp_active_mysql, $my_user_id_mysql, '$datetime')")
+		(NULL, $inp_language_mysql, $inp_title_mysql, $inp_title_english_mysql, $inp_active_mysql, '36x36', $my_user_id_mysql, '$datetime')")
 		or die(mysqli_error($link));
 
 
@@ -277,7 +289,8 @@ elseif($action == "new_group"){
 		</p>
 
 		<p><b>Title English</b>*<br />
-		<input type=\"text\" name=\"inp_title_english\" value=\"\" size=\"60\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+		<input type=\"text\" name=\"inp_title_english\" value=\"\" size=\"60\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /><br />
+		<span class=\"small\">To make the grid appear on frontpage set english title to Frontpage.</span>
 		</p>
 
 		<p><b>Active</b>*<br />
@@ -312,10 +325,10 @@ elseif($action == "new_group"){
 elseif($action == "open_group"){
 	$group_id_mysql = quote_smart($link, $group_id);
 
-	$query = "SELECT group_id, group_language, group_title, group_created_user_id, group_created_datetime, group_updated_user_id, group_updated_datetime FROM $t_grid_groups WHERE group_id=$group_id_mysql";
+	$query = "SELECT group_id, group_language, group_title, group_active, group_created_user_id, group_created_datetime, group_updated_user_id, group_updated_datetime FROM $t_grid_groups WHERE group_id=$group_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_group_id, $get_current_group_language, $get_current_group_title, $get_current_group_created_user_id, $get_current_group_created_datetime, $get_current_group_updated_user_id, $get_current_group_updated_datetime) = $row;
+	list($get_current_group_id, $get_current_group_language, $get_current_group_title, $get_current_group_active, $get_current_group_created_user_id, $get_current_group_created_datetime, $get_current_group_updated_user_id, $get_current_group_updated_datetime) = $row;
 
 	if($get_current_group_id == ""){
 		echo"
@@ -353,7 +366,6 @@ elseif($action == "open_group"){
 			}
 			echo"	
 		<!-- //Feedback -->
-
 
 		<!-- Left and right -->
 
@@ -399,6 +411,17 @@ elseif($action == "open_group"){
 			  </td>
 			  <td style=\"vertical-align: top;\">
 				<!-- Right -->
+					<!-- Active check -->
+						";
+						if($get_current_group_active == "0"){
+							echo"
+							<p>
+							The group is inactive: [<a href=\"index.php?open=$open&amp;page=$page&amp;action=edit_group&amp;group_id=$get_current_group_id&amp;editor_language=$editor_language\">Activate group</a>]
+							</p>
+							";
+						}
+						echo"
+					<!-- //Active check -->
 					<!-- Open group menu -->
 
 						<table>
@@ -507,10 +530,10 @@ elseif($action == "open_group"){
 elseif($action == "edit_group"){
 	$group_id_mysql = quote_smart($link, $group_id);
 
-	$query = "SELECT group_id, group_language, group_title, group_title_english, group_active, group_created_user_id, group_created_datetime, group_updated_user_id, group_updated_datetime FROM $t_grid_groups WHERE group_id=$group_id_mysql";
+	$query = "SELECT group_id, group_language, group_title, group_title_english, group_active, group_preferred_icon_size, group_created_user_id, group_created_datetime, group_updated_user_id, group_updated_datetime FROM $t_grid_groups WHERE group_id=$group_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_group_id, $get_current_group_language, $get_current_group_title, $get_current_group_title_english, $get_current_group_active, $get_current_group_created_user_id, $get_current_group_created_datetime, $get_current_group_updated_user_id, $get_current_group_updated_datetime) = $row;
+	list($get_current_group_id, $get_current_group_language, $get_current_group_title, $get_current_group_title_english, $get_current_group_active, $get_current_group_preferred_icon_size, $get_current_group_created_user_id, $get_current_group_created_datetime, $get_current_group_updated_user_id, $get_current_group_updated_datetime) = $row;
 
 	if($get_current_group_id == ""){
 		echo"
@@ -550,6 +573,12 @@ elseif($action == "edit_group"){
 			$inp_active = output_html($inp_active);
 			$inp_active_mysql = quote_smart($link, $inp_active);
 
+			$inp_preferred_icon_size = $_POST['inp_preferred_icon_size'];
+			$inp_preferred_icon_size = output_html($inp_preferred_icon_size);
+			$inp_preferred_icon_size_mysql = quote_smart($link, $inp_preferred_icon_size);
+
+
+
 			$datetime = date("Y-m-d H:i:s");
 
 			$my_user_id = $_SESSION['admin_user_id'];
@@ -562,6 +591,7 @@ elseif($action == "edit_group"){
 							group_title_english=$inp_title_english_mysql, 
 							group_language=$inp_language_mysql,
 							group_active=$inp_active_mysql,
+							group_preferred_icon_size=$inp_preferred_icon_size_mysql,
 							group_updated_user_id=$my_user_id_mysql, 
 							group_updated_datetime='$datetime' 
 							WHERE group_id=$get_current_group_id") OR die(mysqli_error($link));
@@ -574,7 +604,7 @@ elseif($action == "edit_group"){
 	
 		<!-- Where am I? -->
 			<p><b>You are here:</b><br />
-			<a href=\"index.php?open=$open&amp;page=$page&amp;editor_language=$editor_language&amp;l=$l\">Footer</a>
+			<a href=\"index.php?open=$open&amp;page=$page&amp;editor_language=$editor_language&amp;l=$l\">Grids</a>
 			&gt;
 			<a href=\"index.php?open=$open&amp;page=$page&amp;action=open_group&amp;group_id=$get_current_group_id&amp;editor_language=$editor_language&amp;l=$l\">$get_current_group_title</a>
 			&gt;
@@ -637,6 +667,10 @@ elseif($action == "edit_group"){
 			<input type=\"radio\" name=\"inp_active\" value=\"0\""; if($get_current_group_active == "0"){ echo" checked=\"checked\""; } echo" /> No
 			</p>
 
+			<p><b>Preferred icon size</b>*<br />
+			<input type=\"text\" name=\"inp_preferred_icon_size\" value=\"$get_current_group_preferred_icon_size\" size=\"20\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+			</p>
+
 			<p><input type=\"submit\" value=\"Update\" class=\"btn_default\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
 	 
 			</form>
@@ -681,7 +715,7 @@ elseif($action == "delete_group"){
 	
 		<!-- Where am I? -->
 			<p><b>You are here:</b><br />
-			<a href=\"index.php?open=$open&amp;page=$page&amp;editor_language=$editor_language&amp;l=$l\">Footer</a>
+			<a href=\"index.php?open=$open&amp;page=$page&amp;editor_language=$editor_language&amp;l=$l\">Grids</a>
 			&gt;
 			<a href=\"index.php?open=$open&amp;page=$page&amp;action=open_group&amp;group_id=$get_current_group_id&amp;editor_language=$editor_language&amp;l=$l\">$get_current_group_title</a>
 			&gt;
@@ -719,10 +753,10 @@ elseif($action == "delete_group"){
 } // delete_group
 elseif($action == "new_item"){
 	$group_id_mysql = quote_smart($link, $group_id);
-	$query = "SELECT group_id, group_language, group_title, group_created_user_id, group_created_datetime, group_updated_user_id, group_updated_datetime FROM $t_grid_groups WHERE group_id=$group_id_mysql";
+	$query = "SELECT group_id, group_language, group_title, group_active, group_preferred_icon_size, group_created_user_id, group_created_datetime, group_updated_user_id, group_updated_datetime FROM $t_grid_groups WHERE group_id=$group_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_group_id, $get_current_group_language, $get_current_group_title, $get_current_group_created_user_id, $get_current_group_created_datetime, $get_current_group_updated_user_id, $get_current_group_updated_datetime) = $row;
+	list($get_current_group_id, $get_current_group_language, $get_current_group_title, $get_current_group_active, $get_current_group_preferred_icon_size, $get_current_group_created_user_id, $get_current_group_created_datetime, $get_current_group_updated_user_id, $get_current_group_updated_datetime) = $row;
 
 	if($get_current_group_id == ""){
 		echo"
@@ -914,7 +948,17 @@ elseif($action == "new_item"){
 			</p>
 		<!-- //Where am I? -->
 
-
+		<!-- Group Active? -->";
+			if($get_current_group_active == "0"){
+				echo"
+				<p>
+				The group is inactive: 
+				[<a href=\"index.php?open=$open&amp;page=$page&amp;action=edit_group&amp;group_id=$get_current_group_id&amp;editor_language=$editor_language&amp;l=$l\">Active group</a>]
+				</p>
+				";
+			}
+			echo"
+		<!-- //Group Active? -->
 
 		<!-- Feedback -->
 			";
@@ -939,6 +983,7 @@ elseif($action == "new_item"){
 				});
 				</script>
 			<!-- //Focus -->
+				<h2>Item information</h2>
 
 			<p><b>Title</b>*<br />
 			<input type=\"text\" name=\"inp_title\" value=\"\" size=\"60\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
@@ -949,6 +994,8 @@ elseif($action == "new_item"){
 			</p>
 	
 			<!- icons -->
+				<h2>Icons</h2>
+				<p>Preferred icon size is $get_current_group_preferred_icon_size.</p>
 			";
 			$icons_size_array = array("18x18", "24x24", "36x36", "48x48");
 			for($x=0;$x<sizeof($icons_size_array);$x++){
@@ -1096,10 +1143,10 @@ elseif($action == "edit_item"){
 	}
 	else{
 		// Find group
-		$query = "SELECT group_id, group_language, group_title, group_created_user_id, group_created_datetime, group_updated_user_id, group_updated_datetime FROM $t_grid_groups WHERE group_id=$get_current_item_group_id";
+		$query = "SELECT group_id, group_language, group_title, group_preferred_icon_size, group_created_user_id, group_created_datetime, group_updated_user_id, group_updated_datetime FROM $t_grid_groups WHERE group_id=$get_current_item_group_id";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
-		list($get_current_group_id, $get_current_group_language, $get_current_group_title, $get_current_group_created_user_id, $get_current_group_created_datetime, $get_current_group_updated_user_id, $get_current_group_updated_datetime) = $row;
+		list($get_current_group_id, $get_current_group_language, $get_current_group_title, $get_current_group_preferred_icon_size, $get_current_group_created_user_id, $get_current_group_created_datetime, $get_current_group_updated_user_id, $get_current_group_updated_datetime) = $row;
 
 		if($process == "1"){
 			$inp_title = $_POST['inp_title'];
@@ -1252,7 +1299,7 @@ elseif($action == "edit_item"){
 	
 		<!-- Where am I? -->
 			<p><b>You are here:</b><br />
-			<a href=\"index.php?open=$open&amp;page=$page&amp;editor_language=$editor_language&amp;l=$l\">Footer</a>
+			<a href=\"index.php?open=$open&amp;page=$page&amp;editor_language=$editor_language&amp;l=$l\">Grids</a>
 			&gt;
 			<a href=\"index.php?open=$open&amp;page=$page&amp;action=open_group&amp;group_id=$get_current_item_group_id&amp;editor_language=$editor_language&amp;l=$l\">$get_current_group_title</a>
 			&gt;
@@ -1285,6 +1332,7 @@ elseif($action == "edit_item"){
 				});
 				</script>
 			<!-- //Focus -->
+				<h2>Item information</h2>
 
 			<p><b>Title</b>*<br />
 			<input type=\"text\" name=\"inp_title\" value=\"$get_current_item_title\" size=\"60\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
@@ -1295,6 +1343,8 @@ elseif($action == "edit_item"){
 			</p>
 
 			<!- icons -->
+				<h2>Icons</h2>
+				<p>Preferred icon size is $get_current_group_preferred_icon_size.</p>
 			";
 			$icons_size_array = array("18x18", "24x24", "36x36", "48x48");
 			for($x=0;$x<sizeof($icons_size_array);$x++){
@@ -1415,7 +1465,7 @@ elseif($action == "delete_item"){
 	
 		<!-- Where am I? -->
 			<p><b>You are here:</b><br />
-			<a href=\"index.php?open=$open&amp;page=$page&amp;editor_language=$editor_language&amp;l=$l\">Footer</a>
+			<a href=\"index.php?open=$open&amp;page=$page&amp;editor_language=$editor_language&amp;l=$l\">Grids</a>
 			&gt;
 			<a href=\"index.php?open=$open&amp;page=$page&amp;action=open_group&amp;group_id=$get_current_item_group_id&amp;editor_language=$editor_language&amp;l=$l\">$get_current_group_title</a>
 			&gt;
@@ -1451,4 +1501,58 @@ elseif($action == "delete_item"){
 		";
 	} // found
 } // delete_item
+elseif($action == "css_code"){
+	echo"
+	<h1>CSS code</h1>
+
+	<!-- Where am I? -->
+		<p><b>You are here:</b><br />
+		<a href=\"index.php?open=$open&amp;page=$page&amp;editor_language=$editor_language&amp;l=$l\">Grids</a>
+		&gt;
+		<a href=\"index.php?open=$open&amp;page=$page&amp;action=css_code&amp;editor_language=$editor_language&amp;l=$l\">CSS code</a>
+		</p>
+	<!-- //Where am I? -->
+
+	<p>
+	<textarea style=\"width: 100%;height: 600px;\">
+/*- Grid on index ------------------------------------------------------------------ */
+div.grid_wrapper{
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+}
+div.grid_wrapper > div.grid_item{
+	padding: 15px 0px 15px 0px;
+}
+div.grid_wrapper > div.grid_item > a > img{
+	float: left;
+}
+div.grid_wrapper > div.grid_item > a > span{
+	float: left;
+	padding: 10px 0px 0px 0px;
+	font-size: 110%;
+	color: #474445;
+}
+@media screen and (max-width: 52.375em) {
+
+	div.grid_wrapper > div.grid_item{
+		text-align: center;
+	}
+	div.grid_wrapper > div.grid_item > a > img{
+		float: none;
+		padding: 0px 0px 4px 0px;
+	}
+	div.grid_wrapper > div.grid_item > a > span::before {
+		content: &quot;\A&quot;;
+		white-space: pre;
+	}
+	div.grid_wrapper > div.grid_item > a > span{
+		float: none;
+		padding: 0px 0px 0px 0px;
+		font-size: 110%;
+		color: #474445;
+	}
+}</textarea></p>
+	
+	";
+} // css_code
 ?>

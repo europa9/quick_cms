@@ -273,7 +273,6 @@ if($action == "check"){
 					$user_last_ip_mysql = quote_smart($link, $user_last_ip);
 
 
-
 					// Update login attemt
 					mysqli_query($link, "UPDATE $t_users_logins SET login_successfully=1 WHERE login_id=$get_current_login_id") or die(mysqli_error($link));
 
@@ -328,6 +327,15 @@ if($action == "check"){
 						$message = $message . "$l_if_it_was_you_then_you_can_ignore_this_email.</p>\n";
 
 						$message = $message . "<table>\n\n";
+
+						$message = $message . " <tr>\n\n";
+						$message = $message . "  <td style=\"padding-right: 4px;\">\n\n";
+						$message = $message . "     <span><b>$l_ip:</b></span>\n";
+						$message = $message . "  </td>\n\n";
+						$message = $message . "  <td style=\"padding-right: 4px;\">\n\n";
+						$message = $message . "     <span>$my_ip</span>\n";
+						$message = $message . "  </td>\n\n";
+						$message = $message . " </tr>\n\n";
 
 						$message = $message . " <tr>\n\n";
 						$message = $message . "  <td style=\"padding-right: 4px;\">\n\n";
@@ -394,6 +402,13 @@ if($action == "check"){
 				  				   WHERE known_device_id=$get_current_known_device_id") or die(mysqli_error($link));
 		
 					}
+
+					// Delete old logins (users_logins and users_known_devices)
+					$one_year_ago = $year-1;
+					$one_months_ago = $month-1;
+					mysqli_query($link, "DELETE FROM $t_users_logins WHERE login_year < $year OR login_month < $one_months_ago") or die(mysqli_error($link));
+					mysqli_query($link, "DELETE FROM $t_users_known_devices WHERE known_device_updated_year < $one_year_ago") or die(mysqli_error($link));
+
 
 					// Refer?
 					if(isset($_POST['inp_referer'])){

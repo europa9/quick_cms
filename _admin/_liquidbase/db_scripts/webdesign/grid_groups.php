@@ -16,7 +16,7 @@ if(isset($_SESSION['admin_user_id'])){
 
 
 	$t_grid_groups	= $mysqlPrefixSav . "grid_groups";
-
+	$t_languages_active =  $mysqlPrefixSav . "languages_active";
 
 	$result = mysqli_query($link, "DROP TABLE IF EXISTS $t_grid_groups") or die(mysqli_error($link)); 
 
@@ -44,6 +44,7 @@ if(isset($_SESSION['admin_user_id'])){
 		   group_title VARCHAR(200), 
 		   group_title_english VARCHAR(200), 
 		   group_active INT,
+		   group_preferred_icon_size VARCHAR(20), 
 		   group_created_datetime DATETIME,
 		   group_created_user_id INT,
 		   group_updated_datetime DATETIME,
@@ -57,11 +58,15 @@ if(isset($_SESSION['admin_user_id'])){
 
 		$datetime = date("Y-m-d H:i:s");
 
-		mysqli_query($link, "INSERT INTO $t_grid_groups(group_id, group_language, group_title, group_title_english, group_active, group_created_user_id, group_created_datetime)
+		$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_default FROM $t_languages_active";
+		$result = mysqli_query($link, $query);
+		while($row = mysqli_fetch_row($result)) {
+			list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_default) = $row;
+			mysqli_query($link, "INSERT INTO $t_grid_groups(group_id, group_language, group_title, group_title_english, group_active, group_preferred_icon_size, group_created_user_id, group_created_datetime)
 					VALUES 
-					(NULL, 'en', 'Frontpage', 'Frontpage', 0, $my_user_id_mysql, '$datetime'),
-					(NULL, 'no', 'Forside', 'Frontpage', 0, $my_user_id_mysql, '$datetime')
+					(NULL, '$get_language_active_iso_two', 'Frontpage', 'Frontpage', 0, '36x36', $my_user_id_mysql, '$datetime')
 					") or die(mysqli_error());
+		} // while languages
 
 
 	}
