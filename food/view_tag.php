@@ -44,7 +44,7 @@ $l_mysql = quote_smart($link, $l);
 
 if(isset($_GET['tag'])){
 	$tag = $_GET['tag'];
-	$tag = strip_tags(stripslashes($tag));
+	$tag = output_html($tag);
 }
 else{
 	$tag = "";
@@ -65,6 +65,82 @@ if(isset($_GET['order_method'])) {
 }
 else{
 	$order_method = "";
+}
+
+// Dates
+$year = date("Y");
+$month = date("m");
+$week = date("W");
+
+
+// Find tag
+$l = output_html($l);
+$l_mysql = quote_smart($link, $l);
+
+$query = "SELECT tag_id, tag_language, tag_title, tag_title_clean, tag_number_of_food, tag_last_clicked_year, tag_last_clicked_month, tag_last_clicked_week, tag_unique_views_counter, tag_unique_views_ip_block FROM $t_food_tags_unique WHERE tag_language=$l_mysql AND tag_title_clean=$tag_mysql";
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_row($result);
+list($get_current_tag_id, $get_current_tag_language, $get_current_tag_title, $get_current_tag_title_clean, $get_current_tag_number_of_food, $get_current_tag_last_clicked_year, $get_current_tag_last_clicked_month, $get_current_tag_last_clicked_week, $get_current_tag_unique_views_counter, $get_current_tag_unique_views_ip_block) = $row;
+if($get_current_tag_id == ""){
+	// Tag not found
+	// look for food that used this tag, if exists then insert the tag as a new tag
+
+	$query = "SELECT count(tag_id), tag_title FROM $t_food_index_tags WHERE tag_language=$l_mysql AND tag_title_clean=$tag_mysql";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_count_number_of_food, $get_tag_title) = $row;
+	if($get_count_number_of_food == "0"){
+		echo"
+		<p>Tag not found</p>
+		";
+		die;
+	}
+	else{
+		$inp_title_mysql = quote_smart($link, $get_tag_title);
+		mysqli_query($link, "INSERT INTO $t_food_tags_unique
+				(tag_id, tag_language, tag_title, tag_title_clean, tag_number_of_food, 
+				tag_last_clicked_year, tag_last_clicked_month, tag_last_clicked_week, tag_unique_views_counter, tag_unique_views_ip_block) 
+				VALUES 
+				(NULL, $l_mysql, $inp_title_mysql, $tag_mysql, $get_count_number_of_food, $year, $month, $week, 0, '')")
+				or die(mysqli_error($link));
+
+		
+		// Get ID
+		$query = "SELECT tag_id, tag_language, tag_title, tag_title_clean, tag_number_of_food, tag_last_clicked_year, tag_last_clicked_month, tag_last_clicked_week, tag_unique_views_counter, tag_unique_views_ip_block FROM $t_food_tags_unique WHERE tag_language=$l_mysql AND tag_title_clean=$tag_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_current_tag_id, $get_current_tag_language, $get_current_tag_title, $get_current_tag_title_clean, $get_current_tag_number_of_food, $get_current_tag_last_clicked_year, $get_current_tag_last_clicked_month, $get_current_tag_last_clicked_week, $get_current_tag_unique_views_counter, $get_current_tag_unique_views_ip_block) = $row;
+
+	}
+
+}
+
+// Update number of hits
+$update_unique_hits = 1; // guess
+$ip_block_array = explode("\n", $get_current_tag_unique_views_ip_block);
+$ip_block_array_size = sizeof($ip_block_array);
+$inp_ip_block = "";
+for($x=0;$x<$ip_block_array_size;$x++){
+	if($my_ip == "$ip_block_array[$x]"){
+		$update_unique_hits = 0;
+		break;
+	}
+	
+	if($inp_ip_block == ""){
+		$inp_ip_block = "$ip_block_array[$x]";
+	}
+	else{
+		if($x < 10){
+			$inp_ip_block = $inp_ip_block . "\n" . "$ip_block_array[$x]";
+		}
+	}
+
+}
+if($update_unique_hits == "1"){
+	$inp_unique_views_counter = $get_current_tag_unique_views_counter+1;
+	$inp_ip_block = $my_ip . "\n" . $inp_ip_block;
+	$inp_ip_block_mysql = quote_smart($link, $inp_ip_block);
+	mysqli_query($link, "UPDATE $t_food_tags_unique  SET tag_last_clicked_year=$year, tag_last_clicked_month=$month, tag_last_clicked_week=$week, tag_unique_views_counter=$inp_unique_views_counter, tag_unique_views_ip_block=$inp_ip_block_mysql WHERE tag_id=$get_current_tag_id") or die(mysqli_error($link));
 }
 
 

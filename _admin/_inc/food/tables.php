@@ -47,6 +47,7 @@ $t_food_integration	 	  	= $mysqlPrefixSav . "food_integration";
 $t_food_age_restrictions 	 	= $mysqlPrefixSav . "food_age_restrictions";
 $t_food_age_restrictions_accepted	= $mysqlPrefixSav . "food_age_restrictions_accepted";
 $t_food_user_adapted_view		= $mysqlPrefixSav . "food_user_adapted_view";
+$t_food_tags_unique			= $mysqlPrefixSav . "food_tags_unique";
 
 
 if($action == ""){

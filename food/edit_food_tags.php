@@ -218,6 +218,42 @@ else{
 
 				<form method=\"post\" action=\"edit_food_tags.php?food_id=$get_current_food_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
+
+				<!-- Search engines Autocomplete -->
+					<script id=\"source\" language=\"javascript\" type=\"text/javascript\">
+						\$(document).ready(function () {
+							\$('.inp_tag').keyup(function () {
+								// getting the value that user typed
+								var searchString	= \$(this).val();
+								var name 		= \$(this).attr(\"name\");
+
+								// forming the queryString
+      								var data            = 'l=$l&tag_field=' + name + '&search_query='+ searchString;
+         
+        							// if searchString is not empty
+        							if(searchString) {
+									\$(\"#search_result_\" + name).css('visibility','visible');
+
+									// ajax call
+        								\$.ajax({
+        									type: \"GET\",
+        									url: \"edit_food_tags_search_autocomplete.php\",
+                								data: data,
+										beforeSend: function(html) { // this happens before actual call
+											\$(\"#search_result_\" + name).html(''); 
+										},
+               									success: function(html){
+                    									\$(\"#search_result_\" + name).html(html);
+              									}
+            								});
+       								}
+        							return false;
+
+            						});
+         					});
+					</script>
+				<!-- //Search engines Autocomplete -->
+
 				";
 
 				// Fetch tags
@@ -238,7 +274,8 @@ else{
 					}
 					echo"
 					<p><b>$l_tag $y:</b><br />
-					<input type=\"text\" name=\"$name\" value=\"$get_tag_title\" size=\"20\" /></p>
+					<input type=\"text\" name=\"$name\" class=\"inp_tag\" id=\"$name\" value=\"$get_tag_title\" size=\"25\" autocomplete=\"off\" /></p>
+					<div id=\"search_result_$name\"></div>
 					";
 					$y++;
 				}
@@ -247,13 +284,16 @@ else{
 				if($y == 1){
 					echo"
 					<p><b>$l_tag 1:</b><br />
-					<input type=\"text\" name=\"inp_tag_a\" value=\"\" size=\"20\" /></p>
+					<input type=\"text\" name=\"inp_tag_a\" class=\"inp_tag\" id=\"inp_tag_a\" value=\"\" size=\"25\" autocomplete=\"off\" /></p>
+					<div id=\"search_result_inp_tag_a\"></div>
 					
 					<p><b>$l_tag 2:</b><br />
-					<input type=\"text\" name=\"inp_tag_b\" value=\"\" size=\"20\" /></p>
+					<input type=\"text\" name=\"inp_tag_b\" class=\"inp_tag\" id=\"inp_tag_b\" value=\"\" size=\"25\" autocomplete=\"off\" /></p>
+					<div id=\"search_result_inp_tag_b\"></div>
 					
 					<p><b>$l_tag 3:</b><br />
-					<input type=\"text\" name=\"inp_tag_c\" value=\"\" size=\"20\" /></p>
+					<input type=\"text\" name=\"inp_tag_c\" class=\"inp_tag\" id=\"inp_tag_c\" value=\"\" size=\"25\" autocomplete=\"off\" /></p>
+					<div id=\"search_result_inp_tag_c\"></div>
 					";
 
 				}
@@ -261,10 +301,12 @@ else{
 					echo"
 					
 					<p><b>$l_tag 2:</b><br />
-					<input type=\"text\" name=\"inp_tag_b\" value=\"\" size=\"20\" /></p>
+					<input type=\"text\" name=\"inp_tag_b\" class=\"inp_tag\" id=\"inp_tag_b\" value=\"\" size=\"25\" autocomplete=\"off\" /></p>
+					<div id=\"search_result_inp_tag_b\"></div>
 					
 					<p><b>$l_tag 3:</b><br />
-					<input type=\"text\" name=\"inp_tag_c\" value=\"\" size=\"20\" /></p>
+					<input type=\"text\" name=\"inp_tag_c\" class=\"inp_tag\" id=\"inp_tag_c\" value=\"\" size=\"25\" autocomplete=\"off\" /></p>
+					<div id=\"search_result_inp_tag_c\"></div>
 					";
 
 				}
@@ -272,11 +314,13 @@ else{
 					echo"
 					
 					<p><b>$l_tag 3:</b><br />
-					<input type=\"text\" name=\"inp_tag_c\" value=\"\" size=\"20\" /></p>
+					<input type=\"text\" name=\"inp_tag_c\" class=\"inp_tag\" id=\"inp_tag_c\" value=\"\" size=\"25\" autocomplete=\"off\" /></p>
+					<div id=\"search_result_inp_tag_c\"></div>
 					";
 
 				}
 				echo"
+				<div id=\"inp_search_results\"></div>
 				<p><input type=\"submit\" value=\"$l_save\" class=\"btn btn-success btn-sm\" /></p>
 				
 				</form>

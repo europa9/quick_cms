@@ -42,6 +42,7 @@ $t_recipes_comments			= $mysqlPrefixSav . "recipes_comments";
 $t_recipes_searches			= $mysqlPrefixSav . "recipes_searches";
 $t_recipes_age_restrictions 	 	= $mysqlPrefixSav . "recipes_age_restrictions";
 $t_recipes_age_restrictions_accepted	= $mysqlPrefixSav . "recipes_age_restrictions_accepted";
+$t_recipes_tags_unique			= $mysqlPrefixSav . "recipes_tags_unique";
 
 $t_recipes_pairing_loaded 		= $mysqlPrefixSav . "recipes_pairing_loaded";
 $t_recipes_pairing_recipes		= $mysqlPrefixSav . "recipes_pairing_recipes";
