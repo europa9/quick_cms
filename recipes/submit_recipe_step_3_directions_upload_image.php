@@ -125,140 +125,132 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			// Upload image
 			reset ($_FILES);
 			$temp = current($_FILES);
-			if (is_uploaded_file($temp['tmp_name'])){
-				if (isset($_SERVER['HTTP_ORIGIN'])) {
-					// same-origin requests won't set an origin. If the origin is set, it must be valid.
-				}
 
-				// Sanitize input
-				if (preg_match("/([^\w\s\d\-_~,;:\[\]\(\).])|([\.]{2,})/", $temp['name'])) {
-					header("HTTP/1.1 400 Invalid file name.");
-					return;
-				}
 
+			$file_name = basename($temp['name']);
+			$file_exp = explode('.', $file_name); 
+			$inp_ext = $file_exp[count($file_exp) -1]; 
+			$inp_ext = strtolower($inp_ext);
+			$inp_ext = output_html($inp_ext);
+
+			$uniqid = uniqid();
+			$new_name = $get_recipe_id . "_" . $uniqid . ".$inp_ext";
+
+			$target_path = $upload_path . "/" . $new_name;
+
+			// Sjekk om det er en OK filendelse
+			if (!in_array(strtolower(pathinfo($temp['name'], PATHINFO_EXTENSION)), array("gif", "jpg", "png"))) {
 				// Verify extension
-				if (!in_array(strtolower(pathinfo($temp['name'], PATHINFO_EXTENSION)), array("gif", "jpg", "png"))) {
-					header("HTTP/1.1 400 Invalid extension.");
-					return;
-				}
+				header("HTTP/1.1 400 Invalid extension.");
+				return;
+			}
+			else{
+				if(move_uploaded_file($temp['tmp_name'], $target_path)) {
+					list($width,$height) = @getimagesize($target_path);
+					if($width == "" OR $height == ""){
+						unlink($target_path);
+						header("HTTP/1.1 400 Invalid extension.");
+						return;
+					}
 
 
-				list($width,$height) = @getimagesize($temp['tmp_name']);
-				if($width == "" OR $height == ""){
-					header("HTTP/1.1 400 Invalid extension.");
-					return;
-				}
-
-				// Get extension
-				$inp_ext = get_extension($temp['name']);
-				$inp_ext = output_html($inp_ext);
-				$inp_ext_mysql = quote_smart($link, $inp_ext);
-
-				// New name
-				$name = $temp['name'];
-				$name = str_replace(".$inp_ext", "", $name);
-				$uniqid = uniqid();
-				$new_name = $name . "_" . $uniqid . "." . $inp_ext;
-
-				// Accept upload if there was no origin, or if it is an accepted origin
-				$filetowrite = $upload_path . "/" . $new_name;
-
-				// Move it
-				move_uploaded_file($temp['tmp_name'], $filetowrite);
+					// Get extension
+					$inp_ext_mysql = quote_smart($link, $inp_ext);
 
 
+					// MySQL Image
+					$inp_type = "image";
+					$inp_type_mysql = quote_smart($link, $inp_type);
 
-				// MySQL Image
-				$inp_type = "image";
-				$inp_type_mysql = quote_smart($link, $inp_type);
+					$inp_title = $temp['name'];
+					$inp_title = output_html($inp_title);
+					$inp_title_mysql = quote_smart($link, $inp_title);
 
-				$inp_title = $temp['name'];
-				$inp_title = output_html($inp_title);
-				$inp_title_mysql = quote_smart($link, $inp_title);
+					$inp_file_path = "_uploads/recipes/_image_uploads/$get_recipe_category_id/$get_recipe_id";
+					$inp_file_path_mysql = quote_smart($link, $inp_file_path);
 
-				$inp_file_path = "_uploads/recipes/_image_uploads/$get_recipe_category_id/$get_recipe_id";
-				$inp_file_path_mysql = quote_smart($link, $inp_file_path);
+					$inp_file_name = output_html($new_name);
+					$inp_file_name_mysql = quote_smart($link, $inp_file_name);
 
-				$inp_file_name = output_html($new_name);
-				$inp_file_name_mysql = quote_smart($link, $inp_file_name);
+					$inp_file_thumb_a = $get_recipe_id . "_" . $uniqid . "_thumb_a" . "." . $inp_ext;
+					$inp_file_thumb_a_mysql = quote_smart($link, $inp_file_thumb_a);
 
-				$inp_file_thumb_a = $name . "_" . $uniqid . "_thumb_a" . "." . $inp_ext;
-				$inp_file_thumb_a_mysql = quote_smart($link, $inp_file_thumb_a);
+					$inp_file_thumb_b = $get_recipe_id . "_" . $uniqid . "_thumb_b" . "." . $inp_ext;
+					$inp_file_thumb_b_mysql = quote_smart($link, $inp_file_thumb_b);
 
-				$inp_file_thumb_b = $name . "_" . $uniqid . "_thumb_b" . "." . $inp_ext;
-				$inp_file_thumb_b_mysql = quote_smart($link, $inp_file_thumb_b);
+					$inp_file_thumb_c = $get_recipe_id . "_" . $uniqid . "_thumb_c" . "." . $inp_ext;
+					$inp_file_thumb_c_mysql = quote_smart($link, $inp_file_thumb_c);
 
-				$inp_file_thumb_c = $name . "_" . $uniqid . "_thumb_c" . "." . $inp_ext;
-				$inp_file_thumb_c_mysql = quote_smart($link, $inp_file_thumb_c);
+					// Dates
+					$datetime = date("Y-m-d H:i:s");
+					$date_saying = date("j M Y");
 
-				// Dates
-				$datetime = date("Y-m-d H:i:s");
-				$date_saying = date("j M Y");
+					// Me
+					$query = "SELECT user_id, user_email, user_name, user_alias, user_date_format FROM $t_users WHERE user_id=$my_user_id_mysql";
+					$result = mysqli_query($link, $query);
+					$row = mysqli_fetch_row($result);
+					list($get_my_user_id, $get_my_user_email, $get_my_user_name, $get_my_user_alias, $get_my_user_date_format) = $row;
 
-
-				// Me
-				$query = "SELECT user_id, user_email, user_name, user_alias, user_date_format FROM $t_users WHERE user_id=$my_user_id_mysql";
-				$result = mysqli_query($link, $query);
-				$row = mysqli_fetch_row($result);
-				list($get_my_user_id, $get_my_user_email, $get_my_user_name, $get_my_user_alias, $get_my_user_date_format) = $row;
-
-				// Get my profile image
-				$q = "SELECT photo_id, photo_destination FROM $t_users_profile_photo WHERE photo_user_id=$my_user_id_mysql AND photo_profile_image='1'";
-				$r = mysqli_query($link, $q);
-				$rowb = mysqli_fetch_row($r);
-				list($get_my_photo_id, $get_my_photo_destination) = $rowb;
+					// Get my profile image
+					$q = "SELECT photo_id, photo_destination FROM $t_users_profile_photo WHERE photo_user_id=$my_user_id_mysql AND photo_profile_image='1'";
+					$r = mysqli_query($link, $q);
+					$rowb = mysqli_fetch_row($r);
+					list($get_my_photo_id, $get_my_photo_destination) = $rowb;
 
 
-				$inp_my_alias_mysql = quote_smart($link, $get_my_user_alias);
-				$inp_my_email_mysql = quote_smart($link, $get_my_user_email);
-				$inp_my_image_mysql = quote_smart($link, $get_my_photo_destination);
+					$inp_my_alias_mysql = quote_smart($link, $get_my_user_alias);
+					$inp_my_email_mysql = quote_smart($link, $get_my_user_email);
+					$inp_my_image_mysql = quote_smart($link, $get_my_photo_destination);
 
 
+					// IP
+					$my_ip = "";
+					$my_ip = $_SERVER['REMOTE_ADDR'];
+					$my_ip = output_html($my_ip);
+					$my_ip_mysql = quote_smart($link, $my_ip);
 
-				// IP
-				$my_ip = "";
-				$my_ip = $_SERVER['REMOTE_ADDR'];
-				$my_ip = output_html($my_ip);
-				$my_ip_mysql = quote_smart($link, $my_ip);
+					$my_hostname = "";
+					$my_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+					$my_hostname = output_html($my_hostname);
+					$my_hostname_mysql = quote_smart($link, $my_hostname);
 
-				$my_hostname = "";
-				$my_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
-				$my_hostname = output_html($my_hostname);
-				$my_hostname_mysql = quote_smart($link, $my_hostname);
-
-				$my_user_agent = "";
-				if($configSiteUseGethostbyaddrSav == "1"){
-					$my_user_agent = $_SERVER['HTTP_USER_AGENT'];
-				}
-				$my_user_agent = output_html($my_user_agent);
-				$my_user_agent_mysql = quote_smart($link, $my_user_agent);
+					$my_user_agent = "";
+					if($configSiteUseGethostbyaddrSav == "1"){
+						$my_user_agent = $_SERVER['HTTP_USER_AGENT'];
+					}
+					$my_user_agent = output_html($my_user_agent);
+					$my_user_agent_mysql = quote_smart($link, $my_user_agent);
 
 				
-				mysqli_query($link, "INSERT INTO $t_recipes_images
-				(image_id, image_user_id, image_recipe_id, image_title, image_text, image_path, image_thumb_a, image_thumb_b, image_thumb_c, image_file, image_photo_by_name, image_photo_by_website, image_uploaded_datetime, image_uploaded_ip, image_unique_views, image_ip_block, image_reported, image_reported_checked, image_likes, image_dislikes, image_likes_dislikes_ipblock, image_comments) 
-				VALUES 
-				(NULL, $my_user_id_mysql, $get_recipe_id, $inp_title_mysql, '', $inp_file_path_mysql, $inp_file_thumb_a_mysql, $inp_file_thumb_b_mysql, $inp_file_thumb_c_mysql, $inp_file_name_mysql, '', '', '$datetime', $my_ip_mysql, '0', '', 0, '', 0, 0, '', '0')")
-				or die(mysqli_error($link));
+					mysqli_query($link, "INSERT INTO $t_recipes_images
+					(image_id, image_user_id, image_recipe_id, image_title, image_text, image_path, image_thumb_a, image_thumb_b, image_thumb_c, image_file, image_photo_by_name, image_photo_by_website, image_uploaded_datetime, image_uploaded_ip, image_unique_views, image_ip_block, image_reported, image_reported_checked, image_likes, image_dislikes, image_likes_dislikes_ipblock, image_comments) 
+					VALUES 
+					(NULL, $my_user_id_mysql, $get_recipe_id, $inp_title_mysql, '', $inp_file_path_mysql, $inp_file_thumb_a_mysql, $inp_file_thumb_b_mysql, $inp_file_thumb_c_mysql, $inp_file_name_mysql, '', '', '$datetime', $my_ip_mysql, '0', '', 0, '', 0, 0, '', '0')")
+					or die(mysqli_error($link));
 
 
 
-				// Resize image if it is over 1024 in witdth
-				if($width > 1024){
-					$newwidth=1024;
-					$newheight=($height/$width)*$newwidth; // 667
-					resize_crop_image($newwidth, $newheight, $filetowrite, $filetowrite);
+					// Resize image if it is over 1024 in witdth
+					if($width > 1024){
+						$newwidth=1024;
+						$newheight=($height/$width)*$newwidth; // 667
+						resize_crop_image($newwidth, $newheight, $filetowrite, $filetowrite);
+					}
+
+
+
+
+					// Respond to the successful upload with JSON.
+					// Use a location key to specify the path to the saved image resource.
+					// { location : '/your/uploaded/image/file'}
+					$filetowrite = $upload_path . "/" . $new_name;
+					echo json_encode(array('location' => $filetowrite));
+				} // uploaded
+				else{
+					header("HTTP/1.1 400 Could not upload.");
+					return;
 				}
-
-
-
-
-				// Respond to the successful upload with JSON.
-				// Use a location key to specify the path to the saved image resource.
-				// { location : '/your/uploaded/image/file'}
-				echo json_encode(array('location' => $filetowrite));
-
-			}
-
+			} // jpg, png
 		} // process == 1
 	} // recipe found
 }

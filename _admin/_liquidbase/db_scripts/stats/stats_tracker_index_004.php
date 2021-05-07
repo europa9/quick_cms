@@ -1,3 +1,4 @@
+
 <?php
 if(isset($_SESSION['admin_user_id'])){
 
@@ -21,6 +22,7 @@ if(isset($_SESSION['admin_user_id'])){
 					PRIMARY KEY(tracker_id), 
 					tracker_ip VARCHAR(256),
 					tracker_ip_masked VARCHAR(20),
+					tracker_hostname VARCHAR(256),
 					tracker_month INT,
 					tracker_month_short VARCHAR(10),
 					tracker_year INT,
@@ -30,6 +32,7 @@ if(isset($_SESSION['admin_user_id'])){
 					tracker_hour_minute_end VARCHAR(5),
 					tracker_seconds_spent INT,
 					tracker_time_spent VARCHAR(25),
+					tracker_user_agent VARCHAR(256),
 					tracker_os VARCHAR(256),
 					tracker_browser VARCHAR(256),
 					tracker_type VARCHAR(256),

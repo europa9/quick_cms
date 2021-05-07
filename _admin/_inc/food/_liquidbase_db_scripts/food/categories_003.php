@@ -43,6 +43,7 @@ echo"
 	  	   category_name VARCHAR(50),
 	  	   category_age_restriction INT, 
 	  	   category_parent_id INT,
+	  	   category_symbolic_link_to_category_id INT,
 	  	   category_icon VARCHAR(50),
 	  	   category_last_updated DATETIME,
 	  	   category_note VARCHAR(50),
@@ -154,7 +155,7 @@ echo"
 
 
 
-		// mysqli_query($link, "ALTER TABLE $t_food_categories MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98")or die(mysqli_error($link));
+		mysqli_query($link, "UPDATE $t_food_categories SET category_symbolic_link_to_category_id=0")or die(mysqli_error($link));
 
 
 

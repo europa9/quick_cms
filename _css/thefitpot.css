@@ -46,7 +46,7 @@ div.grid_wrapper > div.grid_item > a > img{
 }
 div.grid_wrapper > div.grid_item > a > span{
 	float: left;
-	padding: 10px 0px 0px 0px;
+	padding: 10px 0px 0px 6px;
 	font-size: 110%;
 	color: #474445;
 }

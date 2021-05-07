@@ -1222,15 +1222,15 @@ else{
 			$inp_tracker_ip_masked = "..." . $inp_tracker_ip_masked;
 			$inp_tracker_ip_masked_mysql = quote_smart($link, $inp_tracker_ip_masked);
 			mysqli_query($link, "INSERT INTO $t_stats_tracker_index 
-			(tracker_id, tracker_ip, tracker_ip_masked, tracker_month, tracker_month_short, 
-			tracker_year, tracker_time_start, tracker_hour_minute_start, tracker_time_end, tracker_hour_minute_end, 
-			tracker_seconds_spent, tracker_time_spent, tracker_os, tracker_browser, tracker_type,
-			tracker_accept_language, tracker_language, tracker_country_name, tracker_hits, tracker_last_url_value,
-			tracker_last_url_title, tracker_last_url_title_fetched) 
+			(tracker_id, tracker_ip, tracker_ip_masked, tracker_hostname, tracker_month, 
+			tracker_month_short, tracker_year, tracker_time_start, tracker_hour_minute_start, tracker_time_end, 
+			tracker_hour_minute_end, tracker_seconds_spent, tracker_time_spent, tracker_user_agent, tracker_os, 
+			tracker_browser, tracker_type, tracker_accept_language, tracker_language, tracker_country_name, 
+			tracker_hits, tracker_last_url_value, tracker_last_url_title, tracker_last_url_title_fetched) 
 			VALUES
-			(NULL, $my_ip_mysql, $inp_tracker_ip_masked_mysql, '$inp_month', '$inp_month_short', 
+			(NULL, $my_ip_mysql, $inp_tracker_ip_masked_mysql, $my_hostname_mysql, '$inp_month', '$inp_month_short', 
 			'$inp_year', '$inp_unix_time', '$inp_hour_minute', '$inp_unix_time', '$inp_hour_minute',
-			 0, 0, $inp_user_agent_os_mysql, $inp_user_agent_browser_mysql, '$get_stats_user_agent_type', 
+			 0, 0, $my_user_agent_mysql, $inp_user_agent_os_mysql, $inp_user_agent_browser_mysql, '$get_stats_user_agent_type', 
 			$inp_accpeted_language_mysql, '$get_current_language_active_iso_two', $inp_geoname_country_name_mysql, 1, $inp_url_mysql, 
 			$inp_title_mysql, 0)") or die(mysqli_error($link));
 

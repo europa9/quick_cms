@@ -445,8 +445,95 @@ else{
 
 	<!-- //Sessions -->
 
+	<!-- Comments -->
+		<a id=\"comments\"></a>
+		<h2>$l_comments</h2>
+
+		<p>
+		<a href=\"weekly_workout_plan_new_comment.php?weekly_id=$get_current_workout_weekly_id&amp;l=$l\" class=\"btn_default\">$l_new_comment</a>
+		</p>
 
 
+		<!-- View comments -->
+			";
+			$query_groups = "SELECT comment_id, comment_plan_id, comment_language, comment_approved, comment_datetime, comment_time, comment_date_print, comment_user_id, comment_user_name, comment_user_alias, comment_user_image_path, comment_user_image_file, comment_user_ip, comment_user_hostname, comment_user_agent, comment_title, comment_text, comment_rating, comment_helpful_clicks, comment_useless_clicks, comment_reported, comment_reported_by_user_id, comment_reported_reason, comment_report_checked, comment_report_checked_comment FROM $t_workout_plans_weekly_comments WHERE comment_plan_id=$get_current_workout_weekly_id ORDER BY comment_id ASC";
+			$result_groups = mysqli_query($link, $query_groups);
+			while($row_groups = mysqli_fetch_row($result_groups)) {
+				list($get_comment_id, $get_comment_plan_id, $get_comment_language, $get_comment_approved, $get_comment_datetime, $get_comment_time, $get_comment_date_print, $get_comment_user_id, $get_comment_user_name, $get_comment_user_alias, $get_comment_user_image_path, $get_comment_user_image_file, $get_comment_user_ip, $get_comment_user_hostname, $get_comment_user_agent, $get_comment_title, $get_comment_text, $get_comment_rating, $get_comment_helpful_clicks, $get_comment_useless_clicks, $get_comment_reported, $get_comment_reported_by_user_id, $get_comment_reported_reason, $get_comment_report_checked, $get_comment_report_checked_comment) = $row_groups;
+		
+				echo"
+				<a id=\"comment$get_comment_id\"></a>
+				<div class=\"clear\" style=\"height:14px;\"></div>
+
+				<div class=\"comment_item\">
+					<table style=\"width: 100%;\">
+					 <tr>
+					  <td style=\"width: 80px;vertical-align:top;\">
+						<!-- Image -->
+							<p style=\"padding: 10px 0px 10px 0px;margin:0;\">
+							<a href=\"$root/users/view_profile.php?user_id=$get_comment_user_id&amp;l=$l\">";
+							if($get_comment_user_image_file == "" OR !(file_exists("$root/$get_comment_user_image_path/$get_comment_user_image_file"))){ 
+								echo"<img src=\"_gfx/avatar_blank_64.png\" alt=\"avatar_blank_64.png\" class=\"comment_avatar\" />";
+							} 
+							else{ 
+								$inp_new_x = 65; // 950
+								$inp_new_y = 65; // 640
+								$thumb_full_path = "$root/$get_comment_user_image_path/user_" . $get_comment_user_id . "-" . $inp_new_x . "x" . $inp_new_y . ".png";
+								if(!(file_exists("$thumb_full_path"))){
+									resize_crop_image($inp_new_x, $inp_new_y, "$root/_uploads/users/images/$get_comment_user_id/$get_comment_user_image_file", "$thumb_full_path");
+								}
+
+								echo"	<img src=\"$thumb_full_path\" alt=\"$get_comment_user_image_file\" class=\"comment_view_avatar\" />"; 
+							} 
+							echo"</a>
+							</p>
+							<!-- //Image -->
+					  </td>
+					  <td style=\"vertical-align:top;\">
+
+						
+						<!-- Menu -->
+							<div style=\"float: right;\">
+							";
+							if(isset($my_user_id)){
+								if($get_comment_user_id == "$my_user_id" OR $get_my_user_rank == "admin" OR $get_my_user_rank == "moderator"){
+									echo"
+									<a href=\"weekly_workout_plan_edit_comment.php?comment_id=$get_comment_id&amp;l=$l\"><img src=\"$root/users/_gfx/edit.png\" alt=\"edit.png\" title=\"$l_edit\" /></a>
+									<a href=\"weekly_workout_plan_delete_comment.php?comment_id=$get_comment_id&amp;l=$l\"><img src=\"$root/users/_gfx/delete.png\" alt=\"delete.png\" title=\"$l_delete\" /></a>
+									";
+								}
+								else{
+									echo"
+									<a href=\"weekly_workout_plan_report_comment.php?comment_id=$get_comment_id&amp;l=$l\"><img src=\"_gfx/icons/report_grey.png\" alt=\"report_grey.png\" title=\"$l_report\" /></a>
+									";
+								}
+							}
+							echo"	
+							</div>
+						<!-- //Menu -->
+
+
+						<!-- Author + date -->
+						<p style=\"margin:0;padding:0;\">
+						<span class=\"recipes_comment_by\">$l_by</span>
+						<a href=\"$root/users/view_profile.php?user_id=$get_comment_user_id&amp;l=$l\" class=\"recipes_comment_author\">$get_comment_user_alias</a>
+						<a href=\"#comment$get_comment_id\" class=\"recipes_comment_date\">$get_comment_date_print</a></span>
+						</p>
+
+						<!-- //Author + date -->
+
+						<!-- Comment -->
+							<p style=\"margin-top: 0px;padding-top: 0;\">$get_comment_text</p>
+						<!-- Comment -->
+					  </td>
+					 </tr>
+					</table>
+				</div>
+				";
+			}
+			echo"
+		<!-- //View comments -->
+	<!-- //Comments -->
 	";
 }
 

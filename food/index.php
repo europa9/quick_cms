@@ -247,9 +247,27 @@ echo"
 	</div>
 <!-- //All categories -->
 
+
+<!-- Tags -->
+	<div class=\"clear\"></div>
+	<p style=\"padding: 20px 0px 0px 0px;margin: 0px 0px 0px 0px;\">
+	";
+	$query_t = "SELECT tag_id, tag_language, tag_title, tag_title_clean FROM $t_food_tags_unique WHERE tag_language=$l_mysql ORDER BY tag_unique_views_counter ASC";
+	$result_t = mysqli_query($link, $query_t);
+	while($row_t = mysqli_fetch_row($result_t)) {
+		list($get_tag_id, $get_tag_language, $get_tag_title, $get_tag_title_clean) = $row_t;
+		echo"
+		<a href=\"view_tag.php?tag=$get_tag_title_clean&amp;l=$l\" class=\"btn_default\">$get_tag_title</a>
+		";
+	}
+	echo"
+	</p>
+<!-- //Tags -->
+
+
 <!-- New products -->
 	
-	<h2 style=\"margin-top: 20px;\">$l_new_products</h2>
+	<h2 style=\"margin-top: 10px;\">$l_new_products</h2>
 
 
 	<div class=\"clear\"></div>
@@ -267,7 +285,6 @@ echo"
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
 		list($get_food_id, $get_food_user_id, $get_food_name, $get_food_clean_name, $get_food_manufacturer_name, $get_food_manufacturer_name_and_food_name, $get_food_description, $get_food_country, $get_food_net_content_metric, $get_food_net_content_measurement_metric, $get_food_net_content_us, $get_food_net_content_measurement_us, $get_food_net_content_added_measurement, $get_food_serving_size_metric, $get_food_serving_size_measurement_metric, $get_food_serving_size_us, $get_food_serving_size_measurement_us, $get_food_serving_size_added_measurement, $get_food_serving_size_pcs, $get_food_serving_size_pcs_measurement, $get_food_energy_metric, $get_food_fat_metric, $get_food_saturated_fat_metric, $get_food_monounsaturated_fat_metric, $get_food_polyunsaturated_fat_metric, $get_food_cholesterol_metric, $get_food_carbohydrates_metric, $get_food_carbohydrates_of_which_sugars_metric, $get_food_dietary_fiber_metric, $get_food_proteins_metric, $get_food_salt_metric, $get_food_sodium_metric, $get_food_energy_us, $get_food_fat_us, $get_food_saturated_fat_us, $get_food_monounsaturated_fat_us, $get_food_polyunsaturated_fat_us, $get_food_cholesterol_us, $get_food_carbohydrates_us, $get_food_carbohydrates_of_which_sugars_us, $get_food_dietary_fiber_us, $get_food_proteins_us, $get_food_salt_us, $get_food_sodium_us, $get_food_score, $get_food_energy_calculated_metric, $get_food_fat_calculated_metric, $get_food_saturated_fat_calculated_metric, $get_food_monounsaturated_fat_calculated_metric, $get_food_polyunsaturated_fat_calculated_metric, $get_food_cholesterol_calculated_metric, $get_food_carbohydrates_calculated_metric, $get_food_carbohydrates_of_which_sugars_calculated_metric, $get_food_dietary_fiber_calculated_metric, $get_food_proteins_calculated_metric, $get_food_salt_calculated_metric, $get_food_sodium_calculated_metric, $get_food_energy_calculated_us, $get_food_fat_calculated_us, $get_food_saturated_fat_calculated_us, $get_food_monounsaturated_fat_calculated_us, $get_food_polyunsaturated_fat_calculated_us, $get_food_cholesterol_calculated_us, $get_food_carbohydrates_calculated_us, $get_food_carbohydrates_of_which_sugars_calculated_us, $get_food_dietary_fiber_calculated_us, $get_food_proteins_calculated_us, $get_food_salt_calculated_us, $get_food_sodium_calculated_us, $get_food_barcode, $get_food_main_category_id, $get_food_sub_category_id, $get_food_image_path, $get_food_image_a, $get_food_thumb_a_small, $get_food_thumb_a_medium, $get_food_thumb_a_large, $get_food_image_b, $get_food_thumb_b_small, $get_food_thumb_b_medium, $get_food_thumb_b_large, $get_food_image_c, $get_food_thumb_c_small, $get_food_thumb_c_medium, $get_food_thumb_c_large, $get_food_image_d, $get_food_thumb_d_small, $get_food_thumb_d_medium, $get_food_thumb_d_large, $get_food_image_e, $get_food_thumb_e_small, $get_food_thumb_e_medium, $get_food_thumb_e_large, $get_food_last_used, $get_food_language, $get_food_synchronized, $get_food_accepted_as_master, $get_food_notes, $get_food_unique_hits, $get_food_unique_hits_ip_block, $get_food_comments, $get_food_likes, $get_food_dislikes, $get_food_likes_ip_block, $get_food_user_ip, $get_food_created_date, $get_food_last_viewed, $get_food_age_restriction) = $row;
-			
 
 		if($get_food_image_a != "" && file_exists("../$get_food_image_path/$get_food_image_a")){	
 			// Name saying
@@ -345,6 +362,26 @@ echo"
 				echo"
 				</p>
 				";
+
+		// Tags
+		$t = 0;
+		$query_t = "SELECT tag_id, tag_title, tag_title_clean FROM $t_food_index_tags WHERE tag_food_id=$get_food_id ORDER BY tag_title ASC";
+		$result_t = mysqli_query($link, $query_t);
+		while($row_t = mysqli_fetch_row($result_t)) {
+			list($get_tag_id, $get_tag_title, $get_tag_title_clean) = $row_t;
+			if($t == "0"){
+				echo"<p style=\"padding-top:0;\">";
+			}
+
+			echo"
+			<a href=\"view_tag.php?tag=$get_tag_title_clean&amp;l=$l\" class=\"btn_default_small\">$get_tag_title</a>
+			";
+			$t++;
+
+		}
+		if($t > 0){
+			echo"</p>";
+		}
 
 		if($nutritional_content_layout == "1" && ($get_current_view_hundred_metric == "1" OR $get_current_view_pcs_metric == "1" OR $get_current_view_eight_us == "1" OR $get_current_view_pcs_us == "1")){
 				

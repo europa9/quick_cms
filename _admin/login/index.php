@@ -264,6 +264,7 @@ $row = mysqli_fetch_row($result);
 list($get_stats_user_agent_id, $get_stats_user_agent_string, $get_stats_user_agent_type, $get_stats_user_agent_browser, $get_stats_user_agent_browser_version, $get_stats_user_agent_browser_icon, $get_stats_user_agent_os, $get_stats_user_agent_os_version, $get_stats_user_agent_os_icon, $get_stats_user_agent_bot, $get_stats_user_agent_bot_icon, $get_stats_user_agent_bot_website, $get_stats_user_agent_banned) = $row;
 if($get_stats_user_agent_id == ""){
 	$define_in_register_stats = 1;
+	$root = "../..";
 	include("$root/_admin/_functions/registrer_stats_autoinsert_new_user_agent.php");
 }
 else{

@@ -200,10 +200,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				";
 
 				// Get all categories
-				$query = "SELECT category_id, category_name, category_parent_id FROM $t_food_categories WHERE category_user_id='0' AND category_parent_id=$main_category_id_mysql ORDER BY category_name ASC";
+				$query = "SELECT category_id, category_name, category_parent_id, category_symbolic_link_to_category_id FROM $t_food_categories WHERE category_user_id='0' AND category_parent_id=$main_category_id_mysql ORDER BY category_name ASC";
 				$result = mysqli_query($link, $query);
 				while($row = mysqli_fetch_row($result)) {
-					list($get_sub_category_id, $get_sub_category_name, $get_sub_category_parent_id) = $row;
+					list($get_sub_category_id, $get_sub_category_name, $get_sub_category_parent_id, $get_sub_category_symbolic_link_to_category_id) = $row;
 				
 					// Translation
 					$query_t = "SELECT category_translation_value FROM $t_food_categories_translations WHERE category_id=$get_sub_category_id AND category_translation_language=$l_mysql";
@@ -211,8 +211,17 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$row_t = mysqli_fetch_row($result_t);
 					list($get_category_translation_value) = $row_t;
 
+					// Link
+					if($get_sub_category_symbolic_link_to_category_id == "0"){
+						$category_id = "$get_sub_category_id";
+					}
+					else{
+						$category_id = "$get_sub_category_symbolic_link_to_category_id";
+					}
+
+
 					echo"
-					<option value=\"new_food_4_general_information.php?main_category_id=$main_category_id&amp;sub_category_id=$get_sub_category_id&amp;barcode=$barcode&amp;&amp;l=$l\">$get_category_translation_value</option>\n";
+					<option value=\"new_food_4_general_information.php?main_category_id=$main_category_id&amp;sub_category_id=$category_id&amp;barcode=$barcode&amp;&amp;l=$l\">$get_category_translation_value</option>\n";
 					
 				}
 				echo"

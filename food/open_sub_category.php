@@ -393,10 +393,10 @@ else{
 	<!-- Sub categories -->
 		<div id=\"food_show_sub_categories\">
 			<ul>";
-			$queryb = "SELECT category_id, category_name, category_parent_id FROM $t_food_categories WHERE category_user_id='0' AND category_parent_id='$get_current_main_category_id' ORDER BY category_name ASC";
+			$queryb = "SELECT category_id, category_name, category_parent_id, category_symbolic_link_to_category_id FROM $t_food_categories WHERE category_user_id='0' AND category_parent_id='$get_current_main_category_id' ORDER BY category_name ASC";
 			$resultb = mysqli_query($link, $queryb);
 			while($rowb = mysqli_fetch_row($resultb)) {
-				list($get_sub_category_id, $get_sub_category_name, $get_sub_category_parent_id) = $rowb;
+				list($get_sub_category_id, $get_sub_category_name, $get_sub_category_parent_id, $get_sub_category_symbolic_link_to_category_id) = $rowb;
 
 				// Translation
 				$query_t = "SELECT category_translation_value FROM $t_food_categories_translations WHERE category_id=$get_sub_category_id AND category_translation_language=$l_mysql";
@@ -404,8 +404,16 @@ else{
 				$row_t = mysqli_fetch_row($result_t);
 				list($get_category_translation_value) = $row_t;
 
+				// Link
+				if($get_sub_category_symbolic_link_to_category_id == "0"){
+					$category_link = "open_sub_category.php?main_category_id=$get_sub_category_parent_id&amp;sub_category_id=$get_sub_category_id&amp;l=$l";
+				}
+				else{
+					$category_link = "open_sub_category.php?main_category_id=$get_sub_category_parent_id&amp;sub_category_id=$get_sub_category_symbolic_link_to_category_id&amp;l=$l";
+				}
+
 				echo"
-				<li><a href=\"open_sub_category.php?main_category_id=$main_category_id&amp;sub_category_id=$get_sub_category_id&amp;system=$system&amp;l=$l\""; if($get_sub_category_id == "$sub_category_id"){ echo" class=\"active\""; } echo">$get_category_translation_value</a></li>
+				<li><a href=\"$category_link\""; if($get_sub_category_id == "$sub_category_id"){ echo" class=\"active\""; } echo">$get_category_translation_value</a></li>
 				";
 			}
 			echo"
@@ -739,6 +747,26 @@ else{
 				echo"
 				</p>
 				";
+	
+				// Tags
+				$t = 0;
+				$query_t = "SELECT tag_id, tag_title, tag_title_clean FROM $t_food_index_tags WHERE tag_food_id=$get_food_id ORDER BY tag_title ASC";
+				$result_t = mysqli_query($link, $query_t);
+				while($row_t = mysqli_fetch_row($result_t)) {
+					list($get_tag_id, $get_tag_title, $get_tag_title_clean) = $row_t;
+					if($t == "0"){
+						echo"<p style=\"padding-top:0;\">";
+					}
+
+					echo"
+					<a href=\"view_tag.php?tag=$get_tag_title_clean&amp;l=$l\" class=\"btn_default_small\">$get_tag_title</a>
+					";
+					$t++;
+
+				}
+				if($t > 0){
+					echo"</p>";
+				}
 
 				if($get_current_view_hundred_metric == "1" OR $get_current_view_pcs_metric == "1" OR $get_current_view_eight_us == "1" OR $get_current_view_pcs_us == "1"){
 				

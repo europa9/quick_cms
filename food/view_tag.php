@@ -184,7 +184,7 @@ echo"
 
 
 <!-- Sorting -->
-		<div style=\"margin-top: 20px;\">
+	<div>
 			<script>
 			\$(function(){
 				\$('#inp_order_by_select').on('change', function () {
@@ -231,7 +231,20 @@ echo"
 	</div>
 <!-- //Sorting -->
 
-
+<!-- Tags -->
+	<p>
+	";
+	$query_t = "SELECT tag_id, tag_language, tag_title, tag_title_clean FROM $t_food_tags_unique WHERE tag_language=$l_mysql ORDER BY tag_unique_views_counter ASC";
+	$result_t = mysqli_query($link, $query_t);
+	while($row_t = mysqli_fetch_row($result_t)) {
+		list($get_tag_id, $get_tag_language, $get_tag_title, $get_tag_title_clean) = $row_t;
+		echo"
+		<a href=\"view_tag.php?tag=$get_tag_title_clean&amp;l=$l\" class=\"btn_default\""; if($tag == "$get_tag_title_clean"){ echo" style=\"font-weight: bold;\""; } echo">$get_tag_title</a>
+		";
+	}
+	echo"
+	</p>
+<!-- //Tags -->
 ";
 
 

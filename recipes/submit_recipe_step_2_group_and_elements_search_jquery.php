@@ -132,12 +132,11 @@ if(isset($_GET['view_id']) OR isset($_POST['view_id'])) {
 	}
 	$view_id = strip_tags(stripslashes($view_id));
 	if(!(is_numeric($view_id))){
-		echo"View id is not numeric";
-		die;
+		$view_id = 0;
 	}
 }
 else{
-	$view_id = "";
+	$view_id = 0;
 }
 
 

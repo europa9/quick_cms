@@ -204,10 +204,10 @@ elseif($action == "edit_category" && isset($_GET['category_id'])){
 	$category_id_mysql = quote_smart($link, $category_id);
 
 	// Select category
-	$query = "SELECT category_id, category_user_id, category_name, category_parent_id, category_age_limit FROM $t_food_categories WHERE category_id=$category_id_mysql";
+	$query = "SELECT category_id, category_user_id, category_name, category_parent_id, category_symbolic_link_to_category_id, category_age_limit FROM $t_food_categories WHERE category_id=$category_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_category_id, $get_current_category_user_id, $get_current_category_name, $get_current_category_parent_id, $get_current_category_age_limit) = $row;
+	list($get_current_category_id, $get_current_category_user_id, $get_current_category_name, $get_current_category_parent_id, $get_current_category_symbolic_link_to_category_id, $get_current_category_age_limit) = $row;
 
 	if($get_current_category_id == ""){
 		echo"
@@ -228,13 +228,21 @@ elseif($action == "edit_category" && isset($_GET['category_id'])){
 			$inp_category_parent_id = output_html($inp_category_parent_id);
 			$inp_category_parent_id_mysql = quote_smart($link, $inp_category_parent_id);
 
+			$inp_symbolic_link_to_category = $_POST['inp_symbolic_link_to_category'];
+			$inp_symbolic_link_to_category = output_html($inp_symbolic_link_to_category);
+			$inp_symbolic_link_to_category_mysql = quote_smart($link, $inp_symbolic_link_to_category);
+
 			$inp_category_age_limit = $_POST['inp_category_age_limit'];
 			$inp_category_age_limit = output_html($inp_category_age_limit);
 			$inp_category_age_limit_mysql = quote_smart($link, $inp_category_age_limit);
 
 
 			// Update
-			$result = mysqli_query($link, "UPDATE $t_food_categories SET category_name=$inp_category_name_mysql, category_parent_id=$inp_category_parent_id_mysql, category_age_limit=$inp_category_age_limit_mysql WHERE category_id=$category_id_mysql");
+			$result = mysqli_query($link, "UPDATE $t_food_categories SET 
+							category_name=$inp_category_name_mysql, 
+							category_parent_id=$inp_category_parent_id_mysql,
+							category_symbolic_link_to_category_id=$inp_symbolic_link_to_category_mysql,
+							category_age_limit=$inp_category_age_limit_mysql WHERE category_id=$category_id_mysql");
 
 			// Send success
 			$url = "index.php?open=$open&page=categories&action=edit_category&category_id=$get_current_category_id&ft=success&fm=changes_saved&language=$language";
@@ -320,9 +328,40 @@ elseif($action == "edit_category" && isset($_GET['category_id'])){
 			</select>
 			</p>
 
+			<p><b>Symbolic link to category:</b><br />
+			A symbolic link is a link instead of a category. When a link is clicked the user will be taken to the category.<br />
+
+			<select name=\"inp_symbolic_link_to_category\">
+				<option value=\"0\""; if($get_current_category_symbolic_link_to_category_id == "0"){ echo" selected=\"selected\""; } echo">- None -</option>\n";
+				$query = "SELECT category_id, category_name, category_parent_id FROM $t_food_categories WHERE category_user_id='0' AND category_parent_id=0 ORDER BY category_name ASC";
+				$result = mysqli_query($link, $query);
+				while($row = mysqli_fetch_row($result)) {
+					list($get_category_id, $get_category_name, $get_category_parent_id) = $row;
+					echo"			";
+					echo"<option value=\"\"></option>\n";
+					echo"<option value=\"$get_category_id\""; if($get_current_category_symbolic_link_to_category_id == "$get_category_id"){ echo" selected=\"selected\""; } echo">$get_category_name</option>\n";
+
+
+					$query_sub = "SELECT category_id, category_name, category_parent_id FROM $t_food_categories WHERE category_user_id='0' AND category_parent_id=$get_category_id ORDER BY category_name ASC";
+					$result_sub = mysqli_query($link, $query_sub);
+					while($row_sub = mysqli_fetch_row($result_sub)) {
+						list($get_sub_category_id, $get_sub_category_name, $get_sub_category_parent_id) = $row_sub;
+
+						echo"			";
+						echo"<option value=\"$get_sub_category_id\""; if($get_current_category_symbolic_link_to_category_id == "$get_sub_category_id"){ echo" selected=\"selected\""; } echo">&nbsp; $get_sub_category_name</option>\n";
+
+					}
+				}
+			echo"
+			</select>
+			</p>
+
+
+
+
 			<p><b>Age limit:</b><br />
 			<input type=\"radio\" name=\"inp_category_age_limit\" value=\"1\""; if($get_current_category_age_limit == "1"){ echo" checked=\"checked\""; } echo" /> Yes
-			<input type=\"radio\" name=\"inp_category_age_limit\" value=\"0\""; if($get_current_category_age_limit == "0"){ echo" checked=\"checked\""; } echo" /> No
+			<input type=\"radio\" name=\"inp_category_age_limit\" value=\"0\""; if($get_current_category_age_limit == "0" OR $get_current_category_age_limit == ""){ echo" checked=\"checked\""; } echo" /> No
 			</p>
 
 			<p>
@@ -445,6 +484,10 @@ elseif($action == "new_category"){
 		$inp_category_parent_id = output_html($inp_category_parent_id);
 		$inp_category_parent_id_mysql = quote_smart($link, $inp_category_parent_id);
 
+		$inp_symbolic_link_to_category = $_POST['inp_symbolic_link_to_category'];
+		$inp_symbolic_link_to_category = output_html($inp_symbolic_link_to_category);
+		$inp_symbolic_link_to_category_mysql = quote_smart($link, $inp_symbolic_link_to_category);
+
 		$inp_category_age_limit = $_POST['inp_category_age_limit'];
 		$inp_category_age_limit = output_html($inp_category_age_limit);
 		$inp_category_age_limit_mysql = quote_smart($link, $inp_category_age_limit);
@@ -456,9 +499,9 @@ elseif($action == "new_category"){
 
 		// Insert
 		mysqli_query($link, "INSERT INTO $t_food_categories
-		(category_id, category_user_id, category_name, category_parent_id, category_note, category_age_limit) 
+		(category_id, category_user_id, category_name, category_parent_id, category_symbolic_link_to_category_id, category_note, category_age_limit) 
 		VALUES 
-		(NULL, '0', $inp_category_name_mysql, $inp_category_parent_id_mysql, $inp_category_note_mysql, $inp_category_age_limit_mysql)")
+		(NULL, '0', $inp_category_name_mysql, $inp_category_parent_id_mysql, $inp_symbolic_link_to_category_mysql, $inp_category_note_mysql, $inp_category_age_limit_mysql)")
 		or die(mysqli_error($link));
 
 		// Get category ID
@@ -466,6 +509,9 @@ elseif($action == "new_category"){
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
 		list($get_current_category_id, $get_current_category_user_id, $get_current_category_name, $get_current_category_parent_id) = $row;
+
+
+
 
 		// Send success
 		if($inp_category_parent_id == "0"){
@@ -516,6 +562,30 @@ elseif($action == "new_category"){
 				list($get_category_id, $get_category_name, $get_category_parent_id) = $row;
 				echo"			";
 				echo"<option value=\"$get_category_id\">$get_category_name</option>\n";
+			}
+		echo"
+		</select>
+		</p>
+			
+		<p><b>Symbolic link to category:</b><br />
+		A symbolic link is a link instead of a category. When a link is clicked the user will be taken to the category.<br />
+		<select name=\"inp_symbolic_link_to_category\">
+			<option value=\"0\">- None -</option>\n";
+			$query = "SELECT category_id, category_name, category_parent_id FROM $t_food_categories WHERE category_user_id='0' AND category_parent_id=0 ORDER BY category_name ASC";
+			$result = mysqli_query($link, $query);
+			while($row = mysqli_fetch_row($result)) {
+				list($get_category_id, $get_category_name, $get_category_parent_id) = $row;
+				echo"			";
+				echo"<option value=\"0\"></option>\n";
+				echo"<option value=\"$get_category_id\">$get_category_name</option>\n";
+
+				$query_sub = "SELECT category_id, category_name, category_parent_id FROM $t_food_categories WHERE category_user_id='0' AND category_parent_id=$get_category_id ORDER BY category_name ASC";
+				$result_sub = mysqli_query($link, $query_sub);
+				while($row_sub = mysqli_fetch_row($result_sub)) {
+					list($get_sub_category_id, $get_sub_category_name, $get_sub_category_parent_id) = $row_sub;
+					echo"			";
+					echo"<option value=\"$get_sub_category_id\">&nbsp; $get_sub_category_name</option>\n";
+				}
 			}
 		echo"
 		</select>

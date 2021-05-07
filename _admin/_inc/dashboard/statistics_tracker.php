@@ -102,16 +102,17 @@ else{
 $tracker_id_mysql = quote_smart($link, $tracker_id);
 
 // Find year
-$query = "SELECT tracker_id, tracker_ip, tracker_ip_masked, tracker_month, tracker_month_short, tracker_year, tracker_time_start, tracker_hour_minute_start, tracker_time_end, tracker_hour_minute_end, tracker_seconds_spent, tracker_time_spent, tracker_os, tracker_browser, tracker_type, tracker_country_name, tracker_accept_language, tracker_language, tracker_last_url_value, tracker_last_url_title, tracker_last_url_title_fetched, tracker_hits FROM $t_stats_tracker_index WHERE tracker_id=$tracker_id_mysql";
+$query = "SELECT tracker_id, tracker_ip, tracker_ip_masked, tracker_hostname, tracker_month, tracker_month_short, tracker_year, tracker_time_start, tracker_hour_minute_start, tracker_time_end, tracker_hour_minute_end, tracker_seconds_spent, tracker_time_spent, tracker_user_agent, tracker_os, tracker_browser, tracker_type, tracker_country_name, tracker_accept_language, tracker_language, tracker_last_url_value, tracker_last_url_title, tracker_last_url_title_fetched, tracker_hits FROM $t_stats_tracker_index WHERE tracker_id=$tracker_id_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
-list($get_current_tracker_id, $get_current_tracker_ip, $get_current_tracker_ip_masked, $get_current_tracker_month, $get_current_tracker_month_short, $get_current_tracker_year, $get_current_tracker_time_start, $get_current_tracker_hour_minute_start, $get_current_tracker_time_end, $get_current_tracker_hour_minute_end, $get_current_tracker_seconds_spent, $get_current_tracker_time_spent, $get_current_tracker_os, $get_current_tracker_browser, $get_current_tracker_type, $get_current_tracker_country_name, $get_current_tracker_accept_language, $get_current_tracker_language, $get_current_tracker_last_url_value, $get_current_tracker_last_url_title, $get_current_tracker_last_url_title_fetched, $get_current_tracker_hits) = $row;
+list($get_current_tracker_id, $get_current_tracker_ip, $get_current_tracker_ip_masked, $get_current_tracker_hostname, $get_current_tracker_month, $get_current_tracker_month_short, $get_current_tracker_year, $get_current_tracker_time_start, $get_current_tracker_hour_minute_start, $get_current_tracker_time_end, $get_current_tracker_hour_minute_end, $get_current_tracker_seconds_spent, $get_current_tracker_time_spent, $get_current_tracker_user_agent, $get_current_tracker_os, $get_current_tracker_browser, $get_current_tracker_type, $get_current_tracker_country_name, $get_current_tracker_accept_language, $get_current_tracker_language, $get_current_tracker_last_url_value, $get_current_tracker_last_url_title, $get_current_tracker_last_url_title_fetched, $get_current_tracker_hits) = $row;
 
 if($get_current_tracker_id == ""){
 	echo"<p>Server error 404</p>";
 }
 else{
 	$year = date("Y");
+	$user_agent_sum = md5($get_current_tracker_user_agent);
 
 	echo"
 	<!-- Headline -->
@@ -130,6 +131,49 @@ else{
 		</p>
 	<!-- //Where am I? -->
 
+	<!-- About -->
+		<table>
+		 <tr>
+		  <td style=\"padding-right: 6px;vertical-align: top;\">
+			<span>
+			IP:<br />
+			Hostname:<br />
+			User agent:<br />
+			OS:<br />
+			Browser:<br />
+			Type:
+			</span>
+		  </td>
+		  <td style=\"padding-right: 10px;vertical-align: top;\">
+			<span>
+			$get_current_tracker_ip [<a href=\"index.php?open=dashboard&amp;page=banned&amp;action=add_new_banned_ip&amp;l=$l&amp;editor_language=$editor_language\">Ban</a>]<br />
+			$get_current_tracker_hostname [<a href=\"index.php?open=dashboard&amp;page=banned&amp;action=add_new_banned_hostname&amp;l=$l&amp;editor_language=$editor_language\">Ban</a>]<br />
+			$get_current_tracker_user_agent [<a href=\"$configControlPanelURLSav/index.php?open=dashboard&amp;page=user_agents&amp;mode=ban_hostname&amp;user_agent_sum=$user_agent_sum&amp;editor_language=$editor_language&amp;l=$l\">Ban</a>]<br />
+			$get_current_tracker_os<br />
+			$get_current_tracker_browser<br />
+			$get_current_tracker_type
+			</span>
+		  </td>
+		  <td style=\"padding-right: 6px;vertical-align: top;\">
+			<span>
+			Country:<br />
+			Accept language:<br />
+			Language:<br />
+			Hits:
+			</span>
+		  </td>
+		  <td style=\"vertical-align: top;\">
+			<span>
+			$get_current_tracker_country_name<br />
+			$get_current_tracker_accept_language<br />
+			$get_current_tracker_language<br />
+			$get_current_tracker_hits
+			</span>
+		  </td>
+		 </tr>
+
+		</table>
+	<!-- //About -->
 
 	<!-- URLS -->
 		<h2>URLS</h2>

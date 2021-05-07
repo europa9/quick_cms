@@ -1564,7 +1564,7 @@ else{
 										\$(\"#nettport_search_results\").html(''); 
 									},
                								success: function(html){
-                    								\$(\"#nettport_search_results\").append(html);
+                    								\$(\"#nettport_search_results\").html(html);
               								}
             							});
        							}
@@ -3256,7 +3256,7 @@ else{
 										\$(\"#nettport_search_results\").html(''); 
 									},
                								success: function(html){
-                    								\$(\"#nettport_search_results\").append(html);
+                    								\$(\"#nettport_search_results\").html(html);
               								}
             							});
        							}
