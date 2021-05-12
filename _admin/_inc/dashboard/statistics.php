@@ -28,9 +28,8 @@ $t_stats_comments_per_year 	= $mysqlPrefixSav . "stats_comments_per_year";
 $t_stats_countries_per_year  = $mysqlPrefixSav . "stats_visits_per_year";
 $t_stats_countries_per_month = $mysqlPrefixSav . "stats_visits_per_month";
 
-$t_stats_ip_to_country_ipv4 		= $mysqlPrefixSav . "stats_ip_to_country_ipv4";
-$t_stats_ip_to_country_ipv6 		= $mysqlPrefixSav . "stats_ip_to_country_ipv6";
-$t_stats_ip_to_country_geonames 	= $mysqlPrefixSav . "stats_ip_to_country_geonames";
+$t_stats_ip_to_country_lookup = $mysqlPrefixSav . "stats_ip_to_country_lookup";
+$t_languages_countries	      = $mysqlPrefixSav . "languages_countries";
 
 $t_stats_os_per_month = $mysqlPrefixSav . "stats_os_per_month";
 $t_stats_os_per_year = $mysqlPrefixSav . "stats_os_per_year";
@@ -94,8 +93,7 @@ if($action == ""){
 		<div class=\"tabs\">
 			<ul>
 				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;l=$l\" class=\"active\">Statistics</a></li>
-				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=ipv4_to_country&amp;l=$l\">IPv4 to country</a></li>
-				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=ipv6_to_country&amp;l=$l\">IPv6 to country</a></li>
+				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=ip_to_country&amp;l=$l\">IP to country</a></li>
 			</ul>
 		</div>
 		<div class=\"clear\" style=\"height: 10px;\"></div>
@@ -268,8 +266,7 @@ elseif($action == "online_now"){
 			<ul>
 				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;l=$l\">Statistics</a></li>
 				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=online_now&amp;l=$l\" class=\"active\">Online now</a></li>
-				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=ipv4_to_country&amp;l=$l\">IPv4 to country</a></li>
-				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=ipv6_to_country&amp;l=$l\">IPv6 to country</a></li>
+				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=ip_to_country&amp;l=$l\">IP to country</a></li>
 			</ul>
 		</div>
 		<div class=\"clear\" style=\"height: 10px;\"></div>
@@ -387,166 +384,14 @@ elseif($action == "online_now"){
 
 	";
 } // online now
-elseif($action == "ipv4_to_country"){
-	echo"
-	<h1>IPv4 to country</h1>
-	<!-- Menu -->
-		<div class=\"tabs\">
-			<ul>
-				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;l=$l\">Statistics</a></li>
-				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=ipv4_to_country&amp;l=$l\" class=\"active\">IPv4 to country</a></li>
-				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=ipv6_to_country&amp;l=$l\">IPv6 to country</a></li>
-			</ul>
-		</div>
-		<div class=\"clear\" style=\"height: 10px;\"></div>
-	<!-- Menu -->
-
-	<!-- Example -->
-		<h2>Example</h2>
-		";
-		if(isset($_GET['inp_ip'])) {
-			$inp_ip = $_GET['inp_ip'];
-			$inp_ip = strip_tags(stripslashes($inp_ip));
-		}
-		else{
-			$inp_ip = $_SERVER['REMOTE_ADDR'];
-			if($inp_ip == "::1"){
-				$inp_ip = "193.214.73.246";
-			}
-		}
-		echo"
-		<!-- Form -->
-			<form method=\"get\" action=\"index.php?open=dashboard&amp;page=statistics&amp;action=ipv4_to_country&amp;l=$l\" enctype=\"multipart/form-data\">
-			<p>
-			<input type=\"hidden\" name=\"open\" value=\"$open\" />
-			<input type=\"hidden\" name=\"page\" value=\"$page\" />
-			<input type=\"hidden\" name=\"action\" value=\"$action\" />
-			<input type=\"hidden\" name=\"l\" value=\"$l\" />
-			<b>IP:</b> <input type=\"text\" name=\"inp_ip\" value=\"$inp_ip\" size=\"25\" />
-			<input type=\"submit\" value=\"Search\" class=\"btn_default\" />
-			</p>
-			</form>
-		<!-- //Form -->
-		";
-
-		$inp_ip = output_html($inp_ip);
-		$ip_array = explode(".", $inp_ip);
-		$ip_a = $ip_array[0];
-		$ip_a_mysql = quote_smart($link, $ip_a);
-
-		$ip_b = $ip_array[1];
-		$ip_b_mysql = quote_smart($link, $ip_b);
-
-		$ip_c = $ip_array[2];
-		$ip_c_mysql = quote_smart($link, $ip_c);
-
-		$ip_d = $ip_array[3];
-		$ip_d_mysql = quote_smart($link, $ip_d);
-
-		$ip_number = $ip_a . $ip_b . $ip_c . $ip_d;
-		$ip_number = output_html($ip_number);
-		$ip_number_mysql = quote_smart($link, $ip_number);
-		
-		$query = "SELECT $t_stats_ip_to_country_ipv4.ip_id, $t_stats_ip_to_country_geonames.geoname_country_name FROM $t_stats_ip_to_country_ipv4 JOIN $t_stats_ip_to_country_geonames ON $t_stats_ip_to_country_ipv4.ip_geoname_id=$t_stats_ip_to_country_geonames.geoname_id";
-		$query = $query . " WHERE ip_registered_country_geoname_id != ''";
-		$query = $query . " AND $t_stats_ip_to_country_ipv4.ip_from_a<=$ip_a_mysql AND $t_stats_ip_to_country_ipv4.ip_to_a>=$ip_a_mysql";
-		$query = $query . " AND $t_stats_ip_to_country_ipv4.ip_from_b<=$ip_b_mysql AND $t_stats_ip_to_country_ipv4.ip_to_b>=$ip_b_mysql";
-		$query = $query . " AND $t_stats_ip_to_country_ipv4.ip_from_c<=$ip_c_mysql AND $t_stats_ip_to_country_ipv4.ip_to_c>=$ip_c_mysql";
-		$query = $query . " AND $t_stats_ip_to_country_ipv4.ip_from_d<=$ip_d_mysql";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_ip_id, $get_geoname_country_name) = $row;
-
-		echo"
-		<p>
-		Query: $query <br />
-		IP ID: $get_ip_id<br />
-		Country name: $get_geoname_country_name
-		</p>
-
-	<!-- //Example -->
-
-	<!-- Generate-->
-		<h2>Generate</h2>
-		<p>
-		<a href=\"index.php?open=dashboard&amp;page=statistics_ipv4_generate_insert_script&amp;editor_language=$editor_language&amp;l=$l\">Generate IPv4 insert script</a>
-		</p>
-	<!-- //Generate -->
-
-
-	<!-- ipv4 -->
-		<table class=\"hor-zebra\">
-		 <thead>
-		  <tr>
-		   <th scope=\"col\">
-			<span>Network</span>
-		   </th>
-		   <th scope=\"col\">
-			<span>Start</span>
-		   </th>
-		   <th scope=\"col\">
-			<span>Stop</span>
-		   </th>
-		   <th scope=\"col\">
-			<span>Geo</span>
-		   </th>
-		  </tr>
-		 </thead>
-		 <tbody>
-		";
-		
-
-		$query = "SELECT ip_id, ip_network, ip_from, ip_from_a, ip_from_b, ip_from_c, ip_from_d, ip_from_numeric, ip_to, ip_to_a, ip_to_b, ip_to_c, ip_to_d, ip_to_numeric, ip_geoname_id, ip_registered_country_geoname_id, ip_represented_country_geoname_id, ip_is_anonymous_proxy, ip_is_satellite_provider FROM $t_stats_ip_to_country_ipv4 LIMIT 0,500";
-		$result = mysqli_query($link, $query);
-		while($row = mysqli_fetch_row($result)) {
-			list($get_ip_id, $get_ip_network, $get_ip_from, $get_ip_from_a, $get_ip_from_b, $get_ip_from_c, $get_ip_from_d, $get_ip_from_numeric, $get_ip_to, $get_ip_to_a, $get_ip_to_b, $get_ip_to_c, $get_ip_to_d, $get_ip_to_numeric, $get_ip_geoname_id, $get_ip_registered_country_geoname_id, $get_ip_represented_country_geoname_id, $get_ip_is_anonymous_proxy, $get_ip_is_satellite_provider) = $row;
-
-			if(isset($style) && $style == "odd"){
-				$style = "";
-			}
-			else{
-				$style = "odd";
-			}
-
-			// Country
-			$query_country = "SELECT geoname_row, geoname_country_name FROM $t_stats_ip_to_country_geonames WHERE geoname_id='$get_ip_geoname_id'";
-			$result_country = mysqli_query($link, $query_country);
-			$row_country = mysqli_fetch_row($result_country);
-			list($get_geoname_row, $get_geoname_country_name) = $row_country;
-
-
-			echo"
-			 <tr>
-			  <td class=\"$style\">
-				<span>$get_ip_network</span>
-			  </td>
-			  <td class=\"$style\">
-				<span>$get_ip_from</span>
-			  </td>
-			  <td class=\"$style\">
-				<span>$get_ip_to</span>
-			  </td>
-			  <td class=\"$style\">
-				<span>$get_geoname_country_name</span>
-			  </td>
-			 </tr>
-			";
-		}
-		echo"
-		 </tbody>
-		</table>
-	<!-- //IPv4 -->
-	";
-} // ipv4_to_country
-elseif($action == "ipv6_to_country"){
+elseif($action == "ip_to_country"){
 	echo"
 	<h1>IPv6 to country</h1>
 	<!-- Menu -->
 		<div class=\"tabs\">
 			<ul>
 				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;l=$l\">Statistics</a></li>
-				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=ipv4_to_country&amp;l=$l\">IPv4 to country</a></li>
-				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=ipv6_to_country&amp;l=$l\" class=\"active\">IPv6 to country</a></li>
+				<li><a href=\"index.php?open=dashboard&amp;page=statistics&amp;action=ip_to_country&amp;l=$l\" class=\"active\">IP to country</a></li>
 			</ul>
 		</div>
 		<div class=\"clear\" style=\"height: 10px;\"></div>
@@ -560,8 +405,8 @@ elseif($action == "ipv6_to_country"){
 		}
 		else{
 			$inp_ip = $_SERVER['REMOTE_ADDR'];
-			if($inp_ip == "::1"){
-				$inp_ip = "2605:e000:151e:c4d7:9564:867f:79d7:bceb";
+			if($inp_ip == "127.0.0.1" OR $inp_ip == "::1"){
+				$inp_ip = "2a01:799:1120:2a00:1971:4c1:f51f:a4b9";
 			}
 		}
 		echo"
@@ -572,7 +417,7 @@ elseif($action == "ipv6_to_country"){
 			<input type=\"hidden\" name=\"page\" value=\"$page\" />
 			<input type=\"hidden\" name=\"action\" value=\"$action\" />
 			<input type=\"hidden\" name=\"l\" value=\"$l\" />
-			<b>IP:</b> <input type=\"text\" name=\"inp_ip\" value=\"$inp_ip\" size=\"25\" />
+			<b>IP:</b> <input type=\"text\" name=\"inp_ip\" value=\"$inp_ip\" size=\"25\" style=\"width: 90%;\" />
 			<input type=\"submit\" value=\"Search\" class=\"btn_default\" />
 			</p>
 			</form>
@@ -580,121 +425,57 @@ elseif($action == "ipv6_to_country"){
 		";
 
 		$inp_ip = output_html($inp_ip);
-		$ip_array = explode(":", $inp_ip);
 
-		$ip_a = hexdec($ip_array[0]);
-		$ip_a_mysql = quote_smart($link, $ip_a);
 
-		$ip_b = hexdec($ip_array[1]);
-		$ip_b_mysql = quote_smart($link, $ip_b);
 
-		$ip_c = hexdec($ip_array[2]);
-		$ip_c_mysql = quote_smart($link, $ip_c);
-
-		$ip_d = hexdec($ip_array[3]);
-		$ip_d_mysql = quote_smart($link, $ip_d);
-
-		$ip_e = hexdec($ip_array[4]);
-		$ip_e_mysql = quote_smart($link, $ip_e);
-
-		$ip_f = hexdec($ip_array[5]);
-		$ip_f_mysql = quote_smart($link, $ip_f);
-
-		$ip_g = hexdec($ip_array[6]);
-		$ip_g_mysql = quote_smart($link, $ip_g);
-
-		$ip_h = hexdec($ip_array[7]);
-		$ip_h_mysql = quote_smart($link, $ip_h);
-
+		if($inp_ip != ""){
 		
-		$query = "SELECT $t_stats_ip_to_country_ipv6.ip_id, $t_stats_ip_to_country_geonames.geoname_country_name FROM $t_stats_ip_to_country_ipv6 JOIN $t_stats_ip_to_country_geonames ON $t_stats_ip_to_country_ipv6.ip_geoname_id=$t_stats_ip_to_country_geonames.geoname_id";
-		$query = $query . " WHERE ip_registered_country_geoname_id != ''";
-		$query = $query . " AND $t_stats_ip_to_country_ipv6.ip_from_dec_a<=$ip_a_mysql AND $t_stats_ip_to_country_ipv6.ip_to_dec_a>=$ip_a_mysql";
-		$query = $query . " AND $t_stats_ip_to_country_ipv6.ip_from_dec_b<=$ip_b_mysql AND $t_stats_ip_to_country_ipv6.ip_to_dec_b>=$ip_b_mysql";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_ip_id, $get_geoname_country_name) = $row;
-
-
-		echo"
-		<p>
-		Query: $query<br />
-		IP ID: $get_ip_id<br />
-		Country name: $get_geoname_country_name
-		</p>
-	<!-- //Example ipv6 -->
-
-	<!-- Generate-->
-		<h2>Generate</h2>
-		<p>
-		<a href=\"index.php?open=dashboard&amp;page=statistics_ipv6_generate_insert_script&amp;editor_language=$editor_language&amp;l=$l\">Generate IPv6 insert script</a>
-		</p>
-	<!-- //Generate -->
-
-
-	<!-- ipv6 -->
-		<table class=\"hor-zebra\">
-		 <thead>
-		  <tr>
-		   <th scope=\"col\">
-			<span>Network</span>
-		   </th>
-		   <th scope=\"col\">
-			<span>Start</span>
-		   </th>
-		   <th scope=\"col\">
-			<span>Stop</span>
-		   </th>
-		   <th scope=\"col\">
-			<span>Geo</span>
-		   </th>
-		  </tr>
-		 </thead>
-		 <tbody>
-		";
-		
-
-		$query = "SELECT ip_id, ip_network, ip_from, ip_to, ip_geoname_id FROM $t_stats_ip_to_country_ipv6 WHERE ip_from_dec_a<=$ip_a_mysql LIMIT 0,500";
-		$result = mysqli_query($link, $query);
-		while($row = mysqli_fetch_row($result)) {
-			list($get_ip_id, $get_ip_network, $get_ip_from, $get_ip_to, $get_ip_geoname_id) = $row;
-
-			if(isset($style) && $style == "odd"){
-				$style = "";
-			}
-			else{
-				$style = "odd";
+			$ip_type = "";
+			if (ip2long($inp_ip) !== false) {
+				$ip_type = "ipv4";
+			} else if (preg_match('/^[0-9a-fA-F:]+$/', $inp_ip) && @inet_pton($inp_ip)) {
+				$ip_type = "ipv6";
 			}
 
-			// Country
-			$query_country = "SELECT geoname_row, geoname_country_name FROM $t_stats_ip_to_country_geonames WHERE geoname_id='$get_ip_geoname_id'";
-			$result_country = mysqli_query($link, $query_country);
-			$row_country = mysqli_fetch_row($result_country);
-			list($get_geoname_row, $get_geoname_country_name) = $row_country;
+			// In addr
+			$in_addr = inet_pton($inp_ip); // 32bit or 128bit binary structure
+			$in_addr_mysql = quote_smart($link, $in_addr);
+			
+		
+			$query = "select * from $t_stats_ip_to_country_lookup where addr_type = '$ip_type' and ip_start <= $in_addr_mysql order by ip_start desc limit 1";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_ip_id, $get_addr_type, $get_ip_start, $get_ip_end, $get_country) = $row;
 
-
+			$get_country_name = "";
+			$get_country_iso_two = "";
+			$query_c = "";
+			if($get_ip_id != ""){
+				$country_iso_two_mysql = quote_smart($link, $get_country);
+				$query_c = "SELECT country_id, country_name, country_iso_two FROM $t_languages_countries WHERE country_iso_two=$country_iso_two_mysql";
+				$result_c = mysqli_query($link, $query_c);
+				$row_c = mysqli_fetch_row($result_c);
+				list($get_country_id, $get_country_name, $get_country_iso_two) = $row_c;
+			}
+		
 			echo"
-			 <tr>
-			  <td class=\"$style\">
-				<span>$get_ip_network</span>
-			  </td>
-			  <td class=\"$style\">
-				<span>$get_ip_from</span>
-			  </td>
-			  <td class=\"$style\">
-				<span>$get_ip_to</span>
-			  </td>
-			  <td class=\"$style\">
-				<span>$get_geoname_country_name</span>
-			  </td>
-			 </tr>
+			<p>
+			Query: $query<br />
+			Query: $query_c<br />
+			Type: $ip_type<br />
+			IP ID: $get_ip_id<br />
+			ISO 2: $get_country_iso_two<br />
+			Country name: $get_country_name<br />
+			</p>
 			";
 		}
+		else{
+			echo"<p>Invalid IP address.</p>";
+		}
 		echo"
-		 </tbody>
-		</table>
-	<!-- //IPv6 -->
+	<!-- //Example ipv6 -->
+
 	";
-} // ipv4_to_country
+} // ip_to_country
 
 ?>

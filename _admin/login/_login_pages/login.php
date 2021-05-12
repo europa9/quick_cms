@@ -61,56 +61,34 @@ if($process == "1"){
 
 
 	// Country :: Find my country based on IP
-	$get_ip_id = 0;
-	$get_geoname_country_name = "Unknown";
-	$get_geoname_country_iso_code = "ZZ";
-	$ip_array = explode(".", $my_ip);
-	$size = sizeof($ip_array);
-	if($size > 1){
-		$ip_a = $ip_array[0];
-		$ip_a_mysql = quote_smart($link, $ip_a);
-
-		$ip_b = $ip_array[1];
-		$ip_b_mysql = quote_smart($link, $ip_b);
-
-		$ip_c = $ip_array[2];
-		$ip_c_mysql = quote_smart($link, $ip_c);
-
-		$ip_d = $ip_array[3];
-		$ip_d_mysql = quote_smart($link, $ip_d);
-
-		$query = "SELECT $t_stats_ip_to_country_ipv4.ip_id, $t_stats_ip_to_country_geonames.geoname_country_iso_code, $t_stats_ip_to_country_geonames.geoname_country_name FROM $t_stats_ip_to_country_ipv4 JOIN $t_stats_ip_to_country_geonames ON $t_stats_ip_to_country_ipv4.ip_geoname_id=$t_stats_ip_to_country_geonames.geoname_id";
-		$query = $query . " WHERE ip_registered_country_geoname_id != ''";
-		$query = $query . " AND $t_stats_ip_to_country_ipv4.ip_from_a<=$ip_a_mysql AND $t_stats_ip_to_country_ipv4.ip_to_a>=$ip_a_mysql";
-		$query = $query . " AND $t_stats_ip_to_country_ipv4.ip_from_b<=$ip_b_mysql AND $t_stats_ip_to_country_ipv4.ip_to_b>=$ip_b_mysql";
-		$query = $query . " AND $t_stats_ip_to_country_ipv4.ip_from_c<=$ip_c_mysql AND $t_stats_ip_to_country_ipv4.ip_to_c>=$ip_c_mysql";
-		$query = $query . " AND $t_stats_ip_to_country_ipv4.ip_from_d<=$ip_d_mysql";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_ip_id, $get_geoname_country_iso_code, $get_geoname_country_name) = $row;
-	} // ipv4
-	else{
-		$ip_array = explode(":", $my_ip);
-
-		$ip_a = hexdec($ip_array[0]);
-		$ip_a_mysql = quote_smart($link, $ip_a);
-
-		$ip_b = hexdec($ip_array[1]);
-		$ip_b_mysql = quote_smart($link, $ip_b);
-
-		$query = "SELECT $t_stats_ip_to_country_ipv6.ip_id, $t_stats_ip_to_country_geonames.geoname_country_iso_code, $t_stats_ip_to_country_geonames.geoname_country_name FROM $t_stats_ip_to_country_ipv6 JOIN $t_stats_ip_to_country_geonames ON $t_stats_ip_to_country_ipv6.ip_geoname_id=$t_stats_ip_to_country_geonames.geoname_id";
-		$query = $query . " WHERE ip_registered_country_geoname_id != ''";
-		$query = $query . " AND $t_stats_ip_to_country_ipv6.ip_from_dec_a<=$ip_a_mysql AND $t_stats_ip_to_country_ipv6.ip_to_dec_a>=$ip_a_mysql";
-		$query = $query . " AND $t_stats_ip_to_country_ipv6.ip_from_dec_b<=$ip_b_mysql AND $t_stats_ip_to_country_ipv6.ip_to_dec_b>=$ip_b_mysql";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_ip_id, $get_geoname_country_iso_code, $get_geoname_country_name) = $row;
-	} // ipv6
-	if($get_geoname_country_name == ""){
-		$get_geoname_country_iso_code = "ZZ";
-		$get_geoname_country_name = "N/A";
+	$ip_type = "";
+	if (ip2long($my_ip) !== false) {
+		$ip_type = "ipv4";
+	} else if (preg_match('/^[0-9a-fA-F:]+$/', $my_ip) && @inet_pton($my_ip)) {
+		$ip_type = "ipv6";
 	}
-	$inp_country_mysql = quote_smart($link, $get_geoname_country_name);
+	$in_addr = inet_pton($my_ip);
+	$in_addr_mysql = quote_smart($link, $in_addr);
+
+	// echo"Type=$ip_type<br />";
+	// echo"in_addr=$in_addr<br />";
+
+	$query = "select * from $t_stats_ip_to_country_lookup where addr_type = '$ip_type' and ip_start <= $in_addr_mysql order by ip_start desc limit 1";
+	$result = mysqli_query($link, $query);
+	$row = mysqli_fetch_row($result);
+	list($get_ip_id, $get_addr_type, $get_ip_start, $get_ip_end, $get_country) = $row;
+		
+	$get_my_country_name = "";
+	$get_my_country_iso_two = "";
+	if($get_ip_id != ""){
+		$country_iso_two_mysql = quote_smart($link, $get_country);
+		$query = "SELECT country_id, country_name, country_iso_two FROM $t_languages_countries WHERE country_iso_two=$country_iso_two_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_country_id, $get_my_country_name, $get_my_country_iso_two) = $row;
+	}
+
+	$inp_country_mysql = quote_smart($link, $get_my_country_name);
 
 	$inp_browser_mysql = quote_smart($link, $get_stats_user_agent_browser);
 
@@ -257,7 +235,7 @@ if($process == "1"){
 			$message = $message . "     <span><b>$l_country:</b></span>\n";
 			$message = $message . "  </td>\n\n";
 			$message = $message . "  <td style=\"padding-right: 4px;\">\n\n";
-			$message = $message . "     <span>$get_geoname_country_name</span>\n";
+			$message = $message . "     <span>$get_my_country_name</span>\n";
 			$message = $message . "  </td>\n\n";
 			$message = $message . " </tr>\n\n";
 			$message = $message . "</table>\n\n";
@@ -357,7 +335,7 @@ if($process == "1"){
 			$message = $message . "     <span><b>$l_country:</b></span>\n";
 			$message = $message . "  </td>\n\n";
 			$message = $message . "  <td style=\"padding-right: 4px;\">\n\n";
-			$message = $message . "     <span>$get_geoname_country_name</span>\n";
+			$message = $message . "     <span>$get_my_country_name</span>\n";
 			$message = $message . "  </td>\n\n";
 			$message = $message . " </tr>\n\n";
 			$message = $message . "</table>\n\n";
@@ -421,7 +399,7 @@ if($process == "1"){
 	mysqli_query($link, "UPDATE $t_users_logins SET login_successfully=1 WHERE login_id=$get_current_login_id") or die(mysqli_error($link));
 
 	// Check if I am known
-	$inp_fingerprint = $my_hostname . "|" . $get_geoname_country_name . "|" . $get_stats_user_agent_os . "|" . $get_stats_user_agent_browser . "|" . $inp_accpeted_language;
+	$inp_fingerprint = $my_hostname . "|" . $get_my_country_name . "|" . $get_stats_user_agent_os . "|" . $get_stats_user_agent_browser . "|" . $inp_accpeted_language;
 	// $inp_fingerprint = md5($inp_fingerprint);
 	$inp_fingerprint_mysql = quote_smart($link, $inp_fingerprint);
 
@@ -503,7 +481,7 @@ if($process == "1"){
 		$message = $message . "     <span><b>$l_country:</b></span>\n";
 		$message = $message . "  </td>\n\n";
 		$message = $message . "  <td style=\"padding-right: 4px;\">\n\n";
-		$message = $message . "     <span>$get_geoname_country_name</span>\n";
+		$message = $message . "     <span>$get_my_country_name</span>\n";
 		$message = $message . "  </td>\n\n";
 		$message = $message . " </tr>\n\n";
 		$message = $message . "</table>\n\n";

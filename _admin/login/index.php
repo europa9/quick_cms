@@ -77,9 +77,8 @@ if(file_exists("$mysql_config_file")){
 	$t_banned_hostnames 		= $mysqlPrefixSav . "banned_hostnames";
 	$t_banned_user_agents		= $mysqlPrefixSav . "banned_user_agents";
 	$t_stats_user_agents_index 	= $mysqlPrefixSav . "stats_user_agents_index";
-	$t_stats_ip_to_country_ipv4 	= $mysqlPrefixSav . "stats_ip_to_country_ipv4";
-	$t_stats_ip_to_country_ipv6 	= $mysqlPrefixSav . "stats_ip_to_country_ipv6";
-	$t_stats_ip_to_country_geonames = $mysqlPrefixSav . "stats_ip_to_country_geonames";
+	$t_stats_ip_to_country_lookup 	= $mysqlPrefixSav . "stats_ip_to_country_lookup";
+	$t_languages_countries		= $mysqlPrefixSav . "languages_countries";
 	$t_users_moderator_of_the_week  = $mysqlPrefixSav . "users_moderator_of_the_week";
 }
 else{

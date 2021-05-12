@@ -148,7 +148,7 @@ if($action == "check"){
 			$month = date("m");
 			$week = date("W");
 
-			$inp_country_mysql = quote_smart($link, $get_geoname_country_name);
+			$inp_country_mysql = quote_smart($link, $get_my_country_name);
 			$inp_browser_mysql = quote_smart($link, $get_stats_user_agent_browser);
 			$inp_os_mysql = quote_smart($link, $get_stats_user_agent_os);
 			$inp_os_icon = clean($get_stats_user_agent_os);
@@ -288,7 +288,7 @@ if($action == "check"){
 				
 
 					// Check if I am known
-					$inp_fingerprint = $my_hostname . "|" . $get_geoname_country_name . "|" . $get_stats_user_agent_os . "|" . $get_stats_user_agent_browser  . "|" . $inp_accpeted_language;
+					$inp_fingerprint = $my_hostname . "|" . $get_my_country_name . "|" . $get_stats_user_agent_os . "|" . $get_stats_user_agent_browser  . "|" . $inp_accpeted_language;
 					// $inp_fingerprint = md5($inp_fingerprint);
 					$inp_fingerprint_mysql = quote_smart($link, $inp_fingerprint);
 
@@ -371,7 +371,7 @@ if($action == "check"){
 						$message = $message . "     <span><b>$l_country:</b></span>\n";
 						$message = $message . "  </td>\n\n";
 						$message = $message . "  <td style=\"padding-right: 4px;\">\n\n";
-						$message = $message . "     <span>$get_geoname_country_name</span>\n";
+						$message = $message . "     <span>$get_my_country_name</span>\n";
 						$message = $message . "  </td>\n\n";
 						$message = $message . " </tr>\n\n";
 						$message = $message . "</table>\n\n";
@@ -544,7 +544,7 @@ if($action == "check"){
 					$message = $message . "     <span><b>$l_country:</b></span>\n";
 					$message = $message . "  </td>\n\n";
 					$message = $message . "  <td style=\"padding-right: 4px;\">\n\n";
-					$message = $message . "     <span>$get_geoname_country_name</span>\n";
+					$message = $message . "     <span>$get_my_country_name</span>\n";
 					$message = $message . "  </td>\n\n";
 					$message = $message . " </tr>\n\n";
 					$message = $message . "</table>\n\n";
@@ -644,7 +644,7 @@ if($action == "check"){
 					$message = $message . "     <span><b>$l_country:</b></span>\n";
 					$message = $message . "  </td>\n\n";
 					$message = $message . "  <td style=\"padding-right: 4px;\">\n\n";
-					$message = $message . "     <span>$get_geoname_country_name</span>\n";
+					$message = $message . "     <span>$get_my_country_name</span>\n";
 					$message = $message . "  </td>\n\n";
 					$message = $message . " </tr>\n\n";
 					$message = $message . "</table>\n\n";
