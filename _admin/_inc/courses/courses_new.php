@@ -84,6 +84,10 @@ if($action == ""){
 		</p>
 	<!-- //Where am I? -->
 
+	<p>
+	<a href=\"index.php?open=courses&amp;page=categories_main_new&amp;editor_language=$editor_language&amp;l=$l\" class=\"btn_default\">New category</a>
+	</p>
+
 	<!-- Language -->
 		<p><b>Editor language:</b><br />
 		";

@@ -38,6 +38,12 @@ $t_courses_exams_index  		= $mysqlPrefixSav . "courses_exams_index";
 $t_courses_exams_qa			= $mysqlPrefixSav . "courses_exams_qa";
 $t_courses_exams_user_tries		= $mysqlPrefixSav . "courses_exams_user_tries";
 $t_courses_exams_user_tries_qa		= $mysqlPrefixSav . "courses_exams_user_tries_qa";
+
+
+/*- Functions ------------------------------------------------------------------------ */
+include("_functions/get_extension.php");
+
+
 /*- Variables ------------------------------------------------------------------------ */
 $tabindex = 0;
 
@@ -73,8 +79,144 @@ if($action == ""){
 
 
 
+		// Folder
+		if(!(is_dir("../_uploads"))){
+			mkdir("../_uploads");
+		}
+		if(!(is_dir("../_uploads/courses"))){
+			mkdir("../_uploads/courses");
+		}
+		if(!(is_dir("../_uploads/courses/categories_main"))){
+			mkdir("../_uploads/courses/categories_main");
+		}
+
+		$upload_path = "../_uploads/courses/categories_main";
+
+
+		$ft_icon = "info";
+           	$fm_icon = "nothing";
+		$icon_sizes = array('16', '18', '24', '32', '36', '48', '96', '260');
+		for($x=0;$x<sizeof($icon_sizes);$x++){
+		
+			
+			$icon_size = $icon_sizes[$x] . "x" . $icon_sizes[$x];
+				
+
+			$image_name = stripslashes($_FILES["inp_icon_$icon_size"]['name']);
+			$extension = get_extension($image_name);
+			$extension = strtolower($extension);
+
+			if($image_name){
+				if (($extension != "jpg") && ($extension != "jpeg") && ($extension != "png") && ($extension != "gif")) {
+					$ft_icon = "warning";
+					$fm_icon = "unknown_file_extension_$extension";
+				}
+				else{
+					// Give new name
+					$inp_name = $get_current_main_category_id . "_icon_" . $icon_size . ".$extension";
+					$uploaded_file = $upload_path . "/" . $inp_name;
+
+					// Upload file
+					if (move_uploaded_file($_FILES["inp_icon_$icon_size"]['tmp_name'], $uploaded_file)) {
+
+						$inp_icon_path = "_uploads/courses/categories_main";
+
+
+						// Get image size
+						$file_size = filesize($uploaded_file);
+						
+						// Check with and height
+						list($width,$height) = getimagesize($uploaded_file);
+	
+						if($width == "" OR $height == ""){
+							unlink("$uploaded_file");
+							$ft_icon = "warning";
+							$fm_icon = "getimagesize_failed";
+						}
+						else{
+							// All ok
+							$inp_icon_mysql = quote_smart($link, $inp_name);
+
+							if($icon_sizes[$x] == "16"){
+								$result = mysqli_query($link, "UPDATE $t_courses_categories_main SET 
+										main_category_icon_path='$inp_icon_path', 
+										main_category_icon_16x16=$inp_icon_mysql
+										WHERE main_category_id=$get_current_main_category_id") or die(mysqli_error($link));
+							}
+							if($icon_sizes[$x] == "18"){
+								$result = mysqli_query($link, "UPDATE $t_courses_categories_main SET 
+										main_category_icon_path='$inp_icon_path', 
+										main_category_icon_18x18=$inp_icon_mysql
+										WHERE main_category_id=$get_current_main_category_id") or die(mysqli_error($link));
+							}
+							if($icon_sizes[$x] == "24"){
+								$result = mysqli_query($link, "UPDATE $t_courses_categories_main SET 
+										main_category_icon_path='$inp_icon_path', 
+										main_category_icon_24x24=$inp_icon_mysql
+										WHERE main_category_id=$get_current_main_category_id") or die(mysqli_error($link));
+							}
+							if($icon_sizes[$x] == "32"){
+								$result = mysqli_query($link, "UPDATE $t_courses_categories_main SET 
+										main_category_icon_path='$inp_icon_path', 
+										main_category_icon_32x32=$inp_icon_mysql
+										WHERE main_category_id=$get_current_main_category_id") or die(mysqli_error($link));
+							}
+							if($icon_sizes[$x] == "36"){
+								$result = mysqli_query($link, "UPDATE $t_courses_categories_main SET 
+										main_category_icon_path='$inp_icon_path', 
+										main_category_icon_36x36=$inp_icon_mysql
+										WHERE main_category_id=$get_current_main_category_id") or die(mysqli_error($link));
+							}
+							if($icon_sizes[$x] == "48"){
+								$result = mysqli_query($link, "UPDATE $t_courses_categories_main SET 
+										main_category_icon_path='$inp_icon_path', 
+										main_category_icon_48x48=$inp_icon_mysql
+										WHERE main_category_id=$get_current_main_category_id") or die(mysqli_error($link));
+							}
+							if($icon_sizes[$x] == "96"){
+								$result = mysqli_query($link, "UPDATE $t_courses_categories_main SET 
+										main_category_icon_path='$inp_icon_path', 
+										main_category_icon_96x96=$inp_icon_mysql
+										WHERE main_category_id=$get_current_main_category_id") or die(mysqli_error($link));
+							}
+							if($icon_sizes[$x] == "260"){
+								$result = mysqli_query($link, "UPDATE $t_courses_categories_main SET 
+										main_category_icon_path='$inp_icon_path', 
+										main_category_icon_260x260=$inp_icon_mysql
+										WHERE main_category_id=$get_current_main_category_id") or die(mysqli_error($link));
+							}
+
+							$ft_icon = "success";
+							$fm_icon = "icon_uploaded";
+						}
+					}
+					else{
+						switch ($_FILES['inp_food_image']['error']) {
+							case UPLOAD_ERR_OK:
+          							$fm_icon = "There is no error, the file uploaded with success.";
+								break;
+							case UPLOAD_ERR_NO_FILE:
+           							$fm_icon = "no_file_uploaded";
+								break;
+							case UPLOAD_ERR_INI_SIZE:
+          							$fm_icon = "to_big_size_in_configuration";
+								break;
+							case UPLOAD_ERR_FORM_SIZE:
+          							$fm_icon = "to_big_size_in_form";
+								break;
+							default:
+          							$fm_icon = "unknown_error";
+								break;
+						}	
+						$ft_icon = "warning";
+					
+					}
+				}
+			}
+		} // for icons
+
 		// Header
-		$url = "index.php?open=$open&page=categories_main&editor_language=$editor_language&ft=success&fm=category_created";
+		$url = "index.php?open=$open&page=categories_main&editor_language=$editor_language&ft=success&fm=category_created&ft_icon=$ft_icon&fm_icon=$fm_icon";
 		header("Location: $url");
 		exit;
 	}
@@ -135,6 +277,40 @@ if($action == ""){
 		}
 		echo"
 		</select>
+		</p>
+
+		
+
+		<!-- Icon 48, 64, 96 -->
+			";
+
+			$icon_sizes = array('16', '18', '24', '32', '36', '48', '96', '260');
+			for($x=0;$x<sizeof($icon_sizes);$x++){
+				$icon_size = $icon_sizes[$x] . "x" . $icon_sizes[$x];
+				echo"
+				<!-- Icon x -->
+					
+					<table>
+					 <tr>
+					  <td style=\"vertical-align:top;padding-right: 20px;\">
+						<p><b>New icon ($icon_size)</b><br />
+						<input type=\"file\" name=\"inp_icon_$icon_size\"  tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+						</p>
+					  </td>
+					  <td style=\"vertical-align:top;padding-right: 20px;\">
+					
+					  </td>
+					 </tr>
+					</table>
+					
+				<!-- //Icon x -->
+				";
+			}
+			echo"
+	
+		<!-- //Icon 48, 64, 96 -->
+
+
 
 		<p><input type=\"submit\" value=\"Create\" class=\"btn_default\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
 

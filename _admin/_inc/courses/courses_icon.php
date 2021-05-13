@@ -260,8 +260,6 @@ else{
 			<div class=\"clear\" style=\"height: 10px;\"></div>
 		<!-- //Course navigation -->
 		
-		<!-- PST -->
-		<!-- //PST -->
 
 		<!-- Icon 48, 64, 96 -->
 			<form method=\"post\" action=\"index.php?open=courses&amp;page=$page&amp;course_id=$get_current_course_id&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">

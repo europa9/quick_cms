@@ -22,6 +22,9 @@ echo"
 <!-- courses categories -->
 ";
 
+mysqli_query($link, "DROP TABLE IF EXISTS $t_courses_categories_main") or die(mysqli_error());
+
+
 $query = "SELECT * FROM $t_courses_categories_main LIMIT 1";
 $result = mysqli_query($link, $query);
 if($result !== FALSE){
@@ -40,6 +43,15 @@ else{
 	   main_category_title_clean VARCHAR(200), 
 	   main_category_description TEXT, 
 	   main_category_language VARCHAR(10), 
+	   main_category_icon_path VARCHAR(150), 
+	   main_category_icon_16x16 VARCHAR(150), 
+	   main_category_icon_18x18 VARCHAR(150), 
+	   main_category_icon_24x24 VARCHAR(150), 
+	   main_category_icon_32x32 VARCHAR(150), 
+	   main_category_icon_36x36 VARCHAR(150), 
+	   main_category_icon_48x48 VARCHAR(150), 
+	   main_category_icon_96x96 VARCHAR(150), 
+	   main_category_icon_260x260 VARCHAR(150), 
 	   main_category_created DATETIME,
 	   main_category_updated DATETIME)")
 	   or die(mysqli_error());
