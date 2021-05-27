@@ -51,7 +51,10 @@ else{
 	   main_category_icon_36x36 VARCHAR(150), 
 	   main_category_icon_48x48 VARCHAR(150), 
 	   main_category_icon_96x96 VARCHAR(150), 
+	   main_category_icon_192x192 VARCHAR(150), 
 	   main_category_icon_260x260 VARCHAR(150), 
+	   main_category_header_logo VARCHAR(150), 
+	   main_category_webdesign VARCHAR(150), 
 	   main_category_created DATETIME,
 	   main_category_updated DATETIME)")
 	   or die(mysqli_error());

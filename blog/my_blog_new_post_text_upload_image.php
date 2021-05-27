@@ -224,20 +224,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				$inp_file_thumb_c_mysql = quote_smart($link, $inp_file_thumb_b);
 
 				// IP
-				$my_ip = "";
 				$my_ip = $_SERVER['REMOTE_ADDR'];
-				$my_ip = output_html($inp_ip);
-				$my_ip_mysql = quote_smart($link, $inp_ip);
+				$my_ip = output_html($my_ip);
+				$my_ip_mysql = quote_smart($link, $my_ip);
 
 				$my_hostname = "";
-				$my_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+				if($configSiteUseGethostbyaddrSav == "1"){
+					$my_hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+				}
 				$my_hostname = output_html($my_hostname);
 				$my_hostname_mysql = quote_smart($link, $my_hostname);
 
 				$my_user_agent = "";
-				if($configSiteUseGethostbyaddrSav == "1"){
-					$my_user_agent = $_SERVER['HTTP_USER_AGENT'];
-				}
+				$my_user_agent = $_SERVER['HTTP_USER_AGENT'];
 				$my_user_agent = output_html($my_user_agent);
 				$my_user_agent_mysql = quote_smart($link, $my_user_agent);
 
@@ -282,12 +281,14 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 							break;
 				}
 				header("HTTP/1.1 500 Server Error $fm");
+				echo"HTTP/1.1 500 Server Error $fm";
 			}
 		} // found blog
 	} // can post
 	else{
 		// Not logged in
 		header("HTTP/1.1 500 Server Error");
+		echo"HTTP/1.1 500 Server Error";
 	}	
 } // logged in
 else{

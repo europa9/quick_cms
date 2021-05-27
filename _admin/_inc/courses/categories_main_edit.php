@@ -55,10 +55,10 @@ $main_category_id_mysql = quote_smart($link, $main_category_id);
 
 
 if($action == ""){
-	$query = "SELECT main_category_id, main_category_title, main_category_title_clean, main_category_description, main_category_language, main_category_icon_path, main_category_icon_16x16, main_category_icon_18x18, main_category_icon_24x24, main_category_icon_32x32, main_category_icon_36x36, main_category_icon_48x48, main_category_icon_96x96, main_category_icon_260x260, main_category_created, main_category_updated FROM $t_courses_categories_main WHERE main_category_id=$main_category_id_mysql";
+	$query = "SELECT main_category_id, main_category_title, main_category_title_clean, main_category_description, main_category_language, main_category_icon_path, main_category_icon_16x16, main_category_icon_18x18, main_category_icon_24x24, main_category_icon_32x32, main_category_icon_36x36, main_category_icon_48x48, main_category_icon_96x96, main_category_icon_192x192, main_category_icon_260x260, main_category_header_logo, main_category_webdesign, main_category_created, main_category_updated FROM $t_courses_categories_main WHERE main_category_id=$main_category_id_mysql";
 	$result = mysqli_query($link, $query);
 	$row = mysqli_fetch_row($result);
-	list($get_current_main_category_id, $get_current_main_category_title, $get_current_main_category_title_clean, $get_current_main_category_description, $get_current_main_category_language, $get_current_main_category_icon_path, $get_current_main_category_icon_16x16, $get_current_main_category_icon_18x18, $get_current_main_category_icon_24x24, $get_current_main_category_icon_32x32, $get_current_main_category_icon_36x36, $get_current_main_category_icon_48x48, $get_current_main_category_icon_96x96, $get_current_main_category_icon_260x260, $get_current_main_category_created, $get_current_main_category_updated) = $row;
+	list($get_current_main_category_id, $get_current_main_category_title, $get_current_main_category_title_clean, $get_current_main_category_description, $get_current_main_category_language, $get_current_main_category_icon_path, $get_current_main_category_icon_16x16, $get_current_main_category_icon_18x18, $get_current_main_category_icon_24x24, $get_current_main_category_icon_32x32, $get_current_main_category_icon_36x36, $get_current_main_category_icon_48x48, $get_current_main_category_icon_96x96, $get_current_main_category_icon_192x192, $get_current_main_category_icon_260x260, $get_current_main_category_header_logo, $get_current_main_category_webdesign, $get_current_main_category_created, $get_current_main_category_updated) = $row;
 
 	if($get_current_main_category_id == ""){
 		echo"<p>Server error 404.</p>";
@@ -77,6 +77,10 @@ if($action == ""){
 			$inp_language = output_html($inp_language);
 			$inp_language_mysql = quote_smart($link, $inp_language);
 
+			$inp_webdesign = $_POST['inp_webdesign'];
+			$inp_webdesign = output_html($inp_webdesign);
+			$inp_webdesign_mysql = quote_smart($link, $inp_webdesign);
+
 
 
 			$datetime = date("Y-m-d H:i:s");
@@ -85,6 +89,7 @@ if($action == ""){
 					main_category_title=$inp_title_mysql, 
 					main_category_title_clean=$inp_title_clean_mysql, 
 					main_category_language=$inp_language_mysql,
+					main_category_webdesign=$inp_webdesign_mysql, 
 					main_category_updated='$datetime'
 					WHERE main_category_id=$get_current_main_category_id") or die(mysqli_error($link));
 
@@ -92,22 +97,25 @@ if($action == ""){
 
 
 			// Folder
-			if(!(is_dir("../_uploads"))){
-				mkdir("../_uploads");
+			if(!(is_dir("../$inp_title_clean"))){
+				mkdir("../$inp_title_clean");
 			}
-			if(!(is_dir("../_uploads/courses"))){
-				mkdir("../_uploads/courses");
+			if(!(is_dir("../$inp_title_clean/_gfx"))){
+				mkdir("../$inp_title_clean/_gfx");
 			}
-			if(!(is_dir("../_uploads/courses/categories_main"))){
-				mkdir("../_uploads/courses/categories_main");
+			if(!(is_dir("../$inp_title_clean/_gfx/header"))){
+				mkdir("../$inp_title_clean/_gfx/header");
+			}
+			if(!(is_dir("../$inp_title_clean/_gfx/icons"))){
+				mkdir("../$inp_title_clean/_gfx/icons");
 			}
 
-			$upload_path = "../_uploads/courses/categories_main";
+			$upload_path = "../$inp_title_clean/_gfx/icons";
 
 	
 			$ft_icon = "info";
            		$fm_icon = "nothing";
-			$icon_sizes = array('16', '18', '24', '32', '36', '48', '96', '260');
+			$icon_sizes = array('16', '18', '24', '32', '36', '48', '96', '192', '260');
 			for($x=0;$x<sizeof($icon_sizes);$x++){
 		
 			
@@ -131,7 +139,7 @@ if($action == ""){
 						// Upload file
 						if (move_uploaded_file($_FILES["inp_icon_$icon_size"]['tmp_name'], $uploaded_file)) {
 
-							$inp_icon_path = "_uploads/courses/categories_main";
+							$inp_icon_path = "$inp_title_clean/_gfx/icons";
 
 
 							// Get image size
@@ -191,6 +199,12 @@ if($action == ""){
 										main_category_icon_96x96=$inp_icon_mysql
 										WHERE main_category_id=$get_current_main_category_id") or die(mysqli_error($link));
 								}
+								if($icon_sizes[$x] == "192"){
+									$result = mysqli_query($link, "UPDATE $t_courses_categories_main SET 
+										main_category_icon_path='$inp_icon_path', 
+										main_category_icon_192x192=$inp_icon_mysql
+										WHERE main_category_id=$get_current_main_category_id") or die(mysqli_error($link));
+								}
 								if($icon_sizes[$x] == "260"){
 									$result = mysqli_query($link, "UPDATE $t_courses_categories_main SET 
 										main_category_icon_path='$inp_icon_path', 
@@ -228,8 +242,169 @@ if($action == ""){
 			} // for icons
 
 
+			// Header logo
+			$ft_header_logo = "info";
+           		$fm_header_logo = "nothing";
+			$upload_path = "../$inp_title_clean/_gfx/header";
+			$image_name = stripslashes($_FILES["inp_header_logo"]['name']);
+			$extension = get_extension($image_name);
+			$extension = strtolower($extension);
+
+			if($image_name){
+				if (($extension != "jpg") && ($extension != "jpeg") && ($extension != "png") && ($extension != "gif")) {
+					$ft_header_logo = "warning";
+					$fm_header_logo = "unknown_file_extension_$extension";
+				}
+				else{
+					// Give new name
+					$inp_name = $inp_title_clean . "_header_logo" . ".$extension";
+					$uploaded_file = $upload_path . "/" . $inp_name;
+
+					// Upload file
+					if (move_uploaded_file($_FILES["inp_header_logo"]['tmp_name'], $uploaded_file)) {
+
+
+						// Get image size
+						$file_size = filesize($uploaded_file);
+						
+						// Check with and height
+						list($width,$height) = getimagesize($uploaded_file);
+	
+						if($width == "" OR $height == ""){
+							unlink("$uploaded_file");
+							$ft_header_logo = "warning";
+							$fm_header_logo = "getimagesize_failed";
+						}
+						else{
+							// All ok
+							$inp_header_logo_mysql = quote_smart($link, $inp_name);
+
+							$result = mysqli_query($link, "UPDATE $t_courses_categories_main SET 
+										main_category_header_logo=$inp_header_logo_mysql
+										WHERE main_category_id=$get_current_main_category_id") or die(mysqli_error($link));
+						
+
+							$ft_header_logo = "success";
+							$fm_header_logo = "header_logo_uploaded";
+						}
+					}
+					else{
+						switch ($_FILES['inp_food_image']['error']) {
+							case UPLOAD_ERR_OK:
+          							$fm_header_logo = "There is no error, the file uploaded with success.";
+								break;
+							case UPLOAD_ERR_NO_FILE:
+           							$fm_header_logo = "no_file_uploaded";
+								break;
+							case UPLOAD_ERR_INI_SIZE:
+          							$fm_header_logo = "to_big_size_in_configuration";
+								break;
+							case UPLOAD_ERR_FORM_SIZE:
+          							$fm_header_logo = "to_big_size_in_form";
+								break;
+							default:
+          							$fm_header_logo = "unknown_error";
+								break;
+						}	
+						$ft_header_logo = "warning";
+					}
+				}
+			}
+
+			// Get all information
+			$query = "SELECT main_category_id, main_category_title, main_category_title_clean, main_category_description, main_category_language, main_category_icon_path, main_category_icon_16x16, main_category_icon_18x18, main_category_icon_24x24, main_category_icon_32x32, main_category_icon_36x36, main_category_icon_48x48, main_category_icon_96x96, main_category_icon_260x260, main_category_header_logo, main_category_webdesign, main_category_created, main_category_updated FROM $t_courses_categories_main WHERE main_category_id=$get_current_main_category_id";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_current_main_category_id, $get_current_main_category_title, $get_current_main_category_title_clean, $get_current_main_category_description, $get_current_main_category_language, $get_current_main_category_icon_path, $get_current_main_category_icon_16x16, $get_current_main_category_icon_18x18, $get_current_main_category_icon_24x24, $get_current_main_category_icon_32x32, $get_current_main_category_icon_36x36, $get_current_main_category_icon_48x48, $get_current_main_category_icon_96x96, $get_current_main_category_icon_260x260, $get_current_main_category_header_logo, $get_current_main_category_webdesign, $get_current_main_category_created, $get_current_main_category_updated) = $row;
+
+
+
+			// Create flat file
+			if(!(is_dir("../$inp_title_clean"))){
+				mkdir("../$inp_title_clean");
+			}
+		
+			$datetime_print = date("j M Y H:i");
+			$year = date("Y");
+			$page_id = date("ymdhis");
+			$input="<?php
+/**
+*
+* File: $inp_title_clean/index.php
+* Version 1.0.0
+* Date $datetime_print
+* Copyright (c) 2009-$year Sindre Andre Ditlefsen
+* License: http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+*/
+
+/*- Configuration ---------------------------------------------------------------------------- */
+\$pageIdSav            = \"$page_id\";
+\$pageNoColumnSav      = \"2\";
+\$pageAllowCommentsSav = \"0\";
+
+/*- Root dir --------------------------------------------------------------------------------- */
+// This determine where we are
+if(file_exists(\"favicon.ico\")){ \$root = \".\"; }
+elseif(file_exists(\"../favicon.ico\")){ \$root = \"..\"; }
+elseif(file_exists(\"../../favicon.ico\")){ \$root = \"../..\"; }
+elseif(file_exists(\"../../../favicon.ico\")){ \$root = \"../../..\"; }
+elseif(file_exists(\"../../../../favicon.ico\")){ \$root = \"../../../..\"; }
+else{ \$root = \"../../..\"; }
+
+/*- Website config --------------------------------------------------------------------------- */
+include(\"\$root/_admin/website_config.php\");
+
+/*- Translation ------------------------------------------------------------------------------ */
+include(\"\$root/_admin/_translations/site/\$l/courses/ts_main_category.php\");
+
+/*- Main category --------------------------------------------------------------------------- */
+\$courseMainCategoryIdSav = \"$get_current_main_category_id\";
+";
+if($get_current_main_category_webdesign != "same_as_website"){
+	$input = $input . "\$webdesignSav = \"$get_current_main_category_webdesign\";";
+}
+$input = $input . "
+\$pageCSSFile = \"../courses/_css/includes_main_category.css\";
+
+/*- Headers ---------------------------------------------------------------------------------- */
+\$website_title = \"$inp_title\";
+if(file_exists(\"./favicon.ico\")){ \$root = \".\"; }
+elseif(file_exists(\"../favicon.ico\")){ \$root = \"..\"; }
+elseif(file_exists(\"../../favicon.ico\")){ \$root = \"../..\"; }
+elseif(file_exists(\"../../../favicon.ico\")){ \$root = \"../../..\"; }
+include(\"\$root/_webdesign/";
+if($inp_webdesign != "same_as_website"){
+	$input = $input . "$inp_webdesign/";
+}
+else{
+	$input = $input . "\$webdesignSav/";
+}
+$input = $input . "header.php\");
+
+/* Course main category header -------------------------------------------------------------- */
+\$mainCategoryIdSav    = \"$get_current_main_category_id\";
+\$mainCategoryTitleSav = \"$inp_title\";
+
+include(\"\$root/courses/_includes/main_category.php\");
+
+/*- Footer ---------------------------------------------------------------------------------- */
+include(\"\$root/_webdesign/";
+if($inp_webdesign != "same_as_website"){
+	$input = $input . "$inp_webdesign/";
+}
+else{
+	$input = $input . "\$webdesignSav/";
+}
+$input = $input . "footer.php\");
+?>";
+
+			$fh = fopen("../$inp_title_clean/index.php", "w+") or die("can not open file");
+			fwrite($fh, $input);
+			fclose($fh);
+
 			// Header
-			$url = "index.php?open=$open&page=categories_main_edit&main_category_id=$get_current_main_category_id&editor_language=$editor_language&ft=success&fm=changes_saved&ft_icon=$ft_icon&fm_icon=$fm_icon";
+			$url = "index.php?open=$open&page=categories_main_edit&main_category_id=$get_current_main_category_id&editor_language=$editor_language&ft=success&fm=changes_saved&ft_icon=$ft_icon&fm_icon=$fm_icon&ft_header_logo=$ft_header_logo&fm_header_logo=$fm_header_logo";
 			header("Location: $url");
 			exit;
 		}
@@ -290,11 +465,37 @@ if($action == ""){
 		}
 		echo"
 		</select>
+		</p>
+
+
+		<p><b>Webdesign:</b><br />
+		<select name=\"inp_webdesign\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\">
+			<option value=\"same_as_website\""; if($get_current_main_category_webdesign == "same_as_website"){ echo" selected=\"selected\""; } echo">Same as website</option>\n";
+		$path = "../_webdesign";
+		if(!(is_dir("$path"))){
+			echo"$path doesnt exists";
+			die;
+		}
+		if ($handle = opendir($path)) {
+			$x = 0;
+			while (false !== ($webdesign_name = readdir($handle))) {
+				if ($webdesign_name === '.') continue;
+				if ($webdesign_name === '..') continue;
+				if ($webdesign_name === 'images') continue;
+				if ($webdesign_name === '_other_designs') continue;
+				if(is_dir("$path/$webdesign_name")){
+					echo"	<option value=\"$webdesign_name\""; if($webdesign_name == "$get_current_main_category_webdesign"){ echo" selected=\"selected\""; } echo">$webdesign_name</option>\n";
+				}
+			}
+		}
+		echo"
+		</select>
+		</p>
 
 		<!-- Icon 48, 64, 96 -->
 			";
 
-			$icon_sizes = array('16', '18', '24', '32', '36', '48', '96', '260');
+			$icon_sizes = array('16', '18', '24', '32', '36', '48', '96', '192', '260');
 			for($x=0;$x<sizeof($icon_sizes);$x++){
 				$icon_size = $icon_sizes[$x] . "x" . $icon_sizes[$x];
 				echo"
@@ -330,6 +531,9 @@ if($action == ""){
 						if($icon_sizes[$x] == "96" && $get_current_main_category_icon_96x96 != "" && file_exists("../$get_current_main_category_icon_path/$get_current_main_category_icon_96x96")){
 							echo"<p><img src=\"../$get_current_main_category_icon_path/$get_current_main_category_icon_96x96\" alt=\"$get_current_main_category_icon_96x96\" /></p>\n";
 						}
+						if($icon_sizes[$x] == "260" && $get_current_main_category_icon_192x192 != "" && file_exists("../$get_current_main_category_icon_path/$get_current_main_category_icon_192x192")){
+							echo"<p><img src=\"../$get_current_main_category_icon_path/$get_current_main_category_icon_192x192\" alt=\"$get_current_main_category_icon_192x192\" /></p>\n";
+						}
 						if($icon_sizes[$x] == "260" && $get_current_main_category_icon_260x260 != "" && file_exists("../$get_current_main_category_icon_path/$get_current_main_category_icon_260x260")){
 							echo"<p><img src=\"../$get_current_main_category_icon_path/$get_current_main_category_icon_260x260\" alt=\"$get_current_main_category_icon_260x260\" /></p>\n";
 						}
@@ -344,6 +548,38 @@ if($action == ""){
 			echo"
 	
 		<!-- //Icon 48, 64, 96 -->
+
+		<!-- Header logo -->
+			<table>
+			 <tr>
+			  <td style=\"vertical-align:top;padding-right: 20px;\">
+				<p><b>Header logo</b><br />
+				";
+				if(isset($_GET['ft_header_logo']) && isset($_GET['fm_header_logo'])){
+					$ft_header_logo = $_GET['ft_header_logo'];
+					$ft_header_logo = strip_tags(stripslashes($ft_header_logo));
+					if($ft_header_logo != "error" && $ft_header_logo != "warning" && $ft_header_logo != "success" && $ft_header_logo != "info"){
+						echo"Server error 403 feedback error";die;
+					}
+					$fm_header_logo = $_GET['fm_header_logo'];
+					$fm_header_logo = strip_tags(stripslashes($fm_header_logo));
+
+					echo"<span>$fm_header_logo<br /></span>\n";
+				}
+				echo"
+				<input type=\"file\" name=\"inp_header_logo\"  tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
+				</p>
+			  </td>
+			  <td style=\"vertical-align:top;padding-right: 20px;\">";
+				if($get_current_main_category_header_logo != "" && file_exists("../$get_current_main_category_title_clean/_gfx/header/$get_current_main_category_header_logo")){
+					echo"<p><img src=\"../$get_current_main_category_title_clean/_gfx/header/$get_current_main_category_header_logo\" alt=\"$get_current_main_category_header_logo\" /></p>\n";
+				}
+				echo"
+					
+			  </td>
+			 </tr>
+			</table>
+		<!-- //Header logo -->
 
 		<p><input type=\"submit\" value=\"Save changes\" class=\"btn_default\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" /></p>
 

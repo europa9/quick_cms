@@ -135,6 +135,10 @@ if($define_in_register_stats == "1"){
 				$inp_stats_user_agent_browser_version = 0;
 				if($inp_stats_user_agent_browser != ""){
 					$inp_stats_user_agent_browser_version = substr($my_user_agent, strrpos($my_user_agent, '/') + 1);
+					$inp_stats_user_agent_browser_version_len = strlen($inp_stats_user_agent_browser_version);
+					if($inp_stats_user_agent_browser_version_len > 10){
+						$inp_stats_user_agent_browser_version = substr($inp_stats_user_agent_browser_version, 0, 10);
+					}
 				}
 				//echo"Agent: $my_user_agent<br />Browser ver: $inp_stats_user_agent_browser_version ";
 				$inp_stats_user_agent_browser_version = output_html($inp_stats_user_agent_browser_version);
@@ -245,6 +249,10 @@ if($define_in_register_stats == "1"){
 				$inp_stats_user_agent_browser_version = 0;
 				if($inp_stats_user_agent_browser != ""){
 					$inp_stats_user_agent_browser_version = substr($my_user_agent, strrpos($my_user_agent, '/') + 1);
+					$inp_stats_user_agent_browser_version_len = strlen($inp_stats_user_agent_browser_version);
+					if($inp_stats_user_agent_browser_version_len > 10){
+						$inp_stats_user_agent_browser_version = substr($inp_stats_user_agent_browser_version, 0, 10);
+					}
 				}
 				// echo"Agent: $my_user_agent<br />Browser ver: $inp_stats_user_agent_browser_version ";
 				$inp_stats_user_agent_browser_version = output_html($inp_stats_user_agent_browser_version);

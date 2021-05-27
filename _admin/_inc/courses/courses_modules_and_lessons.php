@@ -1486,7 +1486,7 @@ else{
 				$result = mysqli_query($link, "DELETE FROM $t_courses_lessons WHERE lesson_id=$get_current_lesson_id");
 
 				// Search engine
-				$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_module_name='courses' AND index_reference_name='lesson_id' AND index_reference_id=$get_lesson_id") or die(mysqli_error($link));
+				$result = mysqli_query($link, "DELETE FROM $t_search_engine_index WHERE index_module_name='courses' AND index_reference_name='lesson_id' AND index_reference_id=$get_current_lesson_id") or die(mysqli_error($link));
 			
 
 

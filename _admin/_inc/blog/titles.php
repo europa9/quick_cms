@@ -35,10 +35,10 @@ $t_blog_default_categories = $mysqlPrefixSav . "blog_default_categories";
 /*- Variables -------------------------------------------------------------------------- */
 if($process == "1"){
 
-	$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+	$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_default FROM $t_languages_active";
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
-		list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
+		list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_default) = $row;
 
 		// Update
 		$inp_value = $_POST["inp_value_$get_language_active_iso_two"];
@@ -104,10 +104,10 @@ echo"
 	
 	 <tbody>\n";
 	$x = 0;
-	$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_flag, language_active_default FROM $t_languages_active";
+	$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_default FROM $t_languages_active";
 	$result = mysqli_query($link, $query);
 	while($row = mysqli_fetch_row($result)) {
-		list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_flag, $get_language_active_default) = $row;
+		list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_default) = $row;
 
 		// Find
 		$language_mysql = quote_smart($link, $get_language_active_iso_two);

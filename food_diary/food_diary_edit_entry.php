@@ -391,7 +391,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['e
 			$inp_hour_salt = 0;
 			$inp_hour_sodium = 0;
 			
-			$query = "SELECT entry_id, entry_energy_per_entry, entry_fat_per_entry, entry_saturated_fat_per_entry, entry_monounsaturated_fat_per_entry, entry_polyunsaturated_fat_per_entry, entry_cholesterol_per_entry, entry_carbohydrates_per_entry, entry_carbohydrates_of_which_sugars_per_entry, entry_dietary_fiber_per_entry, entry_proteins_per_entry, entry_salt_per_entry, entry_sodium_per_entry FROM $t_food_diary_entires WHERE entry_user_id=$my_user_id_mysql AND entry_date='$get_current_entry_date' AND entry_hour_name=$inp_entry_hour_name_mysql";
+			$hour_name_mysql = quote_smart($link, $get_current_entry_hour_name);
+			$query = "SELECT entry_id, entry_energy_per_entry, entry_fat_per_entry, entry_saturated_fat_per_entry, entry_monounsaturated_fat_per_entry, entry_polyunsaturated_fat_per_entry, entry_cholesterol_per_entry, entry_carbohydrates_per_entry, entry_carbohydrates_of_which_sugars_per_entry, entry_dietary_fiber_per_entry, entry_proteins_per_entry, entry_salt_per_entry, entry_sodium_per_entry FROM $t_food_diary_entires WHERE entry_user_id=$my_user_id_mysql AND entry_date='$get_current_entry_date' AND entry_hour_name=$hour_name_mysql";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
     				list($get_entry_id, $get_entry_energy_per_entry, $get_entry_fat_per_entry, $get_entry_saturated_fat_per_entry, $get_entry_monounsaturated_fat_per_entry, $get_entry_polyunsaturated_fat_per_entry, $get_entry_cholesterol_per_entry, $get_entry_carbohydrates_per_entry, $get_entry_carbohydrates_of_which_sugars_per_entry, $get_entry_dietary_fiber_per_entry, $get_entry_proteins_per_entry, $get_entry_salt_per_entry, $get_entry_sodium_per_entry) = $row;
@@ -413,7 +414,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['e
 			
 			$date = date("Y-m-d");
 			$datetime = date("Y-m-d H:i:s");
-			$hour_name_mysql = quote_smart($link, $hour_name);
 
 			$result = mysqli_query($link, "UPDATE $t_food_diary_consumed_hours SET 
 							consumed_hour_energy=$inp_hour_energy,
@@ -511,7 +511,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['e
 							consumed_day_updated_datetime='$datetime', 
 							consumed_day_synchronized='0'
 							 WHERE consumed_day_user_id=$my_user_id_mysql AND consumed_day_date='$get_current_entry_date'") or die(mysqli_error($link));
-
 
 
 			$url = "index.php?date=$get_current_entry_date&l=$l&ft=success&fm=changes_saved#meal$get_current_entry_meal_id";

@@ -21,17 +21,17 @@ if(!(file_exists("_data/blog.php"))){
 \$blogEditModeSav 	   = \"wuciwug\";
 \$blogPrintLogoOnImagesSav = \"0\";
 
-\$blogPostsImageSizeXSav = \"950\";
-\$blogPostsImageSizeYSav = \"640\";
+\$blogPostsImageSizeXSav = \"1280\";
+\$blogPostsImageSizeYSav = \"720\";
 
 \$blogPostsThumbSmallSizeXSav = \"100\";
-\$blogPostsThumbSmallSizeYSav = \"67\";
+\$blogPostsThumbSmallSizeYSav = \"56\";
 
 \$blogPostsThumbMediumSizeXSav = \"400\";
-\$blogPostsThumbMediumSizeYSav = \"269\";
+\$blogPostsThumbMediumSizeYSav = \"225\";
 
 \$blogPostsThumbLargeSizeXSav = \"818\";
-\$blogPostsThumbLargeSizeYSav = \"551\";
+\$blogPostsThumbLargeSizeYSav = \"460\";
 ?>";
 
 	$fh = fopen("_data/blog.php", "w+") or die("can not open file");

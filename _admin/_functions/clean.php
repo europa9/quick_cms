@@ -27,6 +27,8 @@ function clean($value){
 	$value = str_replace("!", "", "$value");
 	$value = str_replace("(", "", "$value");
 	$value = str_replace(")", "", "$value");
+	$value = str_replace("[", "", "$value");
+	$value = str_replace("]", "", "$value");
 	$value = str_replace(".", "", "$value");
 	$value = str_replace("/", "_", "$value");
 	$value = str_replace("#", "_", "$value");

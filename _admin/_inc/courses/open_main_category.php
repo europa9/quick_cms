@@ -166,9 +166,6 @@ if($action == ""){
 					}
 					echo"
 					   <td style=\"vertical-align:top;padding-right: 10px;\">
-						<p class=\"courses_sub_category\">
-						<a href=\"index.php?open=$open&amp;page=courses_open&amp;course_id=$get_course_id&amp;editor_language=$editor_language&amp;l=$l\" class=\"courses_sub_category\">$get_course_sub_category_title</a>
-						</p>
 
 						<p class=\"courses_course_title\">
 						<a href=\"index.php?open=$open&amp;page=courses_open&amp;course_id=$get_course_id&amp;editor_language=$editor_language&amp;l=$l\">$get_course_title</a>

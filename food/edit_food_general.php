@@ -512,16 +512,14 @@ else{
 			
 				<p><b>$l_country:</b><br />
 				<select name=\"inp_food_country\">\n";
-				$query = "SELECT geoname_country_name FROM $t_stats_ip_to_country_geonames ORDER BY geoname_country_name ASC";
+				$query = "SELECT country_name FROM $t_languages_countries ORDER BY country_name ASC";
 				$result = mysqli_query($link, $query);
 				while($row = mysqli_fetch_row($result)) {
-					list($get_geoname_country_name) = $row;
+					list($get_country_name) = $row;
 
-					if($get_geoname_country_name != "$prev_country"){
-						echo"			";
-						echo"<option value=\"$get_geoname_country_name\""; if($get_current_food_country == "$get_geoname_country_name"){ echo" selected=\"selected\""; } echo">$get_geoname_country_name</option>\n";
-					}
-					$prev_country = "$get_geoname_country_name";
+					echo"			";
+					echo"<option value=\"$get_country_name\""; if($get_current_food_country == "$get_country_name"){ echo" selected=\"selected\""; } echo">$get_country_name</option>\n";
+					
 				}
 				echo"
 				</select></p>
