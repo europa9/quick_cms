@@ -249,7 +249,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			}
 			else{
 				if(!(file_exists("$root/$get_food_image_path/$get_food_image_a")) OR $get_food_image_a == ""){
-					echo"<div class=\"info\"><p>Main image of <b>$get_food_manufacturer_name $get_food_name</b> doesnt exists. Please upload a new image!</p></div>";
+					echo"<div class=\"info\"><p>Main image of <a href=\"edit_food.php?food_id=$get_food_id&amp;l=$l\" style=\"font-weight:bold;\">$get_food_manufacturer_name $get_food_name</a> doesnt exists. Please upload a new image! </p></div>";
 					$result_update = mysqli_query($link, "UPDATE $t_food_index SET food_image_a='', food_thumb_a_small='', food_thumb_a_medium='', food_thumb_a_large='' WHERE food_id=$get_food_id") or die(mysqli_error($link));
 				}
 			}

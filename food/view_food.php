@@ -1073,9 +1073,7 @@ else{
 					});
 				});
 				</script>
-
-				<p>
-				<a href=\"#numbers\" class=\"a_show_score\">$l_score:</a> ";
+";
 
 				
 				if($get_current_view_system == "all" OR $get_current_view_system == "metric"){
@@ -1089,6 +1087,10 @@ else{
 				}
 
 				if($get_current_restriction_show_smileys == "1"){
+					echo"
+					<p>
+					<a href=\"#numbers\" class=\"a_show_score\">$l_score:</a> 
+					";
 					if($get_current_food_score > 0){
 						echo"
 						<em style=\"color: red;\">$get_current_food_score</em>
@@ -1104,10 +1106,12 @@ else{
 						<em>$get_current_food_score</em>
 						<img src=\"_gfx/smiley_confused.png\" alt=\"smiley_confused.png\" style=\"padding:0px 0px 0px 4px;\" />";
 					}
+					echo"
+					</p>
+					<p class=\"protein_diff\">*$l_protein_diff_is_multiplied_with_minus_one_to_get_correct_calculation</p>
+					";
 				}
 				echo"
-				</p>
-				<p class=\"protein_diff\">*$l_protein_diff_is_multiplied_with_minus_one_to_get_correct_calculation</p>
 			<!-- //Numbers -->
 
 
