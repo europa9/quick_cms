@@ -270,7 +270,7 @@ else{
 			 <tbody>
 			  <tr>
 			   <td>
-				<h2 style=\"padding:0;margin:0;\">$get_workout_session_title</h2>
+				<h2 style=\"padding:0;margin:0;\">$get_workout_session_title</h2> 
 			   </td>
 			  </tr>
 			 </tbody>
@@ -423,10 +423,16 @@ else{
 			<!-- //List sessions_main -->
 			";
 
-			if($get_workout_session_repeat != "" OR $get_workout_session_pause != ""){
+			if($get_workout_session_repeat != "" OR $get_workout_session_pause != "" OR $get_workout_session_intensity != ""){
 				echo"
 				<p>
 				";
+				if($get_workout_session_intensity != ""){
+					echo"<b>$l_intensity:</b> $get_workout_session_intensity";
+				}
+				if($get_workout_session_intensity != "" && ($get_workout_session_repeat != "" OR $get_workout_session_pause != "")){
+					echo"<br />\n";
+				}
 				if($get_workout_session_repeat != ""){
 					echo"<b>$l_repeat:</b> $get_workout_session_repeat";
 				}
