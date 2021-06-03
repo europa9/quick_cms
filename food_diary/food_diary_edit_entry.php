@@ -391,6 +391,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['e
 			$inp_hour_salt = 0;
 			$inp_hour_sodium = 0;
 			
+			if($get_current_entry_hour_name == ""){
+				echo"Error - current_entry_hour_name is blank"; 
+				die;
+			}
 			$hour_name_mysql = quote_smart($link, $get_current_entry_hour_name);
 			$query = "SELECT entry_id, entry_energy_per_entry, entry_fat_per_entry, entry_saturated_fat_per_entry, entry_monounsaturated_fat_per_entry, entry_polyunsaturated_fat_per_entry, entry_cholesterol_per_entry, entry_carbohydrates_per_entry, entry_carbohydrates_of_which_sugars_per_entry, entry_dietary_fiber_per_entry, entry_proteins_per_entry, entry_salt_per_entry, entry_sodium_per_entry FROM $t_food_diary_entires WHERE entry_user_id=$my_user_id_mysql AND entry_date='$get_current_entry_date' AND entry_hour_name=$hour_name_mysql";
 			$result = mysqli_query($link, $query);

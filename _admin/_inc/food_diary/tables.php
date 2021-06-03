@@ -37,7 +37,7 @@ $t_food_diary_user_adapted_view = $mysqlPrefixSav . "food_diary_user_adapted_vie
 
 $t_food_diary_meals_index	= $mysqlPrefixSav . "food_diary_meals_index";
 $t_food_diary_meals_items	= $mysqlPrefixSav . "food_diary_meals_items";
-
+$t_food_diary_lifestyle_selected_per_day = $mysqlPrefixSav . "food_diary_lifestyle_selected_per_day";
 if($action == ""){
 	echo"
 	<h1>Tables</h1>

@@ -73,84 +73,155 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['e
 		echo"
 		<h1>Server error 404</h1>
 		<p>Entry not found.</p>
+	
+		<meta http-equiv=\"refresh\" content=\"1;url=index.php?l=$l&ft=info&fm=entry_not_found\">
+		
 		";
 	}
 	else{
 		if($process == "1"){
-			
-			$inp_updated = date("Y-m-d H:i:s");
-			$inp_updated_mysql = quote_smart($link, $inp_updated);
+			// Variables
+			$datetime = date("Y-m-d H:i:s");
+			$entry_date_mysql = quote_smart($link, $get_current_entry_date);
+			$hour_name_mysql = quote_smart($link, $get_current_entry_hour_name);
 
 
+			// Delete
 			$result = mysqli_query($link, "DELETE FROM $t_food_diary_entires WHERE entry_id=$entry_id_mysql AND entry_user_id=$my_user_id_mysql");
 
 
 
 			
-			// food_diary_totals_meals :: Calcualte :: Get all meals for that day, and update numbers
-			$inp_total_meal_energy = 0;
-			$inp_total_meal_fat = 0;
-			$inp_total_meal_carb = 0;
-			$inp_total_meal_protein = 0;
+			// 2) Update Consumed Hours (Example breakfast, lunch, dinner)
+			$inp_hour_energy = 0;
+			$inp_hour_fat = 0;
+			$inp_hour_saturated_fat = 0;
+			$inp_hour_monounsaturated_fat = 0;
+			$inp_hour_polyunsaturated_fat = 0;
+			$inp_hour_cholesterol = 0;
+			$inp_hour_carbohydrates = 0;
+			$inp_hour_carbohydrates_of_which_sugars = 0;
+			$inp_hour_dietary_fiber = 0;
+			$inp_hour_proteins = 0;
+			$inp_hour_salt = 0;
+			$inp_hour_sodium = 0;
 			
-			$query = "SELECT entry_id, entry_energy_per_entry, entry_fat_per_entry, entry_carb_per_entry, entry_protein_per_entry FROM $t_food_diary_entires WHERE entry_user_id=$my_user_id_mysql AND entry_date='$get_current_entry_date' AND entry_meal_id='$get_current_entry_meal_id'";
+			$query = "SELECT entry_id, entry_energy_per_entry, entry_fat_per_entry, entry_saturated_fat_per_entry, entry_monounsaturated_fat_per_entry, entry_polyunsaturated_fat_per_entry, entry_cholesterol_per_entry, entry_carbohydrates_per_entry, entry_carbohydrates_of_which_sugars_per_entry, entry_dietary_fiber_per_entry, entry_proteins_per_entry, entry_salt_per_entry, entry_sodium_per_entry FROM $t_food_diary_entires WHERE entry_user_id=$get_current_entry_user_id AND entry_date=$entry_date_mysql AND entry_hour_name=$hour_name_mysql";
 			$result = mysqli_query($link, $query);
 			while($row = mysqli_fetch_row($result)) {
-    				list($get_entry_id, $get_entry_energy_per_entry, $get_entry_fat_per_entry, $get_entry_carb_per_entry, $get_entry_protein_per_entry) = $row;
+    				list($get_entry_id, $get_entry_energy_per_entry, $get_entry_fat_per_entry, $get_entry_saturated_fat_per_entry, $get_entry_monounsaturated_fat_per_entry, $get_entry_polyunsaturated_fat_per_entry, $get_entry_cholesterol_per_entry, $get_entry_carbohydrates_per_entry, $get_entry_carbohydrates_of_which_sugars_per_entry, $get_entry_dietary_fiber_per_entry, $get_entry_proteins_per_entry, $get_entry_salt_per_entry, $get_entry_sodium_per_entry) = $row;
 
+				$inp_hour_energy = $inp_hour_energy+$get_entry_energy_per_entry;
+				$inp_hour_fat = $inp_hour_fat+$get_entry_fat_per_entry;
+				$inp_hour_saturated_fat = $inp_hour_saturated_fat+$get_entry_saturated_fat_per_entry;
+				$inp_hour_monounsaturated_fat = $inp_hour_monounsaturated_fat+$get_entry_monounsaturated_fat_per_entry;
+				$inp_hour_polyunsaturated_fat = $inp_hour_polyunsaturated_fat+$get_entry_polyunsaturated_fat_per_entry;
+				$inp_hour_cholesterol = $inp_hour_cholesterol+$get_entry_cholesterol_per_entry;
+				$inp_hour_carbohydrates = $inp_hour_carbohydrates+$get_entry_carbohydrates_per_entry;
+				$inp_hour_carbohydrates_of_which_sugars = $inp_hour_carbohydrates_of_which_sugars+$get_entry_carbohydrates_of_which_sugars_per_entry;
+				$inp_hour_dietary_fiber = $inp_hour_dietary_fiber+$get_entry_dietary_fiber_per_entry;
+				$inp_hour_proteins = $inp_hour_proteins+$get_entry_proteins_per_entry;
+				$inp_hour_salt = $inp_hour_salt+$get_entry_salt_per_entry;
+				$inp_hour_sodium = $inp_hour_sodium+$get_entry_sodium_per_entry;
 				
-				$inp_total_meal_energy 		= $inp_total_meal_energy+$get_entry_energy_per_entry;
-				$inp_total_meal_fat 		= $inp_total_meal_fat+$get_entry_fat_per_entry;
-				$inp_total_meal_carb		= $inp_total_meal_carb+$get_entry_carb_per_entry;
-				$inp_total_meal_protein 	= $inp_total_meal_protein+$get_entry_protein_per_entry;
 			}
 			
-			$result = mysqli_query($link, "UPDATE $t_food_diary_totals_meals SET 
-			total_meal_energy='$inp_total_meal_energy', total_meal_fat='$inp_total_meal_fat', total_meal_carb='$inp_total_meal_carb', total_meal_protein='$inp_total_meal_protein',
-			total_meal_updated=$inp_updated_mysql, total_meal_synchronized='0'
-			 WHERE total_meal_user_id=$my_user_id_mysql AND total_meal_date='$get_current_entry_date' AND total_meal_meal_id='$get_current_entry_meal_id'");
+			$result = mysqli_query($link, "UPDATE $t_food_diary_consumed_hours SET 
+							consumed_hour_energy=$inp_hour_energy,
+							consumed_hour_fat=$inp_hour_fat,
+							consumed_hour_saturated_fat='$inp_hour_saturated_fat',
+							consumed_hour_monounsaturated_fat='$inp_hour_monounsaturated_fat',
+							consumed_hour_polyunsaturated_fat='$inp_hour_polyunsaturated_fat',
+							consumed_hour_cholesterol='$inp_hour_cholesterol',
+							consumed_hour_carbohydrates='$inp_hour_carbohydrates',
+							consumed_hour_carbohydrates_of_which_sugars='$inp_hour_carbohydrates_of_which_sugars',
+							consumed_hour_dietary_fiber='$inp_hour_dietary_fiber',
+							consumed_hour_proteins='$inp_hour_proteins',
+							consumed_hour_salt='$inp_hour_salt',
+							consumed_hour_sodium='$inp_hour_sodium',
+							consumed_hour_updated_datetime='$datetime',
+							consumed_hour_synchronized=0
+							 WHERE consumed_hour_user_id=$get_current_entry_user_id AND consumed_hour_date=$entry_date_mysql AND consumed_hour_name=$hour_name_mysql") or die(mysqli_error($link));
 
+			// 3) Update Consumed Days (first calculate calories, fat etc used)
+			$inp_consumed_day_energy = 0;
+			$inp_consumed_day_fat = 0;
+			$inp_consumed_day_saturated_fat = 0;
+			$inp_consumed_day_monounsaturated_fat = 0;
+			$inp_consumed_day_polyunsaturated_fat = 0;
+			$inp_consumed_day_cholesterol = 0;
+			$inp_consumed_day_carbohydrates = 0;
+			$inp_consumed_day_carbohydrates_of_which_sugars = 0;
+			$inp_consumed_day_dietary_fiber = 0;
+			$inp_consumed_day_proteins = 0;
+			$inp_consumed_day_salt = 0;
+			$inp_consumed_day_sodium = 0;
+			
+			$query = "SELECT entry_id, entry_energy_per_entry, entry_fat_per_entry, entry_saturated_fat_per_entry, entry_monounsaturated_fat_per_entry, entry_polyunsaturated_fat_per_entry, entry_cholesterol_per_entry, entry_carbohydrates_per_entry, entry_carbohydrates_of_which_sugars_per_entry, entry_dietary_fiber_per_entry, entry_proteins_per_entry, entry_salt_per_entry, entry_sodium_per_entry FROM $t_food_diary_entires WHERE entry_user_id=$get_current_entry_user_id AND entry_date=$entry_date_mysql";
+			$result = mysqli_query($link, $query);
+			while($row = mysqli_fetch_row($result)) {
+    				list($get_entry_id, $get_entry_energy_per_entry, $get_entry_fat_per_entry, $get_entry_saturated_fat_per_entry, $get_entry_monounsaturated_fat_per_entry, $get_entry_polyunsaturated_fat_per_entry, $get_entry_cholesterol_per_entry, $get_entry_carbohydrates_per_entry, $get_entry_carbohydrates_of_which_sugars_per_entry, $get_entry_dietary_fiber_per_entry, $get_entry_proteins_per_entry, $get_entry_salt_per_entry, $get_entry_sodium_per_entry) = $row;
 
-			// food_diary_totals_days
-			$query = "SELECT total_day_id, total_day_user_id, total_day_date, total_day_consumed_energy, total_day_consumed_fat, total_day_consumed_carb, total_day_consumed_protein, total_day_target_sedentary_energy, total_day_target_sedentary_fat, total_day_target_sedentary_carb, total_day_target_sedentary_protein, total_day_target_with_activity_energy, total_day_target_with_activity_fat, total_day_target_with_activity_carb, total_day_target_with_activity_protein, total_day_diff_sedentary_energy, total_day_diff_sedentary_fat, total_day_diff_sedentary_carb, total_day_diff_sedentary_protein, total_day_diff_with_activity_energy, total_day_diff_with_activity_fat, total_day_diff_with_activity_carb, total_day_diff_with_activity_protein FROM $t_food_diary_totals_days WHERE total_day_user_id=$my_user_id_mysql AND total_day_date='$get_current_entry_date'";
+				$inp_consumed_day_energy 			= $inp_consumed_day_energy+$get_entry_energy_per_entry;
+				$inp_consumed_day_fat 				= $inp_consumed_day_fat+$get_entry_fat_per_entry;
+				$inp_consumed_day_saturated_fat 		= $inp_consumed_day_saturated_fat+$get_entry_saturated_fat_per_entry;
+				$inp_consumed_day_monounsaturated_fat 		= $inp_consumed_day_monounsaturated_fat+$get_entry_monounsaturated_fat_per_entry;
+				$inp_consumed_day_polyunsaturated_fat 		= $inp_consumed_day_polyunsaturated_fat+$get_entry_polyunsaturated_fat_per_entry;
+				$inp_consumed_day_cholesterol 			= $inp_consumed_day_cholesterol+$get_entry_cholesterol_per_entry;
+				$inp_consumed_day_carbohydrates 		= $inp_consumed_day_carbohydrates+$get_entry_carbohydrates_per_entry;
+				$inp_consumed_day_carbohydrates_of_which_sugars = $inp_consumed_day_carbohydrates_of_which_sugars+$get_entry_carbohydrates_of_which_sugars_per_entry;
+				$inp_consumed_day_dietary_fiber 		= $inp_consumed_day_dietary_fiber+$get_entry_dietary_fiber_per_entry;
+				$inp_consumed_day_proteins 			= $inp_consumed_day_proteins+$get_entry_proteins_per_entry;
+				$inp_consumed_day_salt 				= $inp_consumed_day_salt+$get_entry_salt_per_entry;
+				$inp_consumed_day_sodium 			= $inp_consumed_day_sodium+$get_entry_sodium_per_entry;
+				
+			}
+			
+			$query = "SELECT consumed_day_id, consumed_day_user_id, consumed_day_year, consumed_day_month, consumed_day_month_saying, consumed_day_day, consumed_day_day_saying, consumed_day_date, consumed_day_energy, consumed_day_fat, consumed_day_saturated_fat, consumed_day_monounsaturated_fat, consumed_day_polyunsaturated_fat, consumed_day_cholesterol, consumed_day_carbohydrates, consumed_day_carbohydrates_of_which_sugars, consumed_day_dietary_fiber, consumed_day_proteins, consumed_day_salt, consumed_day_sodium, consumed_day_target_sedentary_energy, consumed_day_target_sedentary_fat, consumed_day_target_sedentary_carb, consumed_day_target_sedentary_protein, consumed_day_target_with_activity_energy, consumed_day_target_with_activity_fat, consumed_day_target_with_activity_carb, consumed_day_target_with_activity_protein, consumed_day_diff_sedentary_energy, consumed_day_diff_sedentary_fat, consumed_day_diff_sedentary_carb, consumed_day_diff_sedentary_protein, consumed_day_diff_with_activity_energy, consumed_day_diff_with_activity_fat, consumed_day_diff_with_activity_carb, consumed_day_diff_with_activity_protein, consumed_day_updated_datetime, consumed_day_synchronized FROM $t_food_diary_consumed_days WHERE consumed_day_user_id=$get_current_entry_user_id AND consumed_day_date=$entry_date_mysql";
 			$result = mysqli_query($link, $query);
 			$row = mysqli_fetch_row($result);
-			list($get_total_day_id, $get_total_day_user_id, $get_total_day_date, $get_total_day_consumed_energy, $get_total_day_consumed_fat, $get_total_day_consumed_carb, $get_total_day_consumed_protein, $get_total_day_target_sedentary_energy, $get_total_day_target_sedentary_fat, $get_total_day_target_sedentary_carb, $get_total_day_target_sedentary_protein, $get_total_day_target_with_activity_energy, $get_total_day_target_with_activity_fat, $get_total_day_target_with_activity_carb, $get_total_day_target_with_activity_protein, $get_total_day_diff_sedentary_energy, $get_total_day_diff_sedentary_fat, $get_total_day_diff_sedentary_carb, $get_total_day_diff_sedentary_protein, $get_total_day_diff_with_activity_energy, $get_total_day_diff_with_activity_fat, $get_total_day_diff_with_activity_carb, $get_total_day_diff_with_activity_protein) = $row;
-
-			$inp_total_day_consumed_energy = 0;
-			$inp_total_day_consumed_fat = 0;
-			$inp_total_day_consumed_carb = 0;
-			$inp_total_day_consumed_protein = 0;
-			$query = "SELECT total_meal_id, total_meal_energy, total_meal_fat, total_meal_carb, total_meal_protein FROM $t_food_diary_totals_meals WHERE total_meal_user_id=$my_user_id_mysql AND total_meal_date='$get_current_entry_date'";
-			$result = mysqli_query($link, $query);
-			while($row = mysqli_fetch_row($result)) {
-    				list($get_total_meal_id, $get_total_meal_energy, $get_total_meal_fat, $get_total_meal_carb, $get_total_meal_protein) = $row;
-
-				
-				$inp_total_day_consumed_energy  = $inp_total_day_consumed_energy+$get_total_meal_energy;
-				$inp_total_day_consumed_fat     = $inp_total_day_consumed_fat+$get_total_meal_fat;
-				$inp_total_day_consumed_carb    = $inp_total_day_consumed_carb+$get_total_meal_carb;
-				$inp_total_day_consumed_protein = $inp_total_day_consumed_protein+$get_total_meal_protein;
-			}
+			list($get_consumed_day_id, $get_consumed_day_user_id, $get_consumed_day_year, $get_consumed_day_month, $get_consumed_day_month_saying, $get_consumed_day_day, $get_consumed_day_day_saying, $get_consumed_day_date, $get_consumed_day_energy, $get_consumed_day_fat, $get_consumed_day_saturated_fat, $get_consumed_day_monounsaturated_fat, $get_consumed_day_polyunsaturated_fat, $get_consumed_day_cholesterol, $get_consumed_day_carbohydrates, $get_consumed_day_carbohydrates_of_which_sugars, $get_consumed_day_dietary_fiber, $get_consumed_day_proteins, $get_consumed_day_salt, $get_consumed_day_sodium, $get_consumed_day_target_sedentary_energy, $get_consumed_day_target_sedentary_fat, $get_consumed_day_target_sedentary_carb, $get_consumed_day_target_sedentary_protein, $get_consumed_day_target_with_activity_energy, $get_consumed_day_target_with_activity_fat, $get_consumed_day_target_with_activity_carb, $get_consumed_day_target_with_activity_protein, $get_consumed_day_diff_sedentary_energy, $get_consumed_day_diff_sedentary_fat, $get_consumed_day_diff_sedentary_carb, $get_consumed_day_diff_sedentary_protein, $get_consumed_day_diff_with_activity_energy, $get_consumed_day_diff_with_activity_fat, $get_consumed_day_diff_with_activity_carb, $get_consumed_day_diff_with_activity_protein, $get_consumed_day_updated_datetime, $get_consumed_day_synchronized) = $row;
 
 
-			$inp_total_day_diff_sedentary_energy = $get_total_day_target_sedentary_energy-$inp_total_day_consumed_energy;
-			$inp_total_day_diff_sedentary_fat = $get_total_day_target_sedentary_fat-$inp_total_day_consumed_fat;
-			$inp_total_day_diff_sedentary_carb = $get_total_day_target_sedentary_energy-$inp_total_day_consumed_carb;
-			$inp_total_day_diff_sedentary_protein = $get_total_day_target_sedentary_energy-$inp_total_day_consumed_protein;
+
+			$inp_consumed_day_diff_sedentary_energy 	= $get_consumed_day_target_sedentary_energy-$inp_consumed_day_energy;
+			$inp_consumed_day_diff_sedentary_fat 		= $get_consumed_day_target_sedentary_fat-$inp_consumed_day_fat;
+			$inp_consumed_day_diff_sedentary_carb		= $get_consumed_day_target_sedentary_carb-$inp_consumed_day_carbohydrates;
+			$inp_consumed_day_diff_sedentary_protein 	= $get_consumed_day_target_sedentary_protein-$inp_consumed_day_proteins;
 	
 
-			$inp_total_day_diff_with_activity_energy = $get_total_day_target_with_activity_energy-$inp_total_day_consumed_energy;
-			$inp_total_day_diff_with_activity_fat = $get_total_day_target_with_activity_fat-$inp_total_day_consumed_fat;
-			$inp_total_day_diff_with_activity_carb = $get_total_day_target_with_activity_energy-$inp_total_day_consumed_carb;
-			$inp_total_day_diff_with_activity_protein = $get_total_day_target_with_activity_energy-$inp_total_day_consumed_protein;
+			$inp_consumed_day_diff_with_activity_energy = $get_consumed_day_target_with_activity_energy-$inp_consumed_day_energy;
+			$inp_consumed_day_diff_with_activity_fat = $get_consumed_day_target_with_activity_fat-$inp_consumed_day_fat;
+			$inp_consumed_day_diff_with_activity_carb = $get_consumed_day_target_with_activity_carb-$inp_consumed_day_carbohydrates;
+			$inp_consumed_day_diff_with_activity_protein = $get_consumed_day_target_with_activity_protein-$inp_consumed_day_proteins;
 
-			$result = mysqli_query($link, "UPDATE $t_food_diary_totals_days SET 
-			total_day_consumed_energy='$inp_total_day_consumed_energy', total_day_consumed_fat='$inp_total_day_consumed_fat', total_day_consumed_carb='$inp_total_day_consumed_carb', total_day_consumed_protein=$inp_total_day_consumed_protein,
-			total_day_diff_sedentary_energy='$inp_total_day_diff_sedentary_energy', total_day_diff_sedentary_fat='$inp_total_day_diff_sedentary_fat', total_day_diff_sedentary_carb='$inp_total_day_diff_sedentary_carb', total_day_diff_sedentary_protein='$inp_total_day_diff_sedentary_protein',
-			total_day_diff_with_activity_energy='$inp_total_day_diff_with_activity_energy', total_day_diff_with_activity_fat='$inp_total_day_diff_with_activity_fat', total_day_diff_with_activity_carb='$inp_total_day_diff_with_activity_carb', total_day_diff_with_activity_protein='$inp_total_day_diff_with_activity_protein',
-			total_day_updated=$inp_updated_mysql, total_day_synchronized='0'
-			 WHERE total_day_user_id=$my_user_id_mysql AND total_day_date='$get_current_entry_date'");
+			$result = mysqli_query($link, "UPDATE $t_food_diary_consumed_days SET 
+							consumed_day_energy='$inp_consumed_day_energy', 
+							consumed_day_fat='$inp_consumed_day_fat', 
+							consumed_day_saturated_fat='$inp_consumed_day_saturated_fat', 
+							consumed_day_monounsaturated_fat='$inp_consumed_day_monounsaturated_fat', 
+							consumed_day_polyunsaturated_fat='$inp_consumed_day_polyunsaturated_fat', 
+							consumed_day_cholesterol='$inp_consumed_day_cholesterol', 
+							consumed_day_carbohydrates='$inp_consumed_day_carbohydrates', 
+							consumed_day_carbohydrates_of_which_sugars='$inp_consumed_day_carbohydrates_of_which_sugars', 
+							consumed_day_dietary_fiber='$inp_consumed_day_dietary_fiber', 
+							consumed_day_proteins='$inp_consumed_day_proteins', 
+							consumed_day_salt='$inp_consumed_day_salt', 
+							consumed_day_sodium='$inp_consumed_day_sodium', 
+						
+							consumed_day_diff_sedentary_energy='$inp_consumed_day_diff_sedentary_energy', 
+							consumed_day_diff_sedentary_fat='$inp_consumed_day_diff_sedentary_fat', 
+							consumed_day_diff_sedentary_carb='$inp_consumed_day_diff_sedentary_carb', 
+							consumed_day_diff_sedentary_protein='$inp_consumed_day_diff_sedentary_protein',
+
+							consumed_day_diff_with_activity_energy='$inp_consumed_day_diff_with_activity_energy', 
+							consumed_day_diff_with_activity_fat='$inp_consumed_day_diff_with_activity_fat', 
+							consumed_day_diff_with_activity_carb='$inp_consumed_day_diff_with_activity_carb', 
+							consumed_day_diff_with_activity_protein='$inp_consumed_day_diff_with_activity_protein',
+
+							consumed_day_updated_datetime='$datetime', 
+							consumed_day_synchronized='0'
+							 WHERE consumed_day_user_id=$get_current_entry_user_id AND consumed_day_date=$entry_date_mysql") or die(mysqli_error($link));
 
 
 
@@ -270,7 +341,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['e
 		</p>
 
 		<p>
-		<a href=\"food_diary_delete_entry.php?entry_id=$entry_id&amp;l=$l&amp;process=1\">$l_delete</a>
+		<a href=\"food_diary_delete_entry.php?entry_id=$entry_id&amp;l=$l&amp;process=1\" class=\"btn_danger\">$l_delete</a>
 		</p>
 		";
 		

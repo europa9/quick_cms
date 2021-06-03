@@ -130,18 +130,11 @@ else{
 	list($get_current_accepted_id, $get_current_accepted_country) = $row_t;
 	
 	if($get_current_accepted_id == ""){
-		// Accept age restriction
-		$show_food = 0;
-		$show_image_a = 0;
-		$show_image_b = 0;
-		$show_image_c = 0;
-		$show_image_d = 0;
-		$show_image_e = 0;
-		$show_smileys = 0;
+		// Age restriction not accepted
 	}
 	else{
 		// Can I see food and images?
-		$country_mysql = quote_smart($link, $get_accepted_country);
+		$country_mysql = quote_smart($link, $get_current_accepted_country);
 		$query = "SELECT restriction_id, restriction_country_name, restriction_country_iso_two, restriction_country_flag_path_16x16, restriction_country_flag_16x16, restriction_language, restriction_age_limit, restriction_title, restriction_text, restriction_show_food, restriction_show_image_a, restriction_show_image_b, restriction_show_image_c, restriction_show_image_d, restriction_show_image_e, restriction_show_smileys FROM $t_food_age_restrictions WHERE restriction_country_iso_two=$country_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
@@ -390,15 +383,15 @@ else{
 
 		if($get_sub_category_age_limit == "1"){
 			if($get_current_restriction_show_food == "1"){
-				if($show_food == "1"){
-					$show_sub_category = 1;
-				}
-				if($show_food == "1"){
-					$show_image_a      = 1;
-				}
+				$show_sub_category = 1;
 			}
 			else{
 				$show_sub_category = 0;
+			}
+			if($get_current_restriction_show_image_a == "1"){
+				$show_image_a      = 1;
+			}
+			else{
 				$show_image_a      = 0;
 			}
 		}
@@ -665,17 +658,17 @@ else{
 				}
 			} // has image
 
-			// Next category
-			$show_sub_category = 1;
-			$show_image_a      = 1;
-
-		} // while
+		} // while food
 
 		echo"
 		<div class=\"clear\"></div>
 		";
 
 		} // show sub category == 1
+
+		// Next category
+		$show_sub_category = 1;
+		$show_image_a      = 1;
 	} // while
 	echo"
 	<!-- //Subcategories -->

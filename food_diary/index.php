@@ -78,6 +78,10 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		";
 	}
 	else{
+		// Variables
+		$date_mysql = quote_smart($link, $date);
+
+
 		echo"
 
 		<!-- Food diary Quick menu -->
@@ -110,14 +114,18 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$fm = $fm . " $get_entry_name $l_added_to_your_diary_lowercase.";
 
 				}
+				else{
+					$fm = str_replace("_", " ", $fm);
+					$fm = ucfirst($fm);
+				}
 				echo"<div class=\"$ft\"><p>$fm</p></div>";
 			}
 			echo"
 		<!-- //Feedback -->
 
 
-		<!-- Yesterday, tomorrow -->
-			";
+		<!-- Todays Consumed Totals -->";
+
 			$today = date("Y-m-d");
 			if($date == "$today"){
 				$timestamp = time();
@@ -190,6 +198,103 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			$tomorrow = date('Y-m-d', $tomorrow);
 
 
+			$query = "SELECT consumed_day_id, consumed_day_user_id, consumed_day_year, consumed_day_month, consumed_day_month_saying, consumed_day_day, consumed_day_day_saying, consumed_day_date, consumed_day_lifestyle, consumed_day_energy, consumed_day_fat, consumed_day_saturated_fat, consumed_day_monounsaturated_fat, consumed_day_polyunsaturated_fat, consumed_day_cholesterol, consumed_day_carbohydrates, consumed_day_carbohydrates_of_which_sugars, consumed_day_dietary_fiber, consumed_day_proteins, consumed_day_salt, consumed_day_sodium, consumed_day_target_sedentary_energy, consumed_day_target_sedentary_fat, consumed_day_target_sedentary_carb, consumed_day_target_sedentary_protein, consumed_day_target_with_activity_energy, consumed_day_target_with_activity_fat, consumed_day_target_with_activity_carb, consumed_day_target_with_activity_protein, consumed_day_diff_sedentary_energy, consumed_day_diff_sedentary_fat, consumed_day_diff_sedentary_carb, consumed_day_diff_sedentary_protein, consumed_day_diff_with_activity_energy, consumed_day_diff_with_activity_fat, consumed_day_diff_with_activity_carb, consumed_day_diff_with_activity_protein, consumed_day_updated_datetime, consumed_day_synchronized FROM $t_food_diary_consumed_days WHERE consumed_day_user_id=$my_user_id_mysql AND consumed_day_date=$date_mysql";
+			$result = mysqli_query($link, $query);
+			$row = mysqli_fetch_row($result);
+			list($get_consumed_day_id, $get_consumed_day_user_id, $get_consumed_day_year, $get_consumed_day_month, $get_consumed_day_month_saying, $get_consumed_day_day, $get_consumed_day_day_saying, $get_consumed_day_date, $get_consumed_day_lifestyle, $get_consumed_day_energy, $get_consumed_day_fat, $get_consumed_day_saturated_fat, $get_consumed_day_monounsaturated_fat, $get_consumed_day_polyunsaturated_fat, $get_consumed_day_cholesterol, $get_consumed_day_carbohydrates, $get_consumed_day_carbohydrates_of_which_sugars, $get_consumed_day_dietary_fiber, $get_consumed_day_proteins, $get_consumed_day_salt, $get_consumed_day_sodium, $get_consumed_day_target_sedentary_energy, $get_consumed_day_target_sedentary_fat, $get_consumed_day_target_sedentary_carb, $get_consumed_day_target_sedentary_protein, $get_consumed_day_target_with_activity_energy, $get_consumed_day_target_with_activity_fat, $get_consumed_day_target_with_activity_carb, $get_consumed_day_target_with_activity_protein, $get_consumed_day_diff_sedentary_energy, $get_consumed_day_diff_sedentary_fat, $get_consumed_day_diff_sedentary_carb, $get_consumed_day_diff_sedentary_protein, $get_consumed_day_diff_with_activity_energy, $get_consumed_day_diff_with_activity_fat, $get_consumed_day_diff_with_activity_carb, $get_consumed_day_diff_with_activity_protein, $get_consumed_day_updated_datetime, $get_consumed_day_synchronized) = $row;
+			if($get_consumed_day_id == ""){
+				// Insert this day
+				$year = date("Y");
+				$month = date("m");
+				$month_saying = date("M");
+				$day = date("d");
+				$day_saying = date("D");
+				$date = date("Y-m-d");
+				$datetime = date("Y-m-d H:i:s");
+
+				// What do we normaly do on this day?
+				$query = "SELECT lifestyle_id, lifestyle_user_id, lifestyle_count_active_mon, lifestyle_count_active_tue, lifestyle_count_active_wed, lifestyle_count_active_thu, lifestyle_count_active_fri, lifestyle_count_active_sat, lifestyle_count_active_sun, lifestyle_count_sedentary_mon, lifestyle_count_sedentary_tue, lifestyle_count_sedentary_wed, lifestyle_count_sedentary_thu, lifestyle_count_sedentary_fri, lifestyle_count_sedentary_sat, lifestyle_count_sedentary_sun FROM $t_food_diary_lifestyle_selected_per_day WHERE lifestyle_user_id=$get_my_user_id";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_current_lifestyle_id, $get_current_lifestyle_user_id, $get_current_lifestyle_count_active_mon, $get_current_lifestyle_count_active_tue, $get_current_lifestyle_count_active_wed, $get_current_lifestyle_count_active_thu, $get_current_lifestyle_count_active_fri, $get_current_lifestyle_count_active_sat, $get_current_lifestyle_count_active_sun, $get_current_lifestyle_count_sedentary_mon, $get_current_lifestyle_count_sedentary_tue, $get_current_lifestyle_count_sedentary_wed, $get_current_lifestyle_count_sedentary_thu, $get_current_lifestyle_count_sedentary_fri, $get_current_lifestyle_count_sedentary_sat, $get_current_lifestyle_count_sedentary_sun) = $row;
+			
+				$inp_lifestyle = 1;
+				if($day_saying == "Mon"){
+					if($get_current_lifestyle_count_active_mon < $get_current_lifestyle_count_sedentary_mon){
+						$inp_lifestyle = 0;
+					}
+				}
+				elseif($day_saying == "Tue"){
+					if($get_current_lifestyle_count_active_tue < $get_current_lifestyle_count_sedentary_tue){
+						$inp_lifestyle = 0;
+					}
+				}
+				elseif($day_saying == "Wed"){
+					if($get_current_lifestyle_count_active_wed < $get_current_lifestyle_count_sedentary_wed){
+						$inp_lifestyle = 0;
+					}
+				}
+				elseif($day_saying == "Thu"){
+					if($get_current_lifestyle_count_active_thu < $get_current_lifestyle_count_sedentary_thu){
+						$inp_lifestyle = 0;
+					}
+				}
+				elseif($day_saying == "Fri"){
+					if($get_current_lifestyle_count_active_fri < $get_current_lifestyle_count_sedentary_fri){
+						$inp_lifestyle = 0;
+					}
+				}
+				elseif($day_saying == "Sat"){
+					if($get_current_lifestyle_count_active_sat < $get_current_lifestyle_count_sedentary_sat){
+						$inp_lifestyle = 0;
+					}
+				}
+				elseif($day_saying == "Sun"){
+					if($get_current_lifestyle_count_active_sun < $get_current_lifestyle_count_sedentary_sun){
+						$inp_lifestyle = 0;
+					}
+				}
+				else{
+					echo"Unknown day";
+				}
+				
+				mysqli_query($link, "INSERT INTO $t_food_diary_consumed_days
+				(consumed_day_id, consumed_day_user_id, consumed_day_year, consumed_day_month, consumed_day_month_saying, 
+				consumed_day_day, consumed_day_day_saying, consumed_day_date, consumed_day_lifestyle, consumed_day_energy, consumed_day_fat, 
+				consumed_day_saturated_fat, consumed_day_monounsaturated_fat, consumed_day_polyunsaturated_fat, consumed_day_cholesterol, consumed_day_carbohydrates, 
+				consumed_day_carbohydrates_of_which_sugars, consumed_day_dietary_fiber, consumed_day_proteins, consumed_day_salt, consumed_day_sodium, 
+				consumed_day_target_sedentary_energy, consumed_day_target_sedentary_fat, consumed_day_target_sedentary_carb, consumed_day_target_sedentary_protein, consumed_day_target_with_activity_energy, 
+				consumed_day_target_with_activity_fat, consumed_day_target_with_activity_carb, consumed_day_target_with_activity_protein, consumed_day_diff_sedentary_energy, consumed_day_diff_sedentary_fat, 
+				consumed_day_diff_sedentary_carb, consumed_day_diff_sedentary_protein, consumed_day_diff_with_activity_energy, consumed_day_diff_with_activity_fat, consumed_day_diff_with_activity_carb, 
+				consumed_day_diff_with_activity_protein, consumed_day_updated_datetime, consumed_day_synchronized) 
+				VALUES 
+				(NULL, $my_user_id_mysql, $year, $month, '$month_saying',
+				$day, '$day_saying', '$date', $inp_lifestyle, '0', '0',
+				 '0', '0',  '0', '0',  '0',
+				 '0', '0',  '0', '0',  '0',
+			
+				'$get_goal_target_sedentary_calories', '$get_goal_target_sedentary_fat', '$get_goal_target_sedentary_carbs', '$get_goal_target_sedentary_proteins',
+				'$get_goal_target_with_activity_calories', '$get_goal_target_with_activity_fat', '$get_goal_target_with_activity_carbs', '$get_goal_target_with_activity_proteins',
+				'$get_goal_target_sedentary_calories', '$get_goal_target_sedentary_fat', '$get_goal_target_sedentary_carbs', '$get_goal_target_sedentary_proteins',
+				'$get_goal_target_with_activity_calories', '$get_goal_target_with_activity_fat', '$get_goal_target_with_activity_carbs', 
+				'$get_goal_target_with_activity_proteins', '$datetime', 0
+				)")
+				or die(mysqli_error($link));
+				// echo"Ny dag, nye muligheter";
+
+				// Get data
+				$query = "SELECT consumed_day_id, consumed_day_user_id, consumed_day_year, consumed_day_month, consumed_day_month_saying, consumed_day_day, consumed_day_day_saying, consumed_day_date, consumed_day_lifestyle, consumed_day_energy, consumed_day_fat, consumed_day_saturated_fat, consumed_day_monounsaturated_fat, consumed_day_polyunsaturated_fat, consumed_day_cholesterol, consumed_day_carbohydrates, consumed_day_carbohydrates_of_which_sugars, consumed_day_dietary_fiber, consumed_day_proteins, consumed_day_salt, consumed_day_sodium, consumed_day_target_sedentary_energy, consumed_day_target_sedentary_fat, consumed_day_target_sedentary_carb, consumed_day_target_sedentary_protein, consumed_day_target_with_activity_energy, consumed_day_target_with_activity_fat, consumed_day_target_with_activity_carb, consumed_day_target_with_activity_protein, consumed_day_diff_sedentary_energy, consumed_day_diff_sedentary_fat, consumed_day_diff_sedentary_carb, consumed_day_diff_sedentary_protein, consumed_day_diff_with_activity_energy, consumed_day_diff_with_activity_fat, consumed_day_diff_with_activity_carb, consumed_day_diff_with_activity_protein, consumed_day_updated_datetime, consumed_day_synchronized FROM $t_food_diary_consumed_days WHERE consumed_day_user_id=$my_user_id_mysql AND consumed_day_date=$date_mysql";
+				$result = mysqli_query($link, $query);
+				$row = mysqli_fetch_row($result);
+				list($get_consumed_day_id, $get_consumed_day_user_id, $get_consumed_day_year, $get_consumed_day_month, $get_consumed_day_month_saying, $get_consumed_day_day, $get_consumed_day_day_saying, $get_consumed_day_date, $get_consumed_day_lifestyle, $get_consumed_day_energy, $get_consumed_day_fat, $get_consumed_day_saturated_fat, $get_consumed_day_monounsaturated_fat, $get_consumed_day_polyunsaturated_fat, $get_consumed_day_cholesterol, $get_consumed_day_carbohydrates, $get_consumed_day_carbohydrates_of_which_sugars, $get_consumed_day_dietary_fiber, $get_consumed_day_proteins, $get_consumed_day_salt, $get_consumed_day_sodium, $get_consumed_day_target_sedentary_energy, $get_consumed_day_target_sedentary_fat, $get_consumed_day_target_sedentary_carb, $get_consumed_day_target_sedentary_protein, $get_consumed_day_target_with_activity_energy, $get_consumed_day_target_with_activity_fat, $get_consumed_day_target_with_activity_carb, $get_consumed_day_target_with_activity_protein, $get_consumed_day_diff_sedentary_energy, $get_consumed_day_diff_sedentary_fat, $get_consumed_day_diff_sedentary_carb, $get_consumed_day_diff_sedentary_protein, $get_consumed_day_diff_with_activity_energy, $get_consumed_day_diff_with_activity_fat, $get_consumed_day_diff_with_activity_carb, $get_consumed_day_diff_with_activity_protein, $get_consumed_day_updated_datetime, $get_consumed_day_synchronized) = $row;
+
+			}
+		echo"
+		<!-- //Todays Consumed Totals -->
+
+		<!-- Yesterday, tomorrow -->
+			";
+
 			// Print todays date
 			
 
@@ -210,48 +315,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	<!-- //Yesterday, tomorrow -->
 
 
-	<!-- Todays Consumed Totals -->";
-		$date_mysql = quote_smart($link, $date);
-		$query = "SELECT consumed_day_id, consumed_day_user_id, consumed_day_year, consumed_day_month, consumed_day_month_saying, consumed_day_day, consumed_day_day_saying, consumed_day_date, consumed_day_energy, consumed_day_fat, consumed_day_saturated_fat, consumed_day_monounsaturated_fat, consumed_day_polyunsaturated_fat, consumed_day_cholesterol, consumed_day_carbohydrates, consumed_day_carbohydrates_of_which_sugars, consumed_day_dietary_fiber, consumed_day_proteins, consumed_day_salt, consumed_day_sodium, consumed_day_target_sedentary_energy, consumed_day_target_sedentary_fat, consumed_day_target_sedentary_carb, consumed_day_target_sedentary_protein, consumed_day_target_with_activity_energy, consumed_day_target_with_activity_fat, consumed_day_target_with_activity_carb, consumed_day_target_with_activity_protein, consumed_day_diff_sedentary_energy, consumed_day_diff_sedentary_fat, consumed_day_diff_sedentary_carb, consumed_day_diff_sedentary_protein, consumed_day_diff_with_activity_energy, consumed_day_diff_with_activity_fat, consumed_day_diff_with_activity_carb, consumed_day_diff_with_activity_protein, consumed_day_updated_datetime, consumed_day_synchronized FROM $t_food_diary_consumed_days WHERE consumed_day_user_id=$my_user_id_mysql AND consumed_day_date=$date_mysql";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_row($result);
-		list($get_consumed_day_id, $get_consumed_day_user_id, $get_consumed_day_year, $get_consumed_day_month, $get_consumed_day_month_saying, $get_consumed_day_day, $get_consumed_day_day_saying, $get_consumed_day_date, $get_consumed_day_energy, $get_consumed_day_fat, $get_consumed_day_saturated_fat, $get_consumed_day_monounsaturated_fat, $get_consumed_day_polyunsaturated_fat, $get_consumed_day_cholesterol, $get_consumed_day_carbohydrates, $get_consumed_day_carbohydrates_of_which_sugars, $get_consumed_day_dietary_fiber, $get_consumed_day_proteins, $get_consumed_day_salt, $get_consumed_day_sodium, $get_consumed_day_target_sedentary_energy, $get_consumed_day_target_sedentary_fat, $get_consumed_day_target_sedentary_carb, $get_consumed_day_target_sedentary_protein, $get_consumed_day_target_with_activity_energy, $get_consumed_day_target_with_activity_fat, $get_consumed_day_target_with_activity_carb, $get_consumed_day_target_with_activity_protein, $get_consumed_day_diff_sedentary_energy, $get_consumed_day_diff_sedentary_fat, $get_consumed_day_diff_sedentary_carb, $get_consumed_day_diff_sedentary_protein, $get_consumed_day_diff_with_activity_energy, $get_consumed_day_diff_with_activity_fat, $get_consumed_day_diff_with_activity_carb, $get_consumed_day_diff_with_activity_protein, $get_consumed_day_updated_datetime, $get_consumed_day_synchronized) = $row;
-		if($get_consumed_day_id == ""){
-			// Insert this day
-			$year = date("Y");
-			$month = date("m");
-			$month_saying = date("M");
-			$day = date("d");
-			$day_saying = date("D");
-			$date = date("Y-m-d");
-			$datetime = date("Y-m-d H:i:s");
-			mysqli_query($link, "INSERT INTO $t_food_diary_consumed_days
-			(consumed_day_id, consumed_day_user_id, consumed_day_year, consumed_day_month, consumed_day_month_saying, 
-			consumed_day_day, consumed_day_day_saying, consumed_day_date, consumed_day_energy, consumed_day_fat, 
-			consumed_day_saturated_fat, consumed_day_monounsaturated_fat, consumed_day_polyunsaturated_fat, consumed_day_cholesterol, consumed_day_carbohydrates, 
-			consumed_day_carbohydrates_of_which_sugars, consumed_day_dietary_fiber, consumed_day_proteins, consumed_day_salt, consumed_day_sodium, 
-			consumed_day_target_sedentary_energy, consumed_day_target_sedentary_fat, consumed_day_target_sedentary_carb, consumed_day_target_sedentary_protein, consumed_day_target_with_activity_energy, 
-			consumed_day_target_with_activity_fat, consumed_day_target_with_activity_carb, consumed_day_target_with_activity_protein, consumed_day_diff_sedentary_energy, consumed_day_diff_sedentary_fat, 
-			consumed_day_diff_sedentary_carb, consumed_day_diff_sedentary_protein, consumed_day_diff_with_activity_energy, consumed_day_diff_with_activity_fat, consumed_day_diff_with_activity_carb, 
-			consumed_day_diff_with_activity_protein, consumed_day_updated_datetime, consumed_day_synchronized) 
-			VALUES 
-			(NULL, $my_user_id_mysql, $year, $month, '$month_saying',
-			$day, '$day_saying', '$date', '0', '0',
-			 '0', '0',  '0', '0',  '0',
-			 '0', '0',  '0', '0',  '0',
-			
-			'$get_goal_target_sedentary_calories', '$get_goal_target_sedentary_fat', '$get_goal_target_sedentary_carbs', '$get_goal_target_sedentary_proteins',
-			'$get_goal_target_with_activity_calories', '$get_goal_target_with_activity_fat', '$get_goal_target_with_activity_carbs', '$get_goal_target_with_activity_proteins',
-			'$get_goal_target_sedentary_calories', '$get_goal_target_sedentary_fat', '$get_goal_target_sedentary_carbs', '$get_goal_target_sedentary_proteins',
-			'$get_goal_target_with_activity_calories', '$get_goal_target_with_activity_fat', '$get_goal_target_with_activity_carbs', 
-			'$get_goal_target_with_activity_proteins', '$datetime', 0
-			)")
-			or die(mysqli_error($link));
-			// echo"Ny dag, nye muligheter";
-		}
-
-		echo"
-	<!-- //Todays Consumed Totals -->
 
 	<!-- Rest -->
 		";
@@ -280,10 +343,22 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				 </tr>
 				 <tr>
 				  <td style=\"text-align:center;\">
+					<form method=\"post\" id=\"change_lifestyle_form\" action=\"consumed_day_has_lifestyle_edit.php?day_id=$get_consumed_day_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 					<span>
-					$l_active<br />
-					$l_sedentary<br />
+					<input type=\"radio\" name=\"inp_lifestyle\" value=\"1\""; if($get_consumed_day_lifestyle == "1"){ echo" checked=\"checked\""; } echo" /> $l_active<br />
+					<input type=\"radio\" name=\"inp_lifestyle\" value=\"0\""; if($get_consumed_day_lifestyle == "0"){ echo" checked=\"checked\""; } echo" /> $l_sedentary<br />
 					</span>
+					</form>
+					<!-- On check radio send form -->
+						<script>
+						\$(document).ready( function() {
+							\$('input[type=radio]').on('change', function() {
+								\$(this).closest(\"form\").submit();
+							});
+						});
+						</script>
+					<!-- //On check radio send form -->
+					
 				  </td>
 				  <td style=\"text-align:center;\">
 					<span>
@@ -409,7 +484,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$query = "SELECT entry_id, entry_user_id, entry_date, entry_hour_name, entry_food_id, entry_recipe_id, entry_name, entry_manufacturer_name, entry_serving_size, entry_serving_size_measurement, entry_energy_per_entry, entry_fat_per_entry, entry_saturated_fat_per_entry, entry_monounsaturated_fat_per_entry, entry_polyunsaturated_fat_per_entry, entry_cholesterol_per_entry, entry_carbohydrates_per_entry, entry_carbohydrates_of_which_sugars_per_entry, entry_dietary_fiber_per_entry, entry_proteins_per_entry, entry_salt_per_entry, entry_sodium_per_entry, entry_text, entry_deleted, entry_updated_datetime, entry_synchronized FROM $t_food_diary_entires WHERE entry_user_id=$my_user_id_mysql AND entry_date=$date_mysql AND entry_hour_name='$hour_names[$x]'";
 		$result = mysqli_query($link, $query);
 		while($row = mysqli_fetch_row($result)) {
-    		list($get_entry_id, $get_entry_user_id, $get_entry_date, $get_entry_hour_name, $get_entry_food_id, $get_entry_recipe_id, $get_entry_name, $get_entry_manufacturer_name, $get_entry_serving_size, $get_entry_serving_size_measurement, $get_entry_energy_per_entry, $get_entry_fat_per_entry, $get_entry_saturated_fat_per_entry, $get_entry_monounsaturated_fat_per_entry, $get_entry_polyunsaturated_fat_per_entry, $get_entry_cholesterol_per_entry, $get_entry_carbohydrates_per_entry, $get_entry_carbohydrates_of_which_sugars_per_entry, $get_entry_dietary_fiber_per_entry, $get_entry_proteins_per_entry, $get_entry_salt_per_entry, $get_entry_sodium_per_entry, $get_entry_text, $get_entry_deleted, $get_entry_updated_datetime, $get_entry_synchronized) = $row;
+    			list($get_entry_id, $get_entry_user_id, $get_entry_date, $get_entry_hour_name, $get_entry_food_id, $get_entry_recipe_id, $get_entry_name, $get_entry_manufacturer_name, $get_entry_serving_size, $get_entry_serving_size_measurement, $get_entry_energy_per_entry, $get_entry_fat_per_entry, $get_entry_saturated_fat_per_entry, $get_entry_monounsaturated_fat_per_entry, $get_entry_polyunsaturated_fat_per_entry, $get_entry_cholesterol_per_entry, $get_entry_carbohydrates_per_entry, $get_entry_carbohydrates_of_which_sugars_per_entry, $get_entry_dietary_fiber_per_entry, $get_entry_proteins_per_entry, $get_entry_salt_per_entry, $get_entry_sodium_per_entry, $get_entry_text, $get_entry_deleted, $get_entry_updated_datetime, $get_entry_synchronized) = $row;
 			if(isset($style) && $style == ""){
 				$style = "odd";
 			}
@@ -844,7 +919,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			} // for hour names
 
 			echo"
-		<!-- //Yesterdays meals as meals -->		
+		<!-- //Yesterdays meals as meals -->
+		<!-- Graph -->
+			";
+			include("index_include_graph.php");
+			echo"
+		<!-- //Graph -->	
 		";
 	} // goal
 } // logged in

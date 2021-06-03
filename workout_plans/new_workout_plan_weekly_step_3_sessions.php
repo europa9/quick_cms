@@ -613,7 +613,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					$inp_goal = $purifier->purify($inp_goal);
 
 
-					$sql = "UPDATE $t_workout_plans_sessions SET workout_session_goal=? WHERE workout_session_id='$get_workout_session_id'";
+					$sql = "UPDATE $t_workout_plans_sessions SET workout_session_goal=? WHERE workout_session_id='$get_current_workout_session_id'";
 					$stmt = $link->prepare($sql);
 					$stmt->bind_param("s", $inp_goal);
 					$stmt->execute();

@@ -44,6 +44,8 @@ echo"
 	  	   consumed_day_day_saying VARCHAR(50),
 	  	   consumed_day_date DATE,
 
+		   consumed_day_lifestyle INT,
+
 	  	   consumed_day_energy DOUBLE,
 	  	   consumed_day_fat DOUBLE,
 	  	   consumed_day_saturated_fat DOUBLE,
@@ -73,6 +75,7 @@ echo"
 	  	   consumed_day_diff_with_activity_fat DOUBLE,
 	  	   consumed_day_diff_with_activity_carb DOUBLE,
 	  	   consumed_day_diff_with_activity_protein DOUBLE,
+
 		   consumed_day_updated_datetime DATETIME,
 	  	   consumed_day_synchronized VARCHAR(50))")
 		   or die(mysqli_error());
