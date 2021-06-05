@@ -555,6 +555,13 @@ if(isset($_GET['search_query'])) {
 			<div class=\"clear\"></div>
 			";
 		}
+		elseif($x == 3){
+			echo"
+					<div class=\"left_center_center_right_right\" style=\"text-align: center;padding-bottom: 20px;\">
+					</div>
+			<div class=\"clear\"></div>
+			";
+		}
 	} // q
 	else{
 		echo"Search query is blank";

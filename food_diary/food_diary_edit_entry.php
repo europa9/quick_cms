@@ -574,6 +574,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['e
 			elseif($get_current_entry_hour_name == "snacks"){
 				echo"$l_snacks";
 			}
+			elseif($get_current_entry_hour_name == "before_supper"){
+				echo"$l_before_supper";
+			}
 			elseif($get_current_entry_hour_name == "supper"){
 				echo"$l_supper";
 			}

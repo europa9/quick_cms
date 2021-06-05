@@ -417,8 +417,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	<!-- Meals -->
 	";
 	// Start loop
-	$hour_names = array("breakfast", "lunch", "before_training", "after_training", "linner", "dinner", "snacks", "supper", "night_meal");
-	$hour_names_translated = array("$l_breakfast", "$l_lunch", "$l_before_training", "$l_after_training", "$l_linner", "$l_dinner", "$l_snacks", "$l_supper", "$l_night_meal");
+	$hour_names = array("breakfast", "lunch", "before_training", "after_training", "linner", "dinner", "snacks", "before_supper", "supper", "night_meal");
+	$hour_names_translated = array("$l_breakfast", "$l_lunch", "$l_before_training", "$l_after_training", "$l_linner", "$l_dinner", "$l_snacks", "$l_before_supper", "$l_supper", "$l_night_meal");
 	$date_mysql = quote_smart($link, $date);
 	for($x=0;$x<9;$x++){
 		// Find out how many calories I have eaten for this meal

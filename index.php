@@ -135,7 +135,6 @@ if($get_group_id != ""){
 	} // items
 	echo"
 	</div> <!-- //grid_wrapper -->
-
 	<!-- Change image on hover -->
 		<script>
 		\$(\".grid_item\").hover(function(){
@@ -163,18 +162,20 @@ while($row = mysqli_fetch_row($result)) {
 	list($get_feed_id, $get_feed_title, $get_feed_text, $get_feed_image_path, $get_feed_image_file, $get_feed_image_thumb_300x169, $get_feed_image_thumb_540x304, $get_feed_link_url, $get_feed_link_name, $get_feed_module_name, $get_feed_module_part_name, $get_feed_module_part_id, $get_feed_main_category_id, $get_feed_main_category_name, $get_feed_sub_category_id, $get_feed_sub_category_name, $get_feed_user_id, $get_feed_user_email, $get_feed_user_name, $get_feed_user_alias, $get_feed_user_photo_file, $get_feed_user_photo_thumb_40, $get_feed_user_photo_thumb_50, $get_feed_user_photo_thumb_60, $get_feed_user_photo_thumb_200, $get_feed_user_subscribe, $get_feed_user_ip, $get_feed_user_hostname, $get_feed_language, $get_feed_created_datetime, $get_feed_created_date_saying, $get_feed_created_year, $get_feed_created_time, $get_feed_modified_datetime, $get_feed_likes, $get_feed_dislikes, $get_feed_comments, $get_feed_reported, $get_feed_reported_checked, $get_feed_reported_reason) = $row;
 	
 	if($x == 0){
-		echo"
-		<div class=\"blog_frontpage_first_post\">
-			<a href=\"$root/$get_feed_link_url\"><img src=\"$root/$get_feed_image_path/$get_feed_image_file\" alt=\"$get_feed_image_file\" class=\"recipe_of_the_day_img\" /></a>
-
-			<div class=\"blog_frontpage_first_post_category_title_box\">
-				<p>
-				<a href=\"$root/$get_feed_link_url\" class=\"blog_frontpage_first_post_category\">$get_feed_user_name</a><br />
-				<a href=\"$root/$get_feed_link_url\" class=\"blog_frontpage_first_post_title\">$get_feed_title</a>
-				</p>
+		if(file_exists("$root/$get_feed_image_path/$get_feed_image_file") && $get_feed_image_file != ""){
+			echo"
+			<div class=\"blog_frontpage_first_post\">
+				<a href=\"$root/$get_feed_link_url\"><img src=\"$root/$get_feed_image_path/$get_feed_image_file\" alt=\"$get_feed_image_file\" class=\"recipe_of_the_day_img\" /></a>
+			
+				<div class=\"blog_frontpage_first_post_category_title_box\">
+					<p>
+					<a href=\"$root/$get_feed_link_url\" class=\"blog_frontpage_first_post_category\">$get_feed_user_name</a><br />
+					<a href=\"$root/$get_feed_link_url\" class=\"blog_frontpage_first_post_title\">$get_feed_title</a>
+					</p>
+				</div>
 			</div>
-		</div>
-		";
+			";
+		}
 	} // x=0;
 	elseif($x > 0 && $x < 4){
 

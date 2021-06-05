@@ -1,7 +1,9 @@
 <?php
 $l_active = "Aktiv";
 $l_added_to_your_diary_lowercase = "ble lagt til i dagboken din";
+$l_after_dinner = "Etter middag";
 $l_after_training = "Etter trening";
+$l_before_supper = "F&oslash;r kveldsmat";
 $l_before_training = "F&oslash;r trening";
 $l_breakfast = "Frokost";
 $l_calories_consumed = "Kalorier spist";
