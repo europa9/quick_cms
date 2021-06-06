@@ -24,6 +24,7 @@ $t_stats_browsers_per_year	= $mysqlPrefixSav . "stats_browsers_per_year";
 
 $t_stats_comments_per_month 	= $mysqlPrefixSav . "stats_comments_per_month";
 $t_stats_comments_per_year 	= $mysqlPrefixSav . "stats_comments_per_year";
+$t_stats_comments_per_week 	= $mysqlPrefixSav . "stats_comments_per_week";
 
 $t_stats_countries_per_year  = $mysqlPrefixSav . "stats_countries_per_year";
 $t_stats_countries_per_month = $mysqlPrefixSav . "stats_countries_per_month";
@@ -495,6 +496,65 @@ else{
 	<!-- //Humans vs bots unique -->
 
 		
+	<!-- Comments this month -->
+		<a id=\"comments_this_month\"></a>
+		<h2 style=\"margin-top: 20px;\">Comments per week <a href=\"#comments_this_month\" class=\"toggle\" data-divid=\"comments_per_month_information\"><img src=\"_design/gfx/icons/16x16/information.png\" alt=\"information.png\" /></a></h2>
+		<div class=\"comments_per_month_information\">
+			<p>
+			Comments are from the following modules: blog, courses, downloads, exercises, food, recipes and references
+			</p>
+		</div>
+
+
+		<script>
+		am4core.ready(function() {
+			var chart = am4core.create(\"chartdiv_comments_this_month\", am4charts.XYChart);
+			chart.data = [";
+
+			$x = 0;
+			$query = "SELECT stats_comments_id, stats_comments_week, stats_comments_month, stats_comments_comments_written, stats_comments_comments_written_diff_from_last_week FROM $t_stats_comments_per_week WHERE stats_comments_year=$get_current_stats_visit_per_month_year ORDER BY stats_comments_id LIMIT 0,30";
+			$result = mysqli_query($link, $query);
+			while($row = mysqli_fetch_row($result)) {
+				list($get_stats_comments_id, $get_stats_comments_week, $get_stats_comments_month, $get_stats_comments_comments_written, $get_stats_comments_comments_written_diff_from_last_week) = $row;
+						
+				if($x > 0){
+					echo",";
+				}
+				echo"
+				{
+					\"x\": \"$get_stats_comments_week\",
+					\"value\": $get_stats_comments_comments_written
+				}";
+				$x++;
+			} // while
+
+			echo"
+			];
+			// Create axes
+			var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+			categoryAxis.dataFields.category = \"x\";
+			var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+							
+			// Create series
+			var series1 = chart.series.push(new am4charts.LineSeries());
+			series1.dataFields.valueY = \"value\";
+			series1.dataFields.categoryX = \"x\";
+			series1.name = \"Comments\";
+			series1.tooltipText = \"Comments: {valueY}\";
+			series1.fill = am4core.color(\"#99e4dc\");
+			series1.stroke = am4core.color(\"#66d5c9\");
+			series1.strokeWidth = 1;
+
+			// Tooltips
+			chart.cursor = new am4charts.XYCursor();
+			chart.cursor.snapToSeries = series;
+			chart.cursor.xAxis = valueAxis;
+		}); // end am4core.ready()
+		</script>
+		<div id=\"chartdiv_comments_this_month\" style=\"height: 400px;\"></div>
+	<!-- //Comments this month -->
+
+
 	<!-- Bots -->
 		<h2>$l_bots</h2>
 		<table class=\"hor-zebra\">
