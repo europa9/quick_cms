@@ -377,7 +377,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			// Header
 			$url = "index.php?action=food_diary&date=$date";
-			$url = $url . "&ft=success&fm=food_added#hour_name$hour_name";
+			$url = $url . "&ft=success&fm=food_added#hour_$hour_name";
 			header("Location: $url");
 			exit;
 		}

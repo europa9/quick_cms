@@ -415,6 +415,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['e
 				$inp_hour_sodium = $inp_hour_sodium+$get_entry_sodium_per_entry;
 				
 			}
+
+			$inp_hour_energy = round($inp_hour_energy, 0);
+			$inp_hour_fat = round($inp_hour_fat, 0);
+			$inp_hour_saturated_fat = round($inp_hour_saturated_fat, 0);
+			$inp_hour_monounsaturated_fat = round($inp_hour_monounsaturated_fat, 0);
+			$inp_hour_polyunsaturated_fat = round($inp_hour_polyunsaturated_fat, 0);
+			$inp_hour_cholesterol = round($inp_hour_cholesterol, 0);
+			$inp_hour_carbohydrates = round($inp_hour_carbohydrates, 0);
+			$inp_hour_carbohydrates_of_which_sugars = round($inp_hour_carbohydrates_of_which_sugars, 0);
+			$inp_hour_dietary_fiber = round($inp_hour_dietary_fiber, 0);
+			$inp_hour_proteins = round($inp_hour_proteins, 0);
+			$inp_hour_salt = round($inp_hour_salt, 0);
+			$inp_hour_sodium = round($inp_hour_sodium, 0);
 			
 			$date = date("Y-m-d");
 			$datetime = date("Y-m-d H:i:s");
@@ -469,6 +482,19 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['e
 				$inp_consumed_day_sodium 			= $inp_consumed_day_sodium+$get_entry_sodium_per_entry;
 				
 			}
+
+			$inp_consumed_day_energy 			= round($inp_consumed_day_energy, 0);
+			$inp_consumed_day_fat 				= round($inp_consumed_day_fat, 0);
+			$inp_consumed_day_saturated_fat 		= round($inp_consumed_day_saturated_fat, 0);
+			$inp_consumed_day_monounsaturated_fat 		= round($inp_consumed_day_monounsaturated_fat, 0);
+			$inp_consumed_day_polyunsaturated_fat 		= round($inp_consumed_day_polyunsaturated_fat, 0);
+			$inp_consumed_day_cholesterol 			= round($inp_consumed_day_cholesterol, 0);
+			$inp_consumed_day_carbohydrates 		= round($inp_consumed_day_carbohydrates, 0);
+			$inp_consumed_day_carbohydrates_of_which_sugars = round($inp_consumed_day_carbohydrates_of_which_sugars, 0);
+			$inp_consumed_day_dietary_fiber 		= round($inp_consumed_day_dietary_fiber, 0);
+			$inp_consumed_day_proteins 			= round($inp_consumed_day_proteins, 0);
+			$inp_consumed_day_salt 				= round($inp_consumed_day_salt, 0);
+			$inp_consumed_day_sodium 			= round($inp_consumed_day_sodium, 0);
 			
 			$query = "SELECT consumed_day_id, consumed_day_user_id, consumed_day_year, consumed_day_month, consumed_day_month_saying, consumed_day_day, consumed_day_day_saying, consumed_day_date, consumed_day_energy, consumed_day_fat, consumed_day_saturated_fat, consumed_day_monounsaturated_fat, consumed_day_polyunsaturated_fat, consumed_day_cholesterol, consumed_day_carbohydrates, consumed_day_carbohydrates_of_which_sugars, consumed_day_dietary_fiber, consumed_day_proteins, consumed_day_salt, consumed_day_sodium, consumed_day_target_sedentary_energy, consumed_day_target_sedentary_fat, consumed_day_target_sedentary_carb, consumed_day_target_sedentary_protein, consumed_day_target_with_activity_energy, consumed_day_target_with_activity_fat, consumed_day_target_with_activity_carb, consumed_day_target_with_activity_protein, consumed_day_diff_sedentary_energy, consumed_day_diff_sedentary_fat, consumed_day_diff_sedentary_carb, consumed_day_diff_sedentary_protein, consumed_day_diff_with_activity_energy, consumed_day_diff_with_activity_fat, consumed_day_diff_with_activity_carb, consumed_day_diff_with_activity_protein, consumed_day_updated_datetime, consumed_day_synchronized FROM $t_food_diary_consumed_days WHERE consumed_day_user_id=$my_user_id_mysql AND consumed_day_date='$get_current_entry_date'";
 			$result = mysqli_query($link, $query);
@@ -579,6 +605,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['e
 			}
 			elseif($get_current_entry_hour_name == "supper"){
 				echo"$l_supper";
+			}
+			elseif($get_current_entry_hour_name == "night_meal"){
+				echo"$l_night_meal";
 			}
 			else{
 				echo"??";die;

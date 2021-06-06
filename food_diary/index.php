@@ -420,7 +420,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	$hour_names = array("breakfast", "lunch", "before_training", "after_training", "linner", "dinner", "snacks", "before_supper", "supper", "night_meal");
 	$hour_names_translated = array("$l_breakfast", "$l_lunch", "$l_before_training", "$l_after_training", "$l_linner", "$l_dinner", "$l_snacks", "$l_before_supper", "$l_supper", "$l_night_meal");
 	$date_mysql = quote_smart($link, $date);
-	for($x=0;$x<9;$x++){
+	for($x=0;$x<10;$x++){
 		// Find out how many calories I have eaten for this meal
 		$query_c = "SELECT consumed_hour_id, consumed_hour_user_id, consumed_hour_date, consumed_hour_name, consumed_hour_energy, consumed_hour_fat, consumed_hour_saturated_fat, consumed_hour_monounsaturated_fat, consumed_hour_polyunsaturated_fat, consumed_hour_cholesterol, consumed_hour_carbohydrates, consumed_hour_carbohydrates_of_which_sugars, consumed_hour_dietary_fiber, consumed_hour_proteins, consumed_hour_salt, consumed_hour_sodium, consumed_hour_updated_datetime, consumed_hour_synchronized FROM $t_food_diary_consumed_hours WHERE consumed_hour_user_id=$my_user_id_mysql AND consumed_hour_date=$date_mysql AND consumed_hour_name='$hour_names[$x]'";
 		$result_c = mysqli_query($link, $query_c);
@@ -667,7 +667,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		<!-- Yesterdays meals as meals -->
 			";
 			$yesterday_mysql = quote_smart($link, $yesterday);
-			for($x=0;$x<7;$x++){
+			for($x=0;$x<10;$x++){
 				$inp_hour_name_mysql = quote_smart($link, $hour_names[$x]);
 				$check_meal_entries = "";
 				$inp_meal_entries_count= 0;
