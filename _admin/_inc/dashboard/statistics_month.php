@@ -56,9 +56,11 @@ $t_stats_visists_per_month_ips 	= $mysqlPrefixSav . "stats_visists_per_month_ips
 $t_stats_visists_per_year 	= $mysqlPrefixSav . "stats_visists_per_year";
 $t_stats_visists_per_year_ips 	= $mysqlPrefixSav . "stats_visists_per_year_ips";
 
+$t_stats_pages_visits_per_year = $mysqlPrefixSav . "stats_pages_visits_per_year";
+
 $t_search_engine_searches = $mysqlPrefixSav . "search_engine_searches";
 
-
+$t_stats_tracker_index = $mysqlPrefixSav . "stats_tracker_index";
 
 /*- Translation ----------------------------------------------------------------------- */
 include("_translations/admin/$l/dashboard/t_default.php");
@@ -81,6 +83,26 @@ else{
 	$stats_month = date("m");
 }
 $stats_month_mysql = quote_smart($link, $stats_month);
+
+
+/*- Functions ----------------------------------------------------------------------- */
+function get_title($url) {
+	$url = str_replace("&amp;", "&", $url);
+
+	$options = array(
+	  'http'=>array(
+	    'method'=>"GET",
+	    'header'=>"Accept-language: en\r\n" .
+	              "Cookie: foo=bar\r\n" .  // check function.stream-context-create on php.net
+	              "User-Agent:  Mozilla/5.0 (compatible; QuickCMS/1; +http://software.frindex.net)\r\n"
+	  )
+	);
+
+	$context = stream_context_create($options);
+	$page = file_get_contents($url, false, $context);
+	$title = preg_match('/<title[^>]*>(.*?)<\/title>/ims', $page, $match) ? $match[1] : null;
+	return $title;
+}
 
 
 // Find month
@@ -532,6 +554,72 @@ else{
 		</table>
 	<!-- //Bots -->
 
+
+
+	<!-- Pages -->
+		<h2>Page Visits</h2>
+
+
+		<table class=\"hor-zebra\">
+		 <thead>
+		  <tr>
+		   <th scope=\"col\" style=\"width: 40%;\">
+			<span>$l_bot</span>
+		   </th>
+		   <th scope=\"col\" style=\"width: 30%;\">
+			<span>Human unique</span>
+		   </th>
+		   <th scope=\"col\" style=\"width: 30%;\">
+			<span>Bots unique</span>
+		   </th>
+		  </tr>
+		 </thead>
+		 <tbody>
+		";
+		if($get_current_stats_visit_per_month_month < 10){
+			$get_current_stats_visit_per_month_month = 0 . $get_current_stats_visit_per_month_month;
+		}
+		$first_day_time = strtotime("$get_current_stats_visit_per_month_year-$get_current_stats_visit_per_month_month-01");
+		$query = "SELECT stats_pages_per_year_id, stats_pages_per_year_url, stats_pages_per_year_title, stats_pages_per_year_title_fetched, stats_pages_per_year_human_unique, stats_pages_per_year_unique_desktop, stats_pages_per_year_unique_mobile, stats_pages_per_year_unique_bots FROM $t_stats_pages_visits_per_year WHERE stats_pages_per_year_year=$get_current_stats_visit_per_month_year AND stats_pages_per_year_updated_time > $first_day_time ORDER BY stats_pages_per_year_human_unique DESC LIMIT 0,50";
+		$result = mysqli_query($link, $query);
+		while($row = mysqli_fetch_row($result)) {
+			list($get_stats_pages_per_year_id, $get_stats_pages_per_year_url, $get_stats_pages_per_year_title, $get_stats_pages_per_year_title_fetched, $get_stats_pages_per_year_human_unique, $get_stats_pages_per_year_unique_desktop, $get_stats_pages_per_year_unique_mobile, $get_stats_pages_per_year_unique_bots) = $row;
+			
+
+			// We need to visit the site in order to get the correct page title
+			if($get_stats_pages_per_year_title_fetched == "0"){
+				$get_stats_pages_per_year_title = get_title($get_stats_pages_per_year_url);
+				$get_stats_pages_per_year_title = output_html($get_stats_pages_per_year_title);
+				$inp_title_mysql = quote_smart($link, $get_stats_pages_per_year_title);
+				mysqli_query($link, "UPDATE $t_stats_pages_visits_per_year SET stats_pages_per_year_title=$inp_title_mysql, stats_pages_per_year_title_fetched=1 WHERE stats_pages_per_year_id=$get_stats_pages_per_year_id") or die(mysqli_error($link));
+				
+			}
+
+			// Delete empty
+			if($get_stats_pages_per_year_title == ""){
+				mysqli_query($link, "DELETE FROM $t_stats_pages_visits_per_year WHERE stats_pages_per_year_id=$get_stats_pages_per_year_id") or die(mysqli_error($link));
+				$get_stats_pages_per_year_title = "[Deleted]";
+			}
+
+			echo"
+			 <tr>
+			  <td>
+				<span><a href=\"$get_stats_pages_per_year_url\">$get_stats_pages_per_year_title</a></span>
+			  </td>
+			  <td>
+				<span>$get_stats_pages_per_year_human_unique</span>
+			  </td>
+			  <td>
+				<span>$get_stats_pages_per_year_unique_bots</span>
+			  </td>
+			 </tr>
+			";
+		}
+		echo"
+		 </tbody>
+		</table>
+	<!-- //Pages -->
+
 	<!-- Searches -->
 		<h2>Searches</h2>
 		<table class=\"hor-zebra\">
@@ -679,6 +767,148 @@ else{
 		</table>
 	<!-- //Referers-->
 
+
+	<!-- Trackers -->
+		<a id=\"trackers\"></a>
+		<h2>Trackers</h2>
+		<p>Trackers log the last visitors and how they use your site.</p>
+		<!-- Select language -->
+			<script>
+			\$(function(){
+				// bind change event to select
+				\$('#inp_l').on('change', function () {
+					var url = \$(this).val(); // get selected value
+					if (url) { // require a URL
+ 						window.location = url; // redirect
+					}
+					return false;
+				});
+			});
+			</script>
+
+			<select id=\"inp_l\">
+				<option value=\"index.php?open=dashboard&amp;page=statistics_month&amp;stats_year=$stats_year&amp;stats_month=$stats_month&amp;editor_language=$editor_language&amp;l=$l\">$l_editor_language</option>
+				<option value=\"index.php?open=dashboard&amp;page=statistics_month&amp;stats_year=$stats_year&amp;stats_month=$stats_month&amp;editor_language=$editor_language&amp;l=$l\">-</option>\n";
+
+				$query = "SELECT language_active_id, language_active_name, language_active_iso_two, language_active_default FROM $t_languages_active";
+				$result = mysqli_query($link, $query);
+				while($row = mysqli_fetch_row($result)) {
+					list($get_language_active_id, $get_language_active_name, $get_language_active_iso_two, $get_language_active_default) = $row;
+
+					// No language selected?
+					if($editor_language == ""){
+							$editor_language = "$get_language_active_iso_two";
+					}
+					echo"	<option value=\"index.php?open=dashboard&amp;page=statistics_year&amp;stats_year=$stats_year&amp;stats_month=$stats_month&amp;editor_language=$get_language_active_iso_two&amp;l=$l#trackers\"";if($editor_language == "$get_language_active_iso_two"){ echo" selected=\"selected\"";}echo">$get_language_active_name</option>\n";
+				}
+			echo"
+			</select>
+			</p>
+			</form>
+		<!-- //Select language -->
+
+		<table class=\"hor-zebra\">
+		 <thead>
+		  <tr>
+		   <th scope=\"col\">
+			<span>ID</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Type</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>IP</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Last URL</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>OS</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Browser</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Country</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Accepted language</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Language</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Time spent</span>
+		   </th>
+		   <th scope=\"col\">
+			<span>Hits</span>
+		   </th>
+		  </tr>
+		 </thead>
+		 <tbody>
+		";
+		$editor_language_mysql = quote_smart($link, $editor_language);
+		$query = "SELECT tracker_id, tracker_ip, tracker_ip_masked, tracker_month, tracker_month_short, tracker_year, tracker_time_start, tracker_hour_minute_start, tracker_time_end, tracker_hour_minute_end, tracker_seconds_spent, tracker_time_spent, tracker_os, tracker_browser, tracker_type, tracker_country_name, tracker_accept_language, tracker_language, tracker_last_url_value, tracker_last_url_title, tracker_last_url_title_fetched, tracker_hits FROM $t_stats_tracker_index WHERE tracker_language=$editor_language_mysql ORDER BY tracker_id DESC LIMIT 0,300";
+		$result = mysqli_query($link, $query);
+		while($row = mysqli_fetch_row($result)) {
+			list($get_tracker_id, $get_tracker_ip, $get_tracker_ip_masked, $get_tracker_month, $get_tracker_month_short, $get_tracker_year, $get_tracker_time_start, $get_tracker_hour_minute_start, $get_tracker_time_end, $get_tracker_hour_minute_end, $get_tracker_seconds_spent, $get_tracker_time_spent, $get_tracker_os, $get_tracker_browser, $get_tracker_type, $get_tracker_country_name, $get_tracker_accept_language, $get_tracker_language, $get_tracker_last_url_value, $get_tracker_last_url_title, $get_tracker_last_url_title_fetched, $get_tracker_hits) = $row;
+			
+			if($get_tracker_last_url_title_fetched == "0"){
+				$inp_url_title = get_title($get_tracker_last_url_value);
+				$inp_url_title = output_html($inp_url_title);
+				if($inp_url_title == ""){
+					$inp_url_title = "$get_tracker_last_url_title";
+				}
+				$inp_url_title_mysql = quote_smart($link, $inp_url_title);
+				
+				mysqli_query($link, "UPDATE $t_stats_tracker_index SET tracker_last_url_title=$inp_url_title_mysql, tracker_last_url_title_fetched=1 WHERE tracker_id=$get_tracker_id") or die(mysqli_error());
+
+				$get_tracker_last_url_title = "$inp_url_title";
+			}
+
+			echo"
+			 <tr>
+			  <td>
+				<span><a href=\"index.php?open=dashboard&amp;page=statistics_tracker&amp;tracker_id=$get_tracker_id&amp;editor_language=$editor_language&amp;l=$l\">$get_tracker_id</a></span>
+			  </td>
+			  <td>
+				<span>$get_tracker_type</span>
+			  </td>
+			  <td>
+				<span>$get_tracker_ip_masked</span>
+			  </td>
+			  <td>
+				<span><a href=\"$get_tracker_last_url_value\">$get_tracker_last_url_title</a></span>
+			  </td>
+			  <td>
+				<span>$get_tracker_os</span>
+			  </td>
+			  <td>
+				<span>$get_tracker_browser</span>
+			  </td>
+			  <td>
+				<span>$get_tracker_country_name</span>
+			  </td>
+			  <td>
+				<span>$get_tracker_accept_language</span>
+			  </td>
+			  <td>
+				<span>$get_tracker_language</span>
+			  </td>
+			  <td>
+				<span>$get_tracker_time_spent</span>
+			  </td>
+			  <td>
+				<span>$get_tracker_hits</span>
+			  </td>
+			 </tr>
+			";
+
+		}
+		echo"
+		 </tbody>
+		</table>
+	<!-- //Trackers -->
 	";
 	
 } // year found
