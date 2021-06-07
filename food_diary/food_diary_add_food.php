@@ -2281,7 +2281,34 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 			$url = "index.php?action=food_diary&date=$date";
-			$url = $url . "&ft=success&fm=food_added#hour_$hour_name";
+			$url = $url . "&ft=success&fm=food_added";
+			if($hour_name == "breakfast"){
+				
+			}
+			elseif($hour_name == "lunch"){
+				$url = $url . "#hour_breakfast";
+			}
+			elseif($hour_name == "before_training"){
+				$url = $url . "#hour_lunch";
+			}
+			elseif($hour_name == "after_training"){
+				$url = $url . "#hour_before_training";
+			}
+			elseif($hour_name == "linner"){
+				$url = $url . "#hour_after_training";
+			}
+			elseif($hour_name == "snacks"){
+				$url = $url . "#hour_linner";
+			}
+			elseif($hour_name == "before_supper"){
+				$url = $url . "#hour_snacks";
+			}
+			elseif($hour_name == "supper"){
+				$url = $url . "#hour_before_supper";
+			}
+			elseif($hour_name == "night_meal"){
+				$url = $url . "#hour_supper";
+			}
 			header("Location: $url");
 			exit;
 		}
