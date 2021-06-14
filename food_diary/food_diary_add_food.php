@@ -2286,7 +2286,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				
 			}
 			elseif($hour_name == "lunch"){
-				$url = $url . "#hour_breakfast";
 			}
 			elseif($hour_name == "before_training"){
 				$url = $url . "#hour_lunch";

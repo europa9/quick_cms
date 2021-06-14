@@ -291,7 +291,7 @@ echo"
 				list($get_category_translation_id, $get_category_translation_value) = $row_cat;
 	
 				// Thumb
-				if($get_recipe_thumb_278x156 == "" OR !(file_exists("$root/$get_recipe_image_path/$get_recipe_thumb_278x184"))){
+				if($get_recipe_thumb_278x156 == "" OR !(file_exists("$root/$get_recipe_image_path/$get_recipe_thumb_278x156"))){
 					$inp_new_x = 278; // 278x156
 					$inp_new_y = 156;
 

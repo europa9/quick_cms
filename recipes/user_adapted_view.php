@@ -49,7 +49,7 @@ else{
 if(isset($_GET['referer'])) {
 	$referer = $_GET['referer'];
 	$referer = strip_tags(stripslashes($referer));
-	if($referer != "index" && $referer != "categories_browse" && $referer != "edit_recipe_ingredients" && $referer != "browse_recipes_newest" && $referer != "browse_recipes_rating" && $referer != "browse_recipes_views" && $referer != "browse_recipes_comments" && $referer != "submit_recipe_step_2_group_and_elements" && $referer != "view_tag" && $referer != "cuisines_browse"){
+	if($referer != "index" && $referer != "categories_browse" && $referer != "edit_recipe_ingredients" && $referer != "browse_recipes_newest" && $referer != "browse_recipes_rating" && $referer != "browse_recipes_views" && $referer != "browse_recipes_comments" && $referer != "submit_recipe_step_2_group_and_elements" && $referer != "view_tag" && $referer != "cuisines_browse" && $referer != "occasions_browse"){
 		echo"Unknown referer";
 		die;
 	}
@@ -139,9 +139,9 @@ else{
 	if($get_current_view_id == ""){
 		// Create default
 		mysqli_query($link, "INSERT INTO $t_recipes_user_adapted_view 
-				(view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_eight_us) 
+				(view_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_eight_us) 
 				VALUES 
-				(NULL, $my_user_id_mysql, $my_user_ip_mysql, $year, 'metric', 1, 1, 0)")
+				(NULL, $my_user_ip_mysql, $year, 'metric', 1, 1, 0)")
 				or die(mysqli_error($link));
 
 		$query_t = "SELECT view_id, view_user_id, view_ip, view_year, view_system, view_hundred_metric, view_serving, view_pcs_metric, view_eight_us, view_pcs_us FROM $t_recipes_user_adapted_view WHERE view_ip=$my_user_ip_mysql";
@@ -224,7 +224,7 @@ elseif($referer == "cuisines_browse"){
 	if(isset($_GET['cuisine_id'])){
 		$cuisine_id= $_GET['cuisine_id'];
 		$cuisine_id = strip_tags(stripslashes($cuisine_id));
-		if((is_numeric($cuisine_id))){
+		if(!(is_numeric($cuisine_id))){
 			echo"Cuisine id not numeric";
 			die;
 		}
@@ -234,6 +234,23 @@ elseif($referer == "cuisines_browse"){
 	}
 	else{
 		echo"Missing cuisine id";
+		die;
+	}
+}
+elseif($referer == "occasions_browse"){
+	if(isset($_GET['occasion_id'])){
+		$occasion_id= $_GET['occasion_id'];
+		$occasion_id = strip_tags(stripslashes($occasion_id));
+		if(!(is_numeric($occasion_id))){
+			echo"occasion id not numeric";
+			die;
+		}
+		$url = "occasions_browse.php?occasion_id=$occasion_id&l=$l&ft=info&fm=$fm";
+		header("Location: $url");
+		exit;
+	}
+	else{
+		echo"Missing occasion id";
 		die;
 	}
 }

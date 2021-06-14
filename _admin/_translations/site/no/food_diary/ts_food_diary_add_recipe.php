@@ -7,5 +7,6 @@ $l_new_recipe = "Ny oppskrift";
 $l_proteins_abbr_short_lowercase = "pro";
 $l_recipe_search = "S&oslash;k etter oppskrift";
 $l_serving = "Servering";
+$l_servings_abbreviation = "Serveringer";
 $l_serving_abbreviation = "servering";
 ?>

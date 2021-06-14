@@ -1445,7 +1445,6 @@ $inp_last_used_carbohydrates_of_which_sugars_metric_mysql,
 				
 			}
 			elseif($hour_name == "lunch"){
-				$url = $url . "#hour_breakfast";
 			}
 			elseif($hour_name == "before_training"){
 				$url = $url . "#hour_lunch";
