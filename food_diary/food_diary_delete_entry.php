@@ -303,29 +303,38 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['e
 			&gt;
 			<a href=\"index.php?date=$get_current_entry_date&amp;l=$l#meal$get_current_entry_meal_id\">";
 
-			if($get_current_entry_meal_id == "0"){
+			if($get_current_entry_hour_name == "breakfast"){
 				echo"$l_breakfast";
 			}
-			elseif($get_current_entry_meal_id == "1"){
+			elseif($get_current_entry_hour_name == "lunch"){
 				echo"$l_lunch";
 			}
-			elseif($get_current_entry_meal_id == "2"){
+			elseif($get_current_entry_hour_name == "before_training"){
 				echo"$l_before_training";
 			}
-			elseif($get_current_entry_meal_id == "3"){
+			elseif($get_current_entry_hour_name == "after_training"){
 				echo"$l_after_training";
 			}
-			elseif($get_current_entry_meal_id == "4"){
+			elseif($get_current_entry_hour_name == "linner"){
+				echo"$l_linner";
+			}
+			elseif($get_current_entry_hour_name == "dinner"){
 				echo"$l_dinner";
 			}
-			elseif($get_current_entry_meal_id == "5"){
+			elseif($get_current_entry_hour_name == "snacks"){
 				echo"$l_snacks";
 			}
-			elseif($get_current_entry_meal_id == "6"){
+			elseif($get_current_entry_hour_name == "before_supper"){
+				echo"$l_before_supper";
+			}
+			elseif($get_current_entry_hour_name == "supper"){
 				echo"$l_supper";
 			}
+			elseif($get_current_entry_hour_name == "night_meal"){
+				echo"$l_night_meal";
+			}
 			else{
-				echo"??";die;
+				echo"Unknown entry_hour_name";die;
 			}
 			echo"</a>
 			&gt;

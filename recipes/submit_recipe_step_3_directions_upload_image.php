@@ -234,7 +234,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					if($width > 1024){
 						$newwidth=1024;
 						$newheight=($height/$width)*$newwidth; // 667
-						resize_crop_image($newwidth, $newheight, $filetowrite, $filetowrite);
+						resize_crop_image($newwidth, $newheight, "../$inp_file_path/$inp_file_name", "../$inp_file_path/$inp_file_name");
 					}
 
 
@@ -244,7 +244,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					// Use a location key to specify the path to the saved image resource.
 					// { location : '/your/uploaded/image/file'}
 					$filetowrite = $upload_path . "/" . $new_name;
-					echo json_encode(array('location' => $filetowrite));
+					echo json_encode(array('location' => "../$inp_file_path/$inp_file_name"));
 				} // uploaded
 				else{
 					header("HTTP/1.1 400 Could not upload.");

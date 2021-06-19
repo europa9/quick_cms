@@ -911,9 +911,9 @@ else{
 
 
 						// Calories
-						$get_item_calories_calculated = round(($get_item_calories_calculated/$get_item_amount)*$amount, 0);
+						$get_item_energy_calculated = round(($get_item_energy_calculated/$get_item_amount)*$amount, 0);
 						$get_item_fat_calculated = round(($get_item_fat_calculated/$get_item_amount)*$amount, 0);
-						$get_item_carbs_calculated = round(($get_item_carbs_calculated/$get_item_amount)*$amount, 0);
+						$get_item_carbohydrates_calculated = round(($get_item_carbohydrates_calculated/$get_item_amount)*$amount, 0);
 						$get_item_proteins_calculated = round(($get_item_proteins_calculated/$get_item_amount)*$amount, 0);
 						$get_item_salt_calculated = round(($get_item_salt_calculated/$get_item_amount)*$amount, 0);
 						$get_item_sodium_calculated = round(($get_item_sodium_calculated/$get_item_amount)*$amount, 0);

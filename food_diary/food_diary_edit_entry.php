@@ -594,6 +594,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['e
 			elseif($get_current_entry_hour_name == "after_training"){
 				echo"$l_after_training";
 			}
+			elseif($get_current_entry_hour_name == "linner"){
+				echo"$l_linner";
+			}
 			elseif($get_current_entry_hour_name == "dinner"){
 				echo"$l_dinner";
 			}
@@ -610,7 +613,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['e
 				echo"$l_night_meal";
 			}
 			else{
-				echo"??";die;
+				echo"Unknown entry_hour_name";die;
 			}
 			echo"</a>
 			&gt;

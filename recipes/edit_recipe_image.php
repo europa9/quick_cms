@@ -161,44 +161,44 @@ else{
 			if($file_type == "jpg" OR $file_type == "jpeg" OR $file_type == "png" OR $file_type == "gif"){
 				if(move_uploaded_file($_FILES['inp_image']['tmp_name'], $target_path_temp)) {
 
-				// Sjekk om det faktisk er et bilde som er lastet opp
-				list($width,$height) = getimagesize($target_path_temp);
-				if(is_numeric($width) && is_numeric($height)){
+					// Sjekk om det faktisk er et bilde som er lastet opp
+					list($width,$height) = getimagesize($target_path_temp);
+					if(is_numeric($width) && is_numeric($height)){
 
-					// Check that file is big enough
-					if($width < 1919){
-						$url = "edit_recipe_image.php?recipe_id=$recipe_id&l=$l&ft=error&fm=width_have_to_be_bigger";
-						header("Location: $url");
-						exit;
-					}
-					if($height < 1079){
-						$url = "edit_recipe_image.php?recipe_id=$recipe_id&l=$l&ft=error&fm=height_have_to_be_bigger";
-						header("Location: $url");
-						exit;
-					}
-					// Dette bildet er OK
-					copy($target_path_temp, $target_path);
-					unlink($target_path_temp);
+						// Check that file is big enough (1280x720)
+						if($width < 1279){
+							$url = "edit_recipe_image.php?recipe_id=$recipe_id&l=$l&ft=error&fm=width_have_to_be_bigger";
+							header("Location: $url");
+							exit;
+						}
+						if($height < 719){
+							$url = "edit_recipe_image.php?recipe_id=$recipe_id&l=$l&ft=error&fm=height_have_to_be_bigger";
+							header("Location: $url");
+							exit;
+						}
+						// Dette bildet er OK
+						copy($target_path_temp, $target_path);
+						unlink($target_path_temp);
 
 
-					// recipe_image_path
-					$inp_recipe_image_path = "_uploads/recipes/_image_uploads/$get_recipe_category_id/$get_recipe_user_id/$year";
-					$inp_recipe_image_path_mysql = quote_smart($link, $inp_recipe_image_path);
+						// recipe_image_path
+						$inp_recipe_image_path = "_uploads/recipes/_image_uploads/$get_recipe_category_id/$get_recipe_user_id/$year";
+						$inp_recipe_image_path_mysql = quote_smart($link, $inp_recipe_image_path);
 
-					// recipe_image
-					$inp_recipe_image = $new_name;
-					$inp_recipe_image_mysql = quote_smart($link, $inp_recipe_image);
+						// recipe_image
+						$inp_recipe_image = $new_name;
+						$inp_recipe_image_mysql = quote_smart($link, $inp_recipe_image);
 
-					// recipe_thumb
-					$inp_recipe_thumb = $get_recipe_id . "_thumb_278x156.jpg";
-					$inp_recipe_thumb_mysql = quote_smart($link, $inp_recipe_thumb);
+						// recipe_thumb
+						$inp_recipe_thumb = $get_recipe_id . "_thumb_278x156.jpg";
+						$inp_recipe_thumb_mysql = quote_smart($link, $inp_recipe_thumb);
 					
-					// IP
-					$inp_recipe_user_ip = $_SERVER['REMOTE_ADDR'];
+						// IP
+						$inp_recipe_user_ip = $_SERVER['REMOTE_ADDR'];
 						$inp_recipe_user_ip = output_html($inp_recipe_user_ip);
 						$inp_recipe_user_ip_mysql = quote_smart($link, $inp_recipe_user_ip);
 
-					
+				
 						// Update MySQL
 						$result = mysqli_query($link, "UPDATE $t_recipes SET 
 									recipe_image_path=$inp_recipe_image_path_mysql, 
@@ -207,7 +207,7 @@ else{
 									recipe_user_ip=$inp_recipe_user_ip_mysql WHERE recipe_id=$recipe_id_mysql");
 
 						// Rezie image to 1920x1080
-						$newwidth=1920;
+						$newwidth=1280;
 						$newheight=($height/$width)*$newwidth; // 600
 						$tmp=imagecreatetruecolor($newwidth,$newheight);
 						
@@ -225,7 +225,7 @@ else{
 						// Make thumb
 						$width = $newwidth;
 						$height = $newheight;
-
+	
 						$thumb_final_path = "$root/" . $inp_recipe_image_path. "/" . $inp_recipe_thumb;
 						$newwidth=278;
 						$newheight=156; // ($height/$width)*$newwidth
@@ -234,8 +234,6 @@ else{
 						imagecopyresampled($tmp,$src,0,0,0,0,$newwidth,$newheight, $width,$height);
 						imagejpeg($tmp, $thumb_final_path);
 						imagedestroy($tmp);
-					
-
 
 						// Search engine
 						include("edit_recipe_include_update_search_engine.php");
@@ -370,7 +368,7 @@ else{
 
 			<form method=\"post\" action=\"edit_recipe_image.php?recipe_id=$get_recipe_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 			
-			<p><b>$l_new_image (1920x1080 jpg):</b><br />
+			<p><b>$l_new_image (1280x720 $l_or_lowercase 1920x1080 jpg):</b><br />
 			<input type=\"file\" name=\"inp_image\" tabindex=\"";$tabindex=$tabindex+1;echo"$tabindex\" />
 			</p>
 
