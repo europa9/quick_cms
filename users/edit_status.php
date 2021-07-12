@@ -62,8 +62,11 @@ else{
 if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	// Get user
 	$user_id = $_SESSION['user_id'];
+	$user_id = output_html($user_id);
 	$user_id_mysql = quote_smart($link, $user_id);
+
 	$security = $_SESSION['security'];
+	$security= output_html($security);
 	$security_mysql = quote_smart($link, $security);
 
 	$query = "SELECT user_id, user_name, user_alias, user_language, user_date_format, user_rank FROM $t_users WHERE user_id=$user_id_mysql AND user_security=$security_mysql";

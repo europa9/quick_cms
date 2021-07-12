@@ -25,6 +25,43 @@ if(!(isset($define_access_to_control_panel))){
 	echo"<h1>Server error 403</h1>";
 	die;
 }
+
+/*- Timezone --------------------------------------------------------------------------- */
+function timezone_list() {
+    static $timezones = null;
+
+    if ($timezones === null) {
+        $timezones = [];
+        $offsets = [];
+        $now = new DateTime('now', new DateTimeZone('UTC'));
+
+        foreach (DateTimeZone::listIdentifiers() as $timezone) {
+            $now->setTimezone(new DateTimeZone($timezone));
+            $offsets[] = $offset = $now->getOffset();
+            $timezones[$timezone] = '(' . format_GMT_offset($offset) . ') ' . format_timezone_name($timezone);
+        }
+
+        array_multisort($offsets, $timezones);
+    }
+
+    return $timezones;
+}
+function format_GMT_offset($offset) {
+    $hours = intval($offset / 3600);
+    $minutes = abs(intval($offset % 3600 / 60));
+    return 'GMT' . ($offset ? sprintf('%+03d:%02d', $hours, $minutes) : '');
+}
+
+function format_timezone_name($name) {
+    $name = str_replace('/', ', ', $name);
+    $name = str_replace('_', ' ', $name);
+    $name = str_replace('St ', 'St. ', $name);
+    return $name;
+}
+
+
+
+
 /*- Varialbes  ---------------------------------------------------- */
 if(isset($_GET['user_id'])) {
 	$user_id = $_GET['user_id'];
@@ -54,10 +91,10 @@ else{
 }
 // Get user
 $user_id_mysql = quote_smart($link, $user_id);
-$query = "SELECT user_id, user_email, user_name, user_alias, user_password, user_salt, user_security, user_language, user_gender, user_measurement, user_dob, user_date_format, user_registered, user_last_online, user_rank, user_points, user_likes, user_dislikes, user_status, user_login_tries, user_last_ip, user_synchronized, user_verified_by_moderator FROM $t_users WHERE user_id=$user_id_mysql";
+$query = "SELECT user_id, user_email, user_name, user_alias, user_password, user_salt, user_security, user_language, user_gender, user_measurement, user_dob, user_date_format, user_timezone_utc_diff, user_timezone_value, user_registered, user_last_online, user_rank, user_points, user_likes, user_dislikes, user_status, user_login_tries, user_last_ip, user_synchronized, user_verified_by_moderator FROM $t_users WHERE user_id=$user_id_mysql";
 $result = mysqli_query($link, $query);
 $row = mysqli_fetch_row($result);
-list($get_user_id, $get_user_email, $get_user_name, $get_user_alias, $get_user_password, $get_user_salt, $get_user_security, $get_user_language, $get_user_gender, $get_user_measurement, $get_user_dob, $get_user_date_format, $get_user_registered, $get_user_last_online, $get_user_rank, $get_user_points, $get_user_likes, $get_user_dislikes, $get_user_status, $get_user_login_tries, $get_user_last_ip, $get_user_synchronized, $get_user_verified_by_moderator) = $row;
+list($get_user_id, $get_user_email, $get_user_name, $get_user_alias, $get_user_password, $get_user_salt, $get_user_security, $get_user_language, $get_user_gender, $get_user_measurement, $get_user_dob, $get_user_date_format, $get_user_timezone_utc_diff, $get_user_timezone_value, $get_user_registered, $get_user_last_online, $get_user_rank, $get_user_points, $get_user_likes, $get_user_dislikes, $get_user_status, $get_user_login_tries, $get_user_last_ip, $get_user_synchronized, $get_user_verified_by_moderator) = $row;
 
 // Get Profile
 $query = "SELECT profile_id, profile_user_id, profile_first_name, profile_middle_name, profile_last_name, profile_address_line_a, profile_address_line_b, profile_zip, profile_city, profile_country, profile_phone, profile_work, profile_university, profile_high_school, profile_languages, profile_website, profile_interested_in, profile_relationship, profile_about, profile_newsletter FROM $t_users_profile WHERE profile_user_id=$user_id_mysql";
@@ -228,10 +265,26 @@ if($get_my_user_rank != "moderator" && $get_my_user_rank != "admin"){
 		$inp_user_verified_by_moderator = output_html($inp_user_verified_by_moderator);
 		$inp_user_verified_by_moderator_mysql = quote_smart($link, $inp_user_verified_by_moderator);
 
+		$inp_timezone_value = $_POST['inp_timezone_value'];
+		$inp_timezone_value = output_html($inp_timezone_value);
+		$inp_timezone_value_mysql = quote_smart($link, $inp_timezone_value);
+
+		$inp_timezone_utc_diff_array = explode(")", $inp_timezone_value);
+		$inp_timezone_utc_diff = str_replace("(", "", $inp_timezone_utc_diff_array[0]);
+		$inp_timezone_utc_diff = str_replace("GMT", "", $inp_timezone_utc_diff);
+		$inp_timezone_utc_diff_array = explode(":", $inp_timezone_utc_diff);
+		$inp_timezone_utc_diff = $inp_timezone_utc_diff_array[0];
+		if($inp_timezone_utc_diff == ""){
+			$inp_timezone_utc_diff = "0";
+		}
+		$inp_timezone_utc_diff_mysql = quote_smart($link, $inp_timezone_utc_diff);
+
 		$result = mysqli_query($link, "UPDATE $t_users SET 
 					user_language=$inp_user_language_mysql, 
 					user_gender=$inp_user_gender_mysql, 
 					user_measurement=$inp_user_measurement_mysql, 
+					user_timezone_utc_diff=$inp_timezone_utc_diff_mysql, 
+					user_timezone_value=$inp_timezone_value_mysql, 
 					user_rank=$inp_user_rank_mysql, 
 					user_points=$inp_user_points_mysql, 
 					user_likes=$inp_user_likes_mysql, 
@@ -247,10 +300,10 @@ if($get_my_user_rank != "moderator" && $get_my_user_rank != "admin"){
 			}
 		}
 		// get new information
-		$query = "SELECT user_id, user_email, user_name, user_alias, user_password, user_salt, user_security, user_language, user_gender, user_measurement, user_dob, user_date_format, user_registered, user_last_online, user_rank, user_points, user_likes, user_dislikes, user_status, user_login_tries, user_last_ip, user_verified_by_moderator FROM $t_users WHERE user_id=$user_id_mysql";
+		$query = "SELECT user_id, user_email, user_name, user_alias, user_password, user_salt, user_security, user_language, user_gender, user_measurement, user_dob, user_date_format, user_timezone_utc_diff, user_timezone_value, user_registered, user_last_online, user_rank, user_points, user_likes, user_dislikes, user_status, user_login_tries, user_last_ip, user_verified_by_moderator FROM $t_users WHERE user_id=$user_id_mysql";
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_row($result);
-		list($get_user_id, $get_user_email, $get_user_name, $get_user_alias, $get_user_password, $get_user_salt, $get_user_security, $get_user_language, $get_user_gender, $get_user_measurement, $get_user_dob, $get_user_date_format, $get_user_registered, $get_user_last_online, $get_user_rank, $get_user_points, $get_user_likes, $get_user_dislikes, $get_user_status, $get_user_login_tries, $get_user_last_ip, $get_user_verified_by_moderator) = $row;
+		list($get_user_id, $get_user_email, $get_user_name, $get_user_alias, $get_user_password, $get_user_salt, $get_user_security, $get_user_language, $get_user_gender, $get_user_measurement, $get_user_dob, $get_user_date_format, $get_user_timezone_utc_diff, $get_user_timezone_value, $get_user_registered, $get_user_last_online, $get_user_rank, $get_user_points, $get_user_likes, $get_user_dislikes, $get_user_status, $get_user_login_tries, $get_user_last_ip, $get_user_verified_by_moderator) = $row;
 
 
 		// Get profile
@@ -458,6 +511,21 @@ if($get_my_user_rank != "moderator" && $get_my_user_rank != "admin"){
 		<option value=\"imperial\""; if($get_user_measurement == "imperial"){ echo" selected=\"selected\""; } echo">Imperial</option>
 	</select>
 	</p>
+
+
+		<p>
+	Timezone:<br />
+		<select name=\"inp_timezone_value\">\n";
+		$timezones = timezone_list();
+		foreach ($timezones as $key => $row) {
+			echo"			";
+			echo"<option value=\"$row\""; if($get_user_timezone_value == "$row"){ echo" selected=\"selected\""; } echo">$row</option>\n";
+		}
+		echo"
+		</select>
+		</p>
+
+
 	<p>
 	$l_rank:<br />
 			<select name=\"inp_user_rank\">";

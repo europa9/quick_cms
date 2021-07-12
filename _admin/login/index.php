@@ -299,9 +299,7 @@ echo"<!DOCTYPE html>
 
 	<link rel=\"icon\" href=\"../favicon.ico\" />
 	<meta name=\"viewport\" content=\"width=device-width; initial-scale=1.0;\"/>
-
-	<link rel=\"stylesheet\" href=\"_login_design/reset.css\" type=\"text/css\" />
-	<link rel=\"stylesheet\" href=\"_login_design/login.css\" type=\"text/css\" />
+	<link rel=\"stylesheet\" href=\"_login_design/login.css?datetime="; $datetime = date("Y-m-d His"); echo"$datetime\" type=\"text/css\" />
 	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UFT-8\" />
 
 
@@ -312,26 +310,19 @@ echo"<!DOCTYPE html>
 
 </head>
 <body>
-
-<div id=\"wrapper\""; 
-$week = date("W");
-if(file_exists("_login_design/images/bg/$week.jpg")){
-	echo" style=\"background: url('_login_design/images/bg/$week.jpg') no-repeat center center fixed;background-size: cover;\""; 
-}
-echo">
-	<div id=\"content\">
-
-	<!-- Header -->
-	<header>
-		<p><a>$configWebsiteTitleSav <span>$configWebsiteVersionSav $week</span></a></p>
-	</header>
-	<!-- //Header -->
+<div class=\"body_bg\">
+	<div class=\"wrapper\">
+		<!-- Header -->
+			<header>
+				<p><a>$configWebsiteTitleSav <span>$configWebsiteVersionSav</span></a></p>
+			</header>
+		<!-- //Header -->
 
 		
-	<!-- Main -->
-	<div id=\"main\">
-		<!-- Page -->
-		";
+		<!-- Main -->
+			<div id=\"main\">
+			<!-- Page -->
+			";
 } // process
 			if($page != ""){
 				if (preg_match('/(http:\/\/|^\/|\.+?\/)/', $page)){
@@ -351,20 +342,20 @@ echo">
 			}
 if($process != "1"){
 			echo"
-		<!-- //Page -->
-	</div>
-	<!-- //Main -->
+			<!-- //Page -->
+			</div>
+		<!-- //Main -->
 
-	<!-- Footer -->
-	<footer>
-		<p>
-		<a href=\"$cmsWebsiteSav\">&copy; 2019-2020 $cmsNameSav $cmsVersionSav</a>
-		</p>
-	</footer>
-	<!-- //Footer -->
+		<!-- Footer -->
+			<footer>
+				<p>
+				<a href=\"$cmsWebsiteSav\">&copy; 2019-2020 $cmsNameSav $cmsVersionSav</a>
+				</p>
+			</footer>
+		<!-- //Footer -->
 
-	</div> <!-- //Content -->
-</div> <!-- //Wrapper -->
+	</div> <!-- //wrapper-->
+</div> <!-- //body_bg -->
 
 </body>
 </html>";

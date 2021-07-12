@@ -9,4 +9,5 @@ $l_profile_privacy = "Profil personvern";
 $l_public = "Offentlig";
 $l_registered_users = "Registrerte brukere";
 $l_save = "Lagre";
+$l_timezone = "Tidssone";
 ?>

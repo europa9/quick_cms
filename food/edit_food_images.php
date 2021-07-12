@@ -771,6 +771,7 @@ else{
 								if($width == "" OR $height == ""){
 									$ft_image = "warning";
 									$fm_image = "getimagesize_failed";
+						unlink($uploaded_file);
 								}
 								else{
 

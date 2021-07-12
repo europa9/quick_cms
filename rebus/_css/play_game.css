@@ -1,0 +1,66 @@
+/* Timer */
+div.countdown{
+	text-align: center;
+}
+span.get_ready {
+	font-color: grey;
+	font-size: 30px;
+}
+span.game_starts_in {
+	font-color: grey;
+	font-size: 25px;
+}
+
+ul.timer {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+ul.timer > li{
+	display: inline-block;
+	padding: 20px;
+}
+ul.timer > li > span{
+	display: block;
+	font-size: 20px;
+	text-align: center;
+}
+#days {
+	font-size: 100px;
+	color: #db4844;
+}
+#hours {
+	font-size: 100px;
+	color: #f07c22;
+}
+#minutes {
+	font-size: 100px;
+	color: #f6da74;
+}
+#seconds {
+	font-size: 100px;
+	color: #abcd58;
+}
+
+/* Start button */
+#start_game{
+	display: none;
+}
+div.center{
+	text-align: center;
+}
+.btn_start {
+	padding: 4px 16px 4px 16px; 
+	margin: 0px 3px 0px 0px; 
+	font: normal 24px 'Open Sans',sans-serif;
+	background: #DFF2BF;
+	border: #c0cfa6 1px solid; 
+	border-radius: 5px;
+	color: #4F8A10;
+}
+.btn_start:hover {
+	background: #ecf8d8;
+	border: #DFF2BF 1px solid; 
+	color: #243a0d;
+}

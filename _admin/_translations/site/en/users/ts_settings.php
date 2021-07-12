@@ -9,5 +9,6 @@ $l_language = "Language";
 $l_profile_privacy = "Profile privacy";
 $l_public = "Public";
 $l_registered_users = "Registered users";
+$l_timezone = "Timezone";
 $l_friends = "Friends";
 ?>

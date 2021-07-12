@@ -607,12 +607,12 @@ echo"
 	<!-- //Focus -->
 
 	<p>$l_email:<br />
-	<input type=\"text\" name=\"inp_email\" value=\""; if(isset($inp_email)){ echo"$inp_email"; } echo"\" size=\"30\" tabindex=\"1\" class=\"inp_email\" />
+	<input type=\"text\" name=\"inp_email\" value=\""; if(isset($inp_email)){ echo"$inp_email"; } echo"\" size=\"25\" style=\"width: 80%;\" tabindex=\"1\" class=\"inp_email\" />
 	</p>
 
 
 	<p>$l_password:<br />
-	<input type=\"password\" name=\"inp_password\" value=\"\" size=\"30\" tabindex=\"2\" class=\"inp_password\" />
+	<input type=\"password\" name=\"inp_password\" value=\"\" size=\"25\" style=\"width: 80%;\" tabindex=\"2\" class=\"inp_password\" />
 	</p>
 
 	<p>

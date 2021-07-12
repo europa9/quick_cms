@@ -469,7 +469,7 @@ echo"<!DOCTYPE html>
 		<div class=\"header_right\">
 			<div class=\"header_right_quick_menu\">
 				<ul>
-					<li><a href=\"index.php?editor_language=$editor_language&amp;l=$l\"><img src=\"_design/gfx/icons/material/ic_dashboard_black_24dp.png\" alt=\"ic_dashboard_black_24dp.png\" /></a></li>
+					<li><a href=\"index.php?editor_language=$editor_language&amp;l=$l\"><img src=\"_inc/dashboard/_gfx/icons/dashboard_black_24x24.png\" alt=\"dashboard_black_24x24.png\" /></a></li>
 					<li><a href=\"../index.php?l=$l\"><img src=\"_design/gfx/icons/material/ic_home_black_24dp.png\" alt=\"ic_home_black_24dp.png\" /></a></li>
 					<li><a href=\"index.php?open=dashboard&amp;page=notes&amp;action=edit&amp;editor_language=$editor_language&amp;l=$l\"><img src=\"_design/gfx/icons/material/ic_speaker_notes_black_24dp.png\" alt=\"ic_speaker_notes_black_24dp.png\" /></a></li>
 					<li><a href=\"index.php?open=dashboard&amp;page=tasks&amp;editor_language=$editor_language&amp;l=$l\"><img src=\"_design/gfx/icons/material/ic_assignment_black_24dp.png\" alt=\"ic_assignment_black_24dp.png\" /></a></li>
@@ -539,7 +539,7 @@ echo"<!DOCTYPE html>
 
 					echo"
 					<li";if($open == "$get_navigation_url"){echo" class=\"main_navigation_has_sub_li_active\"";}echo">
-						<a href=\"index.php?open=$get_navigation_url&amp;editor_language=$editor_language&amp;l=$l\"";if($open == "$get_navigation_url"){echo" class=\"main_navigation_has_sub_a_active\"";}echo"><img src=\"_design/gfx/icons/material/$get_navigation_icon_white_18\" alt=\"$get_navigation_icon_white_18\" /> $get_navigation_title</a> <img src=\"_design/gfx/main_navigation/main_navigation_has_sub_grey.png\" alt=\"main_navigation_has_sub.png\" class=\"main_navigation_has_sub toggle\" data-divid=\"display_main_navigation_sub_dashboard\" />
+						<a href=\"index.php?open=$get_navigation_url&amp;editor_language=$editor_language&amp;l=$l\"";if($open == "$get_navigation_url"){echo" class=\"main_navigation_has_sub_a_active\"";}echo"><img src=\"_inc/$get_navigation_url/_gfx/icons/$get_navigation_icon_white_18\" alt=\"$get_navigation_icon_white_18\" /> $get_navigation_title</a> <img src=\"_design/gfx/main_navigation/main_navigation_has_sub_grey.png\" alt=\"main_navigation_has_sub.png\" class=\"main_navigation_has_sub toggle\" data-divid=\"display_main_navigation_sub_dashboard\" />
 						<ul class=\"main_navigation_sub display_main_navigation_sub_dashboard\"";if($open == "$get_navigation_url"){echo" style=\"display:block;\"";}echo">\n";
 							include("_inc/$get_navigation_url/menu.php");
 							echo"

@@ -1,0 +1,33 @@
+
+/*- Games ---------------------------------------------------------------------------- */
+div.games_row{
+	display: flex;
+	flex-wrap: wrap;
+}
+div.games_column{
+	flex: 50%;
+	max-width: 50%;
+	text-align: center;
+}
+div.games_column > p{
+	line-height: normal;
+}
+div.games_column:nth-child(2n+1) > p{ /* Left*/
+	padding-right: 10px;
+}
+div.games_column:nth-child(2n) > p{ /* Right */
+	padding-left: 10px;
+}
+div.games_column > p > a > img{
+	border-radius: 1%;
+	margin-bottom: 8px;
+	vertical-align: middle;
+}
+div.games_column > p > a > img:hover{
+	border-radius: 1%;
+}
+
+
+@media screen and (max-width: 52.375em) {
+	
+}

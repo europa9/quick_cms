@@ -422,7 +422,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		
 					<form method=\"post\" action=\"my_blog_new_post_main_image.php?blog_post_id=$get_current_blog_post_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
-					<p><b>$l_image: ($blogPostsImageSizeXSav x $blogPostsImageSizeYSav)</b><br />
+					<p><b>$l_image: (<em>$l_images_will_be_scaled_to $blogPostsImageSizeXSav x $blogPostsImageSizeYSav $l_pixels_lowercase</em>)</b><br />
 					<!-- Existing image? -->
 						";
 

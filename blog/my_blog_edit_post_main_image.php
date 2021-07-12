@@ -375,7 +375,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security']) && isset($_GET['p
 
 
 
-					<p><b>$l_image: ($blogPostsImageSizeXSav x $blogPostsImageSizeYSav)</b><br />
+					<p><b>$l_image: (<em>$l_images_will_be_scaled_to $blogPostsImageSizeXSav x $blogPostsImageSizeYSav $l_pixels_lowercase</em>)</b><br />
 					<!-- Existing image? -->
 						";
 

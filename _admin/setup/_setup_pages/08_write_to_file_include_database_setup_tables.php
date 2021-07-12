@@ -108,6 +108,8 @@ else{
 	   user_measurement VARCHAR(8),
 	   user_dob DATE,
 	   user_date_format VARCHAR(20),
+	   user_timezone_utc_diff INT,
+	   user_timezone_value VARCHAR(60),
 	   user_registered DATETIME,
 	   user_registered_time VARCHAR(70),
 	   user_last_online DATETIME,

@@ -298,7 +298,7 @@ else{
 	echo"
 	<h1>
 	<img src=\"_gfx/loading.gif\" alt=\"loading.gif\" style=\"float:left;padding: 1px 5px 0px 0px;\" />
-	New Post Loading...</h1>
+	New Post...</h1>
 
 	<p>
 	Please log in.

@@ -59,13 +59,13 @@ if($action == ""){
 
 					$admin_navigation_title = ucfirst($file);
 					$admin_navigation_icon = "$file";
-					$admin_navigation_icon_black_small = "ic_" . $file . "_black_18dp.png";
-					$admin_navigation_icon_black_medium = "ic" . $file . "_black_24dp.png";
-					$admin_navigation_icon_white_small = "ic_" . $file . "_white_18dp.png";
-					$admin_navigation_icon_white_medium = "ic_" . $file . "t_white_24dp.png";
+					$admin_navigation_icon_black_small = $file . "_black_18x18.png";
+					$admin_navigation_icon_black_medium = $file . "_black_24x24.png";
+					$admin_navigation_icon_white_small = $file . "_white_18x18.png";
+					$admin_navigation_icon_white_medium = $file . "t_white_24x24.png";
 
 					echo"
-					<li><a href=\"index.php?open=$open&amp;page=default&amp;action=add_to_favorite_and_visit&amp;item=$file&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\"><img src=\"_design/gfx/icons/material/$admin_navigation_icon_black_small\" alt=\"$admin_navigation_icon_black_small\" /> $admin_navigation_title</a></li>";
+					<li><a href=\"index.php?open=$open&amp;page=default&amp;action=add_to_favorite_and_visit&amp;item=$file&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\"><img src=\"_inc/$file/_gfx/icons/$admin_navigation_icon_black_small\" alt=\"$admin_navigation_icon_black_small\" /> $admin_navigation_title</a></li>";
 				}
 				closedir($handle);
 			}
@@ -149,7 +149,7 @@ elseif($action == "my_navigation"){
 			echo"
 			 <tr>
 			  <td class=\"$style\">
-				<span><img src=\"_design/gfx/icons/material/$get_navigation_icon_black_18\" alt=\"$get_navigation_icon_black_18\" /> $get_navigation_title</span>
+				<span><img src=\"_inc/$get_navigation_url/_gfx/icons/$get_navigation_icon_black_18\" alt=\"$get_navigation_icon_black_18\" /> $get_navigation_title</span>
 			  </td>
 			  <td class=\"$style\">
 				<span>
@@ -283,22 +283,22 @@ elseif($action == "edit"){
 			$inp_icon = output_html($inp_icon);
 			$inp_icon_mysql = quote_smart($link, $inp_icon);
 
-			$inp_icon_black_small = "ic_" . $inp_icon . "_black_18dp.png";
+			$inp_icon_black_small = $inp_icon . "_black_18x18.png";
 			$inp_icon_black_small_mysql = quote_smart($link, $inp_icon_black_small);
 
-			$inp_icon_black_medium = "ic" . $inp_icon . "_black_24dp.png";
+			$inp_icon_black_medium = $inp_icon . "_black_24x24.png";
 			$inp_icon_black_medium_mysql = quote_smart($link, $inp_icon_black_medium);
 
-			$inp_icon_white_small = "ic_" . $inp_icon . "_white_18dp.png";
+			$inp_icon_white_small = $inp_icon . "_white_18x18.png";
 			$inp_icon_white_small_mysql = quote_smart($link, $inp_icon_white_small);
 
-			$inp_icon_white_medium = "ic_" . $inp_icon . "_white_24dp.png";
+			$inp_icon_white_medium = $inp_icon . "_white_24x24.png";
 			$inp_icon_white_medium_mysql = quote_smart($link, $inp_icon_white_medium);
 
-			$inp_icon_color_small = "ic_" . $inp_icon . "_orange_18dp.png";
+			$inp_icon_color_small = $inp_icon . "_orange_18x18.png";
 			$inp_icon_color_small_mysql = quote_smart($link, $inp_icon_color_small);
 
-			$inp_icon_color_medium = "ic_" . $inp_icon . "_orange_24dp.png";
+			$inp_icon_color_medium = $inp_icon . "_orange_24x24.png";
 			$inp_icon_color_medium_mysql = quote_smart($link, $inp_icon_color_medium);
 
 			mysqli_query($link, "UPDATE $t_admin_navigation SET navigation_url=$inp_url_mysql, navigation_title=$inp_title_mysql, navigation_icon=$inp_icon_mysql, 
@@ -457,22 +457,22 @@ elseif($action == "add_item"){
 		$inp_icon = output_html($inp_icon);
 		$inp_icon_mysql = quote_smart($link, $inp_icon);
 
-		$inp_icon_black_small = "ic_" . $inp_icon . "_black_18dp.png";
+		$inp_icon_black_small = $inp_icon . "_black_18x18.png";
 		$inp_icon_black_small_mysql = quote_smart($link, $inp_icon_black_small);
 
-		$inp_icon_black_medium = "ic" . $inp_icon . "_black_24dp.png";
+		$inp_icon_black_medium = $inp_icon . "_black_24x24.png";
 		$inp_icon_black_medium_mysql = quote_smart($link, $inp_icon_black_medium);
 
-		$inp_icon_white_small = "ic_" . $inp_icon . "_white_18dp.png";
+		$inp_icon_white_small = $inp_icon . "_white_18x18.png";
 		$inp_icon_white_small_mysql = quote_smart($link, $inp_icon_white_small);
 
-		$inp_icon_white_medium = "ic_" . $inp_icon . "_white_24dp.png";
+		$inp_icon_white_medium = $inp_icon . "_white_24x24.png";
 		$inp_icon_white_medium_mysql = quote_smart($link, $inp_icon_white_medium);
 
-		$inp_icon_color_small = "ic_" . $inp_icon . "_orange_18dp.png";
+		$inp_icon_color_small = $inp_icon . "_orange_18x18.png";
 		$inp_icon_color_small_mysql = quote_smart($link, $inp_icon_color_small);
 
-		$inp_icon_color_medium = "ic_" . $inp_icon . "_orange_24dp.png";
+		$inp_icon_color_medium = $inp_icon . "_orange_24x24.png";
 		$inp_icon_color_medium_mysql = quote_smart($link, $inp_icon_color_medium);
 
 
@@ -487,7 +487,6 @@ elseif($action == "add_item"){
 
 
 		// Sort all alphabetically
-		/*
 		$x=0;
 		$query = "SELECT navigation_id, navigation_url, navigation_title, navigation_icon_white_18, navigation_icon_black_18, navigation_weight FROM $t_admin_navigation WHERE navigation_user_id=$my_user_id_mysql ORDER BY navigation_title ASC";
 		$result = mysqli_query($link, $query);
@@ -499,7 +498,17 @@ elseif($action == "add_item"){
 			}
 			$x++;
 		}
-		*/
+
+		// Get ID of dashboard
+		$query = "SELECT navigation_id FROM $t_admin_navigation WHERE navigation_url='dashboard' AND navigation_user_id=$my_user_id_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_dashboard_navigation_id) = $row;
+
+		// Set weight to -1
+		mysqli_query($link, "UPDATE $t_admin_navigation SET navigation_weight=-1 WHERE navigation_id=$get_dashboard_navigation_id") or die(mysqli_error($link));
+		
+		
 
 		$url = "index.php?open=$open&page=$page&action=add_item&ft=success&fm=item_added";
 		header("Location: $url");
@@ -570,10 +579,10 @@ elseif($action == "add_item"){
 			foreach($dir_files as $file){
 					$admin_navigation_title = ucfirst($file);
 					$admin_navigation_icon = "$file";
-					$admin_navigation_icon_black_small = "ic_" . $file . "_black_18dp.png";
-					$admin_navigation_icon_black_medium = "ic" . $file . "_black_24dp.png";
-					$admin_navigation_icon_white_small = "ic_" . $file . "_white_18dp.png";
-					$admin_navigation_icon_white_medium = "ic_" . $file . "_white_24dp.png";
+					$admin_navigation_icon_black_small = $file . "_black_18x18.png";
+					$admin_navigation_icon_black_medium = $file . "_black_24x24.png";
+					$admin_navigation_icon_white_small = $file . "_white_18x18.png";
+					$admin_navigation_icon_white_medium = $file . "_white_24x24.png";
 
 
 					// Check if I have it
@@ -585,7 +594,7 @@ elseif($action == "add_item"){
 
 					if($get_current_navigation_id == ""){
 						echo"
-						<li><a href=\"index.php?open=$open&amp;page=$page&amp;action=my_navigation&amp;action=$action&amp;item=$file&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\"><img src=\"_design/gfx/icons/material/$admin_navigation_icon_black_small\" alt=\"$admin_navigation_icon_black_small\" /> $admin_navigation_title</a></li>";
+						<li><a href=\"index.php?open=$open&amp;page=$page&amp;action=my_navigation&amp;action=$action&amp;item=$file&amp;editor_language=$editor_language&amp;l=$l&amp;process=1\"><img src=\"_inc/$file/_gfx/icons/$admin_navigation_icon_black_small\" alt=\"$admin_navigation_icon_black_small\" /> $admin_navigation_title</a></li>";
 					}
 			}
 			echo"
@@ -610,12 +619,12 @@ elseif($action == "my_navigation_auto_setup"){
 		mysqli_query($link, "INSERT INTO $t_admin_navigation
 		(navigation_id, navigation_url, navigation_title, navigation_icon, navigation_icon_black_18, navigation_icon_white_18, navigation_user_id, navigation_show, navigation_weight) 
 		VALUES 
-		(NULL, 'dashboard', 'Dashboard', 'dashboard', 'ic_dashboard_black_18dp.png', 'ic_dashboard_white_18dp.png', $my_user_id_mysql, 1, 1),
-		(NULL, 'pages', 'Pages', 'description', 'ic_description_black_18dp.png', 'ic_description_white_18dp.png', $my_user_id_mysql, 1, 2),
-		(NULL, 'media', 'Media', 'picture_in_picture', 'ic_picture_in_picture_black_18dp.png', 'ic_picture_in_picture_white_18dp.png', $my_user_id_mysql, 1, 3),
-		(NULL, 'users', 'Users', 'supervisor_account', 'ic_supervisor_account_black_18dp.png', 'ic_supervisor_account_white_18dp.png', $my_user_id_mysql, 1, 4),
-		(NULL, 'settings', 'Settings', 'settings', 'ic_settings_black_18dp.png', 'ic_settings_white_18dp.png', $my_user_id_mysql, 1, 5),
-		(NULL, 'webdesign', 'Webdesign', 'view_module', 'ic_view_module_black_18dp.png', 'ic_view_module_white_18dp.png', $my_user_id_mysql, 1, 6)
+		(NULL, 'dashboard', 'Dashboard', 'dashboard', 'dashboard_black_18x18.png', 'dashboard_white_18x18.png', $my_user_id_mysql, 1, 1),
+		(NULL, 'pages', 'Pages', 'pages', 'pages_black_18x18.png', 'pages_white_18x18.png', $my_user_id_mysql, 1, 2),
+		(NULL, 'media', 'Media', 'media', 'media_black_18x18.png', 'media_white_18x18.png', $my_user_id_mysql, 1, 3),
+		(NULL, 'users', 'Users', 'users', 'users_black_18x18.png', 'users_white_18x18.png', $my_user_id_mysql, 1, 4),
+		(NULL, 'settings', 'Settings', 'settings', 'settings_black_18x18.png', 'settings_white_18x18.png', $my_user_id_mysql, 1, 5),
+		(NULL, 'webdesign', 'Webdesign', 'webdesign', 'webdesign_black_18x18.png', 'webdesign_white_18x18.png', $my_user_id_mysql, 1, 6)
 		")
 		or die(mysqli_error($link));
 
@@ -644,22 +653,22 @@ elseif($action == "add_to_favorite_and_visit"){
 	$inp_icon = output_html($inp_icon);
 	$inp_icon_mysql = quote_smart($link, $inp_icon);
 
-	$inp_icon_black_small = "ic_" . $inp_icon . "_black_18dp.png";
+	$inp_icon_black_small = $inp_icon . "_black_18x18.png";
 	$inp_icon_black_small_mysql = quote_smart($link, $inp_icon_black_small);
 
-	$inp_icon_black_medium = "ic" . $inp_icon . "_black_24dp.png";
+	$inp_icon_black_medium = $inp_icon . "_black_24x24.png";
 	$inp_icon_black_medium_mysql = quote_smart($link, $inp_icon_black_medium);
 
-	$inp_icon_white_small = "ic_" . $inp_icon . "_white_18dp.png";
+	$inp_icon_white_small = $inp_icon . "_white_18x18.png";
 	$inp_icon_white_small_mysql = quote_smart($link, $inp_icon_white_small);
 
-	$inp_icon_white_medium = "ic_" . $inp_icon . "_white_24dp.png";
+	$inp_icon_white_medium = $inp_icon . "_white_24x24.png";
 	$inp_icon_white_medium_mysql = quote_smart($link, $inp_icon_white_medium);
 
-	$inp_icon_color_small = "ic_" . $inp_icon . "_orange_18dp.png";
+	$inp_icon_color_small = $inp_icon . "_orange_18x18.png";
 	$inp_icon_color_small_mysql = quote_smart($link, $inp_icon_color_small);
 
-	$inp_icon_color_medium = "ic_" . $inp_icon . "_orange_24dp.png";
+	$inp_icon_color_medium = $inp_icon . "_orange_24x24.png";
 	$inp_icon_color_medium_mysql = quote_smart($link, $inp_icon_color_medium);
 
 	// Check if I have this already
@@ -680,7 +689,6 @@ elseif($action == "add_to_favorite_and_visit"){
 
 
 		// Sort all alphabetically
-		/*
 		$x=0;
 		$query = "SELECT navigation_id, navigation_url, navigation_title, navigation_icon_white_18, navigation_icon_black_18, navigation_weight FROM $t_admin_navigation WHERE navigation_user_id=$my_user_id_mysql ORDER BY navigation_title ASC";
 		$result = mysqli_query($link, $query);
@@ -692,7 +700,16 @@ elseif($action == "add_to_favorite_and_visit"){
 			}
 			$x++;
 		}
-		*/
+
+		// Get ID of dashboard
+		$query = "SELECT navigation_id FROM $t_admin_navigation WHERE navigation_url='dashboard' AND navigation_user_id=$my_user_id_mysql";
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_row($result);
+		list($get_dashboard_navigation_id) = $row;
+
+		// Set weight to -1
+		mysqli_query($link, "UPDATE $t_admin_navigation SET navigation_weight=-1 WHERE navigation_id=$get_dashboard_navigation_id") or die(mysqli_error($link));
+		
 		
 		$url = "index.php?open=$inp_url&editor_language=$editor_language&l=$l&ft=info&fm=added_to_quick_access_for_next_time";
 		header("Location: $url");
