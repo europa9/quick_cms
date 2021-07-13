@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* File: rebus/new_game_step_6_introduction.php
+* File: rebus/create_game_step_6_introduction.php
 * Version 1.0.0.
 * Date 09:50 01.07.2021
 * Copyright (c) 2021 Sindre Andre Ditlefsen
@@ -81,7 +81,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 	/*- Headers ---------------------------------------------------------------------------------- */
-	$website_title = "$l_introduction - $get_current_game_title - $l_new_game";
+	$website_title = "$l_introduction - $get_current_game_title - $l_create_game";
 	if(file_exists("./favicon.ico")){ $root = "."; }
 	elseif(file_exists("../favicon.ico")){ $root = ".."; }
 	elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -135,7 +135,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						or die(mysqli_error($link));
 
 			// Header
-			$url = "new_game_step_7_image.php?game_id=$get_current_game_id&l=$l&ft=success&fm=introduction_saved";
+			$url = "create_game_step_7_image.php?game_id=$get_current_game_id&l=$l&ft=success&fm=introduction_saved";
 			header("Location: $url");
 			exit;
 
@@ -177,7 +177,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		<!-- //Focus -->
 
 		<!-- Introduction form -->
-			<form method=\"post\" action=\"new_game_step_6_introduction.php?game_id=$get_current_game_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+			<form method=\"post\" action=\"create_game_step_6_introduction.php?game_id=$get_current_game_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
 
 			<p><b>$l_game_introduction:</b><br />

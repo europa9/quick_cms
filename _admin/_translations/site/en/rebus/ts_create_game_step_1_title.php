@@ -1,5 +1,5 @@
 <?php
-$l_new_game = "New game";
+$l_create_game = "Create game";
 $l_rebus = "Rebus";
 $l_game_title = "Game title";
 $l_privacy = "Privacy";

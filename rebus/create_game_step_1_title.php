@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* File: rebus/new_game_step_1_name.php
+* File: rebus/create_game_step_1_name.php
 * Version 1.0.0.
 * Date 09:50 01.07.2021
 * Copyright (c) 2021 Sindre Andre Ditlefsen
@@ -37,7 +37,7 @@ $tabindex = 0;
 
 
 /*- Headers ---------------------------------------------------------------------------- */
-$website_title = "$l_new_game";
+$website_title = "$l_create_game";
 if(file_exists("./favicon.ico")){ $root = "."; }
 elseif(file_exists("../favicon.ico")){ $root = ".."; }
 elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -57,7 +57,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$inp_title = output_html($inp_title);
 		$inp_title_mysql = quote_smart($link, $inp_title);
 		if($inp_title == ""){
-			$url = "new_game_step_1_name.php?l=$l&ft=error&fm=missing_name";
+			$url = "create_game_step_1_name.php?l=$l&ft=error&fm=missing_name";
 			header("Location: $url");
 			exit;
 		}
@@ -150,7 +150,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$row = mysqli_fetch_row($result);
 		list($get_game_id) = $row;
 		if($get_game_id!= ""){
-			$url = "new_game_step_1_title.php?privacy=$inp_privacy&group_id=$inp_group_id&l=$l&ft=error&fm=there_is_already_a_game_with_that_title_(" . $inp_title . ")";
+			$url = "create_game_step_1_title.php?privacy=$inp_privacy&group_id=$inp_group_id&l=$l&ft=error&fm=there_is_already_a_game_with_that_title_(" . $inp_title . ")";
 			header("Location: $url");
 			exit;
 		}
@@ -184,7 +184,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		or die(mysqli_error($link));
 
 		// Open team
-		$url = "new_game_step_2_county.php?game_id=$get_current_game_id&l=$l&ft=success&fm=game_created";
+		$url = "create_game_step_2_county.php?game_id=$get_current_game_id&l=$l&ft=success&fm=game_created";
 		header("Location: $url");
 		exit;
 
@@ -192,15 +192,16 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	} // process
 
 	echo"
+	<section>
 	<!-- Headline -->
-		<h1>$l_new_game</h1>
+		<h1>$l_create_game</h1>
 	<!-- //Headline -->
 
 	<!-- Where am I ? -->
 		<p><b>$l_you_are_here:</b><br />
 		<a href=\"index.php?l=$l\">$l_rebus</a>
 		&gt;
-		<a href=\"new_game.php?l=$l\">$l_new_game</a>
+		<a href=\"create_game.php?l=$l\">$l_create_game</a>
 		</p>
 	<!-- //Where am I ? -->
 
@@ -223,7 +224,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	<!-- //Focus -->
 
 	<!-- New game form -->
-		<form method=\"post\" action=\"new_game_step_1_title.php?l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+		<form method=\"post\" action=\"create_game_step_1_title.php?l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
 		<p><b>$l_game_title:</b><br />
 		<input type=\"text\" name=\"inp_title\" value=\"\" size=\"25\" style=\"width: 99%;\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
@@ -293,6 +294,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		
 		</form>
 	<!-- //New game form -->
+	</section>
 	";
 }
 else{

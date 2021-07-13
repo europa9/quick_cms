@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* File: rebus/new_game_step_10_publish.php
+* File: rebus/create_game_step_10_publish.php
 * Version 1.0.0.
 * Date 09:50 01.07.2021
 * Copyright (c) 2021 Sindre Andre Ditlefsen
@@ -80,7 +80,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	}
 
 	/*- Headers ---------------------------------------------------------------------------------- */
-	$website_title = "$l_publish - $get_current_game_title - $l_new_game";
+	$website_title = "$l_publish - $get_current_game_title - $l_create_game";
 	if(file_exists("./favicon.ico")){ $root = "."; }
 	elseif(file_exists("../favicon.ico")){ $root = ".."; }
 	elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -247,7 +247,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 	<!-- //Focus -->
 
 	<!-- Publish form -->
-		<form method=\"post\" action=\"new_game_step_10_publish.php?game_id=$get_current_game_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+		<form method=\"post\" action=\"create_game_step_10_publish.php?game_id=$get_current_game_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 		
 		<p>$l_are_you_ready_to_publish_your_game</p>
 

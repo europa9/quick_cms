@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* File: rebus/new_game_step_7_image.php
+* File: rebus/create_game_step_7_image.php
 * Version 1.0.0.
 * Date 09:50 01.07.2021
 * Copyright (c) 2021 Sindre Andre Ditlefsen
@@ -81,7 +81,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 	/*- Headers ---------------------------------------------------------------------------------- */
-	$website_title = "$l_image - $get_current_game_title - $l_new_game";
+	$website_title = "$l_image - $get_current_game_title - $l_create_game";
 	if(file_exists("./favicon.ico")){ $root = "."; }
 	elseif(file_exists("../favicon.ico")){ $root = ".."; }
 	elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -227,7 +227,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			} // name
 
 			// Header
-			$url = "new_game_step_7_image.php?game_id=$get_current_game_id&l=$l&ft=$ft_image&fm=$fm_image";
+			$url = "create_game_step_7_image.php?game_id=$get_current_game_id&l=$l&ft=$ft_image&fm=$fm_image";
 			header("Location: $url");
 			exit;
 
@@ -259,7 +259,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				if($ft == "success" && $fm == "Image uploaded"){
 					echo"
-					<p><a href=\"new_game_step_8_add_assignment.php?game_id=$get_current_game_id&amp;l=$l\" class=\"btn_default\">$l_next &gt;</a></p>
+					<p><a href=\"create_game_step_8_add_assignment.php?game_id=$get_current_game_id&amp;l=$l\" class=\"btn_default\">$l_next &gt;</a></p>
 					";
 				}
 
@@ -278,7 +278,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			
 
 		<!-- Add image form -->
-			<form method=\"post\" action=\"new_game_step_7_image.php?game_id=$get_current_game_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+			<form method=\"post\" action=\"create_game_step_7_image.php?game_id=$get_current_game_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
 		
 			<p><b>$l_image ($l_image_will_be_resized_to 1280x720):</b><br />
@@ -288,7 +288,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 			<div style=\"float: right;\">
-				<p><a href=\"new_game_step_8_add_assignment.php?game_id=$get_current_game_id&amp;l=$l\" class=\"btn_default\">$l_next &gt;</a></p>
+				<p><a href=\"create_game_step_8_add_assignment.php?game_id=$get_current_game_id&amp;l=$l\" class=\"btn_default\">$l_next &gt;</a></p>
 			</div>
 			<div class=\"clear\"></div>
 	

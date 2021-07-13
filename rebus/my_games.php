@@ -80,7 +80,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 	<!-- Actions and Sorting -->
 		<p>
-		<a href=\"new_game_step_1_title.php?l=$l\" class=\"btn_default\">$l_new_game</a>
+		<a href=\"create_game_step_1_title.php?l=$l\" class=\"btn_default\">$l_create_game</a>
 		<a href=\"groups.php?l=$l\" class=\"btn_default\">$l_groups</a>
 		<a href=\"teams.php?l=$l\" class=\"btn_default\">$l_teams</a>
 		</p>

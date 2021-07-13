@@ -91,9 +91,9 @@ echo"<!DOCTYPE html>
 					});
 					\$(\".header_menu_icon\").click(function () {
 						\$(\"nav\").fadeToggle();
-						var src = (\$(this).attr('src') === '$root/_webdesign/$webdesignSav/images/header/menu_24x24_black.png')
-								? '$root/_webdesign/$webdesignSav/images/header/clear_24x24_black.png'
-								: '$root/_webdesign/$webdesignSav/images/header/menu_24x24_black.png';
+						var src = (\$(this).attr('src') === '$root/_webdesign/$webdesignSav/images/header/menu_24x24_white.png')
+								? '$root/_webdesign/$webdesignSav/images/header/clear_24x24_white.png'
+								: '$root/_webdesign/$webdesignSav/images/header/menu_24x24_white.png';
 						\$(\".header_menu_icon\").attr('src', src);
 					});
 					});
@@ -103,8 +103,8 @@ echo"<!DOCTYPE html>
 
 				<div class=\"header_menu\">
 					<ul>
-						<li><a href=\"#\" class=\"header_show_menu\"><img src=\"$root/_webdesign/$webdesignSav/images/header/menu_24x24_black.png\" alt=\"menu_24x24_white.png\" class=\"header_menu_icon\" /></a></li>
-						<li><a href=\"#\" class=\"header_show_search\"><img src=\"$root/_webdesign/$webdesignSav/images/header/search_24x24_black.png\" alt=\"search_24x24_white.png\" /></a></li>
+						<li><a href=\"#\" class=\"header_show_menu\"><img src=\"$root/_webdesign/$webdesignSav/images/header/menu_24x24_white.png\" alt=\"menu_24x24_white.png\" class=\"header_menu_icon\" /></a></li>
+						<li><a href=\"#\" class=\"header_show_search\"><img src=\"$root/_webdesign/$webdesignSav/images/header/search_24x24_white.png\" alt=\"search_24x24_white.png\" /></a></li>
 					
 					";
 					// Am I logged in?
@@ -154,7 +154,7 @@ echo"<!DOCTYPE html>
 		while($row_nav_main = mysqli_fetch_row($result_nav_main)) {
 			list($get_a_navigation_id, $get_a_navigation_a_id, $get_a_navigation_title, $get_a_navigation_title_clean, $get_a_navigation_url, $get_a_navigation_url_path, $get_a_navigation_url_path_md5, $get_a_navigation_url_query, $get_a_navigation_internal_or_external, $get_a_navigation_icon_path, $get_a_navigation_icon_18x18_inactive, $get_a_navigation_icon_18x18_hover, $get_a_navigation_icon_18x18_active) = $row_nav_main;
 			echo"			";
-			echo"<li><a href=\"$root/$get_a_navigation_url_path$get_a_navigation_url_query\" class=\"nav_$get_a_navigation_url_path_md5\">$get_a_navigation_title</a>\n";
+			echo"<li><a href=\"$root/$get_a_navigation_url_path$get_a_navigation_url_query\" class=\"nav_$get_a_navigation_url_path_md5\">$get_a_navigation_title</a></li>\n";
 
 			// Children level 2
 			$found_child = 0;

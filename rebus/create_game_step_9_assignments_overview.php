@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* File: rebus/new_game_step_9_assignments_overview.php
+* File: rebus/create_game_step_9_assignments_overview.php
 * Version 1.0.0.
 * Date 09:50 01.07.2021
 * Copyright (c) 2021 Sindre Andre Ditlefsen
@@ -81,7 +81,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 	/*- Headers ---------------------------------------------------------------------------------- */
-	$website_title = "$l_assignments_overview - $get_current_game_title - $l_new_game";
+	$website_title = "$l_assignments_overview - $get_current_game_title - $l_create_game";
 	if(file_exists("./favicon.ico")){ $root = "."; }
 	elseif(file_exists("../favicon.ico")){ $root = ".."; }
 	elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -118,8 +118,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 		<!-- Actions -->
 			<p>
-			<a href=\"new_game_step_8_add_assignment.php?game_id=$get_current_game_id&amp;l=$l\" class=\"btn_default\">$l_add_assignment</a>
-			<a href=\"new_game_step_10_publish.php?game_id=$get_current_game_id&amp;l=$l\" class=\"btn_default\">$l_next &gt;</a>
+			<a href=\"create_game_step_8_add_assignment.php?game_id=$get_current_game_id&amp;l=$l\" class=\"btn_default\">$l_add_assignment</a>
+			<a href=\"create_game_step_10_publish.php?game_id=$get_current_game_id&amp;l=$l\" class=\"btn_default\">$l_next &gt;</a>
 			</p>
 		<!-- //Actions -->
 
@@ -147,7 +147,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				echo"
 				 <tr>
 				  <td>
-					<span><a href=\"new_game_step_9_assignments_overview.php?action=edit_assignment&amp;game_id=$get_current_game_id&amp;assignment_id=$get_assignment_id&amp;l=$l\">$get_assignment_value</a></span>
+					<span><a href=\"create_game_step_9_assignments_overview.php?action=edit_assignment&amp;game_id=$get_current_game_id&amp;assignment_id=$get_assignment_id&amp;l=$l\">$get_assignment_value</a></span>
 					
 				  </td>
 				  <td>
@@ -182,7 +182,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		<!-- //Assignments -->
 		<!-- Next -->
 			<p style=\"float: right;\">
-			<a href=\"new_game_step_10_publish.php?game_id=$get_current_game_id&amp;l=$l\" class=\"btn_default\">$l_next &gt;</a>
+			<a href=\"create_game_step_10_publish.php?game_id=$get_current_game_id&amp;l=$l\" class=\"btn_default\">$l_next &gt;</a>
 			</p>
 			<div class=\"clear\"></div>
 		<!-- //Next -->
@@ -327,7 +327,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						WHERE assignment_id=$get_current_assignment_id") or die(mysqli_error($link));
 
 			// Header
-			$url = "new_game_step_9_assignments_overview.php?action=edit_assignment&game_id=$get_current_game_id&assignment_id=$get_current_assignment_id&assignment_type=$assignment_type&amp;l=$l&ft=success&fm=changes_saved";
+			$url = "create_game_step_9_assignments_overview.php?action=edit_assignment&game_id=$get_current_game_id&assignment_id=$get_current_assignment_id&assignment_type=$assignment_type&amp;l=$l&ft=success&fm=changes_saved";
 			header("Location: $url");
 			exit;
 
@@ -346,9 +346,9 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			&gt;
 			<a href=\"edit_game.php?game_id=$get_current_game_id&amp;l=$l\">$get_current_game_title</a>
 			&gt;
-			<a href=\"new_game_step_9_assignments_overview.php?game_id=$get_current_game_id&amp;l=$l\">$l_assignments_overview</a>
+			<a href=\"create_game_step_9_assignments_overview.php?game_id=$get_current_game_id&amp;l=$l\">$l_assignments_overview</a>
 			&gt;
-			<a href=\"new_game_step_9_assignments_overview.php?action=edit_assignment&amp;game_id=$get_current_game_id&amp;assignment_id=$get_current_assignment_id&amp;l=$l\">$get_current_assignment_value</a>
+			<a href=\"create_game_step_9_assignments_overview.php?action=edit_assignment&amp;game_id=$get_current_game_id&amp;assignment_id=$get_current_assignment_id&amp;l=$l\">$get_current_assignment_value</a>
 			</p>
 		<!-- //Where am I ? -->
 
@@ -371,12 +371,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		<!-- //Focus -->
 
 		<!-- Edit assignment form -->
-			<form method=\"post\" action=\"new_game_step_9_assignments_overview.php?action=edit_assignment&amp;game_id=$get_current_game_id&amp;assignment_id=$get_current_assignment_id&amp;assignment_type=$assignment_type&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+			<form method=\"post\" action=\"create_game_step_9_assignments_overview.php?action=edit_assignment&amp;game_id=$get_current_game_id&amp;assignment_id=$get_current_assignment_id&amp;assignment_type=$assignment_type&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
 			<p><b>$l_assignment_type:</b><br />
 			<select name=\"assignment_type\" class=\"on_select_go_to_url\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
-				<option value=\"new_game_step_4_add_assignment.php?action=edit_assignment&amp;game_id=$get_current_game_id&amp;assignment_id=$get_current_assignment_id&amp;l=$l&amp;assignment_type=answer_a_question\""; if($assignment_type == "answer_a_question"){ echo" selected=\"selected\""; } echo">$l_answer_a_question</option>
-				<option value=\"new_game_step_4_add_assignment.php?action=edit_assignment&amp;game_id=$get_current_game_id&amp;assignment_id=$get_current_assignment_id&amp;l=$l&amp;assignment_type=take_a_picture_with_coordinates\""; if($assignment_type == "take_a_picture_with_coordinates"){ echo" selected=\"selected\""; } echo">$l_take_a_picture_with_coordinates</option>
+				<option value=\"create_game_step_4_add_assignment.php?action=edit_assignment&amp;game_id=$get_current_game_id&amp;assignment_id=$get_current_assignment_id&amp;l=$l&amp;assignment_type=answer_a_question\""; if($assignment_type == "answer_a_question"){ echo" selected=\"selected\""; } echo">$l_answer_a_question</option>
+				<option value=\"create_game_step_4_add_assignment.php?action=edit_assignment&amp;game_id=$get_current_game_id&amp;assignment_id=$get_current_assignment_id&amp;l=$l&amp;assignment_type=take_a_picture_with_coordinates\""; if($assignment_type == "take_a_picture_with_coordinates"){ echo" selected=\"selected\""; } echo">$l_take_a_picture_with_coordinates</option>
 			</select>
 			</p>
 			<!-- On select go to URL -->
@@ -535,11 +535,11 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 			<div style=\"float: left;\">
 				<p><input type=\"submit\" value=\"$l_save_changes\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
-				<a href=\"new_game_step_9_assignments_overview.php?action=delete_assignment&amp;game_id=$get_current_game_id&amp;assignment_id=$get_current_assignment_id&amp;assignment_type=$assignment_type&amp;l=$l\" class=\"btn_danger\">$l_delete</a>
+				<a href=\"create_game_step_9_assignments_overview.php?action=delete_assignment&amp;game_id=$get_current_game_id&amp;assignment_id=$get_current_assignment_id&amp;assignment_type=$assignment_type&amp;l=$l\" class=\"btn_danger\">$l_delete</a>
 				</p>
 			</div>
 			<div style=\"float: right;\">
-				<p><a href=\"new_game_step_9_assignments_overview.php?game_id=$get_current_game_id&amp;l=$l\" class=\"btn_default\">$l_assignments_overview &gt;</a></p>
+				<p><a href=\"create_game_step_9_assignments_overview.php?game_id=$get_current_game_id&amp;l=$l\" class=\"btn_default\">$l_assignments_overview &gt;</a></p>
 			</div>
 			<div class=\"clear\"></div>
 	
@@ -591,7 +591,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			}
 
 			// Header
-			$url = "new_game_step_9_assignments_overview.php?game_id=$get_current_game_id&l=$l&ft=success&fm=assignment_deleted";
+			$url = "create_game_step_9_assignments_overview.php?game_id=$get_current_game_id&l=$l&ft=success&fm=assignment_deleted";
 			header("Location: $url");
 			exit;
 
@@ -632,8 +632,8 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			</p>
 
 			<p>
-			<a href=\"new_game_step_9_assignments_overview.php?action=delete_assignment&amp;game_id=$get_current_game_id&amp;assignment_id=$get_current_assignment_id&amp;l=$l&amp;process=1\" class=\"btn_danger\">$l_confirm</a>
-			<a href=\"new_game_step_9_assignments_overview.php?action=edit_assignment&amp;game_id=$get_current_game_id&amp;assignment_id=$get_current_assignment_id&amp;l=$l\" class=\"btn_default\">$l_cancel</a>
+			<a href=\"create_game_step_9_assignments_overview.php?action=delete_assignment&amp;game_id=$get_current_game_id&amp;assignment_id=$get_current_assignment_id&amp;l=$l&amp;process=1\" class=\"btn_danger\">$l_confirm</a>
+			<a href=\"create_game_step_9_assignments_overview.php?action=edit_assignment&amp;game_id=$get_current_game_id&amp;assignment_id=$get_current_assignment_id&amp;l=$l\" class=\"btn_default\">$l_cancel</a>
 			</p>
 			
 

@@ -273,9 +273,9 @@ a.bold:hover {
 
 /*- Header ------------------------------------------------------------------------------- */
 header{
-	background: #ffffff;
+	background: #e84c3d;
 	overflow: auto;
-	border-bottom: #efefef 1px solid;
+	border-bottom: #b0635b 1px solid;
 	box-shadow: 0 2px 2px -6px black;
 }
 div.header_inner{
@@ -293,19 +293,15 @@ div.header_inner{
 		float: left;
 	}
 	#header_logo > a{
-		background: url("images/logo/logo_black_24dp.png") no-repeat center left;
+		background: url("images/logo/logo_white_24dp.png") no-repeat center left;
 		padding: 0px 7px 0px 30px;
 		font: bold 26px DancingScript, 'Open Sans',sans-serif;
-		color: black;
+		color: white;
 		text-decoration:none;
-
-		/* 1 pixel black shadow to left, top, right and bottom */
-		text-shadow: -1px 0 #fff, 0 1px #fff, 1px 0 #fff, 0 -1px #fff; 
 	}
 	#header_logo > a:hover{
-		background: url("images/logo/logo_black_24dp_active.png") no-repeat center left;
-		color: black;
-		text-shadow: -1px 0 yellow, 0 1px yellow, 1px 0 yellow, 0 -1px yellow; 
+		background: url("images/logo/logo_white_24dp_active.png") no-repeat center left;
+		color: yellow;
 	}
 	#header_logo > a > span{
 		letter-spacing: 11px;
@@ -357,6 +353,13 @@ div.header_inner{
 	nav{
 		margin: 10px 0px 0px 0px;
 		display: none;
+		margin: 0px auto;
+		width: 1280px;
+	}
+	@media screen and (max-width: 52.375em) {
+		nav {
+			width: 100%;
+		}
 	}
 
 
@@ -372,151 +375,71 @@ div.header_inner{
 	}
 	nav > ul > li > a{
 		font: normal 16px 'Open Sans',sans-serif;
-		color: #fff;
+		color: #1c1c1c;
 		text-decoration:none;
-		padding: 10px 0px 10px 35px;
+		padding: 20px 0px 20px 45px;
 		display: block;
-		background: #333333;
+		border-bottom: #d5d5d5 1px solid;
 	}
 	nav > ul > li > a:hover{
-		color: #f06069;
+		color: #1c1c1c;
 		text-decoration:none;
-		background: #edefee;
 	}
-	/* Recipes */
-	a.nav_aacd8b1788fd3ab955695f1d9179049f{
-		background: url("../../_uploads/pages/navigation/no/oppskrifter_18x18_inactive.png") no-repeat 10px center;
+	/* All games */
+	a.nav_eccc390c9900e225c574f2880be7c716{
+		background: url("../../_uploads/pages/navigation/en/all_games_24x24_inactive.png") no-repeat 10px center;
 	}
-	a.nav_aacd8b1788fd3ab955695f1d9179049f:hover{
-		background: #213147 url("../../_uploads/pages/navigation/no/oppskrifter_18x18_active.png") no-repeat 10px center;
+	a.nav_eccc390c9900e225c574f2880be7c716:hover{
+		background: #dcdcdc url("../../_uploads/pages/navigation/en/all_games_24x24_hover.png") no-repeat 10px center;
 	}
-	a.nav_aacd8b1788fd3ab955695f1d9179049f:active{
-		background: #213147 url("../../_uploads/pages/navigation/no/oppskrifter_18x18_active.png") no-repeat 10px center;
+	a.nav_eccc390c9900e225c574f2880be7c716:active{
+		background: #dcdcdc url("../../_uploads/pages/navigation/en/all_games_24x24_active.png") no-repeat 10px center;
 	}
-
-	/* Food */
-	a.nav_f5ac047f758d76c20658dcdd5686d0e7{
-		background: url("../../_uploads/pages/navigation/no/mat_18x18_inactive.png") no-repeat 10px center;
+	/* Create game */
+	a.nav_067c2966a2ea2ae595fd6ec8a2ddf3eb{
+		background: url("../../_uploads/pages/navigation/en/create_game_24x24_inactive.png") no-repeat 10px center;
 	}
-	a.nav_f5ac047f758d76c20658dcdd5686d0e7:hover{
-		background: #213147 url("../../_uploads/pages/navigation/no/mat_18x18_hover.png") no-repeat 10px center;
+	a.nav_067c2966a2ea2ae595fd6ec8a2ddf3eb:hover{
+		background: #dcdcdc url("../../_uploads/pages/navigation/en/create_game_24x24_hover.png") no-repeat 10px center;
 	}
-	a.nav_f5ac047f758d76c20658dcdd5686d0e7:active{
-		background: #213147 url("../../_uploads/pages/navigation/no/mat_18x18_active.png") no-repeat 10px center;
+	a.nav_067c2966a2ea2ae595fd6ec8a2ddf3eb:active{
+		background: #dcdcdc url("../../_uploads/pages/navigation/en/create_game_24x24_active.png") no-repeat 10px center;
 	}
 
-	/* Exercises */
-	a.nav_d82eff65b7c44bffe2705a071892e20b{
-		background: url("../../_uploads/pages/navigation/no/ovelser_18x18_inactive.png") no-repeat 10px center;
+	/* My games */
+	a.nav_f74783ab1ed5f1202f3bacabea85b0bd{
+		background: url("../../_uploads/pages/navigation/en/my_games_24x24_inactive.png") no-repeat 10px center;
 	}
-	a.nav_d82eff65b7c44bffe2705a071892e20b:hover{
-		background: #213147 url("../../_uploads/pages/navigation/no/ovelser_18x18_hover.png") no-repeat 10px center;
+	a.nav_f74783ab1ed5f1202f3bacabea85b0bd:hover{
+		background: #dcdcdc url("../../_uploads/pages/navigation/en/my_games_24x24_hover.png") no-repeat 10px center;
 	}
-	a.nav_d82eff65b7c44bffe2705a071892e20b:active{
-		background: #213147 url("../../_uploads/pages/navigation/no/ovelser_18x18_active.png") no-repeat 10px center;
+	a.nav_f74783ab1ed5f1202f3bacabea85b0bd:active{
+		background: #dcdcdc url("../../_uploads/pages/navigation/en/my_games_24x24_active.png") no-repeat 10px center;
 	}
 
-	/* Entries */
-	a.nav_1db9981d25abcc90b10c013169a972f7{
-		background: url("../../_uploads/pages/navigation/no/innlegg_18x18_inactive.png") no-repeat 10px center;
+	/* Groups */
+	a.nav_50f4d0ebcf2a9039c50a971527564b2b{
+		background: url("../../_uploads/pages/navigation/en/groups_24x24_inactive.png") no-repeat 10px center;
 	}
-	a.nav_1db9981d25abcc90b10c013169a972f7:hover{
-		background: #213147 url("../../_uploads/pages/navigation/no/innlegg_18x18_hover.png") no-repeat 10px center;
+	a.nav_50f4d0ebcf2a9039c50a971527564b2b:hover{
+		background: #dcdcdc url("../../_uploads/pages/navigation/en/groups_24x24_hover.png") no-repeat 10px center;
 	}
-	a.nav_1db9981d25abcc90b10c013169a972f7:active{
-		background: #213147 url("../../_uploads/pages/navigation/no/innlegg_18x18_active.png") no-repeat 10px center;
+	a.nav_50f4d0ebcf2a9039c50a971527564b2b:active{
+		background: #dcdcdc url("../../_uploads/pages/navigation/en/groups_24x24_active.png") no-repeat 10px center;
 	}
 
 
-	/* Workout diary */
-	a.nav_87159b11d4b4c0e30f591a59abc66b16{
-		background: url("../../_uploads/pages/navigation/no/matdagbok_18x18_inactive.png") no-repeat 10px center;
+	/* Teams */
+	a.nav_6b100d6765382138719a444a61f96430{
+		background: url("../../_uploads/pages/navigation/en/teams_24x24_inactive.png") no-repeat 10px center;
 	}
-	a.nav_87159b11d4b4c0e30f591a59abc66b16:hover{
-		background: #213147 url("../../_uploads/pages/navigation/no/matdagbok_18x18_hover.png") no-repeat 10px center;
+	a.nav_6b100d6765382138719a444a61f96430:hover{
+		background: #dcdcdc url("../../_uploads/pages/navigation/en/teams_24x24_hover.png") no-repeat 10px center;
 	}
-	a.nav_87159b11d4b4c0e30f591a59abc66b16:active{
-		background: #213147 url("../../_uploads/pages/navigation/no/matdagbok_18x18_active.png") no-repeat 10px center;
-	}
-
-	/* Workout diary */
-	a.nav_87159b11d4b4c0e30f591a59abc66b16{
-		background: url("../../_uploads/pages/navigation/no/treningsdagbok_18x18_inactive.png") no-repeat 10px center;
-	}
-	a.nav_87159b11d4b4c0e30f591a59abc66b16:hover{
-		background: #213147 url("../../_uploads/pages/navigation/no/treningsdagbok_18x18_hover.png") no-repeat 10px center;
-	}
-	a.nav_87159b11d4b4c0e30f591a59abc66b16:active{
-		background: #213147 url("../../_uploads/pages/navigation/no/treningsdagbok_18x18_active.png") no-repeat 10px center;
+	a.nav_6b100d6765382138719a444a61f96430:active{
+		background: #dcdcdc url("../../_uploads/pages/navigation/en/teams_24x24_active.png") no-repeat 10px center;
 	}
 
-	/* Food diary */
-	a.nav_c9c196a31c798f20cc593bfb38f5d8e7{
-		background: url("../../_uploads/pages/navigation/no/matdagbok_18x18_inactive.png") no-repeat 10px center;
-	}
-	a.nav_c9c196a31c798f20cc593bfb38f5d8e7:hover{
-		background: #213147 url("../../_uploads/pages/navigation/no/matdagbok_18x18_hover.png") no-repeat 10px center;
-	}
-	a.nav_c9c196a31c798f20cc593bfb38f5d8e7:active{
-		background: #213147 url("../../_uploads/pages/navigation/no/matdagbok_18x18_active.png") no-repeat 10px center;
-	}
-
-	/* Chat */
-	a.nav_ec6e877a6b411b16d730b8b8d73cc302{
-		background: url("../../_uploads/pages/navigation/no/chat_18x18_inactive.png") no-repeat 10px center;
-	}
-	a.nav_ec6e877a6b411b16d730b8b8d73cc302:hover{
-		background: #213147 url("../../_uploads/pages/navigation/no/chat_18x18_hover.png") no-repeat 10px center;
-	}
-	a.nav_ec6e877a6b411b16d730b8b8d73cc302:active{
-		background: #213147 url("../../_uploads/pages/navigation/no/chat_18x18_active.png") no-repeat 10px center;
-	}
-
-	/* Forum */
-	a.nav_ca41891f4e88efcf2e6b6426704c9fb1{
-		background: url("../../_uploads/pages/navigation/no/forum_18x18_inactive.png") no-repeat 10px center;
-	}
-	a.nav_ca41891f4e88efcf2e6b6426704c9fb1:hover{
-		background: #213147 url("../../_uploads/pages/navigation/no/forum_18x18_hover.png") no-repeat 10px center;
-	}
-	a.nav_ca41891f4e88efcf2e6b6426704c9fb1:active{
-		background: #213147 url("../../_uploads/pages/navigation/no/forum_18x18_active.png") no-repeat 10px center;
-	}
-
-
-	/* Diet */
-	a.nav_8b1ff0de0735c12f319132b3b2a2f3a0{
-		background: url("../../_uploads/pages/navigation/no/kosthold_18x18_inactive.png") no-repeat 10px center;
-	}
-	a.nav_8b1ff0de0735c12f319132b3b2a2f3a0:hover{
-		background: #213147 url("../../_uploads/pages/navigation/no/kosthold_18x18_hover.png") no-repeat 10px center;
-	}
-	a.nav_8b1ff0de0735c12f319132b3b2a2f3a0:active{
-		background: #213147 url("../../_uploads/pages/navigation/no/kosthold_18x18_active.png") no-repeat 10px center;
-	}
-
-	/* Workout plans */
-	a.nav_266eb038dbb21a9363231fd5500efe9c{
-		background: url("../../_uploads/pages/navigation/no/treningsplaner_18x18_inactive.png") no-repeat 10px center;
-	}
-	a.nav_266eb038dbb21a9363231fd5500efe9c:hover{
-		background: #213147 url("../../_uploads/pages/navigation/no/treningsplaner_18x18_hover.png") no-repeat 10px center;
-	}
-	a.nav_266eb038dbb21a9363231fd5500efe9c:active{
-		background: #213147 url("../../_uploads/pages/navigation/no/treningsplaner_18x18_active.png") no-repeat 10px center;
-	}
-
-
-	/* Meal Plans */
-	a.nav_4e7eebb1985f5debacf4bc970e46777d{
-		background: url("../../_uploads/pages/navigation/no/maltidsplaner_18x18_inactive.png") no-repeat 10px center;
-	}
-	a.nav_4e7eebb1985f5debacf4bc970e46777d:hover{
-		background: #213147 url("../../_uploads/pages/navigation/no/maltidsplaner_18x18_hover.png") no-repeat 10px center;
-	}
-	a.nav_4e7eebb1985f5debacf4bc970e46777d:active{
-		background: #213147 url("../../_uploads/pages/navigation/no/maltidsplaner_18x18_active.png") no-repeat 10px center;
-	}
 
 	/*- Header Search --------------------------------------------------------- */
 	div.site_search{
@@ -758,6 +681,15 @@ main{
 		width: 100%;
 		margin: 12px 0px 0px 0px;
 	}
+}
+
+
+
+section{
+	background: #ffffff;
+	border-radius: 25px;
+	padding: 1px 20px 10px 20px;
+	margin: 20px 0px 20px 0px;
 }
 
 /*- Aside -------------------------------------------------------------------------- */
@@ -1144,106 +1076,92 @@ span.a_main_below_headline_text_ad_arrow{
 
 /*- Footer --------------------------------------------------------------------- */
 footer{
+	overflow: auto;
+	border-top: #b0635b 1px solid;
 	clear: both;
-	float: left;
-	width: 86%;
-	margin: 0px 0px 0px 14%;
-	background: #05192d;
-}
-div.footer_parent {
-	display: flex;
-	flex-wrap: wrap;
-}
-div.footer_child {
-	flex: 1 0 21%; /* explanation below */
-	margin: 5px;
-	text-align: center;
-}
-div.footer_child > h4{
-	font: normal 20px "Segoe UI", Arial, sans-serif;
-	margin: 10px 0;
-	color: #fff;
-}
-div.footer_child > ul {
-	margin: 0px 0px 0px 0px;
-	padding: 0px 0px 0px 0px;
-	list-style:none;
-}
-div.footer_child > ul > li {
-	list-style-type: none;
-	margin: 0px 0px 0px 0px;
-	padding: 0px 0px 0px 0px;
-}
-div.footer_child > ul > li > a {
-	display: block;
-	margin: 0px 0px 0px 0px;
-	padding: 0px 0px 0px 0px;
-	font: normal 15px "Segoe UI", Arial, sans-serif;
-	color: #fff;
+	background: #e84c3d;
+	box-shadow: 2px 2px 0px -6px black;
 }
 
-/* Icons */
-div.footer_child > ul.footer_icons {
-	display: flex;
-	justify-content: start;
-}
-div.footer_child > ul.footer_icons > li {
-	margin: 10px 10px 0px 0px;
-}
-
-/* Example media queries */
-@media screen and (max-width: 52.375em) {
-	footer{
-		width: 100%;
-		margin: 0px 0px 0px 0;
+	/* Footer parent child */
+	div.footer_parent {
+		display: flex;
+		flex-wrap: wrap;
+		margin: 0px auto;
+		width: 1280px;
 	}
-}
+	@media screen and (max-width: 52.375em) {
+		div.footer_parent {
+			width: 100%;
+		}
+	}
+	div.footer_child {
+		flex: 1 0 21%; /* explanation below */
+		margin: 5px;
+		text-align: center;
+	}
+	div.footer_child > h4{
+		font: normal 20px "Segoe UI", Arial, sans-serif;
+		margin: 10px 0;
+		color: #fff;
+	}
+	div.footer_child > ul {
+		margin: 0px 0px 0px 0px;
+		padding: 0px 0px 0px 0px;
+		list-style:none;
+	}
+	div.footer_child > ul > li {
+		list-style-type: none;
+		margin: 0px 0px 0px 0px;
+		padding: 0px 0px 0px 0px;
+	}
+	div.footer_child > ul > li > a {
+		display: block;
+		margin: 0px 0px 0px 0px;
+		padding: 0px 0px 0px 0px;
+		font: normal 15px "Segoe UI", Arial, sans-serif;
+		color: #fff;
+	}
+
+	/* Footer parent child Icons */
+	div.footer_child > ul.footer_icons {
+		display: flex;
+		justify-content: start;
+	}
+	div.footer_child > ul.footer_icons > li {
+		margin: 10px 10px 0px 0px;
+	}
 
 
 
-/* Footer after */
-div.footer_after{
-	display: flex;
-	flex-wrap: wrap;
-}
-div.footer_after_child {
-	flex: 1; /* explanation below */
-	margin: 5px;
-}
-div.footer_after_child:last-child {
-	text-align: center;
-}
+
+	/* Footer after */
+	div.footer_after{
+		display: flex;
+		flex-wrap: wrap;
+		margin: 0px auto;
+		width: 1280px;
+	}
+	@media screen and (max-width: 52.375em) {
+		div.footer_after{
+			width: 100%;
+		}
+	}
+	div.footer_after_child {
+		flex: 1; /* explanation below */
+		margin: 5px;
+	}
+	div.footer_after_child:last-child {
+		text-align: center;
+	}
 
 
-div.footer_after p{
-	font: normal 15px "Segoe UI", Arial, sans-serif;
-	color: #fff;
-}
-div.footer_after a{
-	font: normal 15px "Segoe UI", Arial, sans-serif;
-	color: #fff;
-}
+	div.footer_after p{
+		font: normal 15px "Segoe UI", Arial, sans-serif;
+		color: #fff;
+	}
+	div.footer_after a{
+		font: normal 15px "Segoe UI", Arial, sans-serif;
+		color: #fff;
+	}
 
-
-
-/*- Cookies ----------------------------------------------------------------- */
-#div_legal{
-	background: #000;
-	text-align: center;
-	width: 80%;
-	position: fixed;
-	bottom: 0;
-	opacity: 0.9;
-
-	float: left;
-	width: 86%;
-	margin: 0px 0px 0px 14%;
-
-}
-#div_legal > p{
-	color: #fff;
-}
-a.legal_read_more{
-	color: #fff;
-	text-decoration: underline;
-}

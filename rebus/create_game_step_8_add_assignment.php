@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* File: rebus/new_game_step_8_add_assignment.php
+* File: rebus/create_game_step_8_add_assignment.php
 * Version 1.0.0.
 * Date 09:50 01.07.2021
 * Copyright (c) 2021 Sindre Andre Ditlefsen
@@ -81,7 +81,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 	/*- Headers ---------------------------------------------------------------------------------- */
-	$website_title = "$get_current_game_title - $l_new_game";
+	$website_title = "$get_current_game_title - $l_create_game";
 	if(file_exists("./favicon.ico")){ $root = "."; }
 	elseif(file_exists("../favicon.ico")){ $root = ".."; }
 	elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -201,7 +201,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 			
 
 			// Header
-			$url = "new_game_step_8_add_assignment.php?game_id=$get_current_game_id&assignment_type=$assignment_type&l=$l&ft=success&fm=assignment_added";
+			$url = "create_game_step_8_add_assignment.php?game_id=$get_current_game_id&assignment_type=$assignment_type&l=$l&ft=success&fm=assignment_added";
 			header("Location: $url");
 			exit;
 
@@ -235,7 +235,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 				if($ft == "success" && $fm == "Assignment added"){
 					echo"
-					<p><a href=\"new_game_step_9_assignments_overview.php?game_id=$get_current_game_id&amp;l=$l\" class=\"btn_default\">$l_next &gt;</a></p>
+					<p><a href=\"create_game_step_9_assignments_overview.php?game_id=$get_current_game_id&amp;l=$l\" class=\"btn_default\">$l_next &gt;</a></p>
 					";
 				}
 
@@ -253,12 +253,12 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		<!-- //Focus -->
 
 		<!-- Add question form -->
-			<form method=\"post\" action=\"new_game_step_8_add_assignment.php?game_id=$get_current_game_id&amp;assignment_type=$assignment_type&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+			<form method=\"post\" action=\"create_game_step_8_add_assignment.php?game_id=$get_current_game_id&amp;assignment_type=$assignment_type&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
 			<p><b>$l_assignment_type:</b><br />
 			<select name=\"assignment_type\" class=\"on_select_go_to_url\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
-				<option value=\"new_game_step_8_add_assignment.php?game_id=$get_current_game_id&amp;l=$l&amp;assignment_type=answer_a_question\""; if($assignment_type == "answer_a_question"){ echo" selected=\"selected\""; } echo">$l_answer_a_question</option>
-				<option value=\"new_game_step_8_add_assignment.php?game_id=$get_current_game_id&amp;l=$l&amp;assignment_type=take_a_picture_with_coordinates\""; if($assignment_type == "take_a_picture_with_coordinates"){ echo" selected=\"selected\""; } echo">$l_take_a_picture_with_coordinates</option>
+				<option value=\"create_game_step_8_add_assignment.php?game_id=$get_current_game_id&amp;l=$l&amp;assignment_type=answer_a_question\""; if($assignment_type == "answer_a_question"){ echo" selected=\"selected\""; } echo">$l_answer_a_question</option>
+				<option value=\"create_game_step_8_add_assignment.php?game_id=$get_current_game_id&amp;l=$l&amp;assignment_type=take_a_picture_with_coordinates\""; if($assignment_type == "take_a_picture_with_coordinates"){ echo" selected=\"selected\""; } echo">$l_take_a_picture_with_coordinates</option>
 			</select>
 			</p>
 			<!-- On select go to URL -->
@@ -446,7 +446,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 				<p><input type=\"submit\" value=\"$l_save\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" /></p>
 			</div>
 			<div style=\"float: right;\">
-				<p><a href=\"new_game_step_9_assignments_overview.php?game_id=$get_current_game_id&amp;l=$l\" class=\"btn_default\">$l_next &gt;</a></p>
+				<p><a href=\"create_game_step_9_assignments_overview.php?game_id=$get_current_game_id&amp;l=$l\" class=\"btn_default\">$l_next &gt;</a></p>
 			</div>
 			<div class=\"clear\"></div>
 	

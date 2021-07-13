@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* File: rebus/new_game_step_2_county.php
+* File: rebus/create_game_step_2_county.php
 * Version 1.0.0.
 * Date 09:50 01.07.2021
 * Copyright (c) 2021 Sindre Andre Ditlefsen
@@ -81,7 +81,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 	/*- Headers ---------------------------------------------------------------------------------- */
-	$website_title = "$l_county - $get_current_game_title - $l_new_game";
+	$website_title = "$l_county - $get_current_game_title - $l_create_game";
 	if(file_exists("./favicon.ico")){ $root = "."; }
 	elseif(file_exists("../favicon.ico")){ $root = ".."; }
 	elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -135,7 +135,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 						or die(mysqli_error($link));
 
 			// Header
-			$url = "new_game_step_3_image.php?game_id=$get_current_game_id&l=$l&ft=success&fm=introduction_saved";
+			$url = "create_game_step_3_image.php?game_id=$get_current_game_id&l=$l&ft=success&fm=introduction_saved";
 			header("Location: $url");
 			exit;
 
@@ -178,7 +178,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 		<!-- Use existing county form -->
 			<h2 style=\"padding-bottom:0;margin-bottom:0;\">$l_use_existing_county</h2>
-			<form method=\"post\" action=\"new_game_step_2_county.php?action=use_existing_county&amp;game_id=$get_current_game_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+			<form method=\"post\" action=\"create_game_step_2_county.php?action=use_existing_county&amp;game_id=$get_current_game_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
 			<p><b>$l_game_can_be_played_in_county_of $get_current_game_country_name:</b><br />
 			<select name=\"inp_county_id\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\">";
@@ -196,7 +196,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 		<!-- Add new county form -->
 			<h2 style=\"padding-bottom:0;margin-bottom:0;\">$l_add_new_county</h2>
-			<form method=\"post\" action=\"new_game_step_2_county.php?action=add_new_county&amp;game_id=$get_current_game_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+			<form method=\"post\" action=\"create_game_step_2_county.php?action=add_new_county&amp;game_id=$get_current_game_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
 			<p><b>$l_new_county_name:</b><br />
 			<input type=\"text\" name=\"inp_name\" size=\"25\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
@@ -216,7 +216,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$row = mysqli_fetch_row($result);
 		list($get_county_id, $get_county_name) = $row;
 		if($get_county_id == ""){
-			$url = "new_game_step_2_county.php?game_id=$get_current_game_id&l=$l&ft=error&fm=no_county_selected";
+			$url = "create_game_step_2_county.php?game_id=$get_current_game_id&l=$l&ft=error&fm=no_county_selected";
 			header("Location: $url");
 			exit;
 		}
@@ -230,7 +230,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					or die(mysqli_error($link));
 		
 		// Header	
-		$url = "new_game_step_3_municipality.php?game_id=$get_current_game_id&l=$l&ft=success&fm=county_selected";
+		$url = "create_game_step_3_municipality.php?game_id=$get_current_game_id&l=$l&ft=success&fm=county_selected";
 		header("Location: $url");
 		exit;
 		
@@ -268,7 +268,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$inp_name = output_html($inp_name);
 		$inp_name_mysql = quote_smart($link, $inp_name);
 		if($inp_name == ""){
-			$url = "new_game_step_2_county.php?game_id=$get_current_game_id&l=$l&ft=error&fm=no_name_specified";
+			$url = "create_game_step_2_county.php?game_id=$get_current_game_id&l=$l&ft=error&fm=no_name_specified";
 			header("Location: $url");
 			exit;
 		}
@@ -279,7 +279,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$row = mysqli_fetch_row($result);
 		list($get_county_id, $get_county_name) = $row;
 		if($get_county_id != ""){
-			$url = "new_game_step_2_county.php?game_id=$get_current_game_id&l=$l&ft=error&fm=that_county_already_exists";
+			$url = "create_game_step_2_county.php?game_id=$get_current_game_id&l=$l&ft=error&fm=that_county_already_exists";
 			header("Location: $url");
 			exit;
 		}
@@ -311,7 +311,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					or die(mysqli_error($link));
 		
 		// Header	
-		$url = "new_game_step_3_municipality.php?game_id=$get_current_game_id&l=$l&ft=success&fm=county_added";
+		$url = "create_game_step_3_municipality.php?game_id=$get_current_game_id&l=$l&ft=success&fm=county_added";
 		header("Location: $url");
 		exit;
 		

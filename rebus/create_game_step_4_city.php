@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* File: rebus/new_game_step_4_city.php
+* File: rebus/create_game_step_4_city.php
 * Version 1.0.0.
 * Date 09:50 01.07.2021
 * Copyright (c) 2021 Sindre Andre Ditlefsen
@@ -81,7 +81,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 
 	/*- Headers ---------------------------------------------------------------------------------- */
-	$website_title = "$l_city - $get_current_game_title - $l_new_game";
+	$website_title = "$l_city - $get_current_game_title - $l_create_game";
 	if(file_exists("./favicon.ico")){ $root = "."; }
 	elseif(file_exists("../favicon.ico")){ $root = ".."; }
 	elseif(file_exists("../../favicon.ico")){ $root = "../.."; }
@@ -127,7 +127,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 		<!-- Use existing city form -->
 			<h2 style=\"padding-bottom:0;margin-bottom:0;\">$l_use_existing_city</h2>
-			<form method=\"post\" action=\"new_game_step_4_city.php?action=use_existing_city&amp;game_id=$get_current_game_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+			<form method=\"post\" action=\"create_game_step_4_city.php?action=use_existing_city&amp;game_id=$get_current_game_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
 			<p><b>$l_game_can_be_played_in_city_of $get_current_game_municipality_name:</b><br />
 			<select name=\"inp_city_id\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\">";
@@ -145,7 +145,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 
 		<!-- Add new city form -->
 			<h2 style=\"padding-bottom:0;margin-bottom:0;\">$l_add_new_city</h2>
-			<form method=\"post\" action=\"new_game_step_4_city.php?action=add_new_city&amp;game_id=$get_current_game_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
+			<form method=\"post\" action=\"create_game_step_4_city.php?action=add_new_city&amp;game_id=$get_current_game_id&amp;l=$l&amp;process=1\" enctype=\"multipart/form-data\">
 
 			<p><b>$l_new_city_name:</b><br />
 			<input type=\"text\" name=\"inp_name\" size=\"25\" tabindex=\""; $tabindex=$tabindex+1; echo"$tabindex\" />
@@ -165,7 +165,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$row = mysqli_fetch_row($result);
 		list($get_city_id, $get_city_name) = $row;
 		if($get_city_id == ""){
-			$url = "new_game_step_4_city.php?game_id=$get_current_city_id&l=$l&ft=error&fm=no_city_selected";
+			$url = "create_game_step_4_city.php?game_id=$get_current_city_id&l=$l&ft=error&fm=no_city_selected";
 			header("Location: $url");
 			exit;
 		}
@@ -179,7 +179,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					or die(mysqli_error($link));
 		
 		// Header	
-		$url = "new_game_step_5_place.php?game_id=$get_current_game_id&l=$l&ft=success&fm=city_selected";
+		$url = "create_game_step_5_place.php?game_id=$get_current_game_id&l=$l&ft=success&fm=city_selected";
 		header("Location: $url");
 		exit;
 		
@@ -217,7 +217,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$inp_name = output_html($inp_name);
 		$inp_name_mysql = quote_smart($link, $inp_name);
 		if($inp_name == ""){
-			$url = "new_game_step_4_city.php?game_id=$get_current_game_id&l=$l&ft=error&fm=no_name_specified";
+			$url = "create_game_step_4_city.php?game_id=$get_current_game_id&l=$l&ft=error&fm=no_name_specified";
 			header("Location: $url");
 			exit;
 		}
@@ -228,7 +228,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 		$row = mysqli_fetch_row($result);
 		list($get_city_id, $get_city_name) = $row;
 		if($get_city_id != ""){
-			$url = "new_game_step_4_city.php?game_id=$get_current_game_id&l=$l&ft=error&fm=that_city_already_exists";
+			$url = "create_game_step_4_city.php?game_id=$get_current_game_id&l=$l&ft=error&fm=that_city_already_exists";
 			header("Location: $url");
 			exit;
 		}
@@ -264,7 +264,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['security'])){
 					or die(mysqli_error($link));
 		
 		// Header	
-		$url = "new_game_step_5_place.php?game_id=$get_current_game_id&l=$l&ft=success&fm=city_added";
+		$url = "create_game_step_5_place.php?game_id=$get_current_game_id&l=$l&ft=success&fm=city_added";
 		header("Location: $url");
 		exit;
 		
